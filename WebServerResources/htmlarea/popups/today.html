@@ -1,0 +1,140 @@
+<HTML STYLE="width:300px; Height: 60px;">
+ <HEAD>
+  <TITLE>Insert Today's Date</TITLE>
+  
+<SCRIPT LANGUAGE="javascript">  
+  <!-- 
+function shortMonthArray() {
+this[0] = "Jan"; this[1] = "Feb"; this[2] = "Mar"; this[3] = "Apr"; this[4] = "May"; this[5] = "Jun";
+this[6] = "Jul"; this[7] = "Aug"; this[8] = "Sep"; this[9] = "Oct"; this[10] = "Nov"; this[11] = "Dec";
+return (this);
+}
+function espMonthArray() {
+this[0] = "Ene"; this[1] = "Feb"; this[2] = "Mar"; this[3] = "Abr"; this[4] = "Mayo"; this[5] = "Jun";
+this[6] = "Jul"; this[7] = "Ago"; this[8] = "Sep"; this[9] = "Oct"; this[10] = "Nov"; this[11] = "Dic";
+return (this);
+}
+function longMonthArray() {
+this[0] = "January"; this[1] = "February"; this[2] = "March"; this[3] = "April"; this[4] = "May"; this[5] = "June";
+this[6] = "July"; this[7] = "August"; this[8] = "September"; this[9] = "October"; this[10] = "November"; this[11] = "December";
+return (this);
+}
+function EspañolMonthArray() {
+this[0] = "Enero"; this[1] = "Febrero"; this[2] = "Marzo"; this[3] = "Abril"; this[4] = "Mayo"; this[5] = "Junio";
+this[6] = "Julio"; this[7] = "Agosto"; this[8] = "Septiembre"; this[9] = "Octubre"; this[10] = "Noviembre"; this[11] = "Dicembre";
+return (this);
+}
+function NumMonthArray() {
+this[0] = "01"; this[1] = "02"; this[2] = "03"; this[3] = "04"; this[4] = "05"; this[5] = "06";
+this[6] = "07"; this[7] = "08"; this[8] = "09"; this[9] = "10"; this[10] = "11"; this[11] = "Dicembre";
+return (this);
+}
+
+function getLongYear(year){
+year = d.getYear();
+if (year < 1000)
+year+=1900;
+return year;
+}
+
+function writeShortDate(){
+shortMonths = new shortMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = shortMonths[month] +"/" +day+ "/" +getLongYear(year);
+document.writeln(str);
+}
+function writeLongDate(){
+longMonths = new longMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = longMonths[month] + " " +day+ ", " +getLongYear(year);
+document.writeln(str);
+}
+function espShortDate(){
+espMonths = new espMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = espMonths[month] +"/" +day+ "/" +getLongYear(year);
+document.writeln(str);
+}
+function EspañolLongDate(){
+EspañolMonths = new EspañolMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = EspañolMonths[month] + " " +day+ ", " +getLongYear(year);
+document.writeln(str);
+}
+function NumAmerDate(){
+NumMonths = new NumMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = NumMonths[month] + "/" +day+ "/" +getLongYear(year);
+document.writeln(str);
+}
+function NumMexDate(){
+NumMonths = new NumMonthArray();
+d = new Date();
+day = d.getDate();
+month = d.getMonth();
+year = d.getYear();
+str = day+ "/" +NumMonths[month]+ "/" +getLongYear(year);
+document.writeln(str);
+}
+// -->
+</SCRIPT>
+<SCRIPT LANGUAGE="javascript">
+
+var myDate = window.dialogArguments;
+document.title = myDate;
+
+
+function returnSelected() {
+  var idx  = document.all.textPulldown.selectedIndex;
+  var text = document.all.textPulldown[idx].text;
+
+  window.returnValue = text;          // set return value
+  window.close();                     // close dialog
+}
+
+</SCRIPT>
+<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+ document.body.onkeypress = _CloseOnEsc;
+ </SCRIPT>
+</HEAD>
+<BODY BGCOLOR="#ECE9D8" TOPMARGIN=15 LEFTMARGIN=0>
+
+<FORM>
+<TABLE WIDTH="100%" BORDER="1" CELLSPACING="0" CELLPADDING="0" ALIGN="center">
+<TR VALIGN="middle"><TD>&nbsp;<font face="Arial,Helvetica,sans-serif" size="2" color="#000000"><B>Select Date Format</B>&nbsp;&nbsp;</FONT>
+<SELECT NAME="textPulldown">
+<OPTION><SCRIPT LANGUAGE="javascript">writeShortDate();</SCRIPT></OPTION>
+<OPTION><SCRIPT LANGUAGE="javascript">writeLongDate();</SCRIPT></OPTION>
+<OPTION><SCRIPT LANGUAGE="javascript">espShortDate();</SCRIPT></OPTION>
+<OPTION><SCRIPT LANGUAGE="javascript">EspañolLongDate();</SCRIPT></OPTION>
+<OPTION><SCRIPT LANGUAGE="javascript">NumAmerDate();</SCRIPT></OPTION>
+<OPTION><SCRIPT LANGUAGE="javascript">NumMexDate();</SCRIPT></OPTION>
+</SELECT>
+</TD></TR>
+</TABLE>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0" ALIGN="center">
+<TR><TD><img src="http://memri.org/blnk.gif" alt="" width="1" height="8" border="0"></TD></TR>
+<TR><TD><div align="center"><INPUT TYPE="button" VALUE=" Insert Today's Date " onClick="returnSelected()" TITLE="Click to insert today's date in the document"></div>
+</TD></TR>
+</TABLE>
+</FORM>
+</BODY></HTML>

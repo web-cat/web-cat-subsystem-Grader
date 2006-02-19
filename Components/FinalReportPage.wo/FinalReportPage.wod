@@ -1,0 +1,247 @@
+AreNonInlineReports: WOConditional {
+	condition = reportArray.count;
+}
+
+Coverage: WOString {
+	numberformat = "0.0";
+	value        = stats.gradedElementsCoveragePercent;
+}
+
+CoverageMeter: WOString {
+	escapeHTML = false;
+	value      = coverageMeter;
+}
+
+EstimatedWait: WOString {
+	value      = estimatedWait;
+	dateformat = estimatedWaitFormat;
+}
+
+FileDeduction: WOString {
+	numberformat = "0.0";
+	value        = stats.deductions;
+}
+
+FileName: WOString {
+	value = stats.sourceFileName;
+}
+
+FileRemarks: WOString {
+	numberformat = "0";
+	value        = stats.remarks;
+}
+
+Form1: WOForm {
+	target = "_blank";
+}
+
+GradingHalted: WOConditional {
+	condition = prefs.assignmentOffering.gradingSuspended;
+}
+
+GradingNotHalted: WOConditional {
+	condition = prefs.assignmentOffering.gradingSuspended;
+	negate    = true;
+}
+
+GradingNotPaused: WOConditional {
+	condition = gradingPaused;
+	negate = true;
+}
+
+GradingPaused: WOConditional {
+	condition = gradingPaused;
+}
+
+HasCoverageData: WOConditional {
+	condition = stats.elementsRaw;
+}
+
+HasFileStats: WOConditional {
+	condition = hasFileStats;
+}
+
+HasNoCoverageData: WOConditional {
+	condition = stats.elementsRaw;
+	negate    = true;
+}
+
+HasNonZeroScore: WOConditional {
+	condition = hasNonZeroScore;
+}
+
+HasTAComments: WOConditional {
+	condition = hasTAComments;
+}
+
+Hyperlink1: WOHyperlink {
+	action = refreshAction;
+}
+
+Image: WOImage {
+	filename = "images/evaluating.gif";
+	width    = 64;
+	height   = 64;
+	alt      = "Still Grading";
+}
+
+InlineReport: WOConditional {
+	condition = hasInlineReport;
+}
+
+InlineSummary: WOConditional {
+	condition = hasInlineSummary;
+}
+
+MetaRefresh1: WOMetaRefresh {
+	action = refreshAction;
+	seconds = refreshTimeout;
+}
+
+MostRecentJobWait: WOString {
+	value      = mostRecentJobWait;
+	dateformat = mostRecentJobWaitFormat;
+}
+
+NoSubmissionChosen: WOConditional {
+    condition = submissionChosen;
+    negate    = true;
+}
+
+Page: net.sf.webcat.core.PageWithNavigation {
+    title = "Your Assignment Submission Results";
+    hideSteps = true;
+}
+
+PartialInlineReport: PartialInlineReport {
+    file = result.resultFile;
+}
+
+PastResults: WOHyperlink {
+	action = pastResults;
+	string = "Past Results";
+}
+
+PopUpButton1: WOPopUpButton {
+        list		  = reportArray;
+        item   		  = report;
+	selection         = selectedReport;
+	displayString 	  = report.label;
+//	noSelectionString = "Select from your files ...";
+}
+
+QueuedJobCount: WOString {
+	value = queuedJobCount;
+}
+
+QueuePosition: WOString {
+	value = queuePosition;
+}
+
+ReportNotReady: WOConditional {
+	condition = reportIsReady;
+	negate = true;
+}
+
+ReportReady: WOConditional {
+	condition = reportIsReady;
+}
+
+ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+}
+
+ReturnToGrading: WOSubmitButton {
+    value = " < Return to Grading ";
+    action = next;
+}
+
+RTGForm: WOForm {}
+
+ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
+    allowScoreEdit = false;
+}
+
+ShowCoverageData: WOConditional {
+    condition = showCoverageData;
+}
+
+ShowDetails: WOHyperlink {
+	action = fileStatsDetails;
+}
+
+ShowReturnToGrading: WOConditional {
+    condition = showReturnToGrading;
+}
+
+ShowSubmitAgain: WOConditional {
+    condition = canSubmitAgain;
+}
+
+StatRepetition: WORepetition {
+	item  = stats;
+	list  = statsDisplayGroup.displayedObjects;
+	index = index;
+}
+
+StatsLabel: WOString {
+	value = result.statElementsLabel;
+}
+
+String1: WOString {
+	value = refreshTimeout;
+}
+
+String2: WOString {
+	value = session.user.email;
+}
+
+SubmissionChosen: WOConditional {
+    condition = submissionChosen;
+}
+
+SubmitAgain: WOSubmitButton {
+    value = " Submit Again ";
+    action = submitAgain;
+}
+
+SubmitButton1: WOSubmitButton {
+	action = fileDeliveryAction;
+	value = "Download Selected File";
+}
+
+SummaryReport: PartialInlineReport {
+    file = result.summaryFile;
+}
+
+TAComments: net.sf.webcat.core.FormattedString {
+	value  = result.comments;
+	format = result.commentFormat;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "File Name";
+	key = "sourceFileName";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Deductions";
+	key = "deductions";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = result.statElementsLabel;
+	key = "gradedElementsCoverage";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Remarks";
+	key = "remarks";
+}

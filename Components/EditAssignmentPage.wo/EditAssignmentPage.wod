@@ -1,0 +1,253 @@
+AddStep: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addStep;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}
+
+CancelSubs: WOSubmitButton {
+    action = cancelSuspendedSubs;
+    value  = "Cancel Them";
+}
+
+ClearGraph: WOSubmitButton {
+    action = clearGraph;
+    value  = "Refresh Cached Graph Data";
+}
+
+CourseName: WOString {
+    value = session.courseOffering.deptNumberAndName;
+}
+
+Description: WOTextField {
+	size = 40;
+	value = prefs.assignmentOffering.assignment.shortDescription;
+}
+
+DueDate: WOTextField {
+	size       = 20;
+	dateformat = "%m/%d/%Y %I:%M %p";
+	value      = prefs.assignmentOffering.dueDate;
+	id         = "DueDate";
+	readonly   = 1;
+}
+
+DueDateSelector: WOImage {
+	filename = "icons/cal.gif";
+	width    = 16;
+	height   = 16;
+	alt      = "Select due date";
+	title    = "Select due date";
+	id       = "DueDateSelector";
+}
+
+EditStep: WOImageButton {
+    filename  = "icons/edit.gif";
+    framework = "Core";
+	action    = editStep;
+	border    = "0";
+	width     = "18";
+	height    = "17";
+	alt       = "Set/edit parameters for this step";
+	title     = "Set/edit parameters for this step";
+}
+
+EditSubmissionProfile: WOImageButton {
+    filename  = "icons/edit.gif";
+    framework = "Core";
+	action    = editSubmissionProfile;
+	border    = "0";
+	width     = "18";
+	height    = "17";
+	alt       = "Edit selected submission rules";
+	title     = "Edit selected submission rules";
+}
+
+Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = prefs.assignmentOffering.graphSummary;
+}
+
+//HasNoSubmissionProfile: WOConditional {
+//    condition = hasSubmissionProfile;
+//    negate    = true;
+//}
+
+//HasSubmissionProfile: WOConditional {
+//    condition = hasSubmissionProfile;
+//}
+
+HasSuspendedSubs: WOConditional {
+    condition = hasSuspendedSubs;
+}
+
+LastTR: net.sf.webcat.core.TableRow {
+	index = scriptDisplayGroup.displayedObjects.count;
+}
+
+MoodleId: WOTextField {
+	size = 8;
+	numberformat = "0";
+	value = prefs.assignmentOffering.assignment.moodleId;
+}
+
+OverrideMoodleId: WOTextField {
+	size = 8;
+	numberformat = "0";
+	value = prefs.assignmentOffering.moodleId;
+}
+
+
+MoveStepDown: WOImageButton {
+    filename  = "icons/arrowDown.gif";
+    framework = "Core";
+	action    = moveStepDown;
+	border    = "0";
+	width     = "15";
+	height    = "13";
+	alt       = "Move this step down";
+	title     = "Move this step down";
+}
+
+MoveStepUp: WOImageButton {
+    filename  = "icons/arrowUp.gif";
+    framework = "Core";
+	action    = moveStepUp;
+	border    = "0";
+	width     = "15";
+	height    = "13";
+	alt       = "Move this step up";
+	title     = "Move this step up";
+}
+
+Name: WOTextField {
+	value = prefs.assignmentOffering.assignment.name;
+	size  = 40;
+}
+
+NewSubmissionProfile: WOSubmitButton {
+    action = newSubmissionProfile;
+    value  = "New";
+}
+
+NumSuspended: WOString {
+    value = numSuspendedSubs;
+}
+
+Order: WOString {
+	value = thisStep.order;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    finishEnabled = true;
+    applyEnabled  = true;
+    stylesheet           = "http://web-cat.cs.vt.edu/jscalendar/skins/aqua/theme.css";
+    externalJavascript   = "http://web-cat.cs.vt.edu/jscalendar/calendar.js,http://web-cat.cs.vt.edu/jscalendar/lang/calendar-en.js,http://web-cat.cs.vt.edu/jscalendar/calendar-setup.js"; 
+}
+
+PublishIt: WOCheckBox {
+	checked = prefs.assignmentOffering.publish;
+}
+
+RegradeSubs: WOSubmitButton {
+    action = regradeSubs;
+    value  = "Regrade Everyone";
+}
+
+ReleaseSubs: WOSubmitButton {
+    action = releaseSuspendedSubs;
+    value  = "Re-grade Them";
+}
+
+RemoveStep: WOImageButton {
+    filename  = "icons/trash.gif";
+    framework = "Core";
+	action    = removeStep;
+	border    = "0";
+	width     = "14";
+	height    = "17";
+	alt       = "Delete this step";
+	title     = "Delete this step";
+}
+
+ScriptName: WOString {
+	value = thisStep.script.displayableName;
+}
+
+StepAllowsTimeout: WOConditional {
+    condition = stepAllowsTimeout;
+}
+
+StepRepetition: WORepetition {
+	item  = thisStep;
+	list  = scriptDisplayGroup.displayedObjects;
+	index = index;
+}
+
+SubmissionProfileList: WOPopUpButton {
+    list          = submissionProfileDisplayGroup.displayedObjects;
+    item          = submissionProfile;
+    displayString = submissionProfile.name;
+    selection     = prefs.assignmentOffering.assignment.submissionProfile;
+}
+
+//SubmissionProfileName: WOString {
+//	value = prefs.assignmentOffering.assignment.submissionProfile.name;
+//}
+
+Suspend: WOCheckBox {
+	checked = isSuspended;
+}
+
+Timeout: WOTextField {
+	numberformat = "0";
+	size = 4;
+	value = stepTimeout;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+TR2: net.sf.webcat.core.TableRow {
+	index = index;
+    showCaution = upcomingAssignmentIsLate;
+    showError   = upcomingAssignment.gradingSuspended;
+}
+
+UploadInstructions: WOText {
+	rows  = 8;
+	cols  = 60;
+ 	value = prefs.assignmentOffering.assignment.fileUploadMessage;
+}
+
+UpcomingAssignmentName: WOHyperlink {
+    string = upcomingAssignment.titleString;
+    href   = upcomingAssignment.assignment.url;
+}
+
+UpcomingAssignmentRepetition: WORepetition {
+	item  = upcomingAssignment;
+	list  = upcomingAssignments;
+	index = index;
+}
+
+UpcomingAssignments: WOCollapsibleComponentContent {
+	openedLabel = "Hide upcoming assignment deadlines";
+	closedLabel = "Show upcoming assignment deadlines";
+}
+
+UpcomingDueDate: WOString {
+    dateformat = "%m/%d/%y %I:%M%p";
+    value = upcomingAssignment.dueDate;
+}
+
+UpcomingIsUnpublished: WOConditional {
+    condition = upcomingAssignment.publish;
+    negate = true;
+}
+
+URL: WOTextField {
+	size = 40;
+	value = prefs.assignmentOffering.assignment.url;
+}

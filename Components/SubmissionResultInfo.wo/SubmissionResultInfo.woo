@@ -1,0 +1,20 @@
+{
+    "WebObjects Release" = "WebObjects 5.1"; 
+	encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        partnerDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = submissions; 
+                masterClassDescription = SubmissionResult; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = user.lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+        }; 
+    }; 
+}

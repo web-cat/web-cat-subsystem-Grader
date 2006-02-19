@@ -1,0 +1,86 @@
+{
+    attributes = (
+        {
+            columnName = CASSIGNMENTID; 
+            name = assignmentOfferingId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            columnName = CCOMMENTHISTORY; 
+            name = commentHistory; 
+            prototypeName = mediumText; 
+        }, 
+        {columnName = CCOURSEOFFERINGID; name = courseOfferingId; prototypeName = foreignId; }, 
+        {name = id; prototypeName = id; }, 
+        {columnName = CSTEPID; name = stepId; prototypeName = foreignId; }, 
+        {columnName = CSUBMISSIONFILESTATSID; name = submissionFileStatsId; prototypeName = foreignId; }, 
+        {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }, 
+        {columnName = CUSERID; name = userId; prototypeName = foreignId; }
+    ); 
+    attributesUsedForLocking = (
+        assignmentOfferingId, 
+        userId, 
+        courseOfferingId, 
+        commentHistory, 
+        submissionId, 
+        submissionFileStatsId, 
+        stepId
+    ); 
+    className = net.sf.webcat.grader.GraderPrefs; 
+    classProperties = (
+        assignmentOffering, 
+        user, 
+        // courseOffering, 
+        commentHistory, 
+        submission, 
+        submissionFileStats, 
+        step
+    ); 
+    externalName = TGRADERPREFS; 
+    name = GraderPrefs; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = AssignmentOffering; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; }); 
+            name = assignmentOffering; 
+        }, 
+        {
+            destination = CourseOffering; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; }); 
+            name = courseOffering; 
+        }, 
+        {
+            destination = Step; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = stepId; }); 
+            name = step; 
+        }, 
+        {
+            destination = Submission; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = submissionId; }); 
+            name = submission; 
+        }, 
+        {
+            destination = SubmissionFileStats; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = submissionFileStatsId; }); 
+            name = submissionFileStats; 
+        }, 
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = user; 
+        }
+    ); 
+}

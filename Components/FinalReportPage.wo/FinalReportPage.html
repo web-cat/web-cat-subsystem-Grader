@@ -1,0 +1,76 @@
+<webobject name="Page"><webobject name="NoSubmissionChosen">
+    <p>Please choose
+    a submission under <webobject name="PastResults"/> to see your feedback.</p>
+</webobject><webobject name="SubmissionChosen"><webobject name="ReportNotReady">
+  <webobject name="GradingHalted">
+    <p>Processing of submissions for this assignment has been
+	temporarily halted.  Your submission has been received and
+	the time has been properly recorded.  It will be processed
+	once the instructor has resolved the issue.
+	If the delay is long, an e-mail message will be sent to you at
+	<webobject name="String2"/>
+	once the results for this submission are available.</p>
+  </webobject><webobject name="GradingNotHalted">
+    <webobject name="GradingPaused">
+      <p>An internal error occured while the Grader was processing
+      your submission.  The administrator has been notifed of the error.
+      An e-mail message will be sent to you at
+      <webobject name="String2"/>
+      once the results for this submission are available.</p>
+    </webobject><webobject name="GradingNotPaused">
+      <webobject name="MetaRefresh1"/>
+      <div style="float:left;margin:2em;"><webobject name="Image"/></div>
+      <div class="shadow"><table>
+      <tr><th colspan="2">Submission Status</th></tr>
+      <tr class="o"><td>Queued jobs</td><td class="n"><webobject name="QueuedJobCount"/></td></tr>
+      <tr class="e"><td>Most recent job wait</td><td class="n"><webobject name="MostRecentJobWait"/></td></tr>
+      <tr class="o"><td>Your queue position</td><td class="n"><webobject name="QueuePosition"/></td></tr>
+      <tr class="e"><td>Your estimated wait</td><td class="n"><webobject name="EstimatedWait"/></td></tr>
+      </table></div><div class="spacer">&nbsp;</div>
+
+      Your submission is being processed by the Grader.
+      The grading report will be generated in a few moments.
+      This page will refresh automatically in
+      <webobject name="String1"/> seconds, or you can
+      <webobject name="Hyperlink1">request an immediate page
+      refresh</webobject>.</p>
+      
+    </webobject>
+  </webobject>
+</webobject><webobject name="ReportReady">
+  <webobject name="ShowReturnToGrading"><webobject name="RTGForm"><webobject name="ReturnToGrading"/></webobject></webobject>
+  <webobject name="ShowSubmitAgain"><webobject name="RTGForm"><webobject name="SubmitAgain"/></webobject></webobject>
+  <webobject name="ResultInfo"/>
+  <webobject name="HasNonZeroScore"><webobject name="ScoreSummary"/></webobject>
+  <webobject name="InlineSummary"><webobject name="SummaryReport"/></webobject>
+  <webobject name="HasTAComments">
+    <div class="shadow"><table><tbody>
+      <tr><th>TA/Instructor Comments</th></tr>
+      <tr class="o"><td><webobject name="TAComments"/></td></tr>
+    </tbody></table></div><div class="spacer">&nbsp;</div>
+  </webobject>
+  <webobject name=HasFileStats>
+    <div class="shadow"><table><tbody>
+      <tr><th>File<webobject name="WCSortOrder1"/></th>
+        <th class="sm">Remarks<webobject name="WCSortOrder4"/></th>
+        <th class="sm">Deductions<webobject name="WCSortOrder2"/></th>
+        <webobject name="ShowCoverageData">
+          <th colspan="2"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
+        </webobject></tr>
+      <webobject name="StatRepetition"><webobject name="TR">
+        <td><webobject name="ShowDetails"><webobject name="FileName"/></webobject></td>
+        <td class="n"><webobject name="FileRemarks"/></td>
+        <td class="n"><webobject name="FileDeduction"/></td>
+        <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
+          <td class="n"><webobject name="Coverage"/>%</td>
+          <td><webobject name="CoverageMeter"/></td>
+          </webobject><webobject name="HasNoCoverageData"><td>&nbsp;</td><td>&nbsp;</td>
+        </webobject></webobject>
+      </webobject></webobject>
+    </tbody></table></div><div class="spacer">&nbsp;</div>
+  </webobject>
+  <webobject name="InlineReport"><webobject name="PartialInlineReport"/></webobject>
+  <webobject name="Form1"><webobject name="AreNonInlineReports">
+	<p><webobject name="PopUpButton1"/>&nbsp; <webobject name="SubmitButton1"/></p>
+  </webobject></webobject>
+</webobject></webobject></webobject>

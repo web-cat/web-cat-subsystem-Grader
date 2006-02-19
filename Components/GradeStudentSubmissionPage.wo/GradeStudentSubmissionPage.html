@@ -1,0 +1,33 @@
+<webobject name="Page"><webobject name="ResultInfo"/>
+<div style="clear:both"><p><webobject name="Done"/>Grading complete? <webobject name="Regrade"/> <webobject name="SelectSubmission"/></p></div>
+<webobject name="ScoreSummary"/>
+<webobject name="HasFileStats">
+<div class="shadow"><table>
+  <tr><th class="sm">Done?<webobject name="WCSortOrder5"/></th>
+    <th>File<webobject name="WCSortOrder1"/></th>
+    <th class="sm">Remarks<webobject name="WCSortOrder4"/></th>
+    <th class="sm">Deductions<webobject name="WCSortOrder2"/></th>
+    <webobject name="ShowCoverageData">
+      <th colspan="2" align="left"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
+    </webobject></tr>
+  <webobject name="StatRepetition"><webobject name="TR">
+    <td><webobject name="FileStatus"/></td>
+    <td><webobject name="ShowDetails"/>&nbsp;<webobject name="FileName"/></td>
+    <td class="n"><webobject name="FileRemarks"/></td>
+    <td class="n"><webobject name="FileDeduction"/></td>
+    <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
+      <td class="n"><webobject name="Coverage"/>%</td>
+      <td><webobject name="CoverageMeter"/></td>
+    </webobject><webobject name="HasNoCoverageData"><td>&nbsp;</td><td>&nbsp;</td>
+    </webobject></webobject>
+  </webobject></webobject>
+</table></div><div class="spacer">&nbsp;</div>
+</webobject>
+<webobject name="InlineSummary"><webobject name="SummaryReport"/></webobject>
+<div class="shadow"><table><tr><th>TA/Instructor Comments</th></tr>
+<tr><td><webobject name="Comments"/></td></tr>
+<tr><td>Format: <webobject name="CommentFormat"/></td></tr>
+</table></div><div class="spacer">&nbsp;</div>
+<webobject name="InlineReport"><webobject name="PartialInlineReport"/></webobject>
+<webobject name="FileBrowser"/>
+</webobject>

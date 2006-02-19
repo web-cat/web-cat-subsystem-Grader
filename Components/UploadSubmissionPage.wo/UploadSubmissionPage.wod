@@ -1,0 +1,100 @@
+AssignmentName: WOString {
+    value = prefs.assignmentOffering.titleString;
+}
+
+DifferentStudent: WOConditional {
+	condition = session.impersonatingAnotherUser;
+}
+
+HasPreviousSubmissions: WOConditional {
+	condition = hasPreviousSubmissions;
+}
+
+HasNoPreviousSubmissions: WOConditional {
+	condition = hasPreviousSubmissions;
+	negate    = true;
+}
+
+HasInstructions: WOConditional {
+	condition = hasInstructions;
+}
+
+OkayToSubmit: WOConditional {
+	condition = okayToSubmit;
+}
+
+HasValidFileUpload: WOConditional {
+	condition = prefs.hasValidFileUpload;
+}
+
+FileUpload1: WOFileUpload {
+	data = prefs.uploadedFile;
+	filePath = prefs.uploadedFileName;
+}
+
+Repetition1: WORepetition {
+	item = aSubmission;
+	list = submissionDisplayGroup.displayedObjects;
+	index = index;
+}
+
+Instructions: WOString {
+	value      = prefs.assignmentOffering.assignment.fileUploadMessage;
+	escapeHTML = false;
+}
+
+FileName: WOString {
+	value = prefs.uploadedFileName;
+}
+
+FileSize: WOString {
+	value = uploadedFileSize;
+}
+
+String1: WOString {
+	value = aSubmission.submitNumber;
+}
+
+String2: WOString {
+	value = aSubmission.submitTime;
+	dateformat = "%m/%d/%y %I:%M%p";
+}
+
+String3: WOString {
+	numberformat = "0.0";
+	value        = aSubmission.result.finalScore;
+}
+
+StudentName: WOString {
+	value = session.user.nameAndUid;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Time";
+	key = "submitTime";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Score";
+	key = "result.finalScore";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Submission No.";
+	key = "submitNumber";
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}
+
+BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = submissionDisplayGroup;
+}

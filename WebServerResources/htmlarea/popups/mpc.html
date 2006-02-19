@@ -1,0 +1,70 @@
+<HTML xmlns:mpc style='width:630px; Height: 355px;'>
+<HEAD>
+<TITLE>Form Editor</TITLE>
+<STYLE>
+@media all { mpc\:container { behavior:url(mpc.htc);}
+mpc\:page {behavior:url(mpc.htc);}}
+H1 {font: bold 18pt verdana;color: navy}
+P {font: 10pt verdana;}
+A:link { color:#003399; text-decoration:none; }
+A:visited { color:#6699CC; text-decoration:none; }
+A:hover { text-decoration:underline; }
+html, body, button, div, input, select, fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; }; 
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+function TabOrientation()
+{
+	if(oMPC.style.tdTabOrientation == "top")oMPC.style.tdTabOrientation = "bottom" ;
+	else oMPC.style.tdTabOrientation = "top"
+}
+function Height()
+{
+	alert(parseInt(heightBox.value));
+	oMPC.style.height = parseInt(heightBox.value);
+}
+function Width()
+{
+	oMPC.style.width = parseInt(widthBox.value);
+}
+function BackColor()
+{
+	oMPC.style.backgroundColor = BackColorBox.value;
+}
+function Color()
+{
+	oMPC.style.color = ColorBox.value;
+}
+</SCRIPT>
+<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+ document.body.onkeypress = _CloseOnEsc;
+ </SCRIPT>
+</HEAD>
+<BODY BGCOLOR="threedface" ONLOAD="oMPC.style.visibility='visible'">
+<!--TOOLBAR_START--><!--TOOLBAR_EXEMPT--><!--TOOLBAR_END-->
+<DIV STYLE="height:250">
+<mpc:container ID="oMPC" STYLE="left: 7.00px; top: 25.0px; width: 430.0px; height: 300px; visibility:hidden">
+<mpc:page ID="tab1" TABTITLE="Insert Form" TABTEXT="FORM">
+<SCRIPT LANGUAGE="JavaScript" SRC="formmgr/insert_form.js"></SCRIPT>
+<!--#include virtual="formmgr/insert_form.inc" -->
+</mpc:page>
+<mpc:page ID="tab2" TABTITLE="Input Text" TABTEXT="TEXT"><!--#include virtual="formmgr/input_text.inc" --></mpc:page>
+<mpc:page ID="tab3" TABTITLE="Input Hidden" TABTEXT="HIDDEN"><!--#include virtual="formmgr/input_hidden.inc" --></mpc:page>
+<mpc:page ID="tab4" TABTITLE="Input Password" TABTEXT="PWD"><!--#include virtual="formmgr/input_pwd.inc" --></mpc:page>
+<mpc:page ID="tab5" TABTITLE="Input File" TABTEXT="FILE"><!--#include virtual="formmgr/input_file.inc" --></mpc:page>
+<mpc:page ID="tab6" TABTITLE="Input Radio Button" TABTEXT="RADIO"><!--#include virtual="formmgr/input_radio.inc" --></mpc:page>
+<mpc:page ID="tab7" TABTITLE="Input Checkbox" TABTEXT="CHECKBOX"><!--#include virtual="formmgr/input_checkbox.inc" --></mpc:page>
+<mpc:page ID="tab8" TABTITLE="Input Textarea" TABTEXT="TEXTAREA"><!--#include virtual="formmgr/textarea.inc" --></mpc:page>
+<mpc:page ID="tab9" TABTITLE="Submit Button" TABTEXT="SUBMIT"><!--#include virtual="formmgr/input_submit.inc" --></mpc:page>
+<mpc:page ID="tab10" TABTITLE="Reset Button" TABTEXT="RESET"><!--#include virtual="formmgr/input_reset.inc" --></mpc:page>
+<mpc:page ID="tab11" TABTITLE="Image" TABTEXT="IMAGE"><!--include virtual="formmgr/input_image.inc" --></mpc:page>
+<mpc:page ID="tab12" TABTITLE="Button" TABTEXT="SELECT">
+<!--include virtual="formmgr/input_select.inc" -->
+</mpc:page>
+</mpc:container>
+</DIV>
+</BODY>
+</HTML>

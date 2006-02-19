@@ -1,0 +1,62 @@
+<html>
+<head><title>Load a Word Document</title>
+<!--
+ This code was developed by Jonathan Snook jonathan@snook.ca
+ http://www.snook.ca
+-->
+<script language="JavaScript">
+<!--//
+function loadworddoc(fpath, ptype){
+    document.all.loadtime.value = "Loading document...";
+    var wordapp = new ActiveXObject("Word.Application"); // creates the word object
+    var initialtime = new Date(); // instantiates time after activex object is created
+
+    // .Visible = true displays the Word window so that user can answer any prompts,
+    // setting to false will not display the word file but the script may "appear" to
+    // hang because the hidden window will be prompting for various scenarios such as
+    // Read Only, corrupt files or file not found error messages.
+    wordapp.Visible=true;
+    wordapp.Documents.Open(fpath, false, true, false);
+    var worddoc = wordapp.Documents(fpath); // creates a reusable handle to the document
+    var txt = "";
+    txt = worddoc.Content;
+    document.all.tbContentElement.DOM.selection.createRange().pasteHTML(txt);
+    switch (ptype) {
+            case 1 :
+            worddoc.Range(0).Copy();
+            document.all.tbContentElement.ExecCommand(5032);
+            break;
+    }
+    wordapp.quit(0); // quit word (very important or you'll quickly chew up memory!)
+
+    var finaltime = new Date(); // what time is it now that we're done
+    var difference;
+    difference = (finaltime - initialtime) / 1000; // calculate how many seconds have passed
+    document.all.loadtime.value = difference + " seconds";
+}
+
+function insertWorddoc() {
+  var filepath, parsetype;
+  var arr = null;
+  arr = showModalDialog( "findworddoc.html", 0, "dialogWidth:320px; dialogHeight:180px;");
+
+  if (arr != null) {
+    // load word doc
+    filepath = arr["filepath"];
+    parsetype = parseInt(arr["parsetype"]);
+    loadworddoc(filepath, parsetype);
+  }
+}
+//-->
+</script>
+</head>
+<body>
+<p><input type=button onClick="insertWorddoc();" value="Load Word Document">
+<p>Load time:<br>
+<input type=text name=loadtime value="0 seconds">
+<p>DEC:<br>
+<object ID="tbContentElement" CLASS="tbContentElement" CLASSID="clsid:2D360201-FFF5-11D1-8D03-00A0C959BC0A" VIEWASTEXT  width="450" height="100">
+<param name=Scrollbars value=false></object>
+<DIV ALIGN="center"><input  value="Insert Into HTMLArea" type=button onClick="window.close()"></DIV>
+</body>
+</html>

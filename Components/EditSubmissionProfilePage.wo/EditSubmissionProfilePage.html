@@ -1,0 +1,56 @@
+<webobject name="Page">
+<table style="border:none"><tbody>
+<tr><th colspan="2">Basic Properties</th></tr>
+<tr><td align="right">Name:</td>
+    <td><webobject name="TextField1"/></td></tr>
+<tr><td align="right" valign="top">Points available:</td>
+    <td><table style="border:none">
+<tr><td><webobject name="TextField14"/></td>
+    <td>from TA</td></tr>
+<tr><td><webobject name="TextField15"/></td>
+    <td>from static analysis tools</td></tr>
+<tr><td><webobject name="TextField16"/></td>
+    <td>from correctness/testing</td></tr>
+<tr style="border-top:1px solid black"><td><webobject name="TextField2"/></td>
+    <td>Total points available</td></tr>
+    </table></td></tr>
+<tr><td align="right">Max submissions:</td>
+    <td><webobject name="TextField12"/>
+    <font size="-1">(blank for unlimited)</font></td></tr>
+<tr><td align="right">Max upload size:</td>
+    <td><webobject name="TextField13"/>
+    <font size="-1">(blank for system maximum)</font></td></tr>
+<tr><td align="right">Start accepting:</td>
+    <td><webobject name="TextField3"/>
+        <webobject name="PopUpButton1"/> before due date
+	<font size="-1">(blank for unlimited)</font></td></tr>
+<tr><td align="right">Stop accepting:</td>
+    <td><webobject name="TextField4"/>
+        <webobject name="PopUpButton2"/> after due date</td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr><th colspan="2">Bonuses/Penalties</th></tr>
+<tr><td colspan="2"><webobject name="CheckBox1"/>
+    Award bonus points for early submissions</td></tr>
+<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Award at most
+    <webobject name="TextField5"/> pts
+    in increments of <webobject name="TextField6"/>
+    for every <webobject name="TextField7"/>
+    <webobject name="PopUpButton3"/> early</td></tr>
+<tr><td colspan="2"><webobject name="CheckBox2"/>
+    Deduct penalty for late submissions</td></tr>
+<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deduct at most
+    <webobject name="TextField8"/> pts
+    in increments of <webobject name="TextField9"/>
+    for every <webobject name="TextField10"/>
+    <webobject name="PopUpButton4"/> late</td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr><th colspan="2">External Submission Engines/Plug-ins</th></tr>
+<tr><td colspan="2">List assignment for submission using:
+    <webobject name="Submitter"/></td></tr>
+<tr><td alight="right">Exclude file patterns:</td><td><webobject name="ExcludedFilePatterns"/></td></tr>
+<tr><td alight="right">Include file patterns:</td><td><webobject name="IncludedFilePatterns"/></td></tr>
+<tr><td alight="right">Required file patterns:</td><td><webobject name="RequiredFilePatterns"/></td></tr>
+<tr><td></td><td>(use commas to separate multiple patterns)</td></tr>
+</tbody>
+</table>
+</webobject>

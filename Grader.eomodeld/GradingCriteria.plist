@@ -1,0 +1,255 @@
+{
+    attributes = (
+        {
+            columnName = CBLANKLINEPT; 
+            name = blankLinePt; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+                valueClassName = Double;
+            }; 
+        }, 
+        {
+            columnName = CDEADTIMEDELTA; 
+            name = deadTimeDelta; 
+            prototypeName = long; 
+            userInfo = {
+                scalarConversionMethodName = intValue; 
+                isScalar = true;
+                scalarDefault = 0L;
+                type = long;
+                valueClassName = Long;
+            }; 
+        }, 
+        {
+            columnName = CDIFFLINESYNCING; 
+            name = diffLineSyncing; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CEXTRALINEPT; 
+            name = extraLinePt; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+		valueClassName = Double;
+            }; 
+        }, 
+        {
+            columnName = CFLOATCOMPARSIONSTYLE; 
+            name = floatComparisonStyle; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CFLOATNEGATIVESTYLE; 
+            name = floatNegativeDelta; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+		valueClassName = Double;
+            }; 
+        }, 
+        {
+            columnName = CFLOATPOSITIVESTYLE; 
+            name = floatPositiveDelta; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+		valueClassName = Double;
+            }; 
+        }, 
+        { name = id; prototypeName = id; }, 
+        {
+            columnName = CIGNOREBLANKLINES; 
+            name = ignoreBlankLines; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CIGNORECASE; 
+            name = ignoreCase; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CIGNORENONPRINTING; 
+            name = ignoreNonprinting; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CINGOREPUNCTUATION; 
+            name = ignorePunctuation; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CIGNOREWHITESPACE; 
+            name = ignoreWhitespace; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = FPROFILENAME; 
+            name = name; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CNOREMALIZEWHITESPACE; 
+            name = normalizeWhitespace; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CPUNCTUATIONTOIGNORE; 
+            name = punctuationToIgnore; 
+            prototypeName = mediumText; 
+        }, 
+        {
+            columnName = CSTRINGCOMPARSIONSTYLE; 
+            name = stringComparsionStyle; 
+            prototypeName = integer; 
+            userInfo = {
+                scalarConversionMethodName = intValue; 
+                isScalar = true;
+		scalarDefault = 0;
+                type = int;
+		valueClassName = Integer;
+            }; 
+        }, 
+        {
+            columnName = CTOKENIZING_STYLE; 
+            name = tokenizingStyle; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CTRIMWHITESPACE; 
+            name = trimWhitespace; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CUSERID; 
+            name = userId; 
+            prototypeName = foreignId; 
+        }
+    ); 
+    attributesUsedForLocking = (
+        ignoreBlankLines, 
+        diffLineSyncing, 
+        ignoreCase, 
+        ignoreWhitespace, 
+        normalizeWhitespace, 
+        trimWhitespace, 
+        ignoreNonprinting, 
+        tokenizingStyle, 
+        floatComparisonStyle, 
+        stringComparsionStyle, 
+        ignorePunctuation, 
+        userId, 
+        name, 
+        blankLinePt, 
+        deadTimeDelta, 
+        extraLinePt, 
+        floatNegativeDelta, 
+        floatPositiveDelta
+    ); 
+    className = net.sf.webcat.grader.GradingCriteria; 
+    classProperties = (
+        blankLinePt, 
+        extraLinePt, 
+        assignment, 
+        deadTimeDelta, 
+        ignoreBlankLines, 
+        diffLineSyncing, 
+        ignoreCase, 
+        ignoreWhitespace, 
+        normalizeWhitespace, 
+        trimWhitespace, 
+        ignoreNonprinting, 
+        punctuationToIgnore, 
+        tokenizingStyle, 
+        floatComparisonStyle, 
+        floatPositiveDelta, 
+        floatNegativeDelta, 
+        stringComparsionStyle, 
+        ignorePunctuation, 
+        author, 
+        name
+    ); 
+    externalName = TGRADINGCRITERIA; 
+    fetchSpecificationDictionary = {}; 
+    name = GradingCriteria; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = Assignment; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = submissionProfileId; sourceAttribute = id; }); 
+            name = assignment; 
+        }, 
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = author; 
+        }
+    ); 
+}

@@ -1,0 +1,113 @@
+AddInstructor: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addInstructor;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}
+
+AddTA: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addTA;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}
+
+CourseList: WOPopUpButton {
+	list              = courseDisplayGroup.allObjects;
+	selection         = session.courseOffering.course;
+	item              = course;
+	displayString     = course.deptNumberAndName;
+}
+
+CRN: WOTextField {
+    value = session.courseOffering.crn;
+    size = 40;
+}
+
+Email: WOHyperlink {
+    href = user.emailHref;
+    string = user.email;
+}
+
+InstructorRepetition: WORepetition {
+	item  = user;
+	list  = instructorDisplayGroup.displayedObjects;
+	index = index;
+}
+
+IsThisUser: WOConditional {
+    condition = matchesUser;
+}
+
+LastInstrTR: net.sf.webcat.core.TableRow {
+    index = instructorDisplayGroup.displayedObjects.count;
+}
+
+LastTATR: net.sf.webcat.core.TableRow {
+    index = TADisplayGroup.displayedObjects.count;
+}
+
+MoodleGroupId: WOTextField {
+	size = 8;
+	numberformat = "0";
+	value = session.courseOffering.moodleGroupId;
+}
+
+MoodleId: WOTextField {
+	size = 8;
+	numberformat = "0";
+	value = session.courseOffering.moodleId;
+}
+
+Name: WOHyperlink {
+    href = user.url;
+    string = user.name;
+}
+
+NotThisUser: WOConditional {
+    condition = matchesUser;
+    negate    = true;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    applyEnabled = true;
+}
+
+RemoveInstructor: WOImageButton {
+    filename  = "icons/trash.gif";
+    framework = "Core";
+	action    = removeInstructor;
+	border    = "0";
+	width     = "14";
+	height    = "17";
+}
+
+RemoveTA: WOImageButton {
+    filename  = "icons/trash.gif";
+    framework = "Core";
+	action    = removeTA;
+	border    = "0";
+	width     = "14";
+	height    = "17";
+}
+
+TARepetition: WORepetition {
+	item  = user;
+	list  = TADisplayGroup.displayedObjects;
+	index = index;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}
+
+URL: WOTextField {
+    value = session.courseOffering.url;
+    size = 40;
+}
+
+UserID: WOString {
+    value = user.userName;
+}

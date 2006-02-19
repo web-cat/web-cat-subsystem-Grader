@@ -1,0 +1,19 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        submissionDisplayGroup = {
+            class = WODisplayGroup; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 5; 
+            sortOrdering = (
+                {
+		    class = EOSortOrdering;
+		    key = submitNumber;
+		    selectorName = "compareDescending:";
+		}
+	    ); 
+        }; 
+    }; 
+}

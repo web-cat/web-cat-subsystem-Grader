@@ -1,0 +1,282 @@
+<!-- based on insimage.dlg -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD W3 HTML 3.2//EN">
+<HTML id=dlgImage STYLE="width: 49.1em; height: 42em">
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<TITLE>Insert Image</TITLE>
+<style>
+  html, body, button, div, input, select, fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; };
+</style>
+<!--
+// htmlArea Released under the (Modified) BSD license
+// Copyright (c) 2002, interactivetools.com, inc
+// All rights reserved.
+
+// Browse image dialog ASP code released under the (Modified) BSD license
+// Copyright (c) 2002-2003, S Babu, vsbabu@vsbabu.org, http://vsbabu.org/
+// All rights reserved.
+
+// Adaptation to htmlArea and security addon released under the (Modified) BSD license
+// Copyright (c) 2002-2003, P Engvall, pengvall@engvall.nu, // http://www.engvall.nu/
+// All rights reserved.
+-->
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+
+function showPreview()
+
+{
+if (document.frmImagePick.ImgUrl.value != "z_test/")
+ document.PREVIEWPIC.src=document.frmImagePick.ImgUrl.value ;
+
+else
+
+document.PREVIEWPIC.src='../images/imgpreview.gif';
+
+}
+
+function UploadImages() {
+	var newWindow;
+	var props = 'scrollBars=yes,resizable=no,toolbar=no,menubar=no,location=no,directories=no,width=360,height=190,top=180,left=200';
+	newWindow = window.open('../imgupload.php', 'Upload_Images_to_server', props);
+}
+
+
+// -->
+</SCRIPT>
+<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+
+function _getTextRange(elm) {
+  var r = elm.parentTextEdit.createTextRange();
+  r.moveToElementText(elm);
+  return r;
+}
+
+window.onerror = HandleError
+
+function HandleError(message, url, line) {
+  var str = "An error has occurred in this dialog." + "\n\n"
+  + "Error: " + line + "\n" + message;
+  alert(str);
+  window.close();
+  return true;
+}
+
+function Init() {
+  var elmSelectedImage;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+  
+  
+
+  // event handlers  
+  document.body.onkeypress = _CloseOnEsc;
+  btnOK.onclick = new Function("btnOKClick()");
+
+  txtFileName.fImageLoaded = false;
+  txtFileName.intImageWidth = 0;
+  txtFileName.intImageHeight = 0;
+
+  if (globalDoc.selection.type == htmlSelectionControl) {
+    if (grngMaster.length == 1) {
+      elmSelectedImage = grngMaster.item(0);
+      if (elmSelectedImage.tagName == "IMG") {
+        txtFileName.fImageLoaded = true;
+        if (elmSelectedImage.src) {
+
+	document.frmImagePick.ImgUrl.value = elmSelectedImage.src;
+document.PREVIEWPIC.src=document.frmImagePick.ImgUrl.value ;
+
+
+          txtFileName.value          = elmSelectedImage.src.replace(/^[^*]*(\*\*\*)/, "$1");  // fix placeholder src values that editor converted to abs paths
+          txtFileName.intImageHeight = elmSelectedImage.height;
+          txtFileName.intImageWidth  = elmSelectedImage.width;
+          txtVertical.value          = elmSelectedImage.vspace;
+          txtHorizontal.value        = elmSelectedImage.hspace;
+          txtBorder.value            = elmSelectedImage.border;
+          txtAltText.value           = elmSelectedImage.alt;
+          selAlignment.value         = elmSelectedImage.align;
+        }
+      }
+    }
+  }
+
+
+  txtFileName.value = txtFileName.value || "http://";
+
+// FOCUS REMOVED, Focus on ImgURL instead
+//  txtFileName.focus();
+document.frmImagePick.ImgUrl.focus();
+
+
+}
+
+function _isValidNumber(txtBox) {
+  var val = parseInt(txtBox);
+  if (isNaN(val) || val < 0 || val > 999) { return false; }
+  return true;
+}
+
+function btnOKClick() {
+  var elmImage;
+  var intAlignment;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+  
+  // error checking
+
+
+// REMOVE: Http:// check
+//  if (!txtFileName.value || txtFileName.value == "http://") { 
+//    alert("Image URL must be specified.");
+//    txtFileName.focus();
+//    return;
+//  }
+
+
+  if (txtHorizontal.value && !_isValidNumber(txtHorizontal.value)) {
+    alert("Horizontal spacing must be a number between 0 and 999.");
+    txtHorizontal.focus();
+    return;
+  }
+  if (txtBorder.value && !_isValidNumber(txtBorder.value)) {
+    alert("Border thickness must be a number between 0 and 999.");
+    txtBorder.focus();
+    return;
+  }
+  if (txtVertical.value && !_isValidNumber(txtVertical.value)) {
+    alert("Vertical spacing must be a number between 0 and 999.");
+    txtVertical.focus();
+    return;
+  }
+
+  // delete selected content and replace with image
+  if (globalDoc.selection.type == htmlSelectionControl && !txtFileName.fImageLoaded) {
+    grngMaster.execCommand('Delete');
+    grngMaster = globalDoc.selection.createRange();
+  }
+    
+  idstr = "\" id=\"556e697175657e537472696e67";     // new image creation ID
+  if (!txtFileName.fImageLoaded) {
+    grngMaster.execCommand("InsertImage", false, idstr);
+    elmImage = globalDoc.all['556e697175657e537472696e67'];
+    elmImage.removeAttribute("id");
+    elmImage.removeAttribute("src");
+    grngMaster.moveStart("character", -1);
+  } else {
+    elmImage = grngMaster.item(0);
+    if (elmImage.src != txtFileName.value) {
+      grngMaster.execCommand('Delete');
+      grngMaster = globalDoc.selection.createRange();
+      grngMaster.execCommand("InsertImage", false, idstr);
+      elmImage = globalDoc.all['556e697175657e537472696e67'];
+      elmImage.removeAttribute("id");
+      elmImage.removeAttribute("src");
+      grngMaster.moveStart("character", -1);
+      txtFileName.fImageLoaded = false;
+    }
+    grngMaster = _getTextRange(elmImage);
+  }
+
+  if (txtFileName.fImageLoaded) {
+    elmImage.style.width = txtFileName.intImageWidth;
+    elmImage.style.height = txtFileName.intImageHeight;
+  }
+
+  if (txtFileName.value.length > 2040) {
+    txtFileName.value = txtFileName.value.substring(0,2040);
+  }
+  
+
+
+	elmImage.src = document.PREVIEWPIC.src
+
+// REMOVE:
+//  if (txtFileName.value != "") { elmImage.src = document.frmImagePick.ImgUrl.value; }
+//  else                           { elmImage.src = txtFileName.value; }  
+
+  if (txtHorizontal.value != "") { elmImage.hspace = parseInt(txtHorizontal.value); }
+  else                           { elmImage.hspace = 0; }
+
+  if (txtVertical.value != "") { elmImage.vspace = parseInt(txtVertical.value); }
+  else                         { elmImage.vspace = 0; }
+  
+  elmImage.alt = txtAltText.value;
+
+  if (txtBorder.value != "") { elmImage.border = parseInt(txtBorder.value); }
+  else                       { elmImage.border = 0; }
+
+  elmImage.align = selAlignment.value;
+  grngMaster.collapse(false);
+  grngMaster.select();
+  window.close();
+}
+</SCRIPT>
+</HEAD>
+<BODY id=bdy onload="Init()" style="background: threedface; color: windowtext;" scroll=no>
+<DIV id=divHoriz style="left: 1.98em; top: 0.7em; height: 1.2168em; ">Browse picture 
+  source:</DIV>
+<DIV id=divHoriz style="left: 25.48em; top: 0.8em; width: 10.76em; height: 1.2168em; ">Image  Preview:</DIV>
+<DIV id=divHoriz style="left: 1.1em; top: 25.626em; height: 1.2168em; ">Browse above or enter full URL including http://</DIV>
+<DIV id=divFileName style="left: 0.98em; top: 40.2168em; width: 7em; height: 1.2168em; "> 
+</DIV>
+<INPUT ID=txtFileName type=text style="left: 9.54em; top: 40.0647em; width: 21.5em;height: 2.1294em; visibility:hidden" tabIndex=10 >
+<DIV id=divAltText style="left: 0.98em; top: 29.6067em; width: 6.58em; height: 1.2168em; ">Alternate Text:</DIV>
+<INPUT type=text ID=txtAltText tabIndex=15 style="left: 0.98em; top: 31.0em; width: 22.65em; height: 2.1294em; " onfocus="select()">
+<FIELDSET id=fldLayout style="left: 24.9em; top: 25.6em; width: 13.15em; height: 7.6em;">
+<LEGEND id=lgdLayout>Layout</LEGEND>
+</FIELDSET>
+<FIELDSET id=fldSpacing style="left: 38.7em; top: 25.6em; width: 8.5em; height: 7.6em;">
+<LEGEND id=lgdSpacing>Spacing</LEGEND>
+</FIELDSET>
+<DIV id=divAlign style="left: 25.6em; top: 27.4em; width: 4.76em; height: 1.2168em; ">Alignment:</DIV>
+<SELECT size=1 ID=selAlignment tabIndex=20 style="left: 30.72em; top: 27.1647em; width: 6.72em; height: 1.2168em; ">
+  <OPTION id=optNotSet value=""> Not set </OPTION>
+  <OPTION id=optLeft value=left> Left </OPTION>
+  <OPTION id=optRight value=right> Right </OPTION>
+  <OPTION id=optTexttop value=textTop> Texttop </OPTION>
+  <OPTION id=optAbsMiddle value=absMiddle> Absmiddle </OPTION>
+  <OPTION id=optBaseline value=baseline SELECTED> Baseline </OPTION>
+  <OPTION id=optAbsBottom value=absBottom> Absbottom </OPTION>
+  <OPTION id=optBottom value=bottom> Bottom </OPTION>
+  <OPTION id=optMiddle value=middle> Middle </OPTION>
+  <OPTION id=optTop value=top> Top </OPTION>
+</SELECT>
+<DIV id=divHoriz style="left: 39.0em; top: 27.4em; width: 4.76em; height: 1.2168em; ">Horizontal:</DIV>
+<INPUT ID=txtHorizontal style="left: 43.9659em; top: 27.0647em; width: 2.7em; height: 2.1294em; ime-mode: disabled;" type=text size=3 maxlength=3 value="" tabIndex=25 onfocus="select()">
+<DIV id=divBorder style="left: 25.6em; top: 30.7159em; width: 8.12em; height: 1.2168em; ">Border Thickness:</DIV>
+<INPUT ID=txtBorder style="left: 33.92em; top: 30.2596em; width: 3.6em; height: 2.1294em; ime-mode: disabled;" type=text size=3 maxlength=3 value="" tabIndex=21 onfocus="select()">
+<DIV id=divVert style="left: 39.0em; top: 30.7159em; width: 3.64em; height: 1.2168em; ">Vertical:</DIV>
+<INPUT ID=txtVertical style="left: 43.9659em; top: 30.2596em; width: 2.7em; height: 2.1294em; ime-mode: disabled;" type=text size=3 maxlength=3 value="" tabIndex=30 onfocus="select()">
+<DIV id=divVert style="left: 0.98em; top: 37.6647em;"><HR WIDTH="495" SIZE="1" COLOR="#C0C0C0"></DIV>
+<BUTTON ID=btnOK style="left: 5.0em; top: 35.0647em; width: 7em; height: 2.2em; " type=submit tabIndex=40>OK</BUTTON>
+<BUTTON ID=btnCancel style="left: 13.00em; top: 35.0647em; width: 7em; height: 2.2em; " type=reset tabIndex=45 onClick="window.close();">Cancel</BUTTON>
+<BUTTON ID=btnUpload style="left: 39.8em; top: 35.0647em; width: 7em; height: 2.2em; " type=reset tabIndex=45 onClick="UploadImages();">Upload Image</BUTTON>
+<FIELDSET id=fldSpacing style="left: 24.9em; top: 34.0647em; width: 22.3em; height: 3.6em;">
+<LEGEND id=lgdSpacing>Upload new images here</LEGEND>
+</FIELDSET>
+
+<FORM NAME="frmImagePick" method="post" action="">
+<TABLE CELLSPACING=10 border="0">
+<TR> 
+<TD style="font-family: MS Shell Dlg; font-size: 8pt;" VALIGN="top" align="left" nowrap> 
+<br> <iframe name="IMGPICK" src="../browseimage.php" style="border: solid black 1px; width: 240px; height:240px; z-index:1"></iframe> 
+<br> <br> <INPUT TYPE=TEXT SIZE=30 NAME=ImgUrl style="left: 0.98em; top: 27.0647em; height: 2.2em; width : 243px;" value="" onChange="showPreview()"> 
+</TD>
+<TD align="center" VALIGN="top"><BR><span style="background-color:white;overflow:auto;width:240px;height:235px;border-width:1px; border-style:solid;border-color:threeddarkshadow white white threeddarkshadow;"> 
+<IMG ID="PREVIEWPIC" NAME="PREVIEWPIC" src="../images/imgpreview.gif" alt="Preview"></span> 
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+
+
+

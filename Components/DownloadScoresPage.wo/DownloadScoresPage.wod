@@ -1,0 +1,39 @@
+AssignmentName: WOHyperlink {
+	href   = prefs.assignmentOffering.assignment.url;
+	target = "_new";
+    string = prefs.assignmentOffering.titleString;
+}
+
+DownloadScores: WOSubmitButton {
+	action = downloadScoreFile;
+	value  = "Download";
+}
+
+OmitStaff: WOCheckBox {
+	checked = omitStaff;
+}
+
+Blackboard: WORadioButton {
+    name = "Group";
+    checked = useBlackboardFormat;
+}
+
+Moodle: WORadioButton {
+    name = "Group";
+    checked = useMoodleFormat;
+}
+
+AssignNo: WOTextField {
+	numberformat = "0";
+	size = 5;
+	value = prefs.assignmentOffering.moodleId;
+}
+
+
+Full: WORadioButton {
+    name = "Group";
+    checked = useFullFormat;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+}

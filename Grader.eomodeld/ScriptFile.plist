@@ -1,0 +1,152 @@
+{
+    attributes = (
+        {
+            columnName = CAUTHORID; 
+            name = authorId;
+            prototypeName = foreignId; 
+        },
+        {
+            columnName = CCONFIGDESCRIPTION; 
+            name = configDescription; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                valueFactoryMethodName = objectWithArchiveData; 
+                isMutable = true; 
+                valueClassName = net.sf.webcat.core.MutableDictionary; 
+            }; 
+        }, 
+        {
+            columnName = CDEFAULTCONFIGSETTINGS; 
+            name = defaultConfigSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                valueFactoryMethodName = objectWithArchiveData; 
+                isMutable = true; 
+                valueClassName = net.sf.webcat.core.MutableDictionary; 
+            }; 
+        },
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CISCONFIGFILE; 
+            name = isConfigFile; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        {
+            columnName = CISPUBLISHED; 
+            name = isPublished; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        { name = id; prototypeName = id; }, 
+        {
+            columnName = CLANGUAGEID; 
+            name = languageId;
+            prototypeName = foreignId; 
+        },
+        {
+            columnName = CLASTMODIFIEDTIME; 
+            name = lastModified; 
+            prototypeName = dateTime; 
+        }, 
+        {
+            columnName = CMAINFILENAME; 
+            name = mainFileName; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CSUBDIRNAME; 
+            name = subdirName; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CNAME; 
+            name = name; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CUPLOADEDFILENAME; 
+            name = uploadedFileName; 
+            prototypeName = tinyText; 
+        }
+    ); 
+    attributesUsedForLocking = (
+        authorId,
+        isConfigFile,
+        isPublished,
+        languageId,
+	    mainFileName,
+	    name,
+        subdirName,
+        uploadedFileName,
+        updateMutableFields
+    ); 
+    className = net.sf.webcat.grader.ScriptFile; 
+    classProperties = (
+        author, 
+        configDescription,
+        courseOfferings,
+        defaultConfigSettings,
+        isConfigFile, 
+        isPublished,
+        language,
+        lastModified, 
+        mainFileName, 
+        name,
+        steps, 
+        subdirName, 
+        uploadedFileName,
+        updateMutableFields
+    ); 
+    externalName = TUPLOADEDSCRIPTFILES; 
+    fetchSpecificationDictionary = {}; 
+    name = ScriptFile; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
+            name = author; 
+        }, 
+        {
+            definition = steps.assignment.offerings.courseOffering; 
+            internalInfo = {_nameInObjectStore = steps_assignment_offerings_courseOffering; }; 
+            joinSemantic = EOInnerJoin; 
+            name = courseOfferings; 
+        }, 
+        {
+            destination = Language; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = languageId; }); 
+            name = language; 
+        }, 
+        {
+            destination = Step; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = scriptId; sourceAttribute = id; }); 
+            name = steps; 
+        }
+    ); 
+}

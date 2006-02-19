@@ -1,0 +1,109 @@
+Repetition2: WORepetition {
+	item = partnerSubmission;
+	list = partnerDisplayGroup.displayedObjects;
+	index = partnerIndex;
+}
+
+Remove: WOImageButton {
+    filename = "images/remv-sm-btn.gif";
+	action   = removePartner;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}
+
+Original: WOConditional {
+	condition = originalSubmission;
+}
+
+NotOriginal: WOConditional {
+	condition = originalSubmission;
+	negate    = true;
+}
+
+String1: WOString {
+	value = partnerSubmission.user.userName;
+}
+
+String2: WOString {
+	value = partnerSubmission.user.name_LF;
+}
+
+String3: WOString {
+	value = partnerSubmission.user.email;
+}
+
+TR2: net.sf.webcat.core.TableRow {
+	index = partnerIndex;
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = partnerDisplayGroup;
+	displayKey = "Name";
+	key = "user.name_LF";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+	displayGroup = partnerDisplayGroup;
+	displayKey = "User Name";
+	key = "user.userName";
+}
+
+Repetition1: WORepetition {
+	item = student;
+	list = studentDisplayGroup.displayedObjects;
+	index = studentIndex;
+}
+
+BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = studentDisplayGroup;
+}
+
+Add: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addPartner;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}
+
+String4: WOString {
+	value = student.userName;
+}
+
+String5: WOString {
+	value = student.name_LF;
+}
+
+String6: WOString {
+	value = student.email;
+}
+
+TR1: net.sf.webcat.core.TableRow {
+	index = studentIndex;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = studentDisplayGroup;
+	displayKey = "Name";
+	key = "name_LF";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = studentDisplayGroup;
+	displayKey = "User Name";
+	key = "userName";
+}
+
+AlreadyPartner: WOConditional {
+	condition = alreadyPartner;
+}
+
+NotPartner: WOConditional {
+	condition = alreadyPartner;
+	negate    = true;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = "Assign Partners";
+}

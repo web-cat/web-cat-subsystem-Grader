@@ -1,0 +1,64 @@
+AssignmentRepetition: WORepetition {
+    item  = anAssignmentOffering;
+    list  = assignmentDisplayGroup.displayedObjects;
+    index = index;
+}
+
+CanCreate: WOConditional {
+    condition = session.tabs.selectedDescendant.config.allowCreate;
+}
+
+CourseName: WOString {
+    value = session.courseOffering.deptNumberAndName;
+}
+
+Deadline: WOString {
+    dateformat = "%m/%d/%y %I:%M%p";
+    value = anAssignmentOffering.dueDate;
+}
+
+Description: WOString {
+    value = anAssignmentOffering.assignment.shortDescription;
+}
+
+Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = anAssignmentOffering.graphSummary;
+}
+
+LastTR: net.sf.webcat.core.TableRow {
+    index = assignmentDisplayGroup.displayedObjects.count;
+}
+
+Name: WOHyperlink {
+	href   = anAssignmentOffering.assignment.url;
+	target = "_new";
+    string = anAssignmentOffering.assignment.name;
+}
+
+NoShowTable: WOConditional {
+    condition = showTable;
+    negate    = true;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}
+
+RadioButton: WORadioButton {
+    name      = "Group";
+    selection = selectedIndex;
+    value     = index;
+}
+
+RadioButton2: WORadioButton {
+    name    = "Group";
+    checked = createNew;
+}
+
+ShowTable: WOConditional {
+    condition = showTable;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}

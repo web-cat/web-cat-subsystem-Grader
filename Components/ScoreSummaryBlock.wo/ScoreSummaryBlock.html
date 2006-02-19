@@ -1,0 +1,24 @@
+<div class="shadow"><table><tbody>
+  <tr><th colspan="3">Score Summary</th></tr>
+  <webobject name="HasTAGrade"><webobject name="TR">
+    <td>Design/Readability:</td><td class="R"><webobject name="CanEditDeduction"><webobject name="EditDeduction"/></webobject><webobject name="CannotEditDeduction"><webobject name="Deduction"/></webobject>/<webobject name="TotalTAPoints"/></td>
+    <td><webobject name="TAMeter"/></td>
+  </webobject></webobject>
+  <webobject name="HasToolGrade"><webobject name="TR">
+    <td>Style/Coding:</td><td class="R"><webobject name="ToolScore"/>/<webobject name="ToolPossible"/></td>
+    <td><webobject name="ToolMeter"/></td>
+  </webobject></webobject>
+  <webobject name="HasTestingGrade"><webobject name="TR"><td>Correctness/Testing:</td><td class="R"><webobject name="TestingScore"/>/<webobject name="TestingPossible"/></td>
+    <td><webobject name="TestingMeter"/></td></webobject></webobject>
+  <webobject name="TR2"><td>Final score: </td><td class="R"><b><webobject name="FinalScore"/>/<webobject name="PossibleScore"/></b></td>
+    <td><webobject name="FinalMeter"/></td></webobject>
+</table></div><webobject name="IncludeSeparator"><div class="spacer">&nbsp;</div></webobject>
+<webobject name="ShowGraphs"><webobject name="IsNotInForm"><webobject name="Form"><webobject name="HideGraphsButton"/></webobject></webobject><webobject name="IsInForm"><webobject name="HideGraphsButton"/></webobject><br/>
+<webobject name="Chart1"/><br/><webobject name="Chart2"/>
+</webobject><webobject name="HideGraphs"><webobject name="IsNotInForm"><webobject name="Form"><table style="border:none"><tr>
+ <td>Position in class:</td><td><webobject name="Graph"/></td>
+ <td><webobject name="ShowGraphsButton"/>
+</td></tr></table></webobject></webobject><webobject name="IsInForm"><table style="border:none"><tr>
+ <td>Position in class:</td><td><webobject name="Graph"/></td>
+ <td><webobject name="ShowGraphsButton"/>
+</td></tr></table></webobject></webobject>

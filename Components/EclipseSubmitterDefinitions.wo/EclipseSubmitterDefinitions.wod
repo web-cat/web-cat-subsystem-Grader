@@ -1,0 +1,73 @@
+AssignmentRepetition: WORepetition {
+    item  = anAssignmentOffering;
+    list  = assignmentsToDisplay;
+    index = index;
+}
+
+Authenticator: WOString {
+    value = authenticator;
+}
+
+CourseName: WOString {
+    value = courseName;
+}
+
+EscapedName: WOString {
+    value = assignmentNameParameter;
+}
+
+ExclusionRep: WORepetition {
+    list = excludePatterns;
+    item = thisPattern;
+}
+
+GroupByInstitution: WOConditional {
+    condition = groupByInstitution;
+}
+
+HasAssignments: WOConditional {
+    condition = assignmentsToDisplay.count;
+}
+
+InclusionRep: WORepetition {
+    list = includePatterns;
+    item = thisPattern;
+}
+
+InstitutionName: WOString {
+    value = anAssignmentOffering.courseOffering.course.department.institution.displayableName;
+}
+
+IsNotFirst: WOConditional {
+    condition = index;
+}
+
+IsNotFirstInInstitution: WOConditional {
+    condition = isNotFirstInInstitution;
+}
+
+Name: WOString {
+    value = assignmentName;
+}
+
+RequireRep: WORepetition {
+    list = requirePatterns;
+    item = thisPattern;
+}
+
+StartNewInstitution: WOConditional {
+    condition = startNewInstitution;
+}
+
+StartNewCourse: WOConditional {
+    condition = startNewCourse;
+}
+
+ThisPattern: WOString {
+    value = thisPattern;
+}
+
+WebCATURL: WOString {
+    value = url;
+    escapeHTML = false;
+}

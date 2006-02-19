@@ -1,0 +1,145 @@
+<html style='width:425px; Height: 125px;'>
+<head>
+<title>Formelement Editor</title>
+
+<style> 
+html, 
+body, 
+button, 
+div, 
+input, 
+select, 
+fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; }; 
+</style>
+
+<script language='javascript'>
+  document.title = "Formelement Editor";
+  
+  var highlightedText = window.dialogArguments;
+  var type = "";
+  
+  function returnSelected() {
+	if ((type == "radio") || (type == "checkbox")){
+		var text = escape( "<INPUT ");
+		if (type != "") {
+			text = text + escape( "' type='" );
+			text = text + escape( type );
+		}
+        	if (document.set.name.value != "") {
+			text = text + escape( "' name='");
+			text = text + escape( document.set.name.value );
+		}
+		if (document.set.waarde.value != "") {
+			text = text + escape( "' value='");
+			text = text + escape( document.set.waarde.value );
+		}
+		if (document.set.ischecked.checked) {
+			text = text + escape( "' checked='");
+			text = text + escape( document.set.ischecked.checked);
+		}
+		text = text + escape( "'>" );
+	}
+        else if (type != "textarea"){
+		var text = escape( "<INPUT " );
+		if (type != "") {
+			text = text + escape( "' type='" );
+			text = text + escape( type );
+		}
+        	if (document.set.name.value != "") {
+			text = text + escape( "' name='");
+			text = text + escape( document.set.name.value );
+		}
+		if (document.set.waarde.value != "") {
+			text = text + escape( "' value='");
+			text = text + escape( document.set.waarde.value );
+		}
+		text = text + escape( "'>" );
+	}
+        else {
+		var text = escape( "<SELECT " );
+        	if (document.set.name.value != "") {
+			text = text + escape( "' name='");
+			text = text + escape( document.set.name.value );
+			text = text + escape( "'>");
+		}
+		if (document.set.waarde.value != "") {
+			text = text + escape( document.set.waarde.value );
+		}
+		text = text + escape( "</SELECT>" );
+	}
+	window.returnValue = text;
+	window.close();
+  }
+  
+  function updateTarget() {
+	var selectedItem	= document.set.type.selectedIndex;
+	var selectedItemValue	= document.set.type.options[selectedItem].value;
+	type = selectedItemValue;
+
+	var lblisChecked = document.getElementById ("divIsChecked")
+	var lblName = document.getElementById ("divName")
+
+        if ((type == "radio")||(type == "checkbox")) {
+		lblisChecked.style.display = "block"
+		document.set.ischecked.style.display = "block" ;
+		document.set.name.disabled = false ;
+		lblName.disabled = false ;
+		document.set.fldLayout.style.height = "10.2em" ;	
+		window.dialogHeight = "150px" ;
+	}
+	else if (type == "email") {
+		lblisChecked.style.display = "none"
+		document.set.ischecked.style.display = "none" ;
+		document.set.name.value = "email" ;
+		document.set.name.disabled = true ;
+		lblName.disabled = true ;
+		document.set.fldLayout.style.height = "8.2em" ;	
+		window.dialogHeight = "125px" ;
+	}
+        else {
+		lblisChecked.style.display = "none"
+		document.set.ischecked.style.display = "none" ;
+		document.set.name.disabled = false ;
+		lblName.disabled = false ;
+		document.set.fldLayout.style.height = "8.2em" ;	
+		window.dialogHeight = "125px" ;
+	}
+  }
+
+
+  function paste_link() {
+	document.set.waarde.value = highlightedText;
+  }
+
+</script>
+</head>
+<body style='background: threedface; color: windowtext; margin: 10px; BORDER-STYLE: none' onload='javascript: paste_link();' scroll=no>
+
+<form method=post name=set>
+<fieldset id=fldLayout style='left: 0.50em; top: 0.5em; width: 31.5em; height: 8.2000em;'></fieldset>
+<div id=divType style='left: 1.50em; top: 1.5em; width: 5.0em; height: 1.2168em;'>Type</div>
+<div id=divTypedropdown style='left: 7.00em; top: 1.4em; width: 7.0em; height: 1.2168em;'>
+<select name=type onChange='javascript: updateTarget();'>
+	<option value="text" selected>text field
+	<option value="email">email field
+	<option value="textarea">textarea field
+	<option value="hidden">hidden field
+	<option value="password">password field
+	<option value="radio">radiobutton
+	<option value="checkbox">ckeckbox
+	<option value="submit">submit
+	<option value="reset">reset
+	<option value="button">button
+</select>
+</div>
+<div id=divName style='left: 1.50em; top: 4.0em; width: 5em; height: 1.2168em;'>Name</div>
+<input style='left: 7.00em; top: 3.6em; width: 23.80em; height: 2.0000em;' name=name type=text value="" size=30>
+<div id=divValue style='left: 1.50em; top: 6.1em; width: 5em; height: 1.2168em;'>Value</div>
+<input style='left: 7.00em; top: 5.8em; width: 23.80em; height: 2.0000em;' name=waarde type=text value="" size=30>
+<div id=divIsChecked style='left: 1.50em; top: 8.3em; width: 5em; height: 1.2168em; display=none;'>Checked</div>
+<input style='left: 7.00em; top: 8.0em; width: 1.5em; height: 2.0000em; display=none;' name=ischecked type=checkbox>
+<input style='left: 32.50em; top: 0.5em; width: 6em; height: 2.2000em;' value=OK  type=button onClick='returnSelected()'>
+<input style='left: 32.50em; top: 3.0em; width: 6em; height: 2.2000em;' value=Cancel type=button onClick='window.close()'>
+</form>
+</body>
+</html>

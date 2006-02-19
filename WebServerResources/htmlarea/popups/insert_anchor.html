@@ -1,0 +1,42 @@
+<html style='width:425px; Height: 90px;'>
+  <head>
+    <title>Bookmark Editor</title>
+	
+    <style> html, body, button, div, input, select, fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; }; </style>
+
+    <script language='javascript'>
+      document.title = "Bookmark Editor";
+      var highlightedText = window.dialogArguments;
+
+    function returnSelected() {
+	var text = escape( "<a name='" );
+	text = text + escape( document.set.text.value );
+	text = text + escape( "'>" );	
+	text = text + escape( "&nbsp;</a>" );
+	window.returnValue = text;
+	window.close();
+      }
+
+      function paste_link() {
+	document.set.text.value = highlightedText;
+      }
+    </script>
+<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+ document.body.onkeypress = _CloseOnEsc;
+ </SCRIPT>
+  </head>
+  <body style='background: threedface; color: windowtext; margin: 10px; BORDER-STYLE: none' onload='javascript: paste_link();' scroll=no>
+<form method=post name=set>
+<fieldset id=fldLayout style='left: 0.50em; top: 0.8em; width: 31.5em; height: 5.2000em;'>
+</fieldset>
+<div id=divFileName style='left: 1.50em; top: 2.4em; width: 5em; height: 1.2168em;'>Bookmark:</div>
+<input style='left: 7.00em; top: 2.3em; width: 23.80em; height: 2.0000em;' name=text type=text value="" size=30>
+<input style='left: 32.50em; top: 1.1em; width: 6em; height: 2.2000em;' value=OK  type=button onClick='returnSelected()'>
+<input style='left: 32.50em; top: 3.6em; width: 6em; height: 2.2000em;' value=Cancel type=button onClick='window.close()'>
+</form>
+  </body>
+</html>

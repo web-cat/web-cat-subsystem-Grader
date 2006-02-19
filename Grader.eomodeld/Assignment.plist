@@ -1,0 +1,112 @@
+{
+    attributes = (
+        {
+            columnName = CAUTHORID; 
+            name = authorId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            columnName = CFILEUPLOADMESSAGE; 
+            name = fileUploadMessage; 
+            prototypeName = text; 
+        }, 
+        {
+            columnName = CCOMPARISONGRADINGCRITERIAID; 
+            name = gradingCriteriaId; 
+            prototypeName = foreignId; 
+        }, 
+        { name = id; prototypeName = id; }, 
+        {
+            columnName = CASSIGNMENTNAME; 
+            name = name; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CRUBRICID; 
+            name = rubricId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            columnName = CASSIGNMENTDESCRIPTION; 
+            name = shortDescription; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CGRADINGPROFILEID; 
+            name = submissionProfileId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            columnName = CASSIGNMENTURL; 
+            name = url; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CMOODLEID; 
+            name = moodleId; 
+            prototypeName = foreignId; 
+        }
+    ); 
+    attributesUsedForLocking = (
+        authorId,
+        gradingCriteriaId, 
+        name, 
+        shortDescription, 
+        submissionProfileId, 
+        url,
+        moodleId
+    ); 
+    className = net.sf.webcat.grader.Assignment; 
+    classProperties = (
+        name, 
+        shortDescription, 
+        submissionProfile, 
+        url, 
+        fileUploadMessage, 
+        gradingCriteria, 
+        offerings, 
+        steps, 
+        author,
+        moodleId
+    ); 
+    externalName = TASSIGNMENT; 
+    name = Assignment; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
+            name = author; 
+        }, 
+        {
+            destination = GradingCriteria; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = gradingCriteriaId; }); 
+            name = gradingCriteria; 
+        }, 
+        {
+            destination = AssignmentOffering; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentId; sourceAttribute = id; }); 
+            name = offerings; 
+        }, 
+        {
+            destination = Step; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentId; sourceAttribute = id; }); 
+            name = steps; 
+        }, 
+        {
+            destination = SubmissionProfile; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = submissionProfileId; }); 
+            name = submissionProfile; 
+        }
+    ); 
+}

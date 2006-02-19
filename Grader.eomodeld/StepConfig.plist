@@ -1,0 +1,63 @@
+{
+    attributes = (
+        { name = id; prototypeName = id; },
+        {
+            columnName = CAUTHORID; 
+            name = authorId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            columnName = CNAME; 
+            name = name; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CCONFIGSETTINGS; 
+            name = configSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                valueFactoryMethodName = objectWithArchiveData; 
+                isMutable = true; 
+                valueClassName = net.sf.webcat.core.MutableDictionary; 
+            }; 
+        },
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }
+    ); 
+    attributesUsedForLocking = (authorId, id, name, updateMutableFields); 
+    className = net.sf.webcat.grader.StepConfig; 
+    classProperties = (
+    	author,
+    	configSettings,
+    	name,
+    	steps,
+    	updateMutableFields
+    ); 
+    externalName = TSTEPCONFIG; 
+    name = StepConfig; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
+            name = author; 
+        }, 
+        {
+            destination = Step; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = stepConfigId; sourceAttribute = id; }); 
+            name = steps; 
+        }
+    ); 
+}

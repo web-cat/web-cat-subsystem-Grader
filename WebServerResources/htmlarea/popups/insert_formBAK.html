@@ -1,0 +1,192 @@
+<html style='width:450px; Height: 355px;'>
+<head>
+<title>Form Editor</title>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="http://webstationone.com/inc/popups.js"></SCRIPT>
+
+<style> 
+html, 
+body, 
+button, 
+div, 
+input, 
+select, 
+fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; }; 
+</style>
+
+<script language='javascript'>
+  document.title = "Form Editor";
+  
+  var highlightedText = window.dialogArguments;
+  var type = "clientemail";
+  
+  function returnSelected() {
+	if (type == "clientemail") {
+		var text = escape("<FORM class=borders");
+		if (document.set.action.value != "") {
+			text = text + escape( " action=\"" ) ;
+			text = text + escape( document.set.action.value );
+		}
+		if (document.set.email.value != "") {
+			text = text + escape( document.set.email.value );
+		}
+		else {alert("You must type in a valid e-mail address"); return true;}
+		text = text + escape( "\"" ) ;
+		
+		if (!document.set.method.value ||document.set.method.value == "post"){
+		text = text + escape( " method=\"" ) ;
+		text = text + escape( document.set.method.value );
+		text = text + escape( "\"" ) ;
+		}
+		
+		if (document.set.name.value != "") {
+        text = text + escape( " name=" ) ;
+		text = text + escape( document.set.name.value );
+		}
+		
+		if (document.set.event.value  !== "" && document.set.event.value  == "OnSubmit" ){
+		text = text + escape( " OnSubmit=\"" ) ;
+		text = text + escape( document.set.inputevent.value );
+		text = text + escape( "\"" );
+		}
+		
+		else if (document.set.event.value  !== "" && document.set.event.value  == "OnReset" ){
+		text = text + escape( " OnReset=\"" ) ;
+		text = text + escape( document.set.inputevent.value );
+		text = text + escape( "\"" );
+		}
+		
+        text = text + escape( " enctype=" ) ;
+		text = text + escape( document.set.enctype.value );
+		text = text + escape( ">" );
+		text = text + escape("</FORM>") ;
+	}
+	
+	else if (type == "serverscript") {
+		var text = escape("<FORM style='border:1px dotted #ff0000;height:20px'");
+		if (document.set.action.value != "") {
+			text = text + escape( " action=\"" ) ;
+			text = text + escape( document.set.action.value );
+		}
+		
+		
+		
+		text = text + escape( "\"" ) ;
+		text = text + escape( " method=\"" ) ;
+		text = text + escape( document.set.method.value );
+		text = text + escape( "\"" ) ;
+		
+		if (document.set.name.value != "") {
+        text = text + escape( " name=" ) ;
+		text = text + escape( document.set.name.value );
+		}
+		
+        text = text + escape( " enctype=" ) ;
+		text = text + escape( document.set.enctype.value );
+				//text = text + escape( "" ) ;
+		text = text + escape( ">" );
+		text = text + escape("</FORM>") ;
+	}
+	
+	window.returnValue = text;
+	window.close();
+  }
+  
+  
+  
+  
+  function updateTarget() {
+	var selectedItem	= document.set.type.selectedIndex;
+	var selectedItemValue	= document.set.type.options[selectedItem].value;
+	type = selectedItemValue;
+
+	var lblEmail = document.getElementById ("divEmail")
+        
+	if (type == "clientemail") {
+		lblEmail.style.display = "block"
+		document.set.email.style.display = "block" ;
+		document.set.action.value = "mailto:" ;
+		document.set.action.disabled = true ;	
+		document.set.fldLayout.style.height = "18.3em" ;	
+		window.dialogHeight = "355px" ;
+	}
+	
+	else if (type == "serverscript") {
+		lblEmail.style.display = "none"
+		document.set.email.style.display = "none" ;
+		document.set.action.value = "http://" ;
+		document.set.action.disabled = false ;
+		document.set.fldLayout.style.height = "18.3em" ;	
+		window.dialogHeight = "355px" ;
+	}	
+  }
+</script>
+</head>
+<BODY STYLE="margin: 10px; BORDER-STYLE: none; background-image:url(formmgr/bg.gif);" scroll="no">
+<div id=divTabs style='left: 7.00px; top: 5.0px; width: 450.0px; height: 336px;'>
+<IMG SRC="formmgr/tabs_form.gif" ALT="" WIDTH="430" HEIGHT="306" BORDER="0" USEMAP="#tabs_form_Map">
+<MAP NAME="tabs_form_Map">
+<AREA SHAPE="rect" ALT="Select Dropdown" COORDS="349,41,430,65" HREF="insert_select.html">
+<AREA SHAPE="rect" ALT="Textarea" COORDS="257,41,348,65" HREF="insert_textarea.html">
+<AREA SHAPE="rect" ALT="Reset" COORDS="189,41,256,65" HREF="insert_reset.html">
+<AREA SHAPE="rect" ALT="Submit" COORDS="122,41,188,65" HREF="insert_submit.html">
+<AREA SHAPE="rect" ALT="Button" COORDS="48,41,121,65" HREF="insert_button.html">
+<AREA SHAPE="rect" ALT="Input File" COORDS="0,41,47,65" HREF="insert_file.html">
+<AREA SHAPE="rect" ALT="Check Box" COORDS="345,6,430,29" HREF="insert_checkbox.html">
+<AREA SHAPE="rect" ALT="Radio Button" COORDS="288,6,344,29" HREF="insert_radio.html">
+<AREA SHAPE="rect" ALT="Input Password" COORDS="201,6,287,29" HREF="insert_password.html">
+<AREA SHAPE="rect" ALT="Input hidden" COORDS="131,6,200,29" HREF="insert_hidden.html">
+<AREA SHAPE="rect" ALT="Input text" COORDS="72,6,130,29" HREF="insert_formelement.html">
+<AREA ALT="Insert Form" COORDS="0,6,71,29" HREF="" onClick="showModalDialog('insert_formelement.html','','resizable: no; help: no; status: no; scroll: no;');window.close()">
+</MAP>
+</div>
+<form method=post name=set>
+<fieldset id=fldLayout style='left: 1.50em; top: 8.1em; width: 31.1em; height: 18.3000em;'>
+<LEGEND>&lt;FORM&gt;</LEGEND>
+</fieldset>
+<div id=divType style='left: 2.50em; top: 9.9em; width: 5.0em; height: 1.2168em;'>Type</div>
+<div id=divTypedropdown style='left: 7.80em; top: 9.8em; width: 7.0em; height: 1.2168em;'>
+<select name=type onChange='javascript: updateTarget();'>
+<option value="clientemail"selected>Submit form by e-mail
+<option value="serverscript">Submit form by script
+</select>
+</div>
+<div id=divMethod style='left: 19.90em; top: 9.9em; width: 5.0em; height: 1.2168em;'>Method</div>
+<div id=divMethoddropdown style='left: 23.6em; top: 9.8em; width: 7.0em; height: 1.2168em;'>
+<select name=method onChange='javascript: updateTarget();'>
+<option value="get" selected>Get (default)
+<option value="post">Post
+</select>
+</div>
+<div id=divName style='left: 2.50em; top: 12.4em; width: 5em; height: 1.2168em;'>Name</div>
+<input style='left: 7.80em; top: 12.1em; width: 23.60em; height: 2.0000em;' name=name type=text value="" size=30>
+<div id=divAction style='left: 2.50em; top: 14.9em; width: 5em; height: 1.2168em;'>Action</div>
+<input style='left: 7.80em; top: 14.5em; width: 23.60em; height: 2.0000em;' name=action type=text value="mailto:" size=30 disabled=true>
+
+<div id=divEnctype style='left: 2.50em; top: 17.0em; width: 5.0em; height: 1.2168em;'>Enctype</div>
+<div id=divEnctypedropdown style='left: 7.8em; top: 16.9em; width: 7.0em; height: 1.2168em;'>
+<select name=enctype onChange='javascript: updateTarget();'>
+<option value="">application/x-www-form-urlencoded (default)
+<option value="multipart/form-data">multipart/form-data (req. for INPUT TYPE=FILE)
+<option value="text/plain">text/plain (for mailto: only)
+<option value="image/jpeg">image/jpeg 
+</select>
+</div>
+<div id=divEmail style='left: 2.50em; top: 19.5em; width: 5em; height: 1.2168em;'>Email</div>
+<input style='left: 7.80em; top: 19.2em; width: 23.60em; height: 2.0000em;' name=email type=text value="" size=30>
+<input style='left: 33.50em; top: 16.3em; width: 6em; height: 2.2000em;' value=OK  type=button onClick='returnSelected()'>
+<input style='left: 33.50em; top: 18.5em; width: 6em; height: 2.2000em;' value=Cancel type=button onClick='window.close()'>
+
+<div id=divEnctype style='left: 2.50em; top: 21.6em; width: 5.0em; height: 1.2168em;'>Events</div>
+<div id=divEvent style='left: 7.8em; top: 21.6em; width: 7.0em; height: 1.2168em;'>
+<select name=event onChange='javascript: updateTarget();'>
+<option value="" selected>
+<option value="OnSubmit">OnSubmit
+<option value="OnReset">OnReset
+</select>
+</div>
+<input style='left: 15.30em; top: 21.6em; width: 16.10em; height: 2.0000em;' name=inputevent type=text value="" size=30>
+<div id=divStyle style='left: 2.50em; top: 23.9em; width: 5.0em; height: 1.2168em;'>Style</div>
+<input style='left: 7.80em; top: 23.8em; width: 23.60em; height: 2.0000em;' name=style type=text value="" size=30>
+</form>
+</body>
+</html>

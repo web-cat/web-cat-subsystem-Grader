@@ -1,0 +1,32 @@
+<webobject name="Page"><table style="border: none;">
+<tr><td class="R">Course:</td><td><webobject name="CourseList"/></td></tr>
+<tr><td class="R">CRN:</td><td><webobject name="CRN"/></td></tr>
+<tr><td class="R">URL:</td><td><webobject name="URL"/></td></tr>
+<tr><td class="R">Moodle Id:</td><td><webobject name="MoodleId"/>
+&nbsp; Group Id:&nbsp;<webobject name="MoodleId"/></td></tr>
+</table><div class="spacer">&nbsp;</div>
+<div class="shadow"><table>
+  <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr>
+  <webobject name="InstructorRepetition"><webobject name="TR">
+    <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
+    <td><webobject name="Email"/></td>
+    <td><webobject name="NotThisUser"><webobject name="RemoveInstructor"/>
+        </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
+  </webobject></webobject>
+  <webobject name="LastInstrTR">
+	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
+  </webobject>
+</table></div><div class="spacer">&nbsp;</div>
+<div class="shadow"><table>
+  <tr><th>User ID</th><th>Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr>
+  <webobject name="TARepetition"><webobject name="TR">
+    <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
+    <td><webobject name="Email"/></td>
+    <td><webobject name="NotThisUser"><webobject name="RemoveTA"/>
+        </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
+  </webobject></webobject>
+  <webobject name="LastTATR">
+	<td colspan="4"><webobject name="AddTA"/> Add another TA</td>
+  </webobject>
+</table></div><div class="spacer">&nbsp;</div>
+</webobject>

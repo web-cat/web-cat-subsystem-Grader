@@ -1,0 +1,53 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        courseDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODatabaseDataSource; 
+                editingContext = session.localContext; 
+                fetchSpecification = {
+                    class = EOFetchSpecification; 
+                    entityName = Course; 
+                    fetchLimit = 0; 
+                    isDeep = NO; 
+                }; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = number; selectorName = "compareAscending:"; }); 
+        }; 
+        instructorDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = instructors; 
+                masterClassDescription = CourseOffering; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "*%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = name_LF; selectorName = "compareAscending:"; }); 
+        }; 
+        TADisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = TAs; 
+                masterClassDescription = CourseOffering; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "*%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = name_LF; selectorName = "compareAscending:"; }); 
+        }; 
+    }; 
+}

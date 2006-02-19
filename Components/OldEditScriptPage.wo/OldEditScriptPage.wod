@@ -1,0 +1,59 @@
+HasExistingFiles : WOConditional {
+	condition = hasExistingFiles;
+}
+
+NoExistingFiles : WOConditional {
+	condition = hasExistingFiles;
+	negate    = true;
+}
+
+RadioButton1: WORadioButton {
+	name = "Group";
+	selection = selectedIndex;
+	value = index;
+}
+
+Repetition1: WORepetition {
+	item = file;
+	list = fileDisplayGroup.displayedObjects;
+	index = index;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = fileDisplayGroup;
+	displayKey = "Name";
+	key = "getPath";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = fileDisplayGroup;
+	displayKey = "Last Modified";
+	key = "lastModified";
+}
+
+String1: WOString {
+	value = fileName;
+}
+
+String2: WOString {
+	dateformat = "%m/%d/%y %I:%M%p";
+	value      = fileDate;
+}
+
+String3: WOString {
+	value = fileSize;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+UploadScript: WOFileUpload {
+	data     = uploadedData;
+	filePath = uploadedName;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = "View or Replace Script";
+    backEnabled   = false;
+}

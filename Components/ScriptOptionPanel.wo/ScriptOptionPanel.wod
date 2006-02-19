@@ -1,0 +1,126 @@
+Browse: WOSubmitButton {
+    value = "Browse...";
+    action = browse;
+}
+
+CheckBox: WOCheckBox {
+    checked = value;
+}
+
+ChoiceLabel: WOString {
+    value = choiceLabel;
+}
+
+Description: WOString {
+    value      = option.description;
+    escapeHTML = false;
+}
+
+DoubleBox: WOTextField {
+    numberformat = "0.0";
+    size  = fieldSize;
+    value = value;
+}
+
+File: WOString {
+    value = fileValue;
+}
+
+HasValue: WOConditional {
+    condition = hasValue;
+}
+
+HideDescription: WOConditional {
+    condition = terse;
+}
+
+IntegerBox: WOTextField {
+    numberformat = "0";
+    size  = fieldSize;
+    value = value;
+}
+
+IsBoolean: WOConditional {
+    condition = isBoolean;
+}
+
+IsDouble: WOConditional {
+    condition = isDouble;
+}
+
+IsFile: WOConditional {
+    condition = isFile;
+}
+
+IsFileOrDir: WOConditional {
+    condition = isFileOrDir;
+}
+
+IsInteger: WOConditional {
+    condition = isInteger;
+}
+
+IsListChoice: WOConditional {
+    condition = isListChoice;
+}
+
+IsLongText: WOConditional {
+    condition = isLongText;
+}
+
+IsRadioChoice: WOConditional {
+    condition = isRadioChoice;
+}
+
+IsShortText: WOConditional {
+    condition = isShortText;
+}
+
+ListChoice: WOPopUpButton {
+    list          = option.choices;
+    item          = choice;
+    displayString = choiceLabel;
+    value         = choiceValue;
+    selection     = selectedChoice;
+}
+
+OptionName: WOString {
+    value = option.name;
+}
+
+RadioButton: WORadioButton {
+    name      = property;
+    value     = choice;
+    selection = selectedChoice;
+}
+
+RadioRepetition: WORepetition {
+    list = option.choices;
+    item = choice;
+}
+
+ShowDescription: WOConditional {
+    condition = terse;
+    negate    = true;
+}
+
+ShowOption: WOConditional {
+    condition = option.disable;
+    negate    = true;
+}
+
+TextArea: WOText {
+	rows  = 8;
+	cols  = 60;
+ 	value = value;
+}
+
+TextBox: WOTextField {
+    size  = fieldSize;
+    value = value;
+}
+
+UseDefault: WOSubmitButton {
+    value = "Use Default";
+    action = clearValue;
+}

@@ -1,0 +1,58 @@
+{
+    allOfferings = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = dueDate; 
+                selectorName = "compareAscending:"; 
+            }
+        ); 
+    }; 
+    courseOffering = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = courseOffering; 
+            selectorName = "isEqualTo:"; 
+            value = {_key = courseOffering; class = EOQualifierVariable; }; 
+        }; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = dueDate; 
+                selectorName = "compareDescending:"; 
+            }
+        ); 
+    }; 
+    submitterEngineBase = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        refreshesRefetchedObjects = YES; 
+        sortOrderings = (
+            {class = EOSortOrdering;
+             key = courseOffering.course.department.institution.displayableName;
+             selectorName = "compareCaseInsensitiveAscending:"; },
+            {class = EOSortOrdering;
+             key = courseOffering.course.department.abbreviation;
+             selectorName = "compareCaseInsensitiveAscending:"; },
+            {class = EOSortOrdering;
+             key = courseOffering.course.number;
+             selectorName = "compareAscending:"; },
+            {class = EOSortOrdering;
+             key = dueDate;
+             selectorName = "compareAscending:"; },
+            {class = EOSortOrdering;
+             key = assignment.name;
+             selectorName = "compareCaseInsensitiveAscending:"; }
+        ); 
+    }; 
+}

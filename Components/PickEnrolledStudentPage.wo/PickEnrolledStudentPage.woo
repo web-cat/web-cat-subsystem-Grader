@@ -1,0 +1,20 @@
+{
+    "WebObjects Release" = "WebObjects 5.1"; 
+	encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        studentDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = students; 
+                masterClassDescription = CourseOffering; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 15; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+        }; 
+    }; 
+}

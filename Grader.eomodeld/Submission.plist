@@ -1,0 +1,100 @@
+{
+    attributes = (
+        {
+            columnName = CASSIGNMENTID;
+            name = assignmentOfferingId;
+            prototypeName = foreignId;
+        },
+        {
+            columnName = CFILENAME;
+            name = fileName;
+            prototypeName = tinyText;
+        },
+        { name = id; prototypeName = id; },
+        {
+            columnName = CPARTNERLINK;
+            externalType = BIT;
+            name = partnerLink;
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        },
+        {
+            columnName = CRESULTID;
+            name = resultId;
+            prototypeName = foreignId;
+        },
+        {
+            columnName = CSUBMITNUMBER;
+            name = submitNumber;
+            prototypeName = integer; 
+            userInfo = {
+                scalarConversionMethodName = intValue; 
+                isScalar = true;
+		scalarDefault = 0;
+                type = int;
+		valueClassName = Integer;
+            }; 
+        },
+        {
+            columnName = CSUBMITTIME;
+            name = submitTime;
+            prototypeName = dateTime;
+        },
+        {
+            columnName = CUSERID;
+            name = userId;
+            prototypeName = foreignId;
+        }
+    );
+    attributesUsedForLocking = (assignmentOfferingId, submitNumber, userId, fileName, resultId, partnerLink);
+    className = net.sf.webcat.grader.Submission;
+    classProperties = (
+        submitTime,
+        submitNumber,
+        fileName,
+        assignmentOffering,
+        user,
+        result,
+        enqueuedJobs,
+        partnerLink
+    );
+    externalName = TSUBMISSION;
+    fetchSpecificationDictionary = {};
+    name = Submission;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = AssignmentOffering;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; });
+            name = assignmentOffering;
+        },
+        {
+            destination = EnqueuedJob;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = submissionId; sourceAttribute = id; });
+            name = enqueuedJobs;
+        },
+        {
+            deleteRule = EODeleteRuleCascade;
+            destination = SubmissionResult;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = resultId; });
+            name = result;
+        },
+        {
+            destination = User;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = userId; });
+            name = user;
+        }
+    );
+}

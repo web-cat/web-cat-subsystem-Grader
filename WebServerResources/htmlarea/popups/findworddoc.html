@@ -1,0 +1,40 @@
+<html>
+<head><title>Load Word Document</title>
+<SCRIPT LANGUAGE="JavaScript" FOR="btnOK" EVENT="onclick">
+<!--
+  var pathlength = document.all.filepath.value.length - 4;
+  var pathisdoc = document.all.filepath.value.lastIndexOf(".doc");
+  var pathistxt = document.all.filepath.value.lastIndexOf(".txt");
+  var pathisrtf = document.all.filepath.value.lastIndexOf(".rtf");
+  
+  if ((pathlength == pathisdoc)||(pathlength == pathistxt)||(pathlength == pathisrtf)){
+    var arr = new Array();
+    arr["filepath"] = filepath.value;
+    arr["parsetype"] = parsetype.value;
+    window.returnValue = arr;
+    window.close();
+  } else {
+    alert("The file you have selected is not a valid document document.\nIt must end with .doc,.rtf or .txt");
+  }
+// -->
+</SCRIPT>
+</head>
+<body bgcolor="ThreeDFace">
+<div align="center">
+<table border=0 cellpadding=5 cellspacing=0>
+<tr><td style="font-family:Arial; font-size:11px">Type in the path or click on Browse:<br>
+    <input type="file" name="filepath" style="width:300px">
+</td></tr>
+<tr><td style="font-family:Arial; font-size:11px">
+   Choose formatting:<br>
+    <select name="parsetype" style="width:300px">
+<!--         <option value="1">No formatting</option>
+        <option value="2">Format into paragraphs only</option> -->
+        <option value="1">Include all formatting</option>
+    </select>
+    </td></tr>
+<tr><td align="center"><input name="btnOK" type="button" onClick="loadworddoc();" value="  OK  "><input type=button onClick="window.close();" value="  Cancel  ">
+</td></tr></table>
+</div>
+</body>
+</html>

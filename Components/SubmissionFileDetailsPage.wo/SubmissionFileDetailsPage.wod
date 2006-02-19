@@ -1,0 +1,22 @@
+SubmitButton3: WOSubmitButton {
+	action = next;
+	value  = "  < Submission Results Summary  ";
+}
+
+Form: WOForm {
+}
+
+ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+    showFileInfo = true;
+}
+
+FileDetails: WOString {
+	value = codeWithComments;
+	escapeHTML = false;
+}
+
+Page: net.sf.webcat.core.PageWithNavigation {
+    title      = "Submission Results: File Details";
+    stylesheet = "/wc-code.css";
+    hideSteps  = true;
+}

@@ -1,0 +1,30 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        gradingProfileDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODatabaseDataSource; 
+                editingContext = session.localContext; 
+                fetchSpecification = {
+                    class = EOFetchSpecification; 
+                    entityName = SubmissionProfile; 
+                    fetchLimit = 0; 
+                    isDeep = YES; 
+                }; 
+            }; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = (
+                {
+                    class = EOSortOrdering; 
+                    key = name; 
+                    selectorName = "compareCaseInsensitiveAscending:"; 
+                }
+            ); 
+        }; 
+    }; 
+}

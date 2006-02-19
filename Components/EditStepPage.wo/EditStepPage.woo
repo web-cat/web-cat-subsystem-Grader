@@ -1,0 +1,13 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        assignmentOptionGroup = {
+            class = WODisplayGroup; 
+            fetchesOnLoad = NO; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+        };
+    }; 
+}

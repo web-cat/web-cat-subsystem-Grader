@@ -1,0 +1,47 @@
+AssignmentName: WOString {
+    value = prefs.assignmentOffering.titleString;
+}
+
+Conditional1: WOConditional {
+	condition = hasErrors;
+	negate    = true;
+}
+
+DifferentStudent: WOConditional {
+	condition = session.impersonatingAnotherUser;
+}
+
+IsSingleFile: WOConditional {
+	condition = singleFile;
+}
+
+IsMultipleFiles: WOConditional {
+	condition = singleFile;
+	negate    = true;
+}
+
+Repetition1: WORepetition {
+	item = file;
+	list = prefs.uploadedFileList;
+	index = index;
+}
+
+String1: WOString {
+	value = file.getName;
+}
+
+String3: WOString {
+	value = fileSize;
+}
+
+StudentName: WOString {
+	value = session.user.nameAndUid;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}

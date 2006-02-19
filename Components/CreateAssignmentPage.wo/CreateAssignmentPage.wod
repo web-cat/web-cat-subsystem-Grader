@@ -1,0 +1,46 @@
+Author: WOString {
+    value = assignment.author.shortName;
+}
+
+AssignmentRepetition: WORepetition {
+    item  = assignment;
+    list  = assignmentDisplayGroup.displayedObjects;
+    index = index;
+}
+
+CourseName: WOString {
+    value = session.courseOffering.deptNumberAndName;
+}
+
+CourseNumber: WOString {
+    value = session.courseOffering.course.deptNumber;
+}
+
+Description: WOString {
+    value = assignment.shortDescription;
+}
+
+HasReusableAssignments: WOConditional {
+    condition = assignmentDisplayGroup.displayedObjects.count;
+}
+
+Name: WOHyperlink {
+	href   = assignment.url;
+	target = "_new";
+    string = assignment.name;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+    sideStepTitle = "Create or Reuse?";
+}
+
+RadioButton: WORadioButton {
+    name      = "Group";
+    selection = selectedIndex;
+    value     = index;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}

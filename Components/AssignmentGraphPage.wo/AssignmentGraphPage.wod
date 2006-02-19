@@ -1,0 +1,39 @@
+AssignmentName: WOString {
+    value = prefs.assignmentOffering.titleString;
+}
+
+Chart1: net.sf.webcat.grader.graphs.HistogramChart {
+    dataset    = prefs.assignmentOffering.graphSummary.frequencyDataset;
+    title      = "Score Distribution for the Class";
+    xAxisLabel = "Score";
+    yAxisLabel = "Students";
+    markValue  = mostRecentScore;
+}
+
+Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
+    dataset    = correctnessToolsDataset;
+    title      = "Your Score Across Your Submissions";
+    xAxisLabel = "Date";
+    yAxisLabel = "Your Score";
+}
+
+Chart3: net.sf.webcat.grader.graphs.StackedAreaChart {
+    dataset    = opportunitiesDataset;
+    title      = "Opportunities for Improvement";
+    xAxisLabel = "Date of Your Submission";
+    yAxisLabel = "Points Lost";
+}
+
+Chart4: net.sf.webcat.grader.graphs.SubmissionCountChart {
+    submissionResults = submissionResultsByNumber;
+    title             = "Number of Submissions by Student";
+    xAxisLabel        = "Student";
+    yAxisLabel        = "No. of Submissions";
+}
+
+IsStaff: WOConditional {
+    condition = isStaff;
+}
+
+Page : net.sf.webcat.core.PageWithNavigation {
+}

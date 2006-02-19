@@ -1,0 +1,8 @@
+CourseList: WOPopUpButton {
+	list              = courseDisplayGroup.allObjects;
+	selection         = session.course;
+	item              = course;
+	displayString     = course.deptNumberAndName;
+}
+Page : net.sf.webcat.core.WizardPage {
+}

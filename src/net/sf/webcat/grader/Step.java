@@ -1,0 +1,268 @@
+/*==========================================================================*\
+ |  $Id$
+ |*-------------------------------------------------------------------------*|
+ |  Copyright (C) 2006 Virginia Tech
+ |
+ |  This file is part of Web-CAT.
+ |
+ |  Web-CAT is free software; you can redistribute it and/or modify
+ |  it under the terms of the GNU General Public License as published by
+ |  the Free Software Foundation; either version 2 of the License, or
+ |  (at your option) any later version.
+ |
+ |  Web-CAT is distributed in the hope that it will be useful,
+ |  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ |  GNU General Public License for more details.
+ |
+ |  You should have received a copy of the GNU General Public License
+ |  along with Web-CAT; if not, write to the Free Software
+ |  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ |
+ |  Project manager: Stephen Edwards <edwards@cs.vt.edu>
+ |  Virginia Tech CS Dept, 660 McBryde Hall (0106), Blacksburg, VA 24061 USA
+\*==========================================================================*/
+
+package net.sf.webcat.grader;
+
+import com.webobjects.foundation.*;
+import com.webobjects.eocontrol.*;
+import er.extensions.ERXConstant;
+import java.io.*;
+import org.apache.log4j.Logger;
+
+// -------------------------------------------------------------------------
+/**
+ * TODO: place a real description here.
+ *
+ * @author 
+ * @version $Id$
+ */
+public class Step
+    extends _Step
+{
+    //~ Constructors ..........................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Creates a new Step object.
+     */
+    public Step()
+    {
+        super();
+    }
+
+
+    //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    public String toString()
+    {
+        return "(" + order() + "): " + script();
+    }
+
+
+    // ----------------------------------------------------------
+    public static int maxTimeout()
+    {
+        return maxTimeout;
+    }
+
+
+    // ----------------------------------------------------------
+    public static int defaultTimeout()
+    {
+        return defaultTimeout;
+    }
+
+
+    // ----------------------------------------------------------
+    public static boolean timeoutIsWithinLimits( int value )
+    {
+        return value > 0  &&  value < maxTimeout;
+    }
+
+
+    // ----------------------------------------------------------
+    public static boolean timeoutIsWithinLimits( Number value )
+    {
+        return value == null || timeoutIsWithinLimits( value.intValue() );
+    }
+
+
+    // ----------------------------------------------------------
+    public void setTimeout( int value )
+    {
+        if ( !timeoutIsWithinLimits( value ) )
+        {
+            value = maxTimeout;
+        }
+        super.setTimeout( value );
+    }
+
+
+    // ----------------------------------------------------------
+    public void setTimeoutRaw( Number value )
+    {
+        if ( value != null && !timeoutIsWithinLimits( value.intValue() ) )
+        {
+            value = ERXConstant.integerForInt( maxTimeout );
+        }
+        super.setTimeoutRaw( value );
+    }
+
+
+    // ----------------------------------------------------------
+    public int effectiveTimeoutForOneRun()
+    {
+        int value = timeout();
+        return ( value == 0 ) ? defaultTimeout : value;
+    }
+
+
+    // ----------------------------------------------------------
+    public int effectiveEndToEndTimeout()
+    {
+        int timeoutOneRun = effectiveTimeoutForOneRun();
+        return timeoutOneRun * script().timeoutMultiplier()
+            + script().timeoutInternalPadding();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Execute this step with the given command line argument(s).
+     * 
+     * @param args the arguments to pass to the script
+     * @param stdout the file where the script's standard output should
+     *               be stored
+     * @param stderr the file where the script's standard error output
+     *               should be stored
+     * @return true if the execution script exceeded the time limit
+     * @throws IOException if one occurs
+     */
+    public boolean execute( String args,
+                            File   stdout,
+                            File   stderr )
+        throws IOException
+    {
+        String finalArgs = args;
+        if ( finalArgs == null )
+        {
+            finalArgs = "";
+        }
+        if ( stdout != null )
+        {
+            finalArgs = finalArgs + " 1> " + stdout.getPath();
+        }
+        if ( stderr != null )
+        {
+            finalArgs = finalArgs + " 2> " + stderr.getPath();
+        }
+
+        ExecThread exeThread = new ExecThread( Thread.currentThread(),
+                                               finalArgs );
+        boolean timedOut = false;
+        try
+        {
+            exeThread.start();
+            Thread.sleep( effectiveEndToEndTimeout() * 1000 );
+            timedOut = true;
+            exeThread.interrupt();
+        }
+        catch ( InterruptedException e )
+        {
+            timedOut = false;
+        }
+        if ( exeThread.exception != null )
+        {
+            throw exeThread.exception;
+        }
+        return timedOut;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * An internal class used as the thread of execution when this
+     * step is executed.
+     */
+    private class ExecThread
+        extends Thread
+    {
+        public ExecThread( Thread parent, String argList )
+        {
+            parentThread = parent;
+            args         = argList;
+        }
+
+        public void run()
+        {
+            try
+            {
+                script().execute( args );
+            }
+            catch ( IOException e )
+            {
+                // Error creating process, so record it
+                log.error( "Exception executing "
+                           + script().mainFilePath(),
+                           e );
+                exception = e;
+            }
+            catch ( InterruptedException e )
+            {
+                // Stopped by timeout
+                log.info( "Script process was interrupted due to "
+                          + "grace period timeout" );
+                return;
+            }
+            parentThread.interrupt();
+        }
+
+        private Thread      parentThread;
+        private String      args;
+        public  IOException exception = null;
+    }
+
+
+// If you add instance variables to store property values you
+// should add empty implementions of the Serialization methods
+// to avoid unnecessary overhead (the properties will be
+// serialized for you in the superclass).
+
+//    // ----------------------------------------------------------
+//    /**
+//     * Serialize this object (an empty implementation, since the
+//     * superclass handles this responsibility).
+//     * @param out the stream to write to
+//     */
+//    private void writeObject( java.io.ObjectOutputStream out )
+//        throws java.io.IOException
+//    {
+//    }
+//
+//
+//    // ----------------------------------------------------------
+//    /**
+//     * Read in a serialized object (an empty implementation, since the
+//     * superclass handles this responsibility).
+//     * @param in the stream to read from
+//     */
+//    private void readObject( java.io.ObjectInputStream in )
+//        throws java.io.IOException, java.lang.ClassNotFoundException
+//    {
+//    }
+
+
+    //~ Instance/static variables .............................................
+
+    static final int maxTimeout = net.sf.webcat.core.Application
+        .configurationProperties()
+        .intForKeyWithDefault( "grader.timeout.max", 600 );
+    static final int defaultTimeout = net.sf.webcat.core.Application
+        .configurationProperties()
+        .intForKeyWithDefault( "grader.timeout.default", 60 );
+
+    static Logger log = Logger.getLogger( Step.class );
+}

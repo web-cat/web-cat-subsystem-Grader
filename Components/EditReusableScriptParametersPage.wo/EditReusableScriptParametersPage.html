@@ -1,0 +1,62 @@
+<webobject name="Page">Script: <span class="hl"><webobject name="ScriptName"/></span>
+
+<p>Configuration name: <webobject name="Name"/></p>
+<webobject name="HasOptions">
+<p>This named configuration profile contains common
+option settings that are shared by the following assignment(s):</p>
+<div class="shadow"><table><tbody><tr><th>Assignment</th><th>Description</th><th>Instances</th></tr>
+<webobject name="Repetition3">
+<webobject name="TR">
+<td><webobject name="AssignmentName"/></td>
+<td><webobject name="AssignmentDescription"/></td>
+<td><webobject name="AssignmentInstanceCount"/></td>
+</webobject></webobject>
+</tbody></table></div><div class="spacer">&nbsp;</div>
+
+<h2>Shared Options</h2>
+
+<p><webobject name="OptionsAreVerbose"><webobject name="TerseOptions"/>
+</webobject><webobject name="OptionsAreTerse"><webobject name="VerboseOptions"/>
+</webobject> verbose descriptions</p>
+
+<webobject name="HasCategories">
+<table style="width:100%"><tr><th>Show: <webobject name="CategoryList"/></th><tr></table>
+<script language="JavaScript">
+<!--
+function submitForm() { document.WizardForm.submit(); }
+//-->
+</script>
+</webobject>
+<webobject name="Repetition2">
+<webobject name="ShowThisOption"><p><webobject name="OptionPanel"/></p></webobject>
+</webobject>
+</webobject><webobject name="HasNoOptions">
+<p>This script has no other configurable options.</p>
+</webobject>
+
+<h2>About This Script
+<webobject name="ShowInfo">
+<webobject name="Collapse"/></h2>
+<table style="border:none">
+<tr><td class="R">Author:</td><td><webobject name="Author"/></td></tr>
+<tr><td class="R">Version:</td><td><webobject name="Version"/></td></tr>
+<tr><td class="R">Modified:</td><td><webobject name="Modified"/></td></tr>
+<tr><td class="R" valign="top">Description:</td><td><webobject name="Description"/></td></tr>
+<tr><td class="R" valign="top">Published:</td><td><webobject name="IsPublished"/> <webobject name="CanEditScript"><webobject name="TogglePublished"/></webobject><br/>
+A published script is available for reuse by everyone.  Unpublished scripts are only visible to
+their author, and to other instructors in a course that is already using the script in at least
+one assignment.</td></tr>
+<webobject name="CanEditScript"><tr><td class="R">Properties:</td><td><webobject name="Reload"/></td></tr></webobject>
+<tr><td class="R">Script files:</td><td><webobject name="CanEditScript"><webobject name="EditScript"/>
+</webobject><webobject name="CannotEditScript">
+<webobject name="BrowseScript"/></webobject></td></tr>
+<!--collapse
+languages
+-->
+</table>
+
+</webobject><webobject name="HideInfo">
+<webobject name="Expand"/></h2>
+</webobject>
+
+</webobject>

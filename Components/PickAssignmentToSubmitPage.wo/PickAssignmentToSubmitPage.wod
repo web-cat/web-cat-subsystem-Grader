@@ -1,0 +1,56 @@
+AssignmentRepetition: WORepetition {
+    item  = anAssignmentOffering;
+    list  = assignmentDisplayGroup.displayedObjects;
+    index = index;
+}
+
+CourseName: WOString {
+    value = session.courseOffering.deptNumberAndName;
+}
+
+Deadline: WOString {
+    dateformat = "%m/%d/%y %I:%M%p";
+    value = anAssignmentOffering.dueDate;
+}
+
+Description: WOString {
+    value = anAssignmentOffering.assignment.shortDescription;
+}
+
+Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = anAssignmentOffering.graphSummary;
+}
+
+HasAssignments: WOConditional {
+    condition = assignmentDisplayGroup.displayedObjects.count;
+}
+
+HasNoAssignments: WOConditional {
+    condition = assignmentDisplayGroup.displayedObjects.count;
+    negate    = true;
+}
+
+Name: WOHyperlink {
+	href   = anAssignmentOffering.assignment.url;
+	target = "_new";
+    string = anAssignmentOffering.assignment.name;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}
+
+RadioButton: WORadioButton {
+    name      = "Group";
+    selection = selectedIndex;
+    value     = index;
+}
+
+ShowHaltedMessage: WOConditional {
+	condition = showHaltedMessage;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+    showError = gradingIsHalted;
+}

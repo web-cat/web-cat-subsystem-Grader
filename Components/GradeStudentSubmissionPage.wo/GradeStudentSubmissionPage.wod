@@ -1,0 +1,176 @@
+CommentFormat: WOPopUpButton {
+        list		  = formats;
+        item   		  = aFormat;
+	selection         = result.commentFormat;
+	displayString 	  = formatLabel;
+//	noSelectionString = "Select from your files ...";
+}
+
+Comments: WOText {
+	rows  = 15;
+	cols  = 80;
+	value = result.comments;
+	name  = "source";
+	id    = "source";
+//	style = "width:100%;";
+}
+
+Coverage: WOString {
+	numberformat = "0.0";
+	value        = stats.gradedElementsCoveragePercent;
+}
+
+CoverageMeter: WOString {
+	escapeHTML = false;
+	value      = coverageMeter;
+}
+
+Done: WOCheckBox {
+	checked = gradingDone;
+}
+
+FileBrowser: net.sf.webcat.core.FileBrowser {
+    title                 = "Browse Raw Files: Submission and Results";
+    file                  = prefs.submission.file.getParentFile;
+    initialExpansionDepth = 0;
+//    includeSeparator = true;
+}
+
+FileDeduction: WOString {
+	numberformat = "0.0";
+	value        = stats.deductions;
+}
+
+FileName: WOString {
+	value = stats.sourceFileName;
+}
+
+FileRemarks: WOString {
+	numberformat = "0";
+	value        = stats.remarks;
+}
+
+FileStatus: WOImage {
+	border    = "0";
+	filename  = stats.statusURL;
+	framework = "Core";
+	height    = "16";
+	width     = "16";
+}
+
+HasCoverageData: WOConditional {
+	condition = stats.elementsRaw;
+}
+
+HasFileStats: WOConditional {
+	condition = hasFileStats;
+}
+
+HasNoCoverageData: WOConditional {
+	condition = stats.elementsRaw;
+	negate    = true;
+}
+
+InlineReport: WOConditional {
+	condition = result.resultFile.exists;
+}
+
+InlineSummary: WOConditional {
+	condition = result.summaryFile.exists;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = "Grade One Submission";
+    hideSteps     = true;
+    applyEnabled  = true;
+//    stylesheet           = "/htmlarea/htmlarea.css";
+//    externalJavascript   = "/htmlarea/htmlarea.js,/htmlarea/htmlarea-lang-en.js,/htmlarea/dialog.js";
+//    inlineHeaderContents = javascriptText;
+//    onLoad               = "initEditor()";
+}
+
+PartialInlineReport: PartialInlineReport {
+    file = result.resultFile;
+}
+
+Regrade: WOSubmitButton {
+	action = regrade;
+	value = "Regrade Submission";
+}
+
+ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+    allowPartnerEdit = true;
+    includeSeparator = false;
+}
+
+ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
+    allowScoreEdit = true;
+}
+
+SelectSubmission: WOSubmitButton {
+	action = selectSubmission;
+	value  = "View Other Submissions";
+}
+
+ShowCoverageData: WOConditional {
+    condition = showCoverageData;
+}
+
+ShowDetails: WOImageButton {
+    filename  = "icons/edit.gif";
+    framework = "Core";
+	action    = fileStatsDetails;
+	border    = "0";
+	width     = "18";
+	height    = "17";
+	alt       = "View file and enter comments";
+	title     = "View file and enter comments";
+}
+
+StatRepetition: WORepetition {
+	item  = stats;
+	list  = statsDisplayGroup.displayedObjects;
+	index = index;
+}
+
+StatsLabel: WOString {
+	value = result.statElementsLabel;
+}
+
+SummaryReport: PartialInlineReport {
+    file = result.summaryFile;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Class Name";
+	key = "fullyQualifiedClassName";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Deductions";
+	key = "deductions";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = result.statElementsLabel;
+	key = "gradedElementsCoverage";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Remarks";
+	key = "remarks";
+}
+
+WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Status";
+	key = "status";
+}

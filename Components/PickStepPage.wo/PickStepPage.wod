@@ -1,0 +1,125 @@
+//Repetition2: WORepetition
+
+//PubScriptLanguage
+
+
+
+AssignmentAuthor: WOString {
+    value = assignment.author.name_LF;
+}
+
+AssignmentName: WOString {
+    value = assignment.titleString;
+}
+
+EditScript: WOImageButton {
+    filename  = "icons/edit.gif";
+    framework = "Core";
+	action    = editScript;
+	border    = "0";
+	width     = "18";
+	height    = "17";
+}
+
+ForAssignmentName: WOString {
+    value = prefs.assignmentOffering.titleString;
+}
+
+HasEarlierAssignments: WOConditional {
+    condition = assignmentGroup.displayedObjects.count;
+}
+
+HasPublishedScripts: WOConditional {
+    condition = publishedScriptGroup.displayedObjects.count;
+}
+
+LastTR: net.sf.webcat.core.TableRow {
+	index = scriptGroup.displayedObjects.count;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = "Add Step(s)";
+    finishEnabled = false;
+    applyEnabled  = false;
+}
+
+RadioButton1: WORadioButton {
+	name      = "Group";
+	selection = selectedAssignmentIndex;
+	value     = index1;
+}
+
+RadioButton2: WORadioButton {
+    name      = "Group";
+    selection = publishedScriptIndex;
+    value     = index2;
+}
+
+RadioButton3: WORadioButton {
+	name      = "Group";
+	selection = selectedScriptIndex;
+	value     = index3;
+}
+
+RadioButton4: WORadioButton {
+	name    = "Group";
+	checked = createNew;
+}
+
+Repetition1: WORepetition {
+	item  = assignment;
+	list  = assignmentGroup.displayedObjects;
+	index = index;
+}
+
+Repetition2: WORepetition {
+	item  = script;
+	list  = publishedScriptGroup.displayedObjects;
+	index = index;
+}
+
+Repetition3: WORepetition {
+	item  = script;
+	list  = scriptGroup.displayedObjects;
+	index = index;
+}
+
+ScriptAuthor: WOString {
+	value = script.author.name_LF;
+}
+
+ScriptModified: WOString {
+	dateformat = "%m/%d/%y %I:%M%p";
+	value      = script.lastModified;
+}
+
+ScriptName: WOString {
+	value = script.displayableName;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+UploadScript: WOFileUpload {
+	data     = uploadedData;
+	filePath = uploadedName;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = scriptGroup;
+	displayKey = "Name";
+	key = "uploadedFileName";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = scriptGroup;
+	displayKey = "Last Modified";
+	key = "lastModified";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = scriptGroup;
+	displayKey = "Author";
+	key = "author.lastName";
+}

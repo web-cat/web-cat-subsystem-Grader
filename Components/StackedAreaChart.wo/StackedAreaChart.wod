@@ -1,0 +1,12 @@
+Chart: WOImage {
+	data     = pngChart;
+	mimeType = "image/png";
+	width    = chartWidth;
+	height   = chartHeight;
+	title    = title;
+	alt      = title;
+}
+
+ShouldDisplay: WOConditional {
+    condition = shouldDisplay;
+}

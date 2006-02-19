@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramBuilderLaunchConfigurationType">
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-packagedirs -templatedir ${workspace_loc:Core} -destination src -refmodel ${workspace_loc:EOJDBCPrototypes}/EOJDBCPrototypes.eomodeld -refmodel ${workspace_loc:Core}/Core.eomodeld -model Grader.eomodeld"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value="full,incremental,"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:Grader}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${EOGENERATOR}"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+</launchConfiguration>

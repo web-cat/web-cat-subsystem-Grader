@@ -1,0 +1,41 @@
+{
+    attributes = (
+        {
+            columnName = CREPORT; 
+            name = fileName; 
+            prototypeName = tinyText; 
+        }, 
+        { name = id; prototypeName = id; }, 
+        {
+            columnName = CLABEL; 
+            name = label; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = TYPE; 
+            name = mimeType; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CRESULTID; 
+            name = resultId; 
+            prototypeName = foreignId; 
+        }
+    ); 
+    attributesUsedForLocking = (fileName, mimeType, label, resultId); 
+    className = net.sf.webcat.grader.ResultFile; 
+    classProperties = (fileName, mimeType, label, submissionResult); 
+    externalName = TRESULTFILE; 
+    fetchSpecificationDictionary = {}; 
+    name = ResultFile; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = SubmissionResult; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = resultId; }); 
+            name = submissionResult; 
+        }
+    ); 
+}

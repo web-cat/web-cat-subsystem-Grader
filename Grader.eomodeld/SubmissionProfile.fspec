@@ -1,0 +1,15 @@
+{
+    course = {
+        class = EOFetchSpecification; 
+        entityName = SubmissionProfile; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        usesDistinct = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = courseOfferings.course; 
+            selectorName = "doesContain:"; 
+            value = {_key = course; class = EOQualifierVariable; }; 
+        }; 
+    }; 
+}

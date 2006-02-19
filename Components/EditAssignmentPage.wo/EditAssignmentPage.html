@@ -1,0 +1,84 @@
+<webobject name="Page">For: <span class="hl"><webobject name="CourseName"/></span><p>
+<h2>Properties For All Instances of This Assignment</h2>
+<table style="border:none">
+<tr><td align="right">Name:</td>
+    <td><webobject name="Name"/></td></tr>
+<tr><td align="right">Short Description:</td>
+    <td><webobject name="Description"/></td></tr>
+<tr><td align="right">URL:</td>
+    <td><webobject name="URL"/></td></TR>
+<tr><td align="right">Moodle Id:</td>
+    <td><webobject name="MoodleId"/></td></TR>
+<tr><td align="right" valign="top" style="padding-left: 0">Upload&nbsp;<br>
+    Instructions:</td>
+    <td valign="top"><webobject name="UploadInstructions"/><br/>
+    <font size="2">Use HTML markup if desired.</font></td></tr>
+</table>
+<h3>Grading Scheme For All Instances</h3>
+<p>Submission Rules:
+<webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/></p>
+<p>Automatically grade using <b>these steps</b> in sequence:<br/>
+<div class="shadow"><table><tbody>
+    <tr><th>Order</th><th>Script</th><th class="sm">Time Limit (sec)</th>
+      <th>Move</th><th>Action</th></tr>
+    <webobject name="StepRepetition"><webobject name="TR">
+        <td align="center"><webobject name="Order"/></td>
+        <td><webobject name="ScriptName"/></td>
+        <td align="center"><webobject name="StepAllowsTimeout"><webobject name="Timeout"/></webobject></td>
+        <td align="center"><webobject name="MoveStepUp"/>
+            <webobject name="MoveStepDown"/></td>
+        <td><webobject name="EditStep"/> <webobject name="RemoveStep"/></td>
+    </webobject></webobject>
+    <webobject name="LastTR">
+    <td></td>
+    <td colspan="5"><webobject name="AddStep"/> Add another step</td>
+    </webobject></tbody></table></div><div class="spacer">&nbsp;</div>
+<h2>Properties Unique to This Course Offering</h2>
+<table style="border:none">
+<tr><td align="right" valign="top">Due:</td>
+    <td colspan="2"><webobject name="DueDate"/>&nbsp;<webobject name="DueDateSelector"/><br/>
+<script type="text/javascript">
+    Calendar.setup({
+        inputField     :    "DueDate",
+        ifFormat       :    "%m/%d/%Y %I:%M %p",
+        button         :    "DueDateSelector",
+        align          :    "bl",
+        showsTime      :    true,
+        timeFormat     :    12,
+        singleClick    :    false
+    });
+</script>
+<webobject name="UpcomingAssignments">
+<div class="shadow"><table>
+<tr><th>Assignment</th><th>Due</th></tr>
+<webobject name="UpcomingAssignmentRepetition">
+<webobject name="TR2"><td><webobject name="UpcomingAssignmentName"/><webobject name="UpcomingIsUnpublished">
+<span style="background-color:yellow">(unpublished)</span></webobject></td>
+<td class="nowrap"><webobject name="UpcomingDueDate"/></td>
+</webobject></webobject></table></div>
+</webobject>
+</td></tr>
+<tr><td align="right">Score Summary:</td><td><webobject name="Graph"/></td>
+    <td><webobject name="ClearGraph"/></td></tr>
+<tr><td align="right">Moodle Id:</td>
+    <td colspan="2"><webobject name="OverrideMoodleId"/> (overrides shared value if set)</td></TR>
+<tr><td align="right">Publish it:</td>
+    <td colspan="2"><webobject name="PublishIt"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;Suspend&nbsp;all&nbsp;grading:&nbsp;
+    <webobject name="Suspend"/></td></tr>
+<webobject name="HasSuspendedSubs">
+<tr><td>&nbsp;</td><td colspan="2">
+<table style="border:none">
+<tr><td colspan="3" style="color:red">
+&nbsp;<b><webobject name="NumSuspended"/> submissions</b> currently
+suspended&nbsp;</td></tr>
+<tr><td align="left"><webobject name="ReleaseSubs"/></td>
+<td align="center">&nbsp;or&nbsp;</td>
+<td align="right"><webobject name="CancelSubs"/></td></tr></table>
+</td></tr>
+</webobject>
+<tr><td>&nbsp;</td><td colspan="2"><webobject name="RegradeSubs"/>
+</td></tr>
+</table>
+<div class="spacer">&nbsp;</div>
+</webobject>

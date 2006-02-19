@@ -1,0 +1,156 @@
+AssignmentName: WOHyperlink {
+	href   = prefs.assignmentOffering.assignment.url;
+	target = "_new";
+    string = prefs.assignmentOffering.titleString;
+}
+
+BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = submissionDisplayGroup;
+}
+
+CompactName: WOString {
+    value = session.courseOffering.compactName;
+}
+
+CourseName: WOString {
+    value = session.courseOffering.course.name;
+}
+
+Nobody: WOConditional {
+	condition = submissionDisplayGroup.allObjects.count;
+	negate    = true;
+}
+
+Repetition1: WORepetition {
+	item  = aSubmission;
+	list  = submissionDisplayGroup.displayedObjects;
+	index = index;
+}
+
+Somebody: WOConditional {
+	condition = submissionDisplayGroup.allObjects.count;
+}
+
+Status: WOImage {
+	border    = "0";
+	filename  = aSubmission.result.statusURL;
+	framework = "Core";
+	height    = "16";
+	width     = "16";
+}
+
+PID: WOString {
+	value = aSubmission.user.userName;
+}
+
+Name: WOString {
+	value = aSubmission.user.name_LF;
+}
+
+SubmitNumber: WOString {
+	value = aSubmission.submitNumber;
+}
+
+SubmitTime: WOString {
+	value = aSubmission.submitTime;
+	dateformat = "%m/%d/%y %I:%M%p";
+}
+
+TestingScore: WOString {
+	value = aSubmission.result.correctnessScoreRaw;
+	numberformat = "0.0";
+}
+
+ToolScore: WOString {
+	value = aSubmission.result.toolScoreRaw;
+	numberformat = "0.0";
+}
+
+TAScore: WOString {
+	value = aSubmission.result.taScoreRaw;
+	numberformat = "0.0";
+}
+
+HighScore: WOString {
+	value = highScore;
+	numberformat = "0.0";
+}
+
+AvgScore: WOString {
+	value = avgScore;
+	numberformat = "0.0";
+}
+
+LowScore: WOString {
+	value = lowScore;
+	numberformat = "0.0";
+}
+
+HasTAScore: WOConditional {
+	condition = hasTAScore;
+}
+
+NoTAScore: WOConditional {
+	condition = hasTAScore;
+	negate    = true;
+}
+
+EditScore: WOHyperlink {
+    action = editSubmissionScore;
+}
+
+ScoreAdjustment: WOString {
+	value = aSubmission.result.scoreAdjustment;
+	numberformat = "0.0";
+}
+
+FinalScore: WOString {
+	value = aSubmission.result.finalScore;
+	numberformat = "0.0";
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+UsesToolCheckScore: WOConditional {
+	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
+}
+
+UsesBonusesOrPenalties: WOConditional {
+	condition = prefs.assignmentOffering.assignment.usesBonusesOrPenalties;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Name";
+	key = "user.name_LF";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "PID";
+	key = "user.pid";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Grading Status";
+	key = "result.status";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Submission Time";
+	key = "submitTime";
+}
+
+WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+	displayGroup = submissionDisplayGroup;
+	displayKey = "Final Score";
+	key = "result.finalScore";
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    nextEnabled = false;
+}

@@ -1,0 +1,52 @@
+AdminRepetition: WORepetition {
+	item  = courseOffering;
+	list  = adminCourses;
+	index = index;
+}
+
+CompactName: WOString {
+	value = courseOffering.compactName;
+}
+
+CourseName: WOString {
+	value = courseOffering.course.name;
+}
+
+HasAdminCourses: WOConditional {
+    condition = adminCourses.count;
+}
+
+NotTeachingCourses: WOConditional {
+    condition = staffCourses.count;
+    negate    = true;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}
+
+RadioButton1: WORadioButton {
+	name      = "Group";
+	selection = selectedStaffIndex;
+	value     = index1;
+}
+
+RadioButton2: WORadioButton {
+	name      = "Group";
+	selection = selectedAdminIndex;
+	value     = index2;
+}
+
+TeachingCourses: WOConditional {
+    condition = staffCourses.count;
+}
+
+TeachingRepetition: WORepetition {
+	item  = courseOffering;
+	list  = staffCourses;
+	index = index;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}

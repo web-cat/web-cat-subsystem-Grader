@@ -1,0 +1,95 @@
+<!-- note: this version of the color picker is optimized for IE 5.5+ only -->
+
+<html STYLE="width: 238px; height: 196px"><head><title>Select Color</title>
+<script language="javascript">
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+
+function Init() {                                                       // run on page load
+  document.body.onkeypress = _CloseOnEsc;
+
+  color = window.dialogArguments;
+  color = ValidateColor(color) || '000000';
+  View(color);                                                          // set default color
+}
+
+function View(color) {                  // preview color
+  if ( color == '' ){
+     document.all.ColorPreview.style.backgroundColor = '';
+     document.all.ColorHex.value = '';
+  } else {
+     document.all.ColorPreview.style.backgroundColor = '#' + color;
+     document.all.ColorHex.value = '#' + color;
+  }
+}
+
+function Set(string) {                   // select color
+  if (string == '') {
+     window.returnvalue = '';
+  } else {
+     color = ValidateColor(string);
+     View(color);                          // show selected color
+     window.returnValue = color;           // set return value
+  }
+  window.close();                       // close dialog
+}
+
+function ValidateColor(string) {                // return valid color code
+  string = string || '';
+  string = string + "";
+  string = string.toUpperCase();
+  chars = '0123456789ABCDEF';
+  out   = '';
+
+  for (i=0; i<string.length; i++) {             // remove invalid color chars
+    schar = string.charAt(i);
+    if (chars.indexOf(schar) != -1) { out += schar; }
+  }
+    
+  if (out.length != 6) { return null; }            // check length
+  return out;
+} 
+
+</script>
+</head>
+<body bgcolor="#000000" topmargin=0 leftmargin=0 onload="Init()">
+
+<form method=get onSubmit="Set(document.all.ColorHex.value); return false;">
+
+<table border=0 cellspacing=0 cellpadding=4 width=100%>
+ <tr>
+  <td bgcolor="buttonface" valign=center><div style="background-color: #000000; padding: 1; height: 21px; width: 50px"><div id="ColorPreview" style="height: 100%; width: 100%"></div></div></td>
+  <td bgcolor="buttonface" valign=center><input type="text" name="ColorHex" value="" size=15 style="font-size: 12px"></td>
+  <td bgcolor="buttonface" width=100%><img border="0" src="../images/ed_transparentcolor.gif" onMouseOver=View('') onClick=Set('')></td>
+ </tr>
+</table>
+
+<table bgcolor=0 cellspacing=1 cellpadding=0 style="cursor: hand;"> 
+<script language="JavaScript"> 
+   <!--
+   var x = new Array('00','33','66','99','CC','FF'); 
+   var y = new Array('000000','333333','666666','999999','CCCCCC','FFFFFF','FF0000','00FF00','0000FF','FFFF00','00FFFF','FF00FF');
+   i=0; 
+   for (d=0;d<2;d++) { 
+     for (c=0;c<6;c++) { 
+       document.write('<tr><td width=10 height=10></td><td onClick=Set(\''+y[i]+'\') onMouseOver=View(\''+y[i]+'\') width=10 height=10 bgcolor=#'+y[i]+'></td><td width=10 height=10></td>'); 
+       i++; 
+       for (b=0;b<3;b++) { 
+         for (a=0;a<6;a++) { 
+           r=x[b+3*d]+x[a]+x[c]; 
+           document.write('<td width=10 height=10 onClick=Set(\''+r+'\') onMouseOver=View(\''+r+'\') bgcolor=#'+r+'></td>'); 
+         } 
+       } 
+       document.write('</tr>'); 
+     } 
+   } 
+//-->
+</script> 
+</tr>
+</table>
+
+
+</form>
+</body></html>

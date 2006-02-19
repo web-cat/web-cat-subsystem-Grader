@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+var highlightedText = window.dialogArguments;
+function returnMyPage() {var text = escape( document.SaveForm.MyPage.value );window.returnValue = text;}
+//-->
+</SCRIPT>
+<SCRIPT DEFER>
+<!--
+function _CloseOnEsc() {if (event.keyCode == 27) { window.close(); return; }}
+document.body.onkeypress = _CloseOnEsc;
+//-->
+</SCRIPT>
+</head>
+
+<body>
+<form name="SaveForm">
+
+<IFRAME SRC="http://www.webstationone.com/test/htmlarea/templates/template1.inc" NAME="EditArea" ID="EditArea" WIDTH="600" HEIGHT="300"></IFRAME>
+<TEXTAREA STYLE="visibility: hidden;" ID="MyPage"></TEXTAREA>
+<input type=button value="Show New HTML" onclick="MyPage.innerText = EditArea.document.body.innerHTML;returnMyPage();window.close();" ></input>
+</form>
+</body>
+</html>

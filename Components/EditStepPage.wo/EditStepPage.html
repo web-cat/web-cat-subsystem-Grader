@@ -1,0 +1,36 @@
+<webobject name="Page">Script: <span class="hl"><webobject name="ScriptName"/></span>
+<p>For: <span class="hl"><webobject name="ForAssignmentName"/></span></p>
+
+<h2>Reusable Configuration Options</h2>
+<webobject name="HasOptions">
+<p>This script supports additional option settings that can be placed in a
+named configuration profile that is shared among several assignments.</p>
+
+<p>Reusable option set:
+<webobject name="ReusableList"/><webobject name="EditReusableConfig"/>
+<webobject name="NewReusableConfig"/></p>
+
+</webobject><webobject name="HasNoOptions">
+<p>This script has no reusable configuration options.</p>
+</webobject>
+
+<h2>Assignment-Specific Options</h2>
+<webobject name="HasAssignmentOptions">
+<p><webobject name="OptionsAreVerbose"><webobject name="TerseOptions"/>
+</webobject><webobject name="OptionsAreTerse"><webobject name="VerboseOptions"/>
+</webobject> verbose descriptions</p>
+<webobject name="HasCategories">
+<table style="width:100%"><tr><th>Show: <webobject name="CategoryList"/></th><tr></table>
+<script language="JavaScript">
+<!--
+function submitForm() { document.WizardForm.submit(); }
+//-->
+</script>
+</webobject>
+<webobject name="Repetition1">
+<p><webobject name="AssignmentOptionPanel"/></p>
+</webobject>
+</webobject><webobject name="HasNoAssignmentOptions">
+<p>This script has no configurable assignment-specific options.</p>
+</webobject>
+</webobject>

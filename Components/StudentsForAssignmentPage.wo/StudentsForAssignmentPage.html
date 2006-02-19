@@ -1,0 +1,36 @@
+<webobject name="Page"><webobject name="Somebody">For: <span class="hl"><webobject name="AssignmentName"/></span></p>
+    <p><b>Score Summary:</b>
+    High: <span class="hl"><webobject name="HighScore"/></span>
+    Mean: <span class="hl"><webobject name="AvgScore"/></span>
+    Low:  <span class="hl"><webobject name="LowScore"/></span></p>
+    <p>Student submissions for you to grade
+      (only students with submissions are shown):<br>
+    <webobject name="BatchNavigator"/>
+    <div class="shadow"><table style="font-size: 10pt;"><tbody>
+    <tr><th class="sm">Done?<webobject name="WCSortOrder3"/></th>
+        <!-- th>PID<! webobject name="WCSortOrder2"/></th -->
+        <th>Name<webobject name="WCSortOrder1"/></th>
+        <th class="sm">Sub No.</th>
+        <th>Time<webobject name="WCSortOrder4"/></th>
+        <th class="sm">Testing</th>
+        <webobject name="UsesToolCheckScore"><th class="sm">Tool Checks</th></webobject>
+        <th>TA</th>
+        <webobject name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></webobject>
+        <th class="sm">Score<webobject name="WCSortOrder5"/></th>
+    </tr>
+    <webobject name="Repetition1"><webobject name="TR">
+	    <td><webobject name="Status"/></td>
+        <!-- td><! webobject name="PID"/></td -->
+        <td><webobject name="Name"/></td>
+        <td class="n"><webobject name="SubmitNumber"/></td>
+        <td class="sm"><webobject name="SubmitTime"/></td>
+        <td class="n"><webobject name="TestingScore"/></td>
+        <webobject name="UsesToolCheckScore"><td class="n"><webobject name="ToolScore"/></td></webobject>
+        <td class="n"><webobject name="EditScore"><webobject name="HasTAScore"><webobject name="TAScore"/></webobject><webobject name="NoTAScore">&lt;edit&gt;</webobject></webobject></td>
+        <webobject name="UsesBonusesOrPenalties"><td class="n"><webobject name="ScoreAdjustment"/></td></webobject>
+        <td class="n"><webobject name="FinalScore"/></td>
+    </webobject></webobject>
+    </tbody></table></div>
+</webobject><webobject name="Nobody">
+<p>No submissions matching your criteria have been found.</p>
+</webobject></webobject>

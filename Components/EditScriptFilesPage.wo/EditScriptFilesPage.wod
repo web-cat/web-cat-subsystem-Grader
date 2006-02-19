@@ -1,0 +1,68 @@
+CanEdit: WOConditional {
+    condition = isEditable;
+}
+
+CreateFolder: WOSubmitButton {
+    value  = "Create Folder";
+    action = createFolder;
+}
+
+FolderList1: WOPopUpButton {
+    list          = folderList;
+    item          = aFolder;
+    displayString = aFolder;
+    selection     = selectedParentFolderForSubFolder;
+}
+
+FolderList2: WOPopUpButton {
+    list          = folderList;
+    item          = aFolder;
+    displayString = aFolder;
+    selection     = selectedParentFolderForUpload;
+}
+
+FolderName: WOTextField {
+    value = folderName;
+    width = 25;
+}
+
+FileBrowser: net.sf.webcat.core.FileBrowser {
+    title                 = browserTitle;
+    file                  = base;
+    isEditable            = isEditable;
+    allowSelection        = allowSelection;
+    fileSelectionListener = fileSelectionListener;
+    allowSelectDir        = allowSelectDir;
+    allowSelectExtensions = allowSelectExtensions;
+    includeSeparator      = true;
+    fileEditListener      = thisPage;
+    applyChangesOnMod     = true;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = sideStepTitle;
+}
+
+Replace: WOSubmitButton {
+    value  = "Replace Entire Folder";
+    action = replaceEntireFolder;
+}
+
+Unzip: WOCheckBox {
+    checked = unzip;
+}
+
+Upload: WOSubmitButton {
+    value  = "Upload File";
+    action = uploadFile;
+}
+
+UploadFile2: WOFileUpload {
+	data = uploadedFile2;
+	filePath = uploadedFileName2;
+}
+
+UploadFile3: WOFileUpload {
+	data = uploadedFile3;
+	filePath = uploadedFileName3;
+}

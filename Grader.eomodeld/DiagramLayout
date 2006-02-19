@@ -1,0 +1,21 @@
+{
+    Layouts = {
+        Default = {
+            EntityOption = All; 
+            RelationshipOption = None; 
+            ViewPositions = {
+                Assignment = (77.000000, 95.000000, 196.000000, 528.000000); 
+                EnqueuedJob = ("-405.000000", 535.000000, 203.000000, 384.000000); 
+                FacultyTaskWizardState = (330.000000, 311.000000, 201.000000, 240.000000); 
+                GradingProfile = ("-159.000000", 53.000000, 195.000000, 636.000000); 
+                ResultFile = ("-398.000000", 46.000000, 189.000000, 114.000000); 
+                ScriptFile = (345.000000, 68.000000, 175.000000, 204.000000); 
+                Submission = ("-130.000000", 699.000000, 153.000000, 204.000000); 
+                SubmissionResult = ("-391.000000", 163.000000, 167.000000, 384.000000); 
+                ViewSubmissionGradesWizardState = (322.000000, 642.000000, 213.391998, 222.000000); 
+            }; 
+            orthoLines = Y; 
+        }; 
+    }; 
+    Version = 1; 
+}

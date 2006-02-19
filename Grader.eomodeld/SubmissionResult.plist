@@ -1,0 +1,138 @@
+{
+    attributes = (
+        {
+            columnName = CCOMMENTS; 
+            name = comments; 
+            prototypeName = mediumText; 
+        }, 
+        {
+            columnName = CCOMMENTFORMAT; 
+            name = commentFormat; 
+            prototypeName = tinyInteger; 
+            userInfo = {
+                scalarConversionMethodName = byteValue; 
+                isScalar = true;
+                scalarDefault = 0;
+                type = byte;
+                valueClassName = Byte;
+            }; 
+        }, 
+        {
+            columnName = CCORRECTNESSSCORE; 
+            name = correctnessScore; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+                valueClassName = Double;
+            }; 
+        }, 
+         {
+            columnName = CISMOSTRECENT; 
+            name = isMostRecent; 
+            prototypeName = boolean; 
+            userInfo = {
+                isScalar = true;
+                scalarDefault = false;
+                type = boolean; 
+            }; 
+        }, 
+        { name = id; prototypeName = id; }, 
+        {
+            columnName = CSTATELEMENTSLABEL; 
+            name = statElementsLabel; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = CSTATUS; 
+            name = status; 
+            prototypeName = tinyInteger; 
+            userInfo = {
+                scalarConversionMethodName = byteValue; 
+                isScalar = true;
+                scalarDefault = net.sf.webcat.core.Status.TO_DO;
+                type = byte;
+                valueClassName = Byte;
+            }; 
+        }, 
+        {
+            columnName = CTASCORE; 
+            name = taScore; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+                valueClassName = Double;
+            }; 
+        }, 
+        {
+            columnName = CTOOLSCORE; 
+            name = toolScore; 
+            prototypeName = double; 
+            userInfo = {
+                scalarConversionMethodName = doubleValue; 
+                isScalar = true; 
+                scalarDefault = 0.0;
+                type = double;
+                valueClassName = Double;
+            }; 
+        }
+    ); 
+    attributesUsedForLocking = (
+        commentFormat,
+        correctnessScore, 
+        isMostRecent,
+        statElementsLabel, 
+        taScore, 
+        toolScore, 
+        status
+    ); 
+    className = net.sf.webcat.grader.SubmissionResult; 
+    classProperties = (
+        commentFormat,
+        comments,
+        correctnessScore, 
+        isMostRecent,
+        resultFiles, 
+        taScore, 
+        toolScore, 
+        statElementsLabel, 
+        status, 
+        submissions, 
+        submissionFileStats
+    ); 
+    externalName = TSUBMISSIONRESULT; 
+    name = SubmissionResult; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = ResultFile; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
+            name = resultFiles; 
+            ownsDestination = Y; 
+        }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = SubmissionFileStats; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
+            name = submissionFileStats; 
+            ownsDestination = Y; 
+        }, 
+        {
+            destination = Submission; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
+            name = submissions; 
+        }
+    ); 
+}

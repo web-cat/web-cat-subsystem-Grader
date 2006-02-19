@@ -1,0 +1,13 @@
+{
+	"WebObjects Release" = "WebObjects 5.2"; 
+	encoding = NSMacOSRomanStringEncoding; 
+    variables = {
+        paramDisplayGroup = {
+            class = WODisplayGroup; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            sortOrdering = (); 
+        }; 
+    }; 
+}

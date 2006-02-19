@@ -1,0 +1,14 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        submissionDisplayGroup = {
+            class = WODisplayGroup; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 100; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = user.lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+        }; 
+    }; 
+}

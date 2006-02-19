@@ -1,0 +1,33 @@
+{
+    "WebObjects Release" = "WebObjects 5.0"; 
+    encoding = NSWindowsCP1252StringEncoding; 
+    variables = {
+        scriptDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = steps; 
+                masterClassDescription = Step; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = order; selectorName = "compareAscending:"; }); 
+        }; 
+	    submissionProfileDisplayGroup = {
+	        class = WODisplayGroup; 
+	        formatForLikeQualifier = "%@*"; 
+	        localKeys = (); 
+	        numberOfObjectsPerBatch = 0; 
+	        sortOrdering = (
+	            {
+	                class = EOSortOrdering; 
+	                key = name; 
+	                selectorName = "compareCaseInsensitiveAscending:"; 
+	            }
+	        ); 
+	    }; 
+    };
+}

@@ -1,0 +1,11 @@
+# ===================================================================
+# W E B - C A T   C O N F I G U R A T I O N   P R O P E R T I E S
+# ===================================================================
+# Subsystem properties for the Grader subsystem:
+# -------------------------------------------------------------------
+grader.timeout.max         = 600
+grader.timeout.default     = 60
+grader.maxFileUploadSize   = 200000
+grader.gracePeriod         = 15
+grader.resumeSuspendedJobs = true
+grader.mailResultNotificationAfterMinutes = 15

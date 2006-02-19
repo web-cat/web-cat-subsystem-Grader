@@ -1,0 +1,112 @@
+BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = studentDisplayGroup;
+}
+
+BatchNavigator2: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = notStudentDisplayGroup;
+}
+
+CourseName: WOString {
+    value = session.courseOffering.deptNumberAndName;
+}
+
+HasNoStudents: WOConditional {
+	condition = studentDisplayGroup.allObjects.count;
+	negate    = true;
+}
+
+HasNoPotentialStudents: WOConditional {
+	condition = notStudentDisplayGroup.allObjects.count;
+	negate    = true;
+}
+
+Upload: WOSubmitButton {
+	action = upload;
+	value  = " Upload ";
+}
+
+AuthList: WOPopUpButton {
+	list              = domainDisplayGroup.allObjects;
+	selection         = domain;
+	item              = domainItem;
+	displayString     = domainItem.displayableName;
+}
+
+uploadCSV: WOFileUpload {
+	data = data;
+	filePath = filePath;
+}
+
+StudentRepetition: WORepetition {
+	item = student;
+	list = studentDisplayGroup.displayedObjects;
+	index = index;
+}
+
+NotStudentRepetition: WORepetition {
+	item = student;
+	list = notStudentDisplayGroup.displayedObjects;
+	index = index;
+}
+
+UserID: WOString {
+	value = student.userName;
+}
+
+Name: WOHyperlink {
+    href = student.url;
+    string = student.name_LF;
+}
+
+Email: WOHyperlink {
+    href = student.emailHref;
+    string = student.email;
+}
+
+TR: net.sf.webcat.core.TableRow {
+	index = index;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+	displayGroup = studentDisplayGroup;
+	displayKey = "Name";
+	key = "name_LF";
+}
+
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+	displayGroup = studentDisplayGroup;
+	displayKey = "User ID";
+	key = "userName";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+	displayGroup = notStudentDisplayGroup;
+	displayKey = "Name";
+	key = "name";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+	displayGroup = notStudentDisplayGroup;
+	displayKey = "User ID";
+	key = "userName";
+}
+
+Page: net.sf.webcat.core.WizardPage {
+}
+
+RemoveStudent: WOImageButton {
+    filename  = "icons/trash.gif";
+    framework = "Core";
+	action    = removeStudent;
+	border    = "0";
+	width     = "14";
+	height    = "17";
+}
+
+AddStudent: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addStudent;
+	border   = "0";
+	width    = "46";
+	height   = "17";
+}

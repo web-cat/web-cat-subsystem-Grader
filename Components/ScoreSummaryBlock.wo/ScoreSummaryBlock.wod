@@ -1,0 +1,152 @@
+CanEditDeduction: WOConditional {
+    condition = allowScoreEdit;
+}
+
+CannotEditDeduction: WOConditional {
+    condition = allowScoreEdit;
+    negate    = true;
+}
+
+Chart1: net.sf.webcat.grader.graphs.HistogramChart {
+    dataset    = prefs.assignmentOffering.graphSummary.frequencyDataset;
+    title      = "Score Distribution for the Class";
+    xAxisLabel = "Score";
+    yAxisLabel = "Students";
+    markValue  = result.graphableScore;
+}
+
+Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
+    dataset    = correctnessToolsDataset;
+    title      = "Your Score Across Your Submissions";
+    xAxisLabel = "Date";
+    yAxisLabel = "Your Score";
+}
+
+Deduction: WOString {
+	numberformat = "0.0";
+	value        = taScore;
+}
+
+EditDeduction: WOTextField {
+	numberformat = "0.0";
+	size         = 7;
+	value        = result.taScoreRaw;
+}
+
+FinalMeter: WOString {
+	value      = finalMeter;
+	escapeHTML = false;
+}
+
+FinalScore: WOString {
+	numberformat = "0.0";
+	value        = result.finalScore;
+}
+
+Form: WOForm {
+    multipleSubmit = true;
+}
+
+Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = prefs.submission.assignmentOffering.graphSummary;
+    markScore    = prefs.submission.result.graphableScore;
+}
+
+HasTAGrade: WOConditional {
+	condition = hasTAGrade;
+}
+
+HasTestingGrade: WOConditional {
+	condition = prefs.assignmentOffering.assignment.usesTestingScore;
+}
+
+HasToolGrade: WOConditional {
+	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
+}
+
+HideGraphs: WOConditional {
+    condition = session.userPreferences.FinalReportShowGraphs;
+    negate    = true;
+}
+
+HideGraphsButton: WOSubmitButton {
+    value  = "Hide Graphs";
+    action = toggleShowGraphs;
+}
+
+IncludeSeparator: WOConditional {
+    condition = includeSeparator;
+}
+
+IsInForm: WOConditional {
+    condition = context.isInForm;
+}
+
+IsNotInForm: WOConditional {
+    condition = context.isInForm;
+    negate    = true;
+}
+
+PossibleScore: WOString {
+	value = prefs.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
+}
+
+ShowGraphs: WOConditional {
+    condition = session.userPreferences.FinalReportShowGraphs;
+}
+
+ShowGraphsButton: WOSubmitButton {
+    value  = "Show Graphs";
+    action = toggleShowGraphs;
+}
+
+TAMeter: WOString {
+	value      = taMeter;
+	escapeHTML = false;
+}
+
+TestingMeter: WOString {
+	value = correctnessMeter;
+	escapeHTML = false;
+}
+
+TestingPossible: WOString {
+	numberformat = "0.0";
+	value        = prefs.assignmentOffering.assignment.submissionProfile.correctnessPoints;
+}
+
+TestingScore: WOString {
+	numberformat = "0.0";
+	value        = result.correctnessScoreRaw;
+}
+
+ToolMeter: WOString {
+	value      = toolMeter;
+	escapeHTML = false;
+}
+
+ToolPossible: WOString {
+	numberformat = "0.0";
+	value        = prefs.assignmentOffering.assignment.submissionProfile.toolPointsRaw;
+}
+
+ToolScore: WOString {
+	numberformat = "0.0";
+	value        = result.toolScoreRaw;
+}
+
+TotalTAPoints: WOString {
+	numberformat = "0.0";
+	value = prefs.assignmentOffering.assignment.submissionProfile.taPoints;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index     = rowNumber;
+    increment = true;
+}
+
+TR2: net.sf.webcat.core.TableRow {
+    index     = rowNumber;
+    increment = true;
+    id        = "divider";
+}

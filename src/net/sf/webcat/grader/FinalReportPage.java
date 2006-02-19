@@ -1,0 +1,510 @@
+/*==========================================================================*\
+ |  $Id$
+ |*-------------------------------------------------------------------------*|
+ |  Copyright (C) 2006 Virginia Tech
+ |
+ |  This file is part of Web-CAT.
+ |
+ |  Web-CAT is free software; you can redistribute it and/or modify
+ |  it under the terms of the GNU General Public License as published by
+ |  the Free Software Foundation; either version 2 of the License, or
+ |  (at your option) any later version.
+ |
+ |  Web-CAT is distributed in the hope that it will be useful,
+ |  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ |  GNU General Public License for more details.
+ |
+ |  You should have received a copy of the GNU General Public License
+ |  along with Web-CAT; if not, write to the Free Software
+ |  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ |
+ |  Project manager: Stephen Edwards <edwards@cs.vt.edu>
+ |  Virginia Tech CS Dept, 660 McBryde Hall (0106), Blacksburg, VA 24061 USA
+\*==========================================================================*/
+
+package net.sf.webcat.grader;
+
+import com.webobjects.appserver.*;
+import com.webobjects.eoaccess.*;
+import com.webobjects.eocontrol.*;
+import com.webobjects.foundation.*;
+import er.extensions.*;
+import java.io.*;
+
+import net.sf.webcat.core.*;
+
+import org.apache.log4j.Logger;
+
+// -------------------------------------------------------------------------
+/**
+ * This class presents the final grading report on a student
+ * submission.  If the submission has not yet completed grading,
+ * then the page presents a message indicating that grading is
+ * in-process and automatically reloads after 10 seconds.  If some
+ * error happened during grading, then the student is informed.
+ * Otherwise, the final grading report is presented.
+ *
+ * @author Stephen Edwards
+ * @version $Id$
+ */
+public class FinalReportPage
+    extends GraderComponent
+{
+    //~ Constructors ..........................................................
+
+    // ----------------------------------------------------------
+    /**
+     * This is the default constructor
+     * 
+     * @param context The page's context
+     */
+    public FinalReportPage( WOContext context )
+    {
+        super( context );
+    }
+
+
+    //~ KVC Attributes (must be public) .......................................
+
+    public SubmissionResult    result;
+    public WODisplayGroup      statsDisplayGroup;
+    // For iterating over display group
+    public SubmissionFileStats stats;
+    public int                 index;
+    
+    public boolean submissionChosen = false;
+    /** true if an inline report file exists */
+    public boolean hasInlineReport  = false;
+    /** true if an inline summary file exists */
+    public boolean hasInlineSummary = false;
+    /** true if submission file stats are recorded for this submission */
+    public boolean hasFileStats     = false;
+    /** The job's isFinished attribute is tested once and stored here.
+        This prevents race conditions arising from testing that field
+        multiple times in the body of the page, or between generating a
+        value for areInlineReports and later testing the job's isFinished
+        attribute separately. */
+    public boolean reportIsReady;
+    /** The associated refresh interval for this page */
+    public int refreshTimeout = 15;
+    /** The report object */
+    public ResultFile report;
+    public ResultFile selectedReport = null;
+    /** Array of all the downloadable report files */
+    public NSArray reportArray;
+    
+    public boolean showReturnToGrading = false;
+
+
+    //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Adds to the response of the page
+     * 
+     * @param response The response being built
+     * @param context  The context of the request
+     */
+    public void appendToResponse( WOResponse response, WOContext context )
+    {
+        log.debug( "beginning appendToResponse()" );
+        jobData = null;
+        if ( prefs().submission() != null )
+        {
+            submissionChosen = true;
+            result = prefs().submission().result();
+            reportIsReady   = ( result != null );
+            if ( reportIsReady )
+            {
+                File inlineReport  = result.resultFile();
+                hasInlineReport    = inlineReport.exists();
+                File inlineSummary = result.summaryFile();
+                hasInlineSummary   = inlineSummary.exists();
+
+                hasFileStats = ( result.submissionFileStats().count() > 0 );
+                statsDisplayGroup.setObjectArray( result.submissionFileStats() );
+
+                NSMutableArray fileList = result.resultFiles().mutableClone();
+                ResultFile userSubmission = new ResultFile();
+                userSubmission.setFileName(
+                    "../" + prefs().submission().fileName() );
+                userSubmission.setMimeType( "application/octet-stream" );
+                userSubmission.setLabel( "Your original submission" );
+                fileList.addObject( userSubmission );
+                reportArray = fileList;
+            }
+        }
+        showCoverageData = null;
+        super.appendToResponse( response, context );
+        log.debug( "ending appendToResponse()" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the file delivery page with the non inline file.
+     * @return the file delivery page
+     */
+    public WOComponent fileDeliveryAction()
+    {
+        DeliverFile download =
+            (DeliverFile)pageWithName( DeliverFile.class.getName() );
+        download.setFileName(
+            new File( prefs().submission().resultDirName(),
+                      selectedReport.fileName() ) );
+        download.setContentType( selectedReport.mimeType() );
+        download.setStartDownload( true );
+        return download;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns null to force a reload of the current page.
+     * @return always null, to refresh the current page
+     */
+    public WOComponent refreshAction()
+    {
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Jump to the start page for selecting past results.
+     * @return the new page
+     */
+    public WOComponent pastResults()
+    {
+        return pageWithName(
+            wcSession().tabs.selectById( "PastResults" ).pageName() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns null to force a reload of the current page.
+     * @return always null, to refresh the current page
+     */
+    public boolean gradingPaused()
+    {
+        EnqueuedJob job = prefs().submission().enqueuedJob();
+        return ( job != null  &&  job.paused() );
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasTAComments()
+    {
+        return result.status() == Status.CHECK
+            && result.comments() != null
+            && !result.comments().equals( "" );
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasNonZeroScore()
+    {
+    return result.finalScore() > 0.0;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent fileStatsDetails()
+    {
+        log.debug( "fileStatsDetails()" );
+        prefs().setSubmissionFileStatsRelationship( stats );
+        WCComponent statsPage = (WCComponent)pageWithName(
+                        SubmissionFileDetailsPage.class.getName() );
+        statsPage.nextPage = this;
+        return statsPage;
+    }
+
+
+    // ----------------------------------------------------------
+    public static String meter( double fraction )
+    {
+        StringBuffer buffer = new StringBuffer( 250 );
+        int covered = (int)( 200.0 * fraction + 0.5 );
+        int uncovered = 200 - covered;
+        buffer.append( "<table class=\"percentbar\"><tr><td " );
+        if ( covered < 1 )
+        {
+            // Completely uncovered
+            buffer.append( "class=\"minus\"><img src=\"/images/blank.gif\" width=\"200\" height=\"12\" alt=\"nothing covered\">" );
+        }
+        else if ( uncovered > 0 )
+        {
+            // Partially covered
+            buffer.append( "class=\"plus\"><img src=\"/images/blank.gif\" width=\"" );
+            buffer.append( covered );
+            buffer.append( "\" height=\"12\" alt=\"" );
+            buffer.append( (int)( 100.0 * fraction + 0.5 ) );
+            buffer.append( " covered\"></td><td class=\"minus\"><img src=\"/images/blank.gif\" width=\"" );
+            buffer.append( uncovered );
+            buffer.append( "\" height=\"12\" alt=\"" );
+            buffer.append( 100 - (int)( 100.0 * fraction + 0.5 ) );
+            buffer.append( " uncovered\">" );
+        }
+        else
+        {
+            // Completely covered
+            buffer.append( "class=\"plus\"><img src=\"/images/blank.gif\" width=\"200\" height=\"12\" alt=\"fully covered\">" );
+        }
+        buffer.append( "</td></tr></table>" );
+        return buffer.toString();
+    }
+
+
+    // ----------------------------------------------------------
+    public String coverageMeter()
+    {
+        return meter( ( (double)stats.elementsCovered() ) /
+                      ( (double)stats.elements() ) );
+    }
+
+
+    // ----------------------------------------------------------
+    public int queuedJobCount()
+    {
+        ensureJobDataIsInitialized();
+        return jobData.queueSize;
+    }
+
+
+    // ----------------------------------------------------------
+    public int queuePosition()
+    {
+        ensureJobDataIsInitialized();
+        return jobData.queuePosition + 1;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the estimated time needed to complete processing this job.
+     * @return the most recent job wait
+     */
+    public NSTimestamp estimatedWait()
+    {
+        ensureJobDataIsInitialized();
+        return new NSTimestamp( jobData.estimatedWait );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the time taken to process the most recent job.
+     * @return the most recent job wait
+     */
+    public NSTimestamp mostRecentJobWait()
+    {
+        ensureJobDataIsInitialized();
+        return new NSTimestamp( jobData.mostRecentWait );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the date format string for the corresponding time value
+     * @param timeDelta the time to format
+     * @return the time format to use
+     */
+    public static String formatForSmallTime( long timeDelta )
+    {
+        String format = "%j days, %H:%M:%S";
+        final int minute = 60 * 1000;
+        final int hour   = 60 * minute;
+        final int day    = 24 * hour;
+        if ( timeDelta < minute )
+        {
+            format = "%S seconds";
+        }
+        else if ( timeDelta < hour )
+        {
+            format = "%M:%S minutes";
+        }
+        else if ( timeDelta < day )
+        {
+            format = "%H:%M:%S hours";
+        }
+        return format;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the date format string for the corresponding time value
+     * @return the time format for the estimated job wait
+     */
+    public String estimatedWaitFormat()
+    {
+        ensureJobDataIsInitialized();
+        return formatForSmallTime( jobData.estimatedWait );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the date format string for the corresponding time value
+     * @return the time format for the most recent job wait
+     */
+    public String mostRecentJobWaitFormat()
+    {
+        ensureJobDataIsInitialized();
+        return formatForSmallTime( jobData.mostRecentWait );
+    }
+
+
+    // ----------------------------------------------------------
+    public Boolean showCoverageData()
+    {
+        if ( showCoverageData == null )
+        {
+            showCoverageData = Boolean.FALSE;
+            if ( hasFileStats )
+            {
+                for ( int i = 0; i < statsDisplayGroup.allObjects().count();
+                      i++ )
+                {
+                    SubmissionFileStats sfs = (SubmissionFileStats)
+                        statsDisplayGroup.allObjects().objectAtIndex( i );
+                    if ( sfs.elementsRaw() != null )
+                    {
+                        showCoverageData = Boolean.TRUE;
+                        break;
+                    }
+                }
+            }
+        }
+        return showCoverageData;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Determine if user can submit to this assignment.
+     * 
+     * @return true if the user can make another submission
+     */
+    public boolean canSubmitAgain()
+    {
+        boolean answer = false;
+        if ( result != null && !showReturnToGrading )
+        {
+            answer = result.submission().assignmentOffering().userCanSubmit(
+                wcSession().localUser() );
+        }
+        return answer;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * An action to go to the submission page for this assignment.
+     * 
+     * @return the submission page for this assignment
+     */
+    public WOComponent submitAgain()
+    {
+        return pageWithName(
+            wcSession().tabs.selectById( "UploadSubmission" ).pageName() );
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent defaultAction()
+    {
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    static private class JobData
+    {
+        public NSArray jobs;
+        public int queueSize;
+        public int queuePosition;
+        long mostRecentWait;
+        long estimatedWait;
+    }
+
+
+    // ----------------------------------------------------------
+    private void ensureJobDataIsInitialized()
+    {
+        if ( jobData == null )
+        {
+            jobData = new JobData();
+            NSMutableArray qualifiers = new NSMutableArray();
+            qualifiers.addObject( new EOKeyValueQualifier(
+                            EnqueuedJob.DISCARDED_KEY,
+                            EOQualifier.QualifierOperatorEqual,
+                            ERXConstant.integerForInt( 0 )
+            ) );
+            qualifiers.addObject( new EOKeyValueQualifier(
+                            EnqueuedJob.PAUSED_KEY,
+                            EOQualifier.QualifierOperatorEqual,
+                            ERXConstant.integerForInt( 0 )
+            ) );
+            qualifiers.addObject( new EOKeyValueQualifier(
+                            EnqueuedJob.REGRADING_KEY,
+                            EOQualifier.QualifierOperatorEqual,
+                            ERXConstant.integerForInt( 0 )
+            ) );
+            EOFetchSpecification fetchSpec =
+                new EOFetchSpecification(
+                        EnqueuedJob.ENTITY_NAME,
+                        new EOAndQualifier( qualifiers ),
+                        new NSArray( new Object[]{
+                                new EOSortOrdering(
+                                        EnqueuedJob.SUBMIT_TIME_KEY,
+                                        EOSortOrdering.CompareAscending
+                                    )
+                            } )
+                    );
+            jobData.jobs =
+                wcSession().localContext().objectsWithFetchSpecification(
+                    fetchSpec
+                );
+            jobData.queueSize = jobData.jobs.count();
+            if ( oldQueuePos < 0
+                 || oldQueuePos >= jobData.queueSize )
+            {
+                oldQueuePos = jobData.queueSize - 1;
+            }
+            jobData.queuePosition = jobData.queueSize;
+            for ( int i = oldQueuePos; i >= 0; i-- )
+            {
+                if ( jobData.jobs.objectAtIndex( i )
+                     == prefs().submission().enqueuedJob() )
+                {
+                    jobData.queuePosition = i;
+                    break;
+                }
+            }
+            oldQueuePos = jobData.queuePosition;
+            if ( jobData.queuePosition == jobData.queueSize )
+            {
+                log.error( "cannot find job in queue for:"
+                           + prefs().submission() );
+            }
+            Grader grader = (Grader)( ( (Application)Application.application() )
+                            .subsystemManager()
+                            .subsystem( Grader.class.getName() ) );
+            jobData.mostRecentWait = grader.mostRecentJobWait();
+            jobData.estimatedWait =
+                grader.estimatedJobTime() * ( jobData.queuePosition + 1 );
+        }
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    private JobData jobData;
+    private int     oldQueuePos = -1;
+    private Boolean showCoverageData;
+
+    static Logger log = Logger.getLogger( FinalReportPage.class );
+}

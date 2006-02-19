@@ -1,0 +1,84 @@
+AdminCourseRepetition: WORepetition {
+	item  = courseOffering;
+	list  = coursesAdmined;
+	index = index;
+}
+
+CompactName: WOString {
+	value = courseOffering.compactName;
+}
+
+CourseName: WOString {
+	value = courseOffering.course.name;
+}
+
+HasNoCourses: WOConditional {
+    condition = session.user.enrolledIn.count;
+    negate    = true;
+}
+
+Page : net.sf.webcat.core.WizardPage {
+    finishEnabled = false;
+}
+
+RadioButton1: WORadioButton {
+	name      = "Group";
+	selection = selectedCourseIndex;
+	value     = index1;
+}
+
+RadioButton2: WORadioButton {
+	name      = "Group";
+	selection = selectedTAIndex;
+	value     = index2;
+}
+
+RadioButton3: WORadioButton {
+	name      = "Group";
+	selection = selectedInstructorIndex;
+	value     = index3;
+}
+
+RadioButton4: WORadioButton {
+	name      = "Group";
+	selection = selectedAdminIndex;
+	value     = index4;
+}
+
+HasAdminCourses: WOConditional {
+    condition = coursesAdmined.count;
+}
+
+HasCourses: WOConditional {
+    condition = session.user.enrolledIn.count;
+}
+
+HasInstructorCourses: WOConditional {
+    condition = coursesTaught.count;
+}
+
+HasTACourses: WOConditional {
+    condition = session.user.TAFor.count;
+}
+
+CourseRepetition: WORepetition {
+	item  = courseOffering;
+	list  = courseDisplayGroup.displayedObjects;
+	index = index;
+}
+
+InstructorCourseRepetition: WORepetition {
+	item  = courseOffering;
+	list  = coursesTaught;
+	index = index;
+}
+
+TACourseRepetition: WORepetition {
+	item  = courseOffering;
+	list  = coursesTAed;
+	index = index;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}
