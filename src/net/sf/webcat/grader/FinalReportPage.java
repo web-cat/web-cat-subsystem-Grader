@@ -490,9 +490,7 @@ public class FinalReportPage
                 log.error( "cannot find job in queue for:"
                            + prefs().submission() );
             }
-            Grader grader = (Grader)( ( (Application)Application.application() )
-                            .subsystemManager()
-                            .subsystem( Grader.class.getName() ) );
+            Grader grader = Grader.getInstance();
             jobData.mostRecentWait = grader.mostRecentJobWait();
             jobData.estimatedWait =
                 grader.estimatedJobTime() * ( jobData.queuePosition + 1 );

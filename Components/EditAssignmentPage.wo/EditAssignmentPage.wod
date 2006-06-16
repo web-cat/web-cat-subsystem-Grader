@@ -141,8 +141,8 @@ Order: WOString {
 Page: net.sf.webcat.core.WizardPage {
     finishEnabled = true;
     applyEnabled  = true;
-    stylesheet           = "http://web-cat.cs.vt.edu/jscalendar/skins/aqua/theme.css";
-    externalJavascript   = "http://web-cat.cs.vt.edu/jscalendar/calendar.js,http://web-cat.cs.vt.edu/jscalendar/lang/calendar-en.js,http://web-cat.cs.vt.edu/jscalendar/calendar-setup.js"; 
+    stylesheet           = "http://localhost/jscalendar/skins/aqua/theme.css";
+    externalJavascript   = "http://localhost/jscalendar/calendar.js,http://localhost/jscalendar/lang/calendar-en.js,http://localhost/jscalendar/calendar-setup.js"; 
 }
 
 PublishIt: WOCheckBox {

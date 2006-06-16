@@ -1,0 +1,95 @@
+<webobject name="Page">
+<webobject name="HasAdminPrivileges">
+<h2>Published Plug-ins (Available to All)</h2>
+<webobject name="HasPublishedPlugins">
+<div class="shadow"><table><tbody><tr><th>Published Plug-ins</th><th>Version</th>
+  <th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+<webobject name="PublishedPluginRepetition">
+<webobject name="TR">
+<td><b><webobject name="Name"/></b>
+<webobject name="UpToDate">(up to date)</webobject>
+<webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
+is available</b>)</webobject>
+<br/><webobject name="Description"/></td>
+<td><webobject name="Version"/></td>
+<td><webobject name="Date"/></td>
+<td class="s"><webobject name="UpToDate">not needed</webobject>
+<webobject name="OutOfDate"><webobject name="CanUpdate">
+  <webobject name="AutoUpdateEnabled"><webobject name="WillUpdate"/></webobject>
+  <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
+</webobject><webobject name="CannotUpdate">
+  <webobject name="WillNotUpdate"/>
+</webobject></webobject></td>
+<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Unpublish"/><webobject name="EditFiles"/><webobject name="Edit"/></td>
+</webobject></webobject></tbody></table></div>
+<div class="spacer">&nbsp;</div>
+</webobject><webobject name="HasNoPublishedPlugins">
+<p><span class="hl">No published plug-ins</span> have been installed.</p>
+</webobject>
+
+<h2>Unpublished Plug-ins (for Individual Use)</h2>
+<webobject name="HasUnpublishedPlugins">
+<div class="shadow"><table><tbody><tr><th>Unpublished Plug-ins</th><th>Version</th>
+  <th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+<webobject name="UnpublishedPluginRepetition">
+<webobject name="TR">
+<td><b><webobject name="Name"/></b>
+<webobject name="UpToDate">(up to date)</webobject>
+<webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
+is available</b>)</webobject>
+<br/><webobject name="Description"/></td>
+<td><webobject name="Version"/></td>
+<td><webobject name="Date"/></td>
+<td class="s"><webobject name="UpToDate">not needed</webobject>
+<webobject name="OutOfDate"><webobject name="CanUpdate">
+  <webobject name="AutoUpdateEnabled"><webobject name="WillUpdate"/></webobject>
+  <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
+</webobject><webobject name="CannotUpdate">
+  <webobject name="WillNotUpdate"/>
+</webobject></webobject></td>
+<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Publish"/><webobject name="EditFiles"/><webobject name="Edit"/></td>
+</webobject></webobject></tbody></table></div>
+<div class="spacer">&nbsp;</div>
+</webobject><webobject name="HasNoUnpublishedPlugins">
+<p><span class="hl">No unpublished plug-ins</span> have been installed.</p>
+</webobject>
+
+</webobject>
+
+<webobject name="HasNoAdminPrivileges">
+<h2>Personal Plug-ins (for Your Individual Use)</h2>
+<webobject name="HasPersonalPlugins">
+<div class="shadow"><table><tbody><tr><th>Your Personal Plug-ins</th><th>Version</th>
+  <th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+<webobject name="PersonalPluginRepetition">
+<webobject name="TR">
+<td><b><webobject name="Name"/></b>
+<webobject name="UpToDate">(up to date)</webobject>
+<webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
+is available</b>)</webobject>
+<br/><webobject name="Description"/></td>
+<td><webobject name="Version"/></td>
+<td><webobject name="Date"/></td>
+<td class="s"><webobject name="UpToDate">not needed</webobject>
+<webobject name="OutOfDate"><webobject name="CanUpdate">
+  <webobject name="AutoUpdateEnabled"><webobject name="WillUpdate"/></webobject>
+  <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
+</webobject><webobject name="CannotUpdate">
+  <webobject name="WillNotUpdate"/>
+</webobject></webobject></td>
+<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="IsNotPublished"><webobject name="Publish"/></webobject><webobject name="IsPublished"><webobject name="Unpublish"/></webobject><webobject name="EditFiles"/><webobject name="Edit"/></td>
+</webobject></webobject></tbody></table></div>
+<div class="spacer">&nbsp;</div>
+</webobject><webobject name="HasNoPersonalPlugins">
+<p>You have not yet installed any personal plug-ins.</p>
+</webobject>
+</webobject>
+
+<h2>Upload a New Plug-in</h2>
+<webobject name="Form1">
+<p>Upload a new plug-in: <webobject name="PluginUpload"/>
+<webobject name="Upload"/></p>
+</webobject>
+<p>Plug-ins are packaged as zip files that contain meta-data describing the
+plug-ins capabilities and configuration scheme.</p>
+</webobject>

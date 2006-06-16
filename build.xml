@@ -4,7 +4,7 @@
 	<!-- add optional targets to depends list if needed -->
 	<target name="build" depends="setProps,init.build,build.woframework"/>
 
-	<target name="install" depends="setProps,init.install,build.woframework"/>
+	<target name="install" depends="setProps,init.install,build.woframework,export.jar"/>
 	    
 	<target name="clean" depends="setProps">
 	  	<delete dir="${framework.name}.framework"/>
@@ -28,8 +28,12 @@
 
 	<!-- basic initializations  -->
 	<target name="init.install">
-		 <tstamp/>
-		 <property name="dest.dir" value="${install.dir}"/>
+        <tstamp/>
+        <property name="dest.dir" value="${install.dir}"/>
+        <propertyfile file="Properties"
+         comment="This file is automatically rewritten by ANT, so all formatting will be trashed.">
+          <entry key="${framework.name}.version.date" value="${DSTAMP}"/>  
+        </propertyfile>
 	</target>
 	
 	<target name="init.build">
@@ -88,4 +92,12 @@
      		</copy>
  	</target>
 
+    <target name="export.jar">   
+        <!-- need to jar framework up somewhere, based on version number info -->
+        <property file="Properties"/>
+        <jar destfile="../${framework.name}_${Grader.version.major}.${Grader.version.minor}.${Grader.version.revision}.jar"
+            basedir="${install.dir}"
+            includes="${framework.name}.framework/**"/>
+    </target>   
+   
 </project>

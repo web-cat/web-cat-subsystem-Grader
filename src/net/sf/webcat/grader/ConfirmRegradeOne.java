@@ -72,10 +72,7 @@ public class ConfirmRegradeOne
         submission.requeueForGrading( wcSession().localContext() );
         prefs().setSubmission( null );
         wcSession().commitLocalChanges();
-        ( (Grader)( ( (Application)Application.application() )
-                    .subsystemManager()
-                    .subsystem( Grader.class.getName() ) ) )
-            .graderQueue().enqueue( null );
+        Grader.getInstance().graderQueue().enqueue( null );
         // Skip return to the grading results page
     }
 }

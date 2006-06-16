@@ -290,10 +290,7 @@ public class GraderComponent
         job.setQueueTime( new NSTimestamp() );
         wcSession().commitLocalChanges();
 
-        ( (Grader)( ( (Application)Application.application() )
-                        .subsystemManager()
-                        .subsystem( Grader.class.getName() ) ) )
-            .graderQueue().enqueue( null );
+        Grader.getInstance().graderQueue().enqueue( null );
         
         prefs().clearUpload();
         prefs().setSubmissionInProcess( false );

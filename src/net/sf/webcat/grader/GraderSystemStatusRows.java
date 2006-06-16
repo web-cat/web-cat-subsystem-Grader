@@ -82,10 +82,7 @@ public class GraderSystemStatusRows
     public void awake()
     {
         super.awake();
-        grader = (Grader)
-            ( ( (Application)Application.application() )
-                .subsystemManager()
-                .subsystem( Grader.class.getName() ) );
+        grader = Grader.getInstance();
     }
 
 

@@ -210,9 +210,21 @@
 //            };
         };
     };
+    "Plug-ins" = {
+        accessLevel = 50;
+        priority = 140;
+        children = {
+            Manage = {
+                pageName = net.sf.webcat.grader.PluginManagerPage;
+                accessLevel = 50;
+                priority = 1;
+                wantsStart = YES;
+            };
+        };
+    };
     Grading = {
         accessLevel = 40;
-        priority = 140;
+        priority = 150;
         children = {
 //            Status = {
 //                pageName = TBDPage; // net.sf.webcat.grader.GradingStatusPage;

@@ -296,10 +296,7 @@ public class EditAssignmentPage
             Application.releasePeerEditingContext( ec );
         }
         // trigger the grading queue to read the released jobs
-        ( (Grader)( ( (Application)Application.application() )
-                    .subsystemManager()
-                    .subsystem( Grader.class.getName() ) ) )
-            .graderQueue().enqueue( null );
+        Grader.getInstance().graderQueue().enqueue( null );
         return null;
     }
 

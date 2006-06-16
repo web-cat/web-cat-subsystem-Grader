@@ -26,7 +26,8 @@ ForAssignmentName: WOString {
 }
 
 HasEarlierAssignments: WOConditional {
-    condition = assignmentGroup.displayedObjects.count;
+    // Turn off this section
+    condition = 0; //assignmentGroup.displayedObjects.count;
 }
 
 HasPublishedScripts: WOConditional {
@@ -95,6 +96,10 @@ ScriptModified: WOString {
 
 ScriptName: WOString {
 	value = script.displayableName;
+}
+
+ScriptVersion: WOString {
+	value = script.configDescription.version;
 }
 
 TR: net.sf.webcat.core.TableRow {

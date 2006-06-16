@@ -57,6 +57,8 @@ public class Grader
     {
         super();
 
+        instance = this;
+
         // Apply any pending database updates for the grader
         UpdateEngine.instance().applyNecessaryUpdates(
                         new GraderDatabaseUpdates() );
@@ -97,6 +99,23 @@ public class Grader
                 Application.releasePeerEditingContext( ec );
             }
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the current subsystem object.  In principle, only one instance
+     * of this class exists.  However, we're not using the singleton pattern
+     * exactly, since the instance is created using a normal constructor
+     * via reflection.  However, this class has a private static data member
+     * that keeps track of the most recently created instance, and this
+     * method provides access to it.  The result is much like a singleton,
+     * but without the guarantees provided by a hidden constructor.
+     * @return the current Grader subsystem instance
+     */
+    public static Grader getInstance()
+    {
+        return instance;
     }
 
 
@@ -902,8 +921,15 @@ public class Grader
                              TabDescriptor.TAB_DEFINITIONS ) ) );
     }
 
+    /**
+     * This is a reference to the single instance of this class, representing
+     * this subsystem.  It is initialized by the constructor.
+     */
+    private static Grader instance;
+
     /** this is the main single grader queue */
     private static GraderQueue graderQueue;
+
     /** this is the queue processor for processing grader jobs */
     private static GraderQueueProcessor graderQueueProcessor;
 

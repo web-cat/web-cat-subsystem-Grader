@@ -3,6 +3,7 @@
 	<name>Grader</name>
 	<comment></comment>
 	<projects>
+		<project>Bootstrap</project>
 		<project>Core</project>
 		<project>DBUpdateEngine</project>
 		<project>EOJDBCPrototypes</project>

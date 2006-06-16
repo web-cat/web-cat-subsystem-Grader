@@ -1,0 +1,227 @@
+AutoUpdateEnabled: WOConditional {
+    condition = adaptor.willUpdateAutomatically;
+}
+
+AutoUpdateNotEnabled: WOConditional {
+    condition = adaptor.willUpdateAutomatically;
+    negate = true;
+}
+
+CannotUpdate: WOConditional {
+    condition = canUpdate;
+    negate = true;
+}
+
+CanUpdate: WOConditional {
+    condition = canUpdate;
+}
+
+Date: WOString {
+	dateformat = "%m/%d/%y %I:%M%p";
+	value      = plugin.lastModified;
+}
+
+Description: WOString {
+	value = plugin.configDescription.description;
+}
+
+DownloadNewNow: WOActiveImage {
+	border    = "0";
+	filename  = "icons/download.gif";
+	framework = "Core";
+	height    = "18";
+	width     = "18";
+	alt       = "Download now for install on restart";
+	title     = "Download now for install on restart";
+	action    = downloadNew;
+}
+
+DownloadNow: WOActiveImage {
+	border    = "0";
+	filename  = "icons/download.gif";
+	framework = "Core";
+	height    = "18";
+	width     = "18";
+	alt       = "Download now for install on restart";
+	title     = "Download now for install on restart";
+	action    = download;
+}
+
+Edit: WOActiveImage {
+	border    = "0";
+	filename  = "icons/edit.gif";
+	framework = "Core";
+	height    = "17";
+	width     = "18";
+	alt       = "Configure subsystem settings";
+	title     = "Configure subsystem settings";
+	action    = edit;
+}
+
+EditFiles: WOActiveImage {
+	border    = "0";
+	filename  = "icons/explore.gif";
+	framework = "Core";
+	height    = "15";
+	width     = "15";
+	alt       = "Browse/edit plug-in files";
+	title     = "Browse/edit plug-in files";
+	action    = editFiles;
+}
+
+EnableAutoUpdates: WOSubmitButton {
+    value = "Enable";
+    action = toggleAutoUpdates;
+}
+
+Form1: WOForm {
+    multipleSubmit = true;
+}
+
+Form2: WOForm {
+    multipleSubmit = true;
+}
+
+HasAdminPrivileges: WOConditional {
+    condition = session.user.hasAdminPrivileges;
+}
+
+HasNoAdminPrivileges: WOConditional {
+    condition = session.user.hasAdminPrivileges;
+    negate = true;
+}
+
+HasNoPersonalPlugins: WOConditional {
+    condition = personalPluginGroup.displayedObjects.count;
+    negate = true;
+}
+
+HasNoPublishedPlugins: WOConditional {
+    condition = publishedPluginGroup.displayedObjects.count;
+    negate = true;
+}
+
+HasNoUnpublishedPlugins: WOConditional {
+    condition = unpublishedPluginGroup.displayedObjects.count;
+    negate = true;
+}
+
+HasPersonalPlugins: WOConditional {
+    condition = personalPluginGroup.displayedObjects.count;
+}
+
+HasPublishedPlugins: WOConditional {
+    condition = publishedPluginGroup.displayedObjects.count;
+}
+
+HasUnpublishedPlugins: WOConditional {
+    condition = unpublishedPluginGroup.displayedObjects.count;
+}
+
+IsNotPublished: WOConditional {
+    condition = plugin.isPublished;
+    negate = true;
+}
+
+IsPublished: WOConditional {
+    condition = plugin.isPublished;
+}
+
+Name: WOString {
+	value = plugin.displayableName;
+}
+
+NewVersion: WOString {
+	value = "TODO"; // subsystem.descriptor.providerVersion.currentVersion;
+}
+
+OutOfDate: WOConditional {
+    condition = 0; // subsystem.descriptor.updateIsAvailable;
+}
+
+Page : net.sf.webcat.core.PageWithNavigation {
+    title = "Manage Plug-ins";
+}
+
+PersonalPluginRepetition: WORepetition {
+	item  = plugin;
+	list  = personalPluginGroup.displayedObjects;
+	index = index;
+}
+
+PluginUpload: WOFileUpload {
+	data     = uploadedData;
+	filePath = uploadedName;
+}
+
+Publish: WOActiveImage {
+	border    = "0";
+	filename  = "icons/show.gif";
+	framework = "Grader";
+	height    = "11";
+	width     = "11";
+	alt       = "Publish plug-in (make visible to others)";
+	title     = "Publish plug-in (make visible to others)";
+	action    = togglePublished;
+}
+
+PublishedPluginRepetition: WORepetition {
+	item  = plugin;
+	list  = publishedPluginGroup.displayedObjects;
+	index = index;
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}
+
+Unpublish: WOActiveImage {
+	border    = "0";
+	filename  = "icons/hide.gif";
+	framework = "Grader";
+	height    = "11";
+	width     = "11";
+	alt       = "Unpublish plug-in (hide from others)";
+	title     = "Unpublish plug-in (hide from others)";
+	action    = togglePublished;
+}
+
+UnpublishedPluginRepetition: WORepetition {
+	item  = plugin;
+	list  = unpublishedPluginGroup.displayedObjects;
+	index = index;
+}
+
+Upload: WOSubmitButton {
+    value = "Upload File & Install";
+    action = upload;
+}
+
+UpToDate: WOConditional {
+    condition = 0; //subsystem.descriptor.updateIsAvailable;
+    negate = true;
+}
+
+Version: WOString {
+	value = plugin.descriptor.currentVersion;
+}
+
+WillUpdate: WOImage {
+	border    = "0";
+	filename  = "icons/check.gif";
+	framework = "Core";
+	height    = "16";
+	width     = "16";
+	alt       = "Lastest version will be installed on next restart";
+	title     = "Lastest version will be installed on next restart";
+}
+
+WillNotUpdate: WOImage {
+	border    = "0";
+	filename  = "icons/exclaim.gif";
+	framework = "Core";
+	height    = "16";
+	width     = "16";
+	alt       = "Automatic updates disabled";
+	title     = "Automatic updates disabled";
+}
