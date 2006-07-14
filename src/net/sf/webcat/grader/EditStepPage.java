@@ -64,22 +64,11 @@ public class EditStepPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup    assignmentOptionGroup;
-    public WODisplayGroup    optionGroup;
     public NSArray           stepConfigList;
     public StepConfig        stepConfig;
-    public NSDictionary      option;
     public Step              step;
     public int               index;
-
-    public NSArray           categories;
-    public String            category;
-    public String            chosenCategory;
-    public String            displayedCategory;
-
-    public static final String hideInfoKey = "EditScriptPageShowInfo";
-    public static final String verboseOptionsKey =
-        "EditScriptPageNoVerboseOptions";
+    public java.io.File      baseDir;
 
 
     //~ Methods ...............................................................
@@ -95,19 +84,11 @@ public class EditStepPage
             step.script(),
             prefs().assignmentOffering().courseOffering().course(),
             step.config() );
-        NSArray options = options = (NSArray)step.script().configDescription()
-            .objectForKey( "assignmentOptions" );
-        assignmentOptionGroup.setObjectArray( options );
-        if ( categories == null )
+        if ( baseDir == null )
         {
-            categories = (NSArray)step.script().configDescription()
-                .objectForKey( "assignmentOptionCategories" );
-            if ( categories != null && categories.count() > 0 )
-            {
-                chosenCategory = (String)categories.objectAtIndex( 0 );
-            }
+            baseDir = new java.io.File ( ScriptFile.userScriptDirName(
+                wcSession().user(), true ).toString() );
         }
-        displayedCategory = chosenCategory;
         if ( log.isDebugEnabled() )
         {
             log.debug( "assignment option values =\n" + step.configSettings() );
@@ -118,28 +99,6 @@ public class EditStepPage
                     + step.config().configSettings() );
         }
         super.appendToResponse( response, context );
-    }
-
-
-    // ----------------------------------------------------------
-    public void toggleHideInfo()
-    {
-        boolean hideInfo = ERXValueUtilities.booleanValue(
-            wcSession().userPreferences.objectForKey( hideInfoKey ) );
-        hideInfo = !hideInfo;
-        wcSession().userPreferences.setObjectForKey(
-            Boolean.valueOf( hideInfo ), hideInfoKey );
-    }
-
-
-    // ----------------------------------------------------------
-    public void toggleVerboseOptions()
-    {
-        boolean verboseOptions = ERXValueUtilities.booleanValue(
-            wcSession().userPreferences.objectForKey( verboseOptionsKey ) );
-        verboseOptions = !verboseOptions;
-        wcSession().userPreferences.setObjectForKey(
-            Boolean.valueOf( verboseOptions ), verboseOptionsKey );
     }
 
 
@@ -182,15 +141,6 @@ public class EditStepPage
         return null;
     }
     
-
-    // ----------------------------------------------------------
-//    public WOComponent apply()
-//    {
-//        log.debug( "apply(): changes:\n"
-//                   + wcSession().defaultEditingContext().updatedObjects() );
-//        return super.apply();
-//    }
-
 
     //~ Instance/static variables .............................................
 

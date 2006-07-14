@@ -2,9 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="/Core"/>
+	<classpathentry kind="src" path="/DBUpdateEngine"/>
+	<classpathentry kind="src" path="/EOJDBCPrototypes"/>
+	<classpathentry kind="src" path="/Bootstrap"/>
 	<classpathentry kind="con" path="org.objectstyle.wolips.WO_CLASSPATH/Core/DBUpdateEngine/EOJDBCPrototypes/ERExtensions/ERJars/JavaWOExtensions/WOUnitTest/JavaEOAccess/JavaEOControl/JavaFoundation/JavaJDBCAdaptor/JavaWebObjects/JavaXML/JDBCEOAdaptor"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Web-CAT-externals"/>
-	<classpathentry kind="src" path="/Bootstrap"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

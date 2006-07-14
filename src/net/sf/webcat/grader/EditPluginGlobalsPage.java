@@ -28,24 +28,20 @@ package net.sf.webcat.grader;
 import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
 
-import er.extensions.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.zip.ZipFile;
-
 import net.sf.webcat.core.*;
 
 import org.apache.log4j.Logger;
 
-// -------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 /**
- * This class presents the list of scripts (grading steps) that
- * are available for selection.
+ *  This class allows one to edit the global settings for a plug-in.
+ *  The creator of this page must set the plugin attribute before
+ *  rendering the page.
  *
- * @author Stephen Edwards
- * @version $Id$
+ *  @author Stephen Edwards
+ *  @version $Id$
  */
-public class EditReusableScriptParametersPage
+public class EditPluginGlobalsPage
     extends GraderComponent
 {
     //~ Constructors ..........................................................
@@ -56,7 +52,7 @@ public class EditReusableScriptParametersPage
      * 
      * @param context The page's context
      */
-    public EditReusableScriptParametersPage( WOContext context )
+    public EditPluginGlobalsPage( WOContext context )
     {
         super( context );
     }
@@ -64,11 +60,8 @@ public class EditReusableScriptParametersPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public Step              step;
-    public WODisplayGroup    assignmentStepGroup;
-    public Step              otherAssignmentStep;
-    public int               index;
-    public java.io.File      baseDir;
+    public ScriptFile   plugin;
+    public java.io.File baseDir;
 
 
     //~ Methods ...............................................................
@@ -77,61 +70,16 @@ public class EditReusableScriptParametersPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "appendToResponse()" );
-        step = prefs().step();
         if ( baseDir == null )
         {
             baseDir = new java.io.File ( ScriptFile.userScriptDirName(
                 wcSession().user(), true ).toString() );
         }
-        if ( step.config() == null )
-        {
-            log.debug( "null config detected, populating it" );
-            StepConfig newConfig = new StepConfig();
-            wcSession().localContext().insertObject( newConfig );
-            step.setConfigRelationship( newConfig );
-            newConfig.setAuthor( wcSession().user() );
-        }
-        assignmentStepGroup.setObjectArray( step.config().steps() );
         if ( log.isDebugEnabled() )
         {
-            log.debug( "assignment option values =\n" + step.configSettings() );
-            log.debug( "shared option values =\n" + step.config().configSettings() );
+            log.debug( "plug-in global settings =\n"
+                + plugin.globalConfigSettings() );
         }
         super.appendToResponse( response, context );
     }
-
-
-    // ----------------------------------------------------------
-    public WOComponent next()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "new assignment option values =\n"
-                       + step.configSettings() );
-            log.debug( "new shared option values =\n"
-                       + step.config().configSettings() );
-        }
-        return super.next();
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent resetOptions()
-    {
-        step.config().configSettings().removeAllObjects();
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent defaultAction()
-    {
-        return null;
-    }
-
-
-    //~ Instance/static variables .............................................
-
-    static Logger log =
-        Logger.getLogger( EditReusableScriptParametersPage.class );
 }

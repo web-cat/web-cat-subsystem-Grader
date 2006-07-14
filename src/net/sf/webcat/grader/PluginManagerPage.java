@@ -28,6 +28,8 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 
+import er.extensions.*;
+
 import org.apache.log4j.*;
 import net.sf.webcat.*;
 import net.sf.webcat.core.*;
@@ -174,13 +176,28 @@ extends WCComponent
 
     // ----------------------------------------------------------
     /**
+     * Determine whether this user has permissions to edit the current plug-in.
+     * @return true if the current plug-in can be edited by the current user
+     */
+    public boolean canEditPlugin()
+    {
+        User user = wcSession().user();
+        return user.hasAdminPrivileges() || user == plugin.author();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Edit the selected plug-in's configuration settings.
      * @return the subsystem's edit page
      */
     public WOComponent edit()
     {
-        // TODO: implement edit action for subsystem configuration
-        return null;
+        EditPluginGlobalsPage newPage = (EditPluginGlobalsPage)
+            pageWithName( EditPluginGlobalsPage.class.getName() );
+        newPage.nextPage = this;
+        newPage.plugin = plugin;
+        return newPage;
     }
 
 
@@ -193,8 +210,14 @@ extends WCComponent
      */
     public WOComponent editFiles()
     {
-        // TODO: implement edit file action for plug-ins
-        return null;
+        EditScriptFilesPage newPage = (EditScriptFilesPage)
+            pageWithName( EditScriptFilesPage.class.getName() );
+        newPage.nextPage = this;
+        newPage.scriptFile = plugin;
+        newPage.hideNextAndBack( true );        
+        newPage.isEditable = wcSession().user().hasAdminPrivileges() ||
+            wcSession().user().equals( plugin.author() );
+        return newPage;
     }
 
 
@@ -207,9 +230,11 @@ extends WCComponent
      */
     public WOComponent toggleAutoUpdates()
     {
-//        net.sf.webcat.WCServletAdaptor adaptor = adaptor();
-//        adaptor.setWillUpdateAutomatically(
-//            !adaptor.willUpdateAutomatically() );
+        boolean option = Application.configurationProperties()
+            .booleanForKey( Grader.NO_AUTO_UPDATE_KEY );
+        Application.configurationProperties().put(
+            Grader.NO_AUTO_UPDATE_KEY, option ? "false" : "true" );
+        Application.configurationProperties().attemptToSave();
         return null;
     }
 
@@ -258,6 +283,32 @@ extends WCComponent
         return null;
     }
     
+
+    // ----------------------------------------------------------
+    /**
+     * Force a fresh reload of the script's config.plist file to pick up
+     * any changes (i.e., new attributes, new default values, etc.).
+     * @return null, to force this page to reload in the browser when the
+     *         action completes
+     */
+    public WOComponent reloadScriptDefinition()
+    {
+        clearErrors();
+        String errMsg = plugin.initializeConfigAttributes();
+        if ( errMsg != null )
+        {
+            cancelLocalChanges();
+            errorMessage( errMsg );
+        }
+        else
+        {
+            wcSession().commitLocalChanges();
+        }
+        return null;
+    }
+
+
     //~ Instance/static variables .............................................
+
     static Logger log = Logger.getLogger( PluginManagerPage.class );
 }

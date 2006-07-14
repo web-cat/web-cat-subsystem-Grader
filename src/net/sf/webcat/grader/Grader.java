@@ -56,12 +56,69 @@ public class Grader
     public Grader()
     {
         super();
-
         instance = this;
+    }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the current subsystem object.  In principle, only one instance
+     * of this class exists.  However, we're not using the singleton pattern
+     * exactly, since the instance is created using a normal constructor
+     * via reflection.  However, this class has a private static data member
+     * that keeps track of the most recently created instance, and this
+     * method provides access to it.  The result is much like a singleton,
+     * but without the guarantees provided by a hidden constructor.
+     * @return the current Grader subsystem instance
+     */
+    public static Grader getInstance()
+    {
+        return instance;
+    }
+
+
+    //~ Constants .............................................................
+
+    public static final String NO_AUTO_UPDATE_KEY =
+        "grader.willNotAutoUpdatePlugins";
+
+
+    //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Performs all startup actions for this subsystem.
+     */
+    public void init()
+    {
         // Apply any pending database updates for the grader
         UpdateEngine.instance().applyNecessaryUpdates(
                         new GraderDatabaseUpdates() );
+
+        // Install or update any plug-ins that need it
+        if ( !Application.configurationProperties()
+                .booleanForKey( NO_AUTO_UPDATE_KEY ) )
+        {
+            EOEditingContext ec = Application.newPeerEditingContext();
+            try
+            {
+                ec.lock();
+                NSArray pluginList = EOUtilities.objectsForEntityNamed(
+                    ec, ScriptFile.ENTITY_NAME );
+
+                for ( int i = 0; i < pluginList.count(); i++ )
+                {
+                    ScriptFile plugin =
+                        (ScriptFile)pluginList.objectAtIndex( i );
+                    // TODO: plugin.updateIfNecessary();
+                }
+            }
+            finally
+            {
+                ec.unlock();
+                Application.releasePeerEditingContext( ec );
+            }
+        }
 
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();
@@ -101,25 +158,6 @@ public class Grader
         }
     }
 
-
-    // ----------------------------------------------------------
-    /**
-     * Returns the current subsystem object.  In principle, only one instance
-     * of this class exists.  However, we're not using the singleton pattern
-     * exactly, since the instance is created using a normal constructor
-     * via reflection.  However, this class has a private static data member
-     * that keeps track of the most recently created instance, and this
-     * method provides access to it.  The result is much like a singleton,
-     * but without the guarantees provided by a hidden constructor.
-     * @return the current Grader subsystem instance
-     */
-    public static Grader getInstance()
-    {
-        return instance;
-    }
-
-
-    //~ Methods ...............................................................
 
     // ----------------------------------------------------------
     /**

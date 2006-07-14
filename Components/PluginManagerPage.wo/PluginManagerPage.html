@@ -10,7 +10,8 @@
 <webobject name="UpToDate">(up to date)</webobject>
 <webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
 is available</b>)</webobject>
-<br/><webobject name="Description"/></td>
+<br/><b>Owner:</b> <webobject name="Author"/><br/><b>Description:</b>
+<webobject name="Description"/></td>
 <td><webobject name="Version"/></td>
 <td><webobject name="Date"/></td>
 <td class="s"><webobject name="UpToDate">not needed</webobject>
@@ -20,7 +21,7 @@ is available</b>)</webobject>
 </webobject><webobject name="CannotUpdate">
   <webobject name="WillNotUpdate"/>
 </webobject></webobject></td>
-<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Unpublish"/><webobject name="EditFiles"/><webobject name="Edit"/></td>
+<td style="white-space:nowrap"><webobject name="CanEdit"><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Unpublish"/><webobject name="EditFiles"/><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></webobject></td>
 </webobject></webobject></tbody></table></div>
 <div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoPublishedPlugins">
@@ -37,7 +38,8 @@ is available</b>)</webobject>
 <webobject name="UpToDate">(up to date)</webobject>
 <webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
 is available</b>)</webobject>
-<br/><webobject name="Description"/></td>
+<br/><b>Owner:</b> <webobject name="Author"/><br/><b>Description:</b>
+<webobject name="Description"/></td>
 <td><webobject name="Version"/></td>
 <td><webobject name="Date"/></td>
 <td class="s"><webobject name="UpToDate">not needed</webobject>
@@ -47,12 +49,28 @@ is available</b>)</webobject>
 </webobject><webobject name="CannotUpdate">
   <webobject name="WillNotUpdate"/>
 </webobject></webobject></td>
-<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Publish"/><webobject name="EditFiles"/><webobject name="Edit"/></td>
+<td style="white-space:nowrap"><webobject name="CanEdit"><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="Publish"/><webobject name="EditFiles"/><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></webobject></td>
 </webobject></webobject></tbody></table></div>
 <div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoUnpublishedPlugins">
 <p><span class="hl">No unpublished plug-ins</span> have been installed.</p>
 </webobject>
+
+<h2>Automatic Updates</h2>
+<webobject name="Form2"><p>
+Automatic updates:
+<webobject name="AutoUpdateEnabled"><b class="check">Enabled</b>
+<webobject name="DisableAutoUpdates"/></webobject>
+<webobject name="AutoUpdateNotEnabled"><b class="warn">Disabled</b>
+<webobject name="EnableAutoUpdates"/></webobject>
+</p></webobject><p>
+This application is capable of downloading and installing new updates to
+plug-ins that are currently installed.  When enabled, Web-CAT will check
+for newer versions of all installed plug-ins on each restart, and download
+any available updates at that time.  You can also <span class="hl">manually
+download</span> updates on demand using the download icons in the table.
+Downloaded updates will <span class="hl">be applied immediately.</span>
+</p>
 
 </webobject>
 
@@ -67,7 +85,8 @@ is available</b>)</webobject>
 <webobject name="UpToDate">(up to date)</webobject>
 <webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
 is available</b>)</webobject>
-<br/><webobject name="Description"/></td>
+<br/><b>Owner:</b> <webobject name="Author"/><br/><b>Description:</b>
+<webobject name="Description"/></td>
 <td><webobject name="Version"/></td>
 <td><webobject name="Date"/></td>
 <td class="s"><webobject name="UpToDate">not needed</webobject>
@@ -77,7 +96,7 @@ is available</b>)</webobject>
 </webobject><webobject name="CannotUpdate">
   <webobject name="WillNotUpdate"/>
 </webobject></webobject></td>
-<td><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="IsNotPublished"><webobject name="Publish"/></webobject><webobject name="IsPublished"><webobject name="Unpublish"/></webobject><webobject name="EditFiles"/><webobject name="Edit"/></td>
+<td style="white-space:nowrap"><webobject name="CanUpdate"><webobject name="DownloadNow"/></webobject><webobject name="IsNotPublished"><webobject name="Publish"/></webobject><webobject name="IsPublished"><webobject name="Unpublish"/></webobject><webobject name="EditFiles"/><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></td>
 </webobject></webobject></tbody></table></div>
 <div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoPersonalPlugins">
@@ -90,6 +109,7 @@ is available</b>)</webobject>
 <p>Upload a new plug-in: <webobject name="PluginUpload"/>
 <webobject name="Upload"/></p>
 </webobject>
-<p>Plug-ins are packaged as zip files that contain meta-data describing the
-plug-ins capabilities and configuration scheme.</p>
+<p>A plug-in is packaged as a zip file that contains meta-data describing the
+plug-in's capabilities and configuration scheme.</p>
+
 </webobject>

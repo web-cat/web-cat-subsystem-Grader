@@ -28,14 +28,11 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-
 import er.extensions.*;
 import er.extensions.ERXConstant;
 import java.io.*;
 import java.util.*;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -588,6 +585,12 @@ public class GraderQueueProcessor
             step.script().reinitializeConfigAttributesIfNecessary();
             log.debug( "creating properties file" );
             // Re-write the properties file
+            properties.addPropertiesFromDictionaryIfNotDefined(
+                ( (Application)Application.application() )
+                    .subsystemManager().pluginProperties()
+                );
+            properties.addPropertiesFromDictionaryIfNotDefined(
+                step.script().globalConfigSettings() );
             properties.addPropertiesFromDictionaryIfNotDefined(
                 step.script().defaultConfigSettings() );
             if ( step.config() != null )

@@ -83,7 +83,6 @@
            src/net/sf/webcat/grader/ResultFile.java, 
            src/net/sf/webcat/grader/ScoreSummaryBlock.java, 
            src/net/sf/webcat/grader/ScriptFile.java, 
-           src/net/sf/webcat/grader/ScriptOptionPanel.java, 
            src/net/sf/webcat/grader/SelectSubmissionProfile.java, 
            src/net/sf/webcat/grader/Step.java, 
            src/net/sf/webcat/grader/StepConfig.java, 
@@ -112,7 +111,8 @@
            src/net/sf/webcat/grader/_SubmissionProfile.java, 
            src/net/sf/webcat/grader/_SubmissionResult.java, 
            src/net/sf/webcat/grader/PluginManagerPage.java, 
-           src/net/sf/webcat/grader/PluginDescriptor.java
+           src/net/sf/webcat/grader/PluginDescriptor.java, 
+           src/net/sf/webcat/grader/EditPluginGlobalsPage.java
         );
         FRAMEWORKS = 
         (
@@ -301,7 +301,6 @@
            Components/PickStepPage.wo, 
            Components/PickSubmissionPage.wo, 
            Components/ScoreSummaryBlock.wo, 
-           Components/ScriptOptionPanel.wo, 
            Components/SelectSubmissionProfile.wo, 
            Components/StudentsForAssignmentPage.wo, 
            Components/SubmissionFileDetailsPage.wo, 
@@ -316,7 +315,8 @@
            Components/EditStepPage.wo, 
            Components/BlueJSubmitterDefinitions.wo, 
            Components/EclipseSubmitterDefinitions.wo, 
-           Components/PluginManagerPage.wo
+           Components/PluginManagerPage.wo, 
+           Components/EditPluginGlobalsPage.wo
         );
         OTHER_SOURCES = 
         (

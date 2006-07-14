@@ -62,6 +62,7 @@ public abstract class _ScriptFile
     // Attributes ---
     public static final String CONFIG_DESCRIPTION_KEY = "configDescription";
     public static final String DEFAULT_CONFIG_SETTINGS_KEY = "defaultConfigSettings";
+    public static final String GLOBAL_CONFIG_SETTINGS_KEY = "globalConfigSettings";
     public static final String IS_CONFIG_FILE_KEY = "isConfigFile";
     public static final String IS_PUBLISHED_KEY = "isPublished";
     public static final String LAST_MODIFIED_KEY = "lastModified";
@@ -266,6 +267,100 @@ public abstract class _ScriptFile
         takeStoredValueForKey( null, "defaultConfigSettings" );
         defaultConfigSettingsRawCache = null;
         defaultConfigSettingsCache = null;
+    }
+
+
+    //-- Local mutable cache --
+    private net.sf.webcat.core.MutableDictionary globalConfigSettingsCache;
+    private NSData globalConfigSettingsRawCache;
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>globalConfigSettings</code> value.
+     * @return the value of the attribute
+     */
+    public net.sf.webcat.core.MutableDictionary globalConfigSettings()
+    {
+    	NSData dbValue = 
+            (NSData)storedValueForKey( "globalConfigSettings" );
+        if ( globalConfigSettingsRawCache != dbValue )
+        {
+            if ( dbValue != null && dbValue.equals( globalConfigSettingsRawCache ) )
+            {
+                // They are still equal, so just update the raw cache
+                globalConfigSettingsRawCache = dbValue;
+            }
+            else
+            {
+                // Underlying attribute may have changed because
+                // of a concurrent update through another editing
+                // context, so throw away current values.
+                globalConfigSettingsRawCache = dbValue;
+                net.sf.webcat.core.MutableDictionary newValue =
+                    net.sf.webcat.core.MutableDictionary
+                    .objectWithArchiveData( dbValue );
+                if ( globalConfigSettingsCache != null )
+                {
+                    globalConfigSettingsCache.copyFrom( newValue );
+                }
+                else
+                {
+                    globalConfigSettingsCache = newValue;
+                }
+                globalConfigSettingsCache.setOwner( this );
+                setUpdateMutableFields( true );
+            }
+        }
+        else if ( dbValue == null && globalConfigSettingsCache == null )
+        { 
+            globalConfigSettingsCache = 
+                net.sf.webcat.core.MutableDictionary
+                .objectWithArchiveData( dbValue );
+             globalConfigSettingsCache.setOwner( this );
+             setUpdateMutableFields( true );
+        }
+        return globalConfigSettingsCache;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>globalConfigSettings</code>
+     * property.
+     * 
+     * @param value The new value for this property
+     */
+    public void setGlobalConfigSettings( net.sf.webcat.core.MutableDictionary value )
+    {
+        if ( globalConfigSettingsCache == null )
+        {
+            globalConfigSettingsCache = value;
+            value.setHasChanged( false );
+            globalConfigSettingsRawCache = value.archiveData();
+            takeStoredValueForKey( globalConfigSettingsRawCache, "globalConfigSettings" );
+        }
+        else if ( globalConfigSettingsCache != value )  // ( globalConfigSettingsCache != null )
+        {
+            globalConfigSettingsCache.copyFrom( value );
+            setUpdateMutableFields( true );
+        }
+        else  // ( globalConfigSettingsCache == non-null value )
+        {
+            // no nothing
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Clear the value of this object's <code>globalConfigSettings</code>
+     * property.
+     */
+    public void clearGlobalConfigSettings()
+    {
+        takeStoredValueForKey( null, "globalConfigSettings" );
+        globalConfigSettingsRawCache = null;
+        globalConfigSettingsCache = null;
     }
 
 
@@ -571,6 +666,13 @@ public abstract class _ScriptFile
             takeStoredValueForKey( defaultConfigSettingsRawCache, "defaultConfigSettings" );
             defaultConfigSettingsCache.setHasChanged( false );
         }
+        if ( globalConfigSettingsCache != null
+            && globalConfigSettingsCache.hasChanged() )
+        {
+            globalConfigSettingsRawCache = globalConfigSettingsCache.archiveData();
+            takeStoredValueForKey( globalConfigSettingsRawCache, "globalConfigSettings" );
+            globalConfigSettingsCache.setHasChanged( false );
+        }
 
         setUpdateMutableFields( false );
     }
@@ -608,6 +710,8 @@ public abstract class _ScriptFile
         configDescriptionRawCache  = null;
         defaultConfigSettingsCache = null;
         defaultConfigSettingsRawCache  = null;
+        globalConfigSettingsCache = null;
+        globalConfigSettingsRawCache  = null;
         setUpdateMutableFields( false );
         super.flushCaches();
     }

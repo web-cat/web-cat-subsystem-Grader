@@ -1,10 +1,18 @@
+Author: WOString {
+    value = plugin.author.nameAndUid;
+}
+
 AutoUpdateEnabled: WOConditional {
-    condition = adaptor.willUpdateAutomatically;
+    condition = application.properties.grader.willNotAutoUpdatePlugins;
+    negate = true;
 }
 
 AutoUpdateNotEnabled: WOConditional {
-    condition = adaptor.willUpdateAutomatically;
-    negate = true;
+    condition = application.properties.grader.willNotAutoUpdatePlugins;
+}
+
+CanEdit: WOConditional {
+    condition = canEditPlugin;
 }
 
 CannotUpdate: WOConditional {
@@ -23,6 +31,11 @@ Date: WOString {
 
 Description: WOString {
 	value = plugin.configDescription.description;
+}
+
+DisableAutoUpdates: WOSubmitButton {
+    value = "Disable";
+    action = toggleAutoUpdates;
 }
 
 DownloadNewNow: WOActiveImage {
@@ -86,6 +99,10 @@ HasAdminPrivileges: WOConditional {
     condition = session.user.hasAdminPrivileges;
 }
 
+HasGlobalSettings: WOConditional {
+    condition = plugin.configDescription.globalOptions.count;
+}
+
 HasNoAdminPrivileges: WOConditional {
     condition = session.user.hasAdminPrivileges;
     negate = true;
@@ -132,11 +149,11 @@ Name: WOString {
 }
 
 NewVersion: WOString {
-	value = "TODO"; // subsystem.descriptor.providerVersion.currentVersion;
+	value = plugin.descriptor.providerVersion.currentVersion;
 }
 
 OutOfDate: WOConditional {
-    condition = 0; // subsystem.descriptor.updateIsAvailable;
+    condition = plugin.descriptor.updateIsAvailable;
 }
 
 Page : net.sf.webcat.core.PageWithNavigation {
@@ -171,6 +188,17 @@ PublishedPluginRepetition: WORepetition {
 	index = index;
 }
 
+ReloadConfig: WOActiveImage {
+	border    = "0";
+	filename  = "icons/reload.png";
+	framework = "Grader";
+	height    = "20";
+	width     = "20";
+	alt       = "Reparse plug-in metadata";
+	title     = "Reparse plug-in metadata";
+	action    = reloadScriptDefinition;
+}
+
 TR: net.sf.webcat.core.TableRow {
     index = index;
 }
@@ -198,7 +226,7 @@ Upload: WOSubmitButton {
 }
 
 UpToDate: WOConditional {
-    condition = 0; //subsystem.descriptor.updateIsAvailable;
+    condition = plugin.descriptor.updateIsAvailable;
     negate = true;
 }
 

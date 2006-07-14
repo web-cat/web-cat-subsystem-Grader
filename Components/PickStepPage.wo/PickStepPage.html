@@ -1,5 +1,7 @@
 <webobject name="Page">For: <span class="hl"><webobject name="ForAssignmentName"/></span>
 
+<p>Use the <b>Plug-ins</b> tab to add new plug-ins.</p>
+
 <webobject name="HasEarlierAssignments">
 <h2>Copy (and Customize) the Steps From an Earlier Assignment</h2>
 
@@ -13,10 +15,10 @@
 </tbody></table></div><div class="spacer">&nbsp;</div></webobject>
 
 <webobject name="HasPublishedScripts">
-<h2>Reuse (and Customize) a Published Script for This Step</h2>
+<h2>Use a Published Plug-in for This Step</h2>
 
 <div class="shadow"><table><tbody>
-  <tr><th>&nbsp;</th><!--th>For Language</th--><th>Script</th><th>Author</th><th>Last Modified</th></tr>
+  <tr><th>&nbsp;</th><!--th>For Language</th--><th>Script</th><th>Owner</th><th>Last Modified</th></tr>
   <webobject name="Repetition2"><webobject name="TR">
     <td><webobject name="RadioButton2"/></td>
     <!--td><! webobject name="PubScriptLanguage"/></td-->
@@ -26,11 +28,11 @@
   </webobject></webobject>
 </tbody></table></div><div class="spacer">&nbsp;</div></webobject>
 
-<h2>Reuse or Upload Your Own Script for This Step</h2>
-<p>Select the script to add to the  grading process:</p>
+<webobject name="HasPersonalScripts">
+<h2>Use Your Own Plug-in for This Step</h2>
 <div class="shadow"><table><tbody>
-  <tr><th>&nbsp;</th><!--th>For Language</th--><th>Script<webobject name="WCSortOrder1"/></th>
-    <th>Author<webobject name="WCSortOrder3"/></th>
+  <tr><th>&nbsp;</th><!--th>For Language</th--><th>Plug-in<webobject name="WCSortOrder1"/></th>
+    <th>Owner<webobject name="WCSortOrder3"/></th>
     <th>Last Modified<webobject name="WCSortOrder2"/></th></tr>
   <webobject name="Repetition3"><webobject name="TR">
     <td><webobject name="RadioButton3"/></td>
@@ -39,8 +41,5 @@
     <td><webobject name="ScriptAuthor"/></td>
     <td><webobject name="ScriptModified"/></td>
   </webobject></webobject>
-  <webobject name="LastTR">
-    <td><webobject name="RadioButton4"/></td>
-	    <td colspan="7">Upload a new script: <webobject name="UploadScript"/></TD>
-  </webobject>
 </tbody></table></div></webobject>
+</webobject>

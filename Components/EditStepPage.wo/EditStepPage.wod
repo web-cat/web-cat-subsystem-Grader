@@ -1,15 +1,10 @@
-AssignmentOptionPanel: net.sf.webcat.grader.ScriptOptionPanel {
-    option       = option;
-    optionValues = step.configSettings;
-    terse        = session.userPreferences.EditScriptPageNoVerboseOptions;
-}
-
-CategoryList: WOPopUpButton {
-    list          = categories;
-    item          = category;
-    selection     = chosenCategory;
-    noSelectionString = "All Options";
-    onchange      = "submitForm()";
+AssignmentOptionEditor: net.sf.webcat.core.OptionSetEditor {
+    options           = step.script.configDescription.assignmentOptions;
+    optionValues      = step.configSettings;
+    categories        = step.script.configDescription.assignmentOptionCategories;
+    verboseOptionsKey = "EditScriptPageNoVerboseOptions";
+    browsePageName    = "EditScriptFilesPage";
+    base              = baseDir;
 }
 
 EditReusableConfig: WOImageButton {
@@ -27,19 +22,6 @@ ForAssignmentName: WOString {
     value = step.assignment.titleString;
 }
 
-HasAssignmentOptions: WOConditional {
-    condition = assignmentOptionGroup.displayedObjects.count;
-}
-
-HasCategories: WOConditional {
-    condition = categories.count;
-}
-
-HasNoAssignmentOptions: WOConditional {
-    condition = assignmentOptionGroup.displayedObjects.count;
-    negate    = true;
-}
-
 HasNoOptions: WOConditional {
     condition = step.script.configDescription.options.count;
     negate    = true;
@@ -54,23 +36,9 @@ NewReusableConfig: WOSubmitButton {
     value  = "New";
 }
 
-OptionsAreTerse: WOConditional {
-    condition = session.userPreferences.EditScriptPageNoVerboseOptions;
-}
-
-OptionsAreVerbose: WOConditional {
-    condition = session.userPreferences.EditScriptPageNoVerboseOptions;
-    negate    = true;
-}
-
 Page: net.sf.webcat.core.WizardPage {
-    sideStepTitle = "Configure Script";
+    sideStepTitle = "Configure Plug-in";
     applyEnabled  = true;
-}
-
-Repetition1: WORepetition {
-    list = assignmentOptionGroup.displayedObjects;
-    item = option;
 }
 
 ReusableList: WOPopUpButton {
@@ -78,23 +46,13 @@ ReusableList: WOPopUpButton {
     item          = stepConfig;
     displayString = stepConfig.name;
     selection     = step.config;
-    noSelectionString = "(script defaults only)";
+    noSelectionString = "(plug-in defaults only)";
 }
 
 ScriptName: WOString {
     value = step.script.displayableName;
 }
 
-TerseOptions: WOSubmitButton {
-    value  = "Hide";
-    action = toggleVerboseOptions;
-}
-
 TR: net.sf.webcat.core.TableRow {
     index = index;
-}
-
-VerboseOptions: WOSubmitButton {
-    value  = "Show";
-    action = toggleVerboseOptions;
 }

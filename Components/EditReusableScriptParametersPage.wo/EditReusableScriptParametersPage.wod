@@ -12,111 +12,23 @@ AssignmentName: WOHyperlink {
     string = otherAssignmentStep.assignment.name;
 }
 
-Author: WOString {
-    value = step.script.author.nameAndUid;
-}
-
-BrowseScript: WOSubmitButton {
-    value = "Browse Script Master Copy";
-    action = editScript;
-}
-
-CanEditScript: WOConditional {
-    condition = canEditScript;
-}
-
-CannotEditScript: WOConditional {
-    condition = canEditScript;
-    negate    = true;
-}
-
-CategoryList: WOPopUpButton {
-    list          = categories;
-    item          = category;
-    selection     = chosenCategory;
-    noSelectionString = "All Options";
-    onchange      = "submitForm()";
-}
-
-Collapse: WOSubmitButton {
-    value = "Collapse";
-    action = toggleHideInfo;
-}
-
-Description: WOString {
-    value = step.script.configDescription.description;
-}
-
-EditScript: WOSubmitButton {
-    value = "Edit Script Master Copy";
-    action = editScript;
-}
-
-Expand: WOSubmitButton {
-    value = "Expand";
-    action = toggleHideInfo;
-}
-
-HasNoOptions: WOConditional {
-    condition = optionGroup.displayedObjects.count;
-    negate    = true;
-}
-
-HasCategories: WOConditional {
-    condition = categories.count;
-}
-
-HasOptions: WOConditional {
-    condition = optionGroup.displayedObjects.count;
-}
-
-HideInfo: WOConditional {
-    condition = session.userPreferences.EditScriptPageShowInfo;
-    negate    = true;
-}
-
-IsPublished: WOString {
-    value = isPublished;
-}
-
-Modified: WOString {
-    value      = step.script.lastModified;
-	dateformat = "%m/%d/%Y %I:%M%p";
-}
-
 Name: WOTextField {
     value = step.config.name;
     size  = 60;
 }
 
-OptionPanel: net.sf.webcat.grader.ScriptOptionPanel {
-    option       = option;
-    optionValues = step.config.configSettings;
-    terse        = session.userPreferences.EditScriptPageNoVerboseOptions;
-}
-
-OptionsAreTerse: WOConditional {
-    condition = session.userPreferences.EditScriptPageNoVerboseOptions;
-}
-
-OptionsAreVerbose: WOConditional {
-    condition = session.userPreferences.EditScriptPageNoVerboseOptions;
-    negate    = true;
+OptionEditor: net.sf.webcat.core.OptionSetEditor {
+    options           = step.script.configDescription.options;
+    optionValues      = step.config.configSettings;
+    categories        = step.script.configDescription.optionCategories;
+    verboseOptionsKey = "EditScriptPageNoVerboseOptions";
+    browsePageName    = "EditScriptFilesPage";
+    base              = baseDir;
 }
 
 Page: net.sf.webcat.core.WizardPage {
     sideStepTitle = "Edit Reusable Options";
     applyEnabled  = true;
-}
-
-Reload: WOSubmitButton {
-    value  = "Reload Property Definitions"; 
-    action = reloadScriptDefinition;
-}
-
-Repetition2: WORepetition {
-    list = optionGroup.displayedObjects;
-    item = option;
 }
 
 Repetition3: WORepetition {
@@ -129,19 +41,6 @@ ScriptName: WOString {
     value = step.script.displayableName;
 }
 
-ShowInfo: WOConditional {
-    condition = session.userPreferences.EditScriptPageShowInfo;
-}
-
-ShowThisOption: WOConditional {
-    condition = showThisOption;
-}
-
-TerseOptions: WOSubmitButton {
-    value  = "Hide";
-    action = toggleVerboseOptions;
-}
-
 TogglePublished: WOSubmitButton {
     value = togglePublishedLabel;
     action = togglePublished;
@@ -149,13 +48,4 @@ TogglePublished: WOSubmitButton {
 
 TR: net.sf.webcat.core.TableRow {
     index = index;
-}
-
-VerboseOptions: WOSubmitButton {
-    value  = "Show";
-    action = toggleVerboseOptions;
-}
-
-Version: WOString {
-    value = step.script.configDescription.version;
 }

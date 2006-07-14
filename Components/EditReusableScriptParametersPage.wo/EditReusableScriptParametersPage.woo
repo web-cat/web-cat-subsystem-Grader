@@ -9,12 +9,5 @@
             localKeys = (); 
             numberOfObjectsPerBatch = 0; 
         };
-        optionGroup = {
-            class = WODisplayGroup; 
-            fetchesOnLoad = NO; 
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-        };
     }; 
 }

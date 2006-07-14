@@ -1,0 +1,19 @@
+OptionEditor: net.sf.webcat.core.OptionSetEditor {
+    options           = plugin.configDescription.globalOptions;
+    optionValues      = plugin.globalConfigSettings;
+    categories        = plugin.configDescription.GlobalOptionCategories;
+    verboseOptionsKey = "EditScriptPageNoVerboseOptions";
+    browsePageName    = "EditScriptFilesPage";
+    base              = baseDir;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    sideStepTitle = "Edit Plug-in Global Options";
+    applyEnabled  = true;
+    backEnabled   = false;
+    nextEnabled   = false;
+}
+
+PluginName: WOString {
+    value = plugin.displayableName;
+}

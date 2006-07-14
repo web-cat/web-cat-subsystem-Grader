@@ -151,6 +151,20 @@ public class GraderDatabaseUpdates
             + "CSUBMISSIONMETHOD TINYINT NOT NULL" );
     }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Adds support for global configuration parameters for plug-ins.
+     * @throws SQLException on error
+     */
+    public void updateIncrement5() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TUPLOADEDSCRIPTFILES add "
+            + "CGLOBALCONFIGSETTINGS BLOB" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

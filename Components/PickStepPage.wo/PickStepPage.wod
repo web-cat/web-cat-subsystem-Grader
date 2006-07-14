@@ -34,8 +34,8 @@ HasPublishedScripts: WOConditional {
     condition = publishedScriptGroup.displayedObjects.count;
 }
 
-LastTR: net.sf.webcat.core.TableRow {
-	index = scriptGroup.displayedObjects.count;
+HasPersonalScripts: WOConditional {
+    condition = scriptGroup.displayedObjects.count;
 }
 
 Page: net.sf.webcat.core.WizardPage {
@@ -60,11 +60,6 @@ RadioButton3: WORadioButton {
 	name      = "Group";
 	selection = selectedScriptIndex;
 	value     = index3;
-}
-
-RadioButton4: WORadioButton {
-	name    = "Group";
-	checked = createNew;
 }
 
 Repetition1: WORepetition {
@@ -104,11 +99,6 @@ ScriptVersion: WOString {
 
 TR: net.sf.webcat.core.TableRow {
 	index = index;
-}
-
-UploadScript: WOFileUpload {
-	data     = uploadedData;
-	filePath = uploadedName;
 }
 
 WCSortOrder1: net.sf.webcat.core.WCSortOrder {

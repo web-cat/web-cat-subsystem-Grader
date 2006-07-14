@@ -28,6 +28,17 @@
             }; 
         },
         {
+            columnName = CGLOBALCONFIGSETTINGS; 
+            name = globalConfigSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                valueFactoryMethodName = objectWithArchiveData; 
+                isMutable = true; 
+                valueClassName = net.sf.webcat.core.MutableDictionary; 
+            }; 
+        },
+        {
             name = updateMutableFields; 
             prototypeName = updateMutableFields; 
             userInfo = {
@@ -105,6 +116,7 @@
         configDescription,
         courseOfferings,
         defaultConfigSettings,
+        globalConfigSettings,
         isConfigFile, 
         isPublished,
         language,

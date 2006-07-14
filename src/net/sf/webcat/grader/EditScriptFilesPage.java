@@ -286,8 +286,23 @@ public class EditScriptFilesPage
     // ----------------------------------------------------------
     public boolean nextEnabled()
     {
-        return nextPage != null
-               || wcSession().currentTab().hasNextSibling();
+        return !hideNextBack
+            && ( nextPage != null
+                 || wcSession().currentTab().hasNextSibling() );
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean backEnabled()
+    {
+        return !hideNextBack && super.backEnabled();
+    }
+
+
+    // ----------------------------------------------------------
+    public void hideNextAndBack( boolean value )
+    {
+        hideNextBack = value;
     }
 
 
@@ -313,5 +328,6 @@ public class EditScriptFilesPage
     //~ Instance/static variables .............................................
 
     private String title;
+    private boolean hideNextBack = false;
     static Logger log = Logger.getLogger( EditScriptFilesPage.class );
 }
