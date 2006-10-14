@@ -26,6 +26,8 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.*;
+import net.sf.webcat.core.WCComponent;
 
 
 // -------------------------------------------------------------------------
@@ -35,8 +37,8 @@ import com.webobjects.appserver.*;
  * @author Stephen Edwards
  * @version $Id$
  */
-public abstract class ConfirmPage
-    extends GraderComponent
+public class ConfirmPage
+    extends WCComponent
 {
     //~ Constructors ..........................................................
 
@@ -51,28 +53,65 @@ public abstract class ConfirmPage
         super( context );
     }
 
+
+    //~ KVC Attributes (must be public) .......................................
+
+    public String           message;
+    public String           actionOk;
+    public String           actionCancel;
+    public NSKeyValueCoding actionReceiver;
+    public boolean          hideSteps = false;
+
+
     //~ Methods ...............................................................
-
-    // ----------------------------------------------------------
-    public abstract void actionOnOK();
-
 
     // ----------------------------------------------------------
     public WOComponent okClicked()
     {
-        actionOnOK();
-        return super.next();
+        WOComponent next = null;
+        if ( actionOk != null )
+        {
+            next = (WOComponent)actionReceiver.valueForKey( actionOk );
+        }
+        if ( next == null )
+        {
+            next = super.next();
+        }
+        return next;
     }
 
 
     // ----------------------------------------------------------
     public WOComponent cancelClicked()
     {
-        return super.next();
+        WOComponent next = null;
+        if ( actionCancel != null )
+        {
+            next = (WOComponent)actionReceiver.valueForKey( actionCancel );
+        }
+        if ( next == null )
+        {
+            next = super.next();
+        }
+        return next;
+    }
+
+
+    // ----------------------------------------------------------
+    public String title()
+    {
+        return title;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setTitle( String newTitle )
+    {
+        title = newTitle;
     }
 
 
     //~ Instance/static variables .............................................
 
-    public String message;
+    private String title = "Confirm Action";
 }
