@@ -282,6 +282,7 @@ public class Submission
         if ( result != null )
         {
             log.debug( "removing SubmissionResult " + result );
+            result.setIsMostRecent( false );
             NSArray subs = result.submissions();
             for ( int i = 0; i < subs.count(); i++ )
             {

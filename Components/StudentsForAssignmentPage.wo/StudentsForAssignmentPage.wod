@@ -2,6 +2,13 @@ AssignmentName: WOHyperlink {
 	href   = prefs.assignmentOffering.assignment.url;
 	target = "_new";
     string = prefs.assignmentOffering.titleString;
+    alt    = "View assignment writeup in new window";
+    title  = "View assignment writeup in new window";
+}
+
+AvgScore: WOString {
+	value = avgScore;
+	numberformat = "0.0";
 }
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
@@ -16,15 +23,69 @@ CourseName: WOString {
     value = session.courseOffering.course.name;
 }
 
+EditScore: WOHyperlink {
+    action = editSubmissionScore;
+    alt    = "View, score, or make comments on submission";
+    title  = "View, score, or make comments on submission";
+}
+
+FinalScore: WOString {
+	value = aSubmission.result.finalScore;
+	numberformat = "0.0";
+}
+
+HasTAScore: WOConditional {
+	condition = hasTAScore;
+}
+
+HighScore: WOString {
+	value = highScore;
+	numberformat = "0.0";
+}
+
+LowScore: WOString {
+	value = lowScore;
+	numberformat = "0.0";
+}
+
+MarkAsComplete: WOSubmitButton {
+    value  = "Mark All as Complete";
+    action = markAsComplete;
+    alt    = "Mark all partially graded submissions as complete";
+    title  = "Mark all partially graded submissions as complete";
+}
+
+Name: WOString {
+	value = aSubmission.user.name_LF;
+}
+
 Nobody: WOConditional {
 	condition = submissionDisplayGroup.allObjects.count;
 	negate    = true;
+}
+
+NoTAScore: WOConditional {
+	condition = hasTAScore;
+	negate    = true;
+}
+
+Page: net.sf.webcat.core.WizardPage {
+    nextEnabled = false;
+}
+
+PID: WOString {
+	value = aSubmission.user.userName;
 }
 
 Repetition1: WORepetition {
 	item  = aSubmission;
 	list  = submissionDisplayGroup.displayedObjects;
 	index = index;
+}
+
+ScoreAdjustment: WOString {
+	value = aSubmission.result.scoreAdjustment;
+	numberformat = "0.0";
 }
 
 Somebody: WOConditional {
@@ -39,14 +100,6 @@ Status: WOImage {
 	width     = "16";
 }
 
-PID: WOString {
-	value = aSubmission.user.userName;
-}
-
-Name: WOString {
-	value = aSubmission.user.name_LF;
-}
-
 SubmitNumber: WOString {
 	value = aSubmission.submitNumber;
 }
@@ -54,6 +107,11 @@ SubmitNumber: WOString {
 SubmitTime: WOString {
 	value = aSubmission.submitTime;
 	dateformat = "%m/%d/%y %I:%M%p";
+}
+
+TAScore: WOString {
+	value = aSubmission.result.taScoreRaw;
+	numberformat = "0.0";
 }
 
 TestingScore: WOString {
@@ -66,59 +124,16 @@ ToolScore: WOString {
 	numberformat = "0.0";
 }
 
-TAScore: WOString {
-	value = aSubmission.result.taScoreRaw;
-	numberformat = "0.0";
-}
-
-HighScore: WOString {
-	value = highScore;
-	numberformat = "0.0";
-}
-
-AvgScore: WOString {
-	value = avgScore;
-	numberformat = "0.0";
-}
-
-LowScore: WOString {
-	value = lowScore;
-	numberformat = "0.0";
-}
-
-HasTAScore: WOConditional {
-	condition = hasTAScore;
-}
-
-NoTAScore: WOConditional {
-	condition = hasTAScore;
-	negate    = true;
-}
-
-EditScore: WOHyperlink {
-    action = editSubmissionScore;
-}
-
-ScoreAdjustment: WOString {
-	value = aSubmission.result.scoreAdjustment;
-	numberformat = "0.0";
-}
-
-FinalScore: WOString {
-	value = aSubmission.result.finalScore;
-	numberformat = "0.0";
-}
-
 TR: net.sf.webcat.core.TableRow {
 	index = index;
 }
 
-UsesToolCheckScore: WOConditional {
-	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
-}
-
 UsesBonusesOrPenalties: WOConditional {
 	condition = prefs.assignmentOffering.assignment.usesBonusesOrPenalties;
+}
+
+UsesToolCheckScore: WOConditional {
+	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
 }
 
 WCSortOrder1: net.sf.webcat.core.WCSortOrder {
@@ -149,8 +164,4 @@ WCSortOrder5: net.sf.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Final Score";
 	key = "result.finalScore";
-}
-
-Page: net.sf.webcat.core.WizardPage {
-    nextEnabled = false;
 }

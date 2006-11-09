@@ -187,8 +187,10 @@ public class SubmissionFileStats
 //        contents.append( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 " );
 //        contents.append( "Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD" );
 //        contents.append( "/xhtml1-strict.dtd\">\n" );
-        contents.append( "<link rel=\"stylesheet\" type=\"text/css\" " );
-        contents.append( "href=\"http://web-cat.cs.vt.edu/wc-code.css\"/>\n" );
+        contents.append( "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
+        contents.append( WCResourceManager.resourceURLFor(
+            "wc-code.css", "Grader", null, null ) );
+        contents.append( "\"/>\n" );
 
         //get the array of file comments from the database
         NSArray comments = comments().sortedArrayUsingComparator(

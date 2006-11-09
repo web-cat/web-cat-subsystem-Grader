@@ -40,6 +40,7 @@ HTMLArea.Config = function () {
 
 	this.bodyStyle = "background-color: #fff; font-family: verdana,sans-serif";
 	this.editorURL = "http://web-cat.cs.vt.edu/htmlarea/";
+	this.coreResourceURL = "http://web-cat.cs.vt.edu/";
 
 	// URL-s
 	this.imgURL = "images/";
@@ -934,7 +935,7 @@ HTMLArea.prototype._insertComment = function(param) {
 	var txt1 = doc.createElement( "div" );
 	txt1.setAttribute( "id", idTag );
 	txt1.innerHTML = "<img id=\"" + idTag
-	    + "\" src=\"/images/blank.gif\" width=\"1\" height=\"3\"/>";
+	    + "\" src=\"" + editor.config.coreResourceURL + "/images/blank.gif\" width=\"1\" height=\"3\"/>";
 	td1.appendChild( txt1 );
 	tr1.appendChild( td1 );
 	comment.appendChild( tr1 );
@@ -965,7 +966,8 @@ HTMLArea.prototype._insertComment = function(param) {
 	    + ":X\" border=\"0\" cellpadding=\"0\"><tbody id=\"" + idTag
 	    + ":B\"><tr id=\"" + idTag + ":R\"><td id=\"" + idTag
 	    + ":D\" class=\"messageBox\"><img id=\"" + idTag
-	    + ":I\" src=\"/icons/" + editor.getIcon(cat)
+	    + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/"
+            + editor.getIcon(cat)
 	    + ".gif\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
 	    + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
 	    + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
@@ -996,7 +998,7 @@ HTMLArea.prototype._insertComment = function(param) {
 	var txt3 = doc.createElement( "div" );
 	txt3.setAttribute( "id", idTag );
 	txt3.innerHTML = "<img id=\"" + idTag
-	    + "\" src=\"/images/blank.gif\" width=\"1\" height=\"3\"/>";
+	    + "\" src=\"" + editor.config.coreResourceURL + "/images/blank.gif\" width=\"1\" height=\"3\"/>";
 	td3.appendChild( txt3 );
 	tr3.appendChild( td3 );
 	comment.appendChild( tr3 );
@@ -1499,7 +1501,7 @@ HTMLArea.prototype._doCategory = function(param) {
 			Ctarget.innerHTML = "&nbsp\;" + param + "&nbsp\;"; // replace the inner string with the new category
 			var Iidtofind = "I" + boxnum + ":" + parent + ":" + reference + ":I"; // search for the element that has the icon
 			var Itarget = doc.getElementById(Iidtofind);
-			Itarget.setAttribute("src", "/icons/"+ this.getIcon(param) +".gif");// replace the src to be the new icon
+			Itarget.setAttribute("src", this.config.coreResourceURL + "/icons/"+ this.getIcon(param) +".gif");// replace the src to be the new icon
 			var pts = "";		
 			if(editor.config.viewPoints) // check to see if the user is authorized to view points
 			{
@@ -1642,7 +1644,7 @@ HTMLArea.prototype.updateHistory = function() {
 						var txt1 = doc.createElement("div");
 						txt1.setAttribute("id", idTag );
 						txt1.innerHTML = "<img id=\"" + idTag
-	    						+ "\" src=\"/images/blank.gif\" width=\"1\" height=\"3\"/>";
+	    						+ "\" src=\"" + this.config.coreResourceURL + "/images/blank.gif\" width=\"1\" height=\"3\"/>";
 						td1.appendChild(txt1);
 						tr1.appendChild(td1);
 						comment.appendChild(tr1);
@@ -1673,7 +1675,7 @@ HTMLArea.prototype.updateHistory = function() {
 	    					+ ":X\" border=\"0\" cellpadding=\"0\"><tbody id=\"" + idTag
 	    					+ ":B\"><tr id=\"" + idTag + ":R\"><td id=\"" + idTag
 	    					+ ":D\" class=\"messageBox\"><img id=\"" + idTag
-	    					+ ":I\" src=\"/icons/" + editor.getIcon(cat)
+	    					+ ":I\" src=\"" + editor.config.coreResourceURL + "/icons/" + editor.getIcon(cat)
 	    					+ ".gif\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
 	    					+ tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
 	    					+ ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
@@ -1705,7 +1707,7 @@ HTMLArea.prototype.updateHistory = function() {
 						var txt3 = doc.createElement("div");
 						txt3.setAttribute("id", idTag);
 						txt3.innerHTML = "<img id=\"" + idTag
-	    						+ "\" src=\"/images/blank.gif\" width=\"1\" height=\"3\"/>";
+	    						+ "\" src=\"" + this.config.coreResourceURL + "/images/blank.gif\" width=\"1\" height=\"3\"/>";
 						td3.appendChild(txt3);
 						tr3.appendChild(td3);
 						comment.appendChild(tr3);

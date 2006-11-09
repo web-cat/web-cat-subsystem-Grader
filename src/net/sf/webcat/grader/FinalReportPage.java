@@ -225,6 +225,11 @@ public class FinalReportPage
     // ----------------------------------------------------------
     public static String meter( double fraction )
     {
+        if ( blankGifUrl == null )
+        {
+            blankGifUrl = WCResourceManager.resourceURLFor(
+                "images/blank.gif", "Core", null, null );
+        }
         StringBuffer buffer = new StringBuffer( 250 );
         int covered = (int)( 200.0 * fraction + 0.5 );
         int uncovered = 200 - covered;
@@ -232,16 +237,22 @@ public class FinalReportPage
         if ( covered < 1 )
         {
             // Completely uncovered
-            buffer.append( "class=\"minus\"><img src=\"/images/blank.gif\" width=\"200\" height=\"12\" alt=\"nothing covered\">" );
+            buffer.append( "class=\"minus\"><img src=\"" );
+            buffer.append( blankGifUrl );
+            buffer.append( "\" width=\"200\" height=\"12\" alt=\"nothing covered\">" );
         }
         else if ( uncovered > 0 )
         {
             // Partially covered
-            buffer.append( "class=\"plus\"><img src=\"/images/blank.gif\" width=\"" );
+            buffer.append( "class=\"plus\"><img src=\"" );
+            buffer.append( blankGifUrl );
+            buffer.append( "\" width=\"" );
             buffer.append( covered );
             buffer.append( "\" height=\"12\" alt=\"" );
             buffer.append( (int)( 100.0 * fraction + 0.5 ) );
-            buffer.append( " covered\"></td><td class=\"minus\"><img src=\"/images/blank.gif\" width=\"" );
+            buffer.append( " covered\"></td><td class=\"minus\"><img src=\"" );
+            buffer.append( blankGifUrl );
+            buffer.append( "\" width=\"" );
             buffer.append( uncovered );
             buffer.append( "\" height=\"12\" alt=\"" );
             buffer.append( 100 - (int)( 100.0 * fraction + 0.5 ) );
@@ -250,7 +261,9 @@ public class FinalReportPage
         else
         {
             // Completely covered
-            buffer.append( "class=\"plus\"><img src=\"/images/blank.gif\" width=\"200\" height=\"12\" alt=\"fully covered\">" );
+            buffer.append( "class=\"plus\"><img src=\"" );
+            buffer.append( blankGifUrl );
+            buffer.append( "\" width=\"200\" height=\"12\" alt=\"fully covered\">" );
         }
         buffer.append( "</td></tr></table>" );
         return buffer.toString();
@@ -504,5 +517,6 @@ public class FinalReportPage
     private int     oldQueuePos = -1;
     private Boolean showCoverageData;
 
+    private static String blankGifUrl;
     static Logger log = Logger.getLogger( FinalReportPage.class );
 }

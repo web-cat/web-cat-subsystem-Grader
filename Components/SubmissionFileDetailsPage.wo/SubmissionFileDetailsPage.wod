@@ -17,6 +17,6 @@ FileDetails: WOString {
 
 Page: net.sf.webcat.core.PageWithNavigation {
     title      = "Submission Results: File Details";
-    stylesheet = "/wc-code.css";
+    stylesheet = "Grader.framework/WebServerResources/wc-code.css";
     hideSteps  = true;
 }

@@ -146,6 +146,7 @@ public class SubmissionProfile
      * submission profile, if specified, is included in the list.
      * 
      * @param context The editing context to use
+     * @param user   The user who's profiles should be listed
      * @param course The course to match against
      * @param mine An additional submission profile to include--probably
      * one that wouldn't be picked up by the fetch specification, say because
@@ -155,6 +156,7 @@ public class SubmissionProfile
      */
     public static NSArray profilesForCourseIncludingMine(
             EOEditingContext context,
+            net.sf.webcat.core.User user,
             net.sf.webcat.core.Course course,
             SubmissionProfile mine
         )

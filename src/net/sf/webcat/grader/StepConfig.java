@@ -126,13 +126,18 @@ public class StepConfig
             StepConfig mine
         )
     {
-        NSArray results = objectsForUserAndCourseScript(
-            context, userBinding, scriptFileBinding, courseBinding );
+        // Have to use two separate queries here, since the join required
+        // in the second query will overly restrict the results of the first!
+        NSMutableArray results = objectsForUser( context, userBinding )
+            .mutableClone();
+        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, 
+            objectsForCourseAndScript(
+                context, scriptFileBinding, courseBinding )
+            );
         if ( mine != null && !results.containsObject( mine ) )
         {
-            NSMutableArray ma = results.mutableClone();
-            ma.addObject( mine );
-            results = ma;
+            results.addObject( mine );
         }
         return results;
     }

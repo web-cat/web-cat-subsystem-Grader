@@ -309,36 +309,59 @@ public abstract class _StepConfig
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>UserAndCourseScript</code>
+     * Retrieve object according to the <code>CourseAndScript</code>
      * fetch specification.
      * 
      * @param context The editing context to use
-     * @param userBinding fetch spec parameter
      * @param scriptFileBinding fetch spec parameter
      * @param courseBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForUserAndCourseScript(
+    public static NSArray objectsForCourseAndScript(
             EOEditingContext context,
-            net.sf.webcat.core.User userBinding,
             net.sf.webcat.grader.ScriptFile scriptFileBinding,
             net.sf.webcat.core.Course courseBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "userAndCourseScript", "StepConfig" );
+            .fetchSpecificationNamed( "courseAndScript", "StepConfig" );
 
         NSMutableDictionary bindings = new NSMutableDictionary();
 
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
         if ( scriptFileBinding != null )
             bindings.setObjectForKey( scriptFileBinding,
                                       "scriptFile" );
         if ( courseBinding != null )
             bindings.setObjectForKey( courseBinding,
                                       "course" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>User</code>
+     * fetch specification.
+     * 
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "user", "StepConfig" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         return context.objectsWithFetchSpecification( spec );

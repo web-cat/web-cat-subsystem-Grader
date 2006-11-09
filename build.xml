@@ -30,6 +30,7 @@
 	<target name="init.install">
         <tstamp/>
         <property name="dest.dir" value="${install.dir}"/>
+        <copy file="Properties.master" tofile="Properties"/>
         <propertyfile file="Properties"
          comment="This file is automatically rewritten by ANT, so all formatting will be trashed.">
           <entry key="${framework.name}.version.date" value="${DSTAMP}"/>  

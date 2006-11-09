@@ -1,0 +1,185 @@
+{
+    optionCategories = ( "Directories", "Timing", "Other Settings" );
+    options = (
+    {
+        property    = "grader.submissiondir";
+        type        = shortText;
+        size        = 70;
+        name        = "Storage Directory Base";
+        category    = "Directories";
+        description =
+  "Web-CAT stores student submissions and results in your server's file system.
+  This directory is where Web-CAT will store this information.  This directory
+  must be writeable by Web-CAT.  Be sure that this directory is backed up
+  on a regular schedule to prevent any data loss.  All internal references
+  to student data files are maintained as relative paths based at this
+  location.  If you modify this value but fail to physically move the old
+  contents, some data may become inaccessible from within Web-CAT.";
+    },
+    {
+        property    = "grader.workarea";
+        type        = shortText;
+        size        = 70;
+        name        = "Work Area";
+        category    = "Directories";
+        description =
+  "Web-CAT upacks, compiles, and executes student submissions in a separate
+  area from where the originals are stored.
+  This directory is the \"scratch area\" where Web-CAT will perform these
+  operations.  If possible, it is helpful to make sure this directory lives on
+  a different partition or different device from either the storage directory
+  listed above, or the system directories used by your server's operating
+  system.  Sandboxing the scratch area in this way will ensure that student
+  program actions cannot consume excessive disk resources and cause problems
+  with other services.  This directory
+  must be writeable by Web-CAT.  This directory is only used for transient
+  data and need not be backed up.";
+    },
+    {
+        property    = "grader.scriptsroot";
+        type        = shortText;
+        size        = 70;
+        name        = "Plug-in Storage Directory Base";
+        category    = "Directories";
+        description =
+  "Web-CAT unpacks and stores plug-ins in your server's file system.
+  This directory is where Web-CAT will store plug-in files.  If left blank,
+  Web-CAT will use a subdirectory called \"UserScripts\" within the
+  submission storage directory.  The plug-in storage directory
+  must be writeable by Web-CAT.  Be sure that this directory is backed up
+  on a regular schedule to prevent any data loss.  All internal references
+  to plug-in files are maintained as relative paths based at this
+  location.  If you modify this value but fail to physically move the old
+  contents, some data may become inaccessible from within Web-CAT.";
+    },
+    {
+        property    = "grader.scriptsdataroot";
+        type        = shortText;
+        size        = 70;
+        name        = "Instructor Home Directory Base";
+        category    = "Directories";
+        description =
+  "Web-CAT allows instructors to upload files used to configure grading
+  plug-ins (e.g., test cases, shared data files, and so on).
+  This directory is where Web-CAT will create home directories to hold
+  instructor-provided files.  If left blank,
+  Web-CAT will use a subdirectory called \"UserScriptsData\" within the
+  submission storage directory.  The instructor home directory base
+  must be writeable by Web-CAT.  Be sure that this directory is backed up
+  on a regular schedule to prevent any data loss.  All internal references
+  to instructor data files are maintained as relative paths based at this
+  location.  If you modify this value but fail to physically move the old
+  contents, some data may become inaccessible from within Web-CAT.";
+    },
+
+
+    {
+        property    = "grader.timeout.default";
+        type        = integer;
+        default     = 60;
+        name        = "Default Timeout for Grading Plug-ins";
+        category    = "Timing";
+        description =
+  "Many grading plug-ins allow an instructor to set a time limit on how long
+  student code can run (you fill this in while editing an assignment's
+  properties--it goes in the plug-in step table).  This is the default value
+  (in seconds) used whenever an instructor leaves a timeout box blank.
+  Setting this number too large can lead to significant slowdowns of the
+  grading queue when students run into infinite looping problems or other
+  non-termination issues.  Changes to this setting take effect the next time
+  Web-CAT restarts.";
+    },
+    {
+        property    = "grader.timeout.max";
+        type        = integer;
+        default     = 600;
+        name        = "Maximum Timeout for Grading Plug-ins";
+        category    = "Timing";
+        description =
+  "This is an upper limit on the time limits instructors can fill un for
+  grading plug-ins.   This limit (in seconds) is used only as a bounds check
+  when instructors explicitly set a timeout themselves.  Changes to this
+  setting take effect the next time Web-CAT restarts.";
+    },
+    {
+        property    = "grader.timeout.gracePeriod";
+        type        = integer;
+        default     = 15;
+        name        = "Plug-in Grace Period";
+        category    = "Timing";
+        description =
+  "Instructors can specify execution time limits for running student code.
+  Similarly, each plug-in provides Web-CAT with a formula used to predict
+  how long it will take to run the entire plug-in (including running the
+  student's code, running the instructor's reference tests, generating any
+  feedback, etc.).  If the plug-in takes much longer than it promises, then
+  Web-CAT will terminate it and report the problem to the instructor and
+  the administrator.  This grace period setting (in seconds) tells Web-CAT
+  how much slack time to allow beyond the plug-in's prediction before
+  terminating a plug-in.  Changes to this setting take effect the next time
+  Web-CAT restarts.";
+    },
+    {
+        property    = "grader.mailResultNotificationAfterMinutes";
+        type        = integer;
+        default     = 15;
+        name        = "E-mail Notification Window";
+        category    = "Timing";
+        description =
+  "When a student makes a submission, they normally receive feedback quickly.
+  However, if there is a significant delay between the submission time and
+  when results are ready, Web-CAT will send the student an e-mail notification
+  that results have become available.  Web-CAT will send such a message
+  if the amount of time (in minutes) that elapses between the submission
+  upload and the availability of results is greater than what you set here.
+  Changes to this setting take effect the next time Web-CAT restarts.";
+    },
+
+
+    {
+        property    = "graderLangList";
+        type        = longText;
+        name        = "Message Listing Languages Supported";
+        category    = "Other Settings";
+        description =
+  "If provided, this message (usually brief) is posted on the <b>login
+  page</b> below the Message of the Day, prefixed by the phrase \"This
+  Web-CAT server currently has the following languages installed:\".  You
+  can use it to advertize which programming languages are supported on
+  your server.  HTML markup is allowed.";
+    },
+    {
+        property    = "grader.maxFileUploadSize";
+        type        = integer;
+        default     = 200000;
+        name        = "Maximum Submission Upload Size";
+        category    = "Other Settings";
+        description =
+  "When a student makes a submission, the uploaded file must be less than this
+  amount (in bytes).  Instructors can set their own limits in submission
+  policies, but instructors may not set any limits higher than this
+  maximum.";
+    },
+    {
+        property    = "grader.willNotAutoUpdatePlugins";
+        type        = boolean;
+        name        = "Disable Auto-update Support for Plug-ins";
+        category    = "Other Settings";
+        description =
+  "Normally, each time Web-CAT starts, it checks to see if newer versions
+  if any installed plug-ins are available.  It will automatically download
+  and install any available plug-in updates unless you disable this feature.";
+    },
+    {
+        property    = "grader.willNotAutoInstallPlugins";
+        type        = boolean;
+        name        = "Disable Auto-installation Support for New Plug-ins";
+        category    = "Other Settings";
+        description =
+  "Normally, each time Web-CAT starts, it checks known providers to see if
+  any new plug-ins have been released for general installation.  It will
+  automatically download and install any new plug-ins unless you disable
+  this feature.";
+    }
+    );
+}

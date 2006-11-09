@@ -77,12 +77,6 @@ public class Grader
     }
 
 
-    //~ Constants .............................................................
-
-    public static final String NO_AUTO_UPDATE_KEY =
-        "grader.willNotAutoUpdatePlugins";
-
-
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
@@ -96,29 +90,7 @@ public class Grader
                         new GraderDatabaseUpdates() );
 
         // Install or update any plug-ins that need it
-        if ( !Application.configurationProperties()
-                .booleanForKey( NO_AUTO_UPDATE_KEY ) )
-        {
-            EOEditingContext ec = Application.newPeerEditingContext();
-            try
-            {
-                ec.lock();
-                NSArray pluginList = EOUtilities.objectsForEntityNamed(
-                    ec, ScriptFile.ENTITY_NAME );
-
-                for ( int i = 0; i < pluginList.count(); i++ )
-                {
-                    ScriptFile plugin =
-                        (ScriptFile)pluginList.objectAtIndex( i );
-                    // TODO: plugin.updateIfNecessary();
-                }
-            }
-            finally
-            {
-                ec.unlock();
-                Application.releasePeerEditingContext( ec );
-            }
-        }
+        ScriptFile.autoUpdateAndInstall();
 
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();
@@ -721,232 +693,106 @@ public class Grader
     //~ Static Utility Methods ................................................
 
     // ----------------------------------------------------------
-    /**
-     * Recursively deletes a directory
-     * 
-     * @param dirName the path of the directory
-     */
-    public static void deleteDirectory( String dirName )
-    {
-        deleteDirectory( new File( dirName ) );
-    }
+//    /**
+//     * unzips the zipfile in the output directory
+//     * 
+//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
+//     * class instead.
+//     * 
+//     * @param zipFileName full path of a zip file
+//     * @param outputDir full path of the output directory
+//     * @throws java.io.IOException if occurs during unzipping
+//     */
+//    public static void unZip( File zipFileName, File outputDir )
+//        throws java.io.IOException
+//    {
+//        unZip( new ZipFile( zipFileName ), outputDir );
+//    }
 
 
     // ----------------------------------------------------------
-    /**
-     * Recursively deletes a directory
-     * 
-     * @param dir the File object for the directory
-     */
-    public static void deleteDirectory( File dir )
-    {
-        File[] files = dir.listFiles();
-        for ( int i = 0; i < files.length; i++ )
-        {
-            if ( files[i].isDirectory() )
-            {
-                deleteDirectory( files[i] );
-            }
-            files[i].delete();
-        }
-        dir.delete();
-    }
+//    /**
+//     * unzips the zipfile in the output directory
+//     * 
+//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
+//     * class instead.
+//     * 
+//     * @param zipFile the zip file
+//     * @param outputDir full path of the output directory
+//     * @throws java.io.IOException if occurs during unzipping
+//     */
+//    public static void unZip( ZipFile zipFile, File outputDir )
+//        throws java.io.IOException
+//    {
+//        Enumeration e = zipFile.entries();
+//        outputDir.mkdirs();
+//        while ( e.hasMoreElements() )
+//        {
+//            ZipEntry entry = (ZipEntry)e.nextElement();
+//            File entryFile = new File( outputDir, entry.getName() );
+//            if ( entry.isDirectory() )
+//            {
+//                entryFile.mkdirs();
+//            }
+//            else
+//            {
+//                File parent = entryFile.getParentFile();
+//                if ( !parent.exists() )
+//                {
+//                    parent.mkdirs();
+//                }
+//                BufferedInputStream  in = new BufferedInputStream(
+//                    zipFile.getInputStream( entry ) );
+//                BufferedOutputStream out = new BufferedOutputStream(
+//                    new FileOutputStream( entryFile ) );
+//                net.sf.webcat.archives.FileUtilities.copyStream( in, out );
+//                in.close();
+//                out.close();
+//            }
+//        }
+//    }
 
 
     // ----------------------------------------------------------
-    /**
-     * Copies the contents of an input stream onto an existing output
-     * stream.  The output stream is flushed when the operation
-     * is complete.
-     * 
-     * @param in  the input stream to copy
-     * @param out the destination
-     * @throws IOException if there are IO errors
-     */
-    public static void copyStream( InputStream in, OutputStream out )
-        throws IOException
-    {
-        // read in increments of BUFFER_SIZE
-        byte[] b = new byte[BUFFER_SIZE];
-        int count = in.read( b );
-        while ( count > -1 )
-        {
-            out.write( b, 0, count );
-            count = in.read( b );
-        }
-        out.flush();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Copies a file into a specified directory
-     * 
-     * @param oldFile the file to copy
-     * @param outputDir the destination directory
-     * @throws IOException if there are IO errors
-     */
-    public static void copyFile( File oldFile, File outputDir )
-        throws IOException
-    {
-        FileInputStream  in  = new FileInputStream( oldFile );
-        FileOutputStream out = new FileOutputStream(
-            new File( outputDir, oldFile.getName() )
-        );
-        copyStream( in, out );
-        in.close();
-        out.close();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Copies the contents of the source directory to the destination
-     * directory
-     * 
-     * @param source the source directory
-     * @param destination the destination directory
-     * @throws IOException if there are IO errors
-     */
-    public static void copyDirectory( File source, File destination )
-        throws IOException
-    {
-        File[] fileList = source.listFiles();
-        for ( int i = 0; i < fileList.length; i++ )
-        {
-            if ( fileList[i].isDirectory() )
-            {
-                // Copy the whole directory
-                File newDir = new File( destination, fileList[i].getName() );
-                newDir.mkdir();
-                copyDirectory( fileList[i], newDir );
-            }
-            else
-            {
-                copyFile( fileList[i], destination );
-            }
-        }
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Unzips the specified zip file into the given destination directory.
-     * 
-     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-     * class instead.
-     * 
-     * @param zipFileName full path of a zip file
-     * @param outputDir full path of the output directory
-     * @throws java.io.IOException if an IO error occurs during unzipping
-     */
-    public static void unZip( String zipFileName, String outputDir )
-        throws java.io.IOException
-    {
-        unZip( new ZipFile( zipFileName ), new File( outputDir ) );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * unzips the zipfile in the output directory
-     * 
-     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-     * class instead.
-     * 
-     * @param zipFileName full path of a zip file
-     * @param outputDir full path of the output directory
-     * @throws java.io.IOException if occurs during unzipping
-     */
-    public static void unZip( File zipFileName, File outputDir )
-        throws java.io.IOException
-    {
-        unZip( new ZipFile( zipFileName ), outputDir );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * unzips the zipfile in the output directory
-     * 
-     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-     * class instead.
-     * 
-     * @param zipFile the zip file
-     * @param outputDir full path of the output directory
-     * @throws java.io.IOException if occurs during unzipping
-     */
-    public static void unZip( ZipFile zipFile, File outputDir )
-        throws java.io.IOException
-    {
-        Enumeration e = zipFile.entries();
-        outputDir.mkdirs();
-        while ( e.hasMoreElements() )
-        {
-            ZipEntry entry = (ZipEntry)e.nextElement();
-            File entryFile = new File( outputDir, entry.getName() );
-            if ( entry.isDirectory() )
-            {
-                entryFile.mkdirs();
-            }
-            else
-            {
-                File parent = entryFile.getParentFile();
-                if ( !parent.exists() )
-                {
-                    parent.mkdirs();
-                }
-                BufferedInputStream  in = new BufferedInputStream(
-                    zipFile.getInputStream( entry ) );
-                BufferedOutputStream out = new BufferedOutputStream(
-                    new FileOutputStream( entryFile ) );
-                copyStream( in, out );
-                in.close();
-                out.close();
-            }
-        }
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * unzips a zip stream in the output directory
-     * 
-     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-     * class instead.
-     * 
-     * @param zipStream the zip file stream
-     * @param outputDir full path of the output directory
-     * @throws java.io.IOException if occurs during unzipping
-     */
-    public static void unZip( ZipInputStream zipStream, File outputDir )
-        throws java.io.IOException
-    {
-        outputDir.mkdirs();
-        ZipEntry entry = zipStream.getNextEntry();
-        while ( entry != null )
-        {
-            File entryFile = new File( outputDir, entry.getName() );
-            if ( entry.isDirectory() )
-            {
-                entryFile.mkdirs();
-            }
-            else
-            {
-                File parent = entryFile.getParentFile();
-                if ( !parent.exists() )
-                {
-                    parent.mkdirs();
-                }
-                BufferedOutputStream out = new BufferedOutputStream(
-                    new FileOutputStream( entryFile ) );
-                copyStream( zipStream, out );
-                out.close();
-            }
-            zipStream.closeEntry();
-            entry = zipStream.getNextEntry();
-        }
-    }
+//    /**
+//     * unzips a zip stream in the output directory
+//     * 
+//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
+//     * class instead.
+//     * 
+//     * @param zipStream the zip file stream
+//     * @param outputDir full path of the output directory
+//     * @throws java.io.IOException if occurs during unzipping
+//     */
+//    public static void unZip( ZipInputStream zipStream, File outputDir )
+//        throws java.io.IOException
+//    {
+//        outputDir.mkdirs();
+//        ZipEntry entry = zipStream.getNextEntry();
+//        while ( entry != null )
+//        {
+//            File entryFile = new File( outputDir, entry.getName() );
+//            if ( entry.isDirectory() )
+//            {
+//                entryFile.mkdirs();
+//            }
+//            else
+//            {
+//                File parent = entryFile.getParentFile();
+//                if ( !parent.exists() )
+//                {
+//                    parent.mkdirs();
+//                }
+//                BufferedOutputStream out = new BufferedOutputStream(
+//                    new FileOutputStream( entryFile ) );
+//                net.sf.webcat.archives.FileUtilities
+//                    .copyStream( zipStream, out );
+//                out.close();
+//            }
+//            zipStream.closeEntry();
+//            entry = zipStream.getNextEntry();
+//        }
+//    }
 
 
     //~ Instance/static variables .............................................

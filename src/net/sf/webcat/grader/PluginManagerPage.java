@@ -28,6 +28,8 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 
+import java.util.*;
+
 import er.extensions.*;
 
 import org.apache.log4j.*;
@@ -61,32 +63,48 @@ extends WCComponent
 
     //~ KVC Attributes (must be public) .......................................
 
-    public int            index;
-    public ScriptFile     plugin;
-    public WODisplayGroup publishedPluginGroup;
-    public WODisplayGroup unpublishedPluginGroup;
-    public WODisplayGroup personalPluginGroup;
-    public NSData         uploadedData;
-    public String         uploadedName;
+    public int               index;
+    public ScriptFile        plugin;
+    public WODisplayGroup    publishedPluginGroup;
+    public WODisplayGroup    unpublishedPluginGroup;
+    public WODisplayGroup    personalPluginGroup;
+    public NSArray           newPlugins;
+    public NSData            uploadedData;
+    public String            uploadedName;
+    public FeatureDescriptor feature;
+    public String            providerURL;
 
+    public static final String TERSE_DESCRIPTIONS_KEY =
+        "tersePluginDescriptions";
 
+    
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
+        terse = null;
+        publishedPluginGroup.fetch();
         if ( wcSession().user().hasAdminPrivileges() )
         {
-            publishedPluginGroup.fetch();
             unpublishedPluginGroup.fetch();
         }
-//        else
+        else
         {
             personalPluginGroup.queryBindings().setObjectForKey(
                 wcSession().user(),
                 "user"
             );
             personalPluginGroup.fetch();
+        }
+        if ( newPlugins == null )
+        {
+            for ( Iterator i = FeatureProvider.providers().iterator();
+                  i.hasNext(); )
+            {
+                ( (FeatureProvider)i.next() ).refresh();
+            }
+            newPlugins = newPlugins();
         }
         super.appendToResponse( response, context );
     }
@@ -105,12 +123,12 @@ extends WCComponent
 
     // ----------------------------------------------------------
     /**
-     * Determine if update download and installation support is active.
-     * @return null to refresh the current page
+     * Determine if there is a download site.
+     * @return true if a download url is defined
      */
-    public boolean canUpdate()
+    public boolean canDownload()
     {
-        return adaptor() != null;
+        return plugin.descriptor().getProperty( "provider.url" ) != null;
     }
 
 
@@ -123,9 +141,16 @@ extends WCComponent
     public WOComponent download()
     {
         clearErrors();
-//        String msg = subsystem.descriptor().providerVersion().downloadTo(
-//            adaptor().updateDownloadLocation() );
-//        possibleErrorMessage( msg );
+        String msg = plugin.installUpdate();
+        possibleErrorMessage( msg );
+        if ( msg == null )
+        {
+            wcSession().commitLocalChanges();
+        }
+        else
+        {
+            wcSession().cancelLocalChanges();
+        }
         return null;
     }
 
@@ -138,9 +163,18 @@ extends WCComponent
     public WOComponent downloadNew()
     {
         clearErrors();
-//        String msg = feature.providerVersion().downloadTo(
-//            adaptor().updateDownloadLocation() );
-//        possibleErrorMessage( msg );
+        String msg =
+            ScriptFile.installOrUpdate( wcSession().user(), feature, false );
+        possibleErrorMessage( msg );
+        if ( msg == null )
+        {
+            wcSession().commitLocalChanges();
+        }
+        else
+        {
+            wcSession().cancelLocalChanges();
+        }
+        newPlugins = null;
         return null;
     }
 
@@ -153,21 +187,21 @@ extends WCComponent
     public WOComponent scanNow()
     {
         clearErrors();
-//        if ( providerURL == null || providerURL.equals( "" ) )
-//        {
-//            errorMessage( "Please specify a provider URL first." );
-//        }
-//        else
-//        {
-//            if ( FeatureProvider.getProvider( providerURL ) == null )
-//            {
-//                errorMessage( "Cannot read feature provider information from "
-//                    + " specified URL: '" + providerURL + "'." );
-//            }
-//        }
-//
-//        // Erase cache of new subsystems so it will be recalculated now
-//        newSubsystems = null;
+        if ( providerURL == null || providerURL.equals( "" ) )
+        {
+            errorMessage( "Please specify a provider URL first." );
+        }
+        else
+        {
+            if ( FeatureProvider.getProvider( providerURL ) == null )
+            {
+                errorMessage( "Cannot read feature provider information from "
+                    + " specified URL: '" + providerURL + "'." );
+            }
+        }
+
+        // Erase cache of new subsystems so it will be recalculated now
+        newPlugins = null;
 
         // refresh page
         return null;
@@ -231,9 +265,27 @@ extends WCComponent
     public WOComponent toggleAutoUpdates()
     {
         boolean option = Application.configurationProperties()
-            .booleanForKey( Grader.NO_AUTO_UPDATE_KEY );
+            .booleanForKey( ScriptFile.NO_AUTO_UPDATE_KEY );
         Application.configurationProperties().put(
-            Grader.NO_AUTO_UPDATE_KEY, option ? "false" : "true" );
+            ScriptFile.NO_AUTO_UPDATE_KEY, option ? "false" : "true" );
+        Application.configurationProperties().attemptToSave();
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Toggle the
+     * {@link net.sf.webcat.WCServletAdaptor#willUpdateAutomatically()}
+     * attribute.
+     * @return null to refresh the current page
+     */
+    public WOComponent toggleAutoInstalls()
+    {
+        boolean option = Application.configurationProperties()
+            .booleanForKey( ScriptFile.NO_AUTO_INSTALL_KEY );
+        Application.configurationProperties().put(
+            ScriptFile.NO_AUTO_INSTALL_KEY, option ? "false" : "true" );
         Application.configurationProperties().attemptToSave();
         return null;
     }
@@ -267,6 +319,7 @@ extends WCComponent
         wcSession().commitLocalChanges();
         uploadedName = null;
         uploadedData = null;
+        newPlugins = null;
         return null;
     }
 
@@ -308,7 +361,170 @@ extends WCComponent
     }
 
 
-    //~ Instance/static variables .............................................
+    // ----------------------------------------------------------
+    /**
+     * Toggle whether or not the user wants verbose descriptions of subsystems
+     * to be shown or hidden.  The setting is stored in the user's preferences
+     * under the key specified by the VERBOSE_DESCRIPTIONS_KEY, and will be
+     * permanently saved the next time the session's local changes are saved.
+     */
+    public void toggleVerboseDescriptions()
+    {
+        boolean verboseDescriptions = ERXValueUtilities.booleanValue(
+            wcSession().userPreferences.objectForKey(
+                TERSE_DESCRIPTIONS_KEY ) );
+        verboseDescriptions = !verboseDescriptions;
+        wcSession().userPreferences.setObjectForKey(
+            Boolean.valueOf( verboseDescriptions ), TERSE_DESCRIPTIONS_KEY );
+        wcSession().commitLocalChanges();
+    }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Look up the user's preferences and determine whether or not to show
+     * verbose subsystem descriptions in this component.
+     * @return true if verbose descriptions should be hidden, or false if
+     * they should be shown
+     */
+    public Boolean terse()
+    {
+        if ( terse == null )
+        {
+            terse = ERXValueUtilities.booleanValue(
+                wcSession().userPreferences.objectForKey(
+                    TERSE_DESCRIPTIONS_KEY ) )
+                ? Boolean.TRUE : Boolean.FALSE;
+        }
+        return terse;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the history URL for the current installed plug-in.
+     * @return The history URL, or null if none is defined
+     */
+    public String pluginHistoryUrl()
+    {
+        String result = plugin.descriptor().getProperty( "history.url" );
+        log.debug( "pluginHistoryUrl() = " + result );
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the information URL for the current installed plug-in.
+     * @return The information URL, or null if none is defined
+     */
+    public String pluginInfoUrl()
+    {
+        String result = plugin.descriptor().getProperty( "info.url" );
+        log.debug( "pluginInfoUrl() = " + result );
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the history URL for the current uninstalled plug-in.
+     * @return The history URL, or null if none is defined
+     */
+    public String featureHistoryUrl()
+    {
+        return feature.getProperty( "history.url" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the information URL for the current uninstalled plug-in.
+     * @return The information URL, or null if none is defined
+     */
+    public String featureInfoUrl()
+    {
+        return feature.getProperty( "info.url" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the information URL for the current uninstalled plug-in.
+     * @return The information URL, or null if none is defined
+     */
+    public String featureDisplayableName()
+    {
+        return feature.getProperty( "displayableName" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Calculate the current set of plugins that are available from
+     * all registered providers, but that are not yet installed.  This
+     * method assumes that the private <code>subsystems</code> data member
+     * has already been initialized with a list of currently installed
+     * subsystems.
+     * @return an array of feature descriptors for available uninstalled
+     *         subsystems
+     */
+    public NSArray newPlugins()
+    {
+        Collection availablePlugins = new HashSet();
+        for ( Iterator i = FeatureProvider.providers().iterator();
+              i.hasNext(); )
+        {
+            FeatureProvider provider = (FeatureProvider)i.next();
+            if ( provider != null )
+            {
+                availablePlugins.addAll( provider.plugins() );
+            }
+        }
+        NSArray exclude = publishedPluginGroup.displayedObjects();
+        if ( exclude != null )
+        {
+            for ( int i = 0; i < exclude.count(); i++ )
+            {
+                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                FeatureDescriptor fd = s.descriptor().providerVersion();
+                if ( fd != null )
+                {
+                    availablePlugins.remove( fd );
+                }
+            }
+        }
+        exclude = unpublishedPluginGroup.displayedObjects();
+        if ( exclude != null )
+        {
+            for ( int i = 0; i < exclude.count(); i++ )
+            {
+                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                FeatureDescriptor fd = s.descriptor().providerVersion();
+                if ( fd != null )
+                {
+                    availablePlugins.remove( fd );
+                }
+            }
+        }
+        exclude = personalPluginGroup.displayedObjects();
+        if ( exclude != null )
+        {
+            for ( int i = 0; i < exclude.count(); i++ )
+            {
+                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                FeatureDescriptor fd = s.descriptor().providerVersion();
+                if ( fd != null )
+                {
+                    availablePlugins.remove( fd );
+                }
+            }
+        }
+        return new NSArray( availablePlugins.toArray() );
+    }
+
+
+    //~ Instance/static variables .............................................
+    private Boolean terse;
     static Logger log = Logger.getLogger( PluginManagerPage.class );
 }

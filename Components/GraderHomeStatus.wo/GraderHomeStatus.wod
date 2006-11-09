@@ -72,6 +72,10 @@ HasEnqueuedJobs: WOConditional {
     condition = enqueuedJobGroup.displayedObjects.count;
 }
 
+IsFacultyUser: WOConditional {
+    condition = session.user.hasFacultyPrivileges;
+}
+
 HasNoAssignments: WOConditional {
     condition = assignmentGroup.displayedObjects.count;
     negate    = true;

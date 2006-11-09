@@ -46,7 +46,7 @@ public class PluginDescriptor
     // ----------------------------------------------------------
     /**
      * Creates a new plug-in descriptor.  This constructor is protected,
-     * since clients should use the {@link ScriptFile.descriptor()}
+     * since clients should use the {@link ScriptFile#descriptor()}
      * method instead.
      * @param plugin the plug-in this descriptor is for
      */
@@ -70,28 +70,33 @@ public class PluginDescriptor
     public String getProperty( String propName )
     {
         Object result =
-            plugin.configDescription().valueForKey( name + "." + propName );
+            plugin.configDescription().valueForKey( propName );
         return result == null
             ? null
             : result.toString();
     }
 
 
-    //~ Protected Methods .....................................................
-
     // ----------------------------------------------------------
     /**
-     * Access a given property and convert it to a numeric value (with a
-     * default of zero).
-     * @param propName the name of the property to look up
-     * @return the property's value as an int
+     * Retrieve a subsystem-specific property's value.
+     * @param propName the name of the property to retrieve
+     * @param defaultValue the value to use if the property is not found
+     * @return the value of the <i>name.propName</i> property, where
+     *     <i>name</i> is the name of this subsystem, or the defaultValue
+     *     if no such property is found
      */
-    protected int intProperty( String propName )
+    public String getProperty( String propName, String defaultValue )
     {
-        return er.extensions.ERXValueUtilities.intValue(
-            plugin.configDescription().valueForKey( propName ) );
+        Object result =
+            plugin.configDescription().valueForKey( propName );
+        return result == null
+            ? defaultValue
+            : result.toString();
     }
 
+
+    //~ Protected Methods .....................................................
 
     // ----------------------------------------------------------
     /**

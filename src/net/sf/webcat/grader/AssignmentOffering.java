@@ -316,7 +316,13 @@ public class AssignmentOffering
     public NSArray mostRecentSubsForAll()
     {
         NSMutableArray recentSubs = new NSMutableArray();
-        NSArray students = courseOffering().students();
+        NSMutableArray students = courseOffering().students().mutableClone();
+        NSArray staff = courseOffering().instructors();
+        students.removeObjectsInArray( staff );
+        students.addObjectsFromArray( staff );
+        staff = courseOffering().TAs();
+        students.removeObjectsInArray( staff );
+        students.addObjectsFromArray( staff );
         for ( int i = 0; i < students.count(); i++ )
         {
             Submission s =

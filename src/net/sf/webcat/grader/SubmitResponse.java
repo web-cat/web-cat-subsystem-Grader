@@ -26,15 +26,13 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
  *  This is the response page for BlueJ submission actions.  It is produced
- *  by {@link Grader#handleDirectionAction(WORequest,Session,WOContext)}
+ *  by {@link Grader#handleDirectAction(WORequest,Session,WOContext)}
  *  in response to a BlueJ submitter direct action transaction.
  *
  *  @author Stephen Edwards

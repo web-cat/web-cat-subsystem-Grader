@@ -32,6 +32,7 @@ import er.extensions.*;
 import er.extensions.ERXConstant;
 import java.io.*;
 import java.util.*;
+import net.sf.webcat.archives.FileUtilities;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
@@ -500,7 +501,7 @@ public class GraderQueueProcessor
             }
         }
         // Clean up the working directory
-        Grader.deleteDirectory( job.workingDirName() );
+        FileUtilities.deleteDirectory( job.workingDirName() );
 
         generateFinalReport( job,
                              gradingProperties,
@@ -525,7 +526,7 @@ public class GraderQueueProcessor
         File workingDir = new File( job.workingDirName() );
         if ( workingDir.exists() )
         {
-            Grader.deleteDirectory( workingDir );
+            FileUtilities.deleteDirectory( workingDir );
         }
         workingDir.mkdirs();
 
@@ -546,7 +547,7 @@ public class GraderQueueProcessor
         File graderLD = new File( submission.resultDirName() );
         if ( graderLD.exists() )
         {
-            Grader.deleteDirectory( graderLD );
+            FileUtilities.deleteDirectory( graderLD );
         }
         graderLD.mkdirs();
     }
@@ -631,7 +632,11 @@ public class GraderQueueProcessor
             // execute the script
             log.debug( "executing script" );
             timeoutOccurredInStep =
-                step.execute( propertiesFile.getPath(), stdout, stderr );
+                step.execute(
+                    propertiesFile.getPath(),
+                    new File( job.workingDirName() ),
+                    stdout,
+                    stderr );
 
             if ( stderr.length() != 0 )
             {
@@ -930,7 +935,7 @@ public class GraderQueueProcessor
                             out.write( "<pre>".getBytes() );
                         }
 
-                        Grader.copyStream( in, out );
+                        FileUtilities.copyStream( in, out );
                         in.close();
 
                         if ( !isHTML )

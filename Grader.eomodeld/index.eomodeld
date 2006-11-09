@@ -3,7 +3,7 @@
     adaptorName = JDBC; 
     connectionDictionary = {
         URL = ""; 
-        driver = org.gjt.mm.mysql.Driver; 
+        driver = com.mysql.jdbc.Driver; 
         jdbc2Info = {
             ANSI92_CONFORMANCE = ANSI92EntryLevel; 
             DBMS_NAME = MySQL; 

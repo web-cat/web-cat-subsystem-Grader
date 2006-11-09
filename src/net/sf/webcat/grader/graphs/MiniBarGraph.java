@@ -143,8 +143,9 @@ public class MiniBarGraph
                 formatter.format( markScoreNumber, buf, null );
                 String msg =  buf.toString();
                 aResponse.appendContentString(
-                    "<img class=\"bar\" src=\"http://web-cat.cs.vt.edu/images/marker" + markOffset
-                    + ".gif\" title=\"" + msg + "\" alt=\"" + msg + "\"/>");
+                    "<img class=\"bar\" src=\"" + markerUrlPrefix()
+                    + markOffset + ".gif\" title=\"" + msg + "\" alt=\""
+                    + msg + "\"/>");
             }
             aResponse.appendContentString( "</td>\n" );
         }
@@ -178,7 +179,32 @@ public class MiniBarGraph
     }
 
 
+    //~ Private Methods .......................................................
+
+    // ----------------------------------------------------------
+    private String markerUrlPrefix() 
+    {
+        if ( _markerUrlPrefix == null )
+        {
+            _markerUrlPrefix = Application.application().resourceManager()
+                .urlForResourceNamed(
+                    "images/marker0.gif", "Grader", null, null );
+            if ( _markerUrlPrefix != null )
+            {
+                _markerUrlPrefix = _markerUrlPrefix.substring( 0,
+                    _markerUrlPrefix.length() - "0.gif".length() );
+            }
+            else
+            {
+                _markerUrlPrefix = "http://web-cat.cs.vt.edu/images/marker";
+            }
+        }
+        return _markerUrlPrefix;
+    }
+
+
     //~ Instance/static variables .............................................
 
+    private static String _markerUrlPrefix;
     private static NSNumberFormatter formatter = new NSNumberFormatter( "0.0" );
 }

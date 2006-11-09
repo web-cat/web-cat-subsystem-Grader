@@ -43,6 +43,7 @@ public class CmsResponse
     // ----------------------------------------------------------
     /**
      * Creates a new Grader subsystem object.
+     * @param context The page's context
      */
     public CmsResponse( WOContext context )
     {

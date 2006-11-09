@@ -141,8 +141,8 @@ Order: WOString {
 Page: net.sf.webcat.core.WizardPage {
     finishEnabled = true;
     applyEnabled  = true;
-    stylesheet           = "http://localhost/jscalendar/skins/aqua/theme.css";
-    externalJavascript   = "http://localhost/jscalendar/calendar.js,http://localhost/jscalendar/lang/calendar-en.js,http://localhost/jscalendar/calendar-setup.js"; 
+    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
+    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js"; 
 }
 
 PublishIt: WOCheckBox {

@@ -38,7 +38,7 @@ FileToolTestingDeduction: WOString {
 
 Form1: WOForm {
       multipleSubmit = true;
-      enctype        = "multipart/form-data";
+      otherTagString="enctype=\"multipart/form-data\"";
 }
 
 
@@ -148,8 +148,8 @@ TotalDeduction: WOString {
 
 Page: net.sf.webcat.core.PageWithNavigation {
 	// /wc-code.css is added to the text box in the java class
-    stylesheet           = "http://localhost/htmlarea/htmlarea.css";
-    externalJavascript   = "http://localhost/htmlarea/codearea.js,http://localhost/htmlarea/htmlarea-lang-en.js,http://localhost/htmlarea/dialog.js";
+    stylesheet           = "Grader.framework/WebServerResources/htmlarea/htmlarea.css";
+    externalJavascript   = "Grader.framework/WebServerResources/htmlarea/codearea.js,Grader.framework/WebServerResources/htmlarea/htmlarea-lang-en.js,Grader.framework/WebServerResources/htmlarea/dialog.js";
     inlineHeaderContents = javascriptText;
     onLoad               = "initEditor()";
     sideStepTitle        = "Add Comments to This File";

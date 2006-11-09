@@ -1,0 +1,43 @@
+# ===================================================================
+# Grader subsystem characteristics
+# ===================================================================
+subsystem.Grader=net.sf.webcat.grader.Grader
+
+Grader.version.major=2
+Grader.version.minor=1
+Grader.version.revision=5
+Grader.requires=Core
+Grader.depends=env, pluginProperties
+
+Grader.copyright=(c) 2006 Virginia Tech Department of Computer Science
+Grader.provider=Virginia Tech Computer Science
+Grader.provider.url=http\://web-cat.cs.vt.edu/updates
+Grader.info.url=http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem
+Grader.history.url=\
+	http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem/ChangeHistory
+Grader.license=GNU General Public License v.2
+Grader.license.url=http\://www.gnu.org/copyleft/gpl.html
+
+Grader.description=\
+    This subsystem provides all of Web-CAT's automated grading services.  \
+    It manages all grading plug-ins as well.
+
+
+# -------------------------------------------------------------------
+# Grader subsystem configuration property defaults
+# -------------------------------------------------------------------
+# see config.plist for docs on each property
+
+grader.gracePeriod=15
+grader.mailResultNotificationAfterMinutes=15
+grader.timeout.max=600
+grader.timeout.default=60
+grader.maxFileUploadSize=200000
+grader.resumeSuspendedJobs=true
+
+
+# -------------------------------------------------------------------
+# Grader logging defaults
+# -------------------------------------------------------------------
+log4j.logger.net.sf.webcat.grader.GraderQueueProcessor = INFO
+log4j.logger.net.sf.webcat.grader.ScriptFile = INFO

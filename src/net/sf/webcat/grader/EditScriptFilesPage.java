@@ -27,14 +27,12 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
+import net.sf.webcat.archives.ArchiveManager;
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -210,11 +208,12 @@ public class EditScriptFilesPage
         {
             File target =
                 new File( base.getParent(), selectedParentFolderForUpload );
-            ZipInputStream zipStream =
-                new ZipInputStream( uploadedFile2.stream() );
+            // ZipInputStream zipStream =
+            //    new ZipInputStream( uploadedFile2.stream() );
             try
             {
-                Grader.unZip( zipStream, target );
+                ArchiveManager.getInstance().unpack(
+                    target, uploadedFileName2, uploadedFile2.stream() );
             }
             catch ( java.io.IOException e )
             {
@@ -255,13 +254,14 @@ public class EditScriptFilesPage
         clearErrors();
         if ( WCFile.isArchiveFile( uploadedFileName3 ) )
         {
-            Grader.deleteDirectory( base );
+            net.sf.webcat.archives.FileUtilities.deleteDirectory( base );
             base.mkdirs();
-            ZipInputStream zipStream =
-                new ZipInputStream( uploadedFile3.stream() );
+            // ZipInputStream zipStream =
+            //    new ZipInputStream( uploadedFile3.stream() );
             try
             {
-                Grader.unZip( zipStream, base );
+                ArchiveManager.getInstance().unpack(
+                    base, uploadedFileName3, uploadedFile3.stream() );
             }
             catch ( java.io.IOException e )
             {

@@ -134,6 +134,7 @@ public class Step
      * Execute this step with the given command line argument(s).
      * 
      * @param args the arguments to pass to the script
+     * @param cwd  the working directory to use
      * @param stdout the file where the script's standard output should
      *               be stored
      * @param stderr the file where the script's standard error output
@@ -142,6 +143,7 @@ public class Step
      * @throws IOException if one occurs
      */
     public boolean execute( String args,
+                            File   cwd,
                             File   stdout,
                             File   stderr )
         throws IOException
@@ -161,7 +163,8 @@ public class Step
         }
 
         ExecThread exeThread = new ExecThread( Thread.currentThread(),
-                                               finalArgs );
+                                               finalArgs,
+                                               cwd);
         boolean timedOut = false;
         try
         {
@@ -190,17 +193,18 @@ public class Step
     private class ExecThread
         extends Thread
     {
-        public ExecThread( Thread parent, String argList )
+        public ExecThread( Thread parent, String argList, File dir )
         {
             parentThread = parent;
             args         = argList;
+            cwd          = dir;
         }
 
         public void run()
         {
             try
             {
-                script().execute( args );
+                script().execute( args, cwd );
             }
             catch ( IOException e )
             {
@@ -222,6 +226,7 @@ public class Step
 
         private Thread      parentThread;
         private String      args;
+        private File        cwd;
         public  IOException exception = null;
     }
 

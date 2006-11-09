@@ -4,6 +4,8 @@ AddInstructor: WOImageButton {
 	border   = "0";
 	width    = "46";
 	height   = "17";
+	alt      = "Add another instructor";
+	title    = "Add another instructor";
 }
 
 AddTA: WOImageButton {
@@ -12,6 +14,8 @@ AddTA: WOImageButton {
 	border   = "0";
 	width    = "46";
 	height   = "17";
+	alt      = "Add another grader/TA";
+	title    = "Add another grader/TA";
 }
 
 CourseList: WOPopUpButton {
@@ -82,6 +86,8 @@ RemoveInstructor: WOImageButton {
 	border    = "0";
 	width     = "14";
 	height    = "17";
+	title     = "Remove this instructor";
+	alt       = "Remove this instructor";
 }
 
 RemoveTA: WOImageButton {
@@ -91,6 +97,8 @@ RemoveTA: WOImageButton {
 	border    = "0";
 	width     = "14";
 	height    = "17";
+	title     = "Remove this grader/TA";
+	alt       = "Remove this grader/TA";
 }
 
 TARepetition: WORepetition {

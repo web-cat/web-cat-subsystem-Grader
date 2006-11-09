@@ -30,9 +30,7 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.*;
 import java.util.*;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
@@ -625,6 +623,26 @@ public class EditFileCommentsPage
         buffer.append( "<script type=\"text/javascript\">\n" );
         buffer.append( "var editor = null;\nfunction initEditor() {\n" );
         buffer.append( "editor = new HTMLArea(\"source\");\n" );
+        {
+            String url = WCResourceManager.resourceURLFor(
+                "htmlarea/htmlarea.js", "Grader", null, null );
+            if ( url != null )
+            {
+                buffer.append( "editor.config.editorURL = \"");
+                buffer.append( url.substring( 0,
+                    url.length() - "htmlarea.js".length() ) );
+                buffer.append( "\";\n");
+            }
+            url = WCResourceManager.resourceURLFor(
+                "images/blank.gif", "Core", null, null );
+            if ( url != null )
+            {
+                buffer.append( "editor.config.coreResourceURL = \"");
+                buffer.append( url.substring( 0,
+                    url.length() - "images/blank.gif".length() ) );
+                buffer.append( "\";\n");
+            }
+        }
         buffer.append( "editor.generate();\n" );
         if ( wcSession() != null && wcSession().user() != null )
         {

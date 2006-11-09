@@ -389,6 +389,10 @@ public class SubmissionResult
     public double graphableScore()
     {
         double result = correctnessScore() + toolScore();
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "graphableScore() = " + result );
+        }
         return ( result >= 0.0 ) ? result : 0.0;
     }
 
@@ -403,6 +407,12 @@ public class SubmissionResult
     public void setIsMostRecent( boolean value )
     {
         boolean wasMostRecent = isMostRecent();
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "setIsMostRecent(" + value + ") called" );
+            log.debug( "   submission = " + submission() );
+            log.debug( "   wasMostRecent = " + wasMostRecent );
+        }
         if ( wasMostRecent && !value )
         {
             submission().assignmentOffering().graphSummary().removeSubmission(

@@ -12,4 +12,16 @@
             value = {_key = course; class = EOQualifierVariable; }; 
         }; 
     }; 
+    user = {
+        class = EOFetchSpecification; 
+        entityName = SubmissionProfile; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = author; 
+            selectorName = "doesContain:"; 
+            value = {_key = user; class = EOQualifierVariable; }; 
+        }; 
+    }; 
 }

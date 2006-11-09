@@ -1,5 +1,10 @@
-Author: WOString {
-    value = plugin.author.nameAndUid;
+AutoInstallEnabled: WOConditional {
+    condition = application.properties.grader.willNotAutoInstallPlugins;
+    negate = true;
+}
+
+AutoInstallNotEnabled: WOConditional {
+    condition = application.properties.grader.willNotAutoInstallPlugins;
 }
 
 AutoUpdateEnabled: WOConditional {
@@ -11,17 +16,18 @@ AutoUpdateNotEnabled: WOConditional {
     condition = application.properties.grader.willNotAutoUpdatePlugins;
 }
 
+AvailablePluginRepetition: WORepetition {
+	item  = feature;
+	list  = newPlugins;
+	index = index;
+}
+
 CanEdit: WOConditional {
     condition = canEditPlugin;
 }
 
-CannotUpdate: WOConditional {
-    condition = canUpdate;
-    negate = true;
-}
-
-CanUpdate: WOConditional {
-    condition = canUpdate;
+CanDownload: WOConditional {
+	condition = canDownload;
 }
 
 Date: WOString {
@@ -31,6 +37,12 @@ Date: WOString {
 
 Description: WOString {
 	value = plugin.configDescription.description;
+	escapeHTML = false;
+}
+
+DisableAutoInstalls: WOSubmitButton {
+    value = "Disable";
+    action = toggleAutoInstalls;
 }
 
 DisableAutoUpdates: WOSubmitButton {
@@ -44,8 +56,8 @@ DownloadNewNow: WOActiveImage {
 	framework = "Core";
 	height    = "18";
 	width     = "18";
-	alt       = "Download now for install on restart";
-	title     = "Download now for install on restart";
+	alt       = "Download and install now";
+	title     = "Download and install now";
 	action    = downloadNew;
 }
 
@@ -82,6 +94,11 @@ EditFiles: WOActiveImage {
 	action    = editFiles;
 }
 
+EnableAutoInstalls: WOSubmitButton {
+    value = "Enable";
+    action = toggleAutoInstalls;
+}
+
 EnableAutoUpdates: WOSubmitButton {
     value = "Enable";
     action = toggleAutoUpdates;
@@ -89,10 +106,7 @@ EnableAutoUpdates: WOSubmitButton {
 
 Form1: WOForm {
     multipleSubmit = true;
-}
-
-Form2: WOForm {
-    multipleSubmit = true;
+    otherTagString="enctype=\"multipart/form-data\"";
 }
 
 HasAdminPrivileges: WOConditional {
@@ -101,6 +115,10 @@ HasAdminPrivileges: WOConditional {
 
 HasGlobalSettings: WOConditional {
     condition = plugin.configDescription.globalOptions.count;
+}
+
+HasHistory: WOConditional {
+    condition = pluginHistoryUrl;
 }
 
 HasNoAdminPrivileges: WOConditional {
@@ -135,6 +153,15 @@ HasUnpublishedPlugins: WOConditional {
     condition = unpublishedPluginGroup.displayedObjects.count;
 }
 
+History: WOHyperlink {
+    href = pluginHistoryUrl;
+    target = "_blank";
+}
+
+InstalledBy: WOString {
+    value = plugin.author.nameAndUid;
+}
+
 IsNotPublished: WOConditional {
     condition = plugin.isPublished;
     negate = true;
@@ -144,12 +171,66 @@ IsPublished: WOConditional {
     condition = plugin.isPublished;
 }
 
-Name: WOString {
-	value = plugin.displayableName;
+IsTerse: WOConditional {
+    condition = terse;
+}
+
+IsVerbose: WOConditional {
+    condition = terse;
+    negate    = true;
+}
+
+Name: WOHyperlink {
+	string = plugin.name;
+	href   = pluginInfoUrl;
+    target = "_blank";
+}
+
+NewDate: WOString {
+	value = feature.versionDate;
+}
+
+NewDescription: WOString {
+	value = feature.description;
+	escapeHTML = false;
+}
+
+NewHasHistory: WOConditional {
+    condition = featureHistoryUrl;
+}
+
+NewHistory: WOHyperlink {
+    href = featureHistoryUrl;
+    target = "_blank";
+}
+
+NewName: WOString {
+	value = feature.name;
+}
+
+NewPluginsAvailable: WOConditional {
+	condition = newPlugins.count;
+}
+
+NewProvider: WOString {
+	value = feature.provider.name;
+}
+
+NewProviderURL: WOString {
+	value = feature.provider.url.toString;
+}
+
+NewTitle: WOString {
+	value = featureDisplayableName;
 }
 
 NewVersion: WOString {
 	value = plugin.descriptor.providerVersion.currentVersion;
+}
+
+NoNewPluginsAvailable: WOConditional {
+	condition = newPlugins.count;
+	negate    = true;
 }
 
 OutOfDate: WOConditional {
@@ -169,6 +250,15 @@ PersonalPluginRepetition: WORepetition {
 PluginUpload: WOFileUpload {
 	data     = uploadedData;
 	filePath = uploadedName;
+}
+
+ProviderURL: WOTextField {
+    value = providerURL;
+    size  = 70;
+}
+
+ProviderVersion: WOString {
+    value = feature.currentVersion;
 }
 
 Publish: WOActiveImage {
@@ -197,6 +287,20 @@ ReloadConfig: WOActiveImage {
 	alt       = "Reparse plug-in metadata";
 	title     = "Reparse plug-in metadata";
 	action    = reloadScriptDefinition;
+}
+
+ScanNow: WOSubmitButton {
+    value = "Scan Now";
+    action = scanNow;
+}
+
+TerseDescriptions: WOSubmitButton {
+    value  = "Hide Descriptions";
+    action = toggleVerboseDescriptions;
+}
+
+Title: WOString {
+	value = plugin.displayableName;
 }
 
 TR: net.sf.webcat.core.TableRow {
@@ -228,6 +332,11 @@ Upload: WOSubmitButton {
 UpToDate: WOConditional {
     condition = plugin.descriptor.updateIsAvailable;
     negate = true;
+}
+
+VerboseDescriptions: WOSubmitButton {
+    value  = "Show Descriptions";
+    action = toggleVerboseDescriptions;
 }
 
 Version: WOString {

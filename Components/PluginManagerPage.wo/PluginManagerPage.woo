@@ -28,7 +28,7 @@
             sortOrdering = (
                 {
                     class = EOSortOrdering; 
-                    key = displayableName; 
+                    key = name; 
                     selectorName = "compareCaseInsensitiveAscending:"; 
                 }
             ); 
@@ -59,7 +59,7 @@
             sortOrdering = (
                 {
                     class = EOSortOrdering; 
-                    key = displayableName; 
+                    key = name; 
                     selectorName = "compareCaseInsensitiveAscending:"; 
                 }
             ); 
@@ -107,7 +107,7 @@
             sortOrdering = (
                 {
                     class = EOSortOrdering; 
-                    key = displayableName; 
+                    key = name; 
                     selectorName = "compareCaseInsensitiveAscending:"; 
                 }
             ); 

@@ -82,4 +82,11 @@ public class EditPluginGlobalsPage
         }
         super.appendToResponse( response, context );
     }
+    
+
+    // ----------------------------------------------------------
+    public WOComponent defaultAction()
+    {
+        return null;
+    }
 }

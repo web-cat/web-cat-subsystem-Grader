@@ -26,14 +26,14 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
+import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
-
-import net.sf.webcat.*;
+import net.sf.webcat.FeatureDescriptor;
+import net.sf.webcat.FeatureProvider;
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -58,7 +58,17 @@ public class ScriptFile
     }
 
 
-    //~ Methods ...............................................................
+    //~ Constants .............................................................
+
+    public static final String NO_AUTO_UPDATE_KEY =
+        "grader.willNotAutoUpdatePlugins";
+    public static final String NO_AUTO_INSTALL_KEY =
+        "grader.willNotAutoInstallPlugins";
+    public static final String AUTO_PUBLISH_KEY =
+        "autoPublish";
+
+
+    //~ Public Methods ........................................................
 
     // ----------------------------------------------------------
     /**
@@ -69,28 +79,6 @@ public class ScriptFile
     public boolean hasSubdir()
     {
         return subdirName() != null;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the name of the directory where a user's scripts are stored.
-     * @param author the user
-     * @param isData true if this is the directory for a script data/config
-     *               file, or false if this is the directory where scripts
-     *               themselves are stored
-     * @return the directory name
-     */
-    public static StringBuffer userScriptDirName( User author, boolean isData )
-    {
-        StringBuffer dir = new StringBuffer( 50 );
-        dir.append( isData ? scriptDataRoot()
-                           : scriptRoot() );
-        dir.append( '/' );
-        dir.append( author.authenticationDomain().subdirName() );
-        dir.append( '/' );
-        dir.append( author.userName() );
-        return dir;
     }
 
 
@@ -149,10 +137,11 @@ public class ScriptFile
      * Execute this script with the given command line argument(s).
      * 
      * @param args the arguments to pass to the script on the command line
+     * @param cwd the working directory to use
      * @throws java.io.IOException if one occurs
      * @throws InterruptedException if one occurs
      */
-    public void execute( String args )
+    public void execute( String args, File cwd )
         throws java.io.IOException, InterruptedException
     {
         Runtime runtime = Runtime.getRuntime();
@@ -162,7 +151,7 @@ public class ScriptFile
             // Look up the associated value, perform property substitution
             // on it, and add it before the main file name
             command = command
-                + net.sf.webcat.core.Application.configurationProperties().
+                + Application.configurationProperties().
                     substitutePropertyReferences(
                         configDescription().valueForKey( "interpreter.prefix" )
                             .toString()
@@ -179,7 +168,10 @@ public class ScriptFile
         try
         {
             log.debug( "execute(): " + command );
-            proc = runtime.exec( command );
+            proc = runtime.exec( command,
+                ( (Application) Application.application() )
+                    .subsystemManager().envp(),
+                cwd );
             proc.waitFor();
         }
         catch ( InterruptedException e )
@@ -319,11 +311,16 @@ public class ScriptFile
                 }
                 setLastModified(
                     new NSTimestamp( configPlist.lastModified() ) );
+                if ( er.extensions.ERXValueUtilities.booleanValue(
+                     configDescription().get( AUTO_PUBLISH_KEY ) ) )
+                {
+                    setIsPublished( true );
+                }
             }
             catch ( Exception e )
             {
                 return e.getMessage()
-                    + "(error reading script's config.plist file)";
+                    + " (error reading script's config.plist file)";
             }
         }
         else
@@ -331,6 +328,125 @@ public class ScriptFile
             return "This script is missing its 'config.plist' file.";
         }
         return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the configured timeout multiplier for this script file.
+     * @return the timeout multiplier (scale factor)
+     */
+    public int timeoutMultiplier()
+    {
+        return er.extensions.ERXValueUtilities.intValueWithDefault(
+            configDescription().valueForKey( "timeoutMultiplier" ), 1 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the configured timeout internal padding for this script file.
+     * @return the timeout internal padding (in seconds)
+     */
+    public int timeoutInternalPadding()
+    {
+        return er.extensions.ERXValueUtilities.intValueWithDefault(
+            configDescription().valueForKey( "timeoutInternalPadding" ), 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get the FeatureDescriptor for this plugin.
+     * @return this plug-in's descriptor
+     */
+    public FeatureDescriptor descriptor()
+    {
+        if ( descriptor == null )
+        {
+            descriptor = new PluginDescriptor( this );
+        }
+        return descriptor;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Download this plug-in's latest file from its provider on-line
+     * and install it for the given user, overwriting any existing
+     * version.
+     * @return null on success, or an error message on failure
+     */
+    public String installUpdate()
+    {
+        return installOrUpdate(
+            author(), descriptor().providerVersion(), true, this );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Download the specified plug-in file and install it for the given
+     * user.  If the download succeeds, a new ScriptFile object will be
+     * created under the specified user object's editing context.  The
+     * new ScriptFile object is not returned, by can be retrieved after
+     * comitting the user object's editing context and refetching.
+     * @param installedBy the user
+     * @param plugin the plug-in to download
+     * @param overwrite true if the named plug-in already exists in the
+     *        user's directory
+     * @return null on success, or an error message on failure
+     */
+    public static String installOrUpdate(
+        User                            installedBy,
+        net.sf.webcat.FeatureDescriptor plugin,
+        boolean                         overwrite )
+    {
+        return installOrUpdate( installedBy, plugin, overwrite, null );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Automatically update any installed scripts if auto-updates are
+     * enabled, and automatically install any new plug-ins, if
+     * auto-installation is enabled.
+     */
+    public static void autoUpdateAndInstall()
+    {
+        EOEditingContext ec = Application.newPeerEditingContext();
+        try
+        {
+            ec.lock();
+            autoInstallNewPlugins( ec, autoUpdatePlugins( ec ) );
+        }
+        finally
+        {
+            ec.unlock();
+            Application.releasePeerEditingContext( ec );
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the name of the directory where a user's scripts are stored.
+     * @param author the user
+     * @param isData true if this is the directory for a script data/config
+     *               file, or false if this is the directory where scripts
+     *               themselves are stored
+     * @return the directory name
+     */
+    public static StringBuffer userScriptDirName( User author, boolean isData )
+    {
+        StringBuffer dir = new StringBuffer( 50 );
+        dir.append( isData ? scriptDataRoot()
+                           : scriptRoot() );
+        dir.append( '/' );
+        dir.append( author.authenticationDomain().subdirName() );
+        dir.append( '/' );
+        dir.append( author.userName() );
+        return dir;
     }
 
 
@@ -406,10 +522,10 @@ public class ScriptFile
         script.setAuthorRelationship( author );
 
         // Save the file to disk
+        log.debug( "saving to file " + script.mainFilePath() );
+        File scriptPath = new File( script.mainFilePath() );
         try
         {
-            log.debug( "saving to file " + script.mainFilePath() );
-            File scriptPath = new File( script.mainFilePath() );
             scriptPath.getParentFile().mkdirs();
             FileOutputStream out = new FileOutputStream( scriptPath );
             uploadedData.writeToStream( out );
@@ -420,6 +536,7 @@ public class ScriptFile
             String msg = e.getMessage();
             errors.setObjectForKey( msg, msg );
             ec.deleteObject( script );
+            scriptPath.delete();
             return null;
         }
 
@@ -428,20 +545,23 @@ public class ScriptFile
         {
             try
             {
-                File zfile = new File( script.mainFilePath() );
-                ZipFile zip = new ZipFile( script.mainFilePath() );
+                //ZipFile zip = new ZipFile( script.mainFilePath() );
                 script.setSubdirName( subdirName );
                 log.debug( "unzipping to " + script.dirName() );
-                Grader.unZip( zip, new File( script.dirName() ) );
-                zip.close();
-                zfile.delete();
+                net.sf.webcat.archives.ArchiveManager.getInstance()
+                    .unpack( new File( script.dirName() ), scriptPath );
+                //Grader.unZip( zip, new File( script.dirName() ) );
+                //zip.close();
+                scriptPath.delete();
             }
             catch ( java.io.IOException e )
             {
                 String msg = e.getMessage();
                 errors.setObjectForKey( msg, msg );
                 script.setSubdirName( subdirName );
-                Grader.deleteDirectory( script.dirName() );
+                net.sf.webcat.archives.FileUtilities
+                    .deleteDirectory( script.dirName() );
+                scriptPath.delete();
                 log.warn( "error unzipping:", e );
                 // throw new NSForwardException( e );
                 ec.deleteObject( script );
@@ -483,30 +603,6 @@ public class ScriptFile
 
     // ----------------------------------------------------------
     /**
-     * Retrieve the configured timeout multiplier for this script file.
-     * @return the timeout multiplier (scale factor)
-     */
-    public int timeoutMultiplier()
-    {
-        return er.extensions.ERXValueUtilities.intValueWithDefault(
-            configDescription().valueForKey( "timeoutMultiplier" ), 1 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the configured timeout internal padding for this script file.
-     * @return the timeout internal padding (in seconds)
-     */
-    public int timeoutInternalPadding()
-    {
-        return er.extensions.ERXValueUtilities.intValueWithDefault(
-            configDescription().valueForKey( "timeoutInternalPadding" ), 0 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Retrieve the name of the directory where all user script config/data
      * files are stored.
      * @return the directory name
@@ -527,18 +623,221 @@ public class ScriptFile
     }
 
 
+    //~ Private Methods .......................................................
+
     // ----------------------------------------------------------
     /**
-     * Get the FeatureDescriptor for this plugin.
-     * @return this plug-in's descriptor
+     * Download the specified plug-in file and install it for the given
+     * user.  If the download succeeds, the given ScriptFile object
+     * will be updated appropriately.  If none is provided, a new ScriptFile
+     * object will be created under the specified user object's editing 
+     * context.  The new ScriptFile object is not returned, by can be
+     * retrieved after comitting the user object's editing context and
+     * refetching.
+     * @param installedBy the user
+     * @param plugin the plug-in to download
+     * @param overwrite true if the named plug-in already exists in the
+     *        user's directory
+     * @param scriptFile the ScriptFile object to update (or null to force
+     *        creation of a new one)
+     * @return null on success, or an error message on failure
      */
-    public FeatureDescriptor descriptor()
+    private static String installOrUpdate(
+        User                            installedBy,
+        net.sf.webcat.FeatureDescriptor plugin,
+        boolean                         overwrite,
+        ScriptFile                      scriptFile )
     {
-        if ( descriptor == null )
+        if ( scriptFile != null && !scriptFile.hasSubdir() )
         {
-            descriptor = new PluginDescriptor( this );
+            return "Installed plug-in does not support downloads!";
         }
-        return descriptor;
+        
+        ScriptFile newScriptFile = null;
+        String subdirName = convertToSubdirName( plugin.name() );
+        if ( scriptFile == null )
+        {
+            newScriptFile = new ScriptFile();
+            installedBy.editingContext().insertObject( newScriptFile );
+            newScriptFile.setLastModified( new NSTimestamp() );
+            newScriptFile.setAuthorRelationship( installedBy );
+            newScriptFile.setSubdirName( subdirName );
+            scriptFile = newScriptFile;
+        }
+
+        File pluginSubdir = new File( scriptFile.dirName() );
+        if ( pluginSubdir.exists() )
+        {
+            log.debug(
+                "directory " + pluginSubdir.getAbsolutePath() + " exists" );
+            if ( overwrite )
+            {
+                net.sf.webcat.archives.FileUtilities
+                    .deleteDirectory( pluginSubdir );
+            }
+            else
+            {
+                if ( newScriptFile != null )
+                {
+                    newScriptFile.editingContext()
+                        .deleteObject( newScriptFile );
+                }
+                return "You already have an installed plug-in with this name."
+                    + " If you want to change that script's files, then "
+                    + " use its browse/edit action icon instead.";
+            }
+        }
+        
+        // Save the file to disk
+        log.debug( "downloading plug-in archive" );
+        File scriptPath = new File( scriptFile.dirName() );
+        File downloadPath = scriptPath.getParentFile();
+        File archiveFile = new File( downloadPath.getAbsolutePath()
+            + "/" + plugin.name() + "_" + plugin.currentVersion() + ".jar" );
+        downloadPath.mkdirs();
+        plugin.downloadTo( downloadPath );
+        try
+        {
+            net.sf.webcat.archives.ArchiveManager.getInstance()
+                .unpack( scriptPath,  archiveFile );
+        }
+        catch ( java.io.IOException e )
+        {
+            if ( newScriptFile != null )
+            {
+                newScriptFile.editingContext()
+                    .deleteObject( newScriptFile );
+            }
+            return e.getMessage();
+        }
+
+        archiveFile.delete();
+        String msg = scriptFile.initializeConfigAttributes();
+        if ( msg != null )
+        {
+            if ( newScriptFile != null )
+            {
+                newScriptFile.editingContext()
+                    .deleteObject( newScriptFile );
+            }
+        }
+        return msg;
+    }
+
+
+    // ----------------------------------------------------------
+    private static NSArray autoUpdatePlugins( EOEditingContext ec )
+    {
+        NSArray pluginList = EOUtilities.objectsForEntityNamed(
+            ec, ENTITY_NAME );
+        if ( !Application.configurationProperties()
+                 .booleanForKey( NO_AUTO_UPDATE_KEY ) )
+        {
+            for ( int i = 0; i < pluginList.count(); i++ )
+            {
+                ScriptFile plugin = (ScriptFile)pluginList.objectAtIndex( i );
+                if ( plugin.descriptor().updateIsAvailable() )
+                {
+                    log.info( "Updating plug-in: \"" + plugin.name() + "\"" );
+                    String msg = plugin.installUpdate();
+                    if ( msg != null )
+                    {
+                        log.error( "Error updating plug-in \""
+                            + plugin.name() + "\": " + msg );
+                    }
+                    ec.saveChanges();
+                }
+                else
+                {
+                    log.debug( "Plug-in \"" + plugin.name()
+                        + "\" is up to date." );
+                }
+            }
+        }
+        return pluginList;
+    }
+
+
+    // ----------------------------------------------------------
+    private static void autoInstallNewPlugins(
+        EOEditingContext ec, NSArray pluginList )
+    {
+        if ( Application.configurationProperties()
+                 .booleanForKey( NO_AUTO_INSTALL_KEY ) )
+        {
+            return;
+        }
+        String adminUserName = Application.configurationProperties()
+            .getProperty( "AdminUsername" );
+        if ( adminUserName == null )
+        {
+            log.error( "No definition for 'AdminUsername' config property!\n"
+                + "Cannot install new plug-ins without admin user name." );
+            return;
+        }
+        User admin = null;
+        NSArray candidates = EOUtilities.objectsMatchingKeyAndValue(
+            ec,
+            User.ENTITY_NAME,
+            User.USER_NAME_KEY,
+            adminUserName );
+        for ( int i = 0; i < candidates.count(); i++ )
+        {
+            User user = (User)candidates.objectAtIndex( i );
+            if ( user.hasAdminPrivileges() )
+            {
+                if ( admin == null )
+                {
+                    admin = user;
+                }
+                else
+                {
+                    log.warn( "Duplicate admin accounts with user name \""
+                        + adminUserName + "\" found.  Using first one." );
+                }
+            }
+        }
+        if ( admin == null )
+        {
+            log.error( "Cannot find admin account with user name \""
+                + adminUserName + "\"!" );
+            return;
+        }
+        
+        Collection availablePlugins = new HashSet();
+        for ( Iterator i = FeatureProvider.providers().iterator();
+              i.hasNext(); )
+        {
+            FeatureProvider provider = (FeatureProvider)i.next();
+            if ( provider != null )
+            {
+                availablePlugins.addAll( provider.plugins() );
+            }
+        }
+        if ( pluginList != null )
+        {
+            for ( int i = 0; i < pluginList.count(); i++ )
+            {
+                ScriptFile s = (ScriptFile)pluginList.objectAtIndex( i );
+                FeatureDescriptor fd = s.descriptor().providerVersion();
+                if ( fd != null )
+                {
+                    availablePlugins.remove( fd );
+                }
+            }
+        }
+        for ( Iterator i = availablePlugins.iterator(); i.hasNext(); )
+        {
+            FeatureDescriptor plugin = (FeatureDescriptor)i.next();
+            log.info( "Installing new plug-in: \"" + plugin.name() + "\"" );
+            String msg = installOrUpdate( admin, plugin, false, null );
+            if ( msg != null )
+            {
+                log.error( "Error installing new plug-in \""
+                    + plugin.name() + "\": " + msg );
+            }
+            ec.saveChanges();
+        }
     }
 
 
