@@ -1,18 +1,18 @@
 #This file is automatically rewritten by ANT, so all formatting will be trashed.
-#Mon Oct 30 12:21:58 EST 2006
-Grader.version.revision=5
+#Fri Nov 10 00:59:32 EST 2006
+Grader.version.revision=6
 Grader.license.url=http\://www.gnu.org/copyleft/gpl.html
 Grader.description=This subsystem provides all of Web-CAT's automated grading services.  It manages all grading plug-ins as well.
 Grader.history.url=http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem/ChangeHistory
 grader.gracePeriod=15
 Grader.version.major=2
-grader.mailResultNotificationAfterMinutes=15
 log4j.logger.net.sf.webcat.grader.GraderQueueProcessor=INFO
+grader.mailResultNotificationAfterMinutes=15
 Grader.copyright=(c) 2006 Virginia Tech Department of Computer Science
 grader.timeout.max=600
 log4j.logger.net.sf.webcat.grader.ScriptFile=INFO
 Grader.provider=Virginia Tech Computer Science
-Grader.version.date=20061030
+Grader.version.date=20061110
 Grader.depends=env, pluginProperties
 subsystem.Grader=net.sf.webcat.grader.Grader
 grader.timeout.default=60

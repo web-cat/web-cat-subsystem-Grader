@@ -214,7 +214,7 @@ public class StudentsForAssignmentPage
         for ( int i = 0; i < submissions.count(); i++ )
         {
             Submission sub = (Submission)submissions.objectAtIndex( i );
-            if ( sub.result().status() != Status.UNFINISHED )
+            if ( sub.result().status() == Status.UNFINISHED )
             {
                 sub.result().setStatus( Status.CHECK );
                 wcSession().commitLocalChanges();
