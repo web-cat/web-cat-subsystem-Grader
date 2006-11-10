@@ -29,11 +29,11 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-
 import er.extensions.*;
+import java.util.Map;
+import java.util.HashMap;
 import net.sf.webcat.core.*;
 import net.sf.webcat.grader.graphs.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -627,13 +627,12 @@ public class AssignmentOffering
         if ( !groupByCRN )
         {
             NSMutableArray filteredResults = results.mutableClone();
-            for ( int i = 0; i < filteredResults.count() - 1; i++ )
+            Map courseAssignmentMap = new HashMap();
+            for ( int i = 0; i < filteredResults.count(); i++ )
             {
-                AssignmentOffering ao1 =
+                AssignmentOffering ao =
                     (AssignmentOffering)filteredResults.objectAtIndex( i );
-                AssignmentOffering ao2 =
-                    (AssignmentOffering)filteredResults.objectAtIndex( i + 1 );
-                if ( ao1.assignment() == ao2.assignment() )
+                if ( !addAssignmentIfNecessary( ao, courseAssignmentMap ) )
                 {
                     filteredResults.removeObjectAtIndex( i );
                     i--;
@@ -703,6 +702,40 @@ public class AssignmentOffering
             }
         }
         return values;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * This helper method for {@link #objectsForSubmitterEngine()} simply
+     * records an assignment in a two-level map organized first by course
+     * and then by assignment name.
+     * @param ao   the assignment offering to add to the map
+     * @param map  the map to add to
+     * @return true, if the assignment was added, which will only happen if
+     * there are no other assignment offerings for the same assignment that
+     * are already entered for some offering of the same course.
+     * Alternatively, returns false if there is already an assignment/course
+     * combination registered in the map that matches.
+     */
+    static private boolean addAssignmentIfNecessary(
+        AssignmentOffering ao, Map map )
+    {
+        Map courseMap = (Map)map.get( ao.courseOffering().course() );
+        if ( courseMap == null )
+        {
+            courseMap = new HashMap();
+            map.put( ao.courseOffering().course(), courseMap );
+        }
+        if ( courseMap.get( ao.assignment() ) == null )
+        {
+            courseMap.put( ao.assignment(), ao.assignment() );
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
