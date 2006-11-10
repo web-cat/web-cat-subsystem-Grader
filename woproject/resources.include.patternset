@@ -5,3 +5,4 @@ Properties
 **/*.api
 **/*.strings
 Tabs.plist
+config.plist

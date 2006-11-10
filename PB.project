@@ -16,16 +16,42 @@
     NEXTSTEP_BUILDTOOL = /bin/gnumake;
     LANGUAGE = English;
     NEXTSTEP_JAVA_COMPILER = /usr/bin/javac;
-    NEXTSTEP_OBJCPLUS_COMPILER = /usr/bin/cc;
-    NEXTSTEP_INSTALLDIR = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-    DYNAMIC_CODE_GEN = YES;
     DEPLOY_WITH_VERSION_NAME = A;
+    DYNAMIC_CODE_GEN = YES;
+    NEXTSTEP_INSTALLDIR = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+    NEXTSTEP_OBJCPLUS_COMPILER = /usr/bin/cc;
     PROJECTTYPE = JavaWebObjectsFramework;
     WINDOWS_JAVA_COMPILER = "$(JDKBINDIR)/javac.exe";
     PROJECTVERSION = 2.8;
     WINDOWS_OBJCPLUS_COMPILER = "$(DEVDIR)/gcc";
+    CURRENTLY_ACTIVE_VERSION = YES;
     FILESTABLE = 
     {
+        FRAMEWORKS = 
+        (
+           Core.framework, 
+           DBUpdateEngine.framework, 
+           EOJDBCPrototypes.framework, 
+           Core.framework, 
+           DBUpdateEngine.framework, 
+           EOJDBCPrototypes.framework, 
+           ERExtensions.framework, 
+           ERJars.framework, 
+           ERJars.framework, 
+           ERJars.framework, 
+           ERJars.framework, 
+           ERJars.framework, 
+           JavaWOExtensions.framework, 
+           WOUnitTest.framework, 
+           JavaEOAccess.framework, 
+           JavaEOControl.framework, 
+           JavaFoundation.framework, 
+           JavaJDBCAdaptor.framework, 
+           JavaWebObjects.framework, 
+           JavaWebObjects.framework, 
+           JavaXML.framework, 
+           JDBCEOAdaptor.framework
+        );
         CLASSES = 
         (
            src/net/sf/webcat/grader/graphs/tests/AssignmentSummaryTest.java, 
@@ -111,31 +137,6 @@
            src/net/sf/webcat/grader/actions/EclipseSubmitterDefinitions.java, 
            src/net/sf/webcat/grader/actions/assignments.java
         );
-        FRAMEWORKS = 
-        (
-           Core.framework, 
-           DBUpdateEngine.framework, 
-           EOJDBCPrototypes.framework, 
-           Core.framework, 
-           DBUpdateEngine.framework, 
-           EOJDBCPrototypes.framework, 
-           ERExtensions.framework, 
-           ERJars.framework, 
-           ERJars.framework, 
-           ERJars.framework, 
-           ERJars.framework, 
-           ERJars.framework, 
-           JavaWOExtensions.framework, 
-           WOUnitTest.framework, 
-           JavaEOAccess.framework, 
-           JavaEOControl.framework, 
-           JavaFoundation.framework, 
-           JavaJDBCAdaptor.framework, 
-           JavaWebObjects.framework, 
-           JavaWebObjects.framework, 
-           JavaXML.framework, 
-           JDBCEOAdaptor.framework
-        );
         WEBSERVER_RESOURCES = 
         (
            "WebServerResources/wc-code.css"
@@ -186,6 +187,8 @@
            Components/SubmitResponse.wo, 
            Components/UploadSubmissionPage.wo
         );
+        SUBPROJECTS = 
+        ();
         OTHER_SOURCES = 
         (
            CustomInfo.plist, 
@@ -194,8 +197,6 @@
            Makefile.postamble, 
            Makefile.preamble
         );
-        SUBPROJECTS = 
-        ();
         WOAPP_RESOURCES = 
         (
            Grader.eomodeld, 
@@ -234,8 +235,8 @@
            Components/SubmissionFileDetailsPage.api, 
            Components/SubmissionResultsInfo.api, 
            Components/SubmitResponse.api, 
-           Components/UploadSubmissionPage.api
+           Components/UploadSubmissionPage.api, 
+           Properties
         );
     };
-    CURRENTLY_ACTIVE_VERSION = YES;
 }

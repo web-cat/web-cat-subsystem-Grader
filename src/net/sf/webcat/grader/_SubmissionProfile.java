@@ -1104,6 +1104,34 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
+     * Retrieve object according to the <code>User</code>
+     * fetch specification.
+     * 
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "user", "SubmissionProfile" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the entity pointed to by the <code>author</code>
      * relationship.
      * @return the entity in the relationship
