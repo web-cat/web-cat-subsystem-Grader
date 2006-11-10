@@ -178,6 +178,23 @@ public class SubmissionFileStats
 
 
     // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>remarks</code> value.
+     * @return the value of the attribute
+     */
+    public int remarks()
+    {
+        int result = super.remarks();
+        NSArray comments = comments();
+        if ( comments != null )
+        {
+            result += comments.count();
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
     public String codeWithComments( User user, boolean isGrading )
         throws Exception
     {
