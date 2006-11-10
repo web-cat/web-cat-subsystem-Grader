@@ -617,6 +617,22 @@ public class GraderQueueProcessor
             properties.setProperty( "timeoutForOneRun",
                             Integer.toString(
                                 step.effectiveTimeoutForOneRun() ) );
+            properties.setProperty( "course",
+                job.submission().assignmentOffering().courseOffering()
+                .course().deptNumber() );
+            properties.setProperty( "CRN",
+                job.submission().assignmentOffering().courseOffering()
+                .crn() );
+            properties.setProperty( "assignment",
+                job.submission().assignmentOffering().assignment()
+                .name() );
+            properties.setProperty( "dueDateTimestamp",
+                Long.toString( job.submission().assignmentOffering()
+                               .dueDate().getTime() ) );
+            properties.setProperty( "submissionTimestamp",
+                Long.toString( job.submission().submitTime().getTime() ) );
+            properties.setProperty( "submissionNo",
+                Integer.toString( job.submission().submitNumber() ) );
 
             BufferedOutputStream out = new BufferedOutputStream(
                 new FileOutputStream( propertiesFile ) );
