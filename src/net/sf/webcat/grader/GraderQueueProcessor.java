@@ -620,9 +620,13 @@ public class GraderQueueProcessor
             properties.setProperty( "course",
                 job.submission().assignmentOffering().courseOffering()
                 .course().deptNumber() );
-            properties.setProperty( "CRN",
-                job.submission().assignmentOffering().courseOffering()
-                .crn() );
+            {
+                String crn = job.submission().assignmentOffering()
+                    .courseOffering().crn();
+                properties.setProperty( "CRN",
+                    ( crn == null ) ? "null" : crn
+                );
+            }
             properties.setProperty( "assignment",
                 job.submission().assignmentOffering().assignment()
                 .name() );
