@@ -92,6 +92,13 @@ public class Grader
         // Install or update any plug-ins that need it
         ScriptFile.autoUpdateAndInstall();
 
+        {
+            NSBundle myBundle = NSBundle.bundleForClass( Grader.class );
+            subsystemTabTemplate = TabDescriptor.tabsFromPropertyList(
+                new NSData ( myBundle.bytesForResourcePath(
+                                 TabDescriptor.TAB_DEFINITIONS ) ) );
+        }
+
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();
         graderQueueProcessor = new GraderQueueProcessor( graderQueue );
@@ -690,120 +697,9 @@ public class Grader
     }
 
 
-    //~ Static Utility Methods ................................................
-
-    // ----------------------------------------------------------
-//    /**
-//     * unzips the zipfile in the output directory
-//     * 
-//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-//     * class instead.
-//     * 
-//     * @param zipFileName full path of a zip file
-//     * @param outputDir full path of the output directory
-//     * @throws java.io.IOException if occurs during unzipping
-//     */
-//    public static void unZip( File zipFileName, File outputDir )
-//        throws java.io.IOException
-//    {
-//        unZip( new ZipFile( zipFileName ), outputDir );
-//    }
-
-
-    // ----------------------------------------------------------
-//    /**
-//     * unzips the zipfile in the output directory
-//     * 
-//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-//     * class instead.
-//     * 
-//     * @param zipFile the zip file
-//     * @param outputDir full path of the output directory
-//     * @throws java.io.IOException if occurs during unzipping
-//     */
-//    public static void unZip( ZipFile zipFile, File outputDir )
-//        throws java.io.IOException
-//    {
-//        Enumeration e = zipFile.entries();
-//        outputDir.mkdirs();
-//        while ( e.hasMoreElements() )
-//        {
-//            ZipEntry entry = (ZipEntry)e.nextElement();
-//            File entryFile = new File( outputDir, entry.getName() );
-//            if ( entry.isDirectory() )
-//            {
-//                entryFile.mkdirs();
-//            }
-//            else
-//            {
-//                File parent = entryFile.getParentFile();
-//                if ( !parent.exists() )
-//                {
-//                    parent.mkdirs();
-//                }
-//                BufferedInputStream  in = new BufferedInputStream(
-//                    zipFile.getInputStream( entry ) );
-//                BufferedOutputStream out = new BufferedOutputStream(
-//                    new FileOutputStream( entryFile ) );
-//                net.sf.webcat.archives.FileUtilities.copyStream( in, out );
-//                in.close();
-//                out.close();
-//            }
-//        }
-//    }
-
-
-    // ----------------------------------------------------------
-//    /**
-//     * unzips a zip stream in the output directory
-//     * 
-//     * @deprecated Use the {@link net.sf.webcat.archives.ArchiveManager}
-//     * class instead.
-//     * 
-//     * @param zipStream the zip file stream
-//     * @param outputDir full path of the output directory
-//     * @throws java.io.IOException if occurs during unzipping
-//     */
-//    public static void unZip( ZipInputStream zipStream, File outputDir )
-//        throws java.io.IOException
-//    {
-//        outputDir.mkdirs();
-//        ZipEntry entry = zipStream.getNextEntry();
-//        while ( entry != null )
-//        {
-//            File entryFile = new File( outputDir, entry.getName() );
-//            if ( entry.isDirectory() )
-//            {
-//                entryFile.mkdirs();
-//            }
-//            else
-//            {
-//                File parent = entryFile.getParentFile();
-//                if ( !parent.exists() )
-//                {
-//                    parent.mkdirs();
-//                }
-//                BufferedOutputStream out = new BufferedOutputStream(
-//                    new FileOutputStream( entryFile ) );
-//                net.sf.webcat.archives.FileUtilities
-//                    .copyStream( zipStream, out );
-//                out.close();
-//            }
-//            zipStream.closeEntry();
-//            entry = zipStream.getNextEntry();
-//        }
-//    }
-
-
     //~ Instance/static variables .............................................
 
     private static NSArray subsystemTabTemplate;
-    {
-        NSBundle myBundle = NSBundle.bundleForClass( Grader.class );
-        subsystemTabTemplate = TabDescriptor.tabsFromPropertyList(
-            new NSData ( myBundle.bytesForResourcePath(
-                             TabDescriptor.TAB_DEFINITIONS ) ) );
-    }
 
     /**
      * This is a reference to the single instance of this class, representing
