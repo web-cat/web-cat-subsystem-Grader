@@ -178,7 +178,7 @@ public class EditScriptFilesPage
         wcSession().commitLocalChanges();
         if ( folderName == null || folderName.length() == 0 )
         {
-            errorMessage( "Please enter a folder name." );
+            error( "Please enter a folder name." );
         }
         else
         {
@@ -191,7 +191,7 @@ public class EditScriptFilesPage
             }
             catch ( Exception e )
             {
-                errorMessage( e.getMessage() );
+                error( e.getMessage() );
             }
         }
         folderList = null;
@@ -203,7 +203,6 @@ public class EditScriptFilesPage
     public WOComponent uploadFile()
     {
         wcSession().commitLocalChanges();
-        clearErrors();
         if ( unzip && WCFile.isArchiveFile( uploadedFileName2 ) )
         {
             File target =
@@ -217,7 +216,7 @@ public class EditScriptFilesPage
             }
             catch ( java.io.IOException e )
             {
-                errorMessage( e.getMessage() );
+                error( e.getMessage() );
             }
             folderList = null;
         }
@@ -235,7 +234,7 @@ public class EditScriptFilesPage
             }
             catch ( java.io.IOException e )
             {
-                errorMessage( e.getMessage() );
+                error( e.getMessage() );
             }
         }
         if ( scriptFile != null )
@@ -251,7 +250,6 @@ public class EditScriptFilesPage
     public WOComponent replaceEntireFolder()
     {
         wcSession().commitLocalChanges();
-        clearErrors();
         if ( WCFile.isArchiveFile( uploadedFileName3 ) )
         {
             net.sf.webcat.archives.FileUtilities.deleteDirectory( base );
@@ -265,7 +263,7 @@ public class EditScriptFilesPage
             }
             catch ( java.io.IOException e )
             {
-                errorMessage( e.getMessage() );
+                error( e.getMessage() );
             }
             if ( scriptFile != null )
             {
@@ -276,7 +274,7 @@ public class EditScriptFilesPage
         }
         else
         {
-            errorMessage( "To replace this entire folder, you must upload a "
+            error( "To replace this entire folder, you must upload a "
                           + "zip or a jar file." );
         }
         return null;

@@ -89,7 +89,7 @@ public class PickCourseTaughtPage
         if ( staffCourses.count() == 0 && adminCourses.count() == 0 )
         {
             // There are no enrolled courses
-            errorMessage(
+            error(
                 "You are not listed as the instructor or TA for any courses." );
         }
         CourseOffering selectedCourse = wcSession().courseOffering();
@@ -139,7 +139,6 @@ public class PickCourseTaughtPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        clearErrors();
         if ( selectedStaffIndex >= 0 )
         {
             wcSession().setCourseOfferingRelationship(
@@ -157,7 +156,7 @@ public class PickCourseTaughtPage
         }
         else
         {
-            errorMessage( "You must choose a course to proceed." );
+            error( "You must choose a course to proceed." );
             return null;
         }
     }

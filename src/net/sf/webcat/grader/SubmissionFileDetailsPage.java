@@ -85,12 +85,11 @@ public class SubmissionFileDetailsPage
         {
             String result = prefs().submissionFileStats().codeWithComments( 
                 wcSession().user(), false );
-            clearErrors();
             return result;
         }
         catch ( Exception e )
         {
-            errorMessage(
+            error(
                 "An error occurred while trying to prepare the source code "
                 + "view for this file.  The error has been reported to the "
                 + "administrator." );

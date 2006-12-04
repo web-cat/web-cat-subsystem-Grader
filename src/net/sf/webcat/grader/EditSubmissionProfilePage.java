@@ -219,14 +219,7 @@ public class EditSubmissionProfilePage
     public WOComponent next()
     {
         saveTimeFields();
-        if ( hasErrors() )
-        {
-            return null;
-        }
-        else
-        {
-            return super.next();
-        }
+        return super.next();
     }
     
 
@@ -234,14 +227,7 @@ public class EditSubmissionProfilePage
     public boolean applyLocalChanges()
     {
         saveTimeFields();
-        if ( hasErrors() )
-        {
-            return false;
-        }
-        else
-        {
-            return super.applyLocalChanges();
-        }
+        return super.applyLocalChanges();
     }
     
 
@@ -260,7 +246,7 @@ public class EditSubmissionProfilePage
                              value.longValue() ) )
         {
             // set error message if size is out of range
-            errorMessage(
+            error(
                 "The maximum upload size allowed is "
                 + SubmissionProfile.maxMaxFileUploadSize()
                 + ".  Contact the administrator for higher limits.",
@@ -268,7 +254,7 @@ public class EditSubmissionProfilePage
         }
         else
         {
-            clearError( "tooLarge" );
+            clearMessage( "tooLarge" );
         }
         // This will automatically restrict to the max value anyway
         submissionProfile.setMaxFileUploadSizeRaw( value );

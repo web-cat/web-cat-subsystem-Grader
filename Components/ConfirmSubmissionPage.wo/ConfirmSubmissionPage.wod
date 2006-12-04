@@ -3,7 +3,7 @@ AssignmentName: WOString {
 }
 
 Conditional1: WOConditional {
-	condition = hasErrors;
+	condition = hasMessages;
 	negate    = true;
 }
 

@@ -93,7 +93,6 @@ public class EditAssignmentPage
         log.debug( "starting super.appendToResponse()" );
         super.appendToResponse( response, context );
         log.debug( "finishing super.appendToResponse()" );
-        clearErrors();
         log.debug( "finishing appendToResponse()" );
     }
 
@@ -112,7 +111,7 @@ public class EditAssignmentPage
             }
             catch ( MalformedURLException e )
             {
-                errorMessage( "The specified URL is not valid." );
+                error( "The specified URL is not valid." );
                 log.error( "Error in validateURL()", e ); 
             }
         }
@@ -162,11 +161,11 @@ public class EditAssignmentPage
              prefs().assignmentOffering().assignment().submissionProfile()
              == null )
         {
-            errorMessage(
+            error(
                 "please select submission rules for this assignment." );
         }
         return  validateURL( prefs().assignmentOffering().assignment().url() )
-            && !hasErrors();
+            && !hasMessages();
     }
 
 
@@ -487,7 +486,7 @@ public class EditAssignmentPage
         if ( value != null && !Step.timeoutIsWithinLimits( value ) )
         {
             // set error message if timeout is out of range
-            errorMessage(
+            error(
                 "The maximum timeout allowed is "
                 + Step.maxTimeout()
                 + ".  Contact the administrator for higher limits." );
@@ -514,7 +513,7 @@ public class EditAssignmentPage
                                                Object    value,
                                                String    key )
     {
-        errorMessage( ex.getMessage() );
+        error( ex.getMessage() );
     }
 
 

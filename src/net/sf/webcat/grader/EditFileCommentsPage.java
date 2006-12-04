@@ -84,7 +84,6 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     public WOComponent saveDone()
     {
-        clearErrors();
         try
         {
             updateTAScore( storeComments() );
@@ -94,19 +93,18 @@ public class EditFileCommentsPage
         {
             // This is thrown by an XML parse error in storeComments(),
             // so use it to avoid updating the TA Score
-            errorMessage(
+            error(
                 "An error occurred while reading your comments.  "
                 + "They could not be saved successfully.  The situation has "
                 + "been reported to the administrator." );
         }
-        return hasErrors() ? null : super.next();
+        return hasMessages() ? null : super.next();
     }
 
 
     // ----------------------------------------------------------
     public WOComponent saveContinue()
     {
-        clearErrors();
         try
         {
             updateTAScore( storeComments() );       
@@ -116,7 +114,7 @@ public class EditFileCommentsPage
         {
             // This is thrown by an XML parse error in storeComments(),
             // so use it to avoid updating the TA Score
-            errorMessage(
+            error(
                 "An error occurred while reading your comments.  "
                 + "They could not be saved successfully.  The situation has "
                 + "been reported to the administrator." );
@@ -128,7 +126,6 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     public WOComponent saveFinishLater()
     {
-        clearErrors();
         try
         {
             updateTAScore( storeComments() );
@@ -138,12 +135,12 @@ public class EditFileCommentsPage
         {
             // This is thrown by an XML parse error in storeComments(),
             // so use it to avoid updating the TA Score
-            errorMessage(
+            error(
                 "An error occurred while reading your comments.  "
                 + "They could not be saved successfully.  The situation has "
                 + "been reported to the administrator." );
         }
-        return hasErrors() ? null : super.next();
+        return hasMessages() ? null : super.next();
     }
 
 
@@ -599,7 +596,7 @@ public class EditFileCommentsPage
         }
         catch ( Exception e )
         {
-            errorMessage(
+            error(
                 "An error occurred while trying to prepare the source code "
                 + "view for this file.  The error has been reported to the "
                 + "administrator.  Please do not try to edit the comments "

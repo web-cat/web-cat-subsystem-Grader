@@ -77,6 +77,7 @@
         <copy todir="${dest.dir}/${framework.name}.framework">
             <fileset dir=".">
                 <include name="WebServerResources/"/>   
+                <exclude name="**/CVS"/>   
             </fileset>
         </copy>      
 	</target>

@@ -129,7 +129,7 @@ public class PickAssignmentToEditPage
     {
         if ( selectedIndex == -1 && !createNew )
         {
-            errorMessage( "You must choose an assignment to proceed." );
+            error( "You must choose an assignment to proceed." );
             return null;
         }
         else if ( createNew )

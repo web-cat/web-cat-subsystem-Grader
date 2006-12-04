@@ -282,7 +282,7 @@
             		};
                 };
             };
-            "Submit For Student" = {
+            "Submit for Student" = {
                 accessLevel = 40;
                 priority = 4;
                 children = {

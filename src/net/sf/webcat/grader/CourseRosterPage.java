@@ -125,13 +125,13 @@ public class CourseRosterPage
             }
             catch ( IOException e )
             {
-                errorMessage( "An IO exception occurred while reading your "
+                error( "An IO exception occurred while reading your "
                               + "CSV file." );
             }
         }
         else
         {
-            errorMessage( "Please select a CSV file to upload." );
+            error( "Please select a CSV file to upload." );
         }
         return null;
     }
@@ -171,7 +171,7 @@ public class CourseRosterPage
                 int pos = t[t.length - 2].indexOf( String.valueOf( '@' ) );
                 if ( pos < 0 )
                 {
-                    errorMessage( "illegal e-mail address '"+ t[t.length - 2]
+                    error( "illegal e-mail address '"+ t[t.length - 2]
                                   + "' for '" + lastName + ", " + firstName
                                   + "' on line " + row + ".  Is your CSV file "
                                   + "in VT Banner format?  Ignoring remainder "
@@ -211,7 +211,7 @@ public class CourseRosterPage
             
             if ( pid == null )
             {
-                errorMessage( "cannot identify user name on line " + row
+                error( "cannot identify user name on line " + row
                               + "." );
                 continue;
             }
@@ -277,7 +277,7 @@ public class CourseRosterPage
             {
                 log.error( "More than one user with same "
                + "pid exists in Database" );
-               errorMessage( "Multiple users with username '"
+               error( "Multiple users with username '"
                    + pid + "' exist; cannot add ambiguous user name "
                    + "to course." );
                user = null;

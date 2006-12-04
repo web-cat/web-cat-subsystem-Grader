@@ -184,7 +184,7 @@ public class PickAssignmentToSubmitPage
     {
         if ( selectedIndex == -1 )
         {
-            errorMessage( "You must choose an assignment to proceed." );
+            error( "You must choose an assignment to proceed." );
             return null;
         }
         else // if ( selectedIndex > -1 )

@@ -102,7 +102,7 @@ public class PickCourseEnrolledPage
             && coursesAdmined.count() == 0 )
         {
             // There are no enrolled courses
-            errorMessage( "Web-CAT has no record of your course enrollments "
+            error( "Web-CAT has no record of your course enrollments "
                           + "for this semester." );
         }
         CourseOffering selectedCourse = wcSession().courseOffering();
@@ -215,7 +215,6 @@ public class PickCourseEnrolledPage
             log.debug(" selected 3 = " + selectedInstructorIndex );
             log.debug(" selected 4 = " + selectedAdminIndex );
         }
-        clearErrors();
         if ( selectedCourseIndex >= 0 )
         {
             log.debug( "choosing enrolled course " + selectedCourseIndex );
@@ -258,7 +257,7 @@ public class PickCourseEnrolledPage
         }
         else
         {
-            errorMessage( "You must choose a course to proceed." );
+            error( "You must choose a course to proceed." );
             return null;
         }
     }

@@ -283,17 +283,12 @@ public class PickStepPage
             log.debug(" selected script     = " + selectedScriptIndex );
             log.debug(" request = " + context().request() );
         }
-        clearErrors();
         if ( createNew )
         {
             log.debug( "uploading a new script" );
-            if ( errors == null )
-            {
-                errors = new NSMutableDictionary();
-            }
             if ( uploadedName == null || uploadedData == null )
             {
-                errorMessage( "Please select a file to upload." );
+                error( "Please select a file to upload." );
                 return null;
             }
             ScriptFile newScript = ScriptFile.createNewScriptFile(
@@ -303,7 +298,7 @@ public class PickStepPage
                 uploadedData,
                 false,
                 true,
-                errors
+                messages()
             );
             if ( newScript != null )
             {
@@ -343,7 +338,7 @@ public class PickStepPage
         }
         else
         {
-            errorMessage( "Please select an option before continuing." );
+            error( "Please select an option before continuing." );
         }
 
 //        if ( saveSelectionCheckForEditing() )
@@ -356,11 +351,7 @@ public class PickStepPage
 
         uploadedName = null;
         uploadedData = null;
-        if ( !hasErrors() )
-        {
-            result = super.next();
-        }
-        return result;
+        return super.next();
     }
 
 

@@ -181,7 +181,7 @@ public class StudentsForAssignmentPage
     public WOComponent editSubmissionScore()
     {
         WOComponent destination = null;
-        if ( !hasErrors() )
+        if ( !hasMessages() )
         {
             if ( aSubmission == null )
             {
@@ -253,20 +253,6 @@ public class StudentsForAssignmentPage
     public boolean hasTAScore()
     {
         return aSubmission.result().taScoreRaw() != null;
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent next()
-    {
-        if ( !hasErrors() )
-        {
-            return super.next();
-        }
-        else
-        {
-            return null;
-        }
     }
 
 

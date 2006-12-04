@@ -113,7 +113,7 @@ public class ConfirmSubmissionPage
             catch ( Exception e )
             {
                 prefs().clearUpload();
-                errorMessage(
+                error(
                     "An error occurred while unpacking "
                     + "your submission.  The error has been "
                     + "reported to the administrator.  If you "
@@ -168,7 +168,7 @@ public class ConfirmSubmissionPage
              && !course.isInstructor( wcSession().primeUser() )
              && !course.isTA( wcSession().primeUser() ) )
         {
-            errorMessage(
+            error(
                 "Unfortunately, the final deadline for this assignment "
                 + "has passed.  No more submissions are being accepted." );
         }
@@ -178,11 +178,11 @@ public class ConfirmSubmissionPage
             if ( msg != null )
             {
                 log.debug( "Submission error = " + msg );
-                errorMessage( msg );
+                error( msg );
             }
         }
 
-        if ( hasErrors() )
+        if ( hasMessages() )
         {
             return null;
         }

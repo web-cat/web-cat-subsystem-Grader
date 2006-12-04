@@ -228,7 +228,7 @@ public class OldEditScriptPage
                 script.setUploadedFileName( null );
                 script.setMainFileName( null );
                 needsEditing = true;
-                errorMessage( "You have another script with this same "
+                error( "You have another script with this same "
                               + "name.  Please use a different file name." );
             }
             else
@@ -264,7 +264,7 @@ public class OldEditScriptPage
                     }
                     catch ( java.io.IOException e )
                     {
-                        errorMessage( "There was an error unzipping "
+                        error( "There was an error unzipping "
                                       + "your file.  Please try again" );
                         script.setSubdirName( subdirName );
                         FileUtilities.deleteDirectory( script.dirName() );

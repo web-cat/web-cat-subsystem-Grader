@@ -158,14 +158,7 @@ public class GradeStudentSubmissionPage
     public WOComponent next()
     {
         saveGrading();
-        if ( !hasErrors() )
-        {
-            return super.next();
-        }
-        else
-        {
-            return null;
-        }
+        return super.next();
     }
 
 
@@ -211,14 +204,7 @@ public class GradeStudentSubmissionPage
     public boolean applyLocalChanges()
     {
         saveGrading();
-        if ( !hasErrors() )
-        {
-            return super.applyLocalChanges();
-        }
-        else
-        {
-            return false;
-        }
+        return super.applyLocalChanges();
     }
 
 
@@ -345,7 +331,7 @@ public class GradeStudentSubmissionPage
     {
         ConfirmPage confirmPage = null;
         saveGrading();
-        if ( !hasErrors() )
+        if ( !hasMessages() )
         {
             confirmPage =
                 (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
