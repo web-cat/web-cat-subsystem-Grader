@@ -161,12 +161,14 @@ public class SubmissionProfile
             SubmissionProfile mine
         )
     {
-        NSArray results = objectsForCourse( context, course );
+        NSMutableArray results =
+            objectsForCourse( context, course ).mutableClone();
+        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, 
+            objectsForUser( context, user ) );
         if ( mine != null && !results.containsObject( mine ) )
         {
-            NSMutableArray ma = results.mutableClone();
-            ma.addObject( mine );
-            results = ma;
+            results.addObject( mine );
         }
         return results;
     }
