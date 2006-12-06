@@ -506,18 +506,6 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    /* (non-Javadoc)
-     * @see com.webobjects.appserver.WOComponent#validationFailedWithException(java.lang.Throwable, java.lang.Object, java.lang.String)
-     */
-    public void validationFailedWithException( Throwable ex,
-                                               Object    value,
-                                               String    key )
-    {
-        error( ex.getMessage() );
-    }
-
-
-    // ----------------------------------------------------------
     public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
     {
         super.takeValuesFromRequest( arg0, arg1 );
