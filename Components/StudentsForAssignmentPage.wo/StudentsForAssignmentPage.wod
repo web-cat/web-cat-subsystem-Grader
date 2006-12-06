@@ -34,6 +34,14 @@ FinalScore: WOString {
 	numberformat = "0.0";
 }
 
+HasMultiplePartners: WOConditional {
+    condition = hasMultiplePartners;
+}
+
+HasPartners: WOConditional {
+    condition = hasPartners;
+}
+
 HasTAScore: WOConditional {
 	condition = hasTAScore;
 }
@@ -41,6 +49,15 @@ HasTAScore: WOConditional {
 HighScore: WOString {
 	value = highScore;
 	numberformat = "0.0";
+}
+
+IsAPartner: WOConditional {
+    condition = isAPartner;
+}
+
+LastPartner: WOConditional {
+    condition = morePartners;
+    negate    = true;
 }
 
 LowScore: WOString {
@@ -55,8 +72,12 @@ MarkAsComplete: WOSubmitButton {
     title  = "Mark all partially graded submissions as complete";
 }
 
+MorePartners: WOConditional {
+    condition = morePartners;
+}
+
 Name: WOString {
-	value = aSubmission.user.name_LF;
+	value = aSubmission.user.name/*_LF*/;
 }
 
 Nobody: WOConditional {
@@ -71,6 +92,15 @@ NoTAScore: WOConditional {
 
 Page: net.sf.webcat.core.WizardPage {
     nextEnabled = false;
+}
+
+PartnerName: WOString {
+    value = partnerSubmission.user.name;
+}
+
+PartnerRepetition: WORepetition {
+    list = aSubmission.result.submissions;
+    item = partnerSubmission;
 }
 
 PID: WOString {

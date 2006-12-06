@@ -62,6 +62,7 @@ public class StudentsForAssignmentPage
     public WODisplayGroup submissionDisplayGroup;
     /** Submission in the worepetition */
     public Submission  aSubmission;
+    public Submission  partnerSubmission;
     /** index in the worepetition */
     public int         index;
 
@@ -253,6 +254,41 @@ public class StudentsForAssignmentPage
     public boolean hasTAScore()
     {
         return aSubmission.result().taScoreRaw() != null;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasPartners()
+    {
+        return aSubmission.result().submissions().count() > 1;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasMultiplePartners()
+    {
+        return aSubmission.result().submissions().count() > 2;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean isAPartner()
+    {
+        return partnerSubmission.user() != aSubmission.user();
+    }
+
+    // ----------------------------------------------------------
+    public boolean morePartners()
+    {
+        NSArray submissions = aSubmission.result().submissions();
+        Submission lastSubmission = (Submission)submissions
+            .objectAtIndex( submissions.count() - 1 );
+        if ( lastSubmission == aSubmission )
+        {
+            lastSubmission = (Submission)submissions
+            .objectAtIndex( submissions.count() - 2 );
+        }
+        return partnerSubmission != lastSubmission;
     }
 
 
