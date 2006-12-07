@@ -156,8 +156,6 @@ public class DownloadScoresPage
         out.println( "Total" );
 
         NSArray submissions = submissionsToExport;
-        NSArray instructors = wcSession().courseOffering().instructors();
-        NSArray TAs = wcSession().courseOffering().TAs();
         if ( submissions != null )
         {
             for ( int i = 0; i < submissions.count(); i++ )
@@ -165,55 +163,23 @@ public class DownloadScoresPage
                 Submission thisSubmission =
                     (Submission)submissions.objectAtIndex( i );
                 User student = thisSubmission.user();
-                log.debug( "checking " + student.userName() );
-                boolean isStaff = false;
-                if ( omitStaff )
-                {
-                    if ( instructors != null )
-                    {
-                        for ( int j = 0; j < instructors.count(); j++ )
-                        {
-                            if ( student == instructors.objectAtIndex( j ) )
-                            {
-                                isStaff = true;
-                                break;
-                            }
-                        }
-                    }
-                    if ( TAs != null )
-                    {
-                        for ( int j = 0; j < TAs.count(); j++ )
-                        {
-                            if ( student == TAs.objectAtIndex( j ) )
-                            {
-                                isStaff = true;
-                                break;
-                            }
-                        }
-                    }
-                    log.debug( "omit staff = " + omitStaff );
-                }
-                
-                if ( !omitStaff || !isStaff )
-                {
-                    print( out, student.universityIDNo() );
-                    print( out, student.userName() );
-                    print( out, student.lastName() );
-                    print( out, student.firstName() );
-                    log.debug( "submission found = "
-                               + thisSubmission.submitNumber() );
-                    print( out, thisSubmission.submitNumberRaw() );
-                    print( out, thisSubmission.submitTime().toString() );
-                    SubmissionResult result = thisSubmission.result();
-                    print( out, result.correctnessScoreRaw() );
-                    print( out, result.toolScoreRaw() );
-                    print( out, result.taScoreRaw() );
-                    print( out, Double.toString(
-                            result.earlyBonus() - result.latePenalty()
-                        ) );
-                    out.println(
-                        Double.toString( result.finalScore() ) );
-                }
+                print( out, student.universityIDNo() );
+                print( out, student.userName() );
+                print( out, student.lastName() );
+                print( out, student.firstName() );
+
+                log.debug( "submission found = "
+                    + thisSubmission.submitNumber() );
+                print( out, thisSubmission.submitNumberRaw() );
+                print( out, thisSubmission.submitTime().toString() );
+                SubmissionResult result = thisSubmission.result();
+                print( out, result.correctnessScoreRaw() );
+                print( out, result.toolScoreRaw() );
+                print( out, result.taScoreRaw() );
+                print( out, Double.toString(
+                    result.earlyBonus() - result.latePenalty()
+                ) );
+                out.println( Double.toString( result.finalScore() ) );
             }
         }
         
@@ -247,50 +213,15 @@ public class DownloadScoresPage
             out.println( name );
         }
         NSArray submissions = submissionsToExport;
-        NSArray instructors = wcSession().courseOffering().instructors();
-        NSArray TAs = wcSession().courseOffering().TAs();
         if ( submissions != null )
         {
             for ( int i = 0; i < submissions.count(); i++ )
             {
                 Submission thisSubmission =
                     (Submission)submissions.objectAtIndex( i );
-                User student = thisSubmission.user();
-                log.debug( "checking " + student.userName() );
-                boolean isStaff = false;
-                if ( omitStaff )
-                {
-                    if ( instructors != null )
-                    {
-                        for ( int j = 0; j < instructors.count(); j++ )
-                        {
-                            if ( student == instructors.objectAtIndex( j ) )
-                            {
-                                isStaff = true;
-                                break;
-                            }
-                        }
-                    }
-                    if ( TAs != null )
-                    {
-                        for ( int j = 0; j < TAs.count(); j++ )
-                        {
-                            if ( student == TAs.objectAtIndex( j ) )
-                            {
-                                isStaff = true;
-                                break;
-                            }
-                        }
-                    }
-                    log.debug( "omit staff = " + omitStaff );
-                }
-                
-                if ( !omitStaff || !isStaff )
-                {
-                    print( out, student.userName() );
-                    out.println( Double.toString(
-                        thisSubmission.result().finalScore() ) );
-                }
+                print( out, thisSubmission.user().userName() );
+                out.println( Double.toString(
+                    thisSubmission.result().finalScore() ) );
             }
         }
         if ( !targetMoodle )
@@ -306,7 +237,26 @@ public class DownloadScoresPage
     // ----------------------------------------------------------
     private void collectSubmissionsToExport()
     {
-        NSArray students = wcSession().courseOffering().students();
+        NSMutableArray students =
+            wcSession().courseOffering().students().mutableClone();
+        if ( omitStaff )
+        {
+            students.removeObjectsInArray(
+                wcSession().courseOffering().instructors() );
+            students.removeObjectsInArray(
+                wcSession().courseOffering().TAs() );
+        }
+        else
+        {
+            er.extensions.ERXArrayUtilities
+                .addObjectsFromArrayWithoutDuplicates(
+                students,
+                wcSession().courseOffering().instructors() );
+            er.extensions.ERXArrayUtilities
+                .addObjectsFromArrayWithoutDuplicates(
+                students,
+                wcSession().courseOffering().TAs() );
+        }
         submissionsToExport = new NSMutableArray();
         if ( students != null )
         {
@@ -316,6 +266,7 @@ public class DownloadScoresPage
                 log.debug( "checking " + student.userName() );
                 
                 Submission thisSubmission = null;
+                Submission gradedSubmission = null;
                 // Find the submission
                 NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
                         wcSession().localContext(),
@@ -343,18 +294,34 @@ public class DownloadScoresPage
                         {
                             thisSubmission = sub;
                         }
-                        else
+                        else if ( sub.submitNumberRaw() != null )
                         {
-                            if ( sub.submitNumberRaw() != null )
+                            int num = sub.submitNumber();
+                            if ( num > thisSubmission.submitNumber() )
+                            {
+                                thisSubmission = sub;
+                            }
+                        }
+                        if ( sub.result().status() != Status.TO_DO )
+                        {
+                            if ( gradedSubmission == null )
+                            {
+                                gradedSubmission = sub;
+                            }
+                            else if ( sub.submitNumberRaw() != null )
                             {
                                 int num = sub.submitNumber();
-                                if ( num > thisSubmission.submitNumber() )
+                                if ( num > gradedSubmission.submitNumber() )
                                 {
-                                    thisSubmission = sub;
+                                    gradedSubmission = sub;
                                 }
                             }
                         }
                     }
+                }
+                if ( gradedSubmission != null )
+                {
+                    thisSubmission = gradedSubmission;
                 }
                 if ( thisSubmission != null )
                 {

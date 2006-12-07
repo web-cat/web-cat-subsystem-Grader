@@ -76,6 +76,10 @@ MorePartners: WOConditional {
     condition = morePartners;
 }
 
+MostRecentSubmitNumber: WOString {
+	value = mostRecentSubmissionNo;
+}
+
 Name: WOString {
 	value = aSubmission.user.name/*_LF*/;
 }
@@ -87,6 +91,11 @@ Nobody: WOConditional {
 
 NoTAScore: WOConditional {
 	condition = hasTAScore;
+	negate    = true;
+}
+
+NotMostRecent: WOConditional {
+	condition = isMostRecentSubmission;
 	negate    = true;
 }
 

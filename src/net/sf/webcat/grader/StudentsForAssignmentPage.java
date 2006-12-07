@@ -28,9 +28,9 @@ package net.sf.webcat.grader;
 import com.webobjects.foundation.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.appserver.*;
-
+import java.util.HashMap;
+import java.util.Map;
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -79,14 +79,22 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
+        if ( maxSubmission == null )
+        {
+            maxSubmission = new HashMap();
+        }
+        else
+        {
+            maxSubmission.clear();
+        }
         NSMutableArray students =
             wcSession().courseOffering().students().mutableClone();
-        NSArray staff = wcSession().courseOffering().instructors();
-        students.removeObjectsInArray( staff );
-        students.addObjectsFromArray( staff );
-        staff = wcSession().courseOffering().TAs();
-        students.removeObjectsInArray( staff );
-        students.addObjectsFromArray( staff );
+        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            students,
+            wcSession().courseOffering().instructors() );
+        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            students,
+            wcSession().courseOffering().TAs() );
         NSMutableArray submissions = new NSMutableArray();
         highScore = 0.0;
         lowScore  = 0.0;
@@ -97,8 +105,10 @@ public class StudentsForAssignmentPage
             {
                 User student = (User)students.objectAtIndex( i );
                 log.debug( "checking " + student.userName() );
-                
+
                 Submission thisSubmission = null;
+                Submission mostRecentSubmission = null;
+                Submission gradedSubmission = null;
                 // Find the submission
                 NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
                         wcSession().localContext(),
@@ -119,6 +129,12 @@ public class StudentsForAssignmentPage
                 {
                     Submission sub =
                         (Submission)thisSubmissionSet.objectAtIndex( j );
+                    if ( mostRecentSubmission == null
+                         || sub.submitNumber() >
+                             mostRecentSubmission.submitNumber() )
+                    {
+                        mostRecentSubmission = sub;
+                    }
                     log.debug( "\tsub #" + sub.submitNumber() );
                     if ( sub.result() != null && !sub.partnerLink() )
                     {
@@ -126,18 +142,39 @@ public class StudentsForAssignmentPage
                         {
                             thisSubmission = sub;
                         }
-                        else
+                        else if ( sub.submitNumberRaw() != null )
                         {
-                            if ( sub.submitNumberRaw() != null )
+                            int num = sub.submitNumber();
+                            if ( num > thisSubmission.submitNumber() )
+                            {
+                                thisSubmission = sub;
+                            }
+                        }
+                        if ( sub.result().status() != Status.TO_DO )
+                        {
+                            if ( gradedSubmission == null )
+                            {
+                                gradedSubmission = sub;
+                            }
+                            else if ( sub.submitNumberRaw() != null )
                             {
                                 int num = sub.submitNumber();
-                                if ( num > thisSubmission.submitNumber() )
+                                if ( num > gradedSubmission.submitNumber() )
                                 {
-                                    thisSubmission = sub;
+                                    gradedSubmission = sub;
                                 }
                             }
                         }
                     }
+                }
+                if ( mostRecentSubmission != null )
+                {
+                    maxSubmission.put( mostRecentSubmission.user(),
+                                       mostRecentSubmission );
+                }
+                if ( gradedSubmission != null )
+                {
+                    thisSubmission = gradedSubmission;
                 }
                 if ( thisSubmission != null )
                 {
@@ -277,6 +314,7 @@ public class StudentsForAssignmentPage
         return partnerSubmission.user() != aSubmission.user();
     }
 
+
     // ----------------------------------------------------------
     public boolean morePartners()
     {
@@ -292,7 +330,24 @@ public class StudentsForAssignmentPage
     }
 
 
+    // ----------------------------------------------------------
+    public boolean isMostRecentSubmission()
+    {
+        return aSubmission ==
+            (Submission)maxSubmission.get( aSubmission.user() );
+    }
+
+
+    // ----------------------------------------------------------
+    public int mostRecentSubmissionNo()
+    {
+        return ( (Submission)maxSubmission.get( aSubmission.user() ) )
+            .submitNumber();
+    }
+
+
     //~ Instance/static variables .............................................
 
+    private Map maxSubmission;
     static Logger log = Logger.getLogger( StudentsForAssignmentPage.class );
 }
