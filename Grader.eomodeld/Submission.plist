@@ -34,9 +34,9 @@
             userInfo = {
                 scalarConversionMethodName = intValue; 
                 isScalar = true;
-		scalarDefault = 0;
+                scalarDefault = 0;
                 type = int;
-		valueClassName = Integer;
+                valueClassName = Integer;
             }; 
         },
         {
