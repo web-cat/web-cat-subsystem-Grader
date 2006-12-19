@@ -199,7 +199,6 @@ public class SubmissionProfile
 
         public String name()
         {
-            log.debug( "TimeUnit.name() = " + name );
             return name;
         }
 
@@ -260,11 +259,11 @@ public class SubmissionProfile
     //~ Instance/static variables .............................................
 
     public static final TimeUnit[] timeUnits = new TimeUnit[] {
-            new TimeUnit( "Minute(s)",            60000 ),
-            new TimeUnit( "Hour(s)",           60*60000 ),
-            new TimeUnit( "Day(s)",         24*60*60000 ),
-            new TimeUnit( "Week(s)",      7*24*60*60000 ),
-            new TimeUnit( "Month(s)",  30*7*24*60*60000 )
+            new TimeUnit( "Minute(s)",                60000L ),
+            new TimeUnit( "Hour(s)",              60L*60000L ),
+            new TimeUnit( "Day(s)",           24L*60L*60000L ),
+            new TimeUnit( "Week(s)",       7L*24L*60L*60000L ),
+            new TimeUnit( "Month(s)",  30L*7L*24L*60L*60000L )
         };
 
     public static final String[] submitters = new String[] {
@@ -279,7 +278,7 @@ public class SubmissionProfile
 
     static final long maxMaxFileUploadSize = net.sf.webcat.core.Application
         .configurationProperties()
-        .longForKeyWithDefault( "grader.maxFileUploadSize", 200000 );
+        .longForKeyWithDefault( "grader.maxFileUploadSize", 200000L );
 
     static Logger log = Logger.getLogger( SubmissionProfile.class );
 }

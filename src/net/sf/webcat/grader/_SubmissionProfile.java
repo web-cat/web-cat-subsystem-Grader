@@ -155,7 +155,7 @@ public abstract class _SubmissionProfile
             (Number)storedValueForKey( "availableTimeDelta" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 
@@ -263,7 +263,7 @@ public abstract class _SubmissionProfile
             (Number)storedValueForKey( "deadTimeDelta" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 
@@ -479,7 +479,7 @@ public abstract class _SubmissionProfile
             (Number)storedValueForKey( "earlyBonusUnitTime" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 
@@ -689,7 +689,7 @@ public abstract class _SubmissionProfile
             (Number)storedValueForKey( "latePenaltyUnitTime" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 
@@ -743,7 +743,7 @@ public abstract class _SubmissionProfile
             (Number)storedValueForKey( "maxFileUploadSize" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 

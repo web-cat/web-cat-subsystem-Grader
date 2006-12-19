@@ -151,7 +151,7 @@ public abstract class _GradingCriteria
             (Number)storedValueForKey( "deadTimeDelta" );
         return ( result == null )
             ? 0L
-            : result.intValue();
+            : result.longValue();
     }
 
 

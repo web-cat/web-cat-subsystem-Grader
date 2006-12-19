@@ -17,7 +17,7 @@
             name = deadTimeDelta; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
@@ -43,7 +43,7 @@
                 isScalar = true; 
                 scalarDefault = 0.0;
                 type = double;
-		valueClassName = Double;
+                valueClassName = Double;
             }; 
         }, 
         {
@@ -65,7 +65,7 @@
                 isScalar = true; 
                 scalarDefault = 0.0;
                 type = double;
-		valueClassName = Double;
+                valueClassName = Double;
             }; 
         }, 
         {
@@ -77,7 +77,7 @@
                 isScalar = true; 
                 scalarDefault = 0.0;
                 type = double;
-		valueClassName = Double;
+                valueClassName = Double;
             }; 
         }, 
         { name = id; prototypeName = id; }, 
@@ -158,9 +158,9 @@
             userInfo = {
                 scalarConversionMethodName = intValue; 
                 isScalar = true;
-		scalarDefault = 0;
+                scalarDefault = 0;
                 type = int;
-		valueClassName = Integer;
+                valueClassName = Integer;
             }; 
         }, 
         {

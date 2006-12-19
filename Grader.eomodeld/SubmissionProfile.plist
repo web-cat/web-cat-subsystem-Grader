@@ -17,7 +17,7 @@
             name = availableTimeDelta; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
@@ -39,7 +39,7 @@
             name = deadTimeDelta; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
@@ -85,7 +85,7 @@
             name = earlyBonusUnitTime; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
@@ -122,7 +122,7 @@
             name = latePenaltyUnitTime; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
@@ -134,7 +134,7 @@
             name = maxFileUploadSize; 
             prototypeName = long; 
             userInfo = {
-                scalarConversionMethodName = intValue; 
+                scalarConversionMethodName = longValue; 
                 isScalar = true;
                 scalarDefault = 0L;
                 type = long;
