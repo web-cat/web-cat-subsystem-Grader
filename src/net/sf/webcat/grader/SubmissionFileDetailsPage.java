@@ -27,6 +27,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
+
+import net.sf.webcat.core.*;
+
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -57,6 +60,9 @@ public class SubmissionFileDetailsPage
     //~ KVC Attributes (must be public) .......................................
 
     public String codeWithComments = null;
+    public WODisplayGroup filesDisplayGroup;
+    public SubmissionFileStats file;
+    public SubmissionFileStats selectedFile = null;
 
 
     //~ Methods ...............................................................
@@ -72,6 +78,8 @@ public class SubmissionFileDetailsPage
     {
         log.debug( "beginning appendToResponse()" );
         codeWithComments = initializeCodeWithComments();
+        filesDisplayGroup.setObjectArray(
+            prefs().submission().result().submissionFileStats() );
         super.appendToResponse( response, context );
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
@@ -98,6 +106,25 @@ public class SubmissionFileDetailsPage
     }
     
     
+    // ----------------------------------------------------------
+    public WOComponent viewNextFile()
+    {
+        log.debug( "viewNextFile()" );
+        if ( selectedFile == null )
+        {
+            return next();
+        }
+        else
+        {
+            prefs().setSubmissionFileStatsRelationship( selectedFile );
+            WCComponent statsPage = (WCComponent)pageWithName(
+                SubmissionFileDetailsPage.class.getName() );
+            statsPage.nextPage = nextPage;
+            return statsPage;
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
     static Logger log = Logger.getLogger( SubmissionFileDetailsPage.class );

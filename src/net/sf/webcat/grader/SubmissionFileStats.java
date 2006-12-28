@@ -138,6 +138,7 @@ public class SubmissionFileStats
         if ( result == null )
         {
             result = fullyQualifiedClassName().replace( '.', '/' ) + ".java";
+            setSourceFileNameRaw( result );
         }
         return result;
     }

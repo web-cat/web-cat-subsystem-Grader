@@ -1,8 +1,8 @@
 {
-    "WebObjects Release" = "WebObjects 5.1"; 
+    "WebObjects Release" = "WebObjects 5.0"; 
     encoding = NSWindowsCP1252StringEncoding; 
     variables = {
-        statsDisplayGroup = {
+        filesDisplayGroup = {
             class = WODisplayGroup; 
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 

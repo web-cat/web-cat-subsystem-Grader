@@ -147,8 +147,8 @@ TR: net.sf.webcat.core.TableRow {
 
 WCSortOrder1: net.sf.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
-	displayKey = "Class Name";
-	key = "fullyQualifiedClassName";
+	displayKey = "File Name";
+	key = "sourceFileName";
 }
 
 WCSortOrder2: net.sf.webcat.core.WCSortOrder {

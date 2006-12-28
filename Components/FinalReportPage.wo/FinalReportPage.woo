@@ -10,8 +10,8 @@
             sortOrdering = (
                 {
 		    		class        = EOSortOrdering;
-		    		key          = remarks;
-		    		selectorName = "compareDescending:";
+		    		key          = sourceFileName;
+		    		selectorName = "compareCaseInsensitiveAscending:";
 				}
 	    	); 
         }; 

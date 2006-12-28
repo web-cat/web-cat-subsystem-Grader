@@ -1,13 +1,13 @@
-SubmitButton3: WOSubmitButton {
-	action = next;
-	value  = "  < Submission Results Summary  ";
+AssignmentName: WOString {
+    value = prefs.submission.assignmentOffering.assignment.name;
 }
 
-Form: WOForm {
+AvailablePoints: WOString {
+	value = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
 }
 
-ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
-    showFileInfo = true;
+DeptNumber: WOString {
+    value = prefs.submission.assignmentOffering.courseOffering.course.deptNumber;
 }
 
 FileDetails: WOString {
@@ -15,8 +15,41 @@ FileDetails: WOString {
 	escapeHTML = false;
 }
 
+FileList: WOPopUpButton {
+    list              = filesDisplayGroup.displayedObjects;
+    item              = file;
+    displayString     = file.sourceFileName;
+    selection         = selectedFile;
+    noSelectionString = "Overall summary of results";
+}
+
+FinalScore: WOString {
+	numberformat = "0.0";
+	value        = prefs.submission.result.finalScore;
+}
+
+Form: WOForm {
+}
+
+Go: WOActiveImage {
+	action = viewNextFile;
+	filename  = "icons/go.png";
+	framework = "Core";
+	width     = "20";
+	height    = "20";
+	style     = "vertical-align:middle;";
+}
+
 Page: net.sf.webcat.core.PageWithNavigation {
-    title      = "Submission Results: File Details";
+    title      = prefs.submissionFileStats.sourceFileName;
     stylesheet = "Grader.framework/WebServerResources/wc-code.css";
     hideSteps  = true;
+}
+
+ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+    showFileInfo = true;
+}
+
+SubmitNumber: WOString {
+    value = prefs.submission.submitNumber;
 }
