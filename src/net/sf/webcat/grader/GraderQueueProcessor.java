@@ -637,6 +637,8 @@ public class GraderQueueProcessor
                 Long.toString( job.submission().submitTime().getTime() ) );
             properties.setProperty( "submissionNo",
                 Integer.toString( job.submission().submitNumber() ) );
+            properties.setProperty( "frameworksBaseURL",
+                Application.application().frameworksBaseURL() );
 
             BufferedOutputStream out = new BufferedOutputStream(
                 new FileOutputStream( propertiesFile ) );
@@ -708,15 +710,19 @@ public class GraderQueueProcessor
      * @param job              the job
      * @param properties       the properties describing the reports
      * @param submissionResult the result to link downloadable reports to
-     * @param inlineReports    the array where inline report files are
+     * @param inlineStudentReports    the array where inline report files are
      *                         added (as InlineFile objects)
+     * @param inlineStudentReports    the array where inline report files
+     *                         intended for course staff are added (as
+     *                         InlineFile objects)
      * @param adminReports     the Vector where admin-targeted report files
      *                         are added (as string file names)
      */
     void collectReports( EnqueuedJob      job,
                          WCProperties     properties,
                          SubmissionResult submissionResult,
-                         NSMutableArray   inlineReports,
+                         NSMutableArray   inlineStudentReports,
+                         NSMutableArray   inlineStaffReports,
                          Vector           adminReports )
     {
         File parentDir = new File( job.submission().resultDirName() );
@@ -741,18 +747,25 @@ public class GraderQueueProcessor
             boolean toStudent =
                 to == null
                 || to.equalsIgnoreCase( "student" )
-                || to.equalsIgnoreCase( "both" );
+                || to.equalsIgnoreCase( "both" )
+                || to.equalsIgnoreCase( "all" );
+            boolean toStaff =
+                to != null
+                && (    to.equalsIgnoreCase( "staff" )
+                     || to.equalsIgnoreCase( "instructor" )
+                     || to.equalsIgnoreCase( "both" )
+                     || to.equalsIgnoreCase( "all" ) );
             boolean toAdmin =
                 to != null
                 && (    to.equalsIgnoreCase( "admin" )
                      || to.equalsIgnoreCase( "administrator" )
-                     || to.equalsIgnoreCase( "both" ) );
+                     || to.equalsIgnoreCase( "all" ) );
             // Now, populate the lists
             if ( toStudent )
             {
                 if ( inline )
                 {
-                    inlineReports.addObject(
+                    inlineStudentReports.addObject(
                         new InlineFile( parentDir,
                                         fileName,
                                         mimeType,
@@ -768,6 +781,29 @@ public class GraderQueueProcessor
                     thisFile.setMimeType( mimeType );
                     thisFile.setSubmissionResultRelationship(
                         submissionResult );
+                }
+            }
+            if ( toStaff )
+            {
+                if ( inline )
+                {
+                    inlineStaffReports.addObject(
+                        new InlineFile( parentDir,
+                                        fileName,
+                                        mimeType,
+                                        border ) );
+                }
+                else
+                {
+                    // FIXME!
+//                    ResultFile thisFile = new ResultFile();
+//                    editingContext.insertObject( thisFile );
+//                    thisFile.setFileName( fileName );
+//                    thisFile.setLabel(
+//                        properties.getProperty( attributeBase + "label" ) );
+//                    thisFile.setMimeType( mimeType );
+//                    thisFile.setSubmissionStaffResultRelationship(
+//                        submissionResult );
                 }
             }
             if ( toAdmin )
@@ -912,85 +948,24 @@ public class GraderQueueProcessor
         submissionResult.setToolScore( toolScore );
         editingContext.insertObject( submissionResult );
 
-        NSMutableArray inlineReports = new NSMutableArray();
+        NSMutableArray inlineStudentReports = new NSMutableArray();
+        NSMutableArray inlineStaffReports = new NSMutableArray();
         Vector         adminReports  = new Vector();
         collectReports( job,
                         properties,
                         submissionResult,
-                        inlineReports,
+                        inlineStudentReports,
+                        inlineStaffReports,
                         adminReports );
 
-        if ( inlineReports.count() > 0 )
-        {
-            try
-            {
-                BufferedOutputStream out = new BufferedOutputStream(
-                    new FileOutputStream( 
-                        new File( job.submission().resultDirName(),
-                                  submissionResult.resultFileName() ) ) );
-//                final byte[] borderString = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td bgcolor=\"#888888\"><img src=\"/images/blank.gif\" width=\"1\" height=\"1\"></td></tr><tr><td bgcolor=\"white\"><img src=\"/images/blank.gif\" width=\"1\" height=\"1\"></td></tr></table>\n".getBytes();
-                final byte[] borderString =
-                    "<hr size=\"1\" noshade />\n".getBytes();
-
-                boolean lastNeedsBorder = false;
-                for ( int i = 0; i < inlineReports.count(); i++ )
-                {
-                    InlineFile thisFile =
-                        (InlineFile)inlineReports.objectAtIndex( i );
-                    
-                    boolean isHTML = thisFile.mimeType != null &&
-                        ( thisFile.mimeType.equalsIgnoreCase( "text/html" ) ||
-                          thisFile.mimeType.equalsIgnoreCase( "html" ) );
-                    try
-                    {
-                        BufferedInputStream in = new BufferedInputStream(
-                            new FileInputStream( thisFile ) );
-                        if ( lastNeedsBorder || thisFile.border )
-                        {
-                            out.write( borderString );
-                        }
-                        lastNeedsBorder = thisFile.border;
-                        if ( !isHTML )
-                        {
-                            out.write( "<pre>".getBytes() );
-                        }
-
-                        FileUtilities.copyStream( in, out );
-                        in.close();
-
-                        if ( !isHTML )
-                        {
-                            out.write( "</pre>".getBytes() );
-                        }
-                        
-                    }
-                    catch ( Exception ex1 )
-                    {
-                        log.error( "exception copying inline report "
-                                   + "fragment '"
-                                   + thisFile.getPath()
-                                   + "'",
-                                   ex1 );
-                        continue;
-                    }
-                }
-                if ( lastNeedsBorder )
-                {
-                    out.write( borderString );
-                }
-                out.flush();
-                out.close();
-            }
-            catch ( Exception ex2 )
-            {
-                log.error( "exception generating final report '"
-                           + job.submission().resultDirName()
-                           + "/"
-                           + submissionResult.resultFileName()
-                           + "'",
-                           ex2 );
-            }
-        }
+        generateCompositeResultFile(
+            new File( job.submission().resultDirName(),
+                      submissionResult.resultFileName() ),
+            inlineStudentReports );
+        generateCompositeResultFile(
+            new File( job.submission().resultDirName(),
+                      submissionResult.staffResultFileName() ),
+            inlineStaffReports );
 
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
@@ -1043,6 +1018,86 @@ public class GraderQueueProcessor
                     : ( ", " + assignment.titleString() ) ), 
                 "Reports addressed to the adminstrator are attached.\n", 
                 adminReports );
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Generates a single composite file from multiple inlined report
+     * fragments.
+     * 
+     * @param destination The output file to create and fill
+     * @param inlineFragments The array of InlineFiles to fill it with
+     */
+    void generateCompositeResultFile( File    destination,
+                                      NSArray inlineFragments )
+    {
+        if ( inlineFragments.count() > 0 )
+        {
+            try
+            {
+                BufferedOutputStream out = new BufferedOutputStream(
+                    new FileOutputStream( destination ) );
+                final byte[] borderString =
+                    "<hr size=\"1\" noshade />\n".getBytes();
+
+                boolean lastNeedsBorder = false;
+                for ( int i = 0; i < inlineFragments.count(); i++ )
+                {
+                    InlineFile thisFile =
+                        (InlineFile)inlineFragments.objectAtIndex( i );
+                    
+                    boolean isHTML = thisFile.mimeType != null &&
+                        ( thisFile.mimeType.equalsIgnoreCase( "text/html" ) ||
+                          thisFile.mimeType.equalsIgnoreCase( "html" ) );
+                    try
+                    {
+                        BufferedInputStream in = new BufferedInputStream(
+                            new FileInputStream( thisFile ) );
+                        if ( lastNeedsBorder || thisFile.border )
+                        {
+                            out.write( borderString );
+                        }
+                        lastNeedsBorder = thisFile.border;
+                        if ( !isHTML )
+                        {
+                            out.write( "<pre>".getBytes() );
+                        }
+
+                        FileUtilities.copyStream( in, out );
+                        in.close();
+
+                        if ( !isHTML )
+                        {
+                            out.write( "</pre>".getBytes() );
+                        }
+                        
+                    }
+                    catch ( Exception ex1 )
+                    {
+                        log.error( "exception copying inline report "
+                                   + "fragment '"
+                                   + thisFile.getPath()
+                                   + "'",
+                                   ex1 );
+                        continue;
+                    }
+                }
+                if ( lastNeedsBorder )
+                {
+                    out.write( borderString );
+                }
+                out.flush();
+                out.close();
+            }
+            catch ( Exception ex2 )
+            {
+                log.error( "exception generating final report '"
+                           + destination
+                           + "'",
+                           ex2 );
+            }
         }
     }
 

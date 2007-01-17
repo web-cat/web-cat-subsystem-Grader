@@ -32,7 +32,7 @@ Done: WOCheckBox {
 FileBrowser: net.sf.webcat.core.FileBrowser {
     title                 = "Browse Raw Files: Submission and Results";
     file                  = prefs.submission.file.getParentFile;
-    initialExpansionDepth = 0;
+    initialExpansionDepth = 1;
 //    includeSeparator = true;
 }
 
@@ -71,14 +71,6 @@ HasNoCoverageData: WOConditional {
 	negate    = true;
 }
 
-InlineReport: WOConditional {
-	condition = result.resultFile.exists;
-}
-
-InlineSummary: WOConditional {
-	condition = result.summaryFile.exists;
-}
-
 Page: net.sf.webcat.core.WizardPage {
     sideStepTitle = "Grade One Submission";
     hideSteps     = true;
@@ -87,10 +79,6 @@ Page: net.sf.webcat.core.WizardPage {
 //    externalJavascript   = "/htmlarea/htmlarea.js,/htmlarea/htmlarea-lang-en.js,/htmlarea/dialog.js";
 //    inlineHeaderContents = javascriptText;
 //    onLoad               = "initEditor()";
-}
-
-PartialInlineReport: PartialInlineReport {
-    file = result.resultFile;
 }
 
 Regrade: WOSubmitButton {
@@ -127,6 +115,10 @@ ShowDetails: WOImageButton {
 	title     = "View file and enter comments";
 }
 
+StaffInlineReport: PartialInlineReport {
+    file = result.staffResultFile;
+}
+
 StatRepetition: WORepetition {
 	item  = stats;
 	list  = statsDisplayGroup.displayedObjects;
@@ -135,6 +127,10 @@ StatRepetition: WORepetition {
 
 StatsLabel: WOString {
 	value = result.statElementsLabel;
+}
+
+StudentInlineReport: PartialInlineReport {
+    file = result.resultFile;
 }
 
 SummaryReport: PartialInlineReport {

@@ -321,6 +321,28 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Retrieve the staff-directed "inline report" file as a File object.
+     * @return the file for this submission
+     */
+    public File staffResultFile()
+    {
+        return new File( submission().resultDirName(), staffResultFileName() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the base file name for the staff-directed "inline report".
+     * @return the base file name
+     */
+    public String staffResultFileName()
+    {
+        return "StaffGraderReport.html";
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the "inline summary"  file as a File object.
      * @return the file for this submission
      */
