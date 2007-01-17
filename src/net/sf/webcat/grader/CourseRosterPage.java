@@ -168,17 +168,17 @@ public class CourseRosterPage
             {
                 lastName  = t[1];
                 firstName = t[2];
-                int pos = t[t.length - 2].indexOf( String.valueOf( '@' ) );
+                int pos = t[t.length - 3].indexOf( String.valueOf( '@' ) );
                 if ( pos < 0 )
                 {
-                    error( "illegal e-mail address '"+ t[t.length - 2]
+                    error( "illegal e-mail address '"+ t[t.length - 3]
                                   + "' for '" + lastName + ", " + firstName
                                   + "' on line " + row + ".  Is your CSV file "
                                   + "in VT Banner format?  Ignoring remainder "
                                   + "of file." );
                     break;
                 }
-                pid = t[t.length - 2].substring( 0, pos );
+                pid = t[t.length - 3].substring( 0, pos );
                 idNo = t[0];
             }
             else
