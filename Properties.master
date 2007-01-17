@@ -5,7 +5,7 @@ subsystem.Grader=net.sf.webcat.grader.Grader
 
 Grader.version.major=2
 Grader.version.minor=1
-Grader.version.revision=10
+Grader.version.revision=11
 Grader.requires=Core
 Grader.depends=env, pluginProperties
 
@@ -39,5 +39,4 @@ grader.resumeSuspendedJobs=true
 # -------------------------------------------------------------------
 # Grader logging defaults
 # -------------------------------------------------------------------
-log4j.logger.net.sf.webcat.grader.GraderQueueProcessor = INFO
-log4j.logger.net.sf.webcat.grader.ScriptFile = INFO
+log4j.logger.net.sf.webcat.grader = INFO
