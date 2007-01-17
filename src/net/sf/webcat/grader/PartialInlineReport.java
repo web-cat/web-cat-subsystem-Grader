@@ -71,15 +71,19 @@ public class PartialInlineReport
         NSData d = null;
         if ( file != null )
         {
-            try
+            // Only read the file if it is really there, of course
+            if ( file.exists() )
             {
-                FileInputStream stream = new FileInputStream( file );
-                d = new NSData( stream, (int)file.length() );
-                stream.close();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Exception including inlined report:", e );
+                try
+                {
+                    FileInputStream stream = new FileInputStream( file );
+                    d = new NSData( stream, (int)file.length() );
+                    stream.close();
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Exception including inlined report:", e );
+                }
             }
         }
         else
