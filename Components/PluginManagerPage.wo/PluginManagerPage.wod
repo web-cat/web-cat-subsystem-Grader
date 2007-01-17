@@ -67,8 +67,8 @@ DownloadNow: WOActiveImage {
 	framework = "Core";
 	height    = "18";
 	width     = "18";
-	alt       = "Download now for install on restart";
-	title     = "Download now for install on restart";
+	alt       = "Download and re-install now";
+	title     = "Download and re-install now";
 	action    = download;
 }
 
