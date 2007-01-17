@@ -717,6 +717,10 @@ public class ScriptFile
         {
             newScriptPath = new File( scriptFile.dirName() );
         }
+        else
+        {
+            scriptFile.setSubdirName( subdirName );
+        }
         File downloadPath = newScriptPath.getParentFile();
         File archiveFile = new File( downloadPath.getAbsolutePath()
             + "/" + plugin.name() + "_" + plugin.currentVersion() + ".jar" );
