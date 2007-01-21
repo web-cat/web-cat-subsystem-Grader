@@ -82,7 +82,7 @@ WCSortOrder2: net.sf.webcat.core.WCSortOrder {
 WCSortOrder3: net.sf.webcat.core.WCSortOrder {
 	displayGroup = notStudentDisplayGroup;
 	displayKey = "Name";
-	key = "name";
+	key = "name_LF";
 }
 
 WCSortOrder4: net.sf.webcat.core.WCSortOrder {
