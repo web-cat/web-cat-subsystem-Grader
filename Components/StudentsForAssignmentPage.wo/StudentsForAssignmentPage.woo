@@ -8,7 +8,7 @@
             localKeys = (); 
             numberOfObjectsPerBatch = 100; 
             selectsFirstObjectAfterFetch = YES; 
-            sortOrdering = ({class = EOSortOrdering; key = user.lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+            sortOrdering = ({class = EOSortOrdering; key = user.name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
         }; 
     }; 
 }
