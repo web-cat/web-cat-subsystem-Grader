@@ -217,9 +217,13 @@ public class Step
             catch ( InterruptedException e )
             {
                 // Stopped by timeout
-                log.info( "Script process was interrupted due to "
+                log.info( "Plug-in process was interrupted due to "
                           + "grace period timeout" );
-                return;
+            }
+            catch ( Throwable t )
+            {
+                log.error( "Unhandled exception occurred executing plug-in:",
+                    t );
             }
             parentThread.interrupt();
         }
