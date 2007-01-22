@@ -144,6 +144,10 @@ public class ScriptFile
     public void execute( String args, File cwd )
         throws java.io.IOException, InterruptedException
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "execute(): args = '" + args + "', cwd = " + cwd );
+        }
         Runtime runtime = Runtime.getRuntime();
         String  command = "";
         if ( configDescription().containsKey( "interpreter.prefix" ) )
