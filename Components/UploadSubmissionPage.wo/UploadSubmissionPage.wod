@@ -97,4 +97,5 @@ Page: net.sf.webcat.core.WizardPage {
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = submissionDisplayGroup;
+    persistentKey = "UploadSubmissionPage.batchSize";
 }

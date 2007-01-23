@@ -10,6 +10,7 @@ Repetition1: WORepetition {
 
 BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = studentDisplayGroup;
+    persistentKey = "PickEnrolledStudentPage.batchSize";
 }
 
 String4: WOString {

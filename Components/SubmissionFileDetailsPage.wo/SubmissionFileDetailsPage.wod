@@ -37,6 +37,8 @@ Go: WOActiveImage {
 	framework = "Core";
 	width     = "40";
 	height    = "19";
+	alt       = "Switch to another file";
+	title     = "Switch to another file";
 	style     = "vertical-align:middle;";
 }
 

@@ -1,9 +1,11 @@
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = studentDisplayGroup;
+    persistentKey = "CourseRosterPage.students";
 }
 
 BatchNavigator2: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = notStudentDisplayGroup;
+    persistentKey = "CourseRosterPage.notStudents";
 }
 
 CourseName: WOString {

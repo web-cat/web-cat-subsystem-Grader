@@ -58,6 +58,7 @@ Repetition1: WORepetition {
 
 BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = potentialDisplayGroup;
+    persistentKey = "EditStaffPage.batchSize";
 }
 
 Add: WOImageButton {

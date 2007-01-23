@@ -13,6 +13,7 @@ AvgScore: WOString {
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
     displayGroup = submissionDisplayGroup;
+    persistentKey = "StudentsForAssignmentPage.batchSize";
 }
 
 CompactName: WOString {
