@@ -108,7 +108,7 @@ public class ScoreSummaryBlock
         {
             return "&lt;Awaiting TA&gt;";
         }
-        double taPts = ( taPtsNum == null ) ? 0.0 : taPtsNum.doubleValue();
+        double taPts = taPtsNum.doubleValue();
         return FinalReportPage.meter( taPts / taPossible );
     }
 

@@ -121,7 +121,6 @@ public class GraderQueueProcessor
         {
             while ( true )
             {
-                int failureCount = 0;
                 if ( editingContext != null )
                 {
                     Application.releasePeerEditingContext( editingContext );
@@ -154,10 +153,10 @@ public class GraderQueueProcessor
                         editingContext.deleteObject( job );
                     }
                     editingContext.saveChanges();
+                    log.debug( "" + jobList.count()
+                        + " discarded jobs retrieved" );
                 }
 
-                log.debug( "" + jobList.count() + " discarded jobs retrieved" );
-                
                 // Get a job
                 log.debug( "waiting for a token" );
                 // We don't need the return value, since it is just null:
@@ -212,97 +211,85 @@ public class GraderQueueProcessor
                     }
                 }
 
-                for ( int i = 0; i < jobList.count(); i++ )
+                // This test is just to make sure the compiler knows it
+                // isn't null, even though the try/catch above ensures it
+                if ( jobList != null )
                 {
-                    NSTimestamp startProcessing = new NSTimestamp();
-                    EnqueuedJob job = (EnqueuedJob)jobList.objectAtIndex( i );
-                    if ( job.discarded() )
+                    for ( int i = 0; i < jobList.count(); i++ )
                     {
-                        editingContext.deleteObject( job );
-                        editingContext.saveChanges();
-                        continue;
-                    }
-                    Submission submission = job.submission();
-                    try
-                    {
-                        AssignmentOffering ao = submission.assignmentOffering();
-                        if ( ao == null )
+                        NSTimestamp startProcessing = new NSTimestamp();
+                        EnqueuedJob job =
+                            (EnqueuedJob)jobList.objectAtIndex( i );
+                        if ( job.discarded() )
                         {
-                            throw new Exception(
-                                "null assignment offering in submission!" );
+                            editingContext.deleteObject( job );
+                            editingContext.saveChanges();
+                            continue;
                         }
-                    }
-                    catch ( Exception e )
-                    {
-                        log.info( "error examining submission: ", e );
-                        if ( failureCount++ > 10 )
+                        Submission submission = job.submission();
+                        if ( submission == null )
                         {
-                            throw e;
+                            log.error( "null submission in enqueued job: "
+                                       + "deleting" );
+                            editingContext.deleteObject( job );
+                            editingContext.saveChanges();
                         }
-                        break;
-                    }
-                    if ( submission == null )
-                    {
-                        log.error( "null submission in enqueued job: "
-                                   + "deleting" );
-                        editingContext.deleteObject( job );
-                        editingContext.saveChanges();
-                    }
-                    else if ( submission.assignmentOffering() == null )
-                    {
-                        log.error( "submission with null assignment offering "
-                                   + "in enqueued job: deleting" );
-                        editingContext.deleteObject( job );
-                        editingContext.saveChanges();
-                    }
-                    else
-                    {
-                        if ( submission.assignmentOffering()
-                                 .gradingSuspended() )
+                        else if ( submission.assignmentOffering() == null )
                         {
-                            log.warn( "Suspending job "
-                                      + submission.dirName() );
-                            job.setPaused( true );
+                            log.error( "submission with null assignment "
+                                       + "offering in enqueued job: deleting" );
+                            editingContext.deleteObject( job );
+                            editingContext.saveChanges();
                         }
                         else
                         {
-                            log.info( "processing submission "
-                                       + submission.dirName() );
-                            processJobWithProtection( job );
-                            NSTimestamp now = new NSTimestamp();
-                            if ( job.queueTime() != null )
+                            if ( submission.assignmentOffering()
+                                     .gradingSuspended() )
                             {
-                                mostRecentJobWait = now.getTime()
-                                    - job.queueTime().getTime();
+                                log.warn( "Suspending job "
+                                          + submission.dirName() );
+                                job.setPaused( true );
                             }
                             else
                             {
-                                mostRecentJobWait = now.getTime()
-                                - submission.submitTime().getTime();
+                                log.info( "processing submission "
+                                           + submission.dirName() );
+                                processJobWithProtection( job );
+                                NSTimestamp now = new NSTimestamp();
+                                if ( job.queueTime() != null )
+                                {
+                                    mostRecentJobWait = now.getTime()
+                                        - job.queueTime().getTime();
+                                }
+                                else
+                                {
+                                    mostRecentJobWait = now.getTime()
+                                    - submission.submitTime().getTime();
+                                }
+                                {
+                                    long processingTime = now.getTime() -
+                                       startProcessing.getTime();
+                                    totalWaitForJobs += processingTime;
+                                    jobsCountedWithWaits++;
+                                }
                             }
-                            {
-                                long processingTime = now.getTime() -
-                                   startProcessing.getTime();
-                                totalWaitForJobs += processingTime;
-                                jobsCountedWithWaits++;
-                            }
+                            // assignment offering could have changed because
+                            // of a fault, so save any changes before
+                            // forcing it out of editing context cache
+                            editingContext.saveChanges();
+                            editingContext.refaultObject( 
+                                submission.assignmentOffering(),
+                                editingContext.globalIDForObject(
+                                    submission.assignmentOffering() ),
+                                editingContext );
                         }
-                        // assignment offering could have changed because
-                        // of a fault, so save any changes before
-                        // forcing it out of editing context cache
-                        editingContext.saveChanges();
-                        editingContext.refaultObject( 
-                            submission.assignmentOffering(),
-                            editingContext.globalIDForObject(
-                                submission.assignmentOffering() ),
-                            editingContext );
-                    }
-                    // Only process one regrading job before looking for
-                    // more regular submissions.
-                    if ( job.regrading() )
-                    {
-                        queue.enqueue( null );
-                        break;
+                        // Only process one regrading job before looking for
+                        // more regular submissions.
+                        if ( job.regrading() )
+                        {
+                            queue.enqueue( null );
+                            break;
+                        }
                     }
                 }
             }

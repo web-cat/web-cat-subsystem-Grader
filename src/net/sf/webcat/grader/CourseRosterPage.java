@@ -415,7 +415,8 @@ public class CourseRosterPage
      * changes. */
     protected int oldBatchIndex2;
 
-    private static final String GENERIC_FORMAT = "0";
+    // The first constant isn't needed in the code, since it's never used
+    // private static final String GENERIC_FORMAT = "0";
     private static final String BANNER_FORMAT  = "1";
 
     static Logger log = Logger.getLogger( CourseRosterPage.class );
