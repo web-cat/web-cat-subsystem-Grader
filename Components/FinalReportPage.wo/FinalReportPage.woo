@@ -1,6 +1,6 @@
 {
     "WebObjects Release" = "WebObjects 5.0"; 
-    encoding = NSWindowsCP1252StringEncoding; 
+    encoding = NSUTF8StringEncoding; 
     variables = {
         statsDisplayGroup = {
             class = WODisplayGroup; 
