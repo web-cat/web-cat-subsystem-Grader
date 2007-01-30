@@ -274,7 +274,6 @@ public class PickStepPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        WOComponent result = null;
         if ( log.isDebugEnabled() )
         {
             log.debug( "next():" );
