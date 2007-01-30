@@ -388,8 +388,8 @@ public class GraderQueueProcessor
 
         // Set up the properties to pass to execution scripts
         WCProperties gradingProperties = new WCProperties();
-        File gradingPropertiesFile =
-            new File( job.submission().resultDirName(), "grading.properties" );
+        File gradingPropertiesFile = new File(job.submission().resultDirName(),
+            SubmissionResult.propertiesFileName() );
         // Initial default values
         gradingProperties.setProperty( "numReports", "0" );
         Number toolPts = job.submission().assignmentOffering().assignment()

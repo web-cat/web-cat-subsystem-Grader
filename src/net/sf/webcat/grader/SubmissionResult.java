@@ -306,6 +306,8 @@ public class SubmissionResult
     {
         return new File( submission().resultDirName(), resultFileName() );
     }
+    // TODO: should this operation (and its relatives) be in the Submission
+    // class instead of in this class?
 
 
     // ----------------------------------------------------------
@@ -313,7 +315,7 @@ public class SubmissionResult
      * Retrieve the base file name for the "inline report".
      * @return the base file name
      */
-    public String resultFileName()
+    public static String resultFileName()
     {
         return "GraderReport.html";
     }
@@ -335,9 +337,53 @@ public class SubmissionResult
      * Retrieve the base file name for the staff-directed "inline report".
      * @return the base file name
      */
-    public String staffResultFileName()
+    public static String staffResultFileName()
     {
         return "StaffGraderReport.html";
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the properties file as a File object.
+     * @return the file for this submission
+     */
+    public File propertiesFile()
+    {
+        if ( propertiesFile == null )
+        {
+            propertiesFile =
+                new File( submission().resultDirName(), propertiesFileName() );            
+        }
+        return propertiesFile;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the base file name for the result properties file.
+     * @return the base file name
+     */
+    public static String propertiesFileName()
+    {
+        return "grading.properties";
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the properties object for this submission result.
+     * @return the properties object attached to the properties file
+     */
+    public WCProperties properties()
+    {
+        if ( properties == null )
+        {
+            properties = new WCProperties(
+                submission().resultDirName() + "/" + propertiesFileName(),
+                null );
+        }
+        return properties;
     }
 
 
@@ -566,5 +612,7 @@ public class SubmissionResult
 
     //~ Instance/static variables .............................................
 
+    private File propertiesFile;
+    private WCProperties properties;
     static Logger log = Logger.getLogger( SubmissionResult.class );
 }
