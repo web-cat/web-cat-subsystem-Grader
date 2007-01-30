@@ -226,6 +226,11 @@ public class GraderQueueProcessor
                     try
                     {
                         AssignmentOffering ao = submission.assignmentOffering();
+                        if ( ao == null )
+                        {
+                            throw new Exception(
+                                "null assignment offering in submission!" );
+                        }
                     }
                     catch ( Exception e )
                     {

@@ -322,7 +322,7 @@ public class GradeStudentSubmissionPage
         prefs().setSubmission( null );
         wcSession().commitLocalChanges();
         Grader.getInstance().graderQueue().enqueue( null );
-        return (WCComponent)back();
+        return back();
     }
 
 

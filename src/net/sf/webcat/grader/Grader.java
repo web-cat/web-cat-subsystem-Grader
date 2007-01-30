@@ -713,7 +713,5 @@ public class Grader
     /** this is the queue processor for processing grader jobs */
     private static GraderQueueProcessor graderQueueProcessor;
 
-    static final private int    BUFFER_SIZE = 8192;
-
     static Logger log = Logger.getLogger( Grader.class );
 }
