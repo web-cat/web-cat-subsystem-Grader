@@ -386,6 +386,20 @@ public class CourseRosterPage
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Guess whether the current user is from VT, and should use the default
+     * of the banner format.
+     * @return always null
+     */
+    public boolean fromVT()
+    {
+        AuthenticationDomain myDomain =
+            wcSession().user().authenticationDomain();
+        return myDomain.displayableName().indexOf( "Virginia Tech" ) >= 0;
+    }
+
+
     //~ Instance/static variables .............................................
 
     /** Saves the state of the student batch navigator to detect setting
@@ -400,9 +414,9 @@ public class CourseRosterPage
     /** Saves the state of the staff batch navigator to detect setting
      * changes. */
     protected int oldBatchIndex2;
-    
-    private static final String BANNER_FORMAT  = "0";
-    private static final String GENERIC_FORMAT = "1";
+
+    private static final String GENERIC_FORMAT = "0";
+    private static final String BANNER_FORMAT  = "1";
 
     static Logger log = Logger.getLogger( CourseRosterPage.class );
 }
