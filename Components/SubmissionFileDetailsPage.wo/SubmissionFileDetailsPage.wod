@@ -1,13 +1,13 @@
 AssignmentName: WOString {
-    value = prefs.submission.assignmentOffering.assignment.name;
+    value = thisFile.submissionResult.submission.assignmentOffering.assignment.name;
 }
 
 AvailablePoints: WOString {
-	value = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
+	value = thisFile.submissionResult.submission.assignmentOffering.assignment.submissionProfile.availablePoints;
 }
 
 DeptNumber: WOString {
-    value = prefs.submission.assignmentOffering.courseOffering.course.deptNumber;
+    value = thisFile.submissionResult.submission.assignmentOffering.courseOffering.course.deptNumber;
 }
 
 FileDetails: WOString {
@@ -25,7 +25,7 @@ FileList: WOPopUpButton {
 
 FinalScore: WOString {
 	numberformat = "0.0";
-	value        = prefs.submission.result.finalScore;
+	value        = thisFile.submissionResult.finalScore;
 }
 
 Form: WOForm {
@@ -53,5 +53,5 @@ ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
 }
 
 SubmitNumber: WOString {
-    value = prefs.submission.submitNumber;
+    value = thisFile.submissionResult.submission.submitNumber;
 }

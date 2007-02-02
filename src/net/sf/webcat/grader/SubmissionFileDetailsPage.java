@@ -84,7 +84,7 @@ public class SubmissionFileDetailsPage
         }
         codeWithComments = initializeCodeWithComments();
         filesDisplayGroup.setObjectArray(
-            prefs().submission().result().submissionFileStats() );
+            thisFile.submissionResult().submissionFileStats() );
         super.appendToResponse( response, context );
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
@@ -123,6 +123,8 @@ public class SubmissionFileDetailsPage
         else
         {
             prefs().setSubmissionFileStatsRelationship( selectedFile );
+            prefs().setSubmission(
+                selectedFile.submissionResult().submission() );
             SubmissionFileDetailsPage statsPage = (SubmissionFileDetailsPage)
                 pageWithName(
                     SubmissionFileDetailsPage.class.getName() );
