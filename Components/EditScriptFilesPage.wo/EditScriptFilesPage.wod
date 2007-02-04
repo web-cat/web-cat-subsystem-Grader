@@ -37,6 +37,7 @@ FileBrowser: net.sf.webcat.core.FileBrowser {
     includeSeparator      = true;
     fileEditListener      = thisPage;
     applyChangesOnMod     = true;
+    currentSelection      = currentSelection;
 }
 
 Page: net.sf.webcat.core.WizardPage {

@@ -79,6 +79,7 @@ public class EditScriptFilesPage
     public String     uploadedFileName3;
     public boolean    unzip = false;
     public FileBrowser.FileSelectionListener fileSelectionListener = null;
+    public String     currentSelection;
 
 
     //~ Methods ...............................................................
