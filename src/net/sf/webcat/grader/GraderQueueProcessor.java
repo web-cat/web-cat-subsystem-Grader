@@ -123,9 +123,11 @@ public class GraderQueueProcessor
             {
                 if ( editingContext != null )
                 {
+                    editingContext.unlock();
                     Application.releasePeerEditingContext( editingContext );
                 }
                 editingContext = Application.newPeerEditingContext();
+                editingContext.lock();
                 
                 // Clear discarded jobs
                 NSArray jobList = null;
