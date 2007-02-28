@@ -67,6 +67,7 @@ public class FinalReportPage
 
     //~ KVC Attributes (must be public) .......................................
 
+    public Submission          submission;
     public SubmissionResult    result;
     public WODisplayGroup      statsDisplayGroup;
     // For iterating over display group
@@ -110,10 +111,14 @@ public class FinalReportPage
     {
         log.debug( "beginning appendToResponse()" );
         jobData = null;
-        if ( prefs().submission() != null )
+        if ( submission == null && prefs() != null )
+        {
+            submission = prefs().submission();
+        }
+        if ( submission != null )
         {
             submissionChosen = true;
-            result = prefs().submission().result();
+            result = submission.result();
             reportIsReady   = ( result != null );
             if ( reportIsReady )
             {
@@ -128,7 +133,7 @@ public class FinalReportPage
                 NSMutableArray fileList = result.resultFiles().mutableClone();
                 ResultFile userSubmission = new ResultFile();
                 userSubmission.setFileName(
-                    "../" + prefs().submission().fileName() );
+                    "../" + submission.fileName() );
                 userSubmission.setMimeType( "application/octet-stream" );
                 userSubmission.setLabel( "Your original submission" );
                 fileList.addObject( userSubmission );
@@ -151,7 +156,7 @@ public class FinalReportPage
         DeliverFile download =
             (DeliverFile)pageWithName( DeliverFile.class.getName() );
         download.setFileName(
-            new File( prefs().submission().resultDirName(),
+            new File( submission.resultDirName(),
                       selectedReport.fileName() ) );
         download.setContentType( selectedReport.mimeType() );
         download.setStartDownload( true );
@@ -189,7 +194,7 @@ public class FinalReportPage
      */
     public boolean gradingPaused()
     {
-        EnqueuedJob job = prefs().submission().enqueuedJob();
+        EnqueuedJob job = submission.enqueuedJob();
         return ( job != null  &&  job.paused() );
     }
 
@@ -491,7 +496,7 @@ public class FinalReportPage
             for ( int i = oldQueuePos; i >= 0; i-- )
             {
                 if ( jobData.jobs.objectAtIndex( i )
-                     == prefs().submission().enqueuedJob() )
+                     == submission.enqueuedJob() )
                 {
                     jobData.queuePosition = i;
                     break;
@@ -501,7 +506,7 @@ public class FinalReportPage
             if ( jobData.queuePosition == jobData.queueSize )
             {
                 log.error( "cannot find job in queue for:"
-                           + prefs().submission() );
+                           + submission );
             }
             Grader grader = Grader.getInstance();
             jobData.mostRecentWait = grader.mostRecentJobWait();

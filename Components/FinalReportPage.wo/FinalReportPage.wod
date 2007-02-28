@@ -36,11 +36,11 @@ Form1: WOForm {
 }
 
 GradingHalted: WOConditional {
-	condition = prefs.assignmentOffering.gradingSuspended;
+	condition = submission.assignmentOffering.gradingSuspended;
 }
 
 GradingNotHalted: WOConditional {
-	condition = prefs.assignmentOffering.gradingSuspended;
+	condition = submission.assignmentOffering.gradingSuspended;
 	negate    = true;
 }
 
