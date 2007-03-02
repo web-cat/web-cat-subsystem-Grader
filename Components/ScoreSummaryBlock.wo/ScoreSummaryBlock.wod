@@ -8,7 +8,7 @@ CannotEditDeduction: WOConditional {
 }
 
 Chart1: net.sf.webcat.grader.graphs.HistogramChart {
-    dataset    = prefs.assignmentOffering.graphSummary.frequencyDataset;
+    dataset    = submission.assignmentOffering.graphSummary.frequencyDataset;
     title      = "Score Distribution for the Class";
     xAxisLabel = "Score";
     yAxisLabel = "Students";
@@ -48,8 +48,8 @@ Form: WOForm {
 }
 
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
-    graphSummary = prefs.submission.assignmentOffering.graphSummary;
-    markScore    = prefs.submission.result.graphableScore;
+    graphSummary = submission.assignmentOffering.graphSummary;
+    markScore    = submission.result.graphableScore;
 }
 
 HasTAGrade: WOConditional {
@@ -57,11 +57,11 @@ HasTAGrade: WOConditional {
 }
 
 HasTestingGrade: WOConditional {
-	condition = prefs.assignmentOffering.assignment.usesTestingScore;
+	condition = submission.assignmentOffering.assignment.usesTestingScore;
 }
 
 HasToolGrade: WOConditional {
-	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
+	condition = submission.assignmentOffering.assignment.usesToolCheckScore;
 }
 
 HideGraphs: WOConditional {
@@ -88,7 +88,7 @@ IsNotInForm: WOConditional {
 }
 
 PossibleScore: WOString {
-	value = prefs.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
+	value = submission.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
 }
 
 ShowGraphs: WOConditional {
@@ -112,7 +112,7 @@ TestingMeter: WOString {
 
 TestingPossible: WOString {
 	numberformat = "0.0";
-	value        = prefs.assignmentOffering.assignment.submissionProfile.correctnessPoints;
+	value        = submission.assignmentOffering.assignment.submissionProfile.correctnessPoints;
 }
 
 TestingScore: WOString {
@@ -127,7 +127,7 @@ ToolMeter: WOString {
 
 ToolPossible: WOString {
 	numberformat = "0.0";
-	value        = prefs.assignmentOffering.assignment.submissionProfile.toolPointsRaw;
+	value        = submission.assignmentOffering.assignment.submissionProfile.toolPointsRaw;
 }
 
 ToolScore: WOString {
@@ -137,7 +137,7 @@ ToolScore: WOString {
 
 TotalTAPoints: WOString {
 	numberformat = "0.0";
-	value = prefs.assignmentOffering.assignment.submissionProfile.taPoints;
+	value = submission.assignmentOffering.assignment.submissionProfile.taPoints;
 }
 
 TR: net.sf.webcat.core.TableRow {

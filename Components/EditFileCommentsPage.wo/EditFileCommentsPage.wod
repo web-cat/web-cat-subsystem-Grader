@@ -158,6 +158,8 @@ Page: net.sf.webcat.core.PageWithNavigation {
 
 ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
     showFileInfo = true;
+    submission = prefs.submission;
+    submissionFileStats = prefs.submissionFileStats;
 }
 
 History: WOHiddenField {

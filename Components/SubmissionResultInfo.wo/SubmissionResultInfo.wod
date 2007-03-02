@@ -3,11 +3,11 @@ AllowPartnerEdit: WOConditional {
 }
 
 AssignmentName: WOString {
-    value = prefs.submission.assignmentOffering.assignment.name;
+    value = submission.assignmentOffering.assignment.name;
 }
 
 DeptNumber: WOString {
-    value = prefs.submission.assignmentOffering.courseOffering.course.deptNumber;
+    value = submission.assignmentOffering.courseOffering.course.deptNumber;
 }
 
 EditPartners: WOSubmitButton {
@@ -16,7 +16,7 @@ EditPartners: WOSubmitButton {
 }
 
 FileName: WOString {
-    value = prefs.submissionFileStats.sourceFileName;
+    value = submissionFileStats.sourceFileName;
 }
 
 IncludeSeparator: WOConditional {
@@ -42,37 +42,37 @@ ShowFileInfo: WOConditional {
 
 String1: WOString {
 	numberformat = "0.0";
-	value = prefs.submissionFileStats.deductions;
+	value = submissionFileStats.deductions;
 }
 
 String3: WOString {
-	value = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
+	value = submission.assignmentOffering.assignment.submissionProfile.availablePoints;
 }
 
 String7: WOString {
 	numberformat = "0.0";
-	value        = prefs.submission.result.finalScore;
+	value        = submission.result.finalScore;
 }
 
 String12: WOString {
 	dateformat = "%m/%d/%y %I:%M%p";
-	value = prefs.submission.submitTime;
+	value = submission.submitTime;
 }
 
 String18: WOString {
-	value = prefs.submission.result.earlyLateStatus;
+	value = submission.result.earlyLateStatus;
 }
 
 String19: WOString {
-	value = prefs.submission.result.scoreModifiers;
+	value = submission.result.scoreModifiers;
 }
 
 StudentName: WOString {
-    value = prefs.submission.user.nameAndUid;
+    value = submission.user.nameAndUid;
 }
 
 SubmitNumber: WOString {
-    value = prefs.submission.submitNumber;
+    value = submission.submitNumber;
 }
 
 TR: net.sf.webcat.core.TableRow {

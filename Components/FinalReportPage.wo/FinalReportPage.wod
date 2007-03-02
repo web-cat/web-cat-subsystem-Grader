@@ -148,6 +148,7 @@ ReportReady: WOConditional {
 }
 
 ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+    submission = submission;
 }
 
 ReturnToGrading: WOSubmitButton {
@@ -159,6 +160,7 @@ RTGForm: WOForm {}
 
 ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = false;
+    submission = submission;
 }
 
 ShowCoverageData: WOConditional {

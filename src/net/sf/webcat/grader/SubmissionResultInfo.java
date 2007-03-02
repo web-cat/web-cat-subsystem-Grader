@@ -56,12 +56,14 @@ public class SubmissionResultInfo
 
     //~ KVC Attributes (must be public) .......................................
 
-    public boolean        showFileInfo     = false;
-    public boolean        allowPartnerEdit = false;
-    public boolean        includeSeparator = true;
-    public WODisplayGroup partnerDisplayGroup;
-    public Submission     partnerSubmission;
-    public int            rowNumber;
+    public Submission          submission;
+    public SubmissionFileStats submissionFileStats;
+    public boolean             showFileInfo     = false;
+    public boolean             allowPartnerEdit = false;
+    public boolean             includeSeparator = true;
+    public WODisplayGroup      partnerDisplayGroup;
+    public Submission          partnerSubmission;
+    public int                 rowNumber;
 
 
     //~ Methods ...............................................................
@@ -70,7 +72,10 @@ public class SubmissionResultInfo
     public void appendToResponse( WOResponse response, WOContext context )
     {
         rowNumber = 0;
-        partnerDisplayGroup.setMasterObject( prefs().submission().result() );
+        if ( submission != null )
+        {
+            partnerDisplayGroup.setMasterObject( submission.result() );
+        }
         super.appendToResponse( response, context );
     }
 
@@ -78,7 +83,7 @@ public class SubmissionResultInfo
     // ----------------------------------------------------------
     public boolean isAPartner()
     {
-        return partnerSubmission.user() != prefs().submission().user();
+        return partnerSubmission.user() != submission.user();
     }
 
 

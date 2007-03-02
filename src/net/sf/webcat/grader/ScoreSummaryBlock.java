@@ -61,6 +61,7 @@ public class ScoreSummaryBlock
 
     public boolean          allowScoreEdit   = false;
     public boolean          includeSeparator = true;
+    public Submission       submission;
     public SubmissionResult result;
     public int              rowNumber;
 
@@ -73,7 +74,7 @@ public class ScoreSummaryBlock
     public void appendToResponse( WOResponse response, WOContext context )
     {
         rowNumber = 0;
-        result = prefs().submission().result();
+        result = submission.result();
         super.appendToResponse( response, context );
     }
 
@@ -81,7 +82,7 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public boolean hasTAGrade()
     {
-        return prefs().submission().assignmentOffering().assignment()
+        return submission.assignmentOffering().assignment()
             .submissionProfile().taPoints() > 0 || allowScoreEdit;
     }
 
@@ -98,7 +99,7 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String taMeter()
     {
-        Number taPossibleNum = prefs().submission().assignmentOffering()
+        Number taPossibleNum = submission.assignmentOffering()
             .assignment().submissionProfile().taPointsRaw();
         double taPossible = ( taPossibleNum == null )
             ? 1.0 : taPossibleNum.doubleValue();
@@ -116,7 +117,7 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String toolMeter()
     {
-        Number toolPossibleNum = prefs().submission().assignmentOffering()
+        Number toolPossibleNum = submission.assignmentOffering()
             .assignment().submissionProfile().toolPointsRaw();
         double toolPossible = ( toolPossibleNum == null )
             ? 1.0 : toolPossibleNum.doubleValue();
@@ -128,7 +129,7 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String correctnessMeter()
     {
-        double possible = prefs().submission().assignmentOffering()
+        double possible = submission.assignmentOffering()
             .assignment().submissionProfile().correctnessPoints();
         double pts = result.correctnessScore();
         return FinalReportPage.meter( pts / possible );
@@ -138,7 +139,7 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String finalMeter()
     {
-        double possible = prefs().submission().assignmentOffering()
+        double possible = submission.assignmentOffering()
             .assignment().submissionProfile().availablePoints();
         double pts = result.finalScore();
         return FinalReportPage.meter( pts / possible );
@@ -166,7 +167,7 @@ public class ScoreSummaryBlock
             correctnessToolsDataset = new SubmissionResultDataset(
                 SubmissionResult.objectsForUser(
                     wcSession().localContext(),
-                    prefs().assignmentOffering(),
+                    submission.assignmentOffering(),
                     result.submission().user() ),
                 SubmissionResultDataset.TESTING_AND_STATIC_TOOLS_SCORE_SERIES );
         }

@@ -89,10 +89,12 @@ Regrade: WOSubmitButton {
 ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
     allowPartnerEdit = true;
     includeSeparator = false;
+    submission = prefs.submission;
 }
 
 ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = true;
+    submission = prefs.submission;
 }
 
 SelectSubmission: WOSubmitButton {
