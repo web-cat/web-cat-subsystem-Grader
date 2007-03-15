@@ -25,16 +25,6 @@
                 type = boolean; 
             }; 
         }, 
-        {   // This attribute is no longer used
-            columnName = FHASSUSPENDEDSUBS; 
-            name = hasSuspendedSubs; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
         { name = id; prototypeName = id; }, 
         {
             columnName = CPUBLISH; 

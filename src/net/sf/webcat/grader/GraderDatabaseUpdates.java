@@ -165,6 +165,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Drop the unused hasSuspendedSubs attribute from AssignmentOffering.
+     * @throws SQLException on error
+     */
+    public void updateIncrement6() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING drop "
+            + "FHASSUSPENDEDSUBS" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
