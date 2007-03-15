@@ -456,8 +456,6 @@ public class GraderQueueProcessor
                   log.error( "halt requested in step " + thisStep
                              + "\n\tfor job " + job );
                   job.setPaused( true );
-                  job.submission().assignmentOffering()
-                      .setHasSuspendedSubs( true );
                   return;
                 }
             }
@@ -479,7 +477,6 @@ public class GraderQueueProcessor
                   AssignmentOffering assignment =
                       job.submission().assignmentOffering();
                   assignment.setGradingSuspended( true );
-                  assignment.setHasSuspendedSubs( true );
                   return;
                 }
             }
@@ -1110,11 +1107,6 @@ public class GraderQueueProcessor
     {
         job.setPaused( true );
         faultOccurredInStep = true;
-
-        // Suspend grading for the assignment
-        AssignmentOffering assignment = job.submission().assignmentOffering();
-        // assignment.setSuspended( true );
-        assignment.setHasSuspendedSubs( true );
 
         Vector attachments = null;
         if ( attachmentsDir != null  &&  attachmentsDir.exists() )

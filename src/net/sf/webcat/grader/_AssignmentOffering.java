@@ -63,7 +63,6 @@ public abstract class _AssignmentOffering
     public static final String DUE_DATE_KEY = "dueDate";
     public static final String GRADING_SUSPENDED_KEY = "gradingSuspended";
     public static final String GRAPH_SUMMARY_KEY = "graphSummary";
-    public static final String HAS_SUSPENDED_SUBS_KEY = "hasSuspendedSubs";
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final String PUBLISH_KEY = "publish";
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
@@ -246,60 +245,6 @@ public abstract class _AssignmentOffering
         takeStoredValueForKey( null, "graphSummary" );
         graphSummaryRawCache = null;
         graphSummaryCache = null;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>hasSuspendedSubs</code> value.
-     * @return the value of the attribute
-     */
-    public boolean hasSuspendedSubs()
-    {
-        Number result =
-            (Number)storedValueForKey( "hasSuspendedSubs" );
-        return ( result == null )
-            ? false
-            : ( result.intValue() > 0 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>hasSuspendedSubs</code>
-     * property.
-     * 
-     * @param value The new value for this property
-     */
-    public void setHasSuspendedSubs( boolean value )
-    {
-        Number actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "hasSuspendedSubs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>hasSuspendedSubs</code> value.
-     * @return the value of the attribute
-     */
-    public Number hasSuspendedSubsRaw()
-    {
-        return (Number)storedValueForKey( "hasSuspendedSubs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>hasSuspendedSubs</code>
-     * property.
-     * 
-     * @param value The new value for this property
-     */
-    public void setHasSuspendedSubsRaw( Number value )
-    {
-        takeStoredValueForKey( value, "hasSuspendedSubs" );
     }
 
 

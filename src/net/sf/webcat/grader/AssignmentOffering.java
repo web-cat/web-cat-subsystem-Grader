@@ -95,18 +95,6 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Determine whether this assignment offering has any jobs
-     * or grading activities suspended.
-     * @return true if any jobs or grading activities have been suspended
-     */
-    public boolean suspendedWarning()
-    {
-        return gradingSuspended() || hasSuspendedSubs();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Determine the latest time when assignments are accepted.
      * @return the final deadline as a timestamp
      */
@@ -736,6 +724,19 @@ public class AssignmentOffering
         {
             return false;
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Check whether this assignment is past the due date.
+     * 
+     * @return true if any submissions to this assignment will be counted
+     *         as late
+     */
+    public boolean isLate()
+    {
+        return dueDate().before( new NSTimestamp() );
     }
 
 

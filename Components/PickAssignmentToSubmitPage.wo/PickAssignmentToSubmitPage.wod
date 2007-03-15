@@ -1,3 +1,12 @@
+AssignmentHasSuspendedSubs: WOConditional {
+    condition = assignmentHasSuspendedSubs;
+}
+
+AssignmentIsUnpublished: WOConditional {
+    condition = anAssignmentOffering.publish;
+    negate = true;
+}
+
 AssignmentRepetition: WORepetition {
     item  = anAssignmentOffering;
     list  = assignmentDisplayGroup.displayedObjects;
@@ -33,7 +42,7 @@ HasNoAssignments: WOConditional {
 Name: WOHyperlink {
 	href   = anAssignmentOffering.assignment.url;
 	target = "_new";
-    string = anAssignmentOffering.assignment.name;
+    string = anAssignmentOffering.assignment.titleString;
 }
 
 Page : net.sf.webcat.core.WizardPage {
@@ -50,7 +59,15 @@ ShowHaltedMessage: WOConditional {
 	condition = showHaltedMessage;
 }
 
+SuspendedCount: WOString {
+    value = anAssignmentOffering.getSuspendedSubs.count;
+}
+
 TR: net.sf.webcat.core.TableRow {
     index = index;
     showError = gradingIsHalted;
+    // showError does not use the raw attribute, since we're using this
+    // method to calculate additional derived info for display via
+    // ShowHaltedMessage.
+    showCaution = anAssignmentOffering.isLate;
 }

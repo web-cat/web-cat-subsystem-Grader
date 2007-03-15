@@ -1,6 +1,16 @@
+AssignmentHasSuspendedSubs: WOConditional {
+    condition = assignmentHasSuspendedSubs;
+}
+
+AssignmentIsUnpublished: WOConditional {
+    condition = assignment.publish;
+    negate = true;
+}
+
 AssignmentName: WOHyperlink {
     string = assignment.titleString;
     href   = assignment.assignment.url;
+	target = "_new";
 }
 
 AssignmentRepetition: WORepetition {
@@ -88,6 +98,7 @@ IsAdminUser: WOConditional {
 JobAssignmentName: WOHyperlink {
     string = job.submission.assignmentOffering.titleString;
     href   = job.submission.assignmentOffering.assignment.url;
+	target = "_new";
 }
 
 JobRepetition: WORepetition {
@@ -125,6 +136,10 @@ SubmitNumber: WOString {
     value = job.submission.submitNumber;
 }
 
+SuspendedCount: WOString {
+    value = assignment.getSuspendedSubs.count;
+}
+
 TR : net.sf.webcat.core.TableRow {
     index       = index;
     showCaution = job.paused;
@@ -133,7 +148,7 @@ TR : net.sf.webcat.core.TableRow {
 
 TR2 : net.sf.webcat.core.TableRow {
     index       = index;
-    showCaution = assignmentIsLate;
+    showCaution = assignment.isLate;
     showError   = assignment.gradingSuspended;
 }
 
@@ -141,11 +156,6 @@ UpcomingAssignmentRepetition: WORepetition {
 	item  = assignment;
 	list  = upcomingAssignmentsGroup.displayedObjects;
 	index = index;
-}
-
-UpcomingIsUnpublished: WOConditional {
-    condition = assignment.publish;
-    negate = true;
 }
 
 ViewResults: WOActiveImage {

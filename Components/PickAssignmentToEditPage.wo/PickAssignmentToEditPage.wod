@@ -1,3 +1,12 @@
+AssignmentHasSuspendedSubs: WOConditional {
+    condition = assignmentHasSuspendedSubs;
+}
+
+AssignmentIsUnpublished: WOConditional {
+    condition = anAssignmentOffering.publish;
+    negate = true;
+}
+
 AssignmentRepetition: WORepetition {
     item  = anAssignmentOffering;
     list  = assignmentDisplayGroup.displayedObjects;
@@ -17,10 +26,6 @@ Deadline: WOString {
     value = anAssignmentOffering.dueDate;
 }
 
-Description: WOString {
-    value = anAssignmentOffering.assignment.shortDescription;
-}
-
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = anAssignmentOffering.graphSummary;
 }
@@ -32,7 +37,7 @@ LastTR: net.sf.webcat.core.TableRow {
 Name: WOHyperlink {
 	href   = anAssignmentOffering.assignment.url;
 	target = "_new";
-    string = anAssignmentOffering.assignment.name;
+    string = anAssignmentOffering.assignment.titleString;
 }
 
 NoShowTable: WOConditional {
@@ -59,6 +64,12 @@ ShowTable: WOConditional {
     condition = showTable;
 }
 
+SuspendedCount: WOString {
+    value = anAssignmentOffering.getSuspendedSubs.count;
+}
+
 TR: net.sf.webcat.core.TableRow {
-    index = index;
+    index       = index;
+    showCaution = anAssignmentOffering.isLate;
+    showError   = anAssignmentOffering.gradingSuspended;
 }

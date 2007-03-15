@@ -170,19 +170,6 @@ public class GraderHomeStatus
 
     // ----------------------------------------------------------
     /**
-     * Check whether the selected assignment is past the due date.
-     * 
-     * @return true if any submissions to this assignment will be counted
-     *         as late
-     */
-    public boolean assignmentIsLate()
-    {
-        return assignment.dueDate().before( currentTime );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Check whether the user can edit the selected assignment.
      * 
      * @return true if the user can edit the assignment
@@ -299,6 +286,23 @@ public class GraderHomeStatus
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "EnterGrades" ).pageName() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Determine if the current assignment has suspended submissions (that
+     * this user can see).
+     * 
+     * @return true if the user can see this assignment's status and this
+     * assignment has suspended submissions
+     */
+    public boolean assignmentHasSuspendedSubs()
+    {
+        return ( wcSession().user().hasAdminPrivileges()
+                 || assignment.courseOffering().instructors()
+                     .containsObject( wcSession().user() ) )
+               && assignment.getSuspendedSubs().count() > 0;
     }
 
 

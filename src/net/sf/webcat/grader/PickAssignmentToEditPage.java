@@ -183,6 +183,23 @@ public class PickAssignmentToEditPage
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Determine if the current assignment has suspended submissions (that
+     * this user can see).
+     * 
+     * @return true if the user can see this assignment's status and this
+     * assignment has suspended submissions
+     */
+    public boolean assignmentHasSuspendedSubs()
+    {
+        return ( wcSession().user().hasAdminPrivileges()
+                 || anAssignmentOffering.courseOffering().instructors()
+                     .containsObject( wcSession().user() ) )
+               && anAssignmentOffering.getSuspendedSubs().count() > 0;
+    }
+
+
     //~ Instance/static variables .............................................
 
     static Logger log = Logger.getLogger( PickAssignmentToEditPage.class );

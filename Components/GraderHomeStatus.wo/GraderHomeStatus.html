@@ -20,7 +20,9 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <div class="shadow"><table>
 <tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr>
 <webobject name="AssignmentRepetition">
-<webobject name="TR2"><td><webobject name="AssignmentName"/></td>
+<webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="AssignmentIsUnpublished">
+<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
+<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
 <td valign="center"><webobject name="Graph"/></td>
 <td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="CanGradeAssignment"><webobject name="GradeAssignment"/></webobject><webobject name="CanEditAssignment"><webobject name="EditAssignment"/></webobject></td></webobject>
@@ -34,8 +36,9 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <div class="shadow"><table>
 <tr><th>Assignment</th><th>Due</th><webobject name="IsAdminUser"><th>Action</th></webobject></tr>
 <webobject name="UpcomingAssignmentRepetition">
-<webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="UpcomingIsUnpublished">
-<span style="background-color:yellow">(unpublished)</span></webobject></td>
+<webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="AssignmentIsUnpublished">
+<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
+<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
 <webobject name="IsAdminUser"><td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="GradeAssignment"/><webobject name="EditAssignment"/></td></webobject></webobject>
 </webobject></table></div><div class="spacer">&nbsp;</div>

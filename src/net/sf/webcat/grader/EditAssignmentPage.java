@@ -153,7 +153,9 @@ public class EditAssignmentPage
             else
             {
                 log.debug( "resuming grading on this assignment" );
-                prefs().assignmentOffering().setGradingSuspended( false );                
+                prefs().assignmentOffering().setGradingSuspended( false );
+                // Have to save this change first!
+                wcSession().commitLocalChanges();
                 releaseSuspendedSubs();
             }
         }
@@ -270,9 +272,7 @@ public class EditAssignmentPage
     public WOComponent releaseSuspendedSubs()
     {
         log.info( "releasing all paused assignments: "
-              + wcSession().courseOffering().course().deptNumber()
-              + " "
-              + prefs().assignmentOffering().assignment().name() );
+              + prefs().assignmentOffering().titleString() );
         EOEditingContext ec = Application.newPeerEditingContext();
         try
         {
@@ -286,7 +286,6 @@ public class EditAssignmentPage
                 job.setPaused( false );
                 job.setQueueTime( new NSTimestamp() );
             }
-            localAO.setHasSuspendedSubs( false );        
             log.info( "released " + jobList.count() + " jobs" );
             ec.saveChanges();
         }
@@ -320,7 +319,6 @@ public class EditAssignmentPage
                 EnqueuedJob job = (EnqueuedJob)jobList.objectAtIndex( i );
                 ec.deleteObject( job );
             }
-            localAO.setHasSuspendedSubs( false );        
             log.info( "cancelled " + jobList.count() + " jobs" );
             ec.saveChanges();
         }

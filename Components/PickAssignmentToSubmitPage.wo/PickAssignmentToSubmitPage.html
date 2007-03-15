@@ -1,10 +1,11 @@
 <webobject name="Page"><webobject name="HasAssignments">For: <span class="hl"><webobject name="CourseName"/></span><p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Assignment</th><th>Description</th><th>Deadline</th><th class="sm">Score Distribution</th></tr>
+<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th></tr>
 <webobject name="AssignmentRepetition">
 <webobject name="TR">
 <td><webobject name="RadioButton"/></td>
-<td><webobject name="Name"/></td>
-<td><webobject name="Description"/></td>
+<td><webobject name="Name"/><webobject name="AssignmentIsUnpublished">
+<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
+<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="Deadline"/></td>
 <td><webobject name="Graph"/></td>
 </webobject></webobject></tbody></table></div>

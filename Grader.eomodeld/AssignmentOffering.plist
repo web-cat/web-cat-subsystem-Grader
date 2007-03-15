@@ -25,7 +25,7 @@
                 type = boolean; 
             }; 
         }, 
-        {
+        {   // This attribute is no longer used
             columnName = FHASSUSPENDEDSUBS; 
             name = hasSuspendedSubs; 
             prototypeName = boolean; 
@@ -79,7 +79,6 @@
         gradingSuspended, 
         publish, 
         assignmentId, 
-        hasSuspendedSubs,
         moodleId,
     	updateMutableFields
     ); 
@@ -92,7 +91,6 @@
         publish,
         assignment,
         submissions,
-        hasSuspendedSubs,
         moodleId,
     	updateMutableFields
     ); 
