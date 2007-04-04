@@ -1,0 +1,45 @@
+<webobject name="Page"><div id="page"><div id="contents" class="nomenu">
+<h1><webobject name="DeptNumber"/>: <webobject name="AssignmentName"/>, by
+<webobject name="StudentName"/>
+</h1>
+<webobject name="Form"><webobject name="Return"/></webobject>
+<webobject name="LongResponse">
+  <webobject name="ResultInfo"/>
+  <webobject name="HasNonZeroScore"><webobject name="ScoreSummary"/></webobject>
+  <webobject name="SummaryReport"/>
+  <webobject name="HasTAComments">
+    <div class="shadow"><table><tbody>
+      <tr><th>TA/Instructor Comments</th></tr>
+      <tr class="o"><td><webobject name="TAComments"/></td></tr>
+    </tbody></table></div><div class="spacer">&nbsp;</div>
+  </webobject>
+  <webobject name=HasFileStats>
+    <div class="shadow"><table><tbody>
+      <tr><th>File</th>
+        <th class="sm">Remarks</th>
+        <th class="sm">Deductions</th>
+        <webobject name="ShowCoverageData">
+          <th colspan="2"><webobject name="StatsLabel"/></th>
+        </webobject></tr>
+      <webobject name="StatRepetition"><webobject name="TR">
+        <td><webobject name="FileName"/></td>
+        <td class="n"><webobject name="FileRemarks"/></td>
+        <td class="n"><webobject name="FileDeduction"/></td>
+        <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
+          <td class="n"><webobject name="Coverage"/>%</td>
+          <td><webobject name="CoverageMeter"/></td>
+          </webobject><webobject name="HasNoCoverageData"><td>&nbsp;</td><td>&nbsp;</td>
+        </webobject></webobject>
+      </webobject></webobject>
+    </tbody></table></div><div class="spacer">&nbsp;</div>
+  </webobject>
+  <webobject name="PartialInlineReport"/>
+  
+  <webobject name="StatRepetition">
+  <h2 class="collapsible"><a title="show/hide" href="javascript:void(0);" onclick="showHide(this, 'srcexp<webobject name="SrcIndex"></webobject>');"><webobject name="Expanded"/><webobject name="FileName"/></a></h2>
+  <div class="expboxcontent" id="srcexp<webobject name="SrcIndex"></webobject>">
+  <webobject name="FileHTML"/>
+  </div></webobject>
+  
+<webobject name="Form"><p><webobject name="Return"/></p></webobject>
+</webobject></div></div></webobject>

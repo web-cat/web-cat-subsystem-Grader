@@ -61,6 +61,12 @@ public class SubmissionFileStats
     }
 
 
+    //~ Constants (for key names) .............................................
+
+    // Attributes ---
+    public static final String SOURCE_FILE_NAME_KEY = "sourceFileName";
+
+
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------

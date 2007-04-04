@@ -581,6 +581,28 @@ public class SubmissionResult
     }
 
 
+    // ----------------------------------------------------------
+    public boolean hasCoverageData()
+    {
+        boolean result = false;
+        NSArray files = submissionFileStats();
+        if ( files.count() > 0 )
+        {
+            for ( int i = 0; i < files.count(); i++ )
+            {
+                SubmissionFileStats sfs = (SubmissionFileStats)
+                    files.objectAtIndex( i );
+                if ( sfs.elementsRaw() != null )
+                {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+
 // If you add instance variables to store property values you
 // should add empty implementions of the Serialization methods
 // to avoid unnecessary overhead (the properties will be

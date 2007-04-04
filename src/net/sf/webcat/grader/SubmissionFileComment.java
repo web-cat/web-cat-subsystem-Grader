@@ -147,6 +147,7 @@ public class SubmissionFileComment
     // ----------------------------------------------------------
     public static int targetIntFromString( String value )
     {
+        value = value.trim();
         for ( int i = 0; i < toName.length; i++ )
         {
             if ( value.equals( toName[i] ) )

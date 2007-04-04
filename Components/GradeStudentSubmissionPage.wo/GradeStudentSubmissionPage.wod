@@ -143,6 +143,11 @@ TR: net.sf.webcat.core.TableRow {
 	index = index;
 }
 
+FullPrintableReport: WOSubmitButton {
+	action = fullPrintableReport;
+	value = "Full Printable Report";
+}
+
 WCSortOrder1: net.sf.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "File Name";

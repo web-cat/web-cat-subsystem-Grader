@@ -386,6 +386,17 @@ public class GradeStudentSubmissionPage
     }
 
 
+    // ----------------------------------------------------------
+    public WOComponent fullPrintableReport()
+    {
+        FullPrintableReport report = (FullPrintableReport)
+            pageWithName( FullPrintableReport.class.getName() );
+        report.result = result;
+        report.nextPage = this;
+        return report;
+    }
+
+
     //~ Instance/static variables .............................................
 
     private Boolean showCoverageData;

@@ -73,14 +73,8 @@ public class FinalReportPage
     // For iterating over display group
     public SubmissionFileStats stats;
     public int                 index;
-    
+
     public boolean submissionChosen = false;
-    /** true if an inline report file exists */
-    public boolean hasInlineReport  = false;
-    /** true if an inline summary file exists */
-    public boolean hasInlineSummary = false;
-    /** true if submission file stats are recorded for this submission */
-    public boolean hasFileStats     = false;
     /** The job's isFinished attribute is tested once and stored here.
         This prevents race conditions arising from testing that field
         multiple times in the body of the page, or between generating a
@@ -122,12 +116,6 @@ public class FinalReportPage
             reportIsReady   = ( result != null );
             if ( reportIsReady )
             {
-                File inlineReport  = result.resultFile();
-                hasInlineReport    = inlineReport.exists();
-                File inlineSummary = result.summaryFile();
-                hasInlineSummary   = inlineSummary.exists();
-
-                hasFileStats = ( result.submissionFileStats().count() > 0 );
                 statsDisplayGroup.setObjectArray( result.submissionFileStats() );
 
                 NSMutableArray fileList = result.resultFiles().mutableClone();
@@ -224,6 +212,17 @@ public class FinalReportPage
                         SubmissionFileDetailsPage.class.getName() );
         statsPage.nextPage = this;
         return statsPage;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent fullPrintableReport()
+    {
+        FullPrintableReport report = (FullPrintableReport)
+            pageWithName( FullPrintableReport.class.getName() );
+        report.result = result;
+        report.nextPage = this;
+        return report;
     }
 
 
@@ -380,21 +379,7 @@ public class FinalReportPage
     {
         if ( showCoverageData == null )
         {
-            showCoverageData = Boolean.FALSE;
-            if ( hasFileStats )
-            {
-                for ( int i = 0; i < statsDisplayGroup.allObjects().count();
-                      i++ )
-                {
-                    SubmissionFileStats sfs = (SubmissionFileStats)
-                        statsDisplayGroup.allObjects().objectAtIndex( i );
-                    if ( sfs.elementsRaw() != null )
-                    {
-                        showCoverageData = Boolean.TRUE;
-                        break;
-                    }
-                }
-            }
+            showCoverageData = Boolean.valueOf( result.hasCoverageData() );
         }
         return showCoverageData;
     }

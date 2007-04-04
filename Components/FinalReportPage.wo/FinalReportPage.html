@@ -42,13 +42,6 @@
   <webobject name="ShowSubmitAgain"><webobject name="RTGForm"><webobject name="SubmitAgain"/></webobject></webobject>
   <webobject name="ResultInfo"/>
   <webobject name="HasNonZeroScore"><webobject name="ScoreSummary"/></webobject>
-  <webobject name="InlineSummary"><webobject name="SummaryReport"/></webobject>
-  <webobject name="HasTAComments">
-    <div class="shadow"><table><tbody>
-      <tr><th>TA/Instructor Comments</th></tr>
-      <tr class="o"><td><webobject name="TAComments"/></td></tr>
-    </tbody></table></div><div class="spacer">&nbsp;</div>
-  </webobject>
   <webobject name=HasFileStats>
     <div class="shadow"><table><tbody>
       <tr><th>File<webobject name="WCSortOrder1"/></th>
@@ -69,7 +62,15 @@
       </webobject></webobject>
     </tbody></table></div><div class="spacer">&nbsp;</div>
   </webobject>
-  <webobject name="InlineReport"><webobject name="PartialInlineReport"/></webobject>
+  <webobject name="Form2"><webobject name="FullPrintableReport"/></webobject>
+  <webobject name="HasTAComments">
+    <div class="shadow"><table><tbody>
+      <tr><th>TA/Instructor Comments</th></tr>
+      <tr class="o"><td><webobject name="TAComments"/></td></tr>
+    </tbody></table></div><div class="spacer">&nbsp;</div>
+  </webobject>
+  <webobject name="SummaryReport"/>
+  <webobject name="PartialInlineReport"/>
   <webobject name="Form1"><webobject name="AreNonInlineReports">
 	<p><webobject name="PopUpButton1"/>&nbsp; <webobject name="SubmitButton1"/></p>
   </webobject></webobject>

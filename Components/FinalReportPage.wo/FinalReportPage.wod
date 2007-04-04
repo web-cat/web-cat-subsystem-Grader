@@ -35,6 +35,14 @@ Form1: WOForm {
 	target = "_blank";
 }
 
+Form2: WOForm {
+}
+
+FullPrintableReport: WOSubmitButton {
+	action = fullPrintableReport;
+	value = "Full Printable Report";
+}
+
 GradingHalted: WOConditional {
 	condition = submission.assignmentOffering.gradingSuspended;
 }
@@ -58,7 +66,7 @@ HasCoverageData: WOConditional {
 }
 
 HasFileStats: WOConditional {
-	condition = hasFileStats;
+	condition = result.submissionFileStats.count;
 }
 
 HasNoCoverageData: WOConditional {
@@ -179,14 +187,14 @@ ShowSubmitAgain: WOConditional {
     condition = canSubmitAgain;
 }
 
+StatsLabel: WOString {
+	value = result.statElementsLabel;
+}
+
 StatRepetition: WORepetition {
 	item  = stats;
 	list  = statsDisplayGroup.displayedObjects;
 	index = index;
-}
-
-StatsLabel: WOString {
-	value = result.statElementsLabel;
 }
 
 String1: WOString {
