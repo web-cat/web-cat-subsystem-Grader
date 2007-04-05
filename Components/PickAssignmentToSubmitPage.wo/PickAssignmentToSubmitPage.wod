@@ -18,8 +18,8 @@ CourseName: WOString {
 }
 
 Deadline: WOString {
-    dateformat = "%m/%d/%y %I:%M%p";
-    value = anAssignmentOffering.dueDate;
+    formatter = session.timeFormatter;
+    value     = anAssignmentOffering.dueDate;
 }
 
 Description: WOString {

@@ -145,8 +145,8 @@ SubmitNumber: WOString {
 }
 
 SubmitTime: WOString {
-	value = aSubmission.submitTime;
-	dateformat = "%m/%d/%y %I:%M%p";
+	value     = aSubmission.submitTime;
+    formatter = session.timeFormatter;
 }
 
 TAScore: WOString {

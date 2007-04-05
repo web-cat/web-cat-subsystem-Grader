@@ -28,8 +28,8 @@ CanGradeAssignment: WOConditional {
 }
 
 DueDate: WOString {
-    dateformat = "%m/%d/%y %I:%M%p";
-    value = assignment.dueDate;
+    formatter = session.timeFormatter;
+    value     = assignment.dueDate;
 }
 
 EditAssignment: WOActiveImage {
@@ -117,8 +117,8 @@ JobIsSuspended: WOConditional {
 }
 
 JobSubmissionTime: WOString {
-    dateformat = "%m/%d/%y %I:%M%p";
-    value = job.submission.submitTime;
+    formatter = session.timeFormatter;
+    value     = job.submission.submitTime;
 }
 
 SubmitAssignment: WOActiveImage {

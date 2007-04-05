@@ -120,8 +120,8 @@ String1: WOString {
 }
 
 String12: WOString {
-	dateformat = "%m/%d/%y %I:%M%p";
-	value = prefs.submission.submitTime;
+    formatter = session.timeFormatter;
+	value     = prefs.submission.submitTime;
 }
 
 String18: WOString {

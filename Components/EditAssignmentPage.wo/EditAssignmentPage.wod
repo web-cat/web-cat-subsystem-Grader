@@ -32,11 +32,11 @@ DescriptionInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 DueDate: WOTextField {
-	size       = 20;
-	dateformat = "%m/%d/%Y %I:%M %p";
-	value      = prefs.assignmentOffering.dueDate;
-	id         = "DueDate";
-	readonly   = 1;
+	size      = 20;
+    formatter = session.timeFormatter;
+	value     = prefs.assignmentOffering.dueDate;
+	id        = "DueDate";
+	readonly  = 1;
 }
 
 DueDateSelector: WOImage {
@@ -269,8 +269,8 @@ UpcomingAssignments: WOCollapsibleComponentContent {
 }
 
 UpcomingDueDate: WOString {
-    dateformat = "%m/%d/%y %I:%M%p";
-    value = upcomingAssignment.dueDate;
+    formatter = session.timeFormatter;
+    value     = upcomingAssignment.dueDate;
 }
 
 UpcomingIsUnpublished: WOConditional {

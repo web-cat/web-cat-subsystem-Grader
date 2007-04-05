@@ -31,8 +31,8 @@ CanDownload: WOConditional {
 }
 
 Date: WOString {
-	dateformat = "%m/%d/%y %I:%M%p";
-	value      = plugin.lastModified;
+    formatter = session.timeFormatter;
+	value     = plugin.lastModified;
 }
 
 Description: WOString {

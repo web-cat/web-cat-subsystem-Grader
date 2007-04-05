@@ -85,8 +85,8 @@ ScriptAuthor: WOString {
 }
 
 ScriptModified: WOString {
-	dateformat = "%m/%d/%y %I:%M%p";
-	value      = script.lastModified;
+    formatter = session.timeFormatter;
+	value     = script.lastModified;
 }
 
 ScriptName: WOString {

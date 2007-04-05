@@ -36,8 +36,8 @@ String1: WOString {
 }
 
 String2: WOString {
-	dateformat = "%m/%d/%y %I:%M%p";
-	value      = fileDate;
+    formatter = session.timeFormatter;
+	value     = fileDate;
 }
 
 String3: WOString {

@@ -55,8 +55,8 @@ String7: WOString {
 }
 
 String12: WOString {
-	dateformat = "%m/%d/%y %I:%M%p";
-	value = submission.submitTime;
+    formatter = session.timeFormatter;
+	value     = submission.submitTime;
 }
 
 String18: WOString {
