@@ -218,11 +218,11 @@ public class FinalReportPage
     // ----------------------------------------------------------
     public WOComponent fullPrintableReport()
     {
-        FullPrintableReport report = (FullPrintableReport)
+        FullPrintableReport fullReport = (FullPrintableReport)
             pageWithName( FullPrintableReport.class.getName() );
-        report.result = result;
-        report.nextPage = this;
-        return report;
+        fullReport.result = result;
+        fullReport.nextPage = this;
+        return fullReport;
     }
 
 
