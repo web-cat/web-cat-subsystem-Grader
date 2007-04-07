@@ -232,6 +232,10 @@ Timeout: WOTextField {
 	value = stepTimeout;
 }
 
+TimeFormat: WOString {
+    value = session.timeFormatter.pattern;
+}
+
 TR: net.sf.webcat.core.TableRow {
 	index = index;
 }
