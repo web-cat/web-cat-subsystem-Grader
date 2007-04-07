@@ -172,7 +172,8 @@ public class UploadSubmissionPage
             log.debug( "next():" );
             log.debug(" request = " + context().request() );
             log.debug(" form values = " + context().request().formValues() );
-            log.debug(" multipart = " + context().request().isMultipartFormData() );
+            log.debug(" multipart = "
+                + context().request().isMultipartFormData() );
         }
         if ( okayToSubmit )
         {
@@ -300,6 +301,26 @@ public class UploadSubmissionPage
             wcSession().setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
+    }
+
+
+    // ----------------------------------------------------------
+    public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
+    {
+        try
+        {
+            super.takeValuesFromRequest( arg0, arg1 );
+        }
+        catch ( Exception e )
+        {
+            error( e.getMessage() );
+            Application.emailExceptionToAdmins( e, arg1,
+                "In UploadSubmissionPage:takeValuesFromRequest(), a post "
+                + "request without an attached file submission was received\n."
+                + "Browser info = \n"
+                + wcSession().browser()
+                );
+        }
     }
 
 
