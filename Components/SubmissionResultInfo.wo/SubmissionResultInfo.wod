@@ -7,7 +7,7 @@ AssignmentName: WOString {
 }
 
 DeptNumber: WOString {
-    value = submission.assignmentOffering.courseOffering.course.deptNumber;
+    value = submission.assignmentOffering.courseOffering.compactName;
 }
 
 EditPartners: WOSubmitButton {

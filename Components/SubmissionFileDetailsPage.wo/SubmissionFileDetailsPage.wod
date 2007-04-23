@@ -7,7 +7,7 @@ AvailablePoints: WOString {
 }
 
 DeptNumber: WOString {
-    value = thisFile.submissionResult.submission.assignmentOffering.courseOffering.course.deptNumber;
+    value = thisFile.submissionResult.submission.assignmentOffering.courseOffering.compactName;
 }
 
 FileDetails: WOString {
