@@ -3,8 +3,10 @@ Library\Frameworks\DBUpdateEngine.framework
 Library\Frameworks\EOJDBCPrototypes.framework
 Library\Frameworks\ERExtensions.framework
 Library\Frameworks\ERJars.framework
+Library\Frameworks\ExternalJars.framework
 Library\Frameworks\JavaWOExtensions.framework
 Library\Frameworks\WOUnitTest.framework
 Library/Frameworks/Core.framework
 Library/Frameworks/DBUpdateEngine.framework
 Library/Frameworks/EOJDBCPrototypes.framework
+Library/Frameworks/ExternalJars.framework
