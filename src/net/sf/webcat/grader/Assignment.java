@@ -322,7 +322,7 @@ public class Assignment
     public static boolean namesAreSimilar( String name1, String name2 )
     {
         boolean result = false;
-        int limit = Math.max( name1.length(), name2.length() );
+        int limit = Math.min( name1.length(), name2.length() );
         for ( int i = 0; i < limit; i++ )
         {
             if ( Character.isLetter( name1.charAt( i ) ) )
