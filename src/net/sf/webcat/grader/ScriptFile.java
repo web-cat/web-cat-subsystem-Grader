@@ -149,7 +149,8 @@ public class ScriptFile
             log.debug( "execute(): args = '" + args + "', cwd = " + cwd );
         }
         Runtime runtime = Runtime.getRuntime();
-        String  command = "";
+        String  command   = "";
+        String[] cmdArray = null;
         if ( configDescription().containsKey( "interpreter.prefix" ) )
         {
             // Look up the associated value, perform property substitution
@@ -177,21 +178,46 @@ public class ScriptFile
             {
                 if ( shell.charAt( shell.length() - 1 ) == '"' )
                 {
-                    command = command.replaceAll("\"", "\\\"" );
-                    command += '"';
+                    cmdArray = shell.split( "\\s+" );
+                    cmdArray[cmdArray.length - 1] = command;
                 }
-                command = shell + command;
+                else
+                {
+                    command = shell + command;
+                }
             }
         }
 
         try
         {
-            log.debug( "execute(): " + command );
-            proc = runtime.exec( command,
-                ( (Application) Application.application() )
-                    .subsystemManager().envp(),
-                cwd );
-            proc.waitFor();
+            if ( log.isDebugEnabled() )
+            {
+                if ( cmdArray != null )
+                {
+                    command = cmdArray[0];
+                    for ( int i = 1; i < cmdArray.length; i++ )
+                    {
+                        command += " " + cmdArray[i];
+                    }
+                }
+                log.debug( "execute(): " + command );
+            }
+            if ( cmdArray != null )
+            {
+                proc = runtime.exec( cmdArray,
+                    ( (Application) Application.application() )
+                        .subsystemManager().envp(),
+                    cwd );
+            }
+            else
+            {
+                proc = runtime.exec( command,
+                    ( (Application) Application.application() )
+                        .subsystemManager().envp(),
+                    cwd );
+            }
+            int exitCode = proc.waitFor();
+            log.debug( "external plug-in returned exit code: " + exitCode );
         }
         catch ( InterruptedException e )
         {
