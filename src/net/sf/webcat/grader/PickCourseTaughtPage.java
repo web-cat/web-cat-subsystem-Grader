@@ -74,7 +74,6 @@ public class PickCourseTaughtPage
     // ----------------------------------------------------------
     public void awake()
     {
-        log.debug( "awake()" );
         selectedStaffIndex = -1;
         selectedAdminIndex = -1;
     }

@@ -214,6 +214,12 @@ public class FullPrintableReport
                     setStepWeights( weights );
                 }
             }
+            catch ( Exception e )
+            {
+                Application.emailExceptionToAdmins( e, context(),
+                    "Exception in setUpTask() preparing full printable report."
+                    );
+            }
             finally
             {
                 ec.unlock();

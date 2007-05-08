@@ -31,9 +31,9 @@ import net.sf.webcat.core.*;
 
 // -------------------------------------------------------------------------
 /**
- * TODO: place a real description here.
+ * Custom settings for a single grading {@link Step}.
  *
- * @author 
+ * @author stedwar2
  * @version $Id$
  */
 public class StepConfig

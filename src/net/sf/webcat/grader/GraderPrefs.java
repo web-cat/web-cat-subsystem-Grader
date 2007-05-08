@@ -32,9 +32,10 @@ import java.io.*;
 
 // -------------------------------------------------------------------------
 /**
- * TODO: place a real description here.
+ * A simple EO to record persistent user choices for assignments and
+ * so on used in navigation.
  *
- * @author 
+ * @author stedwar2
  * @version $Id$
  */
 public class GraderPrefs

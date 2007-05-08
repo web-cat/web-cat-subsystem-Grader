@@ -106,7 +106,8 @@ EnableAutoUpdates: WOSubmitButton {
 
 Form1: WOForm {
     multipleSubmit = true;
-    otherTagString="enctype=\"multipart/form-data\"";
+    enctype="multipart/form-data";
+//    otherTagString="enctype=\"multipart/form-data\"";
 }
 
 HasAdminPrivileges: WOConditional {

@@ -30,9 +30,9 @@ import com.webobjects.eocontrol.*;
 
 // -------------------------------------------------------------------------
 /**
- * TODO: place a real description here.
+ * An EO representing settings for an output comparison grading engine.
  *
- * @author 
+ * @author stedwar2
  * @version $Id$
  */
 public class GradingCriteria

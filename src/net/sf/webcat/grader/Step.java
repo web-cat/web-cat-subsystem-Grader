@@ -33,9 +33,10 @@ import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
- * TODO: place a real description here.
+ * Represents a single step (plug-in entry) in the grading pipeline or
+ * processing sequence for handling a given assignment.
  *
- * @author 
+ * @author stedwar2
  * @version $Id$
  */
 public class Step

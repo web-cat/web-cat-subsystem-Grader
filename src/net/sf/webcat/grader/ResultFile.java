@@ -32,9 +32,10 @@ import com.webobjects.eocontrol.*;
 
 // -------------------------------------------------------------------------
 /**
- * TODO: place a real description here.
+ * An EO representing a generated feedback file that is presented to
+ * the user as part of grading results (often for download).
  *
- * @author 
+ * @author stedwar2
  * @version $Id$
  */
 public class ResultFile

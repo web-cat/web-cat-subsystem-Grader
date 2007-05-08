@@ -4,8 +4,8 @@
 subsystem.Grader=net.sf.webcat.grader.Grader
 
 Grader.version.major=2
-Grader.version.minor=1
-Grader.version.revision=21
+Grader.version.minor=2
+Grader.version.revision=0
 Grader.requires=Core, EOJDBCPrototypes, DBUpdateEngine
 Grader.depends=env, pluginProperties
 

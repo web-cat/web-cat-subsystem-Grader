@@ -186,8 +186,8 @@ public class MiniBarGraph
     {
         if ( _markerUrlPrefix == null )
         {
-            _markerUrlPrefix = Application.application().resourceManager()
-                .urlForResourceNamed(
+            _markerUrlPrefix = ((WCResourceManager)Application.application()
+                .resourceManager() ).urlForStaticHtmlResourceNamed(
                     "images/marker0.gif", "Grader", null, null );
             if ( _markerUrlPrefix != null )
             {
@@ -196,7 +196,8 @@ public class MiniBarGraph
             }
             else
             {
-                _markerUrlPrefix = "http://web-cat.cs.vt.edu/images/marker";
+                _markerUrlPrefix = "http://web-cat.cs.vt.edu/wcstatic/"
+                    + "Grader.framework/WebServerResources/images/marker";
             }
         }
         return _markerUrlPrefix;
