@@ -52,7 +52,3 @@ ReusableList: WOPopUpButton {
 ScriptName: WOString {
     value = step.script.displayableName;
 }
-
-TR: net.sf.webcat.core.TableRow {
-    index = index;
-}

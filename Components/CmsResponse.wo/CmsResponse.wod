@@ -1,12 +1,10 @@
-KeyName: WOString {
-    value = key;
-}
-
 KeyRepetition: WORepetition {
     item = key;
     list = paramDisplayGroup.displayedObjects;
 }
 
-KeyValue: WOString {
-    value = keyValue;
+Param: WOGenericContainer {
+    elementName = "param";
+    name        = key;
+    value       = keyValue;
 }

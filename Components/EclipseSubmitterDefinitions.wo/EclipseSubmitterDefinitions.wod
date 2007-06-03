@@ -1,19 +1,43 @@
+Assignment: WOGenericContainer {
+    elementName = "assignment";
+    name = assignmentName;
+}
+
 AssignmentRepetition: WORepetition {
     item  = anAssignmentOffering;
     list  = assignmentsToDisplay;
     index = index;
 }
 
-Authenticator: WOString {
+Authenticator: WOGenericContainer {
+    elementName = "param";
+    name = "d";
     value = authenticator;
 }
 
-CourseName: WOString {
-    value = courseName;
+BeginCourseGroup: WOGenericElement {
+    elementName = "assignment-group";
+    name = courseName;
 }
 
-EscapedName: WOString {
-    value = assignmentNameParameter;
+BeginInstitutionGroup: WOGenericElement {
+    elementName = "assignment-group";
+    name = anAssignmentOffering.courseOffering.course.department.institution.displayableName;
+}
+
+EndCourseGroup: WOString {
+    value = "</assignment-group>";
+    escapeHTML = false;
+}
+
+EndInstitutionGroup: WOString {
+    value = "</assignment-group>";
+    escapeHTML = false;
+}
+
+ExcludePattern: WOGenericContainer {
+    elementName = "exclude";
+    pattern = thisPattern;
 }
 
 ExclusionRep: WORepetition {
@@ -29,13 +53,14 @@ HasAssignments: WOConditional {
     condition = assignmentsToDisplay.count;
 }
 
+IncludePattern: WOGenericContainer {
+    elementName = "include";
+    pattern = thisPattern;
+}
+
 InclusionRep: WORepetition {
     list = includePatterns;
     item = thisPattern;
-}
-
-InstitutionName: WOString {
-    value = anAssignmentOffering.courseOffering.course.department.institution.displayableName;
 }
 
 IsNotFirst: WOConditional {
@@ -46,8 +71,15 @@ IsNotFirstInInstitution: WOConditional {
     condition = isNotFirstInInstitution;
 }
 
-Name: WOString {
+Name: WOGenericContainer {
+    elementName = "param";
+    name = "a";
     value = assignmentName;
+}
+
+RequirePattern: WOGenericContainer {
+    elementName = "required";
+    pattern = thisPattern;
 }
 
 RequireRep: WORepetition {
@@ -63,11 +95,7 @@ StartNewCourse: WOConditional {
     condition = startNewCourse;
 }
 
-ThisPattern: WOString {
-    value = thisPattern;
-}
-
-WebCATURL: WOString {
-    value = url;
-    escapeHTML = false;
+Transport: WOGenericContainer {
+    elementName = "transport";
+    uri = url;
 }

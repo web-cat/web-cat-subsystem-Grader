@@ -93,14 +93,6 @@ Image: WOImage {
 	alt      = "Still Grading";
 }
 
-InlineReport: WOConditional {
-	condition = hasInlineReport;
-}
-
-InlineSummary: WOConditional {
-	condition = hasInlineSummary;
-}
-
 MetaRefresh1: WOMetaRefresh {
 	action = refreshAction;
 	seconds = refreshTimeout;

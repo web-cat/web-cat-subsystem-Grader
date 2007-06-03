@@ -41,11 +41,6 @@ ScriptName: WOString {
     value = step.script.displayableName;
 }
 
-TogglePublished: WOSubmitButton {
-    value = togglePublishedLabel;
-    action = togglePublished;
-}
-
 TR: net.sf.webcat.core.TableRow {
     index = index;
 }

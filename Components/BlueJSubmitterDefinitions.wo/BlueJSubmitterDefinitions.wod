@@ -50,6 +50,16 @@ Name: WOString {
     value = assignmentName;
 }
 
+Password: WOString {
+    value = "<password:Password>";
+    escapeHTML = false;
+}
+
+PID: WOString {
+    value = "<field:PID=username>";
+    escapeHTML = false;
+}
+
 RequireRep: WORepetition {
     list = requirePatterns;
     item = thisPattern;

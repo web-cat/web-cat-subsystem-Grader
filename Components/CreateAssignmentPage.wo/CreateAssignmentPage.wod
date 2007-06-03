@@ -12,10 +12,6 @@ CourseName: WOString {
     value = session.courseOffering.deptNumberAndName;
 }
 
-CourseNumber: WOString {
-    value = session.courseOffering.course.deptNumber;
-}
-
 Description: WOString {
     value = assignment.shortDescription;
 }

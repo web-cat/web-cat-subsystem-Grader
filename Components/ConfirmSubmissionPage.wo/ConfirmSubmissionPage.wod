@@ -27,7 +27,7 @@ Repetition1: WORepetition {
 }
 
 String1: WOString {
-	value = file.getName;
+	value = file.getName;		// VALID
 }
 
 String3: WOString {

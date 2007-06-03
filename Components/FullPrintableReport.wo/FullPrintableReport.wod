@@ -2,10 +2,6 @@ AssignmentName: WOString {
     value = result.submission.assignmentOffering.assignment.name;
 }
 
-Count : WOString {
-    value = formattedFiles.count;
-}
-
 Coverage: WOString {
 	numberformat = "0.0";
 	value        = stats.file.gradedElementsCoveragePercent;
@@ -56,7 +52,7 @@ HasCoverageData: WOConditional {
 }
 
 HasFileStats: WOConditional {
-	condition = stats.count;
+	condition = formattedFiles.count;
 }
 
 HasNoCoverageData: WOConditional {

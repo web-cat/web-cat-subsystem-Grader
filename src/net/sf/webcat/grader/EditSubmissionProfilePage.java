@@ -45,7 +45,7 @@ public class EditSubmissionProfilePage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditSubmissionProfilePage( WOContext context )
@@ -103,7 +103,7 @@ public class EditSubmissionProfilePage
                   i >= 0; i-- )
             {
                 availableTimeDeltaUnit = SubmissionProfile.timeUnits[ i ];
-                if ( availableTimeDeltaUnit.isUnitFor( 
+                if ( availableTimeDeltaUnit.isUnitFor(
                          storedAvailableTimeDelta ) ||
                      i == 0 )
                 {
@@ -221,7 +221,7 @@ public class EditSubmissionProfilePage
         saveTimeFields();
         return super.next();
     }
-    
+
 
     // ----------------------------------------------------------
     public boolean applyLocalChanges()
@@ -229,14 +229,14 @@ public class EditSubmissionProfilePage
         saveTimeFields();
         return super.applyLocalChanges();
     }
-    
+
 
     // ----------------------------------------------------------
     public Number maxFileUploadSize()
     {
         return submissionProfile.maxFileUploadSizeRaw();
     }
-    
+
 
     // ----------------------------------------------------------
     public void setMaxFileUploadSize( Number value )
@@ -279,7 +279,32 @@ public class EditSubmissionProfilePage
     }
 
 
+    // ----------------------------------------------------------
+    public String inlineJavaScript()
+    {
+        return INLINE_JAVASCRIPT;
+    }
+
+
     //~ Instance/static variables .............................................
+
+    private static final String INLINE_JAVASCRIPT =
+        "<script type=\"text/javascript\">\n"
+        + "<!-- Begin\n"
+        + "function startCalc(){\n"
+        + "  interval = setInterval(\"calc()\",1);\n"
+        + "}\n"
+        + "function calc(){\n"
+        + "  document.WizardForm.total.value =\n"
+        + "      ( document.WizardForm.taPoints.value * 1 )\n"
+        + "      + ( document.WizardForm.toolPoints.value * 1 )\n"
+        + "      + ( document.WizardForm.correctnessPoints.value * 1 );\n"
+        + "}\n"
+        + "function stopCalc(){\n"
+        + "  clearInterval(interval);\n"
+        + "}\n"
+        + "// End -->\n"
+        + "</script>";
 
     static Logger log = Logger.getLogger( EditSubmissionProfilePage.class );
 }

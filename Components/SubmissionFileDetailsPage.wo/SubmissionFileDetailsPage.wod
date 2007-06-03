@@ -48,12 +48,6 @@ Page: net.sf.webcat.core.PageWithNavigation {
     hideSteps  = true;
 }
 
-ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
-    showFileInfo = true;
-    submission = thisFile.submissionResult.submission;
-    submissionFileStats = thisFile;
-}
-
 SubmitNumber: WOString {
     value = thisFile.submissionResult.submission.submitNumber;
 }

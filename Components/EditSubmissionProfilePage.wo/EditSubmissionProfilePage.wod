@@ -160,20 +160,5 @@ Page: net.sf.webcat.core.WizardPage {
     finishEnabled = true;
     applyEnabled  = true;
     sideStepTitle = "Edit Submission Profile";
-    inlineHeaderContents = "<script type=\"text/javascript\">
-<!-- Begin
-function startCalc(){
-  interval = setInterval(\"calc()\",1);
-}
-function calc(){
-  document.WizardForm.total.value =
-      ( document.WizardForm.taPoints.value * 1 )
-      + ( document.WizardForm.toolPoints.value * 1 )
-      + ( document.WizardForm.correctnessPoints.value * 1 ); 
-}
-function stopCalc(){
-  clearInterval(interval);
-}
-//  End -->
-</script>";
+    inlineHeaderContents = inlineJavaScript;
 }

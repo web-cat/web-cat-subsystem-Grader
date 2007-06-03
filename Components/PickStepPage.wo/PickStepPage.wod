@@ -12,15 +12,6 @@ AssignmentName: WOString {
     value = assignment.titleString;
 }
 
-EditScript: WOImageButton {
-    filename  = "icons/edit.gif";
-    framework = "Core";
-	action    = editScript;
-	border    = "0";
-	width     = "18";
-	height    = "17";
-}
-
 ForAssignmentName: WOString {
     value = prefs.assignmentOffering.titleString;
 }
@@ -91,10 +82,6 @@ ScriptModified: WOString {
 
 ScriptName: WOString {
 	value = script.displayableName;
-}
-
-ScriptVersion: WOString {
-	value = script.configDescription.version;
 }
 
 TR: net.sf.webcat.core.TableRow {

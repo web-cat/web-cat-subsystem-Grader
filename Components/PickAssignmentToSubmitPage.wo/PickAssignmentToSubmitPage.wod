@@ -22,10 +22,6 @@ Deadline: WOString {
     value     = anAssignmentOffering.dueDate;
 }
 
-Description: WOString {
-    value = anAssignmentOffering.assignment.shortDescription;
-}
-
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = anAssignmentOffering.graphSummary;
 }

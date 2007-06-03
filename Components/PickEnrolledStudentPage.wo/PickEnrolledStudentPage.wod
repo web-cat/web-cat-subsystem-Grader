@@ -47,14 +47,5 @@ WCSortOrder2: net.sf.webcat.core.WCSortOrder {
 	key = "userName";
 }
 
-AlreadyPartner: WOConditional {
-	condition = alreadyPartner;
-}
-
-NotPartner: WOConditional {
-	condition = alreadyPartner;
-	negate    = true;
-}
-
 Page: net.sf.webcat.core.WizardPage {
 }
