@@ -156,6 +156,20 @@ public class AssignmentSummary
 
     //----------------------------------------------------------
     /**
+     * Generate a small, human-readable representation.
+     * @return A printable summary
+     */
+    public String toString()
+    {
+        float mean = mean();
+        int start = (int)mean;
+        int tenth = (int)( ( mean - start ) * 10 );
+        return "" + start + "." + tenth + "(" + students() + ")";
+    }
+
+
+    //----------------------------------------------------------
+    /**
      * Calculate the mean score for this summary.
      * @return the mean (average) score
      */
@@ -413,8 +427,8 @@ public class AssignmentSummary
     {
         this.parent = parent;
     }
-    
-    
+
+
     //----------------------------------------------------------
     /**
      * Examine all contained objects for mutable containers, and reset
@@ -688,7 +702,7 @@ public class AssignmentSummary
                 buffer.append( percentages[i] );
             buffer.append( "\n" );
         }
-        
+
         return buffer.toString();
     }
 
@@ -795,7 +809,7 @@ public class AssignmentSummary
         {
             return getYValue( series, item );
         }
-        
+
 
         // ----------------------------------------------------------
         public Number getStartX( int series, int item )
@@ -870,7 +884,7 @@ public class AssignmentSummary
 
     private transient float[] percentages;
     private transient boolean percentagesAreUpToDate;
-    
+
     private           boolean               hasChanged = false;
     private           MutableContainer      parent     = null;
     private transient MutableContainerOwner owner      = null;
