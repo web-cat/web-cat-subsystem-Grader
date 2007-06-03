@@ -164,7 +164,7 @@ public class FullPrintableReport
     public class LongResponseTask
         extends InterpolatingLongResponseTask
     {
-        
+
         // ----------------------------------------------------------
         public LongResponseTask( User viewer, SubmissionResult theResult )
         {
@@ -184,13 +184,14 @@ public class FullPrintableReport
             }
         }
 
-        
+
         // ----------------------------------------------------------
         protected Object setUpTask()
         {
+            setUnweightedNumberOfSteps( 1 );
             Pair[] pairs = null;
             try
-            {                
+            {
                 ec.lock();
                 NSArray files = ERXArrayUtilities.sortedArraySortedWithKey(
                     submissionResult.submissionFileStats(),
@@ -231,6 +232,7 @@ public class FullPrintableReport
         // ----------------------------------------------------------
         protected Object nextStep( int stepNumber, Object resultSoFar )
         {
+            if ( resultSoFar == null ) return resultSoFar;
             Pair[] pairs = (Pair[])resultSoFar;
             try
             {
