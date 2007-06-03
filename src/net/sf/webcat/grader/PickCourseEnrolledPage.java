@@ -47,7 +47,7 @@ public class PickCourseEnrolledPage
     // ----------------------------------------------------------
     /**
      * Creates a new PickCourseTaughtPage object.
-     * 
+     *
      * @param context The context to use
      */
     public PickCourseEnrolledPage( WOContext context )
@@ -109,7 +109,7 @@ public class PickCourseEnrolledPage
         if ( selectedCourse != null )
         {
             selectedCourseIndex =
-                courseDisplayGroup.displayedObjects().indexOfIdenticalObject( 
+                courseDisplayGroup.displayedObjects().indexOfIdenticalObject(
                         selectedCourse );
             if ( selectedCourseIndex == NSArray.NotFound )
             {
@@ -299,7 +299,7 @@ public class PickCourseEnrolledPage
     // ----------------------------------------------------------
     public int index4()
     {
-        return index3() + coursesAdmined.count();
+        return index3() + coursesTaught.count();
     }
 
 
