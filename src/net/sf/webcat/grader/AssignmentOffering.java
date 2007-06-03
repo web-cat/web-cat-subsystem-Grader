@@ -95,6 +95,30 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Get a short (no longer than 60 characters) description of this
+     * assignment offering.
+     * @return the description
+     */
+    public String userPresentableDescription()
+    {
+        return courseOffering().compactName() + ": " + assignment().name();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a human-readable representation of this assignment offering, which
+     * is the same as {@link #userPresentableDescription()}.
+     * @return this user's name
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Determine the latest time when assignments are accepted.
      * @return the final deadline as a timestamp
      */
@@ -172,7 +196,7 @@ public class AssignmentOffering
                     );
                 }
             }
-        }        
+        }
         log.debug( "availableFrom() = " + openingDate );
         return ( openingDate == null )
             ? new NSTimestamp( 0L )
@@ -205,7 +229,7 @@ public class AssignmentOffering
      */
     public AssignmentSummary graphSummary()
     {
-        NSData dbValue = 
+        NSData dbValue =
             (NSData)storedValueForKey( "graphSummary" );
         SubmissionProfile profile = ( assignment() == null )
             ? null : assignment().submissionProfile();
@@ -234,8 +258,8 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Return a list of all the submissions for this assignment that are 
-     * still in the grading queue but that are marked as suspended, either 
+     * Return a list of all the submissions for this assignment that are
+     * still in the grading queue but that are marked as suspended, either
      * because of errors or because the instructor has halted grading for
      * this assignment offering.
      * @return an NSArray of EnqueuedJob objects representing suspended
@@ -365,8 +389,8 @@ public class AssignmentOffering
         ec.saveChanges();
         Grader.getInstance().graderQueue().enqueue( null );
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Retrieve the name of the directory where all submissions for any
@@ -385,7 +409,7 @@ public class AssignmentOffering
         dir.append( domain.subdirName() );
         return dir;
     }
-    
+
 
     // ----------------------------------------------------------
     /**
@@ -438,7 +462,7 @@ public class AssignmentOffering
      * similar to some string.  Here, "similar" means that the name of
      * the assignment associated with an offering is similar to the target
      * name, as defined by {@link Assignment#namesAreSimilar(String,String)}.
-     * 
+     *
      * @param context The editing context to use
      * @param targetName The name that results should be similar to
      * @param courseOffering The course offering to search for
@@ -486,7 +510,7 @@ public class AssignmentOffering
      * and that are also associated with submission profiles that designate
      * the given submitter engine will be returned.  Specific keys in the
      * formValues dictionary can be used to narrow the search:
-     * 
+     *
      * institution     the institution property name: only assignments
      *                 associated with courses in departments from this
      *                 institution will be retrieved.
@@ -498,7 +522,7 @@ public class AssignmentOffering
      * staff           a boolean value that, if true, includes non-published
      *                 assignments as well as assignments that are past their
      *                 due dates.
-     * 
+     *
      * @param context    the editing context to use for fetching.
      * @param formValues a dictionary of values encoding choices about which
      *                   assignment offerings to retrieve, and in what order.
@@ -589,7 +613,7 @@ public class AssignmentOffering
             orderings.insertObjectAtIndex(
                 EOSortOrdering.sortOrderingWithKey(
                     COURSE_OFFERING_CRN_KEY,
-                    EOSortOrdering.CompareAscending ), 
+                    EOSortOrdering.CompareAscending ),
                 orderings.count() - 2
                 );
             spec.setSortOrderings( orderings );
@@ -599,12 +623,12 @@ public class AssignmentOffering
         {
             NSMutableArray qualifiers = new NSMutableArray(
                 new EOKeyValueQualifier(
-                    AVAILABLE_FROM_KEY, 
-                    EOQualifier.QualifierOperatorLessThan, 
+                    AVAILABLE_FROM_KEY,
+                    EOQualifier.QualifierOperatorLessThan,
                     currentTime
                 ) );
             qualifiers.addObject( new EOKeyValueQualifier(
-                LATE_DEADLINE_KEY, 
+                LATE_DEADLINE_KEY,
                 EOQualifier.QualifierOperatorGreaterThan,
                 currentTime
                 ) );
@@ -730,7 +754,7 @@ public class AssignmentOffering
     // ----------------------------------------------------------
     /**
      * Check whether this assignment is past the due date.
-     * 
+     *
      * @return true if any submissions to this assignment will be counted
      *         as late
      */

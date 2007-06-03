@@ -135,7 +135,7 @@ public class ScriptFile
     // ----------------------------------------------------------
     /**
      * Execute this script with the given command line argument(s).
-     * 
+     *
      * @param args the arguments to pass to the script on the command line
      * @param cwd the working directory to use
      * @throws java.io.IOException if one occurs
@@ -232,9 +232,26 @@ public class ScriptFile
 
 
     // ----------------------------------------------------------
+    /**
+     * Get a short (no longer than 60 characters) description of this plug-in,
+     * which currently returns {@link #name()}.
+     * @return the description
+     */
+    public String userPresentableDescription()
+    {
+        return name();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a human-readable representation of this plug-in, which is
+     * the same as {@link #userPresentableDescription()}.
+     * @return this user's name
+     */
     public String toString()
     {
-        return mainFilePath();
+        return userPresentableDescription();
     }
 
 
@@ -544,7 +561,7 @@ public class ScriptFile
         }
         if ( toLookFor.exists() )
         {
-            String msg = "You already have an uploaded script with this " 
+            String msg = "You already have an uploaded script with this "
                          + "name.  If you want to change that script's "
                          + "files, then edit its configuration.  "
                          + "Otherwise, please use a different file name "
@@ -669,7 +686,7 @@ public class ScriptFile
      * Download the specified plug-in file and install it for the given
      * user.  If the download succeeds, the given ScriptFile object
      * will be updated appropriately.  If none is provided, a new ScriptFile
-     * object will be created under the specified user object's editing 
+     * object will be created under the specified user object's editing
      * context.  The new ScriptFile object is not returned, by can be
      * retrieved after comitting the user object's editing context and
      * refetching.
@@ -691,7 +708,7 @@ public class ScriptFile
         {
             return "Installed plug-in does not support downloads!";
         }
-        
+
         ScriptFile newScriptFile = null;
         String subdirName = convertToSubdirName( plugin.name() );
         File newScriptPath = null;
@@ -740,7 +757,7 @@ public class ScriptFile
                     + " use its browse/edit action icon instead.";
             }
         }
-        
+
         // Save the file to disk
         log.debug( "downloading plug-in archive" );
         if ( newScriptPath == null )
@@ -863,7 +880,7 @@ public class ScriptFile
                 + adminUserName + "\"!" );
             return;
         }
-        
+
         Collection availablePlugins = new HashSet();
         for ( Iterator i = FeatureProvider.providers().iterator();
               i.hasNext(); )

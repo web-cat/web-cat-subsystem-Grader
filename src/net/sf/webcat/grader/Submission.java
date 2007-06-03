@@ -62,6 +62,18 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Get a short (no longer than 60 characters) description of this
+     * submission, which currently returns {@link #dirName()}.
+     * @return the description
+     */
+    public String userPresentableDescription()
+    {
+        return dirName();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the name of the directory where this submission is stored.
      * @return the directory name
      */
@@ -129,7 +141,7 @@ public class Submission
      * Converts a time to its human-readable format.  Most useful
      * when the time is "small," like a difference between two
      * other time stamps.
-     * 
+     *
      * @param time The time to convert
      * @return     A human-readable version of the time
      */
@@ -267,7 +279,7 @@ public class Submission
         return newSubmission;
     }
 
-    
+
     // ----------------------------------------------------------
     /**
      * Delete all the result information for this submission, including
@@ -298,7 +310,7 @@ public class Submission
         }
     }
 
-    
+
     // ----------------------------------------------------------
     /**
      * Delete all the result information for this submission, including
@@ -352,7 +364,7 @@ public class Submission
             + submitNumber()
             + ( assignment == null
                 ? ""
-                : ( ", " + assignment.titleString() ) ), 
+                : ( ", " + assignment.titleString() ) ),
             studentMsg.toString() );
     }
 

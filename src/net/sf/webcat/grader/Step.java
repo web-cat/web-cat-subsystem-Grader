@@ -64,6 +64,18 @@ public class Step
 
 
     // ----------------------------------------------------------
+    /**
+     * Get a short (no longer than 60 characters) description of this
+     * step, which currently returns {@link #toString()}.
+     * @return the description
+     */
+    public String userPresentableDescription()
+    {
+        return order() + ": " + script();
+    }
+
+
+    // ----------------------------------------------------------
     public static int maxTimeout()
     {
         return maxTimeout;
@@ -133,7 +145,7 @@ public class Step
     // ----------------------------------------------------------
     /**
      * Execute this step with the given command line argument(s).
-     * 
+     *
      * @param args the arguments to pass to the script
      * @param cwd  the working directory to use
      * @param stdout the file where the script's standard output should
