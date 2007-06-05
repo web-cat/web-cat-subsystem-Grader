@@ -53,7 +53,7 @@ public class CourseRosterPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public CourseRosterPage( WOContext context )
@@ -83,7 +83,7 @@ public class CourseRosterPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -102,12 +102,24 @@ public class CourseRosterPage
                 EOQualifier.QualifierOperatorContains,
                 wcSession().courseOffering()
             ) ) );
+        if ( firstLoad )
+        {
+            notStudentDisplayGroup.queryMatch().takeValueForKey(
+                wcSession().user().authenticationDomain().propertyName(),
+                "authenticationDomain.propertyName" );
+            firstLoad = false;
+        }
         notStudentDisplayGroup.fetch();
         super.appendToResponse( response, context );
         oldBatchSize1  = studentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex1 = studentDisplayGroup.currentBatchIndex();
         oldBatchSize2  = notStudentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex2 = notStudentDisplayGroup.currentBatchIndex();
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "unenrolled student filters = "
+                + notStudentDisplayGroup.queryMatch() );
+        }
     }
 
 
@@ -197,7 +209,7 @@ public class CourseRosterPage
                 {
                     int pos = email.indexOf( String.valueOf( '@' ) );
                     if ( pos >= 0 )
-                        pid = email.substring( 0, pos);                    
+                        pid = email.substring( 0, pos);
                 }
                 if ( t.length > 4 )
                 {
@@ -208,14 +220,14 @@ public class CourseRosterPage
                     pw = t[5];
                 }
             }
-            
+
             if ( pid == null )
             {
                 error( "cannot identify user name on line " + row
                               + "." );
                 continue;
             }
-            
+
             try
             {
                 user = (User)EOUtilities.objectMatchingValues(
@@ -414,6 +426,8 @@ public class CourseRosterPage
     /** Saves the state of the staff batch navigator to detect setting
      * changes. */
     protected int oldBatchIndex2;
+
+    private boolean firstLoad = true;
 
     // The first constant isn't needed in the code, since it's never used
     // private static final String GENERIC_FORMAT = "0";

@@ -92,6 +92,13 @@ public class EditStaffPage
                                         ? User.INSTRUCTOR_PRIVILEGES
                                         : User.STUDENT_PRIVILEGES ),
                         "accessLevel" );
+        if ( firstLoad )
+        {
+            potentialDisplayGroup.queryMatch().takeValueForKey(
+                wcSession().user().authenticationDomain().propertyName(),
+                "authenticationDomain.propertyName" );
+            firstLoad = false;
+        }
         potentialDisplayGroup.qualifyDataSource();
         potentialDisplayGroup.fetch();
         potentialDisplayGroup.setNumberOfObjectsPerBatch( oldBatchSize );
@@ -177,6 +184,7 @@ public class EditStaffPage
 
     protected int oldBatchSize;
     protected int oldBatchIndex;
+    protected boolean firstLoad = true;
 
     static Logger log = Logger.getLogger( EditStaffPage.class );
 }
