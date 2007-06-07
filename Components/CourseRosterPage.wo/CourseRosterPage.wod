@@ -1,5 +1,9 @@
-BannerSelected: WOConditional {
-    condition = fromVT;
+AddStudent: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+	action   = addStudent;
+	border   = "0";
+	width    = "46";
+	height   = "17";
 }
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
@@ -12,46 +16,14 @@ BatchNavigator2: net.sf.webcat.core.WCBatchNavigator {
     persistentKey = "CourseRosterPage.notStudents";
 }
 
-CourseName: WOString {
-    value = session.courseOffering.deptNumberAndName;
+Email: WOHyperlink {
+    href = student.emailHref;
+    string = student.email;
 }
 
-GenericSelected: WOConditional {
-    condition = fromVT;
-    negate    = true;
-}
-
-HasNoStudents: WOConditional {
-	condition = studentDisplayGroup.allObjects.count;
-	negate    = true;
-}
-
-HasNoPotentialStudents: WOConditional {
-	condition = notStudentDisplayGroup.allObjects.count;
-	negate    = true;
-}
-
-Upload: WOSubmitButton {
-	action = upload;
-	value  = " Upload ";
-}
-
-AuthList: WOPopUpButton {
-	list              = domainDisplayGroup.allObjects;
-	selection         = domain;
-	item              = domainItem;
-	displayString     = domainItem.displayableName;
-}
-
-uploadCSV: WOFileUpload {
-	data = data;
-	filePath = filePath;
-}
-
-StudentRepetition: WORepetition {
-	item = student;
-	list = studentDisplayGroup.displayedObjects;
-	index = index;
+Name: WOHyperlink {
+    href = student.url;
+    string = student.name_LF;
 }
 
 NotStudentRepetition: WORepetition {
@@ -60,18 +32,22 @@ NotStudentRepetition: WORepetition {
 	index = index;
 }
 
-UserID: WOString {
-	value = student.userName;
+Page: net.sf.webcat.core.WizardPage {
 }
 
-Name: WOHyperlink {
-    href = student.url;
-    string = student.name_LF;
+RemoveStudent: WOImageButton {
+    filename  = "icons/trash.gif";
+    framework = "Core";
+	action    = removeStudent;
+	border    = "0";
+	width     = "14";
+	height    = "17";
 }
 
-Email: WOHyperlink {
-    href = student.emailHref;
-    string = student.email;
+StudentRepetition: WORepetition {
+	item = student;
+	list = studentDisplayGroup.displayedObjects;
+	index = index;
 }
 
 TR: net.sf.webcat.core.TableRow {
@@ -100,24 +76,4 @@ WCSortOrder4: net.sf.webcat.core.WCSortOrder {
 	displayGroup = notStudentDisplayGroup;
 	displayKey = "User ID";
 	key = "userName";
-}
-
-Page: net.sf.webcat.core.WizardPage {
-}
-
-RemoveStudent: WOImageButton {
-    filename  = "icons/trash.gif";
-    framework = "Core";
-	action    = removeStudent;
-	border    = "0";
-	width     = "14";
-	height    = "17";
-}
-
-AddStudent: WOImageButton {
-    filename = "images/add-sm-btn.gif";
-	action   = addStudent;
-	border   = "0";
-	width    = "46";
-	height   = "17";
 }

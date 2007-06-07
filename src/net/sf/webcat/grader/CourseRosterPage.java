@@ -71,11 +71,9 @@ public class CourseRosterPage
     /** index in the worepetition */
     public int            index;
 
-    public String               filePath;
-    public NSData               data;
-    public AuthenticationDomain domain;
-    public AuthenticationDomain domainItem;
-    public WODisplayGroup       domainDisplayGroup;
+    public String         filePath;
+    public NSData         data;
+    public boolean        manuallyAdding = false;
 
 
     //~ Methods ...............................................................
@@ -89,7 +87,6 @@ public class CourseRosterPage
      */
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        domain = wcSession().user().authenticationDomain();
         // Set up student list filters
         studentDisplayGroup.queryBindings().setObjectForKey(
                 wcSession().courseOffering(),
@@ -131,188 +128,18 @@ public class CourseRosterPage
            && data != null
            && data.length() > 0 )
         {
-            try
-            {
-                readStudentList( data.stream() );
-            }
-            catch ( IOException e )
-            {
-                error( "An IO exception occurred while reading your "
-                              + "CSV file." );
-            }
+            UploadRosterPage page = (UploadRosterPage)pageWithName(
+                UploadRosterPage.class.getName() );
+            page.nextPage = this;
+            page.filePath = filePath;
+            page.data     = data;
+            return page;
         }
         else
         {
-            error( "Please select a CSV file to upload." );
+            error( "Please select a (non-empty) CSV file to upload." );
+            return null;
         }
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    public void readStudentList( InputStream stream )
-        throws IOException
-    {
-        EOEditingContext ec = wcSession().localContext();
-
-        // File inputFile = new File( csvFilesDir + "/" + filename );
-        // FileInputStream fis = new FileInputStream( inputFile );
-        ExcelCSVParser usersFile = new ExcelCSVParser( stream );
-//        ExcelCSVParser usersFile = new ExcelCSVParser(
-//                new ByteArrayInputStream( data.bytesNoCopy(
-//                    new NSMutableRange( 0, data.length() )
-//                ) )
-//            );
-        String[] t;
-        User user;
-        int row = 0;
-        while ( ( t = usersFile.getLine() ) != null )
-        {
-            row++;
-            String firstName = null;
-            String lastName  = null;
-            String pid       = null;
-            String email     = null;
-            String idNo      = null;
-            String pw        = null;
-            if ( BANNER_FORMAT.equals(
-                     context().request().stringFormValueForKey( "format" ) ) )
-            {
-                lastName  = t[1];
-                firstName = t[2];
-                int pos = t[t.length - 3].indexOf( String.valueOf( '@' ) );
-                if ( pos < 0 )
-                {
-                    error( "illegal e-mail address '"+ t[t.length - 3]
-                                  + "' for '" + lastName + ", " + firstName
-                                  + "' on line " + row + ".  Is your CSV file "
-                                  + "in VT Banner format?  Ignoring remainder "
-                                  + "of file." );
-                    break;
-                }
-                pid = t[t.length - 3].substring( 0, pos );
-                idNo = t[0];
-            }
-            else
-            {
-                lastName  = t[0];
-                firstName = t[1];
-                if ( t.length > 2 )
-                {
-                    email = t[2];
-                }
-                if ( t.length > 3 && t[3] != null && !t[3].equals( "" ) )
-                {
-                    pid = t[3];
-                }
-                else if ( email != null )
-                {
-                    int pos = email.indexOf( String.valueOf( '@' ) );
-                    if ( pos >= 0 )
-                        pid = email.substring( 0, pos);
-                }
-                if ( t.length > 4 )
-                {
-                    idNo = t[4];
-                }
-                if ( t.length > 5 )
-                {
-                    pw = t[5];
-                }
-            }
-
-            if ( pid == null )
-            {
-                error( "cannot identify user name on line " + row
-                              + "." );
-                continue;
-            }
-
-            try
-            {
-                user = (User)EOUtilities.objectMatchingValues(
-                    ec, User.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[]{ pid  , domain                 },
-                        new Object[]{ User.USER_NAME_KEY,
-                                      User.AUTHENTICATION_DOMAIN_KEY }
-                    )
-                );
-                log.debug( "User " + pid + " already exists in database" );
-                String val = user.firstName();
-                if ( ( val == null || val.equals( "" ) )
-                     && firstName != null && !firstName.equals( "" ) )
-                {
-                    user.setFirstName( firstName );
-                }
-                val = user.lastName();
-                if ( ( val == null || val.equals( "" ) )
-                     && lastName != null && !lastName.equals( "" ) )
-                {
-                    user.setLastName( lastName );
-                }
-                val = user.universityIDNo();
-                if ( ( val == null || val.equals( "" ) )
-                     && idNo != null && !idNo.equals( "" ) )
-                {
-                    user.setUniversityIDNo( idNo );
-                }
-                val = (String)user.storedValueForKey( User.EMAIL_KEY );
-                if ( ( val == null || val.equals( "" ) )
-                     && email != null && !email.equals( "" ) )
-                {
-                    user.setEmail( email );
-                }
-            }
-            catch ( EOObjectNotAvailableException e )
-            {
-                log.info( "Creating new user " + pid );
-                user = User.createUser(
-                    pid, null, domain, User.STUDENT_PRIVILEGES, ec );
-                user.setFirstName( firstName );
-                user.setLastName( lastName );
-                user.setUniversityIDNo( idNo );
-                user.setEmail( email );
-                if ( user.canChangePassword() )
-                {
-                    if ( pw != null && !pw.equals( "" ) )
-                    {
-                        user.changePassword( pw );
-                    }
-                    else
-                    {
-                        user.newRandomPassword();
-                    }
-                }
-            }
-            catch ( EOUtilities.MoreThanOneException e )
-            {
-                log.error( "More than one user with same "
-               + "pid exists in Database" );
-               error( "Multiple users with username '"
-                   + pid + "' exist; cannot add ambiguous user name "
-                   + "to course." );
-               user = null;
-            }
-
-            if ( user != null )
-            {
-                NSArray enrolledIn = user.enrolledIn();
-                if ( enrolledIn != null
-                     && enrolledIn.containsObject(
-                                     wcSession().courseOffering() ) )
-                {
-                    log.debug( "Relationship exists" );
-                }
-                else
-                {
-                    log.debug( "relationship does not exist" );
-                    user.addToEnrolledInRelationship(
-                        wcSession().courseOffering() );
-                }
-            }
-        }
-        wcSession().commitLocalChanges();
     }
 
 
@@ -325,7 +152,7 @@ public class CourseRosterPage
            && data != null
            && data.length() > 0 )
         {
-            upload();
+            return upload();
         }
         if (    oldBatchSize1  != studentDisplayGroup.numberOfObjectsPerBatch()
 	         || oldBatchIndex1 != studentDisplayGroup.currentBatchIndex()
@@ -350,25 +177,12 @@ public class CourseRosterPage
            && data != null
            && data.length() > 0 )
         {
-            upload();
-            return null;
+            return upload();
         }
-        return super.next();
-    }
-
-
-    // ----------------------------------------------------------
-    public boolean applyLocalChanges()
-    {
-        log.debug( "applyLocalChanges()" );
-        if (  filePath != null
-           && !filePath.equals( "" )
-           && data != null
-           && data.length() > 0 )
+        else
         {
-            upload();
+            return super.next();
         }
-        return super.applyLocalChanges();
     }
 
 
@@ -400,15 +214,13 @@ public class CourseRosterPage
 
     // ----------------------------------------------------------
     /**
-     * Guess whether the current user is from VT, and should use the default
-     * of the banner format.
+     * Toggle the manuallyAdding KVC property.
      * @return always null
      */
-    public boolean fromVT()
+    public WOComponent toggleManuallyAdding()
     {
-        AuthenticationDomain myDomain =
-            wcSession().user().authenticationDomain();
-        return myDomain.displayableName().indexOf( "Virginia Tech" ) >= 0;
+        manuallyAdding = !manuallyAdding;
+        return null;
     }
 
 
@@ -428,10 +240,6 @@ public class CourseRosterPage
     protected int oldBatchIndex2;
 
     private boolean firstLoad = true;
-
-    // The first constant isn't needed in the code, since it's never used
-    // private static final String GENERIC_FORMAT = "0";
-    private static final String BANNER_FORMAT  = "1";
 
     static Logger log = Logger.getLogger( CourseRosterPage.class );
 }

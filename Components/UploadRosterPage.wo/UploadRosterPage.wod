@@ -1,0 +1,57 @@
+AuthList: WOPopUpButton {
+	list              = domainDisplayGroup.allObjects;
+	selection         = domain;
+	item              = domainItem;
+	displayString     = domainItem.displayableName;
+}
+
+ColHeaderRepetition: WORepetition {
+    list  = columns;
+    item  = aColumn;
+    index = colIndex;
+}
+
+ColHeading: WOPopUpButton {
+    list = "~@net.sf.webcat.grader.UploadRosterPage@COLUMNS";
+    selection = "~columns[colIndex]";
+}
+
+ColRepetition: WORepetition {
+    list  = aPreviewLine;
+    item  = cell;
+}
+
+Delimiter: WOPopUpButton {
+	list          = "~@net.sf.webcat.grader.UploadRosterPage@DELIMITERS";
+	item          = aDelimiter;
+	displayString = aDelimiter.label;
+	selection     = selectedDelimiter;
+}
+
+LineRepetition: WORepetition {
+    list  = previewLines;
+    item  = aPreviewLine;
+    index = index;
+}
+
+LPLColRepetition: WORepetition {
+    list  = longPreviewLine;
+    item  = cell;
+}
+
+MultipleInstitutions: WOConditional {
+    condition = "~domainDisplayGroup.allObjects.count() > 1";
+}
+
+Page: net.sf.webcat.core.WizardPage {
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+    showCaution = "~(index == 0) && firstLineColumnHeadings";
+}
+
+TRInc: net.sf.webcat.core.TableRow {
+    index     = index;
+    increment = true;
+}

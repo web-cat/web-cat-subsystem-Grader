@@ -1,0 +1,31 @@
+<wo name="Page">For: <span class="hl"><wo:str value="$session.courseOffering.deptNumberAndName"/></span>
+<p>Uploaded file: <span class="hl"><wo:str value="$filePath"/>
+(<wo:str value="~@net.sf.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span></p>
+<p>Delimiter: <wo name="Delimiter"/></p>
+<p><wo:checkbox checked="$firstLineColumnHeadings"/> First line contains
+column names</p>
+<wo name="MultipleInstitutions"><p>Institution: <wo name="AuthList"/>
+  (for any new accounts created)</p></wo name="MultipleInstitutions">
+<p>Replace data file: <wo:upload data="$newData" filePath="$newFilePath"/>
+<wo:submit action="$replace" value=" Replace "/></p>
+
+<wo:if condition="$previewLines.count">
+<p>Data preview (<wo:str value="$numberOfRecords"/> entries):</p>
+<div class="shadow"><table class="colborder">
+<tr><wo name="ColHeaderRepetition"><th><wo name="ColHeading"/></th></wo></tr>
+<wo name="LineRepetition"><wo name="TR">
+<wo name="ColRepetition"><td><wo:str value="$cell"/></td></wo>
+</wo name="TR"></wo name="LineRepetition">
+<wo:if condition="$gapBeforeLongLine"><wo name="TRInc"><wo:WOGenericContainer elementName="td"
+style="text-align:center" colspan="$maxRecordLength">
+. . .</wo></wo></wo:if>
+<wo:if condition="$longPreviewLine"><wo name="TRInc">
+<wo name="LPLColRepetition"><td><wo:str value="$cell"/></td></wo>
+</wo></wo:if>
+<wo:if condition="$gapAfterLongLine"><wo name="TRInc"><wo:WOGenericContainer elementName="td"
+style="text-align:center" colspan="$maxRecordLength">
+. . .</wo></wo></wo:if>
+</table></div><div class="spacer">&nbsp;</div>
+<p><wo:not condition="$nextEnabled"><wo:submit action="$refresh" value="Re-check Columns"/></wo:not></p>
+</wo:if><wo:else><p>No data available to preview.</p></wo>
+</wo>
