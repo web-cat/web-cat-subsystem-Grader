@@ -1,16 +1,17 @@
 <wo name="Page">For: <span class="hl"><wo:str value="$session.courseOffering.deptNumberAndName"/></span>
 <p>Uploaded file: <span class="hl"><wo:str value="$filePath"/>
 (<wo:str value="~@net.sf.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span></p>
-<p>Delimiter: <wo name="Delimiter"/></p>
+<p>Delimiter: <wo name="Delimiter"/> <wo name="DelimiterInfo"/></p>
 <p><wo:checkbox checked="$firstLineColumnHeadings"/> First line contains
-column names</p>
+column names <wo name="FirstLineInfo"/></p>
 <wo name="MultipleInstitutions"><p>Institution: <wo name="AuthList"/>
   (for any new accounts created)</p></wo name="MultipleInstitutions">
 <p>Replace data file: <wo:upload data="$newData" filePath="$newFilePath"/>
-<wo:submit action="$replace" value=" Replace "/></p>
+<wo:submit action="$replace" value=" Replace "/> <wo name="ReplaceInfo"/></p>
 
 <wo:if condition="$previewLines.count">
-<p>Data preview (<wo:str value="$numberOfRecords"/> entries):</p>
+<p>Data preview (<wo:str value="$numberOfRecords"/> entries):
+<wo name="DataPreviewInfo"/></p>
 <div class="shadow"><table class="colborder">
 <tr><wo name="ColHeaderRepetition"><th><wo name="ColHeading"/></th></wo></tr>
 <wo name="LineRepetition"><wo name="TR">
@@ -26,6 +27,7 @@ style="text-align:center" colspan="$maxRecordLength">
 style="text-align:center" colspan="$maxRecordLength">
 . . .</wo></wo></wo:if>
 </table></div><div class="spacer">&nbsp;</div>
-<p><wo:not condition="$nextEnabled"><wo:submit action="$refresh" value="Re-check Columns"/></wo:not></p>
+<p><wo:if condition="$nextEnabled"><wo:submit action="$refresh" value="Refresh Preview"/></wo:if>
+<wo:else><wo:submit action="$refresh" value="Re-check Columns"/></wo:else></p>
 </wo:if><wo:else><p>No data available to preview.</p></wo>
 </wo>

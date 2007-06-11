@@ -21,11 +21,26 @@ ColRepetition: WORepetition {
     item  = cell;
 }
 
+DataPreviewInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Data Preview";
+    message = "Use the drop-down lists above each column to select the interpretation of the data in your CSV file.  Either a user name column or an e-mail column must be identified in order for the CSV file to be processed.  If no user name column is given, user names will be extracted from e-mail addresses instead.";
+}
+
 Delimiter: WOPopUpButton {
 	list          = "~@net.sf.webcat.grader.UploadRosterPage@DELIMITERS";
 	item          = aDelimiter;
 	displayString = aDelimiter.label;
 	selection     = selectedDelimiter;
+}
+
+DelimiterInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Delimiter";
+    message = "Choose the character used as a delimiter between fields in your data file.  Web-CAT will try to guess the delimiter based on your file\'s contents, but you can specify your own choice here.";
+}
+
+FirstLineInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "First Line Column Names";
+    message = "Check this box if the first row in your data file contains column headings and should not be treated as student data.  When checked, Web-CAT will skip the first row of data when extracting information from the file.";
 }
 
 LineRepetition: WORepetition {
@@ -44,6 +59,11 @@ MultipleInstitutions: WOConditional {
 }
 
 Page: net.sf.webcat.core.WizardPage {
+}
+
+ReplaceInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Replace CSV File";
+    message = "If you edit or revise your CSV file and need to upload the changed version, select the new file you want to upload and click \'Replace\'.  The data preview will be updated to reflect the new file\'s contents.";
 }
 
 TR: net.sf.webcat.core.TableRow {
