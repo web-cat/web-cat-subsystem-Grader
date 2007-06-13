@@ -1,113 +1,163 @@
+
 {
-    attributes = (
-        {
-            columnName = CASSIGNMENTID; 
-            name = assignmentId; 
-            prototypeName = foreignId; 
-        }, 
-        {
-            columnName = CCOURSEOFFERINGID; 
-            name = courseOfferingId; 
-            prototypeName = foreignId; 
-        }, 
-        {
-            columnName = CDUEDATE; 
-            name = dueDate; 
-            prototypeName = dateTime; 
-        }, 
-        {
-            columnName = FGRADINGSUSPENDED; 
-            name = gradingSuspended;
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
-        { name = id; prototypeName = id; }, 
-        {
-            columnName = CPUBLISH; 
-            name = publish; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
-        {
-            columnName = CMOODLEID; 
-            name = moodleId; 
-            prototypeName = foreignId; 
-        }, 
-        {
-            allowsNull = Y; 
-            columnName = CGRAPHSUMMARY; 
-            externalType = BLOB; 
-            name = graphSummary; 
-            userInfo = {
-                adaptorValueConversionMethodName = archiveData; 
-                valueFactoryMethodName = objectWithArchiveData; 
-                isMutable = true; 
-                valueClassName = net.sf.webcat.grader.graphs.AssignmentSummary; 
-            }; 
-            valueClassName = NSData; 
-        },
-        {
-            name = updateMutableFields; 
-            prototypeName = updateMutableFields; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }
-    ); 
-    attributesUsedForLocking = (
-        courseOfferingId, 
-        gradingSuspended, 
-        publish, 
-        assignmentId, 
-        moodleId,
-    	updateMutableFields
-    ); 
-    className = net.sf.webcat.grader.AssignmentOffering; 
-    classProperties = (
-        courseOffering,
-        dueDate,
-        gradingSuspended,
-        graphSummary,
-        publish,
-        assignment,
-        submissions,
-        moodleId,
-    	updateMutableFields
-    ); 
-    externalName = TASSIGNMENTOFFERING; 
-    name = AssignmentOffering; 
-    primaryKeyAttributes = (id); 
-    relationships = (
-        {
-            destination = Assignment; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = assignmentId; }); 
-            name = assignment; 
-        }, 
-        {
-            destination = CourseOffering; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; }); 
-            name = courseOffering; 
-        }, 
-        {
-            destination = Submission; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; }); 
-            name = submissions; 
-        }
-    ); 
+    attributes = 
+    (
+       
+       {
+           columnName = CASSIGNMENTID;
+           name = assignmentId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CCOURSEOFFERINGID;
+           name = courseOfferingId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CDUEDATE;
+           name = dueDate;
+           prototypeName = dateTime;
+       }, 
+       
+       {
+           columnName = FGRADINGSUSPENDED;
+           name = gradingSuspended;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           allowsNull = Y;
+           columnName = CGRAPHSUMMARY;
+           externalType = BLOB;
+           name = graphSummary;
+           userInfo = 
+           {
+               adaptorValueConversionMethodName = archiveData;
+               isMutable = true;
+               valueClassName = net.sf.webcat.grader.graphs.AssignmentSummary;
+               valueFactoryMethodName = objectWithArchiveData;
+           };
+           valueClassName = NSData;
+       }, 
+       
+       {
+           name = id;
+           prototypeName = id;
+       }, 
+       
+       {
+           columnName = CMOODLEID;
+           name = moodleId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CPUBLISH;
+           name = publish;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           name = updateMutableFields;
+           prototypeName = updateMutableFields;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }
+    );
+    attributesUsedForLocking = 
+    (
+       assignmentId, 
+       courseOfferingId, 
+       gradingSuspended, 
+       moodleId, 
+       publish, 
+       updateMutableFields
+    );
+    className = net.sf.webcat.grader.AssignmentOffering;
+    classProperties = 
+    (
+       assignment, 
+       courseOffering, 
+       dueDate, 
+       gradingSuspended, 
+       graphSummary, 
+       moodleId, 
+       publish, 
+       submissions, 
+       updateMutableFields
+    );
+    externalName = TASSIGNMENTOFFERING;
+    internalInfo = 
+    {};
+    name = AssignmentOffering;
+    primaryKeyAttributes = 
+    (
+       id
+    );
+    relationships = 
+    (
+       
+       {
+           destination = Assignment;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = assignmentId;
+              }
+           );
+           name = assignment;
+       }, 
+       
+       {
+           destination = CourseOffering;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = courseOfferingId;
+              }
+           );
+           name = courseOffering;
+       }, 
+       
+       {
+           destination = Submission;
+           isToMany = Y;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = assignmentOfferingId;
+                  sourceAttribute = id;
+              }
+           );
+           name = submissions;
+       }
+    );
 }

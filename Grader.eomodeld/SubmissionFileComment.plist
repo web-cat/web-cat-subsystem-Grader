@@ -1,132 +1,176 @@
+
 {
-    attributes = (
-        {
-            columnName = CAUTHORID; 
-            name = authorId; 
-            prototypeName = foreignId;
-        }, 
-        {
-            columnName = CCATEGORYNO; 
-            name = categoryNo; 
-            prototypeName = tinyInteger; 
-            userInfo = {
-                scalarConversionMethodName = byteValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = byte;
-                valueClassName = Byte;
-            }; 
-        }, 
-        {
-            columnName = CFILENAME; 
-            name = fileName; 
-            prototypeName = tinyText; 
-        }, 
-        {
-            columnName = CGROUPNAME; 
-            name = groupName; 
-            prototypeName = tinyText; 
-        }, 
-        { name = id; prototypeName = id; }, 
-        {
-            columnName = CMESSAGE; 
-            name = message; 
-            prototypeName = text; 
-        }, 
-        {
-            columnName = CDEDUCTION; 
-            name = deduction; 
-            prototypeName = double; 
-            userInfo = {
-                scalarConversionMethodName = doubleValue; 
-                isScalar = true; 
-                scalarDefault = 0.0;
-                type = double;
-                valueClassName = Double;
-            }; 
-        }, 
-        {
-            columnName = CLIMITEXCEEDED; 
-            name = limitExceeded; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
-        {
-            columnName = CLINENO; 
-            name = lineNo; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CSUBMISSIONFILESTATSID; 
-            name = submissionFileStatsId; 
-            prototypeName = foreignId; 
-        }, 
-        {
-            columnName = CTONO; 
-            name = toNo; 
-            prototypeName = tinyInteger; 
-            userInfo = {
-                scalarConversionMethodName = byteValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = byte;
-                valueClassName = Byte;
-            }; 
-        }
-    ); 
-    attributesUsedForLocking = (
-        submissionFileStatsId, 
-        fileName, 
-        authorId, 
-        categoryNo, 
-        deduction, 
-        limitExceeded, 
-        toNo, 
-        lineNo, 
-        groupName
-    ); 
-    className = net.sf.webcat.grader.SubmissionFileComment; 
-    classProperties = (
-        submissionFileStats, 
-        fileName, 
-        message, 
-        categoryNo, 
-        deduction, 
-        limitExceeded, 
-        toNo, 
-        author, 
-        lineNo, 
-        groupName
-    ); 
-    externalName = TSUBMISSIONFILECOMMENT; 
-    fetchSpecificationDictionary = {}; 
-    name = SubmissionFileComment; 
-    primaryKeyAttributes = (id); 
-    relationships = (
-        {
-            destination = User; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
-            name = author; 
-        }, 
-        {
-            destination = SubmissionFileStats; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = submissionFileStatsId; }); 
-            name = submissionFileStats; 
-        }
-    ); 
+    attributes = 
+    (
+       
+       {
+           columnName = CAUTHORID;
+           name = authorId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CCATEGORYNO;
+           name = categoryNo;
+           prototypeName = tinyInteger;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = byteValue;
+               scalarDefault = 0;
+               type = byte;
+               valueClassName = Byte;
+           };
+       }, 
+       
+       {
+           columnName = CDEDUCTION;
+           name = deduction;
+           prototypeName = double;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = doubleValue;
+               scalarDefault = 0.0;
+               type = double;
+               valueClassName = Double;
+           };
+       }, 
+       
+       {
+           columnName = CFILENAME;
+           name = fileName;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           columnName = CGROUPNAME;
+           name = groupName;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           name = id;
+           prototypeName = id;
+       }, 
+       
+       {
+           columnName = CLIMITEXCEEDED;
+           name = limitExceeded;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           columnName = CLINENO;
+           name = lineNo;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CMESSAGE;
+           name = message;
+           prototypeName = text;
+       }, 
+       
+       {
+           columnName = CSUBMISSIONFILESTATSID;
+           name = submissionFileStatsId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CTONO;
+           name = toNo;
+           prototypeName = tinyInteger;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = byteValue;
+               scalarDefault = 0;
+               type = byte;
+               valueClassName = Byte;
+           };
+       }
+    );
+    attributesUsedForLocking = 
+    (
+       authorId, 
+       categoryNo, 
+       deduction, 
+       fileName, 
+       groupName, 
+       limitExceeded, 
+       lineNo, 
+       submissionFileStatsId, 
+       toNo
+    );
+    className = net.sf.webcat.grader.SubmissionFileComment;
+    classProperties = 
+    (
+       author, 
+       categoryNo, 
+       deduction, 
+       fileName, 
+       groupName, 
+       limitExceeded, 
+       lineNo, 
+       message, 
+       submissionFileStats, 
+       toNo
+    );
+    externalName = TSUBMISSIONFILECOMMENT;
+    internalInfo = 
+    {};
+    name = SubmissionFileComment;
+    primaryKeyAttributes = 
+    (
+       id
+    );
+    relationships = 
+    (
+       
+       {
+           destination = User;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = authorId;
+              }
+           );
+           name = author;
+       }, 
+       
+       {
+           destination = SubmissionFileStats;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = submissionFileStatsId;
+              }
+           );
+           name = submissionFileStats;
+       }
+    );
 }

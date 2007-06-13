@@ -1,61 +1,101 @@
+
 {
-    attributes = (
-        { name = id; prototypeName = id; }, 
-        {
-            columnName = CPAUSED; 
-            name = paused; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
-        {
-            columnName = CDISCARDED; 
-            name = discarded; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        }, 
-        {
-            columnName = CREGRADING; 
-            name = regrading; 
-            prototypeName = boolean; 
-            userInfo = {
-                isScalar = true;
-                scalarDefault = false;
-                type = boolean; 
-            }; 
-        },
-        {
-            columnName = CQUEUETIME;
-            name = queueTime;
-            prototypeName = dateTime;
-        }, 
-        {
-            columnName = CSUBMISSIONID; 
-            name = submissionId; 
-            prototypeName = foreignId; 
-        }
-    ); 
-    attributesUsedForLocking = (submissionId, paused, discarded, regrading); 
-    className = net.sf.webcat.grader.EnqueuedJob; 
-    classProperties = (submission, paused, discarded, regrading, queueTime); 
-    externalName = TENQUEUEDJOB; 
-    fetchSpecificationDictionary = {}; 
-    name = EnqueuedJob; 
-    primaryKeyAttributes = (id); 
-    relationships = (
-        {
-            destination = Submission; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = submissionId; }); 
-            name = submission; 
-        }
-    ); 
+    attributes = 
+    (
+       
+       {
+           columnName = CDISCARDED;
+           name = discarded;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           name = id;
+           prototypeName = id;
+       }, 
+       
+       {
+           columnName = CPAUSED;
+           name = paused;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           columnName = CQUEUETIME;
+           name = queueTime;
+           prototypeName = dateTime;
+       }, 
+       
+       {
+           columnName = CREGRADING;
+           name = regrading;
+           prototypeName = boolean;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarDefault = false;
+               type = boolean;
+           };
+       }, 
+       
+       {
+           columnName = CSUBMISSIONID;
+           name = submissionId;
+           prototypeName = foreignId;
+       }
+    );
+    attributesUsedForLocking = 
+    (
+       discarded, 
+       paused, 
+       regrading, 
+       submissionId
+    );
+    className = net.sf.webcat.grader.EnqueuedJob;
+    classProperties = 
+    (
+       discarded, 
+       paused, 
+       queueTime, 
+       regrading, 
+       submission
+    );
+    externalName = TENQUEUEDJOB;
+    internalInfo = 
+    {};
+    name = EnqueuedJob;
+    primaryKeyAttributes = 
+    (
+       id
+    );
+    relationships = 
+    (
+       
+       {
+           destination = Submission;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = submissionId;
+              }
+           );
+           name = submission;
+       }
+    );
 }

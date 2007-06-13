@@ -1,14 +1,21 @@
+
 {
-    user = {
-        class = EOFetchSpecification; 
-        entityName = GraderPrefs; 
-        fetchLimit = 0; 
-        isDeep = YES; 
-        qualifier = {
-            class = EOKeyValueQualifier; 
-            key = user; 
-            selectorName = "isEqualTo:"; 
-            value = {_key = user; class = EOQualifierVariable; }; 
-        }; 
-    }; 
+    user = 
+    {
+        class = EOFetchSpecification;
+        entityName = GraderPrefs;
+        fetchLimit = 0;
+        isDeep = YES;
+        qualifier = 
+        {
+            class = EOKeyValueQualifier;
+            key = user;
+            selectorName = isEqualTo:;
+            value = 
+            {
+                _key = user;
+                class = EOQualifierVariable;
+            };
+        };
+    };
 }

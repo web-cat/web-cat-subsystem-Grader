@@ -1,14 +1,21 @@
+
 {
-    crn = {
-        class = EOFetchSpecification; 
-        entityName = Assignment; 
-        fetchLimit = 0; 
-        isDeep = YES; 
-        qualifier = {
-            class = EOKeyValueQualifier; 
-            key = courseOffering.crn; 
-            selectorName = "isEqualTo:"; 
-            value = {_key = crn; class = EOQualifierVariable; }; 
-        }; 
-    }; 
+    crn = 
+    {
+        class = EOFetchSpecification;
+        entityName = Assignment;
+        fetchLimit = 0;
+        isDeep = YES;
+        qualifier = 
+        {
+            class = EOKeyValueQualifier;
+            key = courseOffering.crn;
+            selectorName = isEqualTo:;
+            value = 
+            {
+                _key = crn;
+                class = EOQualifierVariable;
+            };
+        };
+    };
 }

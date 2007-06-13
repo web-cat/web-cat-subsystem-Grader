@@ -1,250 +1,310 @@
+
 {
-    attributes = (
-        {
-            columnName = CCLASSNAME; 
-            name = className; 
-            prototypeName = tinyText; 
-        }, 
-        {
-            columnName = CSOURCEFILENAME; 
-            name = sourceFileNameRaw; 
-            prototypeName = tinyText; 
-        }, 
-        {
-            columnName = CMARKUPFILENAME; 
-            name = markupFileNameRaw; 
-            prototypeName = tinyText; 
-        }, 
-        { name = id; prototypeName = id; }, 
-        {
-            columnName = CCONDITIONALS; 
-            name = conditionals; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CCONDITIONALSCOVERED; 
-            name = conditionalsCovered; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CDEDUCTIONS; 
-            name = deductions; 
-            prototypeName = double; 
-            userInfo = {
-                scalarConversionMethodName = doubleValue; 
-                isScalar = true; 
-                scalarDefault = 0.0;
-                type = double;
-                valueClassName = Double;
-            }; 
-        }, 
-        {
-            columnName = CELEMENTS; 
-            name = elements; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CELEMENTSCOVERED; 
-            name = elementsCovered; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CLOC; 
-            name = loc; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CMETHODS; 
-            name = methods; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CMETHODSCOVERED; 
-            name = methodsCovered; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CNCCLOC; 
-            name = ncloc; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CREMARKS; 
-            name = remarks; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CSTATEMENTS; 
-            name = statements; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CSTATEMENTSCOVERED; 
-            name = statementsCovered; 
-            prototypeName = integer; 
-            userInfo = {
-                scalarConversionMethodName = intValue; 
-                isScalar = true;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            }; 
-        }, 
-        {
-            columnName = CPKGNAME; 
-            name = pkgName; 
-            prototypeName = tinyText; 
-        }, 
-        {
-            columnName = CRESULTID; 
-            name = resultId; 
-            prototypeName = foreignId; 
-        }, 
-        {
-            columnName = CSTATUS; 
-            name = status; 
-            prototypeName = tinyInteger; 
-            userInfo = {
-                scalarConversionMethodName = byteValue; 
-                isScalar = true;
-                scalarDefault = net.sf.webcat.core.Status.TO_DO;
-                type = byte;
-                valueClassName = Byte;
-            }; 
-        }
-    ); 
-    attributesUsedForLocking = (
-        pkgName, 
-        resultId, 
-        className, 
-        ncloc, 
-        methods, 
-        statements, 
-        conditionals, 
-        loc, 
-        methodsCovered, 
-        conditionalsCovered, 
-        statementsCovered, 
-        sourceFileNameRaw, 
-        markupFileNameRaw, 
-        elements, 
-        elementsCovered, 
-        deductions, 
-        remarks, 
-        status
-    ); 
-    className = net.sf.webcat.grader.SubmissionFileStats; 
-    classProperties = (
-        pkgName, 
-        submissionResult, 
-        className, 
-        ncloc, 
-        methods, 
-        statements, 
-        conditionals, 
-        loc, 
-        methodsCovered, 
-        conditionalsCovered, 
-        statementsCovered, 
-        sourceFileNameRaw, 
-        markupFileNameRaw, 
-        elements, 
-        elementsCovered, 
-        deductions, 
-        comments, 
-        remarks, 
-        status
-    ); 
-    externalName = TSUBMISSIONFILESTATS; 
-    fetchSpecificationDictionary = {}; 
-    name = SubmissionFileStats; 
-    primaryKeyAttributes = (id); 
-    relationships = (
-        {
-            deleteRule = EODeleteRuleCascade; 
-            destination = SubmissionFileComment; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = submissionFileStatsId; sourceAttribute = id; }); 
-            name = comments; 
-            ownsDestination = Y; 
-        }, 
-        {
-            destination = SubmissionResult; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = resultId; }); 
-            name = submissionResult; 
-        }
-    ); 
+    attributes = 
+    (
+       
+       {
+           columnName = CCLASSNAME;
+           name = className;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           columnName = CCONDITIONALS;
+           name = conditionals;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CCONDITIONALSCOVERED;
+           name = conditionalsCovered;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CDEDUCTIONS;
+           name = deductions;
+           prototypeName = double;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = doubleValue;
+               scalarDefault = 0.0;
+               type = double;
+               valueClassName = Double;
+           };
+       }, 
+       
+       {
+           columnName = CELEMENTS;
+           name = elements;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CELEMENTSCOVERED;
+           name = elementsCovered;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           name = id;
+           prototypeName = id;
+       }, 
+       
+       {
+           columnName = CLOC;
+           name = loc;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CMARKUPFILENAME;
+           name = markupFileNameRaw;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           columnName = CMETHODS;
+           name = methods;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CMETHODSCOVERED;
+           name = methodsCovered;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CNCCLOC;
+           name = ncloc;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CPKGNAME;
+           name = pkgName;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           columnName = CREMARKS;
+           name = remarks;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CRESULTID;
+           name = resultId;
+           prototypeName = foreignId;
+       }, 
+       
+       {
+           columnName = CSOURCEFILENAME;
+           name = sourceFileNameRaw;
+           prototypeName = tinyText;
+       }, 
+       
+       {
+           columnName = CSTATEMENTS;
+           name = statements;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CSTATEMENTSCOVERED;
+           name = statementsCovered;
+           prototypeName = integer;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = intValue;
+               scalarDefault = 0;
+               type = int;
+               valueClassName = Integer;
+           };
+       }, 
+       
+       {
+           columnName = CSTATUS;
+           name = status;
+           prototypeName = tinyInteger;
+           userInfo = 
+           {
+               isScalar = true;
+               scalarConversionMethodName = byteValue;
+               scalarDefault = net.sf.webcat.core.Status.TO_DO;
+               type = byte;
+               valueClassName = Byte;
+           };
+       }
+    );
+    attributesUsedForLocking = 
+    (
+       className, 
+       conditionals, 
+       conditionalsCovered, 
+       deductions, 
+       elements, 
+       elementsCovered, 
+       loc, 
+       markupFileNameRaw, 
+       methods, 
+       methodsCovered, 
+       ncloc, 
+       pkgName, 
+       remarks, 
+       resultId, 
+       sourceFileNameRaw, 
+       statements, 
+       statementsCovered, 
+       status
+    );
+    className = net.sf.webcat.grader.SubmissionFileStats;
+    classProperties = 
+    (
+       className, 
+       comments, 
+       conditionals, 
+       conditionalsCovered, 
+       deductions, 
+       elements, 
+       elementsCovered, 
+       loc, 
+       markupFileNameRaw, 
+       methods, 
+       methodsCovered, 
+       ncloc, 
+       pkgName, 
+       remarks, 
+       sourceFileNameRaw, 
+       statements, 
+       statementsCovered, 
+       status, 
+       submissionResult
+    );
+    externalName = TSUBMISSIONFILESTATS;
+    internalInfo = 
+    {};
+    name = SubmissionFileStats;
+    primaryKeyAttributes = 
+    (
+       id
+    );
+    relationships = 
+    (
+       
+       {
+           deleteRule = EODeleteRuleCascade;
+           destination = SubmissionFileComment;
+           isToMany = Y;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = submissionFileStatsId;
+                  sourceAttribute = id;
+              }
+           );
+           name = comments;
+           ownsDestination = Y;
+       }, 
+       
+       {
+           destination = SubmissionResult;
+           isToMany = N;
+           joinSemantic = EOInnerJoin;
+           joins = 
+           (
+              
+              {
+                  destinationAttribute = id;
+                  sourceAttribute = resultId;
+              }
+           );
+           name = submissionResult;
+       }
+    );
 }
