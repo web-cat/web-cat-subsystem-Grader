@@ -80,6 +80,7 @@ public abstract class _SubmissionFileStats
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
     // To-many relationships ---
     public static final String COMMENTS_KEY = "comments";
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileStats";
 
 
@@ -100,7 +101,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>className</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setClassName( String value )
@@ -128,7 +129,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>conditionals</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConditionals( int value )
@@ -154,7 +155,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>conditionals</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConditionalsRaw( Number value )
@@ -182,7 +183,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>conditionalsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConditionalsCovered( int value )
@@ -208,7 +209,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>conditionalsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConditionalsCoveredRaw( Number value )
@@ -236,7 +237,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>deductions</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeductions( double value )
@@ -262,7 +263,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>deductions</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeductionsRaw( Number value )
@@ -290,7 +291,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>elements</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setElements( int value )
@@ -316,7 +317,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>elements</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setElementsRaw( Number value )
@@ -344,7 +345,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>elementsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setElementsCovered( int value )
@@ -370,7 +371,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>elementsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setElementsCoveredRaw( Number value )
@@ -398,7 +399,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>loc</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLoc( int value )
@@ -424,7 +425,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>loc</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLocRaw( Number value )
@@ -448,7 +449,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>markupFileNameRaw</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMarkupFileNameRaw( String value )
@@ -476,7 +477,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>methods</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMethods( int value )
@@ -502,7 +503,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>methods</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMethodsRaw( Number value )
@@ -530,7 +531,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>methodsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMethodsCovered( int value )
@@ -556,7 +557,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>methodsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMethodsCoveredRaw( Number value )
@@ -584,7 +585,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>ncloc</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setNcloc( int value )
@@ -610,7 +611,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>ncloc</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setNclocRaw( Number value )
@@ -634,7 +635,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>pkgName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPkgName( String value )
@@ -662,7 +663,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>remarks</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setRemarks( int value )
@@ -688,7 +689,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>remarks</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setRemarksRaw( Number value )
@@ -712,7 +713,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>sourceFileNameRaw</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSourceFileNameRaw( String value )
@@ -740,7 +741,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>statements</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatements( int value )
@@ -766,7 +767,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>statements</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatementsRaw( Number value )
@@ -794,7 +795,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>statementsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatementsCovered( int value )
@@ -820,7 +821,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>statementsCovered</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatementsCoveredRaw( Number value )
@@ -848,7 +849,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>status</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatus( byte value )
@@ -874,7 +875,7 @@ public abstract class _SubmissionFileStats
     /**
      * Change the value of this object's <code>status</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatusRaw( Number value )
@@ -901,7 +902,7 @@ public abstract class _SubmissionFileStats
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionResultRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionResult( net.sf.webcat.grader.SubmissionResult value )
@@ -915,7 +916,7 @@ public abstract class _SubmissionFileStats
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionResultRelationship(
@@ -950,7 +951,7 @@ public abstract class _SubmissionFileStats
     /**
      * Replace the list of entities pointed to by the
      * <code>comments</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setComments( NSMutableArray value )
@@ -965,7 +966,7 @@ public abstract class _SubmissionFileStats
      * relationship (DO NOT USE--instead, use
      * <code>addToCommentsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToComments( net.sf.webcat.grader.SubmissionFileComment value )
@@ -982,7 +983,7 @@ public abstract class _SubmissionFileStats
      * relationship (DO NOT USE--instead, use
      * <code>removeFromCommentsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromComments( net.sf.webcat.grader.SubmissionFileComment value )
@@ -997,7 +998,7 @@ public abstract class _SubmissionFileStats
     /**
      * Add a new entity to the <code>comments</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
@@ -1011,7 +1012,7 @@ public abstract class _SubmissionFileStats
     /**
      * Remove a specific entity from the <code>comments</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
@@ -1025,7 +1026,7 @@ public abstract class _SubmissionFileStats
     /**
      * Create a brand new object that is a member of the
      * <code>comments</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.SubmissionFileComment createCommentsRelationship()
@@ -1045,7 +1046,7 @@ public abstract class _SubmissionFileStats
     /**
      * Remove a specific entity that is a member of the
      * <code>comments</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void deleteCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )

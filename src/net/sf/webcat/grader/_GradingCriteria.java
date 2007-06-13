@@ -81,6 +81,7 @@ public abstract class _GradingCriteria
     public static final String AUTHOR_KEY = "author";
     // To-many relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "GradingCriteria";
 
 
@@ -105,7 +106,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>blankLinePt</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setBlankLinePt( double value )
@@ -131,7 +132,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>blankLinePt</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setBlankLinePtRaw( Number value )
@@ -159,7 +160,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>deadTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeadTimeDelta( long value )
@@ -185,7 +186,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>deadTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeadTimeDeltaRaw( Number value )
@@ -213,7 +214,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>diffLineSyncing</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDiffLineSyncing( boolean value )
@@ -239,7 +240,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>diffLineSyncing</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDiffLineSyncingRaw( Number value )
@@ -267,7 +268,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>extraLinePt</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setExtraLinePt( double value )
@@ -293,7 +294,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>extraLinePt</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setExtraLinePtRaw( Number value )
@@ -321,7 +322,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatComparisonStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatComparisonStyle( boolean value )
@@ -347,7 +348,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatComparisonStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatComparisonStyleRaw( Number value )
@@ -375,7 +376,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatNegativeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatNegativeDelta( double value )
@@ -401,7 +402,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatNegativeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatNegativeDeltaRaw( Number value )
@@ -429,7 +430,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatPositiveDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatPositiveDelta( double value )
@@ -455,7 +456,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>floatPositiveDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFloatPositiveDeltaRaw( Number value )
@@ -483,7 +484,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreBlankLines</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreBlankLines( boolean value )
@@ -509,7 +510,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreBlankLines</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreBlankLinesRaw( Number value )
@@ -537,7 +538,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreCase</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreCase( boolean value )
@@ -563,7 +564,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreCase</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreCaseRaw( Number value )
@@ -591,7 +592,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreNonprinting</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreNonprinting( boolean value )
@@ -617,7 +618,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreNonprinting</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreNonprintingRaw( Number value )
@@ -645,7 +646,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignorePunctuation</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnorePunctuation( boolean value )
@@ -671,7 +672,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignorePunctuation</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnorePunctuationRaw( Number value )
@@ -699,7 +700,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreWhitespace( boolean value )
@@ -725,7 +726,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>ignoreWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIgnoreWhitespaceRaw( Number value )
@@ -749,7 +750,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>name</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setName( String value )
@@ -777,7 +778,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>normalizeWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setNormalizeWhitespace( boolean value )
@@ -803,7 +804,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>normalizeWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setNormalizeWhitespaceRaw( Number value )
@@ -827,7 +828,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>punctuationToIgnore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPunctuationToIgnore( String value )
@@ -855,7 +856,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>stringComparsionStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStringComparsionStyle( int value )
@@ -881,7 +882,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>stringComparsionStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStringComparsionStyleRaw( Number value )
@@ -909,7 +910,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>tokenizingStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTokenizingStyle( boolean value )
@@ -935,7 +936,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>tokenizingStyle</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTokenizingStyleRaw( Number value )
@@ -963,7 +964,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>trimWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTrimWhitespace( boolean value )
@@ -989,7 +990,7 @@ public abstract class _GradingCriteria
     /**
      * Change the value of this object's <code>trimWhitespace</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTrimWhitespaceRaw( Number value )
@@ -1016,7 +1017,7 @@ public abstract class _GradingCriteria
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -1030,7 +1031,7 @@ public abstract class _GradingCriteria
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -1065,7 +1066,7 @@ public abstract class _GradingCriteria
     /**
      * Replace the list of entities pointed to by the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setAssignment( NSMutableArray value )
@@ -1080,7 +1081,7 @@ public abstract class _GradingCriteria
      * relationship (DO NOT USE--instead, use
      * <code>addToAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToAssignment( net.sf.webcat.grader.Assignment value )
@@ -1097,7 +1098,7 @@ public abstract class _GradingCriteria
      * relationship (DO NOT USE--instead, use
      * <code>removeFromAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromAssignment( net.sf.webcat.grader.Assignment value )
@@ -1112,7 +1113,7 @@ public abstract class _GradingCriteria
     /**
      * Add a new entity to the <code>assignment</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToAssignmentRelationship( net.sf.webcat.grader.Assignment value )
@@ -1126,7 +1127,7 @@ public abstract class _GradingCriteria
     /**
      * Remove a specific entity from the <code>assignment</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromAssignmentRelationship( net.sf.webcat.grader.Assignment value )
@@ -1140,7 +1141,7 @@ public abstract class _GradingCriteria
     /**
      * Create a brand new object that is a member of the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Assignment createAssignmentRelationship()
@@ -1160,7 +1161,7 @@ public abstract class _GradingCriteria
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteAssignmentRelationship( net.sf.webcat.grader.Assignment value )

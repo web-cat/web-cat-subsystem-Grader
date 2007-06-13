@@ -67,6 +67,9 @@ public abstract class _StepConfig
     public static final String AUTHOR_KEY = "author";
     // To-many relationships ---
     public static final String STEPS_KEY = "steps";
+    // Fetch specifications ---
+    public static final String COURSE_AND_SCRIPT_FSPEC = "courseAndScript";
+    public static final String USER_FSPEC = "user";
     public static final String ENTITY_NAME = "StepConfig";
 
 
@@ -83,7 +86,7 @@ public abstract class _StepConfig
      */
     public net.sf.webcat.core.MutableDictionary configSettings()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "configSettings" );
         if ( configSettingsRawCache != dbValue )
         {
@@ -114,8 +117,8 @@ public abstract class _StepConfig
             }
         }
         else if ( dbValue == null && configSettingsCache == null )
-        { 
-            configSettingsCache = 
+        {
+            configSettingsCache =
                 net.sf.webcat.core.MutableDictionary
                 .objectWithArchiveData( dbValue );
              configSettingsCache.setOwner( this );
@@ -129,7 +132,7 @@ public abstract class _StepConfig
     /**
      * Change the value of this object's <code>configSettings</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConfigSettings( net.sf.webcat.core.MutableDictionary value )
@@ -181,7 +184,7 @@ public abstract class _StepConfig
     /**
      * Change the value of this object's <code>name</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setName( String value )
@@ -209,7 +212,7 @@ public abstract class _StepConfig
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFields( boolean value )
@@ -235,7 +238,7 @@ public abstract class _StepConfig
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFieldsRaw( Number value )
@@ -311,7 +314,7 @@ public abstract class _StepConfig
     /**
      * Retrieve object according to the <code>CourseAndScript</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param scriptFileBinding fetch spec parameter
      * @param courseBinding fetch spec parameter
@@ -344,7 +347,7 @@ public abstract class _StepConfig
     /**
      * Retrieve object according to the <code>User</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -386,7 +389,7 @@ public abstract class _StepConfig
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -400,7 +403,7 @@ public abstract class _StepConfig
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -435,7 +438,7 @@ public abstract class _StepConfig
     /**
      * Replace the list of entities pointed to by the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSteps( NSMutableArray value )
@@ -450,7 +453,7 @@ public abstract class _StepConfig
      * relationship (DO NOT USE--instead, use
      * <code>addToStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSteps( net.sf.webcat.grader.Step value )
@@ -467,7 +470,7 @@ public abstract class _StepConfig
      * relationship (DO NOT USE--instead, use
      * <code>removeFromStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSteps( net.sf.webcat.grader.Step value )
@@ -482,7 +485,7 @@ public abstract class _StepConfig
     /**
      * Add a new entity to the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToStepsRelationship( net.sf.webcat.grader.Step value )
@@ -496,7 +499,7 @@ public abstract class _StepConfig
     /**
      * Remove a specific entity from the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromStepsRelationship( net.sf.webcat.grader.Step value )
@@ -510,7 +513,7 @@ public abstract class _StepConfig
     /**
      * Create a brand new object that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Step createStepsRelationship()
@@ -530,7 +533,7 @@ public abstract class _StepConfig
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteStepsRelationship( net.sf.webcat.grader.Step value )

@@ -69,6 +69,7 @@ public abstract class _Submission
     public static final String USER_KEY = "user";
     // To-many relationships ---
     public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "Submission";
 
 
@@ -89,7 +90,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>fileName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFileName( String value )
@@ -117,7 +118,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>partnerLink</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPartnerLink( boolean value )
@@ -143,7 +144,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>partnerLink</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPartnerLinkRaw( Number value )
@@ -171,7 +172,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>submitNumber</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubmitNumber( int value )
@@ -197,7 +198,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>submitNumber</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubmitNumberRaw( Number value )
@@ -221,7 +222,7 @@ public abstract class _Submission
     /**
      * Change the value of this object's <code>submitTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubmitTime( NSTimestamp value )
@@ -248,7 +249,7 @@ public abstract class _Submission
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentOffering( net.sf.webcat.grader.AssignmentOffering value )
@@ -262,7 +263,7 @@ public abstract class _Submission
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentOfferingRelationship(
@@ -299,7 +300,7 @@ public abstract class _Submission
      * relationship (DO NOT USE--instead, use
      * <code>setResultRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setResult( net.sf.webcat.grader.SubmissionResult value )
@@ -313,7 +314,7 @@ public abstract class _Submission
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setResultRelationship(
@@ -350,7 +351,7 @@ public abstract class _Submission
      * relationship (DO NOT USE--instead, use
      * <code>setUserRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setUser( net.sf.webcat.core.User value )
@@ -364,7 +365,7 @@ public abstract class _Submission
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setUserRelationship(
@@ -399,7 +400,7 @@ public abstract class _Submission
     /**
      * Replace the list of entities pointed to by the
      * <code>enqueuedJobs</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setEnqueuedJobs( NSMutableArray value )
@@ -414,7 +415,7 @@ public abstract class _Submission
      * relationship (DO NOT USE--instead, use
      * <code>addToEnqueuedJobsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToEnqueuedJobs( net.sf.webcat.grader.EnqueuedJob value )
@@ -431,7 +432,7 @@ public abstract class _Submission
      * relationship (DO NOT USE--instead, use
      * <code>removeFromEnqueuedJobsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromEnqueuedJobs( net.sf.webcat.grader.EnqueuedJob value )
@@ -446,7 +447,7 @@ public abstract class _Submission
     /**
      * Add a new entity to the <code>enqueuedJobs</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )
@@ -460,7 +461,7 @@ public abstract class _Submission
     /**
      * Remove a specific entity from the <code>enqueuedJobs</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )
@@ -474,7 +475,7 @@ public abstract class _Submission
     /**
      * Create a brand new object that is a member of the
      * <code>enqueuedJobs</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.EnqueuedJob createEnqueuedJobsRelationship()
@@ -494,7 +495,7 @@ public abstract class _Submission
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>enqueuedJobs</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )

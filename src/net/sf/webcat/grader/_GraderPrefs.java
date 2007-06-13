@@ -67,6 +67,8 @@ public abstract class _GraderPrefs
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
     public static final String USER_KEY = "user";
     // To-many relationships ---
+    // Fetch specifications ---
+    public static final String USER_FSPEC = "user";
     public static final String ENTITY_NAME = "GraderPrefs";
 
 
@@ -87,7 +89,7 @@ public abstract class _GraderPrefs
     /**
      * Change the value of this object's <code>commentHistory</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCommentHistory( String value )
@@ -100,7 +102,7 @@ public abstract class _GraderPrefs
     /**
      * Retrieve object according to the <code>User</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -142,7 +144,7 @@ public abstract class _GraderPrefs
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentOffering( net.sf.webcat.grader.AssignmentOffering value )
@@ -156,7 +158,7 @@ public abstract class _GraderPrefs
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentOfferingRelationship(
@@ -193,7 +195,7 @@ public abstract class _GraderPrefs
      * relationship (DO NOT USE--instead, use
      * <code>setStepRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setStep( net.sf.webcat.grader.Step value )
@@ -207,7 +209,7 @@ public abstract class _GraderPrefs
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setStepRelationship(
@@ -244,7 +246,7 @@ public abstract class _GraderPrefs
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmission( net.sf.webcat.grader.Submission value )
@@ -258,7 +260,7 @@ public abstract class _GraderPrefs
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionRelationship(
@@ -295,7 +297,7 @@ public abstract class _GraderPrefs
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
@@ -309,7 +311,7 @@ public abstract class _GraderPrefs
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionFileStatsRelationship(
@@ -346,7 +348,7 @@ public abstract class _GraderPrefs
      * relationship (DO NOT USE--instead, use
      * <code>setUserRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setUser( net.sf.webcat.core.User value )
@@ -360,7 +362,7 @@ public abstract class _GraderPrefs
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setUserRelationship(

@@ -71,6 +71,7 @@ public abstract class _SubmissionFileComment
     public static final String AUTHOR_KEY = "author";
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
     // To-many relationships ---
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileComment";
 
 
@@ -95,7 +96,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>categoryNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCategoryNo( byte value )
@@ -121,7 +122,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>categoryNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCategoryNoRaw( Number value )
@@ -149,7 +150,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>deduction</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeduction( double value )
@@ -175,7 +176,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>deduction</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeductionRaw( Number value )
@@ -199,7 +200,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>fileName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFileName( String value )
@@ -223,7 +224,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>groupName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setGroupName( String value )
@@ -251,7 +252,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>limitExceeded</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLimitExceeded( boolean value )
@@ -277,7 +278,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>limitExceeded</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLimitExceededRaw( Number value )
@@ -305,7 +306,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>lineNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLineNo( int value )
@@ -331,7 +332,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>lineNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLineNoRaw( Number value )
@@ -355,7 +356,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>message</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMessage( String value )
@@ -383,7 +384,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>toNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToNo( byte value )
@@ -409,7 +410,7 @@ public abstract class _SubmissionFileComment
     /**
      * Change the value of this object's <code>toNo</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToNoRaw( Number value )
@@ -436,7 +437,7 @@ public abstract class _SubmissionFileComment
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -450,7 +451,7 @@ public abstract class _SubmissionFileComment
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -487,7 +488,7 @@ public abstract class _SubmissionFileComment
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
@@ -501,7 +502,7 @@ public abstract class _SubmissionFileComment
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionFileStatsRelationship(

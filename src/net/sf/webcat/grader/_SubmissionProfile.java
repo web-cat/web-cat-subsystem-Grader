@@ -85,6 +85,9 @@ public abstract class _SubmissionProfile
     // To-many relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
     public static final String COURSE_OFFERINGS_KEY = "courseOfferings";
+    // Fetch specifications ---
+    public static final String COURSE_FSPEC = "course";
+    public static final String USER_FSPEC = "user";
     public static final String ENTITY_NAME = "SubmissionProfile";
 
 
@@ -109,7 +112,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>availablePoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAvailablePoints( double value )
@@ -135,7 +138,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>availablePoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAvailablePointsRaw( Number value )
@@ -163,7 +166,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>availableTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAvailableTimeDelta( long value )
@@ -189,7 +192,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>availableTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAvailableTimeDeltaRaw( Number value )
@@ -217,7 +220,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>awardEarlyBonus</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAwardEarlyBonus( boolean value )
@@ -243,7 +246,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>awardEarlyBonus</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setAwardEarlyBonusRaw( Number value )
@@ -271,7 +274,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>deadTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeadTimeDelta( long value )
@@ -297,7 +300,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>deadTimeDelta</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeadTimeDeltaRaw( Number value )
@@ -325,7 +328,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>deductLatePenalty</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeductLatePenalty( boolean value )
@@ -351,7 +354,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>deductLatePenalty</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDeductLatePenaltyRaw( Number value )
@@ -379,7 +382,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusMaxPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusMaxPts( double value )
@@ -405,7 +408,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusMaxPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusMaxPtsRaw( Number value )
@@ -433,7 +436,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusUnitPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusUnitPts( double value )
@@ -459,7 +462,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusUnitPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusUnitPtsRaw( Number value )
@@ -487,7 +490,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusUnitTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusUnitTime( long value )
@@ -513,7 +516,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>earlyBonusUnitTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setEarlyBonusUnitTimeRaw( Number value )
@@ -537,7 +540,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>excludedFilePatterns</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setExcludedFilePatterns( String value )
@@ -561,7 +564,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>includedFilePatterns</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIncludedFilePatterns( String value )
@@ -589,7 +592,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyMaxPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyMaxPts( double value )
@@ -615,7 +618,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyMaxPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyMaxPtsRaw( Number value )
@@ -643,7 +646,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyUnitPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyUnitPts( double value )
@@ -669,7 +672,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyUnitPts</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyUnitPtsRaw( Number value )
@@ -697,7 +700,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyUnitTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyUnitTime( long value )
@@ -723,7 +726,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>latePenaltyUnitTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLatePenaltyUnitTimeRaw( Number value )
@@ -751,7 +754,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>maxFileUploadSize</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMaxFileUploadSize( long value )
@@ -777,7 +780,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>maxFileUploadSize</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMaxFileUploadSizeRaw( Number value )
@@ -805,7 +808,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>maxSubmissions</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMaxSubmissions( int value )
@@ -831,7 +834,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>maxSubmissions</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMaxSubmissionsRaw( Number value )
@@ -855,7 +858,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>name</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setName( String value )
@@ -879,7 +882,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>requiredFilePatterns</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setRequiredFilePatterns( String value )
@@ -903,7 +906,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>scoreFormat</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setScoreFormat( String value )
@@ -931,7 +934,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>submissionMethod</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubmissionMethod( byte value )
@@ -957,7 +960,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>submissionMethod</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubmissionMethodRaw( Number value )
@@ -985,7 +988,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>taPoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTaPoints( double value )
@@ -1011,7 +1014,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>taPoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTaPointsRaw( Number value )
@@ -1039,7 +1042,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>toolPoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToolPoints( double value )
@@ -1065,7 +1068,7 @@ public abstract class _SubmissionProfile
     /**
      * Change the value of this object's <code>toolPoints</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToolPointsRaw( Number value )
@@ -1078,7 +1081,7 @@ public abstract class _SubmissionProfile
     /**
      * Retrieve object according to the <code>Course</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param courseBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -1106,7 +1109,7 @@ public abstract class _SubmissionProfile
     /**
      * Retrieve object according to the <code>User</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -1148,7 +1151,7 @@ public abstract class _SubmissionProfile
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -1162,7 +1165,7 @@ public abstract class _SubmissionProfile
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -1197,7 +1200,7 @@ public abstract class _SubmissionProfile
     /**
      * Replace the list of entities pointed to by the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setAssignment( NSMutableArray value )
@@ -1212,7 +1215,7 @@ public abstract class _SubmissionProfile
      * relationship (DO NOT USE--instead, use
      * <code>addToAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToAssignment( net.sf.webcat.grader.Assignment value )
@@ -1229,7 +1232,7 @@ public abstract class _SubmissionProfile
      * relationship (DO NOT USE--instead, use
      * <code>removeFromAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromAssignment( net.sf.webcat.grader.Assignment value )
@@ -1244,7 +1247,7 @@ public abstract class _SubmissionProfile
     /**
      * Add a new entity to the <code>assignment</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToAssignmentRelationship( net.sf.webcat.grader.Assignment value )
@@ -1258,7 +1261,7 @@ public abstract class _SubmissionProfile
     /**
      * Remove a specific entity from the <code>assignment</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromAssignmentRelationship( net.sf.webcat.grader.Assignment value )
@@ -1272,7 +1275,7 @@ public abstract class _SubmissionProfile
     /**
      * Create a brand new object that is a member of the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Assignment createAssignmentRelationship()
@@ -1292,7 +1295,7 @@ public abstract class _SubmissionProfile
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>assignment</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteAssignmentRelationship( net.sf.webcat.grader.Assignment value )
@@ -1333,7 +1336,7 @@ public abstract class _SubmissionProfile
     /**
      * Replace the list of entities pointed to by the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setCourseOfferings( NSMutableArray value )
@@ -1348,7 +1351,7 @@ public abstract class _SubmissionProfile
      * relationship (DO NOT USE--instead, use
      * <code>addToCourseOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToCourseOfferings( net.sf.webcat.core.CourseOffering value )
@@ -1365,7 +1368,7 @@ public abstract class _SubmissionProfile
      * relationship (DO NOT USE--instead, use
      * <code>removeFromCourseOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromCourseOfferings( net.sf.webcat.core.CourseOffering value )
@@ -1380,7 +1383,7 @@ public abstract class _SubmissionProfile
     /**
      * Add a new entity to the <code>courseOfferings</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
@@ -1394,7 +1397,7 @@ public abstract class _SubmissionProfile
     /**
      * Remove a specific entity from the <code>courseOfferings</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
@@ -1408,7 +1411,7 @@ public abstract class _SubmissionProfile
     /**
      * Create a brand new object that is a member of the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.core.CourseOffering createCourseOfferingsRelationship()
@@ -1428,7 +1431,7 @@ public abstract class _SubmissionProfile
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )

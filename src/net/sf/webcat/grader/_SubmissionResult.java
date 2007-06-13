@@ -72,6 +72,12 @@ public abstract class _SubmissionResult
     public static final String RESULT_FILES_KEY = "resultFiles";
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
     public static final String SUBMISSIONS_KEY = "submissions";
+    // Fetch specifications ---
+    public static final String MOST_RECENT_BY_DATE_FSPEC = "mostRecentByDate";
+    public static final String MOST_RECENT_SUBMISSION_FSPEC = "mostRecentSubmission";
+    public static final String MOST_RECENT_SUBMISSIONS_FSPEC = "mostRecentSubmissions";
+    public static final String MOST_RECENT_SUBMISSIONS_BY_NUMBER_FSPEC = "mostRecentSubmissionsByNumber";
+    public static final String USER_FSPEC = "user";
     public static final String ENTITY_NAME = "SubmissionResult";
 
 
@@ -96,7 +102,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>commentFormat</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCommentFormat( byte value )
@@ -122,7 +128,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>commentFormat</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCommentFormatRaw( Number value )
@@ -146,7 +152,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>comments</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setComments( String value )
@@ -174,7 +180,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>correctnessScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCorrectnessScore( double value )
@@ -200,7 +206,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>correctnessScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setCorrectnessScoreRaw( Number value )
@@ -228,7 +234,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>isMostRecent</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsMostRecent( boolean value )
@@ -254,7 +260,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>isMostRecent</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsMostRecentRaw( Number value )
@@ -278,7 +284,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>statElementsLabel</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatElementsLabel( String value )
@@ -306,7 +312,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>status</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatus( byte value )
@@ -332,7 +338,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>status</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setStatusRaw( Number value )
@@ -360,7 +366,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>taScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTaScore( double value )
@@ -386,7 +392,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>taScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTaScoreRaw( Number value )
@@ -414,7 +420,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>toolScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToolScore( double value )
@@ -440,7 +446,7 @@ public abstract class _SubmissionResult
     /**
      * Change the value of this object's <code>toolScore</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setToolScoreRaw( Number value )
@@ -453,7 +459,7 @@ public abstract class _SubmissionResult
     /**
      * Retrieve object according to the <code>MostRecentByDate</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param assignmentOfferingBinding fetch spec parameter
      * @param userBinding fetch spec parameter
@@ -486,7 +492,7 @@ public abstract class _SubmissionResult
     /**
      * Retrieve object according to the <code>MostRecentSubmission</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param assignmentOfferingBinding fetch spec parameter
      * @param userBinding fetch spec parameter
@@ -519,7 +525,7 @@ public abstract class _SubmissionResult
     /**
      * Retrieve object according to the <code>MostRecentSubmissions</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param assignmentOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -547,7 +553,7 @@ public abstract class _SubmissionResult
     /**
      * Retrieve object according to the <code>MostRecentSubmissionsByNumber</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param assignmentOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -575,7 +581,7 @@ public abstract class _SubmissionResult
     /**
      * Retrieve object according to the <code>User</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param assignmentOfferingBinding fetch spec parameter
      * @param userBinding fetch spec parameter
@@ -620,7 +626,7 @@ public abstract class _SubmissionResult
     /**
      * Replace the list of entities pointed to by the
      * <code>resultFiles</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setResultFiles( NSMutableArray value )
@@ -635,7 +641,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>addToResultFilesRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToResultFiles( net.sf.webcat.grader.ResultFile value )
@@ -652,7 +658,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>removeFromResultFilesRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromResultFiles( net.sf.webcat.grader.ResultFile value )
@@ -667,7 +673,7 @@ public abstract class _SubmissionResult
     /**
      * Add a new entity to the <code>resultFiles</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
@@ -681,7 +687,7 @@ public abstract class _SubmissionResult
     /**
      * Remove a specific entity from the <code>resultFiles</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
@@ -695,7 +701,7 @@ public abstract class _SubmissionResult
     /**
      * Create a brand new object that is a member of the
      * <code>resultFiles</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.ResultFile createResultFilesRelationship()
@@ -715,7 +721,7 @@ public abstract class _SubmissionResult
     /**
      * Remove a specific entity that is a member of the
      * <code>resultFiles</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void deleteResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
@@ -755,7 +761,7 @@ public abstract class _SubmissionResult
     /**
      * Replace the list of entities pointed to by the
      * <code>submissionFileStats</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSubmissionFileStats( NSMutableArray value )
@@ -770,7 +776,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>addToSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
@@ -787,7 +793,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>removeFromSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
@@ -802,7 +808,7 @@ public abstract class _SubmissionResult
     /**
      * Add a new entity to the <code>submissionFileStats</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
@@ -816,7 +822,7 @@ public abstract class _SubmissionResult
     /**
      * Remove a specific entity from the <code>submissionFileStats</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
@@ -830,7 +836,7 @@ public abstract class _SubmissionResult
     /**
      * Create a brand new object that is a member of the
      * <code>submissionFileStats</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.SubmissionFileStats createSubmissionFileStatsRelationship()
@@ -850,7 +856,7 @@ public abstract class _SubmissionResult
     /**
      * Remove a specific entity that is a member of the
      * <code>submissionFileStats</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void deleteSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
@@ -890,7 +896,7 @@ public abstract class _SubmissionResult
     /**
      * Replace the list of entities pointed to by the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSubmissions( NSMutableArray value )
@@ -905,7 +911,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>addToSubmissionsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissions( net.sf.webcat.grader.Submission value )
@@ -922,7 +928,7 @@ public abstract class _SubmissionResult
      * relationship (DO NOT USE--instead, use
      * <code>removeFromSubmissionsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissions( net.sf.webcat.grader.Submission value )
@@ -937,7 +943,7 @@ public abstract class _SubmissionResult
     /**
      * Add a new entity to the <code>submissions</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissionsRelationship( net.sf.webcat.grader.Submission value )
@@ -951,7 +957,7 @@ public abstract class _SubmissionResult
     /**
      * Remove a specific entity from the <code>submissions</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissionsRelationship( net.sf.webcat.grader.Submission value )
@@ -965,7 +971,7 @@ public abstract class _SubmissionResult
     /**
      * Create a brand new object that is a member of the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Submission createSubmissionsRelationship()
@@ -985,7 +991,7 @@ public abstract class _SubmissionResult
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteSubmissionsRelationship( net.sf.webcat.grader.Submission value )

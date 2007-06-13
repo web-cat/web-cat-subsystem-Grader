@@ -71,6 +71,10 @@ public abstract class _AssignmentOffering
     public static final String COURSE_OFFERING_KEY = "courseOffering";
     // To-many relationships ---
     public static final String SUBMISSIONS_KEY = "submissions";
+    // Fetch specifications ---
+    public static final String ALL_OFFERINGS_FSPEC = "allOfferings";
+    public static final String COURSE_OFFERING_FSPEC = "courseOffering";
+    public static final String SUBMITTER_ENGINE_BASE_FSPEC = "submitterEngineBase";
     public static final String ENTITY_NAME = "AssignmentOffering";
 
 
@@ -91,7 +95,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>dueDate</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDueDate( NSTimestamp value )
@@ -119,7 +123,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>gradingSuspended</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setGradingSuspended( boolean value )
@@ -145,7 +149,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>gradingSuspended</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setGradingSuspendedRaw( Number value )
@@ -165,7 +169,7 @@ public abstract class _AssignmentOffering
      */
     public net.sf.webcat.grader.graphs.AssignmentSummary graphSummary()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "graphSummary" );
         if ( graphSummaryRawCache != dbValue )
         {
@@ -196,8 +200,8 @@ public abstract class _AssignmentOffering
             }
         }
         else if ( dbValue == null && graphSummaryCache == null )
-        { 
-            graphSummaryCache = 
+        {
+            graphSummaryCache =
                 net.sf.webcat.grader.graphs.AssignmentSummary
                 .objectWithArchiveData( dbValue );
              graphSummaryCache.setOwner( this );
@@ -211,7 +215,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>graphSummary</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setGraphSummary( net.sf.webcat.grader.graphs.AssignmentSummary value )
@@ -263,7 +267,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>moodleId</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMoodleId( Number value )
@@ -291,7 +295,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>publish</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPublish( boolean value )
@@ -317,7 +321,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>publish</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPublishRaw( Number value )
@@ -345,7 +349,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFields( boolean value )
@@ -371,7 +375,7 @@ public abstract class _AssignmentOffering
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFieldsRaw( Number value )
@@ -447,7 +451,7 @@ public abstract class _AssignmentOffering
     /**
      * Retrieve object according to the <code>AllOfferings</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
@@ -466,7 +470,7 @@ public abstract class _AssignmentOffering
     /**
      * Retrieve object according to the <code>CourseOffering</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -494,7 +498,7 @@ public abstract class _AssignmentOffering
     /**
      * Retrieve object according to the <code>SubmitterEngineBase</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
@@ -527,7 +531,7 @@ public abstract class _AssignmentOffering
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignment( net.sf.webcat.grader.Assignment value )
@@ -541,7 +545,7 @@ public abstract class _AssignmentOffering
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentRelationship(
@@ -578,7 +582,7 @@ public abstract class _AssignmentOffering
      * relationship (DO NOT USE--instead, use
      * <code>setCourseOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setCourseOffering( net.sf.webcat.core.CourseOffering value )
@@ -592,7 +596,7 @@ public abstract class _AssignmentOffering
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setCourseOfferingRelationship(
@@ -627,7 +631,7 @@ public abstract class _AssignmentOffering
     /**
      * Replace the list of entities pointed to by the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSubmissions( NSMutableArray value )
@@ -642,7 +646,7 @@ public abstract class _AssignmentOffering
      * relationship (DO NOT USE--instead, use
      * <code>addToSubmissionsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissions( net.sf.webcat.grader.Submission value )
@@ -659,7 +663,7 @@ public abstract class _AssignmentOffering
      * relationship (DO NOT USE--instead, use
      * <code>removeFromSubmissionsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissions( net.sf.webcat.grader.Submission value )
@@ -674,7 +678,7 @@ public abstract class _AssignmentOffering
     /**
      * Add a new entity to the <code>submissions</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSubmissionsRelationship( net.sf.webcat.grader.Submission value )
@@ -688,7 +692,7 @@ public abstract class _AssignmentOffering
     /**
      * Remove a specific entity from the <code>submissions</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSubmissionsRelationship( net.sf.webcat.grader.Submission value )
@@ -702,7 +706,7 @@ public abstract class _AssignmentOffering
     /**
      * Create a brand new object that is a member of the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Submission createSubmissionsRelationship()
@@ -722,7 +726,7 @@ public abstract class _AssignmentOffering
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>submissions</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteSubmissionsRelationship( net.sf.webcat.grader.Submission value )

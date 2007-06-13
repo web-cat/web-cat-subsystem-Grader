@@ -77,6 +77,7 @@ public abstract class _ScriptFile
     // To-many relationships ---
     public static final String COURSE_OFFERINGS_KEY = "courseOfferings";
     public static final String STEPS_KEY = "steps";
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "ScriptFile";
 
 
@@ -93,7 +94,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary configDescription()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "configDescription" );
         if ( configDescriptionRawCache != dbValue )
         {
@@ -124,8 +125,8 @@ public abstract class _ScriptFile
             }
         }
         else if ( dbValue == null && configDescriptionCache == null )
-        { 
-            configDescriptionCache = 
+        {
+            configDescriptionCache =
                 net.sf.webcat.core.MutableDictionary
                 .objectWithArchiveData( dbValue );
              configDescriptionCache.setOwner( this );
@@ -139,7 +140,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>configDescription</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConfigDescription( net.sf.webcat.core.MutableDictionary value )
@@ -187,7 +188,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary defaultConfigSettings()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "defaultConfigSettings" );
         if ( defaultConfigSettingsRawCache != dbValue )
         {
@@ -218,8 +219,8 @@ public abstract class _ScriptFile
             }
         }
         else if ( dbValue == null && defaultConfigSettingsCache == null )
-        { 
-            defaultConfigSettingsCache = 
+        {
+            defaultConfigSettingsCache =
                 net.sf.webcat.core.MutableDictionary
                 .objectWithArchiveData( dbValue );
              defaultConfigSettingsCache.setOwner( this );
@@ -233,7 +234,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>defaultConfigSettings</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDefaultConfigSettings( net.sf.webcat.core.MutableDictionary value )
@@ -281,7 +282,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary globalConfigSettings()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "globalConfigSettings" );
         if ( globalConfigSettingsRawCache != dbValue )
         {
@@ -312,8 +313,8 @@ public abstract class _ScriptFile
             }
         }
         else if ( dbValue == null && globalConfigSettingsCache == null )
-        { 
-            globalConfigSettingsCache = 
+        {
+            globalConfigSettingsCache =
                 net.sf.webcat.core.MutableDictionary
                 .objectWithArchiveData( dbValue );
              globalConfigSettingsCache.setOwner( this );
@@ -327,7 +328,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>globalConfigSettings</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setGlobalConfigSettings( net.sf.webcat.core.MutableDictionary value )
@@ -383,7 +384,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>isConfigFile</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsConfigFile( boolean value )
@@ -409,7 +410,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>isConfigFile</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsConfigFileRaw( Number value )
@@ -437,7 +438,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>isPublished</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsPublished( boolean value )
@@ -463,7 +464,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>isPublished</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsPublishedRaw( Number value )
@@ -487,7 +488,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>lastModified</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLastModified( NSTimestamp value )
@@ -511,7 +512,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>mainFileName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMainFileName( String value )
@@ -535,7 +536,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>name</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setName( String value )
@@ -559,7 +560,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>subdirName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setSubdirName( String value )
@@ -587,7 +588,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFields( boolean value )
@@ -613,7 +614,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFieldsRaw( Number value )
@@ -637,7 +638,7 @@ public abstract class _ScriptFile
     /**
      * Change the value of this object's <code>uploadedFileName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUploadedFileName( String value )
@@ -745,7 +746,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -759,7 +760,7 @@ public abstract class _ScriptFile
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -796,7 +797,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>setLanguageRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setLanguage( net.sf.webcat.core.Language value )
@@ -810,7 +811,7 @@ public abstract class _ScriptFile
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setLanguageRelationship(
@@ -845,7 +846,7 @@ public abstract class _ScriptFile
     /**
      * Replace the list of entities pointed to by the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setCourseOfferings( NSMutableArray value )
@@ -860,7 +861,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>addToCourseOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToCourseOfferings( net.sf.webcat.core.CourseOffering value )
@@ -877,7 +878,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>removeFromCourseOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromCourseOfferings( net.sf.webcat.core.CourseOffering value )
@@ -892,7 +893,7 @@ public abstract class _ScriptFile
     /**
      * Add a new entity to the <code>courseOfferings</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
@@ -906,7 +907,7 @@ public abstract class _ScriptFile
     /**
      * Remove a specific entity from the <code>courseOfferings</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
@@ -920,7 +921,7 @@ public abstract class _ScriptFile
     /**
      * Create a brand new object that is a member of the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.core.CourseOffering createCourseOfferingsRelationship()
@@ -940,7 +941,7 @@ public abstract class _ScriptFile
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>courseOfferings</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
@@ -981,7 +982,7 @@ public abstract class _ScriptFile
     /**
      * Replace the list of entities pointed to by the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSteps( NSMutableArray value )
@@ -996,7 +997,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>addToStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSteps( net.sf.webcat.grader.Step value )
@@ -1013,7 +1014,7 @@ public abstract class _ScriptFile
      * relationship (DO NOT USE--instead, use
      * <code>removeFromStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSteps( net.sf.webcat.grader.Step value )
@@ -1028,7 +1029,7 @@ public abstract class _ScriptFile
     /**
      * Add a new entity to the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToStepsRelationship( net.sf.webcat.grader.Step value )
@@ -1042,7 +1043,7 @@ public abstract class _ScriptFile
     /**
      * Remove a specific entity from the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromStepsRelationship( net.sf.webcat.grader.Step value )
@@ -1056,7 +1057,7 @@ public abstract class _ScriptFile
     /**
      * Create a brand new object that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Step createStepsRelationship()
@@ -1076,7 +1077,7 @@ public abstract class _ScriptFile
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteStepsRelationship( net.sf.webcat.grader.Step value )

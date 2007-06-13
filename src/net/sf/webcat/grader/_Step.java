@@ -69,6 +69,7 @@ public abstract class _Step
     public static final String CONFIG_KEY = "config";
     public static final String SCRIPT_KEY = "script";
     // To-many relationships ---
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "Step";
 
 
@@ -85,7 +86,7 @@ public abstract class _Step
      */
     public net.sf.webcat.core.MutableDictionary configSettings()
     {
-    	NSData dbValue = 
+    	NSData dbValue =
             (NSData)storedValueForKey( "configSettings" );
         if ( configSettingsRawCache != dbValue )
         {
@@ -116,8 +117,8 @@ public abstract class _Step
             }
         }
         else if ( dbValue == null && configSettingsCache == null )
-        { 
-            configSettingsCache = 
+        {
+            configSettingsCache =
                 net.sf.webcat.core.MutableDictionary
                 .objectWithArchiveData( dbValue );
              configSettingsCache.setOwner( this );
@@ -131,7 +132,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>configSettings</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setConfigSettings( net.sf.webcat.core.MutableDictionary value )
@@ -187,7 +188,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>order</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setOrder( int value )
@@ -213,7 +214,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>order</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setOrderRaw( Number value )
@@ -241,7 +242,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>timeout</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTimeout( int value )
@@ -267,7 +268,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>timeout</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setTimeoutRaw( Number value )
@@ -295,7 +296,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFields( boolean value )
@@ -321,7 +322,7 @@ public abstract class _Step
     /**
      * Change the value of this object's <code>updateMutableFields</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUpdateMutableFieldsRaw( Number value )
@@ -411,7 +412,7 @@ public abstract class _Step
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignment( net.sf.webcat.grader.Assignment value )
@@ -425,7 +426,7 @@ public abstract class _Step
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAssignmentRelationship(
@@ -462,7 +463,7 @@ public abstract class _Step
      * relationship (DO NOT USE--instead, use
      * <code>setConfigRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setConfig( net.sf.webcat.grader.StepConfig value )
@@ -476,7 +477,7 @@ public abstract class _Step
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setConfigRelationship(
@@ -513,7 +514,7 @@ public abstract class _Step
      * relationship (DO NOT USE--instead, use
      * <code>setScriptRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setScript( net.sf.webcat.grader.ScriptFile value )
@@ -527,7 +528,7 @@ public abstract class _Step
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setScriptRelationship(

@@ -71,6 +71,8 @@ public abstract class _Assignment
     // To-many relationships ---
     public static final String OFFERINGS_KEY = "offerings";
     public static final String STEPS_KEY = "steps";
+    // Fetch specifications ---
+    public static final String CRN_FSPEC = "crn";
     public static final String ENTITY_NAME = "Assignment";
 
 
@@ -91,7 +93,7 @@ public abstract class _Assignment
     /**
      * Change the value of this object's <code>fileUploadMessage</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFileUploadMessage( String value )
@@ -115,7 +117,7 @@ public abstract class _Assignment
     /**
      * Change the value of this object's <code>moodleId</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMoodleId( Number value )
@@ -139,7 +141,7 @@ public abstract class _Assignment
     /**
      * Change the value of this object's <code>name</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setName( String value )
@@ -163,7 +165,7 @@ public abstract class _Assignment
     /**
      * Change the value of this object's <code>shortDescription</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setShortDescription( String value )
@@ -187,7 +189,7 @@ public abstract class _Assignment
     /**
      * Change the value of this object's <code>url</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setUrl( String value )
@@ -200,7 +202,7 @@ public abstract class _Assignment
     /**
      * Retrieve object according to the <code>Crn</code>
      * fetch specification.
-     * 
+     *
      * @param context The editing context to use
      * @param crnBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
@@ -242,7 +244,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthor( net.sf.webcat.core.User value )
@@ -256,7 +258,7 @@ public abstract class _Assignment
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setAuthorRelationship(
@@ -293,7 +295,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>setGradingCriteriaRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setGradingCriteria( net.sf.webcat.grader.GradingCriteria value )
@@ -307,7 +309,7 @@ public abstract class _Assignment
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setGradingCriteriaRelationship(
@@ -344,7 +346,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionProfileRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionProfile( net.sf.webcat.grader.SubmissionProfile value )
@@ -358,7 +360,7 @@ public abstract class _Assignment
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionProfileRelationship(
@@ -393,7 +395,7 @@ public abstract class _Assignment
     /**
      * Replace the list of entities pointed to by the
      * <code>offerings</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setOfferings( NSMutableArray value )
@@ -408,7 +410,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>addToOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToOfferings( net.sf.webcat.grader.AssignmentOffering value )
@@ -425,7 +427,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>removeFromOfferingsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromOfferings( net.sf.webcat.grader.AssignmentOffering value )
@@ -440,7 +442,7 @@ public abstract class _Assignment
     /**
      * Add a new entity to the <code>offerings</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToOfferingsRelationship( net.sf.webcat.grader.AssignmentOffering value )
@@ -454,7 +456,7 @@ public abstract class _Assignment
     /**
      * Remove a specific entity from the <code>offerings</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromOfferingsRelationship( net.sf.webcat.grader.AssignmentOffering value )
@@ -468,7 +470,7 @@ public abstract class _Assignment
     /**
      * Create a brand new object that is a member of the
      * <code>offerings</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.AssignmentOffering createOfferingsRelationship()
@@ -488,7 +490,7 @@ public abstract class _Assignment
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>offerings</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteOfferingsRelationship( net.sf.webcat.grader.AssignmentOffering value )
@@ -529,7 +531,7 @@ public abstract class _Assignment
     /**
      * Replace the list of entities pointed to by the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The new set of entities to relate to
      */
     public void setSteps( NSMutableArray value )
@@ -544,7 +546,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>addToStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToSteps( net.sf.webcat.grader.Step value )
@@ -561,7 +563,7 @@ public abstract class _Assignment
      * relationship (DO NOT USE--instead, use
      * <code>removeFromStepsRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromSteps( net.sf.webcat.grader.Step value )
@@ -576,7 +578,7 @@ public abstract class _Assignment
     /**
      * Add a new entity to the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void addToStepsRelationship( net.sf.webcat.grader.Step value )
@@ -590,7 +592,7 @@ public abstract class _Assignment
     /**
      * Remove a specific entity from the <code>steps</code>
      * relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship
      */
     public void removeFromStepsRelationship( net.sf.webcat.grader.Step value )
@@ -604,7 +606,7 @@ public abstract class _Assignment
     /**
      * Create a brand new object that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @return The new entity
      */
     public net.sf.webcat.grader.Step createStepsRelationship()
@@ -624,7 +626,7 @@ public abstract class _Assignment
     /**
      * Remove and then delete a specific entity that is a member of the
      * <code>steps</code> relationship.
-     * 
+     *
      * @param value The entity to remove from the relationship and then delete
      */
     public void deleteStepsRelationship( net.sf.webcat.grader.Step value )

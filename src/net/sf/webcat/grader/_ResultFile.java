@@ -65,6 +65,7 @@ public abstract class _ResultFile
     // To-one relationships ---
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
     // To-many relationships ---
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "ResultFile";
 
 
@@ -85,7 +86,7 @@ public abstract class _ResultFile
     /**
      * Change the value of this object's <code>fileName</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setFileName( String value )
@@ -109,7 +110,7 @@ public abstract class _ResultFile
     /**
      * Change the value of this object's <code>label</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setLabel( String value )
@@ -133,7 +134,7 @@ public abstract class _ResultFile
     /**
      * Change the value of this object's <code>mimeType</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setMimeType( String value )
@@ -160,7 +161,7 @@ public abstract class _ResultFile
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionResultRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionResult( net.sf.webcat.grader.SubmissionResult value )
@@ -174,7 +175,7 @@ public abstract class _ResultFile
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionResultRelationship(

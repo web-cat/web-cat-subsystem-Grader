@@ -66,6 +66,7 @@ public abstract class _EnqueuedJob
     // To-one relationships ---
     public static final String SUBMISSION_KEY = "submission";
     // To-many relationships ---
+    // Fetch specifications ---
     public static final String ENTITY_NAME = "EnqueuedJob";
 
 
@@ -90,7 +91,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>discarded</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDiscarded( boolean value )
@@ -116,7 +117,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>discarded</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setDiscardedRaw( Number value )
@@ -144,7 +145,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>paused</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPaused( boolean value )
@@ -170,7 +171,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>paused</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setPausedRaw( Number value )
@@ -194,7 +195,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>queueTime</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setQueueTime( NSTimestamp value )
@@ -222,7 +223,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>regrading</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setRegrading( boolean value )
@@ -248,7 +249,7 @@ public abstract class _EnqueuedJob
     /**
      * Change the value of this object's <code>regrading</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setRegradingRaw( Number value )
@@ -275,7 +276,7 @@ public abstract class _EnqueuedJob
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionRelationship()</code>.
      * This method is provided for WebObjects use.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmission( net.sf.webcat.grader.Submission value )
@@ -289,7 +290,7 @@ public abstract class _EnqueuedJob
      * Set the entity pointed to by the <code>authenticationDomain</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
-     * 
+     *
      * @param value The new entity to relate to
      */
     public void setSubmissionRelationship(
