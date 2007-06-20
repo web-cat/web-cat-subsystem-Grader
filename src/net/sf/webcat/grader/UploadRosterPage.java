@@ -594,7 +594,7 @@ public class UploadRosterPage
                         user.setLastName( lastName );
                         user.setUniversityIDNo( idNo );
                         user.setEmail( email );
-                        user.setEmail( url );
+                        user.setUrl( url );
                         numNewCreated++;
                         if ( user.canChangePassword() )
                         {
