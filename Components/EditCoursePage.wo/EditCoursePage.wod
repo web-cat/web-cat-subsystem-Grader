@@ -25,9 +25,19 @@ CourseList: WOPopUpButton {
 	displayString     = course.deptNumberAndName;
 }
 
+CourseInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Course";
+    message = "Use the Course drop-down list to change the course with which this offering is associated.";
+}
+
 CRN: WOTextField {
     value = session.courseOffering.crn;
     size = 40;
+}
+
+CRNInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "CRN";
+    message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
 }
 
 Email: WOHyperlink {
@@ -45,6 +55,16 @@ IsThisUser: WOConditional {
     condition = matchesUser;
 }
 
+Label: WOTextField {
+    value = session.courseOffering.label;
+    size = 40;
+}
+
+LabelInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Label";
+    message = "Use this optional field to provide a brief (3-10 character) alternative label to use instead of the CRN when identifying this course offering to users.  Example labels: &quot;MWF&quot;, &quot;Thu lab&quot;, or &quot;M11:00&quot;.";
+}
+
 LastInstrTR: net.sf.webcat.core.TableRow {
     index = instructorDisplayGroup.displayedObjects.count;
 }
@@ -59,10 +79,20 @@ MoodleGroupId: WOTextField {
 	value = session.courseOffering.moodleGroupId;
 }
 
+MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Moodle Group Id";
+    message = "Offers experimental support for instructors testing out the Moodle-to-Web-CAT gateway.  Otherwise, leave it blank.";
+}
+
 MoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
 	value = session.courseOffering.moodleId;
+}
+
+MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Moodle Id";
+    message = "Offers experimental support for instructors testing out the Moodle-to-Web-CAT gateway.  Otherwise, leave it blank.";
 }
 
 Name: WOHyperlink {
@@ -114,6 +144,11 @@ TR: net.sf.webcat.core.TableRow {
 URL: WOTextField {
     value = session.courseOffering.url;
     size = 40;
+}
+
+URLInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "URL";
+    message = "Optionally, fill in the URL field with your course offering\'s home site on the web. If you enter a value in this field, then references to the course offering on other pages will be hyperlinks to this destination. If you leave it blank, those references will just be plain text, not hyperlinks.";
 }
 
 UserID: WOString {
