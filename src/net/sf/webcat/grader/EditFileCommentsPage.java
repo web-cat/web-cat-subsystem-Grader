@@ -53,7 +53,7 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditFileCommentsPage( WOContext context )
@@ -67,7 +67,7 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -107,7 +107,7 @@ public class EditFileCommentsPage
     {
         try
         {
-            updateTAScore( storeComments() );       
+            updateTAScore( storeComments() );
             prefs().submissionFileStats().setStatus( Status.UNFINISHED );
         }
         catch ( Exception e )
@@ -248,7 +248,7 @@ public class EditFileCommentsPage
         Number correctnessScore   = result.correctnessScoreRaw();
         SubmissionProfile profile = prefs().assignmentOffering()
             .assignment().submissionProfile();
-        
+
         projectToolTestingDeduction = result.toolScore();
         if ( profile.toolPointsRaw() != null )
         {
@@ -304,7 +304,7 @@ public class EditFileCommentsPage
                 score += ptsTakenOff; // adding the deductions
                 result.setTaScore( score );
             }
-            // else I dont know what to do 
+            // else I dont know what to do
         }
         SubmissionFileStats stats = prefs().submissionFileStats();
         double oldDeductions = stats.deductions();
@@ -367,7 +367,7 @@ public class EditFileCommentsPage
         try
         {
             // remove the link statement
-            
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "before subst:\n---------------------------------" );
@@ -415,7 +415,7 @@ public class EditFileCommentsPage
             Element    root       = doc.getRootElement();
             List       children   = root.getChild( "tbody" ).getChildren();
             Iterator   iterator   = children.iterator();
-            
+
             // Delete existing comments by the current user from the
             // database
             NSArray comments = prefs().submissionFileStats().comments();
@@ -436,7 +436,7 @@ public class EditFileCommentsPage
 
             // check all children for comment box (id should have I) and
             // then extract values
-            while ( iterator.hasNext() ) 
+            while ( iterator.hasNext() )
             {
                 Element child = (Element)iterator.next();
                 // get the id attribute from the row
@@ -451,7 +451,7 @@ public class EditFileCommentsPage
                      && ( id.charAt( id.length() - 1 ) == '\"' ) )
                 {
                     // if there are quotes around the attribute value
-                    id = id.substring( 1, id.length() - 1 );                 
+                    id = id.substring( 1, id.length() - 1 );
                 }
                 String [] idarr = id.split( ":" );
                 if ( idarr[0].charAt( 0 ) == 'I' )
@@ -463,7 +463,7 @@ public class EditFileCommentsPage
                     int    refnum = Integer.parseInt( idarr[2] );
                     String idpart = "I" + boxnum + ":" + rownum + ":" + refnum;
                     log.debug( "Tagged comment block found: " + idpart );
-                    
+
                     Element msg = getElementById( child, idpart + ":M" );
                     if ( msg != null )
                     {
@@ -501,7 +501,7 @@ public class EditFileCommentsPage
                                     colonIndex + 1, ptVal.length() );
                             }
                             ptVal = ptVal.trim();
-                        
+
                             if ( !ptVal.equals( "" ) )
                             {
                                 try
@@ -517,7 +517,7 @@ public class EditFileCommentsPage
                                                + "ptVal argument '"
                                                + ptVal + "'", e );
                                 }
-                            }                           
+                            }
                             else // if no points given , then 0 is by default
                             {
                                 comment.setDeduction( 0.0 );
@@ -559,16 +559,16 @@ public class EditFileCommentsPage
                 + "comments edited by a user in the file:\n\n"
                 + prefs().submissionFileStats().markupFile().getPath()
                 + "\n\nThe raw XML follows the exception details.\n"
-                + Application.informationForExceptionInContext(
-                                e, null, context() )
+                + ( (Application)application() )
+                      .informationForExceptionInContext( e, null, context() )
                 + "\n\nRaw XML (value of codeWithComments):\n"
-                + codeWithCommentsToStore, null ); 
+                + codeWithCommentsToStore, null );
             throw e;
         }
         // Let the raw string be garbage collected, now that we're
         // finished with it
         codeWithCommentsToStore = null;
-        
+
         log.debug( " Store comments is returning = " + taPts );
         return taPts;
     }
@@ -604,8 +604,8 @@ public class EditFileCommentsPage
             codeWithComments = null;
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public void setCodeWithComments( String code )
     {
