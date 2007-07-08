@@ -83,6 +83,19 @@ public class assignments
 
     // ----------------------------------------------------------
     /**
+     * Generate a list of assignment submission targets, in the format
+     * used by the Eclipse project submitter extension.
+     *
+     * @return A new EclipseSubmitterDefinitions page
+     */
+    public WOActionResults icalAction()
+    {
+        return pageWithName( ICalView.class.getName() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * The default action simply calls bluejAction().
      *
      * @return A new BlueJSubmitterDefinitions page
