@@ -98,11 +98,11 @@ MoodleId: WOTextField {
 	value = prefs.assignmentOffering.assignment.moodleId;
 }
 
-
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
     title   = "Moodle Id";
     message = "If you are using our Moodle for your course web site and it has extensions to support uploading CSV gradebook information, place your Moodle course\'s ID in this slot.  Otherwise, leave it blank.";
 }
+
 OverrideMoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
