@@ -85,7 +85,8 @@ public class BlueJSubmitterDefinitions
         {
             ec.lock();
             groupByCRN = ERXValueUtilities.booleanValue(
-                context().request().formValueForKey( "groupByCRN" ) );
+                context().request().formValueForKey( "groupByCRN" ) )
+                || ( context().request().formValueForKey( "crns" ) != null );
             assignmentsToDisplay =
                 AssignmentOffering.objectsForSubmitterEngine(
                     ec,
@@ -107,7 +108,7 @@ public class BlueJSubmitterDefinitions
                   != last.courseOffering().course().department().institution();
             }
             response.setHeader( mimeType(), "content-type" );
-            super.appendToResponse( response, context );        
+            super.appendToResponse( response, context );
         }
         finally
         {
