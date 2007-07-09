@@ -26,6 +26,7 @@
 package net.sf.webcat.grader.actions;
 
 import com.webobjects.appserver.*;
+
 import er.extensions.*;
 
 // -------------------------------------------------------------------------
@@ -103,5 +104,21 @@ public class assignments
     public WOActionResults defaultAction()
     {
         return bluejAction();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Dispatch an action.
+     * @param actionName The name of the action to dispatch
+     * @return the action's result
+     */
+    public WOActionResults performActionNamed( String actionName )
+    {
+        if ( "ical.ics".equals( actionName ) )
+        {
+            actionName = "ical";
+        }
+        return super.performActionNamed( actionName );
     }
 }

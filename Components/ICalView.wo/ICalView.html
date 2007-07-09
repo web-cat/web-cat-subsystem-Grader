@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Web-CAT//NONSGML v1.0//EN
+X-WR-CALNAME:<wo:str value="$application.name"/>
+<wo:if condition="$assignmentsToDisplay.count"><wo name="AssignmentRepetition">BEGIN:VTODO
+UID:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
+DUE:<wo:str value="$anAssignmentOffering.dueDate" formatter="$formatter"/>
+SUMMARY:<wo:str value="$anAssignmentOffering.courseOffering.course.deptNumber" escapeHTML="false"/>: <wo:str value="$assignmentName" escapeHTML="false"/>
+<wo:if condition="$anAssignmentOffering.assignment.url">URL:<wo:str value="$anAssignmentOffering.assignment.url" escapeHTML="false"/>
+DESCRIPTION: Submit to Web-CAT at: <wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
+</wo:if><wo:else>URL:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
+</wo:else>ORGANIZER:MAILTO:<wo:str value="~anAssignmentOffering.courseOffering.instructors[0].email"/>
+END:VTODO
+</wo></wo:if>END:VCALENDAR
