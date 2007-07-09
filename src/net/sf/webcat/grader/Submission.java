@@ -28,6 +28,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -56,6 +57,52 @@ public class Submission
     {
         super();
     }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up a Submission by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The submission, or null if no such id exists
+     */
+    public static Submission submissionForId( EOEditingContext ec, int id )
+    {
+        Submission sub = null;
+        NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+            ENTITY_NAME, "id", new Integer( id ) );
+        if ( results != null && results.count() > 0 )
+        {
+            sub = (Submission)results.objectAtIndex( 0 );
+        }
+        return sub;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up a Submission by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The submission, or null if no such id exists
+     */
+    public static Submission submissionForId( EOEditingContext ec, String id )
+    {
+        Submission sub = null;
+        int idNumber = er.extensions.ERXValueUtilities.intValue( id );
+        if ( idNumber > 0 )
+        {
+            sub = submissionForId( ec, idNumber );
+        }
+        return sub;
+    }
+
+
+    //~ Constants (for key names) .............................................
+
+    public static final String ID_FORM_KEY = "sid";
 
 
     //~ Methods ...............................................................
@@ -122,6 +169,18 @@ public class Submission
             return file().getPath();
         else
             return dirName();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        return (Number)EOUtilities.primaryKeyForObject(
+            editingContext() , this ).objectForKey( "id" );
     }
 
 
