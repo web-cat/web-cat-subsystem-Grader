@@ -42,14 +42,14 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class PickSubmissionPage
-    extends GraderComponent
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public PickSubmissionPage( WOContext context )
@@ -66,10 +66,10 @@ public class PickSubmissionPage
 
     /** index of selected submission. */
     public int selectedIndex;
-    
+
     /** true if previous submissions exist */
     public boolean previousSubmissions;
-    
+
     public String sideStepTitle;
 
 
@@ -78,7 +78,7 @@ public class PickSubmissionPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */

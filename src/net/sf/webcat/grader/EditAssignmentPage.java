@@ -45,14 +45,14 @@ import org.apache.log4j.Logger;
  *  @version $Id$
  */
 public class EditAssignmentPage
-    extends GraderComponent
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditAssignmentPage( WOContext context )
@@ -112,7 +112,7 @@ public class EditAssignmentPage
             catch ( MalformedURLException e )
             {
                 error( "The specified URL is not valid." );
-                log.error( "Error in validateURL()", e ); 
+                log.error( "Error in validateURL()", e );
             }
         }
         log.debug( "url validation = " + result );
@@ -531,7 +531,7 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     /**
      * Check whether the selected assignment is past the due date.
-     * 
+     *
      * @return true if any submissions to this assignment will be counted
      *         as late
      */

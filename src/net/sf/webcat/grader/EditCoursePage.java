@@ -40,14 +40,14 @@ import org.apache.log4j.Logger;
 *  @version $Id$
 */
 public class EditCoursePage
-    extends WCComponent
+    extends GraderCourseComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * Creates a new TBDPage object.
-     * 
+     *
      * @param context The context to use
      */
     public EditCoursePage( WOContext context )

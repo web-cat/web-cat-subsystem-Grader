@@ -43,14 +43,14 @@ import org.apache.log4j.Logger;
  *  @version $Id$
  */
 public class PickAssignmentToEditPage
-    extends GraderComponent
+    extends GraderCourseComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * Creates a new PickAssignmentPage object.
-     * 
+     *
      * @param context The context to use
      */
     public PickAssignmentToEditPage( WOContext context )
@@ -187,7 +187,7 @@ public class PickAssignmentToEditPage
     /**
      * Determine if the current assignment has suspended submissions (that
      * this user can see).
-     * 
+     *
      * @return true if the user can see this assignment's status and this
      * assignment has suspended submissions
      */

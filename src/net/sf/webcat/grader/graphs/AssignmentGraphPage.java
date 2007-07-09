@@ -39,7 +39,7 @@ import net.sf.webcat.grader.*;
  * @version $Id$
  */
 public class AssignmentGraphPage
-    extends GraderComponent
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 

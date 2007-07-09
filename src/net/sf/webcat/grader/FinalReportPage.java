@@ -49,14 +49,14 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class FinalReportPage
-    extends GraderComponent
+    extends GraderSubmissionComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public FinalReportPage( WOContext context )
@@ -88,7 +88,7 @@ public class FinalReportPage
     public ResultFile selectedReport = null;
     /** Array of all the downloadable report files */
     public NSArray reportArray;
-    
+
     public boolean showReturnToGrading = false;
 
 
@@ -97,7 +97,7 @@ public class FinalReportPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -388,7 +388,7 @@ public class FinalReportPage
     // ----------------------------------------------------------
     /**
      * Determine if user can submit to this assignment.
-     * 
+     *
      * @return true if the user can make another submission
      */
     public boolean canSubmitAgain()
@@ -406,7 +406,7 @@ public class FinalReportPage
     // ----------------------------------------------------------
     /**
      * An action to go to the submission page for this assignment.
-     * 
+     *
      * @return the submission page for this assignment
      */
     public WOComponent submitAgain()

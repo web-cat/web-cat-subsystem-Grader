@@ -26,67 +26,76 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
-
 import net.sf.webcat.core.*;
 
-import org.apache.log4j.Logger;
-
-// -------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 /**
- * Allow the user to select an enrolled student from the current course.
+ *  A {@link GraderComponent} that adds support for initializing course
+ *  selections from login parameters.
  *
- * @author Stephen Edwards
- * @version $Id$
+ *  @author  Stephen Edwards
+ *  @version $Id$
  */
-public class PickEnrolledStudentPage
-    extends GraderAssignmentComponent
+public class GraderCourseComponent
+    extends GraderComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
-     * Default constructor.
-     * @param context The page's context
+     * Creates a new GraderCourseComponent object.
+     *
+     * @param context The context to use
      */
-    public PickEnrolledStudentPage( WOContext context )
+    public GraderCourseComponent( WOContext context )
     {
         super( context );
     }
 
 
-    //~ KVC Attributes (must be public) .......................................
-
-    public WODisplayGroup      studentDisplayGroup;
-    public User                student;
-    public int                 studentIndex;
-
-
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    /**
+     * Extracts course offering identification from the given startup
+     * parameters.
+     * @param params A dictionary of form values to decode
+     * @return True if successful, false if the parameter is missing
+     */
+    public boolean startWith( NSDictionary params )
     {
-        studentDisplayGroup.setMasterObject( wcSession().courseOffering() );
-        super.appendToResponse( response, context );
+        boolean result = false;
+        String crn = stringValueForKey( params, CourseOffering.CRN_KEY );
+        if ( crn != null )
+        {
+            result = startWith( CourseOffering
+                .offeringForCrn( wcSession().localContext(), crn ) );
+        }
+        return result;
     }
 
 
     // ----------------------------------------------------------
-    public void cancelLocalChanges()
+    /**
+     * Sets the relevant course and course offering properties for this
+     * session.
+     * @param offering the course offering to use for generating settings
+     * @return True if successful, false if the course offering is not valid
+     */
+    protected boolean startWith( CourseOffering offering )
     {
-        NSDictionary config = wcSession().tabs.selectedDescendant().config();
-        if ( config != null
-             && config.objectForKey( "resetPrimeUser" ) != null )
+        boolean result = false;
+        User user = wcSession().user();
+        if ( offering != null
+             && ( user.enrolledIn().contains(  offering )
+                  || offering.isInstructor( user )
+                  || offering.isTA( user ) ) )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            result = true;
+            wcSession().setCourse( offering.course() );
+            wcSession().setCourseOffering( offering );
         }
-        super.cancelLocalChanges();
+        return result;
     }
-
-
-    //~ Instance/static variables .............................................
-
-    static Logger log = Logger.getLogger( PickEnrolledStudentPage.class );
 }

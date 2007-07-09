@@ -43,14 +43,14 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class UploadSubmissionPage
-    extends GraderComponent
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public UploadSubmissionPage( WOContext context )
@@ -75,7 +75,7 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -122,13 +122,13 @@ public class UploadSubmissionPage
         log.debug( "grace = " +
                    prefs().assignmentOffering().assignment()
                        .submissionProfile().deadTimeDelta() );
-        
+
         NSTimestamp deadline = new NSTimestamp(
                 prefs().assignmentOffering().dueDate().getTime()
                 + prefs().assignmentOffering().assignment()
                    .submissionProfile().deadTimeDelta() );
         log.debug( "time = " + deadline );
-        
+
         super.appendToResponse( response, context );
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
@@ -143,7 +143,7 @@ public class UploadSubmissionPage
      * A predicate that indicates whether the user can proceed.
      * As a side-effect, it sets the error message if the user cannot
      * proceed.
-     * 
+     *
      * @return true if the user can proceed
      */
     public boolean okayToSubmit()

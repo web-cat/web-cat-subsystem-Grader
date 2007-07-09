@@ -44,14 +44,14 @@ import org.apache.log4j.Logger;
  *  @version $Id$
  */
 public class PickAssignmentToSubmitPage
-    extends GraderComponent
+    extends GraderCourseComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * Creates a new PickAssignmentPage object.
-     * 
+     *
      * @param context The context to use
      */
     public PickAssignmentToSubmitPage( WOContext context )
@@ -100,17 +100,17 @@ public class PickAssignmentToSubmitPage
             //
             // assigments which are still open
             //
-            if ( !(  selectedCourse.isInstructor( wcSession().user() ) 
+            if ( !(  selectedCourse.isInstructor( wcSession().user() )
                             || selectedCourse.isTA( wcSession().user() ) ) )
             {
                 qualifiers.addObject( new EOKeyValueQualifier(
-                                  AssignmentOffering.AVAILABLE_FROM_KEY, 
-                                  EOQualifier.QualifierOperatorLessThan, 
+                                  AssignmentOffering.AVAILABLE_FROM_KEY,
+                                  EOQualifier.QualifierOperatorLessThan,
                                   currentTime
                                 ) );
             }
             qualifiers.addObject( new EOKeyValueQualifier(
-                                  AssignmentOffering.LATE_DEADLINE_KEY, 
+                                  AssignmentOffering.LATE_DEADLINE_KEY,
                                   EOQualifier.QualifierOperatorGreaterThan,
                                   currentTime
                                 ) );
@@ -124,12 +124,12 @@ public class PickAssignmentToSubmitPage
         //
         // assignments which are published
         //
-        if ( !(  selectedCourse.isInstructor( wcSession().user() ) 
+        if ( !(  selectedCourse.isInstructor( wcSession().user() )
               || selectedCourse.isTA( wcSession().user() ) ) )
         {
             log.debug( "hiding unpublished assignments" );
-            qualifiers.addObject( new EOKeyValueQualifier( 
-                                      AssignmentOffering.PUBLISH_KEY, 
+            qualifiers.addObject( new EOKeyValueQualifier(
+                                      AssignmentOffering.PUBLISH_KEY,
                                       EOQualifier.QualifierOperatorEqual,
                                       ERXConstant.integerForInt( 1 )
                                     ) );
@@ -221,7 +221,7 @@ public class PickAssignmentToSubmitPage
     /**
      * Determine if the current assignment has suspended submissions (that
      * this user can see).
-     * 
+     *
      * @return true if the user can see this assignment's status and this
      * assignment has suspended submissions
      */
