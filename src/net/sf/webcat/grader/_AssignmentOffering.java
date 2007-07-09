@@ -74,6 +74,8 @@ public abstract class _AssignmentOffering
     // Fetch specifications ---
     public static final String ALL_OFFERINGS_FSPEC = "allOfferings";
     public static final String COURSE_OFFERING_FSPEC = "courseOffering";
+    public static final String STAFF_FSPEC = "staff";
+    public static final String STUDENT_FSPEC = "student";
     public static final String SUBMITTER_ENGINE_BASE_FSPEC = "submitterEngineBase";
     public static final String ENTITY_NAME = "AssignmentOffering";
 
@@ -488,6 +490,62 @@ public abstract class _AssignmentOffering
         if ( courseOfferingBinding != null )
             bindings.setObjectForKey( courseOfferingBinding,
                                       "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Staff</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForStaff(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "staff", "AssignmentOffering" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Student</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForStudent(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "student", "AssignmentOffering" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         return context.objectsWithFetchSpecification( spec );
