@@ -401,63 +401,59 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    public void emailNotificationToStudent( String message )
+    public String permalink()
     {
-        StringBuffer studentMsg = new StringBuffer();
-        studentMsg.append( "The Grader submission report for " );
-        AssignmentOffering assignment = assignmentOffering();
-        if ( assignment != null )
+        if ( cachedPermalink == null )
         {
-            studentMsg.append( assignment.titleString() );
-            studentMsg.append( ' ' );
+            cachedPermalink = Application.configurationProperties()
+                .getProperty( "base.url" )
+                + "?page=MostRecent&"
+                + ID_FORM_KEY + "=" + id();
         }
-        studentMsg.append( "\nsubmission number " );
-        studentMsg.append( submitNumber() );
-        studentMsg.append( " " );
-        studentMsg.append( message );
-        studentMsg.append( ".\n" );
-        studentMsg.append( "Log in to Web-CAT to view the report.\n" );
-        net.sf.webcat.core.Application.sendSimpleEmail(
-            user().email(),
-            "[Grader] results available: #"
-            + submitNumber()
-            + ( assignment == null
-                ? ""
-                : ( ", " + assignment.titleString() ) ),
-            studentMsg.toString() );
+        return cachedPermalink;
     }
 
 
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
+    // ----------------------------------------------------------
+    public void emailNotificationToStudent( String message )
+    {
+        WCProperties properties =
+            new WCProperties( Application.configurationProperties() );
+        user().addPropertiesTo( properties );
+        if ( properties.getProperty( "login.url" ) == null )
+        {
+            String dest = Application.application().servletConnectURL();
+            properties.setProperty( "login.url", dest );
+        }
+        properties.setProperty( "submission.number",
+            Integer.toString( submitNumber() ) );
+        properties.setProperty( "message", message );
+        AssignmentOffering assignment = assignmentOffering();
+        if ( assignment != null )
+        {
+            properties.setProperty( "assignment.title",
+                assignment.titleString() );
+        }
+        properties.setProperty(  "submission.result.link", permalink() );
 
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
+        net.sf.webcat.core.Application.sendSimpleEmail(
+            user().email(),
+            properties.stringForKeyWithDefault(
+                "submission.email.title",
+                "[Grader] results available: #${submission.number}, "
+                + "${assignment.title}" ),
+            properties.stringForKeyWithDefault(
+                "submission.email.body",
+                "The feedback report for ${assignment.title}\n"
+                + "submission number ${submission.number} ${message}.\n\n"
+                + "Log in to Web-CAT to view the report:\n\n"
+                + "${submission.result.link}\n" )
+            );
+    }
 
 
     //~ Instance/static variables .............................................
 
+    private String cachedPermalink;
     static Logger log = Logger.getLogger( Submission.class );
 }

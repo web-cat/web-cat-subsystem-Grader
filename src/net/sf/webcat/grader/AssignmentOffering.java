@@ -174,6 +174,20 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
+    public String permalink()
+    {
+        if ( cachedPermalink == null )
+        {
+            cachedPermalink = Application.configurationProperties()
+                .getProperty( "base.url" )
+                + "?page=UploadSubmission&"
+                + ID_FORM_KEY + "=" + id();
+        }
+        return cachedPermalink;
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Determine the latest time when assignments are accepted.
      * @return the final deadline as a timestamp
@@ -869,5 +883,6 @@ public class AssignmentOffering
 
     //~ Instance/static variables .............................................
 
+    private String cachedPermalink;
     static Logger log = Logger.getLogger( AssignmentOffering.class );
 }
