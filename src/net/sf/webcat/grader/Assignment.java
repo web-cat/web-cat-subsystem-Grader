@@ -26,7 +26,9 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
+import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
+import er.extensions.ERXArrayUtilities;
 import java.io.File;
 import java.util.*;
 import net.sf.webcat.core.*;
@@ -54,6 +56,48 @@ public class Assignment
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Look up an Assignment by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The assignment, or null if no such id exists
+     */
+    public static Assignment assignmentForId( EOEditingContext ec, int id )
+    {
+        Assignment assignment = null;
+        NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+            ENTITY_NAME, "id", new Integer( id ) );
+        if ( results != null && results.count() > 0 )
+        {
+            assignment = (Assignment)results.objectAtIndex( 0 );
+        }
+        return assignment;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an Assignment by id number.  Assumes the editing
+     * context is appropriately locked.  Converts the string parameter
+     * to an integer, then performs the search.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The assignment, or null if no such id exists
+     */
+    public static Assignment assignmentForId( EOEditingContext ec, String id )
+    {
+        Assignment result = null;
+        int idNumber = er.extensions.ERXValueUtilities.intValue( id );
+        if ( idNumber > 0 )
+        {
+            result = assignmentForId( ec, idNumber );
+        }
+        return result;
+    }
+
+
     //~ Constants (for key names) .............................................
 
     public static final String COURSE_OFFERINGS_KEY =
@@ -62,34 +106,10 @@ public class Assignment
     public static final String COURSES_KEY =
         COURSE_OFFERINGS_KEY
         + "." + CourseOffering.COURSE_KEY;
+    public static final String ID_FORM_KEY = "aid";
 
 
-    //~ Methods ...............................................................
-
-    // ----------------------------------------------------------
-    private String subdirNameOf( String name )
-    {
-        String result = null;
-        if ( name != null )
-        {
-            char[] chars = new char[ name.length() ];
-            int  pos   = 0;
-            for ( int i = 0; i < name.length(); i++ )
-            {
-                char c = name.charAt( i );
-                if ( Character.isLetterOrDigit( c ) ||
-                     c == '_'                       ||
-                     c == '-' )
-                {
-                    chars[ pos ] = c;
-                    pos++;
-                }
-            }
-            result = new String( chars, 0, pos );
-        }
-        return result;
-    }
-
+    //~ Public Methods ........................................................
 
     // ----------------------------------------------------------
     public String subdirName()
@@ -134,6 +154,18 @@ public class Assignment
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        return (Number)EOUtilities.primaryKeyForObject(
+            editingContext() , this ).objectForKey( "id" );
     }
 
 
@@ -187,68 +219,6 @@ public class Assignment
         {
             renameSubdirs( dirNeedingRenaming, subdirName() );
             dirNeedingRenaming = null;
-        }
-    }
-
-
-    // ----------------------------------------------------------
-    private boolean conflictingSubdirNameExists( String subdir )
-    {
-        NSArray domains = AuthenticationDomain.authDomains();
-        for ( int i = 0; i < domains.count(); i++ )
-        {
-            AuthenticationDomain domain =
-                (AuthenticationDomain)domains.objectAtIndex( i );
-            NSArray offerings = offerings();
-            StringBuffer dir =
-                AssignmentOffering.submissionBaseDirName( domain );
-            int baseDirLen = dir.length();
-            for ( int j = 0; j < offerings.count(); j++ )
-            {
-                // clear out old suffix
-                dir.delete( baseDirLen, dir.length() );
-                AssignmentOffering offering =
-                    (AssignmentOffering)offerings.objectAtIndex( j );
-                offering.addSubdirNameForAssignment( dir, subdir );
-                File f = new File( dir.toString() );
-                if ( f.exists() )
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-    // ----------------------------------------------------------
-    private void renameSubdirs( String oldSubdir, String newSubdir )
-    {
-        NSArray domains = AuthenticationDomain.authDomains();
-        for ( int i = 0; i < domains.count(); i++ )
-        {
-            AuthenticationDomain domain =
-                (AuthenticationDomain)domains.objectAtIndex( i );
-            NSArray offerings = offerings();
-            StringBuffer dir =
-                AssignmentOffering.submissionBaseDirName( domain );
-            int baseDirLen = dir.length();
-            for ( int j = 0; j < offerings.count(); j++ )
-            {
-                // clear out old suffix
-                dir.delete( baseDirLen, dir.length() );
-                AssignmentOffering offering =
-                    (AssignmentOffering)offerings.objectAtIndex( j );
-                offering.addSubdirNameForAssignment( dir, oldSubdir );
-                File oldDir = new File( dir.toString() );
-                dir.delete( baseDirLen, dir.length() );
-                offering.addSubdirNameForAssignment( dir, newSubdir );
-                File newDir = new File( dir.toString() );
-                if ( oldDir.exists() )
-                {
-                    oldDir.renameTo( newDir );
-                }
-            }
         }
     }
 
@@ -351,6 +321,36 @@ public class Assignment
 
 
     // ----------------------------------------------------------
+    public AssignmentOffering offeringForUser( User user )
+    {
+        AssignmentOffering offering = null;
+        NSDictionary userBinding = new NSDictionary( user, "user" );
+
+        // First, check to see if the user is a student in any of the
+        // course offerings associated with the available assignment offerings
+        NSArray results = ERXArrayUtilities
+            .filteredArrayWithEntityFetchSpecification( offerings(),
+                AssignmentOffering.ENTITY_NAME,
+                AssignmentOffering.STUDENT_FSPEC,
+                userBinding );
+        if ( results == null || results.count() == 0 )
+        {
+            // if the user is not found as a student, check for staff instead
+            results = ERXArrayUtilities
+                .filteredArrayWithEntityFetchSpecification( offerings(),
+                    AssignmentOffering.ENTITY_NAME,
+                    AssignmentOffering.STAFF_FSPEC,
+                    userBinding );
+        }
+        if ( results != null && results.count() > 0 )
+        {
+            offering = (AssignmentOffering)results.objectAtIndex( 0 );
+        }
+        return offering;
+    }
+
+
+    // ----------------------------------------------------------
     public static boolean namesAreSimilar( String name1, String name2 )
     {
         boolean result = false;
@@ -371,33 +371,93 @@ public class Assignment
     }
 
 
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
+    //~ Private Methods .......................................................
 
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
+    // ----------------------------------------------------------
+    private String subdirNameOf( String name )
+    {
+        String result = null;
+        if ( name != null )
+        {
+            char[] chars = new char[ name.length() ];
+            int  pos   = 0;
+            for ( int i = 0; i < name.length(); i++ )
+            {
+                char c = name.charAt( i );
+                if ( Character.isLetterOrDigit( c ) ||
+                     c == '_'                       ||
+                     c == '-' )
+                {
+                    chars[ pos ] = c;
+                    pos++;
+                }
+            }
+            result = new String( chars, 0, pos );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    private boolean conflictingSubdirNameExists( String subdir )
+    {
+        NSArray domains = AuthenticationDomain.authDomains();
+        for ( int i = 0; i < domains.count(); i++ )
+        {
+            AuthenticationDomain domain =
+                (AuthenticationDomain)domains.objectAtIndex( i );
+            NSArray offerings = offerings();
+            StringBuffer dir =
+                AssignmentOffering.submissionBaseDirName( domain );
+            int baseDirLen = dir.length();
+            for ( int j = 0; j < offerings.count(); j++ )
+            {
+                // clear out old suffix
+                dir.delete( baseDirLen, dir.length() );
+                AssignmentOffering offering =
+                    (AssignmentOffering)offerings.objectAtIndex( j );
+                offering.addSubdirNameForAssignment( dir, subdir );
+                File f = new File( dir.toString() );
+                if ( f.exists() )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    private void renameSubdirs( String oldSubdir, String newSubdir )
+    {
+        NSArray domains = AuthenticationDomain.authDomains();
+        for ( int i = 0; i < domains.count(); i++ )
+        {
+            AuthenticationDomain domain =
+                (AuthenticationDomain)domains.objectAtIndex( i );
+            NSArray offerings = offerings();
+            StringBuffer dir =
+                AssignmentOffering.submissionBaseDirName( domain );
+            int baseDirLen = dir.length();
+            for ( int j = 0; j < offerings.count(); j++ )
+            {
+                // clear out old suffix
+                dir.delete( baseDirLen, dir.length() );
+                AssignmentOffering offering =
+                    (AssignmentOffering)offerings.objectAtIndex( j );
+                offering.addSubdirNameForAssignment( dir, oldSubdir );
+                File oldDir = new File( dir.toString() );
+                dir.delete( baseDirLen, dir.length() );
+                offering.addSubdirNameForAssignment( dir, newSubdir );
+                File newDir = new File( dir.toString() );
+                if ( oldDir.exists() )
+                {
+                    oldDir.renameTo( newDir );
+                }
+            }
+        }
+    }
 
 
     //~ Instance/static variables .............................................
