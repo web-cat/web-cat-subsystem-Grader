@@ -56,11 +56,6 @@ public class ICalView
 
     //~ Methods ...............................................................
 
-    // TODO: add customized, assignment-specific URLs
-    // TODO: add URLs in My Profile preferences
-    // TODO: add UIDs
-    // TODO: add filtering for list of courses and list of CRNs
-
     // Was using this template for events:
     // ------------------------
 //    BEGIN:VEVENT
@@ -74,7 +69,7 @@ public class ICalView
     // ----------------------------------------------------------
     public String mimeType()
     {
-        return "text/plain"; // "text/calendar";
+        return "text/calendar";
     }
 
 
