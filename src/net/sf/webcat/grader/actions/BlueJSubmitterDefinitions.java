@@ -230,8 +230,8 @@ public class BlueJSubmitterDefinitions
             "submit",
             null,
             useSecureSubmissionURLs(),
-            0
-            // ,true
+            0,
+            !useSecureSubmissionURLs()
             );
         // unfortunately, we can't force HTTPS here, since not all
         // installations will necessarily support SSL
