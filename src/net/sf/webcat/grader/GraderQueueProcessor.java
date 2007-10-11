@@ -53,7 +53,7 @@ public class GraderQueueProcessor
     // ----------------------------------------------------------
     /**
      * Default constructor
-     * 
+     *
      * @param queue the queue to operate on
      */
     public GraderQueueProcessor( GraderQueue queue )
@@ -128,7 +128,7 @@ public class GraderQueueProcessor
                 }
                 editingContext = Application.newPeerEditingContext();
                 editingContext.lock();
-                
+
                 // Clear discarded jobs
                 NSArray jobList = null;
                 try
@@ -144,7 +144,7 @@ public class GraderQueueProcessor
                                     fetchDiscardedJobs
                             );
                 }
-                
+
                 if ( jobList != null )
                 {
                     // delete all the discarded jobs
@@ -222,26 +222,23 @@ public class GraderQueueProcessor
                         NSTimestamp startProcessing = new NSTimestamp();
                         EnqueuedJob job =
                             (EnqueuedJob)jobList.objectAtIndex( i );
-                        if ( job.discarded() )
-                        {
-                            editingContext.deleteObject( job );
-                            editingContext.saveChanges();
-                            continue;
-                        }
                         Submission submission = job.submission();
                         if ( submission == null )
                         {
                             log.error( "null submission in enqueued job: "
                                        + "deleting" );
                             editingContext.deleteObject( job );
-                            editingContext.saveChanges();
+                        }
+                        else if ( job.discarded() )
+                        {
+                            log.debug("discarded job: deleting");
+                            editingContext.deleteObject( job );
                         }
                         else if ( submission.assignmentOffering() == null )
                         {
                             log.error( "submission with null assignment "
                                        + "offering in enqueued job: deleting" );
                             editingContext.deleteObject( job );
-                            editingContext.saveChanges();
                         }
                         else
                         {
@@ -275,15 +272,37 @@ public class GraderQueueProcessor
                                     jobsCountedWithWaits++;
                                 }
                             }
+                        }
+
+                        // Now save all the changes
+                        {
                             // assignment offering could have changed because
                             // of a fault, so save any changes before
                             // forcing it out of editing context cache
-                            editingContext.saveChanges();
-                            editingContext.refaultObject( 
-                                submission.assignmentOffering(),
-                                editingContext.globalIDForObject(
-                                    submission.assignmentOffering() ),
-                                editingContext );
+                            try
+                            {
+                                editingContext.saveChanges();
+                                editingContext.refaultAllObjects();
+                            }
+                            catch (IllegalStateException e)
+                            {
+                                // Database inconsistency problem
+                                try
+                                {
+                                    editingContext.revert();
+                                    editingContext.invalidateAllObjects();
+                                    editingContext.unlock();
+                                    Application.releasePeerEditingContext(
+                                        editingContext);
+                                }
+                                catch (Exception ee)
+                                {
+                                    log.error("Exception trying to save "
+                                        + "grading results (retrying)", ee);
+                                }
+                                editingContext = null;
+                                queue.enqueue( null );
+                            }
                         }
                         // Only process one regrading job before looking for
                         // more regular submissions.
@@ -317,7 +336,7 @@ public class GraderQueueProcessor
      * This function processes the job and performs the stages that
      * are necessary.  It guards against any exceptions while
      * processing the job.
-     * 
+     *
      * @param job the job to process
      */
     void processJobWithProtection( EnqueuedJob job )
@@ -340,7 +359,7 @@ public class GraderQueueProcessor
     /**
      * This function processes the job and performs the stages that
      * are necessary.
-     * 
+     *
      * @param job the job to process
      */
     void processJob( EnqueuedJob job )
@@ -451,7 +470,7 @@ public class GraderQueueProcessor
             if ( gradingProperties.getProperty( "halt" ) != null )
             {
                 if ( gradingProperties.booleanForKey( "halt" ) )
-                {       
+                {
                   gradingProperties.remove( "halt" );
                   log.error( "halt requested in step " + thisStep
                              + "\n\tfor job " + job );
@@ -469,7 +488,7 @@ public class GraderQueueProcessor
             if ( gradingProperties.getProperty( "halt.all" ) != null )
             {
                 if ( gradingProperties.booleanForKey( "halt.all" ) )
-                {       
+                {
                   gradingProperties.remove( "halt.all" );
                   log.error( "halt requested for all jobs in step " + thisStep
                              + "\n\tfor job " + job );
@@ -506,7 +525,7 @@ public class GraderQueueProcessor
      * Creates and cleans the working directory, if necessary, fills
      * it with the student's submission, and creates the reporting
      * directory.
-     * 
+     *
      * @param job the job to operate on
      * @throws Exception if it occurs during this stage
      */
@@ -555,7 +574,7 @@ public class GraderQueueProcessor
      * data member if an internal failure occurred in processing this
      * step.  Alternatively, it will set the timeoutOccurredInStep data
      * member if the time limit was exceeded for this step.
-     * 
+     *
      * @param job            the job being processed
      * @param step           the grading step to execute
      * @param properties     the cumulative properties settings to use
@@ -697,7 +716,7 @@ public class GraderQueueProcessor
      * Collects all the reports in the given properties file, splitting
      * them into those that are inline, those that are downloadable,
      * and those to send to the administrator.
-     * 
+     *
      * @param job              the job
      * @param properties       the properties describing the reports
      * @param submissionResult the result to link downloadable reports to
@@ -922,7 +941,7 @@ public class GraderQueueProcessor
     /**
      * Generates the final report, records the submission results,
      * and deletes the job.
-     * 
+     *
      * @param job the finished job
      */
     void generateFinalReport( EnqueuedJob  job,
@@ -1006,8 +1025,8 @@ public class GraderQueueProcessor
                 + submission.submitNumber()
                 + ( assignment == null
                     ? ""
-                    : ( ", " + assignment.titleString() ) ), 
-                "Reports addressed to the adminstrator are attached.\n", 
+                    : ( ", " + assignment.titleString() ) ),
+                "Reports addressed to the adminstrator are attached.\n",
                 adminReports );
         }
     }
@@ -1017,7 +1036,7 @@ public class GraderQueueProcessor
     /**
      * Generates a single composite file from multiple inlined report
      * fragments.
-     * 
+     *
      * @param destination The output file to create and fill
      * @param inlineFragments The array of InlineFiles to fill it with
      */
@@ -1038,7 +1057,7 @@ public class GraderQueueProcessor
                 {
                     InlineFile thisFile =
                         (InlineFile)inlineFragments.objectAtIndex( i );
-                    
+
                     boolean isHTML = thisFile.mimeType != null &&
                         ( thisFile.mimeType.equalsIgnoreCase( "text/html" ) ||
                           thisFile.mimeType.equalsIgnoreCase( "html" ) );
@@ -1063,7 +1082,7 @@ public class GraderQueueProcessor
                         {
                             out.write( "</pre>".getBytes() );
                         }
-                        
+
                     }
                     catch ( Exception ex1 )
                     {
@@ -1097,7 +1116,7 @@ public class GraderQueueProcessor
     /**
      * Handles a technical fault Suspends grading of other submissions for the
      * same assignment
-     * 
+     *
      * @param job the job which faulted
      */
     void technicalFault( EnqueuedJob job,
@@ -1149,7 +1168,7 @@ public class GraderQueueProcessor
     // ----------------------------------------------------------
     /**
      * Find out how many grading jobs have been processed so far.
-     * 
+     *
      * @return the number of jobs process so far
      */
     public int processedJobCount()
@@ -1161,7 +1180,7 @@ public class GraderQueueProcessor
     // ----------------------------------------------------------
     /**
      * Find out the processing delay for the most recently completed job.
-     * 
+     *
      * @return the time in milliseconds
      */
     public long mostRecentJobWait()
@@ -1173,7 +1192,7 @@ public class GraderQueueProcessor
     // ----------------------------------------------------------
     /**
      * Find out the estimated processing delay for any job.
-     * 
+     *
      * @return the time in milliseconds
      */
     public long estimatedJobTime()
@@ -1211,7 +1230,7 @@ public class GraderQueueProcessor
     /** Number of jobs processed so far, to report administrative status. */
     private int  jobCount = 0;
     private int  jobsCountedWithWaits = 0;
-    
+
     /** Time between submission and grading completion for more recent job. */
     private long mostRecentJobWait = 0;
     private long totalWaitForJobs = 0;
@@ -1220,7 +1239,7 @@ public class GraderQueueProcessor
     // State for the current step being executed
     private boolean faultOccurredInStep;
     private boolean timeoutOccurredInStep;
-    
+
     private EOEditingContext editingContext;
 
     static Logger log = Logger.getLogger( GraderQueueProcessor.class );
