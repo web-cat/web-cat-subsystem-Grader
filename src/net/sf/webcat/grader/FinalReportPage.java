@@ -141,6 +141,10 @@ public class FinalReportPage
      */
     public WOComponent fileDeliveryAction()
     {
+        if (selectedReport == null)
+        {
+            error("Please select a file to download first.");
+        }
         DeliverFile download =
             (DeliverFile)pageWithName( DeliverFile.class.getName() );
         download.setFileName(
@@ -396,8 +400,46 @@ public class FinalReportPage
         boolean answer = false;
         if ( result != null && !showReturnToGrading )
         {
-            answer = result.submission().assignmentOffering().userCanSubmit(
-                wcSession().localUser() );
+//            answer = result.submission().assignmentOffering().userCanSubmit(
+//                wcSession().localUser() );
+
+            // This is all debugging code to figure out why we occasionally
+            // get NPEs on the original line commented out above.
+            Submission sub = result.submission();
+            if (sub == null)
+            {
+                log.error("null submission for result found!");
+                try
+                {
+                    log.error("result = " + result);
+                }
+                catch (Exception e)
+                {
+                    log.error("unable to print result details:", e);
+                }
+            }
+            else
+            {
+                AssignmentOffering ao = sub.assignmentOffering();
+                if (ao == null)
+                {
+                    log.error("null assignment offering for submission found!");
+                    try
+                    {
+                        log.error("result = " + result);
+                        log.error("submission = " + sub);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error(
+                            "unable to print submission/result details:", e);
+                    }
+                }
+                else
+                {
+                    answer = ao.userCanSubmit( wcSession().localUser() );
+                }
+            }
         }
         return answer;
     }
