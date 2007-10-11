@@ -302,6 +302,7 @@ public class GraderQueueProcessor
                                 }
                                 editingContext = null;
                                 queue.enqueue( null );
+                                break;
                             }
                         }
                         // Only process one regrading job before looking for
