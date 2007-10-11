@@ -82,10 +82,10 @@ public class HistogramChart
         if ( pngChart == null )
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            
+
             // adjust chart height
             double maxItems = 2;
-            IntervalXYDataset dataset = dataset();            
+            IntervalXYDataset dataset = dataset();
             for ( int i = 0; i < dataset.getItemCount( 0 ); i++ )
             {
                 double x = dataset.getYValue( 0, i );

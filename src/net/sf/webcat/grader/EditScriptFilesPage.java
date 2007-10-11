@@ -52,7 +52,7 @@ public class EditScriptFilesPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditScriptFilesPage( WOContext context )
