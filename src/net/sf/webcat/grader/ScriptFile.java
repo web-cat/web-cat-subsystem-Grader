@@ -148,9 +148,7 @@ public class ScriptFile
         {
             log.debug( "execute(): args = '" + args + "', cwd = " + cwd );
         }
-        Runtime runtime = Runtime.getRuntime();
         String  command   = "";
-        String[] cmdArray = null;
         if ( configDescription().containsKey( "interpreter.prefix" ) )
         {
             // Look up the associated value, perform property substitution
@@ -164,70 +162,13 @@ public class ScriptFile
                 + " ";
         }
         command += mainFilePath();
-        Process proc = null;
         if ( args != null )
         {
             command = command + " " + args;
         }
 
-        // Tack on the command shell prefix to the beginning, quoting the
-        // whole argument sequence if necessary
-        {
-            String shell = net.sf.webcat.core.Application.cmdShell();
-            if ( shell != null && shell.length() > 0 )
-            {
-                if ( shell.charAt( shell.length() - 1 ) == '"' )
-                {
-                    cmdArray = shell.split( "\\s+" );
-                    cmdArray[cmdArray.length - 1] = command;
-                }
-                else
-                {
-                    command = shell + command;
-                }
-            }
-        }
-
-        try
-        {
-            if ( log.isDebugEnabled() )
-            {
-                if ( cmdArray != null )
-                {
-                    command = cmdArray[0];
-                    for ( int i = 1; i < cmdArray.length; i++ )
-                    {
-                        command += " " + cmdArray[i];
-                    }
-                }
-                log.debug( "execute(): " + command );
-            }
-            if ( cmdArray != null )
-            {
-                proc = runtime.exec( cmdArray,
-                    ( (Application) Application.application() )
-                        .subsystemManager().envp(),
-                    cwd );
-            }
-            else
-            {
-                proc = runtime.exec( command,
-                    ( (Application) Application.application() )
-                        .subsystemManager().envp(),
-                    cwd );
-            }
-            int exitCode = proc.waitFor();
-            log.debug( "external plug-in returned exit code: " + exitCode );
-        }
-        catch ( InterruptedException e )
-        {
-            // stopped by timeout
-            if ( proc != null )
-            {
-                proc.destroy();
-            }
-            throw e;
-        }
+        ( (Application)Application.application() )
+            .executeExternalCommand( command, cwd );
     }
 
 
