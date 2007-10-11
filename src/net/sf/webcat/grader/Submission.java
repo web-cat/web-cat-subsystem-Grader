@@ -179,8 +179,27 @@ public class Submission
      */
     public Number id()
     {
-        return (Number)EOUtilities.primaryKeyForObject(
-            editingContext() , this ).objectForKey( "id" );
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            String subInfo = null;
+            try
+            {
+                subInfo = toString();
+            }
+            catch (Exception ee)
+            {
+                subInfo = ee.toString();
+            }
+            ((Application)Application.application()).emailExceptionToAdmins(
+                e, null, "An exception was generated trying to retrieve the "
+                + "id for a submission.\n\nSubmission = " + subInfo );
+            return 0;
+        }
     }
 
 
