@@ -70,6 +70,7 @@ public class EditAssignmentPage
     public WODisplayGroup    submissionProfileDisplayGroup;
     public SubmissionProfile submissionProfile; // For Repetition1
     public AssignmentOffering upcomingAssignment;
+    public AssignmentOffering thisAssignment;
 
 
     //~ Methods ...............................................................
@@ -80,15 +81,18 @@ public class EditAssignmentPage
         log.debug( "starting appendToResponse()" );
         upcomingAssignments = null;
         currentTime = new NSTimestamp();
-        AssignmentOffering ao = prefs().assignmentOffering();
-        scriptDisplayGroup.setMasterObject( ao.assignment() );
-        isSuspended = ao.gradingSuspended();
+        if (thisAssignment == null)
+        {
+            thisAssignment = prefs().assignmentOffering();
+        }
+        scriptDisplayGroup.setMasterObject( thisAssignment.assignment() );
+        isSuspended = thisAssignment.gradingSuspended();
         submissionProfileDisplayGroup.setObjectArray(
             SubmissionProfile.profilesForCourseIncludingMine(
                 wcSession().localContext(),
                 wcSession().user(),
-                ao.courseOffering().course(),
-                ao.assignment().submissionProfile() )
+                thisAssignment.courseOffering().course(),
+                thisAssignment.assignment().submissionProfile() )
              );
         log.debug( "starting super.appendToResponse()" );
         super.appendToResponse( response, context );
@@ -141,32 +145,32 @@ public class EditAssignmentPage
     protected boolean saveAndCanProceed( boolean requireProfile )
     {
         boolean offeringIsSuspended =
-            prefs().assignmentOffering().gradingSuspended();
+            thisAssignment.gradingSuspended();
         if ( offeringIsSuspended != isSuspended )
         {
             if ( ! offeringIsSuspended )
             {
                 log.debug( "suspending grading on this assignment" );
-                prefs().assignmentOffering().setGradingSuspended( true );
+                thisAssignment.setGradingSuspended( true );
                 isSuspended = true;
             }
             else
             {
                 log.debug( "resuming grading on this assignment" );
-                prefs().assignmentOffering().setGradingSuspended( false );
+                thisAssignment.setGradingSuspended( false );
                 // Have to save this change first!
                 wcSession().commitLocalChanges();
                 releaseSuspendedSubs();
             }
         }
         if ( requireProfile &&
-             prefs().assignmentOffering().assignment().submissionProfile()
+             thisAssignment.assignment().submissionProfile()
              == null )
         {
             error(
                 "please select submission rules for this assignment." );
         }
-        return  validateURL( prefs().assignmentOffering().assignment().url() )
+        return  validateURL( thisAssignment.assignment().url() )
             && !hasMessages();
     }
 
@@ -210,7 +214,7 @@ public class EditAssignmentPage
     public boolean hasSubmissionProfile()
     {
         return null !=
-            prefs().assignmentOffering().assignment().submissionProfile();
+            thisAssignment.assignment().submissionProfile();
     }
 
 
@@ -239,7 +243,7 @@ public class EditAssignmentPage
             SubmissionProfile newProfile = new SubmissionProfile();
             wcSession().localContext().insertObject( newProfile );
             Assignment selectedAssignment =
-                prefs().assignmentOffering().assignment();
+                thisAssignment.assignment();
             selectedAssignment.setSubmissionProfileRelationship( newProfile );
             newProfile.setAuthor( wcSession().user() );
             result = (WCComponent)pageWithName(
@@ -256,7 +260,7 @@ public class EditAssignmentPage
         log.debug( "script count = "
                    + scriptDisplayGroup.displayedObjects().count() );
         suspendedSubmissionCount =
-            prefs().assignmentOffering().getSuspendedSubs().count();
+            thisAssignment.getSuspendedSubs().count();
         return suspendedSubmissionCount > 0;
     }
 
@@ -272,13 +276,13 @@ public class EditAssignmentPage
     public WOComponent releaseSuspendedSubs()
     {
         log.info( "releasing all paused assignments: "
-              + prefs().assignmentOffering().titleString() );
+              + thisAssignment.titleString() );
         EOEditingContext ec = Application.newPeerEditingContext();
         try
         {
             ec.lock();
             AssignmentOffering localAO = (AssignmentOffering)EOUtilities
-                .localInstanceOfObject( ec, prefs().assignmentOffering() );
+                .localInstanceOfObject( ec, thisAssignment );
             NSArray jobList = localAO.getSuspendedSubs();
             for ( int i = 0; i < jobList.count(); i++ )
             {
@@ -308,7 +312,7 @@ public class EditAssignmentPage
         {
             ec.lock();
             AssignmentOffering localAO = (AssignmentOffering)EOUtilities
-                .localInstanceOfObject( ec, prefs().assignmentOffering() );
+                .localInstanceOfObject( ec, thisAssignment );
             log.info( "cancelling all paused assignments: "
                       + wcSession().courseOffering().course().deptNumber()
                       + " "
@@ -335,7 +339,7 @@ public class EditAssignmentPage
     public WOComponent regradeSubsActionOk()
     {
         wcSession().commitLocalChanges();
-        prefs().assignmentOffering().regradeMostRecentSubsForAll(
+        thisAssignment.regradeMostRecentSubsForAll(
             wcSession().localContext() );
         wcSession().commitLocalChanges();
         return null;
@@ -421,6 +425,7 @@ public class EditAssignmentPage
         if ( saveAndCanProceed() )
         {
             log.debug( "step = " + thisStep );
+            prefs().setAssignmentOfferingRelationship( thisAssignment );
             prefs().setStepRelationship( thisStep );
             result = (WCComponent)pageWithName(
                 EditStepPage.class.getName() );
@@ -497,7 +502,7 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent clearGraph()
     {
-        prefs().assignmentOffering().clearGraphSummary();
+        thisAssignment.clearGraphSummary();
         wcSession().commitLocalChanges();
         return null;
     }
@@ -507,21 +512,21 @@ public class EditAssignmentPage
     public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
     {
         super.takeValuesFromRequest( arg0, arg1 );
-        String name = prefs().assignmentOffering().assignment().name();
-        if ( prefs().assignmentOffering().assignment().submissionProfile()
+        String name = thisAssignment.assignment().name();
+        if ( thisAssignment.assignment().submissionProfile()
              == null
              && name != null )
         {
             NSArray similar = AssignmentOffering.offeringsWithSimilarNames(
                 wcSession().localContext(),
                 name,
-                prefs().assignmentOffering().courseOffering(),
+                thisAssignment.courseOffering(),
                 1 );
             if ( similar.count() > 0 )
             {
                 AssignmentOffering ao =
                     (AssignmentOffering)similar.objectAtIndex( 0 );
-                prefs().assignmentOffering().assignment().setSubmissionProfile(
+                thisAssignment.assignment().setSubmissionProfile(
                     ao.assignment().submissionProfile() );
             }
         }
@@ -548,7 +553,7 @@ public class EditAssignmentPage
         {
             upcomingAssignments = AssignmentOffering.objectsForAllOfferings(
                 wcSession().localContext() ).mutableClone();
-            upcomingAssignments.removeObject( prefs().assignmentOffering() );
+            upcomingAssignments.removeObject( thisAssignment );
         }
         return upcomingAssignments;
     }

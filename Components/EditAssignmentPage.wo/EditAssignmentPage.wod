@@ -24,7 +24,7 @@ CourseName: WOString {
 
 Description: WOTextField {
 	size = 40;
-	value = prefs.assignmentOffering.assignment.shortDescription;
+	value = thisAssignment.assignment.shortDescription;
 }
 
 DescriptionInfo: net.sf.webcat.core.PopUpInfo {
@@ -35,7 +35,7 @@ DescriptionInfo: net.sf.webcat.core.PopUpInfo {
 DueDate: WOTextField {
 	size      = 20;
     formatter = session.timeFormatter;
-	value     = prefs.assignmentOffering.dueDate;
+	value     = thisAssignment.dueDate;
 	id        = "DueDate";
 	readonly  = 1;
 }
@@ -72,7 +72,7 @@ EditSubmissionProfile: WOImageButton {
 }
 
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
-    graphSummary = prefs.assignmentOffering.graphSummary;
+    graphSummary = thisAssignment.graphSummary;
 }
 
 //HasNoSubmissionProfile: WOConditional {
@@ -95,7 +95,7 @@ LastTR: net.sf.webcat.core.TableRow {
 MoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = prefs.assignmentOffering.assignment.moodleId;
+	value = thisAssignment.assignment.moodleId;
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -106,7 +106,7 @@ MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
 OverrideMoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = prefs.assignmentOffering.moodleId;
+	value = thisAssignment.moodleId;
 }
 
 
@@ -133,7 +133,7 @@ MoveStepUp: WOImageButton {
 }
 
 Name: WOTextField {
-	value = prefs.assignmentOffering.assignment.name;
+	value = thisAssignment.assignment.name;
 	size  = 40;
 }
 
@@ -163,7 +163,7 @@ Page: net.sf.webcat.core.WizardPage {
 }
 
 PublishIt: WOCheckBox {
-	checked = prefs.assignmentOffering.publish;
+	checked = thisAssignment.publish;
 }
 
 PublishItInfo: net.sf.webcat.core.PopUpInfo {
@@ -216,11 +216,11 @@ SubmissionProfileList: WOPopUpButton {
     list          = submissionProfileDisplayGroup.displayedObjects;
     item          = submissionProfile;
     displayString = submissionProfile.name;
-    selection     = prefs.assignmentOffering.assignment.submissionProfile;
+    selection     = thisAssignment.assignment.submissionProfile;
 }
 
 //SubmissionProfileName: WOString {
-//	value = prefs.assignmentOffering.assignment.submissionProfile.name;
+//	value = thisAssignment.assignment.submissionProfile.name;
 //}
 
 Suspend: WOCheckBox {
@@ -255,7 +255,7 @@ TR2: net.sf.webcat.core.TableRow {
 UploadInstructions: WOText {
 	rows  = 8;
 	cols  = 60;
- 	value = prefs.assignmentOffering.assignment.fileUploadMessage;
+ 	value = thisAssignment.assignment.fileUploadMessage;
 }
 
 UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
@@ -291,7 +291,7 @@ UpcomingIsUnpublished: WOConditional {
 
 URL: WOTextField {
 	size = 40;
-	value = prefs.assignmentOffering.assignment.url;
+	value = thisAssignment.assignment.url;
 }
 
 URLInfo: net.sf.webcat.core.PopUpInfo {
