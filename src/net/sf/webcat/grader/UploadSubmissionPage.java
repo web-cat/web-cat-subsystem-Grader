@@ -318,7 +318,7 @@ public class UploadSubmissionPage
                 "In UploadSubmissionPage:takeValuesFromRequest(), a post "
                 + "request without an attached file submission was received\n."
                 + "Browser info = \n"
-                + wcSession().browser()
+                + context().request().headerForKey("user-agent")
                 );
         }
     }
