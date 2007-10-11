@@ -31,6 +31,7 @@ Delimiter: WOPopUpButton {
 	item          = aDelimiter;
 	displayString = aDelimiter.label;
 	selection     = selectedDelimiter;
+    onchange      = "submitForm()";
 }
 
 DelimiterInfo: net.sf.webcat.core.PopUpInfo {
