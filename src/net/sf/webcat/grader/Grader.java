@@ -143,7 +143,7 @@ public class Grader
      * Initialize the subsystem-specific session data in a newly created
      * session object.  This method is called once by the core for
      * each newly created session object.
-     * 
+     *
      * @param s The new session object
      */
     public void initializeSessionData( Session s )
@@ -159,7 +159,7 @@ public class Grader
             // Swallow the exception--we want to force a failure on
             // the first cross-model search in this session, so that
             // later searches will work OK.
-        }        
+        }
     }
 
 
@@ -204,7 +204,7 @@ public class Grader
     // ----------------------------------------------------------
     /**
      * Access the grader job queue.
-     * 
+     *
      * @return the grader job queue associated with this subsystem
      */
     public GraderQueue graderQueue()
@@ -216,7 +216,7 @@ public class Grader
     // ----------------------------------------------------------
     /**
      * Find out how many grading jobs have been processed so far.
-     * 
+     *
      * @return the number of jobs process so far
      */
     public int processedJobCount()
@@ -228,7 +228,7 @@ public class Grader
     // ----------------------------------------------------------
     /**
      * Find out the processing delay for the most recently completed job.
-     * 
+     *
      * @return the time in milliseconds
      */
     public long mostRecentJobWait()
@@ -240,7 +240,7 @@ public class Grader
     // ----------------------------------------------------------
     /**
      * Find out the processing delay for the most recently completed job.
-     * 
+     *
      * @return the time in milliseconds
      */
     public long estimatedJobTime()
@@ -360,18 +360,18 @@ public class Grader
         log.debug( "user = " + session.user()
                    + "(prime = " + session.primeUser() + ")" );
 //        qualifiers.addObject( new EOKeyValueQualifier(
-//                              AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY, 
-//                              EOQualifier.QualifierOperatorEqual, 
+//                              AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
+//                              EOQualifier.QualifierOperatorEqual,
 //                              session.user()
 //                             ) );
 //        log.debug( "scheme = " + scheme );
 //        qualifiers.addObject( new EOKeyValueQualifier(
-//                                      AssignmentOffering.ASSIGNMENT_NAME_KEY, 
-//                                      EOQualifier.QualifierOperatorEqual, 
+//                                      AssignmentOffering.ASSIGNMENT_NAME_KEY,
+//                                      EOQualifier.QualifierOperatorEqual,
 //                                      scheme
 //                                  ) );
-//        qualifiers.addObject( new EOKeyValueQualifier( 
-//                                      AssignmentOffering.PUBLISH_KEY, 
+//        qualifiers.addObject( new EOKeyValueQualifier(
+//                                      AssignmentOffering.PUBLISH_KEY,
 //                                      EOQualifier.QualifierOperatorGreaterThan,
 //                                      ERXConstant.integerForInt( 0 )
 //                                    ) );
@@ -514,26 +514,26 @@ public class Grader
         {
             // Look for an assignment where this user is course staff
             NSMutableArray qualifiers = new NSMutableArray();
+//            qualifiers.addObject( new EOKeyValueQualifier(
+//                                  AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
+//                                  EOQualifier.QualifierOperatorEqual,
+//                                  session.user()
+//                                 ) );
+//            qualifiers.addObject( new EOKeyValueQualifier(
+//                            AssignmentOffering.COURSE_OFFERING_TAS_KEY,
+//                            EOQualifier.QualifierOperatorEqual,
+//                            session.user()
+//                           ) );
+//            qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
             qualifiers.addObject( new EOKeyValueQualifier(
-                                  AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY, 
-                                  EOQualifier.QualifierOperatorEqual, 
-                                  session.user()
-                                 ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.COURSE_OFFERING_TAS_KEY, 
-                            EOQualifier.QualifierOperatorEqual,
-                            session.user()
-                           ) );
-            qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.ASSIGNMENT_NAME_KEY, 
+                            AssignmentOffering.ASSIGNMENT_NAME_KEY,
                             EOQualifier.QualifierOperatorEqual,
                             scheme
                            ) );
             if ( crn != null )
             {
                 qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.COURSE_OFFERING_CRN_KEY, 
+                            AssignmentOffering.COURSE_OFFERING_CRN_KEY,
                             EOQualifier.QualifierOperatorEqual,
                             crn
                            ) );
@@ -541,7 +541,7 @@ public class Grader
             else if ( courseNo != null )
             {
                 qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.COURSE_NUMBER_KEY, 
+                            AssignmentOffering.COURSE_NUMBER_KEY,
                             EOQualifier.QualifierOperatorEqual,
                             courseNo
                            ) );
@@ -557,6 +557,31 @@ public class Grader
                                     AssignmentOffering.ENTITY_NAME,
                                     new EOAndQualifier( qualifiers ),
                                     null ) );
+                // Remove any that the user doesn't have staff access to.
+                // Can't put this in an EOOrQualifier, since the generated
+                // SQL will be broken.
+                if (assignments.count() > 0 )
+                {
+                    NSMutableArray filtered = assignments.mutableClone();
+                    int i = 0;
+                    while (i < assignments.count())
+                    {
+                        AssignmentOffering ao =
+                            (AssignmentOffering)filtered.objectAtIndex(i);
+                        CourseOffering co = ao.courseOffering();
+                        if ( session.user().hasAdminPrivileges()
+                             || co.isInstructor(session.user())
+                             || co.isTA(session.user()) )
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            filtered.remove(i);
+                        }
+                    }
+                    assignments = filtered;
+                }
                 if ( assignments.count() > 0 )
                 {
                     log.debug( "found matching assignment for course staff." );
@@ -655,7 +680,7 @@ public class Grader
                 + "Web-CAT administrator.  Please try your submission again.";
             result.criticalError = true;
         }
-        
+
         log.debug( "handleSubmission() returning" );
         return result.generateResponse();
     }
@@ -682,7 +707,7 @@ public class Grader
         if ( genericGComp.wcSession().primeUser() == null
              || genericGComp.prefs().submission() == null )
         {
-            
+
             result = ( (Application)Application.application() ).gotoLoginPage(
                             context );
         }
