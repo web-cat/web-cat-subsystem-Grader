@@ -25,6 +25,18 @@ BeginInstitutionGroup: WOGenericElement {
     name = anAssignmentOffering.courseOffering.course.department.institution.displayableName;
 }
 
+CourseNumber: WOGenericContainer {
+    elementName = "param";
+    name = "course";
+    value = anAssignmentOffering.courseOffering.course.number;
+}
+
+CRN: WOGenericContainer {
+    elementName = "param";
+    name = "crn";
+    value = anAssignmentOffering.courseOffering.crn;
+}
+
 EndCourseGroup: WOString {
     value = "</assignment-group>";
     escapeHTML = false;

@@ -19,7 +19,7 @@
       .file.include   = <webobject name="ThisPattern"/>;</webobject><webobject name="ExclusionRep">
       .file.exclude   = <webobject name="ThisPattern"/>;</webobject><webobject name="RequireRep">
       .file.essential = <webobject name="ThisPattern"/>;</webobject>
-      .transport = <webobject name="WebCATURL"/>?u=<webobject name="PID"/>&p=<webobject name="Password"/>&a=<webobject name="EscapedName"/>&d=<webobject name="Authenticator"/>;
+      .transport = <webobject name="WebCATURL"/>?u=<webobject name="PID"/>&p=<webobject name="Password"/>&a=<webobject name="EscapedName"/>&d=<webobject name="Authenticator"/>&<wo:if condition="$groupByCRN">crn=<wo:str value="$anAssignmentOffering.courseOffering.crn"/></wo:if><wo:else>course=<wo:str value="$anAssignmentOffering.courseOffering.course.number"/></wo:else>;
     }</webobject>
 
   }
