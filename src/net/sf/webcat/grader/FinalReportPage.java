@@ -391,6 +391,23 @@ public class FinalReportPage
 
     // ----------------------------------------------------------
     /**
+     * Determine if this assignment is just for collecting submissions,
+     * without any automated processing steps.
+     *
+     * @return true if the submission is just being collected
+     */
+    public boolean justCollecting()
+    {
+        NSArray steps =
+            result.submission().assignmentOffering().assignment().steps();
+        return !result.summaryFile().exists()
+            && !result.resultFile().exists()
+            && (steps == null || steps.count() == 0);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Determine if user can submit to this assignment.
      *
      * @return true if the user can make another submission
