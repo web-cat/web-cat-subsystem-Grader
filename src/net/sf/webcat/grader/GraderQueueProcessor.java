@@ -290,7 +290,6 @@ public class GraderQueueProcessor
                                 try
                                 {
                                     editingContext.revert();
-                                    editingContext.invalidateAllObjects();
                                     editingContext.unlock();
                                     Application.releasePeerEditingContext(
                                         editingContext);
