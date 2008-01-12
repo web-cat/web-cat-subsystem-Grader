@@ -37,6 +37,14 @@ RadioButton2: WORadioButton {
 	value     = index2;
 }
 
+SemesterList: WOPopUpButton {
+	list              = semesters;
+	item              = aSemester;
+	selection         = semester;
+	noSelectionString = "All semesters";
+    onchange          = "submitForm()";
+}
+
 TeachingCourses: WOConditional {
     condition = staffCourses.count;
 }

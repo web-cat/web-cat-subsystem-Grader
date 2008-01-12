@@ -28,9 +28,9 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-
+import er.extensions.ERXConstant;
+import er.extensions.ERXValueUtilities;
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -50,7 +50,7 @@ public class PickCourseTaughtPage
     // ----------------------------------------------------------
     /**
      * Creates a new PickCourseTaughtPage object.
-     * 
+     *
      * @param context The context to use
      */
     public PickCourseTaughtPage( WOContext context )
@@ -67,7 +67,9 @@ public class PickCourseTaughtPage
     public int                 index;
     public int                 selectedStaffIndex;
     public int                 selectedAdminIndex;
-
+    public NSArray             semesters;
+    public Semester            semester;
+    public Semester            aSemester;
 
     //~ Methods ...............................................................
 
@@ -83,13 +85,38 @@ public class PickCourseTaughtPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         User user = wcSession().user();
-        staffCourses = user.staffFor();
-        adminCourses = user.adminForButNotStaff();
+        if ( semesters == null )
+        {
+            semesters =
+                Semester.objectsForFetchAll( wcSession().localContext() );
+            Object semesterPref = user.preferences()
+                .valueForKey( PickCourseEnrolledPage.SEMESTER_PREF_KEY );
+            if (semesterPref == null && semesters.count() > 0)
+            {
+                // Default to most recent semester, if no preference is set
+                semester = (Semester)semesters.objectAtIndex(0);
+            }
+            else
+            {
+                semester = Semester.semesterForId( wcSession().localContext(),
+                    ERXValueUtilities.intValue( semesterPref ) );
+            }
+        }
+        // Save selected semester
+        user.preferences().takeValueForKey(
+            semester == null ? ERXConstant.ZeroInteger : semester.id(),
+            PickCourseEnrolledPage.SEMESTER_PREF_KEY );
+        user.savePreferences();
+
+        staffCourses = user.staffFor(semester);
+        adminCourses = user.adminForButNotStaff(semester);
         if ( staffCourses.count() == 0 && adminCourses.count() == 0 )
         {
             // There are no enrolled courses
             error(
-                "You are not listed as the instructor or TA for any courses." );
+                "You are not listed as the instructor or TA for any courses"
+                + (semester == null ? "" : " in the selected semester")
+                + "." );
         }
         CourseOffering selectedCourse = wcSession().courseOffering();
         if ( selectedCourse != null )
@@ -130,7 +157,7 @@ public class PickCourseTaughtPage
                 selectedAdminIndex += staffCourses.count();
             }
         }
-        
+
         super.appendToResponse( response, context );
     }
 
@@ -167,6 +194,15 @@ public class PickCourseTaughtPage
         return ( staffCourses.count() > 0
                  || adminCourses.count() > 0 )
                  &&  super.nextEnabled();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent defaultAction()
+    {
+        // When semester list changes, make sure not to take the
+        // default action, which is to click "next".
+        return null;
     }
 
 

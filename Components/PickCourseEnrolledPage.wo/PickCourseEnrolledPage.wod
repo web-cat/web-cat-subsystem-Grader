@@ -73,6 +73,14 @@ InstructorCourseRepetition: WORepetition {
 	index = index;
 }
 
+SemesterList: WOPopUpButton {
+	list              = semesters;
+	item              = aSemester;
+	selection         = semester;
+	noSelectionString = "All semesters";
+    onchange          = "submitForm()";
+}
+
 TACourseRepetition: WORepetition {
 	item  = courseOffering;
 	list  = coursesTAed;

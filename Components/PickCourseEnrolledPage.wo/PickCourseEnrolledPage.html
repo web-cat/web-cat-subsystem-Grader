@@ -1,4 +1,11 @@
-<webobject name="Page"><webobject name="HasCourses">You are <b>enrolled in</b> these courses:<p>
+<webobject name="Page"><wo:if condition="$semesters.count">
+<script language="JavaScript">
+<!--
+function submitForm() { document.WizardForm.submit(); }
+//-->
+</script>
+Show courses for: <wo name="SemesterList"/>
+</wo:if><webobject name="HasCourses"><p>You are <b>enrolled in</b> these courses:</p>
 <div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
 <webobject name="CourseRepetition">
 <webobject name="TR">
@@ -7,7 +14,7 @@
 <td><webobject name="CourseName"/></td>
 </webobject></webobject></tbody></table></div>
 </webobject><webobject name="HasNoCourses">
-<p>You are not currently <b>enrolled in</b> any courses.</p>
+<p>You are not currently <b>enrolled in</b> any courses<wo:if condition="$semester"> in the selected semester</wo:if>.</p>
 </webobject><webobject name="HasTACourses"><div class="spacer">&nbsp;</div>
 <p>You are <b>grading</b> these courses:</p>
 <div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
