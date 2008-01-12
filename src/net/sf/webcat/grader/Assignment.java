@@ -106,6 +106,9 @@ public class Assignment
     public static final String COURSES_KEY =
         COURSE_OFFERINGS_KEY
         + "." + CourseOffering.COURSE_KEY;
+    public static final String SEMESTERS_KEY =
+        COURSE_OFFERINGS_KEY
+        + "." + CourseOffering.SEMESTER_KEY;
     public static final String ID_FORM_KEY = "aid";
 
 
@@ -117,7 +120,7 @@ public class Assignment
         if ( cachedSubdirName == null )
         {
             String name = name();
-            cachedSubdirName = subdirNameOf( name );
+            cachedSubdirName = AuthenticationDomain.subdirNameOf( name );
             log.debug( "trimmed name '" + name + "' to '"
                        + cachedSubdirName + "'" );
         }
@@ -172,7 +175,6 @@ public class Assignment
     // ----------------------------------------------------------
     public void setName( String value )
     {
-        // TODO[low]: Need to rename the corresponding directory as well
         if ( dirNeedingRenaming == null && name() != null )
         {
             dirNeedingRenaming = subdirName();
@@ -192,7 +194,7 @@ public class Assignment
                 "Please provide an assignment name." );
         }
         String result = value.toString().trim();
-        String newSubdirName = subdirNameOf( result );
+        String newSubdirName = AuthenticationDomain.subdirNameOf( result );
         log.debug( "validateName(" + result + ")" );
         log.debug( "subdir = " + newSubdirName );
         if ( !newSubdirName.equals( subdirName() )
@@ -351,6 +353,34 @@ public class Assignment
 
 
     // ----------------------------------------------------------
+    /**
+     * Retrieve all the other assignments that share a course offering with
+     * one of this assignment's offerings.
+     *
+     * @param context The editing context to use
+     * @return an NSArray of the entities retrieved
+     */
+    public NSArray objectsForNeighborAssignments(
+            EOEditingContext context
+        )
+    {
+        NSMutableArray results = new NSMutableArray();
+        NSArray myOfferings = offerings();
+        for (int i = 0; i < myOfferings.count(); i++)
+        {
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates( results,
+                objectsForNeighborAssignments( context,
+                    ( (AssignmentOffering)myOfferings.objectAtIndex(i) )
+                        .courseOffering()
+                    )
+                );
+        }
+        results.remove(this);
+        return results;
+    }
+
+
+    // ----------------------------------------------------------
     public static boolean namesAreSimilar( String name1, String name2 )
     {
         boolean result = false;
@@ -371,57 +401,140 @@ public class Assignment
     }
 
 
-    //~ Private Methods .......................................................
-
     // ----------------------------------------------------------
-    private String subdirNameOf( String name )
+    /**
+     * This EOQualifier matches any assignment with a directory name
+     * that does not match (case-insensitive) any existing assignment offering
+     * associated with a given course offering--in other words, succeeds
+     * for assignments that would have unique names.
+     */
+    public static class NonDuplicateAssignmentNameQualifier
+        extends EOQualifier
+        implements EOQualifierEvaluation
     {
-        String result = null;
-        if ( name != null )
+        // ----------------------------------------------------------
+        /**
+         * Create a new qualifier for assignments in the given course.
+         * @param courseOffering the course offering to check against
+         */
+        public NonDuplicateAssignmentNameQualifier(
+            CourseOffering courseOffering)
         {
-            char[] chars = new char[ name.length() ];
-            int  pos   = 0;
-            for ( int i = 0; i < name.length(); i++ )
+            if (courseOffering != null)
             {
-                char c = name.charAt( i );
-                if ( Character.isLetterOrDigit( c ) ||
-                     c == '_'                       ||
-                     c == '-' )
+                lcNames = new HashSet();
+                NSArray assignments =
+                    AssignmentOffering.objectsForCourseOffering(
+                        courseOffering.editingContext(), courseOffering );
+                for (int i = 0; i < assignments.count(); i++)
                 {
-                    chars[ pos ] = c;
-                    pos++;
+                    String newName =
+                        ((AssignmentOffering)assignments.objectAtIndex(i))
+                        .assignment().subdirName();
+                    if (newName != null)
+                    {
+                        lcNames.add( newName.toLowerCase() );
+                    }
                 }
             }
-            result = new String( chars, 0, pos );
         }
-        return result;
+
+
+        // ----------------------------------------------------------
+        /**
+         * Create a new qualifier for assignments in the given course.
+         * @param lcNames the set of existing assignment names (assumed to all
+         * be lowercase-only) to check against
+         */
+        public NonDuplicateAssignmentNameQualifier(Set lcNames)
+        {
+            this.lcNames = lcNames;
+        }
+
+
+        // ----------------------------------------------------------
+        @Override
+        public void addQualifierKeysToSet( NSMutableSet qualifierKeys )
+        {
+            qualifierKeys.add("subdirName");
+        }
+
+
+        // ----------------------------------------------------------
+        @Override
+        public EOQualifier qualifierWithBindings(
+            NSDictionary bindings, boolean requiresAll )
+        {
+            Object courseOfferingBinding = bindings.valueForKey(
+                "courseOffering");
+            if (courseOfferingBinding == null)
+            {
+                return new NonDuplicateAssignmentNameQualifier((Set)null);
+            }
+            else
+            {
+                return new NonDuplicateAssignmentNameQualifier(
+                    (CourseOffering)courseOfferingBinding);
+            }
+        }
+
+
+        // ----------------------------------------------------------
+        @Override
+        public void validateKeysWithRootClassDescription(
+            EOClassDescription classDescription )
+        {
+            if (!classDescription.entityName().equals(ENTITY_NAME))
+            {
+                throw new RuntimeException("This qualifier can only be "
+                    + "applied to " + ENTITY_NAME + " objects.");
+            }
+        }
+
+
+        // ----------------------------------------------------------
+        @Override
+        public boolean evaluateWithObject( Object object )
+        {
+            String subdirName = ((Assignment)object).subdirName();
+            return subdirName != null
+                && ( lcNames == null
+                     || !lcNames.contains( subdirName.toLowerCase() ) );
+        }
+
+
+        //~ Instance/static variables .........................................
+
+        private Set lcNames;
     }
 
+
+    //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
     private boolean conflictingSubdirNameExists( String subdir )
     {
-        NSArray domains = AuthenticationDomain.authDomains();
-        for ( int i = 0; i < domains.count(); i++ )
+        NSArray neighbors = objectsForNeighborAssignments( editingContext() );
+        if (log.isDebugEnabled())
         {
-            AuthenticationDomain domain =
-                (AuthenticationDomain)domains.objectAtIndex( i );
-            NSArray offerings = offerings();
-            StringBuffer dir =
-                AssignmentOffering.submissionBaseDirName( domain );
-            int baseDirLen = dir.length();
-            for ( int j = 0; j < offerings.count(); j++ )
+            log.debug( "neighbors = " + neighbors );
+        }
+        if (subdir != null)
+        {
+            subdir = subdir.toLowerCase();
+        }
+        for (int i = 0; i < neighbors.count(); i++)
+        {
+            Assignment asgn = (Assignment)neighbors.objectAtIndex(i);
+            String yourSub = asgn.subdirName();
+            if (yourSub != null)
             {
-                // clear out old suffix
-                dir.delete( baseDirLen, dir.length() );
-                AssignmentOffering offering =
-                    (AssignmentOffering)offerings.objectAtIndex( j );
-                offering.addSubdirNameForAssignment( dir, subdir );
-                File f = new File( dir.toString() );
-                if ( f.exists() )
-                {
-                    return true;
-                }
+                yourSub = yourSub.toLowerCase();
+            }
+            if ( (subdir == null && yourSub == null)
+                 || (subdir != null && subdir.equals(yourSub)))
+            {
+                return true;
             }
         }
         return false;
@@ -437,24 +550,37 @@ public class Assignment
             AuthenticationDomain domain =
                 (AuthenticationDomain)domains.objectAtIndex( i );
             NSArray offerings = offerings();
-            StringBuffer dir =
-                AssignmentOffering.submissionBaseDirName( domain );
+            StringBuffer dir = domain.submissionBaseDirBuffer();
             int baseDirLen = dir.length();
+            String msgs = null;
             for ( int j = 0; j < offerings.count(); j++ )
             {
                 // clear out old suffix
                 dir.delete( baseDirLen, dir.length() );
                 AssignmentOffering offering =
                     (AssignmentOffering)offerings.objectAtIndex( j );
-                offering.addSubdirNameForAssignment( dir, oldSubdir );
+                offering.courseOffering().addSubdirTo( dir );
+                dir.append('/');
+                dir.append( oldSubdir );
                 File oldDir = new File( dir.toString() );
-                dir.delete( baseDirLen, dir.length() );
-                offering.addSubdirNameForAssignment( dir, newSubdir );
-                File newDir = new File( dir.toString() );
                 if ( oldDir.exists() )
                 {
-                    oldDir.renameTo( newDir );
+                    dir.delete( baseDirLen, dir.length() );
+                    offering.courseOffering().addSubdirTo( dir );
+                    dir.append('/');
+                    dir.append( newSubdir );
+                    File newDir = new File( dir.toString() );
+                    if (!oldDir.renameTo( newDir ))
+                    {
+                        msgs = (msgs == null ? "" : (msgs + "  "))
+                            + "Failed to rename directory: "
+                            + oldDir + " => " + newDir;
+                    }
                 }
+            }
+            if (msgs != null)
+            {
+                throw new RuntimeException(msgs);
             }
         }
     }
