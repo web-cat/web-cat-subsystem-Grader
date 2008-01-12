@@ -31,9 +31,7 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.net.URL;
 import java.net.MalformedURLException;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 
