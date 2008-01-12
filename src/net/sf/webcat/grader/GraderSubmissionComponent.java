@@ -65,7 +65,7 @@ public class GraderSubmissionComponent
     public boolean startWith( NSDictionary params )
     {
         boolean result = false;
-        String sid = stringValueForKey( params, "sid" );
+        String sid = stringValueForKey( params, Submission.ID_FORM_KEY );
         if ( sid != null )
         {
             result = startWith( Submission
