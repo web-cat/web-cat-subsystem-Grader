@@ -26,6 +26,7 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.*;
 
 import net.sf.webcat.core.*;
 
@@ -64,6 +65,8 @@ public class EditCoursePage
     public Course              course;
     public User                user;
     public int                 index;
+    public NSArray             semesters;
+    public Semester            aSemester;
 
 
     //~ Methods ...............................................................
@@ -71,6 +74,11 @@ public class EditCoursePage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse arg0, WOContext arg1 )
     {
+        if ( semesters == null )
+        {
+            semesters =
+                Semester.objectsForFetchAll( wcSession().localContext() );
+        }
         instructorDisplayGroup.setMasterObject( wcSession().courseOffering() );
         TADisplayGroup.setMasterObject( wcSession().courseOffering() );
         super.appendToResponse( arg0, arg1 );
@@ -78,14 +86,14 @@ public class EditCoursePage
 
 
     // ----------------------------------------------------------
-    /**
-     * Makes the default action call apply.
-     * @see net.sf.webcat.core.WCComponent#defaultAction()
-     */
     public WOComponent defaultAction()
     {
-        apply();
-        return super.defaultAction();
+        // apply();
+        // return super.defaultAction();
+
+        // When semester list changes, make sure not to take the
+        // default action, which is to click "next".
+        return null;
     }
 
 

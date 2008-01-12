@@ -131,6 +131,18 @@ RemoveTA: WOImageButton {
 	alt       = "Remove this grader/TA";
 }
 
+SemesterInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Semester";
+    message = "Use the Semester drop-down list to change the semester with which this offering is associated.";
+}
+
+SemesterList: WOPopUpButton {
+	list              = semesters;
+	item              = aSemester;
+	selection         = session.courseOffering.semester;
+    onchange          = "submitForm()";
+}
+
 TARepetition: WORepetition {
 	item  = user;
 	list  = TADisplayGroup.displayedObjects;
