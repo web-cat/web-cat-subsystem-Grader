@@ -132,11 +132,11 @@ public class Submission
         }
         else
         {
-            StringBuffer dir = AssignmentOffering.submissionBaseDirName(
-                                   user().authenticationDomain() );
+            StringBuffer dir =
+                user().authenticationDomain().submissionBaseDirBuffer();
             if ( assignmentOffering() != null )
             {
-                assignmentOffering().addSubdirNameForAssignment( dir, null );
+                assignmentOffering().addSubdirTo( dir );
             }
             else
             {
@@ -198,7 +198,7 @@ public class Submission
             ((Application)Application.application()).emailExceptionToAdmins(
                 e, null, "An exception was generated trying to retrieve the "
                 + "id for a submission.\n\nSubmission = " + subInfo );
-            return 0;
+            return er.extensions.ERXConstant.ZeroInteger;
         }
     }
 
