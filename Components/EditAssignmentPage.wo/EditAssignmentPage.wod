@@ -19,7 +19,7 @@ ClearGraph: WOSubmitButton {
 }
 
 CourseName: WOString {
-    value = session.courseOffering.deptNumberAndName;
+    value = thisAssignment.courseOffering.deptNumberAndName;
 }
 
 Description: WOTextField {
