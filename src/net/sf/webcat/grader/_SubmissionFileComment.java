@@ -103,7 +103,7 @@ public abstract class _SubmissionFileComment
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "categoryNo" );
+        setCategoryNoRaw( actual );
     }
 
 
@@ -157,7 +157,7 @@ public abstract class _SubmissionFileComment
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "deduction" );
+        setDeductionRaw( actual );
     }
 
 
@@ -259,7 +259,7 @@ public abstract class _SubmissionFileComment
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "limitExceeded" );
+        setLimitExceededRaw( actual );
     }
 
 
@@ -313,7 +313,7 @@ public abstract class _SubmissionFileComment
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "lineNo" );
+        setLineNoRaw( actual );
     }
 
 
@@ -391,7 +391,7 @@ public abstract class _SubmissionFileComment
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "toNo" );
+        setToNoRaw( actual );
     }
 
 
@@ -433,7 +433,7 @@ public abstract class _SubmissionFileComment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -448,7 +448,7 @@ public abstract class _SubmissionFileComment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -484,7 +484,7 @@ public abstract class _SubmissionFileComment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionFileStats</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -499,7 +499,7 @@ public abstract class _SubmissionFileComment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionFileStats</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

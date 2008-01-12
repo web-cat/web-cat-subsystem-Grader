@@ -391,7 +391,7 @@ public abstract class _ScriptFile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "isConfigFile" );
+        setIsConfigFileRaw( actual );
     }
 
 
@@ -445,7 +445,7 @@ public abstract class _ScriptFile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "isPublished" );
+        setIsPublishedRaw( actual );
     }
 
 
@@ -595,7 +595,7 @@ public abstract class _ScriptFile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "updateMutableFields" );
+        setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -742,7 +742,7 @@ public abstract class _ScriptFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -757,7 +757,7 @@ public abstract class _ScriptFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -793,7 +793,7 @@ public abstract class _ScriptFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>language</code>
      * relationship (DO NOT USE--instead, use
      * <code>setLanguageRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -808,7 +808,7 @@ public abstract class _ScriptFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>language</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

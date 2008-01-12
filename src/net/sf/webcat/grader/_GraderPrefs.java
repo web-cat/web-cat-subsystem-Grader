@@ -140,7 +140,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignmentOffering</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -155,7 +155,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignmentOffering</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -191,7 +191,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>step</code>
      * relationship (DO NOT USE--instead, use
      * <code>setStepRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -206,7 +206,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>step</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -242,7 +242,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submission</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -257,7 +257,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submission</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -293,7 +293,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionFileStats</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionFileStatsRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -308,7 +308,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionFileStats</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -344,7 +344,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>user</code>
      * relationship (DO NOT USE--instead, use
      * <code>setUserRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -359,7 +359,7 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>user</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

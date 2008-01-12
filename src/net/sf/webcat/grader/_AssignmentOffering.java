@@ -132,7 +132,7 @@ public abstract class _AssignmentOffering
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "gradingSuspended" );
+        setGradingSuspendedRaw( actual );
     }
 
 
@@ -304,7 +304,7 @@ public abstract class _AssignmentOffering
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "publish" );
+        setPublishRaw( actual );
     }
 
 
@@ -358,7 +358,7 @@ public abstract class _AssignmentOffering
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "updateMutableFields" );
+        setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -585,7 +585,7 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignment</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -600,7 +600,7 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignment</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -636,7 +636,7 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>courseOffering</code>
      * relationship (DO NOT USE--instead, use
      * <code>setCourseOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -651,7 +651,7 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>courseOffering</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

@@ -157,7 +157,7 @@ public abstract class _ResultFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionResult</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionResultRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -172,7 +172,7 @@ public abstract class _ResultFile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionResult</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

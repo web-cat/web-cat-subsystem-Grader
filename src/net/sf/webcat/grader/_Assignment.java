@@ -72,7 +72,8 @@ public abstract class _Assignment
     public static final String OFFERINGS_KEY = "offerings";
     public static final String STEPS_KEY = "steps";
     // Fetch specifications ---
-    public static final String CRN_FSPEC = "crn";
+    public static final String NEIGHBOR_ASSIGNMENTS_FSPEC = "neighborAssignments";
+    public static final String REUSE_IN_COURSE_FSPEC = "reuseInCourse";
     public static final String ENTITY_NAME = "Assignment";
 
 
@@ -200,26 +201,59 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>Crn</code>
+     * Retrieve object according to the <code>NeighborAssignments</code>
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param crnBinding fetch spec parameter
+     * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForCrn(
+    public static NSArray objectsForNeighborAssignments(
             EOEditingContext context,
-            java.lang.Object crnBinding
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "crn", "Assignment" );
+            .fetchSpecificationNamed( "neighborAssignments", "Assignment" );
 
         NSMutableDictionary bindings = new NSMutableDictionary();
 
-        if ( crnBinding != null )
-            bindings.setObjectForKey( crnBinding,
-                                      "crn" );
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>ReuseInCourse</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseBinding fetch spec parameter
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForReuseInCourse(
+            EOEditingContext context,
+            net.sf.webcat.core.Course courseBinding,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "reuseInCourse", "Assignment" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseBinding != null )
+            bindings.setObjectForKey( courseBinding,
+                                      "course" );
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         return context.objectsWithFetchSpecification( spec );
@@ -240,7 +274,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -255,7 +289,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -291,7 +325,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>gradingCriteria</code>
      * relationship (DO NOT USE--instead, use
      * <code>setGradingCriteriaRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -306,7 +340,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>gradingCriteria</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -342,7 +376,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionProfile</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionProfileRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -357,7 +391,7 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionProfile</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

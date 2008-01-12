@@ -125,7 +125,7 @@ public abstract class _Submission
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "partnerLink" );
+        setPartnerLinkRaw( actual );
     }
 
 
@@ -179,7 +179,7 @@ public abstract class _Submission
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "submitNumber" );
+        setSubmitNumberRaw( actual );
     }
 
 
@@ -245,7 +245,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignmentOffering</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAssignmentOfferingRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -260,7 +260,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>assignmentOffering</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -296,7 +296,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>result</code>
      * relationship (DO NOT USE--instead, use
      * <code>setResultRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -311,7 +311,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>result</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
@@ -347,7 +347,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>user</code>
      * relationship (DO NOT USE--instead, use
      * <code>setUserRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -362,7 +362,7 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>user</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

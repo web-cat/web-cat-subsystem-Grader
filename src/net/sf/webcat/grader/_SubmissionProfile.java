@@ -119,7 +119,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "availablePoints" );
+        setAvailablePointsRaw( actual );
     }
 
 
@@ -173,7 +173,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "availableTimeDelta" );
+        setAvailableTimeDeltaRaw( actual );
     }
 
 
@@ -227,7 +227,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "awardEarlyBonus" );
+        setAwardEarlyBonusRaw( actual );
     }
 
 
@@ -281,7 +281,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "deadTimeDelta" );
+        setDeadTimeDeltaRaw( actual );
     }
 
 
@@ -335,7 +335,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "deductLatePenalty" );
+        setDeductLatePenaltyRaw( actual );
     }
 
 
@@ -389,7 +389,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "earlyBonusMaxPts" );
+        setEarlyBonusMaxPtsRaw( actual );
     }
 
 
@@ -443,7 +443,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "earlyBonusUnitPts" );
+        setEarlyBonusUnitPtsRaw( actual );
     }
 
 
@@ -497,7 +497,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "earlyBonusUnitTime" );
+        setEarlyBonusUnitTimeRaw( actual );
     }
 
 
@@ -599,7 +599,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "latePenaltyMaxPts" );
+        setLatePenaltyMaxPtsRaw( actual );
     }
 
 
@@ -653,7 +653,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "latePenaltyUnitPts" );
+        setLatePenaltyUnitPtsRaw( actual );
     }
 
 
@@ -707,7 +707,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "latePenaltyUnitTime" );
+        setLatePenaltyUnitTimeRaw( actual );
     }
 
 
@@ -761,7 +761,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "maxFileUploadSize" );
+        setMaxFileUploadSizeRaw( actual );
     }
 
 
@@ -815,7 +815,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "maxSubmissions" );
+        setMaxSubmissionsRaw( actual );
     }
 
 
@@ -941,7 +941,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "submissionMethod" );
+        setSubmissionMethodRaw( actual );
     }
 
 
@@ -995,7 +995,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "taPoints" );
+        setTaPointsRaw( actual );
     }
 
 
@@ -1049,7 +1049,7 @@ public abstract class _SubmissionProfile
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "toolPoints" );
+        setToolPointsRaw( actual );
     }
 
 
@@ -1147,7 +1147,7 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -1162,7 +1162,7 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

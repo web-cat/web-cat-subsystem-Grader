@@ -109,7 +109,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "commentFormat" );
+        setCommentFormatRaw( actual );
     }
 
 
@@ -187,7 +187,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "correctnessScore" );
+        setCorrectnessScoreRaw( actual );
     }
 
 
@@ -241,7 +241,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "isMostRecent" );
+        setIsMostRecentRaw( actual );
     }
 
 
@@ -319,7 +319,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "status" );
+        setStatusRaw( actual );
     }
 
 
@@ -373,7 +373,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "taScore" );
+        setTaScoreRaw( actual );
     }
 
 
@@ -427,7 +427,7 @@ public abstract class _SubmissionResult
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "toolScore" );
+        setToolScoreRaw( actual );
     }
 
 

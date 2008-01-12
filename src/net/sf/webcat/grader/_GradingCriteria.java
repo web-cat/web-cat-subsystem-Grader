@@ -113,7 +113,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "blankLinePt" );
+        setBlankLinePtRaw( actual );
     }
 
 
@@ -167,7 +167,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             new Long( value );
-        takeStoredValueForKey( actual, "deadTimeDelta" );
+        setDeadTimeDeltaRaw( actual );
     }
 
 
@@ -221,7 +221,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "diffLineSyncing" );
+        setDiffLineSyncingRaw( actual );
     }
 
 
@@ -275,7 +275,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "extraLinePt" );
+        setExtraLinePtRaw( actual );
     }
 
 
@@ -329,7 +329,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "floatComparisonStyle" );
+        setFloatComparisonStyleRaw( actual );
     }
 
 
@@ -383,7 +383,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "floatNegativeDelta" );
+        setFloatNegativeDeltaRaw( actual );
     }
 
 
@@ -437,7 +437,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "floatPositiveDelta" );
+        setFloatPositiveDeltaRaw( actual );
     }
 
 
@@ -491,7 +491,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "ignoreBlankLines" );
+        setIgnoreBlankLinesRaw( actual );
     }
 
 
@@ -545,7 +545,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "ignoreCase" );
+        setIgnoreCaseRaw( actual );
     }
 
 
@@ -599,7 +599,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "ignoreNonprinting" );
+        setIgnoreNonprintingRaw( actual );
     }
 
 
@@ -653,7 +653,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "ignorePunctuation" );
+        setIgnorePunctuationRaw( actual );
     }
 
 
@@ -707,7 +707,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "ignoreWhitespace" );
+        setIgnoreWhitespaceRaw( actual );
     }
 
 
@@ -785,7 +785,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "normalizeWhitespace" );
+        setNormalizeWhitespaceRaw( actual );
     }
 
 
@@ -863,7 +863,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "stringComparsionStyle" );
+        setStringComparsionStyleRaw( actual );
     }
 
 
@@ -917,7 +917,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "tokenizingStyle" );
+        setTokenizingStyleRaw( actual );
     }
 
 
@@ -971,7 +971,7 @@ public abstract class _GradingCriteria
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "trimWhitespace" );
+        setTrimWhitespaceRaw( actual );
     }
 
 
@@ -1013,7 +1013,7 @@ public abstract class _GradingCriteria
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship (DO NOT USE--instead, use
      * <code>setAuthorRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -1028,7 +1028,7 @@ public abstract class _GradingCriteria
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>author</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

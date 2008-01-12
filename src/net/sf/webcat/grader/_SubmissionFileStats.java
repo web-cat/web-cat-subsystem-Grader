@@ -136,7 +136,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "conditionals" );
+        setConditionalsRaw( actual );
     }
 
 
@@ -190,7 +190,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "conditionalsCovered" );
+        setConditionalsCoveredRaw( actual );
     }
 
 
@@ -244,7 +244,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             new Double( value );
-        takeStoredValueForKey( actual, "deductions" );
+        setDeductionsRaw( actual );
     }
 
 
@@ -298,7 +298,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "elements" );
+        setElementsRaw( actual );
     }
 
 
@@ -352,7 +352,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "elementsCovered" );
+        setElementsCoveredRaw( actual );
     }
 
 
@@ -406,7 +406,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "loc" );
+        setLocRaw( actual );
     }
 
 
@@ -484,7 +484,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "methods" );
+        setMethodsRaw( actual );
     }
 
 
@@ -538,7 +538,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "methodsCovered" );
+        setMethodsCoveredRaw( actual );
     }
 
 
@@ -592,7 +592,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "ncloc" );
+        setNclocRaw( actual );
     }
 
 
@@ -670,7 +670,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "remarks" );
+        setRemarksRaw( actual );
     }
 
 
@@ -748,7 +748,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "statements" );
+        setStatementsRaw( actual );
     }
 
 
@@ -802,7 +802,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "statementsCovered" );
+        setStatementsCoveredRaw( actual );
     }
 
 
@@ -856,7 +856,7 @@ public abstract class _SubmissionFileStats
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
-        takeStoredValueForKey( actual, "status" );
+        setStatusRaw( actual );
     }
 
 
@@ -898,7 +898,7 @@ public abstract class _SubmissionFileStats
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionResult</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionResultRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -913,7 +913,7 @@ public abstract class _SubmissionFileStats
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submissionResult</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *

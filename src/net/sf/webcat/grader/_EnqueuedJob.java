@@ -98,7 +98,7 @@ public abstract class _EnqueuedJob
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "discarded" );
+        setDiscardedRaw( actual );
     }
 
 
@@ -152,7 +152,7 @@ public abstract class _EnqueuedJob
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "paused" );
+        setPausedRaw( actual );
     }
 
 
@@ -230,7 +230,7 @@ public abstract class _EnqueuedJob
     {
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        takeStoredValueForKey( actual, "regrading" );
+        setRegradingRaw( actual );
     }
 
 
@@ -272,7 +272,7 @@ public abstract class _EnqueuedJob
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submission</code>
      * relationship (DO NOT USE--instead, use
      * <code>setSubmissionRelationship()</code>.
      * This method is provided for WebObjects use.
@@ -287,7 +287,7 @@ public abstract class _EnqueuedJob
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>authenticationDomain</code>
+     * Set the entity pointed to by the <code>submission</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
