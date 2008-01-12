@@ -168,8 +168,15 @@ public class AssignmentOffering
      */
     public Number id()
     {
-        return (Number)EOUtilities.primaryKeyForObject(
-            editingContext() , this ).objectForKey( "id" );
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
     }
 
 
@@ -463,50 +470,20 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Retrieve the name of the directory where all submissions for any
-     * user in a given authentication domain are stored.
-     * @param domain the authentication domain to use in generating the
-     *        directory name
-     * @return the directory name
-     */
-    public static StringBuffer submissionBaseDirName(
-        AuthenticationDomain domain )
-    {
-        StringBuffer dir = new StringBuffer( 50 );
-        dir.append( net.sf.webcat.core.Application
-            .configurationProperties().getProperty( "grader.submissiondir" ) );
-        dir.append( '/' );
-        dir.append( domain.subdirName() );
-        return dir;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Retrieve the name of the subdirectory where all submissions for this
      * assignment offering are stored.  This subdirectory is relative to
      * the base submission directory for some authentication domain, such
      * as the value returned by
-     * {@link #submissionBaseDirName(AuthenticationDomain)}.
+     * {@link AuthenticationDomain#submissionBaseDirBuffer()}.
      * @param dir the string buffer to add the requested subdirectory to
      *        (a / is added to this buffer, followed by the subdirectory name
      *        generated here)
-     * @param assignSubdir the subdirectory name to use for the assignment.
-     *        If null is passed in (which is typical), the results of
-     *        {@link Assignment#subdirName()} used.  Pass in a non-null value
-     *        to override with another choice.
      */
-    public void addSubdirNameForAssignment( StringBuffer dir,
-                                            String       assignSubdir )
+    public void addSubdirTo( StringBuffer dir )
     {
+        courseOffering().addSubdirTo( dir );
         dir.append( '/' );
-        dir.append( courseOffering().semester().dirName() );
-        dir.append( '/' );
-        dir.append( courseOffering().crnSubdirName() );
-        dir.append( '/' );
-        dir.append( ( assignSubdir == null )
-                        ? assignment().subdirName()
-                        : assignSubdir );
+        dir.append( assignment().subdirName() );
     }
 
 
@@ -525,6 +502,21 @@ public class AssignmentOffering
         return result;
     }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Check whether this assignment is past the due date.
+     *
+     * @return true if any submissions to this assignment will be counted
+     *         as late
+     */
+    public boolean isLate()
+    {
+        return dueDate().before( new NSTimestamp() );
+    }
+
+
+    //~ Public Static Methods .................................................
 
     // ----------------------------------------------------------
     /**
@@ -754,53 +746,6 @@ public class AssignmentOffering
         return results;
     }
 
-    private static class InQualifier
-        extends ERXInQualifier
-    {
-        public InQualifier( String key, NSArray values )
-        {
-            super( key, values, 1 );
-        }
-
-        /** Tests if the given object's key is in the supplied values */
-        public boolean evaluateWithObject(Object object)
-        {
-            Object value = NSKeyValueCodingAdditions.Utility
-                .valueForKeyPath(object, key());
-            return value != null && values().containsObject(value);
-        }
-
-    }
-
-
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
-
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
-
 
     //~ Private Methods .......................................................
 
@@ -869,15 +814,22 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
-    /**
-     * Check whether this assignment is past the due date.
-     *
-     * @return true if any submissions to this assignment will be counted
-     *         as late
-     */
-    public boolean isLate()
+    private static class InQualifier
+        extends ERXInQualifier
     {
-        return dueDate().before( new NSTimestamp() );
+        public InQualifier( String key, NSArray values )
+        {
+            super( key, values, 1 );
+        }
+
+        /** Tests if the given object's key is in the supplied values */
+        public boolean evaluateWithObject(Object object)
+        {
+            Object value = NSKeyValueCodingAdditions.Utility
+                .valueForKeyPath(object, key());
+            return value != null && values().containsObject(value);
+        }
+
     }
 
 
