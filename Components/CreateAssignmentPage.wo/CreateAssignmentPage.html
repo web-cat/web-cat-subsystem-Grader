@@ -3,6 +3,14 @@
 <webobject name="HasReusableAssignments">
 <p>Or you can reuse an existing assignment from another section of
 <span class="hl"><webobject name="CourseName"/></span>:</p>
+<wo:if condition="$semesters.count">
+<script language="JavaScript">
+<!--
+function submitForm() { document.WizardForm.submit(); }
+//-->
+</script>
+<p>Show assignments for: <wo name="SemesterList"/></p></wo:if>
+<wo:if condition="$assignmentDisplayGroup.displayedObjects.count">
 <div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Assignment</th><th>Description</th><th>Author</th></tr>
 <webobject name="AssignmentRepetition">
 <webobject name="TR">
@@ -11,7 +19,10 @@
 <td><webobject name="Description"/></td>
 <td><webobject name="Author"/></td>
 </webobject></webobject></tbody></table></div>
-<div class="spacer">&nbsp;</div>
+<div class="spacer">&nbsp;</div></wo:if><wo:else>
+<p>There are no assignments from the selected semester available for reuse
+(assignments with conflicting names cannot be reused this semester).</p>
+</wo:else>
   <p>When reusing an assignment, a
   new offering for the assignment is created with its own due date and
   publish and halted settings, but <b>all offerings share</b> the same

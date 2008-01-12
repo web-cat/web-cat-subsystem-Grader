@@ -29,8 +29,10 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import java.util.GregorianCalendar;
 
+import er.extensions.*;
+
+import java.util.GregorianCalendar;
 import net.sf.webcat.core.*;
 
 import org.apache.log4j.Logger;
@@ -51,7 +53,7 @@ public class CreateAssignmentPage
     // ----------------------------------------------------------
     /**
      * Creates a new PickAssignmentPage object.
-     * 
+     *
      * @param context The context to use
      */
     public CreateAssignmentPage( WOContext context )
@@ -66,6 +68,13 @@ public class CreateAssignmentPage
     public Assignment     assignment;
     public int            selectedIndex = -1;
     public int            index         = -1;
+    public NSArray        reusableAssignments;
+    public NSArray             semesters;
+    public Semester            semester;
+    public Semester            aSemester;
+
+    public static final String SEMESTER_PREF_KEY =
+        "CreateAssignmentPage.semester";
 
 
     //~ Methods ...............................................................
@@ -76,68 +85,64 @@ public class CreateAssignmentPage
         log.debug( "starting appendToResponse()" );
         index = -1;
         selectedIndex = -1;
-        NSMutableArray qualifiers = new NSMutableArray();
 
-        // Look for submission profiles authored by this individual
-        qualifiers.addObject( new EOKeyValueQualifier(
-                                      Assignment.AUTHOR_KEY,
-                                      EOQualifier.QualifierOperatorEqual,
-                                      wcSession().user()
-                                  ) );
-        // Also look for submission profiles used in this class
-        qualifiers.addObject( new EOKeyValueQualifier(
-                                      Assignment.COURSES_KEY,
-                                      EOQualifier.QualifierOperatorContains,
-                                      wcSession().courseOffering().course()
-                                  ) );
-        EOQualifier notThisCourse = new EONotQualifier(
-                new EOKeyValueQualifier(
-                    Assignment.COURSE_OFFERINGS_KEY,
-                    EOQualifier.QualifierOperatorContains,
-                    wcSession().courseOffering()
-                )
-            );
-        try
+        // First, take care of semester list and preference
+        User user = wcSession().user();
+        if ( semesters == null )
+        {
+            semesters =
+                Semester.objectsForFetchAll( wcSession().localContext() );
+            Object semesterPref = user.preferences()
+                .valueForKey( SEMESTER_PREF_KEY );
+            if (semesterPref == null && semesters.count() > 0)
+            {
+                // Default to most recent semester, if no preference is set
+                semester = (Semester)semesters.objectAtIndex(0);
+            }
+            else
+            {
+                semester = Semester.semesterForId( wcSession().localContext(),
+                    ERXValueUtilities.intValue( semesterPref ) );
+            }
+        }
+        // Save selected semester
+        user.preferences().takeValueForKey(
+            semester == null ? ERXConstant.ZeroInteger : semester.id(),
+            SEMESTER_PREF_KEY );
+        user.savePreferences();
+
+        // Second, make sure list of reusable assignments is set
+        if (reusableAssignments == null)
+        {
+            reusableAssignments =
+                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                    Assignment.objectsForReuseInCourse(
+                        wcSession().localContext(),
+                        wcSession().courseOffering().course(),
+                        wcSession().courseOffering()
+                    ),
+                    new Assignment.NonDuplicateAssignmentNameQualifier(
+                        wcSession().courseOffering()
+                    )
+                );
+            assignmentDisplayGroup.setObjectArray( reusableAssignments );
+        }
+
+        // Set semester filter, if necessary
+        if (semester == null)
+        {
+            assignmentDisplayGroup.setQualifier(null);
+            assignmentDisplayGroup.updateDisplayedObjects();
+        }
+        else
         {
             assignmentDisplayGroup.setQualifier(
-                new EOAndQualifier(
-                    new NSArray( new Object[]{
-                        new EOOrQualifier( qualifiers ),
-                        notThisCourse
-                    } ) ) );
-            assignmentDisplayGroup.fetch();
-        }
-        catch ( Exception e )
-        {
-            log.error( "exception searching for assignments", e );
-            Application.emailExceptionToAdmins(
-                e, context(), "Exception searching for assignments" );
-            try
-            {
-                // Try fetching all of the submission profiles, which should
-                // deepen all the relationships (I hope!)
-                EOUtilities.objectsForEntityNamed(
-                    wcSession().localContext(),
-                    Assignment.ENTITY_NAME );
-                assignmentDisplayGroup.setQualifier(
-                    new EOAndQualifier(
-                        new NSArray( new Object[]{
-                            new EOOrQualifier( qualifiers ),
-                            notThisCourse
-                        } ) ) );
-                assignmentDisplayGroup.fetch();
-            }
-            catch ( Exception e2 )
-            {
-                log.error( "2nd exception searching for assignments", e2 );
-                Application.emailExceptionToAdmins(
-                    e2, context(), "2nd exception searching for assignments" );
-                // OK, just kill the second part of the qualifier to
-                // get only this user's stuff
-                assignmentDisplayGroup.setQualifier(
-                    (EOQualifier)qualifiers.objectAtIndex( 0 ) );
-                assignmentDisplayGroup.fetch();                    
-            }
+                new EOKeyValueQualifier(
+                    Assignment.SEMESTERS_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    semester
+                ) );
+            assignmentDisplayGroup.updateDisplayedObjects();
         }
         super.appendToResponse( response, context );
     }
@@ -240,7 +245,7 @@ public class CreateAssignmentPage
                 dueDateTime.set( GregorianCalendar.HOUR , 11 );
                 dueDateTime.set( GregorianCalendar.MINUTE , 55 );
                 dueDateTime.set( GregorianCalendar.SECOND , 0  );
-    
+
                 ts = new NSTimestamp( dueDateTime.getTime() );
             }
             else
@@ -285,7 +290,7 @@ public class CreateAssignmentPage
                         yearLen.add( GregorianCalendar.DAY_OF_YEAR, -1 );
                         days += yearLen.get( GregorianCalendar.DAY_OF_YEAR );
                     }
-                    
+
                     log.debug( "day gap: " + days );
                     log.debug( "old time: " + ao1DateTime );
                     ao1DateTime.add( GregorianCalendar.DAY_OF_YEAR, days );
@@ -301,7 +306,7 @@ public class CreateAssignmentPage
                 {
                     ts = new NSTimestamp(
                         adjustTimeLike( ts, ao1DateTime ).getTime() );
-                    
+
                 }
             }
             else if ( others.count() > 0 )
@@ -316,6 +321,15 @@ public class CreateAssignmentPage
         }
 
         newOffering.setDueDate( ts );
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent defaultAction()
+    {
+        // When semester list changes, make sure not to take the
+        // default action, which is to click "next".
+        return null;
     }
 
 

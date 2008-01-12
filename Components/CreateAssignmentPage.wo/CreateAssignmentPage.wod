@@ -17,7 +17,7 @@ Description: WOString {
 }
 
 HasReusableAssignments: WOConditional {
-    condition = assignmentDisplayGroup.displayedObjects.count;
+    condition = assignmentDisplayGroup.allObjects.count;
 }
 
 Name: WOHyperlink {
@@ -35,6 +35,14 @@ RadioButton: WORadioButton {
     name      = "Group";
     selection = selectedIndex;
     value     = index;
+}
+
+SemesterList: WOPopUpButton {
+	list              = semesters;
+	item              = aSemester;
+	selection         = semester;
+	noSelectionString = "All semesters";
+    onchange          = "submitForm()";
 }
 
 TR: net.sf.webcat.core.TableRow {
