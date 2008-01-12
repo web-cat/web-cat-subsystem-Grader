@@ -1,19 +1,62 @@
 
 {
-    crn = 
+    reuseInCourse =
     {
         class = EOFetchSpecification;
         entityName = Assignment;
         fetchLimit = 0;
         isDeep = YES;
-        qualifier = 
+        qualifier =
+        {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = offerings.courseOffering.course;
+                    selectorName = doesContain:;
+                    value =
+                    {
+                        _key = course;
+                        class = EOQualifierVariable;
+                    };
+                },
+                {
+                    class = EONotQualifier;
+                    qualifier = {
+                        class = EOKeyValueQualifier;
+                        key = offerings.courseOffering;
+                        selectorName = doesContain:;
+                        value =
+                        {
+                            _key = courseOffering;
+                            class = EOQualifierVariable;
+                        };
+                    };
+                }
+            );
+        };
+        sortOrderings = (
+           {
+               class = EOSortOrdering;
+               key = name;
+               selectorName = "compareCaseInsensitiveAscending:";
+           }
+        );
+    };
+    neighborAssignments =
+    {
+        class = EOFetchSpecification;
+        entityName = Assignment;
+        fetchLimit = 0;
+        isDeep = YES;
+        qualifier =
         {
             class = EOKeyValueQualifier;
-            key = courseOffering.crn;
-            selectorName = isEqualTo:;
-            value = 
+            key = offerings.courseOffering;
+            selectorName = doesContain:;
+            value =
             {
-                _key = crn;
+                _key = courseOffering;
                 class = EOQualifierVariable;
             };
         };
