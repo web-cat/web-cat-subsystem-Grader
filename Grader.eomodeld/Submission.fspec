@@ -1,0 +1,38 @@
+{
+    earliestForCourseOffering = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        fetchLimit = 1;
+        qualifier = {
+            class = EOKeyValueQualifier;
+            key = assignmentOffering.courseOffering;
+            selectorName = "isEqualTo:";
+            value = {_key = courseOffering; class = EOQualifierVariable; };
+        };
+        sortOrderings = (
+        	{
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = compareAscending:;
+        	}
+        );
+    };
+    latestForCourseOffering = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        fetchLimit = 1;
+        qualifier = {
+            class = EOKeyValueQualifier;
+            key = assignmentOffering.courseOffering;
+            selectorName = "isEqualTo:";
+            value = {_key = courseOffering; class = EOQualifierVariable; };
+        };
+        sortOrderings = (
+        	{
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = compareDescending:;
+        	}
+        );
+    };
+}

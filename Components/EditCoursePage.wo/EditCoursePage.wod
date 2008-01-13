@@ -40,6 +40,11 @@ CRNInfo: net.sf.webcat.core.PopUpInfo {
     message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
 }
 
+DateRangeInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Show Submission Date Range";
+    message = "Click this button to calculate the range of dates for all submissions in this course offering, across all assignment offerings associated with it.";
+}
+
 Email: WOHyperlink {
     href = user.emailHref;
     string = user.email;

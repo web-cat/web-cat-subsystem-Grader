@@ -12,6 +12,17 @@ function submitForm() { document.WizardForm.submit(); }
 <tr><td class="R">Moodle Id:</td><td><wo name="MoodleId"/>
 <wo name="MoodleIdInfo"/>&nbsp; Group Id:&nbsp;<wo name="MoodleId"/>
 <wo name="MoodleGroupIdInfo"/></td></tr>
+<tr><td></td><td><wo:if condition="$earliestAndLatestComputed">
+<wo:if condition="$earliest">
+Submission date range:
+<wo:str value="$earliest" formatter="$session.timeFormatter"/>
+-
+<wo:str value="$latest" formatter="$session.timeFormatter"/>
+</wo:if><wo:else>
+No submissions found for any assignment in this course offering.
+</wo:else></wo:if><wo:else>
+<wo:submit value="Show Submission Date Range" action="$computeSubmissionDateRange"/>
+<wo name="DateRangeInfo"/></wo:else></td></tr>
 </table><div class="spacer">&nbsp;</div>
 <div class="shadow"><table>
   <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr>

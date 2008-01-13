@@ -67,6 +67,9 @@ public class EditCoursePage
     public int                 index;
     public NSArray             semesters;
     public Semester            aSemester;
+    public NSTimestamp         earliest;
+    public NSTimestamp         latest;
+    public boolean             earliestAndLatestComputed;
 
 
     //~ Methods ...............................................................
@@ -160,6 +163,30 @@ public class EditCoursePage
         addPage.editInstructors = false;
         addPage.nextPage = this;
         return addPage;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Find the dates of the earliest and latest submissions for
+     * any assignment associated with this course.
+     * @return null, to force a page refresh
+     */
+    public WOComponent computeSubmissionDateRange()
+    {
+        NSArray subs = Submission.objectsForEarliestForCourseOffering(
+            wcSession().localContext(),
+            wcSession().courseOffering());
+        if (subs.count() > 0)
+        {
+            earliest = ((Submission)subs.objectAtIndex(0)).submitTime();
+            subs = Submission.objectsForLatestForCourseOffering(
+                wcSession().localContext(),
+                wcSession().courseOffering());
+            latest = ((Submission)subs.objectAtIndex(0)).submitTime();
+        }
+        earliestAndLatestComputed = true;
+        return null;
     }
 
 

@@ -70,6 +70,8 @@ public abstract class _Submission
     // To-many relationships ---
     public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
     // Fetch specifications ---
+    public static final String EARLIEST_FOR_COURSE_OFFERING_FSPEC = "earliestForCourseOffering";
+    public static final String LATEST_FOR_COURSE_OFFERING_FSPEC = "latestForCourseOffering";
     public static final String ENTITY_NAME = "Submission";
 
 
@@ -228,6 +230,62 @@ public abstract class _Submission
     public void setSubmitTime( NSTimestamp value )
     {
         takeStoredValueForKey( value, "submitTime" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>EarliestForCourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForEarliestForCourseOffering(
+            EOEditingContext context,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "earliestForCourseOffering", "Submission" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>LatestForCourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForLatestForCourseOffering(
+            EOEditingContext context,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "latestForCourseOffering", "Submission" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        return context.objectsWithFetchSpecification( spec );
     }
 
 
