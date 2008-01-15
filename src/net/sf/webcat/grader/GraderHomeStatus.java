@@ -29,12 +29,9 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-
 import er.extensions.*;
 import er.extensions.ERXConstant;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.*;
 
 // -------------------------------------------------------------------------
@@ -76,7 +73,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -92,8 +89,8 @@ public class GraderHomeStatus
         currentTime = new NSTimestamp();
         NSMutableArray qualifiers = new NSMutableArray();
         qualifiers.addObject( new EOKeyValueQualifier(
-                AssignmentOffering.AVAILABLE_FROM_KEY, 
-                EOQualifier.QualifierOperatorLessThan, 
+                AssignmentOffering.AVAILABLE_FROM_KEY,
+                EOQualifier.QualifierOperatorLessThan,
                 currentTime
             ) );
 //        assignmentGroup.setQualifier(
@@ -101,13 +98,13 @@ public class GraderHomeStatus
 //        log.debug( "qualifier = " + assignmentGroup.qualifier() );
 //        assignmentGroup.fetch();
 //        log.debug( "results = " + assignmentGroup.displayedObjects() );
-        qualifiers.addObject( new EOKeyValueQualifier( 
-                AssignmentOffering.PUBLISH_KEY, 
+        qualifiers.addObject( new EOKeyValueQualifier(
+                AssignmentOffering.PUBLISH_KEY,
                 EOQualifier.QualifierOperatorEqual,
                 ERXConstant.integerForInt( 1 )
             ) );
-        qualifiers.addObject( new EOKeyValueQualifier( 
-                AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY, 
+        qualifiers.addObject( new EOKeyValueQualifier(
+                AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
                 EOQualifier.QualifierOperatorContains,
                 wcSession().user()
             ) );
@@ -117,13 +114,13 @@ public class GraderHomeStatus
 //        assignmentGroup.fetch();
 //        log.debug( "results = " + assignmentGroup.displayedObjects() );
         qualifiers = new NSMutableArray( new EOAndQualifier( qualifiers ) );
-        qualifiers.addObject( new EOKeyValueQualifier( 
-                AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY, 
+        qualifiers.addObject( new EOKeyValueQualifier(
+                AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
                 EOQualifier.QualifierOperatorContains,
                 wcSession().user()
             ) );
-        qualifiers.addObject( new EOKeyValueQualifier( 
-                AssignmentOffering.COURSE_OFFERING_TAS_KEY, 
+        qualifiers.addObject( new EOKeyValueQualifier(
+                AssignmentOffering.COURSE_OFFERING_TAS_KEY,
                 EOQualifier.QualifierOperatorContains,
                 wcSession().user()
             ) );
@@ -134,7 +131,7 @@ public class GraderHomeStatus
 //        log.debug( "results = " + assignmentGroup.displayedObjects() );
         qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
         EOQualifier deadlineQualifier = new EOKeyValueQualifier(
-            AssignmentOffering.LATE_DEADLINE_KEY, 
+            AssignmentOffering.LATE_DEADLINE_KEY,
             EOQualifier.QualifierOperatorGreaterThan,
             currentTime
             );
@@ -144,6 +141,18 @@ public class GraderHomeStatus
         assignmentGroup.fetch();
         qualifiers.removeAllObjects();
         qualifiers.addObject( deadlineQualifier );
+        // Also, more recent than two weeks ago
+        qualifiers.addObject( new EOKeyValueQualifier(
+            AssignmentOffering.DUE_DATE_KEY,
+            EOQualifier.QualifierOperatorGreaterThan,
+            currentTime.timestampByAddingGregorianUnits( 0, 0, -14, 0, 0, 0 )
+            ) );
+        // Also, some time within the next 4 weeks
+        qualifiers.addObject( new EOKeyValueQualifier(
+            AssignmentOffering.DUE_DATE_KEY,
+            EOQualifier.QualifierOperatorLessThan,
+            currentTime.timestampByAddingGregorianUnits( 0, 0, 28, 0, 0, 0 )
+            ) );
         qualifiers.addObject( new EONotQualifier( assignmentQualifier ) );
         upcomingAssignmentsGroup.setQualifier(
             new EOAndQualifier( qualifiers ) );
@@ -155,7 +164,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * View results for the most recent submission to the selected assignments.
-     * 
+     *
      * @return the most recent results page
      */
     public Number mostRecentScore()
@@ -171,7 +180,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * Check whether the user can edit the selected assignment.
-     * 
+     *
      * @return true if the user can edit the assignment
      */
     public boolean canEditAssignment()
@@ -183,7 +192,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * Check whether the user can edit the selected assignment.
-     * 
+     *
      * @return true if the user can edit the assignment
      */
     public boolean canGradeAssignment()
@@ -199,7 +208,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * An action to go to the submission page for a given assignment.
-     * 
+     *
      * @return the submission page for the selected assignment
      */
     public WOComponent submitAssignment()
@@ -215,7 +224,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * View results for the most recent submission to the selected assignments.
-     * 
+     *
      * @return the most recent results page
      */
     public WOComponent viewResults()
@@ -244,7 +253,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * An action to go to the graphing page for a given assignment.
-     * 
+     *
      * @return the graphing page for the selected assignment
      */
     public WOComponent graphResults()
@@ -260,7 +269,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * An action to go to edit page for a given assignment.
-     * 
+     *
      * @return the properties page for the selected assignment
      */
     public WOComponent editAssignment()
@@ -276,7 +285,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     /**
      * An action to go to edit page for a given assignment.
-     * 
+     *
      * @return the properties page for the selected assignment
      */
     public WOComponent gradeAssignment()
@@ -293,7 +302,7 @@ public class GraderHomeStatus
     /**
      * Determine if the current assignment has suspended submissions (that
      * this user can see).
-     * 
+     *
      * @return true if the user can see this assignment's status and this
      * assignment has suspended submissions
      */
