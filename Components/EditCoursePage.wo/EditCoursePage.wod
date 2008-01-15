@@ -145,7 +145,6 @@ SemesterList: WOPopUpButton {
 	list              = semesters;
 	item              = aSemester;
 	selection         = session.courseOffering.semester;
-    onchange          = "submitForm()";
 }
 
 TARepetition: WORepetition {
