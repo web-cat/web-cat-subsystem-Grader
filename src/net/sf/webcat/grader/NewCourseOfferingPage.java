@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
+import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 
 import net.sf.webcat.core.*;
@@ -46,7 +47,7 @@ public class NewCourseOfferingPage
     // ----------------------------------------------------------
     /**
      * Creates a new TBDPage object.
-     * 
+     *
      * @param context The context to use
      */
     public NewCourseOfferingPage( WOContext context )
@@ -57,8 +58,11 @@ public class NewCourseOfferingPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public Course         course;
-    public WODisplayGroup courseDisplayGroup;
+    public Course               course;
+    public WODisplayGroup       courseDisplayGroup;
+    public NSArray              institutions;
+    public AuthenticationDomain institution;
+    public AuthenticationDomain anInstitution;
 
 
     //~ Methods ...............................................................
@@ -66,12 +70,30 @@ public class NewCourseOfferingPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
     public void appendToResponse( WOResponse response, WOContext context )
     {
+        if (institutions == null)
+        {
+            institutions = AuthenticationDomain.authDomains();
+            institution = wcSession().user().authenticationDomain();
+        }
+        if (institution == null)
+        {
+            courseDisplayGroup.setQualifier( null );
+        }
+        else
+        {
+            courseDisplayGroup.setQualifier( new EOKeyValueQualifier(
+                Course.iNSTITUTION_KEY,
+                EOQualifier.QualifierOperatorEqual,
+                institution
+                ));
+        }
+        courseDisplayGroup.updateDisplayedObjects();
         if ( wcSession().courseOffering() != null )
         {
             wcSession().setCourseRelationship(
@@ -79,7 +101,17 @@ public class NewCourseOfferingPage
         }
         super.appendToResponse( response, context );
     }
-    
+
+
+    // ----------------------------------------------------------
+    public WOComponent defaultAction()
+    {
+        // When semester list changes, make sure not to take the
+        // default action, which is to click "next".
+        return null;
+    }
+
+
     // ----------------------------------------------------------
     /**
      * Create a new course offering object and move on to an edit page.
@@ -87,9 +119,15 @@ public class NewCourseOfferingPage
      */
     public WOComponent next()
     {
+        if (wcSession().course() == null)
+        {
+            error( "Please select a course." );
+            return null;
+        }
         CourseOffering newOffering = new CourseOffering();
         wcSession().localContext().insertObject( newOffering );
         newOffering.setCourseRelationship( wcSession().course() );
+        // TODO: use date-based search instead of just creation ordering
         NSArray semesters = EOUtilities.objectsForEntityNamed(
                         wcSession().localContext(), Semester.ENTITY_NAME );
         newOffering.setSemesterRelationship(

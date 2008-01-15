@@ -1,8 +1,16 @@
 CourseList: WOPopUpButton {
-	list              = courseDisplayGroup.allObjects;
+	list              = courseDisplayGroup.displayedObjects;
 	selection         = session.course;
 	item              = course;
 	displayString     = course.deptNumberAndName;
 }
+
+InstitutionList: WOPopUpButton{
+	list              = institutions;
+	item              = anInstitution;
+	selection         = institution;
+    onchange          = "submitForm()";
+}
+
 Page : net.sf.webcat.core.WizardPage {
 }
