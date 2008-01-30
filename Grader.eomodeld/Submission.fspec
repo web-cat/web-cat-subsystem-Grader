@@ -10,11 +10,11 @@
             value = {_key = courseOffering; class = EOQualifierVariable; };
         };
         sortOrderings = (
-        	{
+            {
                 class = EOSortOrdering;
                 key = submitTime;
                 selectorName = compareAscending:;
-        	}
+            }
         );
     };
     latestForCourseOffering = {
@@ -28,11 +28,11 @@
             value = {_key = courseOffering; class = EOQualifierVariable; };
         };
         sortOrderings = (
-        	{
+            {
                 class = EOSortOrdering;
                 key = submitTime;
                 selectorName = compareDescending:;
-        	}
+            }
         );
     };
 }
