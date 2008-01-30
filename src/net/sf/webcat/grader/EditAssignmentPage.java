@@ -142,6 +142,7 @@ public class EditAssignmentPage
      */
     protected boolean saveAndCanProceed( boolean requireProfile )
     {
+        if (thisAssignment == null) return true;
         boolean offeringIsSuspended =
             thisAssignment.gradingSuspended();
         if ( offeringIsSuspended != isSuspended )
@@ -528,6 +529,52 @@ public class EditAssignmentPage
                     ao.assignment().submissionProfile() );
             }
         }
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent deleteActionOk()
+    {
+        prefs().setAssignmentOfferingRelationship( null );
+        wcSession().commitLocalChanges();
+        Assignment assignment = thisAssignment.assignment();
+        wcSession().localContext().deleteObject(thisAssignment);
+        wcSession().commitLocalChanges();
+        thisAssignment = null;
+        if (assignment.offerings().count() == 0)
+        {
+            wcSession().localContext().deleteObject(assignment);
+            wcSession().commitLocalChanges();
+        }
+        return finish();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent delete()
+    {
+        ConfirmPage confirmPage = null;
+        if ( saveAndCanProceed() )
+        {
+            confirmPage =
+                (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+            confirmPage.nextPage       = this;
+            confirmPage.message        =
+                "This action will <b>delete the assignment offering</b>, "
+                + "together with any staff submissions that have been "
+                + "made to it.</p>";
+            if (thisAssignment.assignment().offerings().count() > 1)
+            {
+                confirmPage.message +=
+                    "<p>Since this is the only offering of the selected "
+                    + "assignment, this action will also <b>delete the "
+                    + "assignment altogether</b>.</p>";
+            }
+            confirmPage.actionReceiver = this;
+            confirmPage.actionOk       = "deleteActionOk";
+            confirmPage.setTitle( "Confirm Delete Request" );
+        }
+        return confirmPage;
     }
 
 

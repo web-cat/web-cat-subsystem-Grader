@@ -30,6 +30,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.*;
+import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 import net.sf.webcat.core.*;
@@ -145,7 +146,20 @@ public class AssignmentOffering
      */
     public String userPresentableDescription()
     {
-        return courseOffering().compactName() + ": " + assignment().name();
+        String result = "";
+        if (courseOffering() != null)
+        {
+            result += courseOffering().compactName() + ": ";
+        }
+        if (assignment() != null)
+        {
+            result += assignment().name();
+        }
+        if (result.equals(""))
+        {
+            result = super.toString();
+        }
+        return result;
     }
 
 
@@ -516,6 +530,126 @@ public class AssignmentOffering
     }
 
 
+    // ----------------------------------------------------------
+    @Override
+    public void mightDelete()
+    {
+        log.debug("mightDelete()");
+        if (hasStudentSubmissions())
+        {
+            log.debug("mightDelete(): offering has non-staff submissions");
+            throw new ValidationException("You may not delete an assignment "
+                + "offering that has already received student submissions.");
+        }
+        StringBuffer buf = new StringBuffer("/");
+        addSubdirTo(buf);
+        subdirToDelete = buf.toString();
+        super.mightDelete();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean canDelete()
+    {
+        boolean result = (courseOffering() == null
+            || editingContext() == null
+            || !hasStudentSubmissions());
+        log.debug("canDelete() = " + result);
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void didDelete( EOEditingContext context )
+    {
+        super.didDelete( context );
+        // should check to see if this is a child ec
+        EOObjectStore parent = context.parentObjectStore();
+        if (parent == null || !(parent instanceof EOEditingContext))
+        {
+            if (subdirToDelete != null)
+            {
+                NSArray domains = AuthenticationDomain.authDomains();
+                for ( int i = 0; i < domains.count(); i++ )
+                {
+                    AuthenticationDomain domain =
+                        (AuthenticationDomain)domains.objectAtIndex( i );
+                    StringBuffer dir = domain.submissionBaseDirBuffer();
+                    dir.append(subdirToDelete);
+                    File assignmentDir = new File(dir.toString());
+                    if (assignmentDir.exists())
+                    {
+                        net.sf.webcat.archives.FileUtilities.deleteDirectory(
+                            assignmentDir);
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Check to see if any students have submitted to this assignment
+     * offering.  This check explicitly excludes any users who have
+     * instructor-level or TA-level access to the associated course
+     * offering.
+     * @return true if any student submissions exist
+     */
+    public boolean hasStudentSubmissions()
+    {
+        NSMutableArray qualifiers = new NSMutableArray();
+        // Must be a submission to this assignment
+        qualifiers.add(new EOKeyValueQualifier(
+            Submission.ASSIGNMENT_OFFERING_KEY,
+            EOQualifier.QualifierOperatorEqual,
+            this));
+        if (this.courseOffering() != null)
+        {
+            NSArray people = this.courseOffering().instructors();
+            // Not an instructor
+            if (people.count() > 0)
+            {
+                for (int i = 0; i < people.count(); i++)
+                {
+                    // Add to query
+                    qualifiers.add(new EONotQualifier(
+                        new EOKeyValueQualifier(
+                            Submission.USER_KEY,
+                            EOQualifier.QualifierOperatorEqual,
+                            people.objectAtIndex(i)
+                        )));
+                }
+            }
+            people = this.courseOffering().TAs();
+            // Not a TA
+            if (this.courseOffering().TAs().count() > 0)
+            {
+                for (int i = 0; i < people.count(); i++)
+                {
+                    // Add to query
+                    qualifiers.add(new EONotQualifier(
+                        new EOKeyValueQualifier(
+                            Submission.USER_KEY,
+                            EOQualifier.QualifierOperatorEqual,
+                            people.objectAtIndex(i)
+                        )));
+                }
+            }
+        }
+        EOFetchSpecification spec = new EOFetchSpecification(
+            Submission.ENTITY_NAME, new EOAndQualifier(qualifiers), null);
+        // Only need to return 1, since we're just trying to find out if
+        // there are any at all
+        spec.setFetchLimit(1);
+        NSArray result = editingContext().objectsWithFetchSpecification( spec );
+        log.debug("fetch = " + result);
+        return result.count() > 0;
+    }
+
+
     //~ Public Static Methods .................................................
 
     // ----------------------------------------------------------
@@ -836,5 +970,6 @@ public class AssignmentOffering
     //~ Instance/static variables .............................................
 
     private String cachedPermalink;
+    private String subdirToDelete;
     static Logger log = Logger.getLogger( AssignmentOffering.class );
 }

@@ -1,6 +1,11 @@
-<webobject name="Page">For: <span class="hl"><webobject name="CourseName"/></span><p>
+<webobject name="Page">For: <span class="hl"><webobject name="CourseName"/></span>
 <h2>Properties for All Instances of This Assignment</h2>
 <table style="border:none">
+<wo:if condition="~!thisAssignment.isNewObject && !thisAssignment.hasStudentSubmissions">
+<tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
+    <td>You may delete this assignment offering.   It cannot be deleted once
+    students (not staff) begin making submissions.</td></tr>
+</wo:if>
 <tr><td align="right">Name:</td>
     <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
 <tr><td align="right">Title:</td>
