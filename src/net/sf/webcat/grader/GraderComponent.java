@@ -88,8 +88,7 @@ public class GraderComponent
             User prime = wcSession().primeUser();
             if ( prime.editingContext() != wcSession().localContext() )
             {
-                prime = (User)EOUtilities.localInstanceOfObject(
-                    wcSession().localContext(), prime );
+                prime = prime.localInstance( wcSession().localContext() );
             }
             NSArray results = null;
             try
@@ -116,12 +115,11 @@ public class GraderComponent
                 {
                     ec.lock();
                     ec.insertObject( newPrefs );
-                    User localPrime = (User)EOUtilities.localInstanceOfObject(
-                                ec, prime );
+                    User localPrime = prime.localInstance( ec );
                     newPrefs.setUserRelationship( localPrime );
                     ec.saveChanges();
-                    prefs = (GraderPrefs)EOUtilities.localInstanceOfObject(
-                        wcSession().localContext(), newPrefs );
+                    prefs =
+                        newPrefs.localInstance( wcSession().localContext() );
                 }
                 catch ( Exception e)
                 {

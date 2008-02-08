@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -57,6 +59,87 @@ public abstract class _StepConfig
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _StepConfig object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param updateMutableFields
+     * @return The newly created object
+     */
+    public static StepConfig createStepConfig(
+        EOEditingContext editingContext,
+        boolean updateMutableFields
+        )
+    {
+        StepConfig eoObject = (StepConfig)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _StepConfig.ENTITY_NAME);
+        eoObject.setUpdateMutableFields(updateMutableFields);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static StepConfig localInstance(
+        EOEditingContext editingContext, StepConfig eo)
+    {
+        return (eo == null)
+            ? null
+            : (StepConfig)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static StepConfig forId(
+        EOEditingContext ec, int id )
+    {
+        StepConfig obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (StepConfig)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static StepConfig forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Attributes ---
@@ -74,6 +157,50 @@ public abstract class _StepConfig
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public StepConfig localInstance(EOEditingContext editingContext)
+    {
+        return (StepConfig)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     //-- Local mutable cache --
     private net.sf.webcat.core.MutableDictionary configSettingsCache;
@@ -137,6 +264,11 @@ public abstract class _StepConfig
      */
     public void setConfigSettings( net.sf.webcat.core.MutableDictionary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConfigSettings("
+                + value + ")" );
+        }
         if ( configSettingsCache == null )
         {
             configSettingsCache = value;
@@ -163,6 +295,10 @@ public abstract class _StepConfig
      */
     public void clearConfigSettings()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearConfigSettings()" );
+        }
         takeStoredValueForKey( null, "configSettings" );
         configSettingsRawCache = null;
         configSettingsCache = null;
@@ -189,6 +325,11 @@ public abstract class _StepConfig
      */
     public void setName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setName("
+                + value + "): was " + name() );
+        }
         takeStoredValueForKey( value, "name" );
     }
 
@@ -217,6 +358,11 @@ public abstract class _StepConfig
      */
     public void setUpdateMutableFields( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFields("
+                + value + "): was " + updateMutableFields() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setUpdateMutableFieldsRaw( actual );
@@ -243,6 +389,11 @@ public abstract class _StepConfig
      */
     public void setUpdateMutableFieldsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFieldsRaw("
+                + value + "): was " + updateMutableFieldsRaw() );
+        }
         takeStoredValueForKey( value, "updateMutableFields" );
     }
 
@@ -253,6 +404,7 @@ public abstract class _StepConfig
      */
     public void saveMutables()
     {
+        log.debug("saveMutables()");
         if ( configSettingsCache != null
             && configSettingsCache.hasChanged() )
         {
@@ -271,6 +423,7 @@ public abstract class _StepConfig
      */
     public void willUpdate()
     {
+        log.debug("willUpdate()");
         saveMutables();
         super.willUpdate();
     }
@@ -282,6 +435,7 @@ public abstract class _StepConfig
      */
     public void willInsert()
     {
+        log.debug("willInsert()");
         saveMutables();
         super.willInsert();
     }
@@ -293,6 +447,7 @@ public abstract class _StepConfig
      */
     public void flushCaches()
     {
+        log.debug("flushCaches()");
         configSettingsCache = null;
         configSettingsRawCache  = null;
         setUpdateMutableFields( false );
@@ -307,67 +462,6 @@ public abstract class _StepConfig
     public void mutableContainerHasChanged()
     {
         setUpdateMutableFields( true );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>CourseAndScript</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param scriptFileBinding fetch spec parameter
-     * @param courseBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForCourseAndScript(
-            EOEditingContext context,
-            net.sf.webcat.grader.ScriptFile scriptFileBinding,
-            net.sf.webcat.core.Course courseBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "courseAndScript", "StepConfig" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( scriptFileBinding != null )
-            bindings.setObjectForKey( scriptFileBinding,
-                                      "scriptFile" );
-        if ( courseBinding != null )
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>User</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForUser(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "user", "StepConfig" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
     }
 
 
@@ -394,6 +488,11 @@ public abstract class _StepConfig
      */
     public void setAuthor( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthor("
+                + value + "): was " + author() );
+        }
         takeStoredValueForKey( value, "author" );
     }
 
@@ -409,6 +508,11 @@ public abstract class _StepConfig
     public void setAuthorRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthorRelationship("
+                + value + "): was " + author() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = author();
@@ -443,6 +547,11 @@ public abstract class _StepConfig
      */
     public void setSteps( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSteps("
+                + value + "): was " + steps() );
+        }
         takeStoredValueForKey( value, "steps" );
     }
 
@@ -458,6 +567,11 @@ public abstract class _StepConfig
      */
     public void addToSteps( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSteps("
+                + value + "): was " + steps() );
+        }
         NSMutableArray array = (NSMutableArray)steps();
         willChange();
         array.addObject( value );
@@ -475,6 +589,11 @@ public abstract class _StepConfig
      */
     public void removeFromSteps( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromSteps("
+                + value + "): was " + steps() );
+        }
         NSMutableArray array = (NSMutableArray)steps();
         willChange();
         array.removeObject( value );
@@ -490,6 +609,11 @@ public abstract class _StepConfig
      */
     public void addToStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToStepsRelationship("
+                + value + "): was " + steps() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "steps" );
     }
@@ -504,6 +628,11 @@ public abstract class _StepConfig
      */
     public void removeFromStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromStepsRelationship("
+                + value + "): was " + steps() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "steps" );
     }
@@ -518,6 +647,10 @@ public abstract class _StepConfig
      */
     public net.sf.webcat.grader.Step createStepsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createStepsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "Step" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -538,6 +671,11 @@ public abstract class _StepConfig
      */
     public void deleteStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteStepsRelationship("
+                + value + "): was " + steps() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "steps" );
         editingContext().deleteObject( value );
@@ -551,6 +689,11 @@ public abstract class _StepConfig
      */
     public void deleteAllStepsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllStepsRelationships(): was "
+                + steps() );
+        }
         Enumeration objects = steps().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteStepsRelationship(
@@ -558,4 +701,85 @@ public abstract class _StepConfig
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>CourseAndScript</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param scriptFileBinding fetch spec parameter
+     * @param courseBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForCourseAndScript(
+            EOEditingContext context,
+            net.sf.webcat.grader.ScriptFile scriptFileBinding,
+            net.sf.webcat.core.Course courseBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "courseAndScript", "StepConfig" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( scriptFileBinding != null )
+            bindings.setObjectForKey( scriptFileBinding,
+                                      "scriptFile" );
+        if ( courseBinding != null )
+            bindings.setObjectForKey( courseBinding,
+                                      "course" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForCourseAndScript(ec"
+            
+                + ", " + scriptFileBinding
+                + ", " + courseBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>User</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "user", "StepConfig" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForUser(ec"
+            
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( StepConfig.class );
 }

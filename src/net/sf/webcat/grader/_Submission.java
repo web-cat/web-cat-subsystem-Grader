@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,87 @@ public abstract class _Submission
     public _Submission()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _Submission object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param partnerLink
+     * @return The newly created object
+     */
+    public static Submission createSubmission(
+        EOEditingContext editingContext,
+        boolean partnerLink
+        )
+    {
+        Submission eoObject = (Submission)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _Submission.ENTITY_NAME);
+        eoObject.setPartnerLink(partnerLink);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static Submission localInstance(
+        EOEditingContext editingContext, Submission eo)
+    {
+        return (eo == null)
+            ? null
+            : (Submission)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static Submission forId(
+        EOEditingContext ec, int id )
+    {
+        Submission obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (Submission)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static Submission forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -79,6 +162,50 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public Submission localInstance(EOEditingContext editingContext)
+    {
+        return (Submission)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>fileName</code> value.
      * @return the value of the attribute
      */
@@ -97,6 +224,11 @@ public abstract class _Submission
      */
     public void setFileName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFileName("
+                + value + "): was " + fileName() );
+        }
         takeStoredValueForKey( value, "fileName" );
     }
 
@@ -125,6 +257,11 @@ public abstract class _Submission
      */
     public void setPartnerLink( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPartnerLink("
+                + value + "): was " + partnerLink() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setPartnerLinkRaw( actual );
@@ -151,6 +288,11 @@ public abstract class _Submission
      */
     public void setPartnerLinkRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPartnerLinkRaw("
+                + value + "): was " + partnerLinkRaw() );
+        }
         takeStoredValueForKey( value, "partnerLink" );
     }
 
@@ -179,6 +321,11 @@ public abstract class _Submission
      */
     public void setSubmitNumber( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmitNumber("
+                + value + "): was " + submitNumber() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setSubmitNumberRaw( actual );
@@ -205,6 +352,11 @@ public abstract class _Submission
      */
     public void setSubmitNumberRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmitNumberRaw("
+                + value + "): was " + submitNumberRaw() );
+        }
         takeStoredValueForKey( value, "submitNumber" );
     }
 
@@ -229,63 +381,12 @@ public abstract class _Submission
      */
     public void setSubmitTime( NSTimestamp value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmitTime("
+                + value + "): was " + submitTime() );
+        }
         takeStoredValueForKey( value, "submitTime" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>EarliestForCourseOffering</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param courseOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForEarliestForCourseOffering(
-            EOEditingContext context,
-            net.sf.webcat.core.CourseOffering courseOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "earliestForCourseOffering", "Submission" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( courseOfferingBinding != null )
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>LatestForCourseOffering</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param courseOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForLatestForCourseOffering(
-            EOEditingContext context,
-            net.sf.webcat.core.CourseOffering courseOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "latestForCourseOffering", "Submission" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( courseOfferingBinding != null )
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
     }
 
 
@@ -312,6 +413,11 @@ public abstract class _Submission
      */
     public void setAssignmentOffering( net.sf.webcat.grader.AssignmentOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentOffering("
+                + value + "): was " + assignmentOffering() );
+        }
         takeStoredValueForKey( value, "assignmentOffering" );
     }
 
@@ -327,6 +433,11 @@ public abstract class _Submission
     public void setAssignmentOfferingRelationship(
         net.sf.webcat.grader.AssignmentOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentOfferingRelationship("
+                + value + "): was " + assignmentOffering() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.AssignmentOffering object = assignmentOffering();
@@ -363,6 +474,11 @@ public abstract class _Submission
      */
     public void setResult( net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setResult("
+                + value + "): was " + result() );
+        }
         takeStoredValueForKey( value, "result" );
     }
 
@@ -378,6 +494,11 @@ public abstract class _Submission
     public void setResultRelationship(
         net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setResultRelationship("
+                + value + "): was " + result() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.SubmissionResult object = result();
@@ -414,6 +535,11 @@ public abstract class _Submission
      */
     public void setUser( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUser("
+                + value + "): was " + user() );
+        }
         takeStoredValueForKey( value, "user" );
     }
 
@@ -429,6 +555,11 @@ public abstract class _Submission
     public void setUserRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUserRelationship("
+                + value + "): was " + user() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = user();
@@ -463,6 +594,11 @@ public abstract class _Submission
      */
     public void setEnqueuedJobs( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEnqueuedJobs("
+                + value + "): was " + enqueuedJobs() );
+        }
         takeStoredValueForKey( value, "enqueuedJobs" );
     }
 
@@ -478,6 +614,11 @@ public abstract class _Submission
      */
     public void addToEnqueuedJobs( net.sf.webcat.grader.EnqueuedJob value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToEnqueuedJobs("
+                + value + "): was " + enqueuedJobs() );
+        }
         NSMutableArray array = (NSMutableArray)enqueuedJobs();
         willChange();
         array.addObject( value );
@@ -495,6 +636,11 @@ public abstract class _Submission
      */
     public void removeFromEnqueuedJobs( net.sf.webcat.grader.EnqueuedJob value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromEnqueuedJobs("
+                + value + "): was " + enqueuedJobs() );
+        }
         NSMutableArray array = (NSMutableArray)enqueuedJobs();
         willChange();
         array.removeObject( value );
@@ -510,6 +656,11 @@ public abstract class _Submission
      */
     public void addToEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToEnqueuedJobsRelationship("
+                + value + "): was " + enqueuedJobs() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "enqueuedJobs" );
     }
@@ -524,6 +675,11 @@ public abstract class _Submission
      */
     public void removeFromEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromEnqueuedJobsRelationship("
+                + value + "): was " + enqueuedJobs() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "enqueuedJobs" );
     }
@@ -538,6 +694,10 @@ public abstract class _Submission
      */
     public net.sf.webcat.grader.EnqueuedJob createEnqueuedJobsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createEnqueuedJobsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "EnqueuedJob" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -558,6 +718,11 @@ public abstract class _Submission
      */
     public void deleteEnqueuedJobsRelationship( net.sf.webcat.grader.EnqueuedJob value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteEnqueuedJobsRelationship("
+                + value + "): was " + enqueuedJobs() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "enqueuedJobs" );
         editingContext().deleteObject( value );
@@ -571,6 +736,11 @@ public abstract class _Submission
      */
     public void deleteAllEnqueuedJobsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllEnqueuedJobsRelationships(): was "
+                + enqueuedJobs() );
+        }
         Enumeration objects = enqueuedJobs().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteEnqueuedJobsRelationship(
@@ -578,4 +748,79 @@ public abstract class _Submission
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>EarliestForCourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForEarliestForCourseOffering(
+            EOEditingContext context,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "earliestForCourseOffering", "Submission" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForEarliestForCourseOffering(ec"
+            
+                + ", " + courseOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>LatestForCourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForLatestForCourseOffering(
+            EOEditingContext context,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "latestForCourseOffering", "Submission" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForLatestForCourseOffering(ec"
+            
+                + ", " + courseOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( Submission.class );
 }

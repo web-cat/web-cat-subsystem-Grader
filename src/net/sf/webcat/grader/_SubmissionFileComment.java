@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,87 @@ public abstract class _SubmissionFileComment
     public _SubmissionFileComment()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _SubmissionFileComment object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param limitExceeded
+     * @return The newly created object
+     */
+    public static SubmissionFileComment createSubmissionFileComment(
+        EOEditingContext editingContext,
+        boolean limitExceeded
+        )
+    {
+        SubmissionFileComment eoObject = (SubmissionFileComment)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _SubmissionFileComment.ENTITY_NAME);
+        eoObject.setLimitExceeded(limitExceeded);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static SubmissionFileComment localInstance(
+        EOEditingContext editingContext, SubmissionFileComment eo)
+    {
+        return (eo == null)
+            ? null
+            : (SubmissionFileComment)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionFileComment forId(
+        EOEditingContext ec, int id )
+    {
+        SubmissionFileComment obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (SubmissionFileComment)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionFileComment forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -79,6 +162,50 @@ public abstract class _SubmissionFileComment
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public SubmissionFileComment localInstance(EOEditingContext editingContext)
+    {
+        return (SubmissionFileComment)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>categoryNo</code> value.
      * @return the value of the attribute
      */
@@ -101,6 +228,11 @@ public abstract class _SubmissionFileComment
      */
     public void setCategoryNo( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCategoryNo("
+                + value + "): was " + categoryNo() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setCategoryNoRaw( actual );
@@ -127,6 +259,11 @@ public abstract class _SubmissionFileComment
      */
     public void setCategoryNoRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCategoryNoRaw("
+                + value + "): was " + categoryNoRaw() );
+        }
         takeStoredValueForKey( value, "categoryNo" );
     }
 
@@ -155,6 +292,11 @@ public abstract class _SubmissionFileComment
      */
     public void setDeduction( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeduction("
+                + value + "): was " + deduction() );
+        }
         Number actual =
             new Double( value );
         setDeductionRaw( actual );
@@ -181,6 +323,11 @@ public abstract class _SubmissionFileComment
      */
     public void setDeductionRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductionRaw("
+                + value + "): was " + deductionRaw() );
+        }
         takeStoredValueForKey( value, "deduction" );
     }
 
@@ -205,6 +352,11 @@ public abstract class _SubmissionFileComment
      */
     public void setFileName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFileName("
+                + value + "): was " + fileName() );
+        }
         takeStoredValueForKey( value, "fileName" );
     }
 
@@ -229,6 +381,11 @@ public abstract class _SubmissionFileComment
      */
     public void setGroupName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGroupName("
+                + value + "): was " + groupName() );
+        }
         takeStoredValueForKey( value, "groupName" );
     }
 
@@ -257,6 +414,11 @@ public abstract class _SubmissionFileComment
      */
     public void setLimitExceeded( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLimitExceeded("
+                + value + "): was " + limitExceeded() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setLimitExceededRaw( actual );
@@ -283,6 +445,11 @@ public abstract class _SubmissionFileComment
      */
     public void setLimitExceededRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLimitExceededRaw("
+                + value + "): was " + limitExceededRaw() );
+        }
         takeStoredValueForKey( value, "limitExceeded" );
     }
 
@@ -311,6 +478,11 @@ public abstract class _SubmissionFileComment
      */
     public void setLineNo( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLineNo("
+                + value + "): was " + lineNo() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setLineNoRaw( actual );
@@ -337,6 +509,11 @@ public abstract class _SubmissionFileComment
      */
     public void setLineNoRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLineNoRaw("
+                + value + "): was " + lineNoRaw() );
+        }
         takeStoredValueForKey( value, "lineNo" );
     }
 
@@ -361,6 +538,11 @@ public abstract class _SubmissionFileComment
      */
     public void setMessage( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMessage("
+                + value + "): was " + message() );
+        }
         takeStoredValueForKey( value, "message" );
     }
 
@@ -389,6 +571,11 @@ public abstract class _SubmissionFileComment
      */
     public void setToNo( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToNo("
+                + value + "): was " + toNo() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setToNoRaw( actual );
@@ -415,6 +602,11 @@ public abstract class _SubmissionFileComment
      */
     public void setToNoRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToNoRaw("
+                + value + "): was " + toNoRaw() );
+        }
         takeStoredValueForKey( value, "toNo" );
     }
 
@@ -442,6 +634,11 @@ public abstract class _SubmissionFileComment
      */
     public void setAuthor( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthor("
+                + value + "): was " + author() );
+        }
         takeStoredValueForKey( value, "author" );
     }
 
@@ -457,6 +654,11 @@ public abstract class _SubmissionFileComment
     public void setAuthorRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthorRelationship("
+                + value + "): was " + author() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = author();
@@ -493,6 +695,11 @@ public abstract class _SubmissionFileComment
      */
     public void setSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionFileStats("
+                + value + "): was " + submissionFileStats() );
+        }
         takeStoredValueForKey( value, "submissionFileStats" );
     }
 
@@ -508,6 +715,11 @@ public abstract class _SubmissionFileComment
     public void setSubmissionFileStatsRelationship(
         net.sf.webcat.grader.SubmissionFileStats value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionFileStatsRelationship("
+                + value + "): was " + submissionFileStats() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.SubmissionFileStats object = submissionFileStats();
@@ -521,4 +733,7 @@ public abstract class _SubmissionFileComment
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( SubmissionFileComment.class );
 }

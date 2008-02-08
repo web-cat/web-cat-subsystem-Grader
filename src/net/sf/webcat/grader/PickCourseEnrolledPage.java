@@ -109,7 +109,7 @@ public class PickCourseEnrolledPage
             }
             else
             {
-                semester = Semester.semesterForId( wcSession().localContext(),
+                semester = Semester.forId( wcSession().localContext(),
                     ERXValueUtilities.intValue( semesterPref ) );
             }
         }

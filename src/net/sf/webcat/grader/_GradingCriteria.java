@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,114 @@ public abstract class _GradingCriteria
     public _GradingCriteria()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _GradingCriteria object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param diffLineSyncing
+     * @param floatComparisonStyle
+     * @param ignoreBlankLines
+     * @param ignoreCase
+     * @param ignoreNonprinting
+     * @param ignorePunctuation
+     * @param ignoreWhitespace
+     * @param normalizeWhitespace
+     * @param tokenizingStyle
+     * @param trimWhitespace
+     * @return The newly created object
+     */
+    public static GradingCriteria createGradingCriteria(
+        EOEditingContext editingContext,
+        boolean diffLineSyncing,
+        boolean floatComparisonStyle,
+        boolean ignoreBlankLines,
+        boolean ignoreCase,
+        boolean ignoreNonprinting,
+        boolean ignorePunctuation,
+        boolean ignoreWhitespace,
+        boolean normalizeWhitespace,
+        boolean tokenizingStyle,
+        boolean trimWhitespace
+        )
+    {
+        GradingCriteria eoObject = (GradingCriteria)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _GradingCriteria.ENTITY_NAME);
+        eoObject.setDiffLineSyncing(diffLineSyncing);
+        eoObject.setFloatComparisonStyle(floatComparisonStyle);
+        eoObject.setIgnoreBlankLines(ignoreBlankLines);
+        eoObject.setIgnoreCase(ignoreCase);
+        eoObject.setIgnoreNonprinting(ignoreNonprinting);
+        eoObject.setIgnorePunctuation(ignorePunctuation);
+        eoObject.setIgnoreWhitespace(ignoreWhitespace);
+        eoObject.setNormalizeWhitespace(normalizeWhitespace);
+        eoObject.setTokenizingStyle(tokenizingStyle);
+        eoObject.setTrimWhitespace(trimWhitespace);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static GradingCriteria localInstance(
+        EOEditingContext editingContext, GradingCriteria eo)
+    {
+        return (eo == null)
+            ? null
+            : (GradingCriteria)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static GradingCriteria forId(
+        EOEditingContext ec, int id )
+    {
+        GradingCriteria obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (GradingCriteria)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static GradingCriteria forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -89,6 +199,50 @@ public abstract class _GradingCriteria
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public GradingCriteria localInstance(EOEditingContext editingContext)
+    {
+        return (GradingCriteria)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>blankLinePt</code> value.
      * @return the value of the attribute
      */
@@ -111,6 +265,11 @@ public abstract class _GradingCriteria
      */
     public void setBlankLinePt( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setBlankLinePt("
+                + value + "): was " + blankLinePt() );
+        }
         Number actual =
             new Double( value );
         setBlankLinePtRaw( actual );
@@ -137,6 +296,11 @@ public abstract class _GradingCriteria
      */
     public void setBlankLinePtRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setBlankLinePtRaw("
+                + value + "): was " + blankLinePtRaw() );
+        }
         takeStoredValueForKey( value, "blankLinePt" );
     }
 
@@ -165,6 +329,11 @@ public abstract class _GradingCriteria
      */
     public void setDeadTimeDelta( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeadTimeDelta("
+                + value + "): was " + deadTimeDelta() );
+        }
         Number actual =
             new Long( value );
         setDeadTimeDeltaRaw( actual );
@@ -191,6 +360,11 @@ public abstract class _GradingCriteria
      */
     public void setDeadTimeDeltaRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeadTimeDeltaRaw("
+                + value + "): was " + deadTimeDeltaRaw() );
+        }
         takeStoredValueForKey( value, "deadTimeDelta" );
     }
 
@@ -219,6 +393,11 @@ public abstract class _GradingCriteria
      */
     public void setDiffLineSyncing( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDiffLineSyncing("
+                + value + "): was " + diffLineSyncing() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setDiffLineSyncingRaw( actual );
@@ -245,6 +424,11 @@ public abstract class _GradingCriteria
      */
     public void setDiffLineSyncingRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDiffLineSyncingRaw("
+                + value + "): was " + diffLineSyncingRaw() );
+        }
         takeStoredValueForKey( value, "diffLineSyncing" );
     }
 
@@ -273,6 +457,11 @@ public abstract class _GradingCriteria
      */
     public void setExtraLinePt( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExtraLinePt("
+                + value + "): was " + extraLinePt() );
+        }
         Number actual =
             new Double( value );
         setExtraLinePtRaw( actual );
@@ -299,6 +488,11 @@ public abstract class _GradingCriteria
      */
     public void setExtraLinePtRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExtraLinePtRaw("
+                + value + "): was " + extraLinePtRaw() );
+        }
         takeStoredValueForKey( value, "extraLinePt" );
     }
 
@@ -327,6 +521,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatComparisonStyle( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatComparisonStyle("
+                + value + "): was " + floatComparisonStyle() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setFloatComparisonStyleRaw( actual );
@@ -353,6 +552,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatComparisonStyleRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatComparisonStyleRaw("
+                + value + "): was " + floatComparisonStyleRaw() );
+        }
         takeStoredValueForKey( value, "floatComparisonStyle" );
     }
 
@@ -381,6 +585,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatNegativeDelta( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatNegativeDelta("
+                + value + "): was " + floatNegativeDelta() );
+        }
         Number actual =
             new Double( value );
         setFloatNegativeDeltaRaw( actual );
@@ -407,6 +616,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatNegativeDeltaRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatNegativeDeltaRaw("
+                + value + "): was " + floatNegativeDeltaRaw() );
+        }
         takeStoredValueForKey( value, "floatNegativeDelta" );
     }
 
@@ -435,6 +649,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatPositiveDelta( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatPositiveDelta("
+                + value + "): was " + floatPositiveDelta() );
+        }
         Number actual =
             new Double( value );
         setFloatPositiveDeltaRaw( actual );
@@ -461,6 +680,11 @@ public abstract class _GradingCriteria
      */
     public void setFloatPositiveDeltaRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFloatPositiveDeltaRaw("
+                + value + "): was " + floatPositiveDeltaRaw() );
+        }
         takeStoredValueForKey( value, "floatPositiveDelta" );
     }
 
@@ -489,6 +713,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreBlankLines( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreBlankLines("
+                + value + "): was " + ignoreBlankLines() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIgnoreBlankLinesRaw( actual );
@@ -515,6 +744,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreBlankLinesRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreBlankLinesRaw("
+                + value + "): was " + ignoreBlankLinesRaw() );
+        }
         takeStoredValueForKey( value, "ignoreBlankLines" );
     }
 
@@ -543,6 +777,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreCase( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreCase("
+                + value + "): was " + ignoreCase() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIgnoreCaseRaw( actual );
@@ -569,6 +808,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreCaseRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreCaseRaw("
+                + value + "): was " + ignoreCaseRaw() );
+        }
         takeStoredValueForKey( value, "ignoreCase" );
     }
 
@@ -597,6 +841,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreNonprinting( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreNonprinting("
+                + value + "): was " + ignoreNonprinting() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIgnoreNonprintingRaw( actual );
@@ -623,6 +872,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreNonprintingRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreNonprintingRaw("
+                + value + "): was " + ignoreNonprintingRaw() );
+        }
         takeStoredValueForKey( value, "ignoreNonprinting" );
     }
 
@@ -651,6 +905,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnorePunctuation( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnorePunctuation("
+                + value + "): was " + ignorePunctuation() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIgnorePunctuationRaw( actual );
@@ -677,6 +936,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnorePunctuationRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnorePunctuationRaw("
+                + value + "): was " + ignorePunctuationRaw() );
+        }
         takeStoredValueForKey( value, "ignorePunctuation" );
     }
 
@@ -705,6 +969,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreWhitespace( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreWhitespace("
+                + value + "): was " + ignoreWhitespace() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIgnoreWhitespaceRaw( actual );
@@ -731,6 +1000,11 @@ public abstract class _GradingCriteria
      */
     public void setIgnoreWhitespaceRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIgnoreWhitespaceRaw("
+                + value + "): was " + ignoreWhitespaceRaw() );
+        }
         takeStoredValueForKey( value, "ignoreWhitespace" );
     }
 
@@ -755,6 +1029,11 @@ public abstract class _GradingCriteria
      */
     public void setName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setName("
+                + value + "): was " + name() );
+        }
         takeStoredValueForKey( value, "name" );
     }
 
@@ -783,6 +1062,11 @@ public abstract class _GradingCriteria
      */
     public void setNormalizeWhitespace( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setNormalizeWhitespace("
+                + value + "): was " + normalizeWhitespace() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setNormalizeWhitespaceRaw( actual );
@@ -809,6 +1093,11 @@ public abstract class _GradingCriteria
      */
     public void setNormalizeWhitespaceRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setNormalizeWhitespaceRaw("
+                + value + "): was " + normalizeWhitespaceRaw() );
+        }
         takeStoredValueForKey( value, "normalizeWhitespace" );
     }
 
@@ -833,6 +1122,11 @@ public abstract class _GradingCriteria
      */
     public void setPunctuationToIgnore( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPunctuationToIgnore("
+                + value + "): was " + punctuationToIgnore() );
+        }
         takeStoredValueForKey( value, "punctuationToIgnore" );
     }
 
@@ -861,6 +1155,11 @@ public abstract class _GradingCriteria
      */
     public void setStringComparsionStyle( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStringComparsionStyle("
+                + value + "): was " + stringComparsionStyle() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setStringComparsionStyleRaw( actual );
@@ -887,6 +1186,11 @@ public abstract class _GradingCriteria
      */
     public void setStringComparsionStyleRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStringComparsionStyleRaw("
+                + value + "): was " + stringComparsionStyleRaw() );
+        }
         takeStoredValueForKey( value, "stringComparsionStyle" );
     }
 
@@ -915,6 +1219,11 @@ public abstract class _GradingCriteria
      */
     public void setTokenizingStyle( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTokenizingStyle("
+                + value + "): was " + tokenizingStyle() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setTokenizingStyleRaw( actual );
@@ -941,6 +1250,11 @@ public abstract class _GradingCriteria
      */
     public void setTokenizingStyleRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTokenizingStyleRaw("
+                + value + "): was " + tokenizingStyleRaw() );
+        }
         takeStoredValueForKey( value, "tokenizingStyle" );
     }
 
@@ -969,6 +1283,11 @@ public abstract class _GradingCriteria
      */
     public void setTrimWhitespace( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTrimWhitespace("
+                + value + "): was " + trimWhitespace() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setTrimWhitespaceRaw( actual );
@@ -995,6 +1314,11 @@ public abstract class _GradingCriteria
      */
     public void setTrimWhitespaceRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTrimWhitespaceRaw("
+                + value + "): was " + trimWhitespaceRaw() );
+        }
         takeStoredValueForKey( value, "trimWhitespace" );
     }
 
@@ -1022,6 +1346,11 @@ public abstract class _GradingCriteria
      */
     public void setAuthor( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthor("
+                + value + "): was " + author() );
+        }
         takeStoredValueForKey( value, "author" );
     }
 
@@ -1037,6 +1366,11 @@ public abstract class _GradingCriteria
     public void setAuthorRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthorRelationship("
+                + value + "): was " + author() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = author();
@@ -1071,6 +1405,11 @@ public abstract class _GradingCriteria
      */
     public void setAssignment( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignment("
+                + value + "): was " + assignment() );
+        }
         takeStoredValueForKey( value, "assignment" );
     }
 
@@ -1086,6 +1425,11 @@ public abstract class _GradingCriteria
      */
     public void addToAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToAssignment("
+                + value + "): was " + assignment() );
+        }
         NSMutableArray array = (NSMutableArray)assignment();
         willChange();
         array.addObject( value );
@@ -1103,6 +1447,11 @@ public abstract class _GradingCriteria
      */
     public void removeFromAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromAssignment("
+                + value + "): was " + assignment() );
+        }
         NSMutableArray array = (NSMutableArray)assignment();
         willChange();
         array.removeObject( value );
@@ -1118,6 +1467,11 @@ public abstract class _GradingCriteria
      */
     public void addToAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "assignment" );
     }
@@ -1132,6 +1486,11 @@ public abstract class _GradingCriteria
      */
     public void removeFromAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "assignment" );
     }
@@ -1146,6 +1505,10 @@ public abstract class _GradingCriteria
      */
     public net.sf.webcat.grader.Assignment createAssignmentRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createAssignmentRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "Assignment" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -1166,6 +1529,11 @@ public abstract class _GradingCriteria
      */
     public void deleteAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "assignment" );
         editingContext().deleteObject( value );
@@ -1179,6 +1547,11 @@ public abstract class _GradingCriteria
      */
     public void deleteAllAssignmentRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllAssignmentRelationships(): was "
+                + assignment() );
+        }
         Enumeration objects = assignment().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteAssignmentRelationship(
@@ -1186,4 +1559,7 @@ public abstract class _GradingCriteria
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( GradingCriteria.class );
 }

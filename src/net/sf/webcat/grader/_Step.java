@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -57,6 +59,87 @@ public abstract class _Step
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _Step object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param updateMutableFields
+     * @return The newly created object
+     */
+    public static Step createStep(
+        EOEditingContext editingContext,
+        boolean updateMutableFields
+        )
+    {
+        Step eoObject = (Step)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _Step.ENTITY_NAME);
+        eoObject.setUpdateMutableFields(updateMutableFields);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static Step localInstance(
+        EOEditingContext editingContext, Step eo)
+    {
+        return (eo == null)
+            ? null
+            : (Step)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static Step forId(
+        EOEditingContext ec, int id )
+    {
+        Step obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (Step)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static Step forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Attributes ---
@@ -74,6 +157,50 @@ public abstract class _Step
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public Step localInstance(EOEditingContext editingContext)
+    {
+        return (Step)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     //-- Local mutable cache --
     private net.sf.webcat.core.MutableDictionary configSettingsCache;
@@ -137,6 +264,11 @@ public abstract class _Step
      */
     public void setConfigSettings( net.sf.webcat.core.MutableDictionary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConfigSettings("
+                + value + ")" );
+        }
         if ( configSettingsCache == null )
         {
             configSettingsCache = value;
@@ -163,6 +295,10 @@ public abstract class _Step
      */
     public void clearConfigSettings()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearConfigSettings()" );
+        }
         takeStoredValueForKey( null, "configSettings" );
         configSettingsRawCache = null;
         configSettingsCache = null;
@@ -193,6 +329,11 @@ public abstract class _Step
      */
     public void setOrder( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setOrder("
+                + value + "): was " + order() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setOrderRaw( actual );
@@ -219,6 +360,11 @@ public abstract class _Step
      */
     public void setOrderRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setOrderRaw("
+                + value + "): was " + orderRaw() );
+        }
         takeStoredValueForKey( value, "order" );
     }
 
@@ -247,6 +393,11 @@ public abstract class _Step
      */
     public void setTimeout( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTimeout("
+                + value + "): was " + timeout() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setTimeoutRaw( actual );
@@ -273,6 +424,11 @@ public abstract class _Step
      */
     public void setTimeoutRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTimeoutRaw("
+                + value + "): was " + timeoutRaw() );
+        }
         takeStoredValueForKey( value, "timeout" );
     }
 
@@ -301,6 +457,11 @@ public abstract class _Step
      */
     public void setUpdateMutableFields( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFields("
+                + value + "): was " + updateMutableFields() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setUpdateMutableFieldsRaw( actual );
@@ -327,6 +488,11 @@ public abstract class _Step
      */
     public void setUpdateMutableFieldsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFieldsRaw("
+                + value + "): was " + updateMutableFieldsRaw() );
+        }
         takeStoredValueForKey( value, "updateMutableFields" );
     }
 
@@ -337,6 +503,7 @@ public abstract class _Step
      */
     public void saveMutables()
     {
+        log.debug("saveMutables()");
         if ( configSettingsCache != null
             && configSettingsCache.hasChanged() )
         {
@@ -355,6 +522,7 @@ public abstract class _Step
      */
     public void willUpdate()
     {
+        log.debug("willUpdate()");
         saveMutables();
         super.willUpdate();
     }
@@ -366,6 +534,7 @@ public abstract class _Step
      */
     public void willInsert()
     {
+        log.debug("willInsert()");
         saveMutables();
         super.willInsert();
     }
@@ -377,6 +546,7 @@ public abstract class _Step
      */
     public void flushCaches()
     {
+        log.debug("flushCaches()");
         configSettingsCache = null;
         configSettingsRawCache  = null;
         setUpdateMutableFields( false );
@@ -417,6 +587,11 @@ public abstract class _Step
      */
     public void setAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignment("
+                + value + "): was " + assignment() );
+        }
         takeStoredValueForKey( value, "assignment" );
     }
 
@@ -432,6 +607,11 @@ public abstract class _Step
     public void setAssignmentRelationship(
         net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.Assignment object = assignment();
@@ -468,6 +648,11 @@ public abstract class _Step
      */
     public void setConfig( net.sf.webcat.grader.StepConfig value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConfig("
+                + value + "): was " + config() );
+        }
         takeStoredValueForKey( value, "config" );
     }
 
@@ -483,6 +668,11 @@ public abstract class _Step
     public void setConfigRelationship(
         net.sf.webcat.grader.StepConfig value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConfigRelationship("
+                + value + "): was " + config() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.StepConfig object = config();
@@ -519,6 +709,11 @@ public abstract class _Step
      */
     public void setScript( net.sf.webcat.grader.ScriptFile value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setScript("
+                + value + "): was " + script() );
+        }
         takeStoredValueForKey( value, "script" );
     }
 
@@ -534,6 +729,11 @@ public abstract class _Step
     public void setScriptRelationship(
         net.sf.webcat.grader.ScriptFile value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setScriptRelationship("
+                + value + "): was " + script() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.ScriptFile object = script();
@@ -547,4 +747,7 @@ public abstract class _Step
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( Step.class );
 }

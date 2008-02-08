@@ -280,8 +280,7 @@ public class EditAssignmentPage
         try
         {
             ec.lock();
-            AssignmentOffering localAO = (AssignmentOffering)EOUtilities
-                .localInstanceOfObject( ec, thisAssignment );
+            AssignmentOffering localAO = thisAssignment.localInstance( ec );
             NSArray jobList = localAO.getSuspendedSubs();
             for ( int i = 0; i < jobList.count(); i++ )
             {
@@ -310,8 +309,7 @@ public class EditAssignmentPage
         try
         {
             ec.lock();
-            AssignmentOffering localAO = (AssignmentOffering)EOUtilities
-                .localInstanceOfObject( ec, thisAssignment );
+            AssignmentOffering localAO = thisAssignment.localInstance( ec );
             log.info( "cancelling all paused assignments: "
                       + coreSelections().courseOffering().course().deptNumber()
                       + " "

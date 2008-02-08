@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -56,6 +58,84 @@ public abstract class _ResultFile
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _ResultFile object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @return The newly created object
+     */
+    public static ResultFile createResultFile(
+        EOEditingContext editingContext
+        )
+    {
+        ResultFile eoObject = (ResultFile)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _ResultFile.ENTITY_NAME);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static ResultFile localInstance(
+        EOEditingContext editingContext, ResultFile eo)
+    {
+        return (eo == null)
+            ? null
+            : (ResultFile)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static ResultFile forId(
+        EOEditingContext ec, int id )
+    {
+        ResultFile obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (ResultFile)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static ResultFile forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Attributes ---
@@ -70,6 +150,50 @@ public abstract class _ResultFile
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public ResultFile localInstance(EOEditingContext editingContext)
+    {
+        return (ResultFile)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     // ----------------------------------------------------------
     /**
@@ -91,6 +215,11 @@ public abstract class _ResultFile
      */
     public void setFileName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFileName("
+                + value + "): was " + fileName() );
+        }
         takeStoredValueForKey( value, "fileName" );
     }
 
@@ -115,6 +244,11 @@ public abstract class _ResultFile
      */
     public void setLabel( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLabel("
+                + value + "): was " + label() );
+        }
         takeStoredValueForKey( value, "label" );
     }
 
@@ -139,6 +273,11 @@ public abstract class _ResultFile
      */
     public void setMimeType( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMimeType("
+                + value + "): was " + mimeType() );
+        }
         takeStoredValueForKey( value, "mimeType" );
     }
 
@@ -166,6 +305,11 @@ public abstract class _ResultFile
      */
     public void setSubmissionResult( net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionResult("
+                + value + "): was " + submissionResult() );
+        }
         takeStoredValueForKey( value, "submissionResult" );
     }
 
@@ -181,6 +325,11 @@ public abstract class _ResultFile
     public void setSubmissionResultRelationship(
         net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionResultRelationship("
+                + value + "): was " + submissionResult() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.SubmissionResult object = submissionResult();
@@ -194,4 +343,7 @@ public abstract class _ResultFile
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( ResultFile.class );
 }

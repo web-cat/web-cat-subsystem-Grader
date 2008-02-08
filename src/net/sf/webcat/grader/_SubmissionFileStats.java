@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,84 @@ public abstract class _SubmissionFileStats
     public _SubmissionFileStats()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _SubmissionFileStats object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @return The newly created object
+     */
+    public static SubmissionFileStats createSubmissionFileStats(
+        EOEditingContext editingContext
+        )
+    {
+        SubmissionFileStats eoObject = (SubmissionFileStats)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _SubmissionFileStats.ENTITY_NAME);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static SubmissionFileStats localInstance(
+        EOEditingContext editingContext, SubmissionFileStats eo)
+    {
+        return (eo == null)
+            ? null
+            : (SubmissionFileStats)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionFileStats forId(
+        EOEditingContext ec, int id )
+    {
+        SubmissionFileStats obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (SubmissionFileStats)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionFileStats forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -88,6 +168,50 @@ public abstract class _SubmissionFileStats
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public SubmissionFileStats localInstance(EOEditingContext editingContext)
+    {
+        return (SubmissionFileStats)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>className</code> value.
      * @return the value of the attribute
      */
@@ -106,6 +230,11 @@ public abstract class _SubmissionFileStats
      */
     public void setClassName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setClassName("
+                + value + "): was " + className() );
+        }
         takeStoredValueForKey( value, "className" );
     }
 
@@ -134,6 +263,11 @@ public abstract class _SubmissionFileStats
      */
     public void setConditionals( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConditionals("
+                + value + "): was " + conditionals() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setConditionalsRaw( actual );
@@ -160,6 +294,11 @@ public abstract class _SubmissionFileStats
      */
     public void setConditionalsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConditionalsRaw("
+                + value + "): was " + conditionalsRaw() );
+        }
         takeStoredValueForKey( value, "conditionals" );
     }
 
@@ -188,6 +327,11 @@ public abstract class _SubmissionFileStats
      */
     public void setConditionalsCovered( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConditionalsCovered("
+                + value + "): was " + conditionalsCovered() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setConditionalsCoveredRaw( actual );
@@ -214,6 +358,11 @@ public abstract class _SubmissionFileStats
      */
     public void setConditionalsCoveredRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConditionalsCoveredRaw("
+                + value + "): was " + conditionalsCoveredRaw() );
+        }
         takeStoredValueForKey( value, "conditionalsCovered" );
     }
 
@@ -242,6 +391,11 @@ public abstract class _SubmissionFileStats
      */
     public void setDeductions( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductions("
+                + value + "): was " + deductions() );
+        }
         Number actual =
             new Double( value );
         setDeductionsRaw( actual );
@@ -268,6 +422,11 @@ public abstract class _SubmissionFileStats
      */
     public void setDeductionsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductionsRaw("
+                + value + "): was " + deductionsRaw() );
+        }
         takeStoredValueForKey( value, "deductions" );
     }
 
@@ -296,6 +455,11 @@ public abstract class _SubmissionFileStats
      */
     public void setElements( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setElements("
+                + value + "): was " + elements() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setElementsRaw( actual );
@@ -322,6 +486,11 @@ public abstract class _SubmissionFileStats
      */
     public void setElementsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setElementsRaw("
+                + value + "): was " + elementsRaw() );
+        }
         takeStoredValueForKey( value, "elements" );
     }
 
@@ -350,6 +519,11 @@ public abstract class _SubmissionFileStats
      */
     public void setElementsCovered( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setElementsCovered("
+                + value + "): was " + elementsCovered() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setElementsCoveredRaw( actual );
@@ -376,6 +550,11 @@ public abstract class _SubmissionFileStats
      */
     public void setElementsCoveredRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setElementsCoveredRaw("
+                + value + "): was " + elementsCoveredRaw() );
+        }
         takeStoredValueForKey( value, "elementsCovered" );
     }
 
@@ -404,6 +583,11 @@ public abstract class _SubmissionFileStats
      */
     public void setLoc( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLoc("
+                + value + "): was " + loc() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setLocRaw( actual );
@@ -430,6 +614,11 @@ public abstract class _SubmissionFileStats
      */
     public void setLocRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLocRaw("
+                + value + "): was " + locRaw() );
+        }
         takeStoredValueForKey( value, "loc" );
     }
 
@@ -454,6 +643,11 @@ public abstract class _SubmissionFileStats
      */
     public void setMarkupFileNameRaw( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMarkupFileNameRaw("
+                + value + "): was " + markupFileNameRaw() );
+        }
         takeStoredValueForKey( value, "markupFileNameRaw" );
     }
 
@@ -482,6 +676,11 @@ public abstract class _SubmissionFileStats
      */
     public void setMethods( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMethods("
+                + value + "): was " + methods() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setMethodsRaw( actual );
@@ -508,6 +707,11 @@ public abstract class _SubmissionFileStats
      */
     public void setMethodsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMethodsRaw("
+                + value + "): was " + methodsRaw() );
+        }
         takeStoredValueForKey( value, "methods" );
     }
 
@@ -536,6 +740,11 @@ public abstract class _SubmissionFileStats
      */
     public void setMethodsCovered( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMethodsCovered("
+                + value + "): was " + methodsCovered() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setMethodsCoveredRaw( actual );
@@ -562,6 +771,11 @@ public abstract class _SubmissionFileStats
      */
     public void setMethodsCoveredRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMethodsCoveredRaw("
+                + value + "): was " + methodsCoveredRaw() );
+        }
         takeStoredValueForKey( value, "methodsCovered" );
     }
 
@@ -590,6 +804,11 @@ public abstract class _SubmissionFileStats
      */
     public void setNcloc( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setNcloc("
+                + value + "): was " + ncloc() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setNclocRaw( actual );
@@ -616,6 +835,11 @@ public abstract class _SubmissionFileStats
      */
     public void setNclocRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setNclocRaw("
+                + value + "): was " + nclocRaw() );
+        }
         takeStoredValueForKey( value, "ncloc" );
     }
 
@@ -640,6 +864,11 @@ public abstract class _SubmissionFileStats
      */
     public void setPkgName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPkgName("
+                + value + "): was " + pkgName() );
+        }
         takeStoredValueForKey( value, "pkgName" );
     }
 
@@ -668,6 +897,11 @@ public abstract class _SubmissionFileStats
      */
     public void setRemarks( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setRemarks("
+                + value + "): was " + remarks() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setRemarksRaw( actual );
@@ -694,6 +928,11 @@ public abstract class _SubmissionFileStats
      */
     public void setRemarksRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setRemarksRaw("
+                + value + "): was " + remarksRaw() );
+        }
         takeStoredValueForKey( value, "remarks" );
     }
 
@@ -718,6 +957,11 @@ public abstract class _SubmissionFileStats
      */
     public void setSourceFileNameRaw( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSourceFileNameRaw("
+                + value + "): was " + sourceFileNameRaw() );
+        }
         takeStoredValueForKey( value, "sourceFileNameRaw" );
     }
 
@@ -746,6 +990,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatements( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatements("
+                + value + "): was " + statements() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setStatementsRaw( actual );
@@ -772,6 +1021,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatementsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatementsRaw("
+                + value + "): was " + statementsRaw() );
+        }
         takeStoredValueForKey( value, "statements" );
     }
 
@@ -800,6 +1054,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatementsCovered( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatementsCovered("
+                + value + "): was " + statementsCovered() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setStatementsCoveredRaw( actual );
@@ -826,6 +1085,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatementsCoveredRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatementsCoveredRaw("
+                + value + "): was " + statementsCoveredRaw() );
+        }
         takeStoredValueForKey( value, "statementsCovered" );
     }
 
@@ -854,6 +1118,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatus( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatus("
+                + value + "): was " + status() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setStatusRaw( actual );
@@ -880,6 +1149,11 @@ public abstract class _SubmissionFileStats
      */
     public void setStatusRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatusRaw("
+                + value + "): was " + statusRaw() );
+        }
         takeStoredValueForKey( value, "status" );
     }
 
@@ -907,6 +1181,11 @@ public abstract class _SubmissionFileStats
      */
     public void setSubmissionResult( net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionResult("
+                + value + "): was " + submissionResult() );
+        }
         takeStoredValueForKey( value, "submissionResult" );
     }
 
@@ -922,6 +1201,11 @@ public abstract class _SubmissionFileStats
     public void setSubmissionResultRelationship(
         net.sf.webcat.grader.SubmissionResult value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionResultRelationship("
+                + value + "): was " + submissionResult() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.SubmissionResult object = submissionResult();
@@ -956,6 +1240,11 @@ public abstract class _SubmissionFileStats
      */
     public void setComments( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setComments("
+                + value + "): was " + comments() );
+        }
         takeStoredValueForKey( value, "comments" );
     }
 
@@ -971,6 +1260,11 @@ public abstract class _SubmissionFileStats
      */
     public void addToComments( net.sf.webcat.grader.SubmissionFileComment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToComments("
+                + value + "): was " + comments() );
+        }
         NSMutableArray array = (NSMutableArray)comments();
         willChange();
         array.addObject( value );
@@ -988,6 +1282,11 @@ public abstract class _SubmissionFileStats
      */
     public void removeFromComments( net.sf.webcat.grader.SubmissionFileComment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromComments("
+                + value + "): was " + comments() );
+        }
         NSMutableArray array = (NSMutableArray)comments();
         willChange();
         array.removeObject( value );
@@ -1003,6 +1302,11 @@ public abstract class _SubmissionFileStats
      */
     public void addToCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToCommentsRelationship("
+                + value + "): was " + comments() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "comments" );
     }
@@ -1017,6 +1321,11 @@ public abstract class _SubmissionFileStats
      */
     public void removeFromCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromCommentsRelationship("
+                + value + "): was " + comments() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "comments" );
     }
@@ -1031,6 +1340,10 @@ public abstract class _SubmissionFileStats
      */
     public net.sf.webcat.grader.SubmissionFileComment createCommentsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createCommentsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "SubmissionFileComment" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -1051,6 +1364,11 @@ public abstract class _SubmissionFileStats
      */
     public void deleteCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteCommentsRelationship("
+                + value + "): was " + comments() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "comments" );
     }
@@ -1063,6 +1381,11 @@ public abstract class _SubmissionFileStats
      */
     public void deleteAllCommentsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllCommentsRelationships(): was "
+                + comments() );
+        }
         Enumeration objects = comments().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteCommentsRelationship(
@@ -1070,4 +1393,7 @@ public abstract class _SubmissionFileStats
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( SubmissionFileStats.class );
 }

@@ -72,13 +72,13 @@ public class GraderAssignmentComponent
         if ( aoid != null )
         {
             result = startWith( AssignmentOffering
-                .offeringForId( wcSession().localContext(), aoid ) );
+                .forId( wcSession().localContext(), aoid ) );
         }
         else
         {
             String aid = stringValueForKey( params, Assignment.ID_FORM_KEY );
             result = startWith( Assignment
-                .assignmentForId( wcSession().localContext(), aid ) );
+                .forId( wcSession().localContext(), aid ) );
         }
         return result;
     }

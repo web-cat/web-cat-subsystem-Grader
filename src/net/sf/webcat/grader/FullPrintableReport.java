@@ -98,9 +98,8 @@ public class FullPrintableReport
                 {
                     Pair pair = new Pair();
                     formattedFiles.addObject( pair );
-                    pair.file = (SubmissionFileStats)EOUtilities
-                        .localInstanceOfObject( wcSession().localContext(),
-                            rawPairs[i].file );
+                    pair.file = rawPairs[i].file
+                        .localInstance( wcSession().localContext() );
                     pair.html = rawPairs[i].html;
                 }
             }
@@ -174,9 +173,8 @@ public class FullPrintableReport
             try
             {
                 ec.lock();
-                submissionResult = (SubmissionResult)EOUtilities
-                    .localInstanceOfObject( ec, theResult );
-                user = (User)EOUtilities.localInstanceOfObject( ec, viewer );
+                submissionResult = theResult.localInstance( ec );
+                user = viewer.localInstance( ec );
             }
             finally
             {

@@ -60,49 +60,6 @@ public class AssignmentOffering
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Look up an AssignmentOffering by id number.  Assumes the editing
-     * context is appropriately locked.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The assignment offering, or null if no such id exists
-     */
-    public static AssignmentOffering offeringForId(
-        EOEditingContext ec, int id )
-    {
-        AssignmentOffering offering = null;
-        NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-            ENTITY_NAME, "id", new Integer( id ) );
-        if ( results != null && results.count() > 0 )
-        {
-            offering = (AssignmentOffering)results.objectAtIndex( 0 );
-        }
-        return offering;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Look up an AssignmentOffering by id number.  Assumes the editing
-     * context is appropriately locked.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The assignment offering, or null if no such id exists
-     */
-    public static AssignmentOffering offeringForId(
-        EOEditingContext ec, String id )
-    {
-        AssignmentOffering offering = null;
-        int idNumber = er.extensions.ERXValueUtilities.intValue( id );
-        if ( idNumber > 0 )
-        {
-            offering = offeringForId( ec, idNumber );
-        }
-        return offering;
-    }
-
-
     //~ Constants (for key names) .............................................
 
     // Derived Attributes ---
@@ -172,25 +129,6 @@ public class AssignmentOffering
     public String toString()
     {
         return userPresentableDescription();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>id</code> value.
-     * @return the value of the attribute
-     */
-    public Number id()
-    {
-        try
-        {
-            return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
-        }
-        catch (Exception e)
-        {
-            return er.extensions.ERXConstant.ZeroInteger;
-        }
     }
 
 

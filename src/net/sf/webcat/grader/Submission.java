@@ -59,47 +59,6 @@ public class Submission
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Look up a Submission by id number.  Assumes the editing
-     * context is appropriately locked.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The submission, or null if no such id exists
-     */
-    public static Submission submissionForId( EOEditingContext ec, int id )
-    {
-        Submission sub = null;
-        NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-            ENTITY_NAME, "id", new Integer( id ) );
-        if ( results != null && results.count() > 0 )
-        {
-            sub = (Submission)results.objectAtIndex( 0 );
-        }
-        return sub;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Look up a Submission by id number.  Assumes the editing
-     * context is appropriately locked.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The submission, or null if no such id exists
-     */
-    public static Submission submissionForId( EOEditingContext ec, String id )
-    {
-        Submission sub = null;
-        int idNumber = er.extensions.ERXValueUtilities.intValue( id );
-        if ( idNumber > 0 )
-        {
-            sub = submissionForId( ec, idNumber );
-        }
-        return sub;
-    }
-
-
     //~ Constants (for key names) .............................................
 
     public static final String ID_FORM_KEY = "sid";
@@ -406,7 +365,7 @@ public class Submission
             Submission me = this;
             if ( ec != editingContext() )
             {
-                me = (Submission)EOUtilities.localInstanceOfObject( ec, this );
+                me = localInstance( ec );
             }
             me.deleteResultsAndRemovePartners();
             log.debug( "creating new job for Submission " + this );

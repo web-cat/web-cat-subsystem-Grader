@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -54,6 +56,93 @@ public abstract class _ScriptFile
     public _ScriptFile()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _ScriptFile object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param isConfigFile
+     * @param isPublished
+     * @param updateMutableFields
+     * @return The newly created object
+     */
+    public static ScriptFile createScriptFile(
+        EOEditingContext editingContext,
+        boolean isConfigFile,
+        boolean isPublished,
+        boolean updateMutableFields
+        )
+    {
+        ScriptFile eoObject = (ScriptFile)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _ScriptFile.ENTITY_NAME);
+        eoObject.setIsConfigFile(isConfigFile);
+        eoObject.setIsPublished(isPublished);
+        eoObject.setUpdateMutableFields(updateMutableFields);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static ScriptFile localInstance(
+        EOEditingContext editingContext, ScriptFile eo)
+    {
+        return (eo == null)
+            ? null
+            : (ScriptFile)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static ScriptFile forId(
+        EOEditingContext ec, int id )
+    {
+        ScriptFile obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (ScriptFile)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static ScriptFile forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -82,6 +171,50 @@ public abstract class _ScriptFile
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public ScriptFile localInstance(EOEditingContext editingContext)
+    {
+        return (ScriptFile)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     //-- Local mutable cache --
     private net.sf.webcat.core.MutableDictionary configDescriptionCache;
@@ -145,6 +278,11 @@ public abstract class _ScriptFile
      */
     public void setConfigDescription( net.sf.webcat.core.MutableDictionary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setConfigDescription("
+                + value + ")" );
+        }
         if ( configDescriptionCache == null )
         {
             configDescriptionCache = value;
@@ -171,6 +309,10 @@ public abstract class _ScriptFile
      */
     public void clearConfigDescription()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearConfigDescription()" );
+        }
         takeStoredValueForKey( null, "configDescription" );
         configDescriptionRawCache = null;
         configDescriptionCache = null;
@@ -239,6 +381,11 @@ public abstract class _ScriptFile
      */
     public void setDefaultConfigSettings( net.sf.webcat.core.MutableDictionary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDefaultConfigSettings("
+                + value + ")" );
+        }
         if ( defaultConfigSettingsCache == null )
         {
             defaultConfigSettingsCache = value;
@@ -265,6 +412,10 @@ public abstract class _ScriptFile
      */
     public void clearDefaultConfigSettings()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearDefaultConfigSettings()" );
+        }
         takeStoredValueForKey( null, "defaultConfigSettings" );
         defaultConfigSettingsRawCache = null;
         defaultConfigSettingsCache = null;
@@ -333,6 +484,11 @@ public abstract class _ScriptFile
      */
     public void setGlobalConfigSettings( net.sf.webcat.core.MutableDictionary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGlobalConfigSettings("
+                + value + ")" );
+        }
         if ( globalConfigSettingsCache == null )
         {
             globalConfigSettingsCache = value;
@@ -359,6 +515,10 @@ public abstract class _ScriptFile
      */
     public void clearGlobalConfigSettings()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearGlobalConfigSettings()" );
+        }
         takeStoredValueForKey( null, "globalConfigSettings" );
         globalConfigSettingsRawCache = null;
         globalConfigSettingsCache = null;
@@ -389,6 +549,11 @@ public abstract class _ScriptFile
      */
     public void setIsConfigFile( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsConfigFile("
+                + value + "): was " + isConfigFile() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIsConfigFileRaw( actual );
@@ -415,6 +580,11 @@ public abstract class _ScriptFile
      */
     public void setIsConfigFileRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsConfigFileRaw("
+                + value + "): was " + isConfigFileRaw() );
+        }
         takeStoredValueForKey( value, "isConfigFile" );
     }
 
@@ -443,6 +613,11 @@ public abstract class _ScriptFile
      */
     public void setIsPublished( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsPublished("
+                + value + "): was " + isPublished() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIsPublishedRaw( actual );
@@ -469,6 +644,11 @@ public abstract class _ScriptFile
      */
     public void setIsPublishedRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsPublishedRaw("
+                + value + "): was " + isPublishedRaw() );
+        }
         takeStoredValueForKey( value, "isPublished" );
     }
 
@@ -493,6 +673,11 @@ public abstract class _ScriptFile
      */
     public void setLastModified( NSTimestamp value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLastModified("
+                + value + "): was " + lastModified() );
+        }
         takeStoredValueForKey( value, "lastModified" );
     }
 
@@ -517,6 +702,11 @@ public abstract class _ScriptFile
      */
     public void setMainFileName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMainFileName("
+                + value + "): was " + mainFileName() );
+        }
         takeStoredValueForKey( value, "mainFileName" );
     }
 
@@ -541,6 +731,11 @@ public abstract class _ScriptFile
      */
     public void setName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setName("
+                + value + "): was " + name() );
+        }
         takeStoredValueForKey( value, "name" );
     }
 
@@ -565,6 +760,11 @@ public abstract class _ScriptFile
      */
     public void setSubdirName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubdirName("
+                + value + "): was " + subdirName() );
+        }
         takeStoredValueForKey( value, "subdirName" );
     }
 
@@ -593,6 +793,11 @@ public abstract class _ScriptFile
      */
     public void setUpdateMutableFields( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFields("
+                + value + "): was " + updateMutableFields() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setUpdateMutableFieldsRaw( actual );
@@ -619,6 +824,11 @@ public abstract class _ScriptFile
      */
     public void setUpdateMutableFieldsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFieldsRaw("
+                + value + "): was " + updateMutableFieldsRaw() );
+        }
         takeStoredValueForKey( value, "updateMutableFields" );
     }
 
@@ -643,6 +853,11 @@ public abstract class _ScriptFile
      */
     public void setUploadedFileName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUploadedFileName("
+                + value + "): was " + uploadedFileName() );
+        }
         takeStoredValueForKey( value, "uploadedFileName" );
     }
 
@@ -653,6 +868,7 @@ public abstract class _ScriptFile
      */
     public void saveMutables()
     {
+        log.debug("saveMutables()");
         if ( configDescriptionCache != null
             && configDescriptionCache.hasChanged() )
         {
@@ -685,6 +901,7 @@ public abstract class _ScriptFile
      */
     public void willUpdate()
     {
+        log.debug("willUpdate()");
         saveMutables();
         super.willUpdate();
     }
@@ -696,6 +913,7 @@ public abstract class _ScriptFile
      */
     public void willInsert()
     {
+        log.debug("willInsert()");
         saveMutables();
         super.willInsert();
     }
@@ -707,6 +925,7 @@ public abstract class _ScriptFile
      */
     public void flushCaches()
     {
+        log.debug("flushCaches()");
         configDescriptionCache = null;
         configDescriptionRawCache  = null;
         defaultConfigSettingsCache = null;
@@ -751,6 +970,11 @@ public abstract class _ScriptFile
      */
     public void setAuthor( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthor("
+                + value + "): was " + author() );
+        }
         takeStoredValueForKey( value, "author" );
     }
 
@@ -766,6 +990,11 @@ public abstract class _ScriptFile
     public void setAuthorRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthorRelationship("
+                + value + "): was " + author() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = author();
@@ -802,6 +1031,11 @@ public abstract class _ScriptFile
      */
     public void setLanguage( net.sf.webcat.core.Language value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLanguage("
+                + value + "): was " + language() );
+        }
         takeStoredValueForKey( value, "language" );
     }
 
@@ -817,6 +1051,11 @@ public abstract class _ScriptFile
     public void setLanguageRelationship(
         net.sf.webcat.core.Language value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLanguageRelationship("
+                + value + "): was " + language() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.Language object = language();
@@ -851,6 +1090,11 @@ public abstract class _ScriptFile
      */
     public void setCourseOfferings( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         takeStoredValueForKey( value, "courseOfferings" );
     }
 
@@ -866,6 +1110,11 @@ public abstract class _ScriptFile
      */
     public void addToCourseOfferings( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         NSMutableArray array = (NSMutableArray)courseOfferings();
         willChange();
         array.addObject( value );
@@ -883,6 +1132,11 @@ public abstract class _ScriptFile
      */
     public void removeFromCourseOfferings( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         NSMutableArray array = (NSMutableArray)courseOfferings();
         willChange();
         array.removeObject( value );
@@ -898,6 +1152,11 @@ public abstract class _ScriptFile
      */
     public void addToCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
     }
@@ -912,6 +1171,11 @@ public abstract class _ScriptFile
      */
     public void removeFromCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
     }
@@ -926,6 +1190,10 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.CourseOffering createCourseOfferingsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createCourseOfferingsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "CourseOffering" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -946,6 +1214,11 @@ public abstract class _ScriptFile
      */
     public void deleteCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
         editingContext().deleteObject( value );
@@ -959,6 +1232,11 @@ public abstract class _ScriptFile
      */
     public void deleteAllCourseOfferingsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllCourseOfferingsRelationships(): was "
+                + courseOfferings() );
+        }
         Enumeration objects = courseOfferings().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteCourseOfferingsRelationship(
@@ -987,6 +1265,11 @@ public abstract class _ScriptFile
      */
     public void setSteps( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSteps("
+                + value + "): was " + steps() );
+        }
         takeStoredValueForKey( value, "steps" );
     }
 
@@ -1002,6 +1285,11 @@ public abstract class _ScriptFile
      */
     public void addToSteps( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSteps("
+                + value + "): was " + steps() );
+        }
         NSMutableArray array = (NSMutableArray)steps();
         willChange();
         array.addObject( value );
@@ -1019,6 +1307,11 @@ public abstract class _ScriptFile
      */
     public void removeFromSteps( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromSteps("
+                + value + "): was " + steps() );
+        }
         NSMutableArray array = (NSMutableArray)steps();
         willChange();
         array.removeObject( value );
@@ -1034,6 +1327,11 @@ public abstract class _ScriptFile
      */
     public void addToStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToStepsRelationship("
+                + value + "): was " + steps() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "steps" );
     }
@@ -1048,6 +1346,11 @@ public abstract class _ScriptFile
      */
     public void removeFromStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromStepsRelationship("
+                + value + "): was " + steps() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "steps" );
     }
@@ -1062,6 +1365,10 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.grader.Step createStepsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createStepsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "Step" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -1082,6 +1389,11 @@ public abstract class _ScriptFile
      */
     public void deleteStepsRelationship( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteStepsRelationship("
+                + value + "): was " + steps() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "steps" );
         editingContext().deleteObject( value );
@@ -1095,6 +1407,11 @@ public abstract class _ScriptFile
      */
     public void deleteAllStepsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllStepsRelationships(): was "
+                + steps() );
+        }
         Enumeration objects = steps().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteStepsRelationship(
@@ -1102,4 +1419,7 @@ public abstract class _ScriptFile
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( ScriptFile.class );
 }

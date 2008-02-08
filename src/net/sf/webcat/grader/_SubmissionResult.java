@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,87 @@ public abstract class _SubmissionResult
     public _SubmissionResult()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _SubmissionResult object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param isMostRecent
+     * @return The newly created object
+     */
+    public static SubmissionResult createSubmissionResult(
+        EOEditingContext editingContext,
+        boolean isMostRecent
+        )
+    {
+        SubmissionResult eoObject = (SubmissionResult)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _SubmissionResult.ENTITY_NAME);
+        eoObject.setIsMostRecent(isMostRecent);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static SubmissionResult localInstance(
+        EOEditingContext editingContext, SubmissionResult eo)
+    {
+        return (eo == null)
+            ? null
+            : (SubmissionResult)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionResult forId(
+        EOEditingContext ec, int id )
+    {
+        SubmissionResult obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (SubmissionResult)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionResult forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -85,6 +168,50 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public SubmissionResult localInstance(EOEditingContext editingContext)
+    {
+        return (SubmissionResult)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>commentFormat</code> value.
      * @return the value of the attribute
      */
@@ -107,6 +234,11 @@ public abstract class _SubmissionResult
      */
     public void setCommentFormat( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCommentFormat("
+                + value + "): was " + commentFormat() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setCommentFormatRaw( actual );
@@ -133,6 +265,11 @@ public abstract class _SubmissionResult
      */
     public void setCommentFormatRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCommentFormatRaw("
+                + value + "): was " + commentFormatRaw() );
+        }
         takeStoredValueForKey( value, "commentFormat" );
     }
 
@@ -157,6 +294,11 @@ public abstract class _SubmissionResult
      */
     public void setComments( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setComments("
+                + value + "): was " + comments() );
+        }
         takeStoredValueForKey( value, "comments" );
     }
 
@@ -185,6 +327,11 @@ public abstract class _SubmissionResult
      */
     public void setCorrectnessScore( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCorrectnessScore("
+                + value + "): was " + correctnessScore() );
+        }
         Number actual =
             new Double( value );
         setCorrectnessScoreRaw( actual );
@@ -211,6 +358,11 @@ public abstract class _SubmissionResult
      */
     public void setCorrectnessScoreRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCorrectnessScoreRaw("
+                + value + "): was " + correctnessScoreRaw() );
+        }
         takeStoredValueForKey( value, "correctnessScore" );
     }
 
@@ -239,6 +391,11 @@ public abstract class _SubmissionResult
      */
     public void setIsMostRecent( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsMostRecent("
+                + value + "): was " + isMostRecent() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setIsMostRecentRaw( actual );
@@ -265,6 +422,11 @@ public abstract class _SubmissionResult
      */
     public void setIsMostRecentRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsMostRecentRaw("
+                + value + "): was " + isMostRecentRaw() );
+        }
         takeStoredValueForKey( value, "isMostRecent" );
     }
 
@@ -289,6 +451,11 @@ public abstract class _SubmissionResult
      */
     public void setStatElementsLabel( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatElementsLabel("
+                + value + "): was " + statElementsLabel() );
+        }
         takeStoredValueForKey( value, "statElementsLabel" );
     }
 
@@ -317,6 +484,11 @@ public abstract class _SubmissionResult
      */
     public void setStatus( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatus("
+                + value + "): was " + status() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setStatusRaw( actual );
@@ -343,6 +515,11 @@ public abstract class _SubmissionResult
      */
     public void setStatusRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStatusRaw("
+                + value + "): was " + statusRaw() );
+        }
         takeStoredValueForKey( value, "status" );
     }
 
@@ -371,6 +548,11 @@ public abstract class _SubmissionResult
      */
     public void setTaScore( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTaScore("
+                + value + "): was " + taScore() );
+        }
         Number actual =
             new Double( value );
         setTaScoreRaw( actual );
@@ -397,6 +579,11 @@ public abstract class _SubmissionResult
      */
     public void setTaScoreRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTaScoreRaw("
+                + value + "): was " + taScoreRaw() );
+        }
         takeStoredValueForKey( value, "taScore" );
     }
 
@@ -425,6 +612,11 @@ public abstract class _SubmissionResult
      */
     public void setToolScore( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToolScore("
+                + value + "): was " + toolScore() );
+        }
         Number actual =
             new Double( value );
         setToolScoreRaw( actual );
@@ -451,7 +643,535 @@ public abstract class _SubmissionResult
      */
     public void setToolScoreRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToolScoreRaw("
+                + value + "): was " + toolScoreRaw() );
+        }
         takeStoredValueForKey( value, "toolScore" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>resultFiles</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    public NSArray resultFiles()
+    {
+        return (NSArray)storedValueForKey( "resultFiles" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>resultFiles</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setResultFiles( NSMutableArray value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setResultFiles("
+                + value + "): was " + resultFiles() );
+        }
+        takeStoredValueForKey( value, "resultFiles" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>resultFiles</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToResultFilesRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToResultFiles( net.sf.webcat.grader.ResultFile value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToResultFiles("
+                + value + "): was " + resultFiles() );
+        }
+        NSMutableArray array = (NSMutableArray)resultFiles();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>resultFiles</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromResultFilesRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromResultFiles( net.sf.webcat.grader.ResultFile value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromResultFiles("
+                + value + "): was " + resultFiles() );
+        }
+        NSMutableArray array = (NSMutableArray)resultFiles();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>resultFiles</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToResultFilesRelationship("
+                + value + "): was " + resultFiles() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "resultFiles" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>resultFiles</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromResultFilesRelationship("
+                + value + "): was " + resultFiles() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "resultFiles" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>resultFiles</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.ResultFile createResultFilesRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createResultFilesRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "ResultFile" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "resultFiles" );
+        return (net.sf.webcat.grader.ResultFile)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity that is a member of the
+     * <code>resultFiles</code> relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void deleteResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteResultFilesRelationship("
+                + value + "): was " + resultFiles() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "resultFiles" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>resultFiles</code> relationship.
+     */
+    public void deleteAllResultFilesRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllResultFilesRelationships(): was "
+                + resultFiles() );
+        }
+        Enumeration objects = resultFiles().objectEnumerator();
+        while ( objects.hasMoreElements() )
+            deleteResultFilesRelationship(
+                (net.sf.webcat.grader.ResultFile)objects.nextElement() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>submissionFileStats</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    public NSArray submissionFileStats()
+    {
+        return (NSArray)storedValueForKey( "submissionFileStats" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>submissionFileStats</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setSubmissionFileStats( NSMutableArray value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionFileStats("
+                + value + "): was " + submissionFileStats() );
+        }
+        takeStoredValueForKey( value, "submissionFileStats" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>submissionFileStats</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToSubmissionFileStatsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissionFileStats("
+                + value + "): was " + submissionFileStats() );
+        }
+        NSMutableArray array = (NSMutableArray)submissionFileStats();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>submissionFileStats</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromSubmissionFileStatsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromSubmissionFileStats("
+                + value + "): was " + submissionFileStats() );
+        }
+        NSMutableArray array = (NSMutableArray)submissionFileStats();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>submissionFileStats</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissionFileStatsRelationship("
+                + value + "): was " + submissionFileStats() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "submissionFileStats" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>submissionFileStats</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromSubmissionFileStatsRelationship("
+                + value + "): was " + submissionFileStats() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "submissionFileStats" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>submissionFileStats</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.SubmissionFileStats createSubmissionFileStatsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createSubmissionFileStatsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "SubmissionFileStats" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "submissionFileStats" );
+        return (net.sf.webcat.grader.SubmissionFileStats)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity that is a member of the
+     * <code>submissionFileStats</code> relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void deleteSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteSubmissionFileStatsRelationship("
+                + value + "): was " + submissionFileStats() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "submissionFileStats" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>submissionFileStats</code> relationship.
+     */
+    public void deleteAllSubmissionFileStatsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllSubmissionFileStatsRelationships(): was "
+                + submissionFileStats() );
+        }
+        Enumeration objects = submissionFileStats().objectEnumerator();
+        while ( objects.hasMoreElements() )
+            deleteSubmissionFileStatsRelationship(
+                (net.sf.webcat.grader.SubmissionFileStats)objects.nextElement() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>submissions</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    public NSArray submissions()
+    {
+        return (NSArray)storedValueForKey( "submissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>submissions</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setSubmissions( NSMutableArray value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissions("
+                + value + "): was " + submissions() );
+        }
+        takeStoredValueForKey( value, "submissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>submissions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToSubmissionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToSubmissions( net.sf.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissions("
+                + value + "): was " + submissions() );
+        }
+        NSMutableArray array = (NSMutableArray)submissions();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>submissions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromSubmissionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromSubmissions( net.sf.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromSubmissions("
+                + value + "): was " + submissions() );
+        }
+        NSMutableArray array = (NSMutableArray)submissions();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>submissions</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToSubmissionsRelationship( net.sf.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "submissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>submissions</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromSubmissionsRelationship( net.sf.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "submissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>submissions</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.Submission createSubmissionsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createSubmissionsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "Submission" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "submissions" );
+        return (net.sf.webcat.grader.Submission)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>submissions</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deleteSubmissionsRelationship( net.sf.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "submissions" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>submissions</code> relationship.
+     */
+    public void deleteAllSubmissionsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllSubmissionsRelationships(): was "
+                + submissions() );
+        }
+        Enumeration objects = submissions().objectEnumerator();
+        while ( objects.hasMoreElements() )
+            deleteSubmissionsRelationship(
+                (net.sf.webcat.grader.Submission)objects.nextElement() );
     }
 
 
@@ -484,7 +1204,16 @@ public abstract class _SubmissionResult
                                       "user" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        return context.objectsWithFetchSpecification( spec );
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForMostRecentByDate(ec"
+            
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 
@@ -517,7 +1246,16 @@ public abstract class _SubmissionResult
                                       "user" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        return context.objectsWithFetchSpecification( spec );
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForMostRecentSubmission(ec"
+            
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 
@@ -545,7 +1283,15 @@ public abstract class _SubmissionResult
                                       "assignmentOffering" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        return context.objectsWithFetchSpecification( spec );
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForMostRecentSubmissions(ec"
+            
+                + ", " + assignmentOfferingBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 
@@ -573,7 +1319,15 @@ public abstract class _SubmissionResult
                                       "assignmentOffering" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        return context.objectsWithFetchSpecification( spec );
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForMostRecentSubmissionsByNumber(ec"
+            
+                + ", " + assignmentOfferingBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 
@@ -606,414 +1360,20 @@ public abstract class _SubmissionResult
                                       "user" );
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        return context.objectsWithFetchSpecification( spec );
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForUser(ec"
+            
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the entities pointed to by the <code>resultFiles</code>
-     * relationship.
-     * @return an NSArray of the entities in the relationship
-     */
-    public NSArray resultFiles()
-    {
-        return (NSArray)storedValueForKey( "resultFiles" );
-    }
+    //~ Instance/static variables .............................................
 
-
-    // ----------------------------------------------------------
-    /**
-     * Replace the list of entities pointed to by the
-     * <code>resultFiles</code> relationship.
-     *
-     * @param value The new set of entities to relate to
-     */
-    public void setResultFiles( NSMutableArray value )
-    {
-        takeStoredValueForKey( value, "resultFiles" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>resultFiles</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>addToResultFilesRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToResultFiles( net.sf.webcat.grader.ResultFile value )
-    {
-        NSMutableArray array = (NSMutableArray)resultFiles();
-        willChange();
-        array.addObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>resultFiles</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>removeFromResultFilesRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromResultFiles( net.sf.webcat.grader.ResultFile value )
-    {
-        NSMutableArray array = (NSMutableArray)resultFiles();
-        willChange();
-        array.removeObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>resultFiles</code>
-     * relationship.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
-    {
-        addObjectToBothSidesOfRelationshipWithKey(
-            value, "resultFiles" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>resultFiles</code>
-     * relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "resultFiles" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Create a brand new object that is a member of the
-     * <code>resultFiles</code> relationship.
-     *
-     * @return The new entity
-     */
-    public net.sf.webcat.grader.ResultFile createResultFilesRelationship()
-    {
-        EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "ResultFile" );
-        EOEnterpriseObject eoObject = eoClassDesc
-            .createInstanceWithEditingContext( editingContext(), null );
-        editingContext().insertObject( eoObject );
-        addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "resultFiles" );
-        return (net.sf.webcat.grader.ResultFile)eoObject;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity that is a member of the
-     * <code>resultFiles</code> relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void deleteResultFilesRelationship( net.sf.webcat.grader.ResultFile value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "resultFiles" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove (and then delete, if owned) all entities that are members of the
-     * <code>resultFiles</code> relationship.
-     */
-    public void deleteAllResultFilesRelationships()
-    {
-        Enumeration objects = resultFiles().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteResultFilesRelationship(
-                (net.sf.webcat.grader.ResultFile)objects.nextElement() );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the entities pointed to by the <code>submissionFileStats</code>
-     * relationship.
-     * @return an NSArray of the entities in the relationship
-     */
-    public NSArray submissionFileStats()
-    {
-        return (NSArray)storedValueForKey( "submissionFileStats" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Replace the list of entities pointed to by the
-     * <code>submissionFileStats</code> relationship.
-     *
-     * @param value The new set of entities to relate to
-     */
-    public void setSubmissionFileStats( NSMutableArray value )
-    {
-        takeStoredValueForKey( value, "submissionFileStats" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>submissionFileStats</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>addToSubmissionFileStatsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
-    {
-        NSMutableArray array = (NSMutableArray)submissionFileStats();
-        willChange();
-        array.addObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>submissionFileStats</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>removeFromSubmissionFileStatsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
-    {
-        NSMutableArray array = (NSMutableArray)submissionFileStats();
-        willChange();
-        array.removeObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>submissionFileStats</code>
-     * relationship.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
-    {
-        addObjectToBothSidesOfRelationshipWithKey(
-            value, "submissionFileStats" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>submissionFileStats</code>
-     * relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "submissionFileStats" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Create a brand new object that is a member of the
-     * <code>submissionFileStats</code> relationship.
-     *
-     * @return The new entity
-     */
-    public net.sf.webcat.grader.SubmissionFileStats createSubmissionFileStatsRelationship()
-    {
-        EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "SubmissionFileStats" );
-        EOEnterpriseObject eoObject = eoClassDesc
-            .createInstanceWithEditingContext( editingContext(), null );
-        editingContext().insertObject( eoObject );
-        addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "submissionFileStats" );
-        return (net.sf.webcat.grader.SubmissionFileStats)eoObject;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity that is a member of the
-     * <code>submissionFileStats</code> relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void deleteSubmissionFileStatsRelationship( net.sf.webcat.grader.SubmissionFileStats value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "submissionFileStats" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove (and then delete, if owned) all entities that are members of the
-     * <code>submissionFileStats</code> relationship.
-     */
-    public void deleteAllSubmissionFileStatsRelationships()
-    {
-        Enumeration objects = submissionFileStats().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteSubmissionFileStatsRelationship(
-                (net.sf.webcat.grader.SubmissionFileStats)objects.nextElement() );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the entities pointed to by the <code>submissions</code>
-     * relationship.
-     * @return an NSArray of the entities in the relationship
-     */
-    public NSArray submissions()
-    {
-        return (NSArray)storedValueForKey( "submissions" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Replace the list of entities pointed to by the
-     * <code>submissions</code> relationship.
-     *
-     * @param value The new set of entities to relate to
-     */
-    public void setSubmissions( NSMutableArray value )
-    {
-        takeStoredValueForKey( value, "submissions" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>submissions</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>addToSubmissionsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToSubmissions( net.sf.webcat.grader.Submission value )
-    {
-        NSMutableArray array = (NSMutableArray)submissions();
-        willChange();
-        array.addObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>submissions</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>removeFromSubmissionsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromSubmissions( net.sf.webcat.grader.Submission value )
-    {
-        NSMutableArray array = (NSMutableArray)submissions();
-        willChange();
-        array.removeObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>submissions</code>
-     * relationship.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToSubmissionsRelationship( net.sf.webcat.grader.Submission value )
-    {
-        addObjectToBothSidesOfRelationshipWithKey(
-            value, "submissions" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>submissions</code>
-     * relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromSubmissionsRelationship( net.sf.webcat.grader.Submission value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "submissions" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Create a brand new object that is a member of the
-     * <code>submissions</code> relationship.
-     *
-     * @return The new entity
-     */
-    public net.sf.webcat.grader.Submission createSubmissionsRelationship()
-    {
-        EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "Submission" );
-        EOEnterpriseObject eoObject = eoClassDesc
-            .createInstanceWithEditingContext( editingContext(), null );
-        editingContext().insertObject( eoObject );
-        addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "submissions" );
-        return (net.sf.webcat.grader.Submission)eoObject;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove and then delete a specific entity that is a member of the
-     * <code>submissions</code> relationship.
-     *
-     * @param value The entity to remove from the relationship and then delete
-     */
-    public void deleteSubmissionsRelationship( net.sf.webcat.grader.Submission value )
-    {
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "submissions" );
-        editingContext().deleteObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove (and then delete, if owned) all entities that are members of the
-     * <code>submissions</code> relationship.
-     */
-    public void deleteAllSubmissionsRelationships()
-    {
-        Enumeration objects = submissions().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteSubmissionsRelationship(
-                (net.sf.webcat.grader.Submission)objects.nextElement() );
-    }
-
-
+    static Logger log = Logger.getLogger( SubmissionResult.class );
 }

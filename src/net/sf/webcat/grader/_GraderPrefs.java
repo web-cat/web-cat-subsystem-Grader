@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -56,6 +58,84 @@ public abstract class _GraderPrefs
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _GraderPrefs object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @return The newly created object
+     */
+    public static GraderPrefs createGraderPrefs(
+        EOEditingContext editingContext
+        )
+    {
+        GraderPrefs eoObject = (GraderPrefs)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _GraderPrefs.ENTITY_NAME);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static GraderPrefs localInstance(
+        EOEditingContext editingContext, GraderPrefs eo)
+    {
+        return (eo == null)
+            ? null
+            : (GraderPrefs)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static GraderPrefs forId(
+        EOEditingContext ec, int id )
+    {
+        GraderPrefs obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (GraderPrefs)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static GraderPrefs forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Attributes ---
@@ -73,6 +153,50 @@ public abstract class _GraderPrefs
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public GraderPrefs localInstance(EOEditingContext editingContext)
+    {
+        return (GraderPrefs)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     // ----------------------------------------------------------
     /**
@@ -94,35 +218,12 @@ public abstract class _GraderPrefs
      */
     public void setCommentHistory( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCommentHistory("
+                + value + "): was " + commentHistory() );
+        }
         takeStoredValueForKey( value, "commentHistory" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>User</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForUser(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "user", "GraderPrefs" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
     }
 
 
@@ -149,6 +250,11 @@ public abstract class _GraderPrefs
      */
     public void setAssignmentOffering( net.sf.webcat.grader.AssignmentOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentOffering("
+                + value + "): was " + assignmentOffering() );
+        }
         takeStoredValueForKey( value, "assignmentOffering" );
     }
 
@@ -164,6 +270,11 @@ public abstract class _GraderPrefs
     public void setAssignmentOfferingRelationship(
         net.sf.webcat.grader.AssignmentOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentOfferingRelationship("
+                + value + "): was " + assignmentOffering() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.AssignmentOffering object = assignmentOffering();
@@ -200,6 +311,11 @@ public abstract class _GraderPrefs
      */
     public void setStep( net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStep("
+                + value + "): was " + step() );
+        }
         takeStoredValueForKey( value, "step" );
     }
 
@@ -215,6 +331,11 @@ public abstract class _GraderPrefs
     public void setStepRelationship(
         net.sf.webcat.grader.Step value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStepRelationship("
+                + value + "): was " + step() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.Step object = step();
@@ -251,6 +372,11 @@ public abstract class _GraderPrefs
      */
     public void setSubmission( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmission("
+                + value + "): was " + submission() );
+        }
         takeStoredValueForKey( value, "submission" );
     }
 
@@ -266,6 +392,11 @@ public abstract class _GraderPrefs
     public void setSubmissionRelationship(
         net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionRelationship("
+                + value + "): was " + submission() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.Submission object = submission();
@@ -302,6 +433,11 @@ public abstract class _GraderPrefs
      */
     public void setSubmissionFileStats( net.sf.webcat.grader.SubmissionFileStats value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionFileStats("
+                + value + "): was " + submissionFileStats() );
+        }
         takeStoredValueForKey( value, "submissionFileStats" );
     }
 
@@ -317,6 +453,11 @@ public abstract class _GraderPrefs
     public void setSubmissionFileStatsRelationship(
         net.sf.webcat.grader.SubmissionFileStats value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionFileStatsRelationship("
+                + value + "): was " + submissionFileStats() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.SubmissionFileStats object = submissionFileStats();
@@ -353,6 +494,11 @@ public abstract class _GraderPrefs
      */
     public void setUser( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUser("
+                + value + "): was " + user() );
+        }
         takeStoredValueForKey( value, "user" );
     }
 
@@ -368,6 +514,11 @@ public abstract class _GraderPrefs
     public void setUserRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUserRelationship("
+                + value + "): was " + user() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = user();
@@ -381,4 +532,43 @@ public abstract class _GraderPrefs
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>User</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "user", "GraderPrefs" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForUser(ec"
+            
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( GraderPrefs.class );
 }

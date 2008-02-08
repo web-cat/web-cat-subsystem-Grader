@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -53,6 +55,93 @@ public abstract class _SubmissionProfile
     public _SubmissionProfile()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _SubmissionProfile object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param awardEarlyBonus
+     * @param deductLatePenalty
+     * @param submissionMethod
+     * @return The newly created object
+     */
+    public static SubmissionProfile createSubmissionProfile(
+        EOEditingContext editingContext,
+        boolean awardEarlyBonus,
+        boolean deductLatePenalty,
+        byte submissionMethod
+        )
+    {
+        SubmissionProfile eoObject = (SubmissionProfile)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _SubmissionProfile.ENTITY_NAME);
+        eoObject.setAwardEarlyBonus(awardEarlyBonus);
+        eoObject.setDeductLatePenalty(deductLatePenalty);
+        eoObject.setSubmissionMethod(submissionMethod);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static SubmissionProfile localInstance(
+        EOEditingContext editingContext, SubmissionProfile eo)
+    {
+        return (eo == null)
+            ? null
+            : (SubmissionProfile)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionProfile forId(
+        EOEditingContext ec, int id )
+    {
+        SubmissionProfile obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (SubmissionProfile)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionProfile forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -95,6 +184,50 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public SubmissionProfile localInstance(EOEditingContext editingContext)
+    {
+        return (SubmissionProfile)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>availablePoints</code> value.
      * @return the value of the attribute
      */
@@ -117,6 +250,11 @@ public abstract class _SubmissionProfile
      */
     public void setAvailablePoints( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAvailablePoints("
+                + value + "): was " + availablePoints() );
+        }
         Number actual =
             new Double( value );
         setAvailablePointsRaw( actual );
@@ -143,6 +281,11 @@ public abstract class _SubmissionProfile
      */
     public void setAvailablePointsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAvailablePointsRaw("
+                + value + "): was " + availablePointsRaw() );
+        }
         takeStoredValueForKey( value, "availablePoints" );
     }
 
@@ -171,6 +314,11 @@ public abstract class _SubmissionProfile
      */
     public void setAvailableTimeDelta( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAvailableTimeDelta("
+                + value + "): was " + availableTimeDelta() );
+        }
         Number actual =
             new Long( value );
         setAvailableTimeDeltaRaw( actual );
@@ -197,6 +345,11 @@ public abstract class _SubmissionProfile
      */
     public void setAvailableTimeDeltaRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAvailableTimeDeltaRaw("
+                + value + "): was " + availableTimeDeltaRaw() );
+        }
         takeStoredValueForKey( value, "availableTimeDelta" );
     }
 
@@ -225,6 +378,11 @@ public abstract class _SubmissionProfile
      */
     public void setAwardEarlyBonus( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAwardEarlyBonus("
+                + value + "): was " + awardEarlyBonus() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setAwardEarlyBonusRaw( actual );
@@ -251,6 +409,11 @@ public abstract class _SubmissionProfile
      */
     public void setAwardEarlyBonusRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAwardEarlyBonusRaw("
+                + value + "): was " + awardEarlyBonusRaw() );
+        }
         takeStoredValueForKey( value, "awardEarlyBonus" );
     }
 
@@ -279,6 +442,11 @@ public abstract class _SubmissionProfile
      */
     public void setDeadTimeDelta( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeadTimeDelta("
+                + value + "): was " + deadTimeDelta() );
+        }
         Number actual =
             new Long( value );
         setDeadTimeDeltaRaw( actual );
@@ -305,6 +473,11 @@ public abstract class _SubmissionProfile
      */
     public void setDeadTimeDeltaRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeadTimeDeltaRaw("
+                + value + "): was " + deadTimeDeltaRaw() );
+        }
         takeStoredValueForKey( value, "deadTimeDelta" );
     }
 
@@ -333,6 +506,11 @@ public abstract class _SubmissionProfile
      */
     public void setDeductLatePenalty( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductLatePenalty("
+                + value + "): was " + deductLatePenalty() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setDeductLatePenaltyRaw( actual );
@@ -359,6 +537,11 @@ public abstract class _SubmissionProfile
      */
     public void setDeductLatePenaltyRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductLatePenaltyRaw("
+                + value + "): was " + deductLatePenaltyRaw() );
+        }
         takeStoredValueForKey( value, "deductLatePenalty" );
     }
 
@@ -387,6 +570,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusMaxPts( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusMaxPts("
+                + value + "): was " + earlyBonusMaxPts() );
+        }
         Number actual =
             new Double( value );
         setEarlyBonusMaxPtsRaw( actual );
@@ -413,6 +601,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusMaxPtsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusMaxPtsRaw("
+                + value + "): was " + earlyBonusMaxPtsRaw() );
+        }
         takeStoredValueForKey( value, "earlyBonusMaxPts" );
     }
 
@@ -441,6 +634,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusUnitPts( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusUnitPts("
+                + value + "): was " + earlyBonusUnitPts() );
+        }
         Number actual =
             new Double( value );
         setEarlyBonusUnitPtsRaw( actual );
@@ -467,6 +665,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusUnitPtsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusUnitPtsRaw("
+                + value + "): was " + earlyBonusUnitPtsRaw() );
+        }
         takeStoredValueForKey( value, "earlyBonusUnitPts" );
     }
 
@@ -495,6 +698,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusUnitTime( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusUnitTime("
+                + value + "): was " + earlyBonusUnitTime() );
+        }
         Number actual =
             new Long( value );
         setEarlyBonusUnitTimeRaw( actual );
@@ -521,6 +729,11 @@ public abstract class _SubmissionProfile
      */
     public void setEarlyBonusUnitTimeRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEarlyBonusUnitTimeRaw("
+                + value + "): was " + earlyBonusUnitTimeRaw() );
+        }
         takeStoredValueForKey( value, "earlyBonusUnitTime" );
     }
 
@@ -545,6 +758,11 @@ public abstract class _SubmissionProfile
      */
     public void setExcludedFilePatterns( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcludedFilePatterns("
+                + value + "): was " + excludedFilePatterns() );
+        }
         takeStoredValueForKey( value, "excludedFilePatterns" );
     }
 
@@ -569,6 +787,11 @@ public abstract class _SubmissionProfile
      */
     public void setIncludedFilePatterns( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIncludedFilePatterns("
+                + value + "): was " + includedFilePatterns() );
+        }
         takeStoredValueForKey( value, "includedFilePatterns" );
     }
 
@@ -597,6 +820,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyMaxPts( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyMaxPts("
+                + value + "): was " + latePenaltyMaxPts() );
+        }
         Number actual =
             new Double( value );
         setLatePenaltyMaxPtsRaw( actual );
@@ -623,6 +851,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyMaxPtsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyMaxPtsRaw("
+                + value + "): was " + latePenaltyMaxPtsRaw() );
+        }
         takeStoredValueForKey( value, "latePenaltyMaxPts" );
     }
 
@@ -651,6 +884,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyUnitPts( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyUnitPts("
+                + value + "): was " + latePenaltyUnitPts() );
+        }
         Number actual =
             new Double( value );
         setLatePenaltyUnitPtsRaw( actual );
@@ -677,6 +915,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyUnitPtsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyUnitPtsRaw("
+                + value + "): was " + latePenaltyUnitPtsRaw() );
+        }
         takeStoredValueForKey( value, "latePenaltyUnitPts" );
     }
 
@@ -705,6 +948,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyUnitTime( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyUnitTime("
+                + value + "): was " + latePenaltyUnitTime() );
+        }
         Number actual =
             new Long( value );
         setLatePenaltyUnitTimeRaw( actual );
@@ -731,6 +979,11 @@ public abstract class _SubmissionProfile
      */
     public void setLatePenaltyUnitTimeRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLatePenaltyUnitTimeRaw("
+                + value + "): was " + latePenaltyUnitTimeRaw() );
+        }
         takeStoredValueForKey( value, "latePenaltyUnitTime" );
     }
 
@@ -759,6 +1012,11 @@ public abstract class _SubmissionProfile
      */
     public void setMaxFileUploadSize( long value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMaxFileUploadSize("
+                + value + "): was " + maxFileUploadSize() );
+        }
         Number actual =
             new Long( value );
         setMaxFileUploadSizeRaw( actual );
@@ -785,6 +1043,11 @@ public abstract class _SubmissionProfile
      */
     public void setMaxFileUploadSizeRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMaxFileUploadSizeRaw("
+                + value + "): was " + maxFileUploadSizeRaw() );
+        }
         takeStoredValueForKey( value, "maxFileUploadSize" );
     }
 
@@ -813,6 +1076,11 @@ public abstract class _SubmissionProfile
      */
     public void setMaxSubmissions( int value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMaxSubmissions("
+                + value + "): was " + maxSubmissions() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setMaxSubmissionsRaw( actual );
@@ -839,6 +1107,11 @@ public abstract class _SubmissionProfile
      */
     public void setMaxSubmissionsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMaxSubmissionsRaw("
+                + value + "): was " + maxSubmissionsRaw() );
+        }
         takeStoredValueForKey( value, "maxSubmissions" );
     }
 
@@ -863,6 +1136,11 @@ public abstract class _SubmissionProfile
      */
     public void setName( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setName("
+                + value + "): was " + name() );
+        }
         takeStoredValueForKey( value, "name" );
     }
 
@@ -887,6 +1165,11 @@ public abstract class _SubmissionProfile
      */
     public void setRequiredFilePatterns( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setRequiredFilePatterns("
+                + value + "): was " + requiredFilePatterns() );
+        }
         takeStoredValueForKey( value, "requiredFilePatterns" );
     }
 
@@ -911,6 +1194,11 @@ public abstract class _SubmissionProfile
      */
     public void setScoreFormat( String value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setScoreFormat("
+                + value + "): was " + scoreFormat() );
+        }
         takeStoredValueForKey( value, "scoreFormat" );
     }
 
@@ -939,6 +1227,11 @@ public abstract class _SubmissionProfile
      */
     public void setSubmissionMethod( byte value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionMethod("
+                + value + "): was " + submissionMethod() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value );
         setSubmissionMethodRaw( actual );
@@ -965,6 +1258,11 @@ public abstract class _SubmissionProfile
      */
     public void setSubmissionMethodRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionMethodRaw("
+                + value + "): was " + submissionMethodRaw() );
+        }
         takeStoredValueForKey( value, "submissionMethod" );
     }
 
@@ -993,6 +1291,11 @@ public abstract class _SubmissionProfile
      */
     public void setTaPoints( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTaPoints("
+                + value + "): was " + taPoints() );
+        }
         Number actual =
             new Double( value );
         setTaPointsRaw( actual );
@@ -1019,6 +1322,11 @@ public abstract class _SubmissionProfile
      */
     public void setTaPointsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTaPointsRaw("
+                + value + "): was " + taPointsRaw() );
+        }
         takeStoredValueForKey( value, "taPoints" );
     }
 
@@ -1047,6 +1355,11 @@ public abstract class _SubmissionProfile
      */
     public void setToolPoints( double value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToolPoints("
+                + value + "): was " + toolPoints() );
+        }
         Number actual =
             new Double( value );
         setToolPointsRaw( actual );
@@ -1073,63 +1386,12 @@ public abstract class _SubmissionProfile
      */
     public void setToolPointsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setToolPointsRaw("
+                + value + "): was " + toolPointsRaw() );
+        }
         takeStoredValueForKey( value, "toolPoints" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>Course</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param courseBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForCourse(
-            EOEditingContext context,
-            net.sf.webcat.core.Course courseBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "course", "SubmissionProfile" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( courseBinding != null )
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>User</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForUser(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "user", "SubmissionProfile" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
     }
 
 
@@ -1156,6 +1418,11 @@ public abstract class _SubmissionProfile
      */
     public void setAuthor( net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthor("
+                + value + "): was " + author() );
+        }
         takeStoredValueForKey( value, "author" );
     }
 
@@ -1171,6 +1438,11 @@ public abstract class _SubmissionProfile
     public void setAuthorRelationship(
         net.sf.webcat.core.User value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAuthorRelationship("
+                + value + "): was " + author() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.User object = author();
@@ -1205,6 +1477,11 @@ public abstract class _SubmissionProfile
      */
     public void setAssignment( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignment("
+                + value + "): was " + assignment() );
+        }
         takeStoredValueForKey( value, "assignment" );
     }
 
@@ -1220,6 +1497,11 @@ public abstract class _SubmissionProfile
      */
     public void addToAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToAssignment("
+                + value + "): was " + assignment() );
+        }
         NSMutableArray array = (NSMutableArray)assignment();
         willChange();
         array.addObject( value );
@@ -1237,6 +1519,11 @@ public abstract class _SubmissionProfile
      */
     public void removeFromAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromAssignment("
+                + value + "): was " + assignment() );
+        }
         NSMutableArray array = (NSMutableArray)assignment();
         willChange();
         array.removeObject( value );
@@ -1252,6 +1539,11 @@ public abstract class _SubmissionProfile
      */
     public void addToAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "assignment" );
     }
@@ -1266,6 +1558,11 @@ public abstract class _SubmissionProfile
      */
     public void removeFromAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "assignment" );
     }
@@ -1280,6 +1577,10 @@ public abstract class _SubmissionProfile
      */
     public net.sf.webcat.grader.Assignment createAssignmentRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createAssignmentRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "Assignment" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -1300,6 +1601,11 @@ public abstract class _SubmissionProfile
      */
     public void deleteAssignmentRelationship( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "assignment" );
         editingContext().deleteObject( value );
@@ -1313,6 +1619,11 @@ public abstract class _SubmissionProfile
      */
     public void deleteAllAssignmentRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllAssignmentRelationships(): was "
+                + assignment() );
+        }
         Enumeration objects = assignment().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteAssignmentRelationship(
@@ -1341,6 +1652,11 @@ public abstract class _SubmissionProfile
      */
     public void setCourseOfferings( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         takeStoredValueForKey( value, "courseOfferings" );
     }
 
@@ -1356,6 +1672,11 @@ public abstract class _SubmissionProfile
      */
     public void addToCourseOfferings( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         NSMutableArray array = (NSMutableArray)courseOfferings();
         willChange();
         array.addObject( value );
@@ -1373,6 +1694,11 @@ public abstract class _SubmissionProfile
      */
     public void removeFromCourseOfferings( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromCourseOfferings("
+                + value + "): was " + courseOfferings() );
+        }
         NSMutableArray array = (NSMutableArray)courseOfferings();
         willChange();
         array.removeObject( value );
@@ -1388,6 +1714,11 @@ public abstract class _SubmissionProfile
      */
     public void addToCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
     }
@@ -1402,6 +1733,11 @@ public abstract class _SubmissionProfile
      */
     public void removeFromCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
     }
@@ -1416,6 +1752,10 @@ public abstract class _SubmissionProfile
      */
     public net.sf.webcat.core.CourseOffering createCourseOfferingsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createCourseOfferingsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "CourseOffering" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -1436,6 +1776,11 @@ public abstract class _SubmissionProfile
      */
     public void deleteCourseOfferingsRelationship( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteCourseOfferingsRelationship("
+                + value + "): was " + courseOfferings() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "courseOfferings" );
         editingContext().deleteObject( value );
@@ -1449,6 +1794,11 @@ public abstract class _SubmissionProfile
      */
     public void deleteAllCourseOfferingsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllCourseOfferingsRelationships(): was "
+                + courseOfferings() );
+        }
         Enumeration objects = courseOfferings().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteCourseOfferingsRelationship(
@@ -1456,4 +1806,79 @@ public abstract class _SubmissionProfile
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Course</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForCourse(
+            EOEditingContext context,
+            net.sf.webcat.core.Course courseBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "course", "SubmissionProfile" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseBinding != null )
+            bindings.setObjectForKey( courseBinding,
+                                      "course" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForCourse(ec"
+            
+                + ", " + courseBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>User</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "user", "SubmissionProfile" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForUser(ec"
+            
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( SubmissionProfile.class );
 }

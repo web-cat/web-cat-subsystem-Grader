@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -56,6 +58,93 @@ public abstract class _EnqueuedJob
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _EnqueuedJob object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param discarded
+     * @param paused
+     * @param regrading
+     * @return The newly created object
+     */
+    public static EnqueuedJob createEnqueuedJob(
+        EOEditingContext editingContext,
+        boolean discarded,
+        boolean paused,
+        boolean regrading
+        )
+    {
+        EnqueuedJob eoObject = (EnqueuedJob)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _EnqueuedJob.ENTITY_NAME);
+        eoObject.setDiscarded(discarded);
+        eoObject.setPaused(paused);
+        eoObject.setRegrading(regrading);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static EnqueuedJob localInstance(
+        EOEditingContext editingContext, EnqueuedJob eo)
+    {
+        return (eo == null)
+            ? null
+            : (EnqueuedJob)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static EnqueuedJob forId(
+        EOEditingContext ec, int id )
+    {
+        EnqueuedJob obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (EnqueuedJob)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static EnqueuedJob forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Attributes ---
@@ -71,6 +160,50 @@ public abstract class _EnqueuedJob
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public EnqueuedJob localInstance(EOEditingContext editingContext)
+    {
+        return (EnqueuedJob)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
 
     // ----------------------------------------------------------
     /**
@@ -96,6 +229,11 @@ public abstract class _EnqueuedJob
      */
     public void setDiscarded( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDiscarded("
+                + value + "): was " + discarded() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setDiscardedRaw( actual );
@@ -122,6 +260,11 @@ public abstract class _EnqueuedJob
      */
     public void setDiscardedRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDiscardedRaw("
+                + value + "): was " + discardedRaw() );
+        }
         takeStoredValueForKey( value, "discarded" );
     }
 
@@ -150,6 +293,11 @@ public abstract class _EnqueuedJob
      */
     public void setPaused( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPaused("
+                + value + "): was " + paused() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setPausedRaw( actual );
@@ -176,6 +324,11 @@ public abstract class _EnqueuedJob
      */
     public void setPausedRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPausedRaw("
+                + value + "): was " + pausedRaw() );
+        }
         takeStoredValueForKey( value, "paused" );
     }
 
@@ -200,6 +353,11 @@ public abstract class _EnqueuedJob
      */
     public void setQueueTime( NSTimestamp value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setQueueTime("
+                + value + "): was " + queueTime() );
+        }
         takeStoredValueForKey( value, "queueTime" );
     }
 
@@ -228,6 +386,11 @@ public abstract class _EnqueuedJob
      */
     public void setRegrading( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setRegrading("
+                + value + "): was " + regrading() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setRegradingRaw( actual );
@@ -254,6 +417,11 @@ public abstract class _EnqueuedJob
      */
     public void setRegradingRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setRegradingRaw("
+                + value + "): was " + regradingRaw() );
+        }
         takeStoredValueForKey( value, "regrading" );
     }
 
@@ -281,6 +449,11 @@ public abstract class _EnqueuedJob
      */
     public void setSubmission( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmission("
+                + value + "): was " + submission() );
+        }
         takeStoredValueForKey( value, "submission" );
     }
 
@@ -296,6 +469,11 @@ public abstract class _EnqueuedJob
     public void setSubmissionRelationship(
         net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissionRelationship("
+                + value + "): was " + submission() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.Submission object = submission();
@@ -309,4 +487,7 @@ public abstract class _EnqueuedJob
     }
 
 
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( EnqueuedJob.class );
 }

@@ -30,7 +30,9 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import com.webobjects.eoaccess.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -54,6 +56,93 @@ public abstract class _AssignmentOffering
     public _AssignmentOffering()
     {
         super();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * _AssignmentOffering object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param gradingSuspended
+     * @param publish
+     * @param updateMutableFields
+     * @return The newly created object
+     */
+    public static AssignmentOffering createAssignmentOffering(
+        EOEditingContext editingContext,
+        boolean gradingSuspended,
+        boolean publish,
+        boolean updateMutableFields
+        )
+    {
+        AssignmentOffering eoObject = (AssignmentOffering)
+            EOUtilities.createAndInsertInstance(
+                editingContext,
+                _AssignmentOffering.ENTITY_NAME);
+        eoObject.setGradingSuspended(gradingSuspended);
+        eoObject.setPublish(publish);
+        eoObject.setUpdateMutableFields(updateMutableFields);
+        return eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a local instance of the given object in another editing context.
+     * @param editingContext The target editing context
+     * @param eo The object to import
+     * @return An instance of the given object in the target editing context
+     */
+    public static AssignmentOffering localInstance(
+        EOEditingContext editingContext, AssignmentOffering eo)
+    {
+        return (eo == null)
+            ? null
+            : (AssignmentOffering)EOUtilities.localInstanceOfObject(
+                editingContext, eo);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static AssignmentOffering forId(
+        EOEditingContext ec, int id )
+    {
+        AssignmentOffering obj = null;
+        if (id > 0)
+        {
+            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
+                ENTITY_NAME, "id", new Integer( id ) );
+            if ( results != null && results.count() > 0 )
+            {
+                obj = (AssignmentOffering)results.objectAtIndex( 0 );
+            }
+        }
+        return obj;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static AssignmentOffering forId(
+        EOEditingContext ec, String id )
+    {
+        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -84,6 +173,50 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Get a local instance of this object in another editing context.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public AssignmentOffering localInstance(EOEditingContext editingContext)
+    {
+        return (AssignmentOffering)EOUtilities.localInstanceOfObject(
+            editingContext, this);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get a list of changes between this object's current state and the
+     * last committed version.
+     * @return a dictionary of the changes that have not yet been committed
+     */
+    public NSDictionary changedProperties()
+    {
+        return changesFromSnapshot(
+            editingContext().committedSnapshotForObject(this) );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>id</code> value.
+     * @return the value of the attribute
+     */
+    public Number id()
+    {
+        try
+        {
+            return (Number)EOUtilities.primaryKeyForObject(
+                editingContext() , this ).objectForKey( "id" );
+        }
+        catch (Exception e)
+        {
+            return er.extensions.ERXConstant.ZeroInteger;
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>dueDate</code> value.
      * @return the value of the attribute
      */
@@ -102,6 +235,11 @@ public abstract class _AssignmentOffering
      */
     public void setDueDate( NSTimestamp value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDueDate("
+                + value + "): was " + dueDate() );
+        }
         takeStoredValueForKey( value, "dueDate" );
     }
 
@@ -130,6 +268,11 @@ public abstract class _AssignmentOffering
      */
     public void setGradingSuspended( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGradingSuspended("
+                + value + "): was " + gradingSuspended() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setGradingSuspendedRaw( actual );
@@ -156,6 +299,11 @@ public abstract class _AssignmentOffering
      */
     public void setGradingSuspendedRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGradingSuspendedRaw("
+                + value + "): was " + gradingSuspendedRaw() );
+        }
         takeStoredValueForKey( value, "gradingSuspended" );
     }
 
@@ -222,6 +370,11 @@ public abstract class _AssignmentOffering
      */
     public void setGraphSummary( net.sf.webcat.grader.graphs.AssignmentSummary value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGraphSummary("
+                + value + ")" );
+        }
         if ( graphSummaryCache == null )
         {
             graphSummaryCache = value;
@@ -248,6 +401,10 @@ public abstract class _AssignmentOffering
      */
     public void clearGraphSummary()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearGraphSummary()" );
+        }
         takeStoredValueForKey( null, "graphSummary" );
         graphSummaryRawCache = null;
         graphSummaryCache = null;
@@ -274,6 +431,11 @@ public abstract class _AssignmentOffering
      */
     public void setMoodleId( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMoodleId("
+                + value + "): was " + moodleId() );
+        }
         takeStoredValueForKey( value, "moodleId" );
     }
 
@@ -302,6 +464,11 @@ public abstract class _AssignmentOffering
      */
     public void setPublish( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPublish("
+                + value + "): was " + publish() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setPublishRaw( actual );
@@ -328,6 +495,11 @@ public abstract class _AssignmentOffering
      */
     public void setPublishRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPublishRaw("
+                + value + "): was " + publishRaw() );
+        }
         takeStoredValueForKey( value, "publish" );
     }
 
@@ -356,6 +528,11 @@ public abstract class _AssignmentOffering
      */
     public void setUpdateMutableFields( boolean value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFields("
+                + value + "): was " + updateMutableFields() );
+        }
         Number actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
         setUpdateMutableFieldsRaw( actual );
@@ -382,6 +559,11 @@ public abstract class _AssignmentOffering
      */
     public void setUpdateMutableFieldsRaw( Number value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFieldsRaw("
+                + value + "): was " + updateMutableFieldsRaw() );
+        }
         takeStoredValueForKey( value, "updateMutableFields" );
     }
 
@@ -392,6 +574,7 @@ public abstract class _AssignmentOffering
      */
     public void saveMutables()
     {
+        log.debug("saveMutables()");
         if ( graphSummaryCache != null
             && graphSummaryCache.hasChanged() )
         {
@@ -410,6 +593,7 @@ public abstract class _AssignmentOffering
      */
     public void willUpdate()
     {
+        log.debug("willUpdate()");
         saveMutables();
         super.willUpdate();
     }
@@ -421,6 +605,7 @@ public abstract class _AssignmentOffering
      */
     public void willInsert()
     {
+        log.debug("willInsert()");
         saveMutables();
         super.willInsert();
     }
@@ -432,6 +617,7 @@ public abstract class _AssignmentOffering
      */
     public void flushCaches()
     {
+        log.debug("flushCaches()");
         graphSummaryCache = null;
         graphSummaryRawCache  = null;
         setUpdateMutableFields( false );
@@ -446,128 +632,6 @@ public abstract class _AssignmentOffering
     public void mutableContainerHasChanged()
     {
         setUpdateMutableFields( true );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>AllOfferings</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForAllOfferings(
-            EOEditingContext context
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "allOfferings", "AssignmentOffering" );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>CourseOffering</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param courseOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForCourseOffering(
-            EOEditingContext context,
-            net.sf.webcat.core.CourseOffering courseOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "courseOffering", "AssignmentOffering" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( courseOfferingBinding != null )
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>Staff</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForStaff(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "staff", "AssignmentOffering" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>Student</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForStudent(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "student", "AssignmentOffering" );
-
-        NSMutableDictionary bindings = new NSMutableDictionary();
-
-        if ( userBinding != null )
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        return context.objectsWithFetchSpecification( spec );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>SubmitterEngineBase</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray objectsForSubmitterEngineBase(
-            EOEditingContext context
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "submitterEngineBase", "AssignmentOffering" );
-
-        return context.objectsWithFetchSpecification( spec );
     }
 
 
@@ -594,6 +658,11 @@ public abstract class _AssignmentOffering
      */
     public void setAssignment( net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignment("
+                + value + "): was " + assignment() );
+        }
         takeStoredValueForKey( value, "assignment" );
     }
 
@@ -609,6 +678,11 @@ public abstract class _AssignmentOffering
     public void setAssignmentRelationship(
         net.sf.webcat.grader.Assignment value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
         if ( value == null )
         {
             net.sf.webcat.grader.Assignment object = assignment();
@@ -645,6 +719,11 @@ public abstract class _AssignmentOffering
      */
     public void setCourseOffering( net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCourseOffering("
+                + value + "): was " + courseOffering() );
+        }
         takeStoredValueForKey( value, "courseOffering" );
     }
 
@@ -660,6 +739,11 @@ public abstract class _AssignmentOffering
     public void setCourseOfferingRelationship(
         net.sf.webcat.core.CourseOffering value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setCourseOfferingRelationship("
+                + value + "): was " + courseOffering() );
+        }
         if ( value == null )
         {
             net.sf.webcat.core.CourseOffering object = courseOffering();
@@ -694,6 +778,11 @@ public abstract class _AssignmentOffering
      */
     public void setSubmissions( NSMutableArray value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setSubmissions("
+                + value + "): was " + submissions() );
+        }
         takeStoredValueForKey( value, "submissions" );
     }
 
@@ -709,6 +798,11 @@ public abstract class _AssignmentOffering
      */
     public void addToSubmissions( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissions("
+                + value + "): was " + submissions() );
+        }
         NSMutableArray array = (NSMutableArray)submissions();
         willChange();
         array.addObject( value );
@@ -726,6 +820,11 @@ public abstract class _AssignmentOffering
      */
     public void removeFromSubmissions( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromSubmissions("
+                + value + "): was " + submissions() );
+        }
         NSMutableArray array = (NSMutableArray)submissions();
         willChange();
         array.removeObject( value );
@@ -741,6 +840,11 @@ public abstract class _AssignmentOffering
      */
     public void addToSubmissionsRelationship( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
         addObjectToBothSidesOfRelationshipWithKey(
             value, "submissions" );
     }
@@ -755,6 +859,11 @@ public abstract class _AssignmentOffering
      */
     public void removeFromSubmissionsRelationship( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "submissions" );
     }
@@ -769,6 +878,10 @@ public abstract class _AssignmentOffering
      */
     public net.sf.webcat.grader.Submission createSubmissionsRelationship()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createSubmissionsRelationship()" );
+        }
         EOClassDescription eoClassDesc = EOClassDescription
             .classDescriptionForEntityName( "Submission" );
         EOEnterpriseObject eoObject = eoClassDesc
@@ -789,6 +902,11 @@ public abstract class _AssignmentOffering
      */
     public void deleteSubmissionsRelationship( net.sf.webcat.grader.Submission value )
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteSubmissionsRelationship("
+                + value + "): was " + submissions() );
+        }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "submissions" );
         editingContext().deleteObject( value );
@@ -802,6 +920,11 @@ public abstract class _AssignmentOffering
      */
     public void deleteAllSubmissionsRelationships()
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllSubmissionsRelationships(): was "
+                + submissions() );
+        }
         Enumeration objects = submissions().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteSubmissionsRelationship(
@@ -809,4 +932,167 @@ public abstract class _AssignmentOffering
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>AllOfferings</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForAllOfferings(
+            EOEditingContext context
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "allOfferings", "AssignmentOffering" );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForAllOfferings(ec"
+            
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>CourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForCourseOffering(
+            EOEditingContext context,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "courseOffering", "AssignmentOffering" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( courseOfferingBinding != null )
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForCourseOffering(ec"
+            
+                + ", " + courseOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Staff</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForStaff(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "staff", "AssignmentOffering" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForStaff(ec"
+            
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Student</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForStudent(
+            EOEditingContext context,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "student", "AssignmentOffering" );
+
+        NSMutableDictionary bindings = new NSMutableDictionary();
+
+        if ( userBinding != null )
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForStudent(ec"
+            
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>SubmitterEngineBase</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray objectsForSubmitterEngineBase(
+            EOEditingContext context
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "submitterEngineBase", "AssignmentOffering" );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForSubmitterEngineBase(ec"
+            
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger( AssignmentOffering.class );
 }

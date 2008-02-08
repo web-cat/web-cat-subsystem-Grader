@@ -56,48 +56,6 @@ public class Assignment
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Look up an Assignment by id number.  Assumes the editing
-     * context is appropriately locked.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The assignment, or null if no such id exists
-     */
-    public static Assignment assignmentForId( EOEditingContext ec, int id )
-    {
-        Assignment assignment = null;
-        NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-            ENTITY_NAME, "id", new Integer( id ) );
-        if ( results != null && results.count() > 0 )
-        {
-            assignment = (Assignment)results.objectAtIndex( 0 );
-        }
-        return assignment;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Look up an Assignment by id number.  Assumes the editing
-     * context is appropriately locked.  Converts the string parameter
-     * to an integer, then performs the search.
-     * @param ec The editing context to use
-     * @param id The id to look up
-     * @return The assignment, or null if no such id exists
-     */
-    public static Assignment assignmentForId( EOEditingContext ec, String id )
-    {
-        Assignment result = null;
-        int idNumber = er.extensions.ERXValueUtilities.intValue( id );
-        if ( idNumber > 0 )
-        {
-            result = assignmentForId( ec, idNumber );
-        }
-        return result;
-    }
-
-
     //~ Constants (for key names) .............................................
 
     public static final String COURSE_OFFERINGS_KEY =
@@ -157,18 +115,6 @@ public class Assignment
     public String toString()
     {
         return userPresentableDescription();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>id</code> value.
-     * @return the value of the attribute
-     */
-    public Number id()
-    {
-        return (Number)EOUtilities.primaryKeyForObject(
-            editingContext() , this ).objectForKey( "id" );
     }
 
 

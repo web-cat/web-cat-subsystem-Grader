@@ -69,7 +69,7 @@ public class GraderSubmissionComponent
         if ( sid != null )
         {
             result = startWith( Submission
-                .submissionForId( wcSession().localContext(), sid ) );
+                .forId( wcSession().localContext(), sid ) );
         }
         return result;
     }
