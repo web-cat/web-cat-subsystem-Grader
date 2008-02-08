@@ -53,7 +53,7 @@ public class PickStepPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public PickStepPage( WOContext context )
@@ -83,6 +83,7 @@ public class PickStepPage
     // ----------------------------------------------------------
     public void awake()
     {
+        super.awake();
         log.debug( "awake()" );
         selectedAssignmentIndex = -1;
         selectedScriptIndex     = -1;
@@ -95,7 +96,7 @@ public class PickStepPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         assignmentGroup.queryBindings().setObjectForKey(
-            wcSession().courseOffering(),
+            coreSelections().courseOffering(),
             "courseOffering"
         );
         assignmentGroup.queryBindings().setObjectForKey(
@@ -103,9 +104,9 @@ public class PickStepPage
             "user"
         );
         assignmentGroup.fetch();
-        
+
         scriptGroup.queryBindings().setObjectForKey(
-            wcSession().courseOffering().course(),
+            coreSelections().courseOffering().course(),
             "course"
         );
         scriptGroup.queryBindings().setObjectForKey(

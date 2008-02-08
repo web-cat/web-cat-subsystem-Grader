@@ -44,7 +44,7 @@ import net.sf.webcat.core.*;
  * @version $Id$
  */
 public class UploadRosterPage
-    extends GraderComponent
+    extends GraderCourseEditComponent
 {
     //~ Constructors ..........................................................
 
@@ -734,8 +734,7 @@ public class UploadRosterPage
                     {
                         NSArray enrolledIn = user.enrolledIn();
                         if ( enrolledIn != null
-                             && enrolledIn.containsObject(
-                                     wcSession().courseOffering() ) )
+                             && enrolledIn.containsObject( courseOffering() ) )
                         {
                             log.debug( "Relationship exists" );
                             numAlreadyEnrolled++;
@@ -745,7 +744,7 @@ public class UploadRosterPage
                         {
                             log.debug( "relationship does not exist" );
                             user.addToEnrolledInRelationship(
-                                wcSession().courseOffering() );
+                                courseOffering() );
                             if (isExistingUser)
                             {
                                 if (existingUserNames == null)

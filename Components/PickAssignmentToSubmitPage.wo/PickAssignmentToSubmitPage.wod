@@ -14,7 +14,7 @@ AssignmentRepetition: WORepetition {
 }
 
 CourseName: WOString {
-    value = session.courseOffering.deptNumberAndName;
+    value = coreSelections.courseOffering.deptNumberAndName;
 }
 
 Deadline: WOString {

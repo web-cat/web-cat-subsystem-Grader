@@ -1,6 +1,6 @@
 CourseList: WOPopUpButton {
 	list              = courseDisplayGroup.displayedObjects;
-	selection         = session.course;
+	selection         = coreSelections.course;
 	item              = course;
 	displayString     = course.deptNumberAndName;
 }

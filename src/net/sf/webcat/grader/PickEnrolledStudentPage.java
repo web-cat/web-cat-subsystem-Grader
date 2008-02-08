@@ -68,7 +68,8 @@ public class PickEnrolledStudentPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        studentDisplayGroup.setMasterObject( wcSession().courseOffering() );
+        studentDisplayGroup.setMasterObject(
+            coreSelections().courseOffering() );
         super.appendToResponse( response, context );
     }
 

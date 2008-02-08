@@ -213,8 +213,7 @@ public class GraderHomeStatus
      */
     public WOComponent submitAssignment()
     {
-        wcSession().setCourseOfferingRelationship(
-            assignment.courseOffering() );
+        coreSelections().setCourseOffering( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "UploadSubmission" ).pageName() );
@@ -229,8 +228,7 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        wcSession().setCourseOfferingRelationship(
-            assignment.courseOffering() );
+        coreSelections().setCourseOffering( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
             wcSession().user() );
@@ -258,8 +256,7 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        wcSession().setCourseOfferingRelationship(
-            assignment.courseOffering() );
+        coreSelections().setCourseOffering( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "GraphResults" ).pageName() );
@@ -274,8 +271,7 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
-        wcSession().setCourseOfferingRelationship(
-            assignment.courseOffering() );
+        coreSelections().setCourseOffering( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "AssignmentProperties" ).pageName() );
@@ -290,8 +286,7 @@ public class GraderHomeStatus
      */
     public WOComponent gradeAssignment()
     {
-        wcSession().setCourseOfferingRelationship(
-            assignment.courseOffering() );
+        coreSelections().setCourseOffering( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "EnterGrades" ).pageName() );

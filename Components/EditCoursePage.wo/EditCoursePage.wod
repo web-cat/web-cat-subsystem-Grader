@@ -20,7 +20,7 @@ AddTA: WOImageButton {
 
 CourseList: WOPopUpButton {
 	list              = courseDisplayGroup.allObjects;
-	selection         = session.courseOffering.course;
+	selection         = courseOffering.course;
 	item              = course;
 	displayString     = course.deptNumberAndName;
 }
@@ -31,7 +31,7 @@ CourseInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 CRN: WOTextField {
-    value = session.courseOffering.crn;
+    value = courseOffering.crn;
     size = 40;
 }
 
@@ -61,7 +61,7 @@ IsThisUser: WOConditional {
 }
 
 Label: WOTextField {
-    value = session.courseOffering.label;
+    value = courseOffering.label;
     size = 40;
 }
 
@@ -81,7 +81,7 @@ LastTATR: net.sf.webcat.core.TableRow {
 MoodleGroupId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = session.courseOffering.moodleGroupId;
+	value = courseOffering.moodleGroupId;
 }
 
 MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -92,7 +92,7 @@ MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
 MoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = session.courseOffering.moodleId;
+	value = courseOffering.moodleId;
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -144,7 +144,7 @@ SemesterInfo: net.sf.webcat.core.PopUpInfo {
 SemesterList: WOPopUpButton {
 	list              = semesters;
 	item              = aSemester;
-	selection         = session.courseOffering.semester;
+	selection         = courseOffering.semester;
 }
 
 TARepetition: WORepetition {
@@ -158,7 +158,7 @@ TR: net.sf.webcat.core.TableRow {
 }
 
 URL: WOTextField {
-    value = session.courseOffering.url;
+    value = courseOffering.url;
     size = 40;
 }
 

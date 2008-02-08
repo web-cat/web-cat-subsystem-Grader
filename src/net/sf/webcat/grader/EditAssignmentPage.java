@@ -313,7 +313,7 @@ public class EditAssignmentPage
             AssignmentOffering localAO = (AssignmentOffering)EOUtilities
                 .localInstanceOfObject( ec, thisAssignment );
             log.info( "cancelling all paused assignments: "
-                      + wcSession().courseOffering().course().deptNumber()
+                      + coreSelections().courseOffering().course().deptNumber()
                       + " "
                       + localAO.assignment().name() );
             NSArray jobList = localAO.getSuspendedSubs();

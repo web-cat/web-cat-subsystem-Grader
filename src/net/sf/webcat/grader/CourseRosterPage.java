@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class CourseRosterPage
-    extends GraderComponent
+    extends GraderCourseEditComponent
 {
     //~ Constructors ..........................................................
 
@@ -88,16 +88,12 @@ public class CourseRosterPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         // Set up student list filters
-        studentDisplayGroup.queryBindings().setObjectForKey(
-                wcSession().courseOffering(),
-                "courseOffering"
-            );
-        studentDisplayGroup.fetch();
+        studentDisplayGroup.setObjectArray( courseOffering().students() );
         notStudentDisplayGroup.setQualifier( new EONotQualifier(
             new EOKeyValueQualifier(
                 User.ENROLLED_IN_KEY,
                 EOQualifier.QualifierOperatorContains,
-                wcSession().courseOffering()
+                courseOffering()
             ) ) );
         if ( firstLoad )
         {
@@ -193,8 +189,8 @@ public class CourseRosterPage
      */
     public WOComponent removeStudent()
     {
-        wcSession().courseOffering().removeFromStudentsRelationship( student );
-        wcSession().commitLocalChanges();
+        courseOffering().removeFromStudentsRelationship( student );
+        applyLocalChanges();
         return null;
     }
 
@@ -206,8 +202,8 @@ public class CourseRosterPage
      */
     public WOComponent addStudent()
     {
-        wcSession().courseOffering().addToStudentsRelationship( student );
-        wcSession().commitLocalChanges();
+        courseOffering().addToStudentsRelationship( student );
+        applyLocalChanges();
         return null;
     }
 

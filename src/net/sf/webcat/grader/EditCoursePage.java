@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 *  @version $Id$
 */
 public class EditCoursePage
-    extends GraderCourseComponent
+    extends GraderCourseEditComponent
 {
     //~ Constructors ..........................................................
 
@@ -82,8 +82,8 @@ public class EditCoursePage
             semesters =
                 Semester.objectsForFetchAll( wcSession().localContext() );
         }
-        instructorDisplayGroup.setMasterObject( wcSession().courseOffering() );
-        TADisplayGroup.setMasterObject( wcSession().courseOffering() );
+        instructorDisplayGroup.setMasterObject( courseOffering() );
+        TADisplayGroup.setMasterObject( courseOffering() );
         super.appendToResponse( arg0, arg1 );
     }
 
@@ -119,7 +119,7 @@ public class EditCoursePage
      */
     public WOComponent removeInstructor()
     {
-        wcSession().courseOffering().removeFromInstructorsRelationship( user );
+        courseOffering().removeFromInstructorsRelationship( user );
         return null;
     }
 
@@ -131,7 +131,7 @@ public class EditCoursePage
      */
     public WOComponent removeTA()
     {
-        wcSession().courseOffering().removeFromTAsRelationship( user );
+        courseOffering().removeFromTAsRelationship( user );
         return null;
     }
 
@@ -176,17 +176,65 @@ public class EditCoursePage
     {
         NSArray subs = Submission.objectsForEarliestForCourseOffering(
             wcSession().localContext(),
-            wcSession().courseOffering());
+            courseOffering());
         if (subs.count() > 0)
         {
             earliest = ((Submission)subs.objectAtIndex(0)).submitTime();
             subs = Submission.objectsForLatestForCourseOffering(
                 wcSession().localContext(),
-                wcSession().courseOffering());
+                courseOffering());
             latest = ((Submission)subs.objectAtIndex(0)).submitTime();
         }
         earliestAndLatestComputed = true;
         return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Extracts course offering identification from the given startup
+     * parameters.  Note that this is copied directly from
+     * {@link GraderCourseComponent}, but can't be inherited because of
+     * MI restrictions.
+     * @param params A dictionary of form values to decode
+     * @return True if successful, false if the parameter is missing
+     */
+    public boolean startWith( NSDictionary params )
+    {
+        boolean result = false;
+        String crn = stringValueForKey( params, CourseOffering.CRN_KEY );
+        if ( crn != null )
+        {
+            result = startWith( CourseOffering
+                .offeringForCrn( wcSession().localContext(), crn ) );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Sets the relevant course and course offering properties for this
+     * session.  Note that this is copied directly from
+     * {@link GraderCourseComponent}, but can't be inherited because of
+     * MI restrictions.
+     * @param offering the course offering to use for generating settings
+     * @return True if successful, false if the course offering is not valid
+     */
+    protected boolean startWith( CourseOffering offering )
+    {
+        boolean result = false;
+        User sessionUser = wcSession().user();
+        if ( offering != null
+             && ( sessionUser.enrolledIn().contains(  offering )
+                  || offering.isInstructor( sessionUser )
+                  || offering.isTA( sessionUser ) ) )
+        {
+            result = true;
+            coreSelections().setCourse( offering.course() );
+            coreSelections().setCourseOffering( offering );
+        }
+        return result;
     }
 
 

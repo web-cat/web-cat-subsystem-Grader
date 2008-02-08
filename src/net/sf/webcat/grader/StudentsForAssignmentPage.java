@@ -88,13 +88,13 @@ public class StudentsForAssignmentPage
             maxSubmission.clear();
         }
         NSMutableArray students =
-            wcSession().courseOffering().students().mutableClone();
+            coreSelections().courseOffering().students().mutableClone();
         er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
-            wcSession().courseOffering().instructors() );
+            coreSelections().courseOffering().instructors() );
         er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
-            wcSession().courseOffering().TAs() );
+            coreSelections().courseOffering().TAs() );
         NSMutableArray submissions = new NSMutableArray();
         highScore = 0.0;
         lowScore  = 0.0;

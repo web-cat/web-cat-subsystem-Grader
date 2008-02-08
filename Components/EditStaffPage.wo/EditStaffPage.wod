@@ -1,9 +1,9 @@
 CompactName: WOString {
-    value = session.courseOffering.compactName;
+    value = courseOffering.compactName;
 }
 
 CourseName: WOString {
-    value = session.courseOffering.course.name;
+    value = courseOffering.course.name;
 }
 
 UserRole: WOString {

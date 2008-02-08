@@ -79,7 +79,7 @@ public class PickAssignmentToEditPage
         assignmentDisplayGroup.setQualifier(
                 new EOKeyValueQualifier( AssignmentOffering.COURSE_OFFERING_KEY,
                                          EOQualifier.QualifierOperatorEqual,
-                                         wcSession().courseOffering() )
+                                         coreSelections().courseOffering() )
             );
         assignmentDisplayGroup.fetch();
         if ( assignmentDisplayGroup.displayedObjects().count() == 0 )

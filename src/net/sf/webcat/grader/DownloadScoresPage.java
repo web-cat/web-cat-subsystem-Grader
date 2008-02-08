@@ -130,10 +130,10 @@ public class DownloadScoresPage
         out.print( "Course" );
         out.print( "" );
         out.println(
-            wcSession().courseOffering().course().deptNumber() );
+            coreSelections().courseOffering().course().deptNumber() );
         out.print( "Semester" );
         out.print( "" );
-        out.println( wcSession().courseOffering().semester().name() );
+        out.println( coreSelections().courseOffering().semester().name() );
         out.print( "Assignment" );
         out.print( "" );
         out.println( prefs().assignmentOffering().assignment().name() );
@@ -238,24 +238,24 @@ public class DownloadScoresPage
     private void collectSubmissionsToExport()
     {
         NSMutableArray students =
-            wcSession().courseOffering().students().mutableClone();
+            coreSelections().courseOffering().students().mutableClone();
         if ( omitStaff )
         {
             students.removeObjectsInArray(
-                wcSession().courseOffering().instructors() );
+                coreSelections().courseOffering().instructors() );
             students.removeObjectsInArray(
-                wcSession().courseOffering().TAs() );
+                coreSelections().courseOffering().TAs() );
         }
         else
         {
             er.extensions.ERXArrayUtilities
                 .addObjectsFromArrayWithoutDuplicates(
                 students,
-                wcSession().courseOffering().instructors() );
+                coreSelections().courseOffering().instructors() );
             er.extensions.ERXArrayUtilities
                 .addObjectsFromArrayWithoutDuplicates(
                 students,
-                wcSession().courseOffering().TAs() );
+                coreSelections().courseOffering().TAs() );
         }
         submissionsToExport = new NSMutableArray();
         if ( students != null )
@@ -356,7 +356,7 @@ public class DownloadScoresPage
             (DeliverFile)pageWithName( DeliverFile.class.getName() );
         csvFile.setFileData( new NSData( rawData ) );
         csvFile.setFileName( new File( ""
-           + wcSession().courseOffering().crnSubdirName()
+           + coreSelections().courseOffering().crnSubdirName()
            + "-"
            + prefs().assignmentOffering().assignment().subdirName()
            + ".csv" ) );

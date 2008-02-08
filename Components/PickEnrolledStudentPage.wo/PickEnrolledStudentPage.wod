@@ -1,5 +1,5 @@
 CourseName: WOString {
-    value = session.courseOffering.deptNumberAndName;
+    value = coreSelections.courseOffering.deptNumberAndName;
 }
 
 Repetition1: WORepetition {

@@ -93,8 +93,8 @@ public class GraderCourseComponent
                   || offering.isTA( user ) ) )
         {
             result = true;
-            wcSession().setCourse( offering.course() );
-            wcSession().setCourseOffering( offering );
+            coreSelections().setCourse( offering.course() );
+            coreSelections().setCourseOffering( offering );
         }
         return result;
     }

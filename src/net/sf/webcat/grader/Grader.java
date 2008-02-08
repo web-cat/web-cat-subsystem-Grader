@@ -612,7 +612,8 @@ public class Grader
             return result.generateResponse();
         }
 
-        session.setCourseOfferingRelationship( assignment.courseOffering() );
+        genericGComp.coreSelections().setCourseOffering(
+            assignment.courseOffering() );
         genericGComp.prefs().setAssignmentOfferingRelationship( assignment );
         NSArray submissions = EOUtilities.objectsMatchingValues(
                 ec,

@@ -78,7 +78,7 @@ public class PickAssignmentToSubmitPage
         showHaltedMessage = false;
         NSTimestamp currentTime   = new NSTimestamp();
         NSMutableArray qualifiers = new NSMutableArray();
-        CourseOffering selectedCourse = wcSession().courseOffering();
+        CourseOffering selectedCourse = coreSelections().courseOffering();
         //
         // assignments for this course
         //

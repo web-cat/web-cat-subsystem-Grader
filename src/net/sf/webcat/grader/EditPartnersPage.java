@@ -86,7 +86,7 @@ public class EditPartnersPage
         }
         partnerDisplayGroup.setMasterObject( result );
         studentDisplayGroup.setMasterObject(
-            wcSession().courseOffering() );
+            coreSelections().courseOffering() );
         super.appendToResponse( response, context );
     }
 
@@ -128,7 +128,7 @@ public class EditPartnersPage
                          },
                     new Object[] { Submission.ASSIGNMENT_OFFERING_KEY,
                                    Submission.USER_KEY }
-                )                
+                )
             );
         for ( int i = 0; i < studentSubmissions.count(); i++ )
         {

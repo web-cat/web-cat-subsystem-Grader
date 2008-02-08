@@ -41,21 +41,21 @@ import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
- *  A specialized version of {@link WCComponent} that adds some extras
+ *  A specialized version of {@link WCCourseComponent} that adds some extras
  *  for use by components in the Grader subsystem.
  *
  *  @author  Stephen Edwards
  *  @version $Id$
  */
 public class GraderComponent
-    extends WCComponent
+    extends WCCourseComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * Creates a new GraderComponent object.
-     * 
+     *
      * @param context The context to use
      */
     public GraderComponent( WOContext context )
@@ -102,7 +102,7 @@ public class GraderComponent
                 // Just try again, in case this is a failure due to the
                 // use of shared contexts under Win2K
                 results = GraderPrefs.objectsForUser(
-                    wcSession().localContext(), prime );                
+                    wcSession().localContext(), prime );
             }
             if ( results.count() > 0 )
             {
@@ -262,15 +262,14 @@ public class GraderComponent
         try
         {
             NSArray oldJobs = EOUtilities.objectsMatchingValues(
-                            wcSession().localContext(),
-                            EnqueuedJob.ENTITY_NAME,
-                            new NSDictionary(
-                                new Object[] {  wcSession().user(),
-                                                submission.assignmentOffering()
-                                             },
-                                new Object[] { EnqueuedJob.USER_KEY,
-                                               EnqueuedJob.ASSIGNMENT_OFFERING_KEY }
-                            ) );
+                    wcSession().localContext(),
+                    EnqueuedJob.ENTITY_NAME,
+                    new NSDictionary(
+                        new Object[] {  wcSession().user(),
+                                        submission.assignmentOffering()    },
+                        new Object[] { EnqueuedJob.USER_KEY,
+                                       EnqueuedJob.ASSIGNMENT_OFFERING_KEY }
+                ) );
             for ( int i = 0; i < oldJobs.count(); i++ )
             {
                 EnqueuedJob job = (EnqueuedJob)oldJobs.objectAtIndex( i );
@@ -291,7 +290,7 @@ public class GraderComponent
         wcSession().commitLocalChanges();
 
         Grader.getInstance().graderQueue().enqueue( null );
-        
+
         prefs().clearUpload();
         prefs().setSubmissionInProcess( false );
 

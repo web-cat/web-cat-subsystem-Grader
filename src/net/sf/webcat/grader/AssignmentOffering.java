@@ -526,7 +526,9 @@ public class AssignmentOffering
      */
     public boolean isLate()
     {
-        return dueDate().before( new NSTimestamp() );
+        return ( dueDate() == null )
+            ? false
+            : dueDate().before( new NSTimestamp() );
     }
 
 

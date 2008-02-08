@@ -83,6 +83,7 @@ public class PickCourseEnrolledPage
     // ----------------------------------------------------------
     public void awake()
     {
+        super.awake();
         log.debug( "awake()" );
         selectedCourseIndex     = -1;
         selectedTAIndex         = -1;
@@ -150,7 +151,7 @@ public class PickCourseEnrolledPage
             error( "Web-CAT has no record of your course enrollments "
                           + "for this semester." );
         }
-        CourseOffering selectedCourse = wcSession().courseOffering();
+        CourseOffering selectedCourse = coreSelections().courseOffering();
         if ( selectedCourse != null )
         {
             selectedCourseIndex =
@@ -197,7 +198,7 @@ public class PickCourseEnrolledPage
                  && selectedInstructorIndex == NSArray.NotFound
                  && selectedAdminIndex == NSArray.NotFound )
             {
-                wcSession().setCourseOfferingRelationship( null );
+                coreSelections().setCourseOffering( null );
                 selectedCourse = null;
             }
         }
@@ -206,7 +207,7 @@ public class PickCourseEnrolledPage
             if ( courseDisplayGroup.displayedObjects().count() > 0 )
             {
                 selectedCourseIndex = 0;
-                wcSession().setCourseOfferingRelationship(
+                coreSelections().setCourseOffering(
                      (CourseOffering)courseDisplayGroup.displayedObjects().
                          objectAtIndex( selectedCourseIndex )
                 );
@@ -214,7 +215,7 @@ public class PickCourseEnrolledPage
             else if ( coursesTAed.count() > 0 )
             {
                 selectedTAIndex = courseDisplayGroup.displayedObjects().count();
-                wcSession().setCourseOfferingRelationship(
+                coreSelections().setCourseOffering(
                      (CourseOffering)coursesTAed.
                          objectAtIndex( 0 ) );
             }
@@ -223,7 +224,7 @@ public class PickCourseEnrolledPage
                 selectedInstructorIndex =
                     courseDisplayGroup.displayedObjects().count()
                     + coursesTAed.count();
-                wcSession().setCourseOfferingRelationship(
+                coreSelections().setCourseOffering(
                      (CourseOffering)coursesTaught.objectAtIndex( 0 ) );
             }
             else if ( coursesAdmined.count() > 0 )
@@ -232,7 +233,7 @@ public class PickCourseEnrolledPage
                     courseDisplayGroup.displayedObjects().count()
                     + coursesTAed.count()
                     + coursesTaught.count();
-                wcSession().setCourseOfferingRelationship(
+                coreSelections().setCourseOffering(
                      (CourseOffering)coursesAdmined.objectAtIndex( 0 ) );
             }
         }
@@ -263,7 +264,7 @@ public class PickCourseEnrolledPage
         if ( selectedCourseIndex >= 0 )
         {
             log.debug( "choosing enrolled course " + selectedCourseIndex );
-            wcSession().setCourseOfferingRelationship(
+            coreSelections().setCourseOffering(
                 (CourseOffering)courseDisplayGroup.displayedObjects()
                     .objectAtIndex( selectedCourseIndex ) );
             return super.next();
@@ -272,7 +273,7 @@ public class PickCourseEnrolledPage
         {
             selectedTAIndex -= courseDisplayGroup.displayedObjects().count();
             log.debug( "choosing TAed course " + selectedTAIndex );
-            wcSession().setCourseOfferingRelationship(
+            coreSelections().setCourseOffering(
                 (CourseOffering)coursesTAed
                     .objectAtIndex( selectedTAIndex ) );
             return super.next();
@@ -283,7 +284,7 @@ public class PickCourseEnrolledPage
                 courseDisplayGroup.displayedObjects().count();
             selectedInstructorIndex -= coursesTAed.count();
             log.debug( "choosing taught course " + selectedInstructorIndex );
-            wcSession().setCourseOfferingRelationship(
+            coreSelections().setCourseOffering(
                 (CourseOffering)coursesTaught
                     .objectAtIndex( selectedInstructorIndex ) );
             return super.next();
@@ -295,7 +296,7 @@ public class PickCourseEnrolledPage
             selectedAdminIndex -= coursesTAed.count();
             selectedAdminIndex -= coursesTaught.count();
             log.debug( "choosing admin'ed course " + selectedInstructorIndex );
-            wcSession().setCourseOfferingRelationship(
+            coreSelections().setCourseOffering(
                 (CourseOffering)coursesAdmined
                     .objectAtIndex( selectedAdminIndex ) );
             return super.next();

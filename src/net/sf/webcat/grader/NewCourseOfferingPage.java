@@ -40,7 +40,7 @@ import net.sf.webcat.core.*;
  *  @version $Id$
  */
 public class NewCourseOfferingPage
-    extends GraderComponent
+    extends GraderCourseEditComponent
 {
     //~ Constructors ..........................................................
 
@@ -94,10 +94,10 @@ public class NewCourseOfferingPage
                 ));
         }
         courseDisplayGroup.updateDisplayedObjects();
-        if ( wcSession().courseOffering() != null )
+        if ( coreSelections().courseOffering() != null )
         {
-            wcSession().setCourseRelationship(
-                            wcSession().courseOffering().course() );
+            coreSelections().setCourse(
+                coreSelections().courseOffering().course() );
         }
         super.appendToResponse( response, context );
     }
@@ -119,21 +119,22 @@ public class NewCourseOfferingPage
      */
     public WOComponent next()
     {
-        if (wcSession().course() == null)
+        if (coreSelections().course() == null)
         {
             error( "Please select a course." );
             return null;
         }
         CourseOffering newOffering = new CourseOffering();
         wcSession().localContext().insertObject( newOffering );
-        newOffering.setCourseRelationship( wcSession().course() );
+        newOffering.setCourseRelationship( coreSelections().course() );
         // TODO: use date-based search instead of just creation ordering
         NSArray semesters = EOUtilities.objectsForEntityNamed(
                         wcSession().localContext(), Semester.ENTITY_NAME );
         newOffering.setSemesterRelationship(
                         (Semester)semesters.lastObject() );
         newOffering.addToInstructorsRelationship( wcSession().user() );
-        wcSession().setCourseOfferingRelationship( newOffering );
+        // wcSession().setCourseOfferingRelationship( newOffering );
+        setCourseOffering(newOffering);
         return super.next();
     }
 }

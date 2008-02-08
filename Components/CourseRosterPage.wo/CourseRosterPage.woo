@@ -4,22 +4,6 @@
     variables = {
         studentDisplayGroup = {
             class = WODisplayGroup;
-            dataSource = {
-                class = EODatabaseDataSource;
-                editingContext = session.localContext;
-                fetchSpecification = {
-                    class = EOFetchSpecification;
-                    entityName = User;
-                    fetchLimit = 0;
-                    isDeep = NO;
-                    qualifier = {
-                        class = EOKeyValueQualifier;
-                        key = enrolledIn;
-                        selectorName = "isEqualTo:";
-                        value = {_key = courseOffering; class = EOQualifierVariable; };
-                    };
-                };
-            };
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();

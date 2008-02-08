@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class EditStaffPage
-    extends GraderComponent
+    extends GraderCourseEditComponent
 {
     //~ Constructors ..........................................................
 
@@ -78,13 +78,14 @@ public class EditStaffPage
                     ? "instructor"
                     : "TA" )
             + " list";
-        staffDisplayGroup.setMasterObject( wcSession().courseOffering() );
+        staffDisplayGroup.setMasterObject( courseOffering() );
         staffDisplayGroup.setDetailKey( editInstructors
                         ? CourseOffering.INSTRUCTORS_KEY
                         : CourseOffering.TAS_KEY );
         staffDisplayGroup.fetch();
-        log.debug( "current size = " + potentialDisplayGroup.numberOfObjectsPerBatch()
-                   + " current index = " + potentialDisplayGroup.currentBatchIndex() );
+        log.debug(
+            "current size = " + potentialDisplayGroup.numberOfObjectsPerBatch()
+            + " current index = " + potentialDisplayGroup.currentBatchIndex() );
         oldBatchSize  = potentialDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = potentialDisplayGroup.currentBatchIndex();
         potentialDisplayGroup.queryBindings().setObjectForKey(
@@ -128,8 +129,7 @@ public class EditStaffPage
     {
         if ( editInstructors )
         {
-            wcSession().courseOffering().addToInstructorsRelationship(
-                            user );
+            courseOffering().addToInstructorsRelationship( user );
         }
         else
         {
@@ -137,7 +137,7 @@ public class EditStaffPage
             {
                 user.setAccessLevel( User.GTA_PRIVILEGES );
             }
-            wcSession().courseOffering().addToTAsRelationship( user );
+            courseOffering().addToTAsRelationship( user );
         }
         return null;
     }
@@ -148,13 +148,11 @@ public class EditStaffPage
     {
         if ( editInstructors )
         {
-            wcSession().courseOffering().removeFromInstructorsRelationship(
-                            user );
+            courseOffering().removeFromInstructorsRelationship( user );
         }
         else
         {
-            wcSession().courseOffering().removeFromTAsRelationship(
-                            user );
+            courseOffering().removeFromTAsRelationship( user );
         }
         return null;
     }

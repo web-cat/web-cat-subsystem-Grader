@@ -118,11 +118,11 @@ public class CreateAssignmentPage
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
                     Assignment.objectsForReuseInCourse(
                         wcSession().localContext(),
-                        wcSession().courseOffering().course(),
-                        wcSession().courseOffering()
+                        coreSelections().courseOffering().course(),
+                        coreSelections().courseOffering()
                     ),
                     new Assignment.NonDuplicateAssignmentNameQualifier(
-                        wcSession().courseOffering()
+                        coreSelections().courseOffering()
                     )
                 );
             assignmentDisplayGroup.setObjectArray( reusableAssignments );
@@ -210,7 +210,7 @@ public class CreateAssignmentPage
     public void configureNewAssignmentOffering( NSTimestamp commonDueDate )
     {
         AssignmentOffering newOffering = prefs().assignmentOffering();
-        newOffering.setCourseOffering( wcSession().courseOffering() );
+        newOffering.setCourseOffering( coreSelections().courseOffering() );
         if ( commonDueDate != null )
         {
             newOffering.setDueDate( commonDueDate );
@@ -262,7 +262,7 @@ public class CreateAssignmentPage
             NSMutableArray others =
                 AssignmentOffering.offeringsWithSimilarNames(
                     wcSession().localContext(), name1,
-                    wcSession().courseOffering(), 2 );
+                    coreSelections().courseOffering(), 2 );
             if ( others.count() > 1 )
             {
                 AssignmentOffering ao1 =
