@@ -286,8 +286,7 @@ public class EditScriptFilesPage
     public boolean nextEnabled()
     {
         return !hideNextBack
-            && ( nextPage != null
-                 || wcSession().currentTab().hasNextSibling() );
+            && ( nextPage != null || currentTab().hasNextSibling() );
     }
 
 

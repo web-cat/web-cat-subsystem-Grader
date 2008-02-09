@@ -77,7 +77,7 @@ LongResponse : net.sf.webcat.core.LongResponse {
 Page : net.sf.webcat.core.BarePage {
 //    title      = title;
     stylesheet = "Grader.framework/WebServerResources/wc-code.css";
-    bodyClass  = session.currentTab.cssClass;
+    bodyClass  = currentTab.cssClass;
     onLoad     = "expandAll()";
 }
 

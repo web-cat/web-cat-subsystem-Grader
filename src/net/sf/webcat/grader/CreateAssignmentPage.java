@@ -167,10 +167,10 @@ public class CreateAssignmentPage
         log.debug( "next page = " + next );
         log.debug( "next page class = " + next.getClass().getName() );
         if ( next instanceof PickAssignmentToEditPage
-           && wcSession().currentTab().hasNextSibling() )
+           && currentTab().hasNextSibling() )
         {
-            next = pageWithName( wcSession().currentTab().nextSibling()
-                .select().pageName() );
+            next = pageWithName(
+                currentTab().nextSibling().select().pageName() );
         }
         return next;
     }
