@@ -70,7 +70,7 @@ public abstract class _EnqueuedJob
      * @param regrading
      * @return The newly created object
      */
-    public static EnqueuedJob createEnqueuedJob(
+    public static EnqueuedJob create(
         EOEditingContext editingContext,
         boolean discarded,
         boolean paused,

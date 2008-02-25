@@ -71,7 +71,7 @@ public abstract class _AssignmentOffering
      * @param updateMutableFields
      * @return The newly created object
      */
-    public static AssignmentOffering createAssignmentOffering(
+    public static AssignmentOffering create(
         EOEditingContext editingContext,
         boolean gradingSuspended,
         boolean publish,

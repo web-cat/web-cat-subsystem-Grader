@@ -71,7 +71,7 @@ public abstract class _ScriptFile
      * @param updateMutableFields
      * @return The newly created object
      */
-    public static ScriptFile createScriptFile(
+    public static ScriptFile create(
         EOEditingContext editingContext,
         boolean isConfigFile,
         boolean isPublished,

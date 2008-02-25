@@ -68,7 +68,7 @@ public abstract class _Submission
      * @param partnerLink
      * @return The newly created object
      */
-    public static Submission createSubmission(
+    public static Submission create(
         EOEditingContext editingContext,
         boolean partnerLink
         )

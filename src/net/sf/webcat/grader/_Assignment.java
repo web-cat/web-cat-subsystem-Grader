@@ -67,7 +67,7 @@ public abstract class _Assignment
      * inserted
      * @return The newly created object
      */
-    public static Assignment createAssignment(
+    public static Assignment create(
         EOEditingContext editingContext
         )
     {

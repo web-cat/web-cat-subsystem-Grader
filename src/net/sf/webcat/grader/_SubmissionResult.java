@@ -68,7 +68,7 @@ public abstract class _SubmissionResult
      * @param isMostRecent
      * @return The newly created object
      */
-    public static SubmissionResult createSubmissionResult(
+    public static SubmissionResult create(
         EOEditingContext editingContext,
         boolean isMostRecent
         )

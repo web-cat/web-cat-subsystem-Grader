@@ -67,7 +67,7 @@ public abstract class _ResultFile
      * inserted
      * @return The newly created object
      */
-    public static ResultFile createResultFile(
+    public static ResultFile create(
         EOEditingContext editingContext
         )
     {

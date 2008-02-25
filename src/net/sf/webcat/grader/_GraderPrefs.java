@@ -67,7 +67,7 @@ public abstract class _GraderPrefs
      * inserted
      * @return The newly created object
      */
-    public static GraderPrefs createGraderPrefs(
+    public static GraderPrefs create(
         EOEditingContext editingContext
         )
     {

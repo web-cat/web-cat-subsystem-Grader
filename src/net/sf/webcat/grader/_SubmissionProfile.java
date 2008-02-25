@@ -70,7 +70,7 @@ public abstract class _SubmissionProfile
      * @param submissionMethod
      * @return The newly created object
      */
-    public static SubmissionProfile createSubmissionProfile(
+    public static SubmissionProfile create(
         EOEditingContext editingContext,
         boolean awardEarlyBonus,
         boolean deductLatePenalty,

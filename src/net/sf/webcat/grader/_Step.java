@@ -69,7 +69,7 @@ public abstract class _Step
      * @param updateMutableFields
      * @return The newly created object
      */
-    public static Step createStep(
+    public static Step create(
         EOEditingContext editingContext,
         boolean updateMutableFields
         )

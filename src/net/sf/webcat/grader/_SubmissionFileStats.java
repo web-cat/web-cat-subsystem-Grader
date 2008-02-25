@@ -67,7 +67,7 @@ public abstract class _SubmissionFileStats
      * inserted
      * @return The newly created object
      */
-    public static SubmissionFileStats createSubmissionFileStats(
+    public static SubmissionFileStats create(
         EOEditingContext editingContext
         )
     {

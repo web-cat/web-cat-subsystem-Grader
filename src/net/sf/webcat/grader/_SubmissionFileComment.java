@@ -68,7 +68,7 @@ public abstract class _SubmissionFileComment
      * @param limitExceeded
      * @return The newly created object
      */
-    public static SubmissionFileComment createSubmissionFileComment(
+    public static SubmissionFileComment create(
         EOEditingContext editingContext,
         boolean limitExceeded
         )

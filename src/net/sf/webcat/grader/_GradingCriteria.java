@@ -77,7 +77,7 @@ public abstract class _GradingCriteria
      * @param trimWhitespace
      * @return The newly created object
      */
-    public static GradingCriteria createGradingCriteria(
+    public static GradingCriteria create(
         EOEditingContext editingContext,
         boolean diffLineSyncing,
         boolean floatComparisonStyle,
