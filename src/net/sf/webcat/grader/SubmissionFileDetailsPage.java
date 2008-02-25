@@ -71,7 +71,7 @@ public class SubmissionFileDetailsPage
     // ----------------------------------------------------------
     /**
      * Adds to the response of the page
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -96,8 +96,8 @@ public class SubmissionFileDetailsPage
     {
         try
         {
-            String result = thisFile.codeWithComments( 
-                wcSession().user(), false );
+            String result = thisFile.codeWithComments(
+                user(), false );
             return result;
         }
         catch ( Exception e )
@@ -109,8 +109,8 @@ public class SubmissionFileDetailsPage
             return null;
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public WOComponent viewNextFile()
     {
@@ -123,7 +123,7 @@ public class SubmissionFileDetailsPage
         else
         {
             prefs().setSubmissionFileStatsRelationship( selectedFile );
-            prefs().setSubmission(
+            prefs().setSubmissionRelationship(
                 selectedFile.submissionResult().submission() );
             SubmissionFileDetailsPage statsPage = (SubmissionFileDetailsPage)
                 pageWithName(

@@ -6,7 +6,7 @@
             class = WODisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
-                editingContext = session.localContext;
+                editingContext = localContext;
                 fetchSpecification = {
                     class = EOFetchSpecification;
                     entityName = AuthenticationDomain;

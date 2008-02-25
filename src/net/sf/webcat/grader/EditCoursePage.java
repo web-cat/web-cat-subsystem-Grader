@@ -80,7 +80,7 @@ public class EditCoursePage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( wcSession().localContext() );
+                Semester.objectsForFetchAll( localContext() );
         }
         instructorDisplayGroup.setMasterObject( courseOffering() );
         TADisplayGroup.setMasterObject( courseOffering() );
@@ -108,7 +108,7 @@ public class EditCoursePage
      */
     public boolean matchesUser()
     {
-        return user == wcSession().user();
+        return user == user();
     }
 
 
@@ -167,6 +167,35 @@ public class EditCoursePage
 
 
     // ----------------------------------------------------------
+    public WOComponent deleteActionOk()
+    {
+        if (!applyLocalChanges()) return null;
+        CourseOffering thisOffering = courseOffering();
+        setCourseOffering(null);
+        coreSelections().setCourseOfferingRelationship( null );
+        localContext().deleteObject(thisOffering);
+        return finish();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent delete()
+    {
+        ConfirmPage confirmPage = null;
+        confirmPage =
+            (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+        confirmPage.nextPage       = this;
+        confirmPage.message        =
+            "This action will <b>delete the course offering</b>. "
+            + "This action cannot be undone.</p>";
+        confirmPage.actionReceiver = this;
+        confirmPage.actionOk       = "deleteActionOk";
+        confirmPage.setTitle( "Confirm Delete Request" );
+        return confirmPage;
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Find the dates of the earliest and latest submissions for
      * any assignment associated with this course.
@@ -175,14 +204,12 @@ public class EditCoursePage
     public WOComponent computeSubmissionDateRange()
     {
         NSArray subs = Submission.objectsForEarliestForCourseOffering(
-            wcSession().localContext(),
-            courseOffering());
+            localContext(), courseOffering());
         if (subs.count() > 0)
         {
             earliest = ((Submission)subs.objectAtIndex(0)).submitTime();
             subs = Submission.objectsForLatestForCourseOffering(
-                wcSession().localContext(),
-                courseOffering());
+                localContext(), courseOffering());
             latest = ((Submission)subs.objectAtIndex(0)).submitTime();
         }
         earliestAndLatestComputed = true;
@@ -206,7 +233,7 @@ public class EditCoursePage
         if ( crn != null )
         {
             result = startWith( CourseOffering
-                .offeringForCrn( wcSession().localContext(), crn ) );
+                .offeringForCrn( localContext(), crn ) );
         }
         return result;
     }
@@ -224,15 +251,15 @@ public class EditCoursePage
     protected boolean startWith( CourseOffering offering )
     {
         boolean result = false;
-        User sessionUser = wcSession().user();
+        User sessionUser = user();
         if ( offering != null
              && ( sessionUser.enrolledIn().contains(  offering )
                   || offering.isInstructor( sessionUser )
                   || offering.isTA( sessionUser ) ) )
         {
             result = true;
-            coreSelections().setCourse( offering.course() );
-            coreSelections().setCourseOffering( offering );
+            coreSelections().setCourseRelationship( offering.course() );
+            coreSelections().setCourseOfferingRelationship( offering );
         }
         return result;
     }

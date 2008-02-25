@@ -52,7 +52,7 @@ extends WCComponent
     // ----------------------------------------------------------
     /**
      * Creates a new page object.
-     * 
+     *
      * @param context The context to use
      */
     public PluginManagerPage( WOContext context )
@@ -77,7 +77,7 @@ extends WCComponent
     public static final String TERSE_DESCRIPTIONS_KEY =
         "tersePluginDescriptions";
 
-    
+
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
@@ -85,14 +85,14 @@ extends WCComponent
     {
         terse = null;
         publishedPluginGroup.fetch();
-        if ( wcSession().user().hasAdminPrivileges() )
+        if ( user().hasAdminPrivileges() )
         {
             unpublishedPluginGroup.fetch();
         }
         else
         {
             personalPluginGroup.queryBindings().setObjectForKey(
-                wcSession().user(),
+                user(),
                 "user"
             );
             personalPluginGroup.fetch();
@@ -144,13 +144,16 @@ extends WCComponent
         possibleErrorMessage( msg );
         if ( msg == null )
         {
-            wcSession().commitLocalChanges();
-            confirmationMessage( "The plug-in '" + plugin.name()
-                + "' has been downloaded from its provider and re-installed." );
+            if (applyLocalChanges())
+            {
+                confirmationMessage( "The plug-in '" + plugin.name()
+                    + "' has been downloaded from its provider and "
+                    + "re-installed." );
+            }
         }
         else
         {
-            wcSession().cancelLocalChanges();
+            cancelLocalChanges();
         }
         return null;
     }
@@ -164,17 +167,19 @@ extends WCComponent
     public WOComponent downloadNew()
     {
         String msg =
-            ScriptFile.installOrUpdate( wcSession().user(), feature, false );
+            ScriptFile.installOrUpdate( user(), feature, false );
         possibleErrorMessage( msg );
         if ( msg == null )
         {
-            wcSession().commitLocalChanges();
-            confirmationMessage( "New plug-in '" + feature.name()
-                + "' has been downloaded and installed." );
+            if (applyLocalChanges())
+            {
+                confirmationMessage( "New plug-in '" + feature.name()
+                    + "' has been downloaded and installed." );
+            }
         }
         else
         {
-            wcSession().cancelLocalChanges();
+            cancelLocalChanges();
         }
         newPlugins = null;
         return null;
@@ -216,7 +221,7 @@ extends WCComponent
      */
     public boolean canEditPlugin()
     {
-        User user = wcSession().user();
+        User user = user();
         return user.hasAdminPrivileges() || user == plugin.author();
     }
 
@@ -249,9 +254,9 @@ extends WCComponent
             pageWithName( EditScriptFilesPage.class.getName() );
         newPage.nextPage = this;
         newPage.scriptFile = plugin;
-        newPage.hideNextAndBack( true );        
-        newPage.isEditable = wcSession().user().hasAdminPrivileges() ||
-            wcSession().user().equals( plugin.author() );
+        newPage.hideNextAndBack( true );
+        newPage.isEditable = user().hasAdminPrivileges() ||
+            user().equals( plugin.author() );
         return newPage;
     }
 
@@ -305,15 +310,15 @@ extends WCComponent
             return null;
         }
         ScriptFile.createNewScriptFile(
-            wcSession().localContext(),
-            wcSession().user(),
+            localContext(),
+            user(),
             uploadedName,
             uploadedData,
             false,
             true,
             messages()
         );
-        wcSession().commitLocalChanges();
+        applyLocalChanges();
         uploadedName = null;
         uploadedData = null;
         newPlugins = null;
@@ -329,10 +334,10 @@ extends WCComponent
     public WOComponent togglePublished()
     {
         plugin.setIsPublished( !plugin.isPublished() );
-        wcSession().commitLocalChanges();
+        applyLocalChanges();
         return null;
     }
-    
+
 
     // ----------------------------------------------------------
     /**
@@ -351,9 +356,11 @@ extends WCComponent
         }
         else
         {
-            wcSession().commitLocalChanges();
-            confirmationMessage( "Configuration definition for plug-in '"
-                + plugin.name() + "' has been reloaded." );
+            if (applyLocalChanges())
+            {
+                confirmationMessage( "Configuration definition for plug-in '"
+                    + plugin.name() + "' has been reloaded." );
+            }
         }
         return null;
     }
@@ -369,12 +376,11 @@ extends WCComponent
     public void toggleVerboseDescriptions()
     {
         boolean verboseDescriptions = ERXValueUtilities.booleanValue(
-            wcSession().userPreferences.objectForKey(
-                TERSE_DESCRIPTIONS_KEY ) );
+            user().preferences().objectForKey( TERSE_DESCRIPTIONS_KEY ) );
         verboseDescriptions = !verboseDescriptions;
-        wcSession().userPreferences.setObjectForKey(
+        user().preferences().setObjectForKey(
             Boolean.valueOf( verboseDescriptions ), TERSE_DESCRIPTIONS_KEY );
-        wcSession().commitLocalChanges();
+        user().savePreferences();
     }
 
 
@@ -390,8 +396,7 @@ extends WCComponent
         if ( terse == null )
         {
             terse = ERXValueUtilities.booleanValue(
-                wcSession().userPreferences.objectForKey(
-                    TERSE_DESCRIPTIONS_KEY ) )
+                user().preferences().objectForKey( TERSE_DESCRIPTIONS_KEY ) )
                 ? Boolean.TRUE : Boolean.FALSE;
         }
         return terse;

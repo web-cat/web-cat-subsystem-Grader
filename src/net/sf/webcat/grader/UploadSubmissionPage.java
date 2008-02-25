@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class UploadSubmissionPage
-    extends GraderAssignmentComponent
+    extends GraderSubmissionUploadComponent
 {
     //~ Constructors ..........................................................
 
@@ -82,12 +82,12 @@ public class UploadSubmissionPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "primeUser = " + wcSession().primeUser()
-                   + ", localUser = " + wcSession().user() );
+                   + ", localUser = " + user() );
         NSArray submissions = EOUtilities.objectsMatchingValues(
-                wcSession().localContext(),
+                localContext(),
                 Submission.ENTITY_NAME,
                 new NSDictionary(
-                        new Object[] {  wcSession().user(),
+                        new Object[] {  user(),
                                         prefs().assignmentOffering()
                                      },
                         new Object[] {  Submission.USER_KEY,
@@ -114,7 +114,7 @@ public class UploadSubmissionPage
 
         if ( okayToSubmit )
         {
-            startSubmission( currentSubNo, wcSession().user() );
+            startSubmission( currentSubNo, user() );
         }
 
         log.debug( "due = "
@@ -132,9 +132,9 @@ public class UploadSubmissionPage
         super.appendToResponse( response, context );
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
-        cachedUploadedFile     = prefs().uploadedFile();
-        cachedUploadedFileName = prefs().uploadedFileName();
-        cachedUploadedFileList = prefs().uploadedFileList();
+        cachedUploadedFile     = submissionInProcess().uploadedFile();
+        cachedUploadedFileName = submissionInProcess().uploadedFileName();
+        cachedUploadedFileList = submissionInProcess().uploadedFileList();
     }
 
 
@@ -184,9 +184,11 @@ public class UploadSubmissionPage
             log.debug( "deadline = " + deadline );
             log.debug( "now = " + ( new NSTimestamp() ) );
             CourseOffering course = prefs().assignmentOffering().courseOffering();
+            User primeUser =
+                wcSession().primeUser().localInstance(localContext());
             if ( deadline.before( new NSTimestamp() )
-                 && !course.isInstructor( wcSession().primeUser() )
-                 && !course.isTA( wcSession().primeUser() ) )
+                 && !course.isInstructor( primeUser )
+                 && !course.isTA( primeUser ) )
             {
                 error(
                     "Unfortunately, the final deadline for this assignment "
@@ -194,23 +196,23 @@ public class UploadSubmissionPage
                 return null;
             }
             boolean clearFileList = true;
-            if ( !prefs().hasValidFileUpload() )
+            if ( !submissionInProcess().hasValidFileUpload() )
             {
-                prefs().setUploadedFile( cachedUploadedFile );
-                prefs().setUploadedFileName( cachedUploadedFileName );
-                prefs().setUploadedFileList( cachedUploadedFileList );
+                submissionInProcess().setUploadedFile( cachedUploadedFile );
+                submissionInProcess().setUploadedFileName( cachedUploadedFileName );
+                submissionInProcess().setUploadedFileList( cachedUploadedFileList );
                 clearFileList = false;
             }
-            if ( !prefs().hasValidFileUpload() )
+            if ( !submissionInProcess().hasValidFileUpload() )
             {
                 error( "Please select a file to upload." );
                 return null;
             }
             if ( clearFileList )
             {
-                prefs().setUploadedFileList( null );
+                submissionInProcess().setUploadedFileList( null );
             }
-            if ( prefs().uploadedFile().length() >
+            if ( submissionInProcess().uploadedFile().length() >
                  prefs().assignmentOffering().assignment()
                      .submissionProfile().effectiveMaxFileUploadSize() )
             {
@@ -265,7 +267,7 @@ public class UploadSubmissionPage
     public String uploadedFileSize()
     {
         long size = 0L;
-        NSData file = prefs().uploadedFile();
+        NSData file = submissionInProcess().uploadedFile();
         if ( file != null )
         {
             size = file.length();
@@ -298,7 +300,7 @@ public class UploadSubmissionPage
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
     }

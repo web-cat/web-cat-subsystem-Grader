@@ -269,7 +269,7 @@ public class DownloadScoresPage
                 Submission gradedSubmission = null;
                 // Find the submission
                 NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
-                        wcSession().localContext(),
+                        localContext(),
                         Submission.ENTITY_NAME,
                         new NSDictionary(
                             new Object[] {

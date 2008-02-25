@@ -454,7 +454,7 @@ public class FinalReportPage
                 }
                 else
                 {
-                    answer = ao.userCanSubmit( wcSession().localUser() );
+                    answer = ao.userCanSubmit( user() );
                 }
             }
         }
@@ -527,7 +527,7 @@ public class FinalReportPage
                             } )
                     );
             jobData.jobs =
-                wcSession().localContext().objectsWithFetchSpecification(
+                localContext().objectsWithFetchSpecification(
                     fetchSpec
                 );
             jobData.queueSize = jobData.jobs.count();

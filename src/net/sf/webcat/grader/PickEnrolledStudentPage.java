@@ -81,7 +81,7 @@ public class PickEnrolledStudentPage
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
     }

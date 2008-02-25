@@ -86,13 +86,13 @@ public class PickSubmissionPage
     {
         log.debug( "entering appendToResponse()" );
         selectedIndex = -1;
-        User user = wcSession().user();
+        User user = user();
         if ( prefs().submission() != null )
         {
             user = prefs().submission().user();
         }
         submissions = EOUtilities.objectsMatchingValues(
-                wcSession().localContext(),
+                localContext(),
                 Submission.ENTITY_NAME,
                 new NSDictionary(
                         new Object[] {  user,
@@ -218,7 +218,7 @@ public class PickSubmissionPage
         boolean result = false;
         if ( prefs().submission() != null )
         {
-            result = wcSession().user() != prefs().submission().user();
+            result = user() != prefs().submission().user();
         }
         return result;
     }

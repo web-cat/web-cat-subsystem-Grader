@@ -120,7 +120,7 @@ public class EditPartnersPage
     {
         int submitNumber = 1;
         NSArray studentSubmissions = EOUtilities.objectsMatchingValues(
-                wcSession().localContext(),
+                localContext(),
                 Submission.ENTITY_NAME,
                 new NSDictionary(
                     new Object[] { prefs().assignmentOffering(),
@@ -143,9 +143,7 @@ public class EditPartnersPage
         // Don't need the return value: we just want it to be created, and
         // partnerSubmission() will save the changes to the DB
         prefs().submission().partnerSubmission(
-                student,
-                submitNumber,
-                wcSession().localContext() );
+                student, submitNumber, localContext() );
         return null;
     }
 
@@ -159,7 +157,7 @@ public class EditPartnersPage
         log.debug( "removing submission " + partnerSubmission.submitNumber()
                    + " for " + partnerSubmission.user().userName() );
         partnerSubmission.setResultRelationship( null );
-        wcSession().localContext().deleteObject( partnerSubmission );
+        localContext().deleteObject( partnerSubmission );
         return null;
     }
 

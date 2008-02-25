@@ -102,7 +102,7 @@ public class GraderCourseEditComponent
         boolean result = super.applyLocalChanges();
         if (result && offering != null)
         {
-            coreSelections().setCourseOffering(offering);
+            coreSelections().setCourseOfferingRelationship(offering);
         }
         return result;
     }

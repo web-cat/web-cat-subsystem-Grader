@@ -159,7 +159,7 @@ public class PickAssignmentToEditPage
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
     }
@@ -193,9 +193,9 @@ public class PickAssignmentToEditPage
      */
     public boolean assignmentHasSuspendedSubs()
     {
-        return ( wcSession().user().hasAdminPrivileges()
+        return ( user().hasAdminPrivileges()
                  || anAssignmentOffering.courseOffering().instructors()
-                     .containsObject( wcSession().user() ) )
+                     .containsObject( user() ) )
                && anAssignmentOffering.getSuspendedSubs().count() > 0;
     }
 

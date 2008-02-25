@@ -100,8 +100,8 @@ public class PickAssignmentToSubmitPage
             //
             // assigments which are still open
             //
-            if ( !(  selectedCourse.isInstructor( wcSession().user() )
-                            || selectedCourse.isTA( wcSession().user() ) ) )
+            if ( !(  selectedCourse.isInstructor( user() )
+                            || selectedCourse.isTA( user() ) ) )
             {
                 qualifiers.addObject( new EOKeyValueQualifier(
                                   AssignmentOffering.AVAILABLE_FROM_KEY,
@@ -124,8 +124,8 @@ public class PickAssignmentToSubmitPage
         //
         // assignments which are published
         //
-        if ( !(  selectedCourse.isInstructor( wcSession().user() )
-              || selectedCourse.isTA( wcSession().user() ) ) )
+        if ( !(  selectedCourse.isInstructor( user() )
+              || selectedCourse.isTA( user() ) ) )
         {
             log.debug( "hiding unpublished assignments" );
             qualifiers.addObject( new EOKeyValueQualifier(
@@ -227,9 +227,9 @@ public class PickAssignmentToSubmitPage
      */
     public boolean assignmentHasSuspendedSubs()
     {
-        return ( wcSession().user().hasAdminPrivileges()
+        return ( user().hasAdminPrivileges()
                  || anAssignmentOffering.courseOffering().instructors()
-                     .containsObject( wcSession().user() ) )
+                     .containsObject( user() ) )
                && anAssignmentOffering.getSuspendedSubs().count() > 0;
     }
 

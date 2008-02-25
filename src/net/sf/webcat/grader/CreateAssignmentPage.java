@@ -87,11 +87,11 @@ public class CreateAssignmentPage
         selectedIndex = -1;
 
         // First, take care of semester list and preference
-        User user = wcSession().user();
+        User user = user();
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( wcSession().localContext() );
+                Semester.objectsForFetchAll( localContext() );
             Object semesterPref = user.preferences()
                 .valueForKey( SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)
@@ -101,7 +101,7 @@ public class CreateAssignmentPage
             }
             else
             {
-                semester = Semester.forId( wcSession().localContext(),
+                semester = Semester.forId( localContext(),
                     ERXValueUtilities.intValue( semesterPref ) );
             }
         }
@@ -117,7 +117,7 @@ public class CreateAssignmentPage
             reusableAssignments =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
                     Assignment.objectsForReuseInCourse(
-                        wcSession().localContext(),
+                        localContext(),
                         coreSelections().courseOffering().course(),
                         coreSelections().courseOffering()
                     ),
@@ -184,7 +184,7 @@ public class CreateAssignmentPage
             .displayedObjects().objectAtIndex( selectedIndex );
         NSTimestamp common = selected.commonOfferingsDueDate();
         AssignmentOffering newOffering = new AssignmentOffering();
-        wcSession().localContext().insertObject( newOffering );
+        localContext().insertObject( newOffering );
         newOffering.setAssignmentRelationship( selected );
         prefs().setAssignmentOfferingRelationship( newOffering );
         configureNewAssignmentOffering( common );
@@ -196,12 +196,12 @@ public class CreateAssignmentPage
     {
         log.debug( "createNewAssignment()" );
         Assignment newAssignment = new Assignment();
-        wcSession().localContext().insertObject( newAssignment );
+        localContext().insertObject( newAssignment );
         AssignmentOffering newOffering = new AssignmentOffering();
-        wcSession().localContext().insertObject( newOffering );
+        localContext().insertObject( newOffering );
         newOffering.setAssignmentRelationship( newAssignment );
         prefs().setAssignmentOfferingRelationship( newOffering );
-        newAssignment.setAuthorRelationship( wcSession().user() );
+        newAssignment.setAuthorRelationship( user() );
         configureNewAssignmentOffering( null );
     }
 
@@ -261,7 +261,7 @@ public class CreateAssignmentPage
         {
             NSMutableArray others =
                 AssignmentOffering.offeringsWithSimilarNames(
-                    wcSession().localContext(), name1,
+                    localContext(), name1,
                     coreSelections().courseOffering(), 2 );
             if ( others.count() > 1 )
             {

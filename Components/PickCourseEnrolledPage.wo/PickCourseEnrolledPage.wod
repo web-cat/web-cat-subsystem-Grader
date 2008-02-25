@@ -13,7 +13,7 @@ CourseName: WOString {
 }
 
 HasNoCourses: WOConditional {
-    condition = session.user.enrolledIn.count;
+    condition = user.enrolledIn.count;
     negate    = true;
 }
 
@@ -50,7 +50,7 @@ HasAdminCourses: WOConditional {
 }
 
 HasCourses: WOConditional {
-    condition = session.user.enrolledIn.count;
+    condition = user.enrolledIn.count;
 }
 
 HasInstructorCourses: WOConditional {
@@ -58,7 +58,7 @@ HasInstructorCourses: WOConditional {
 }
 
 HasTACourses: WOConditional {
-    condition = session.user.TAFor.count;
+    condition = user.TAFor.count;
 }
 
 CourseRepetition: WORepetition {

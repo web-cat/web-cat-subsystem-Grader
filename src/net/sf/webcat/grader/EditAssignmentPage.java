@@ -87,8 +87,8 @@ public class EditAssignmentPage
         isSuspended = thisAssignment.gradingSuspended();
         submissionProfileDisplayGroup.setObjectArray(
             SubmissionProfile.profilesForCourseIncludingMine(
-                wcSession().localContext(),
-                wcSession().user(),
+                localContext(),
+                user(),
                 thisAssignment.courseOffering().course(),
                 thisAssignment.assignment().submissionProfile() )
              );
@@ -158,7 +158,7 @@ public class EditAssignmentPage
                 log.debug( "resuming grading on this assignment" );
                 thisAssignment.setGradingSuspended( false );
                 // Have to save this change first!
-                wcSession().commitLocalChanges();
+                if (!applyLocalChanges()) return false;
                 releaseSuspendedSubs();
             }
         }
@@ -240,11 +240,11 @@ public class EditAssignmentPage
         if ( saveAndCanProceed( false ) )
         {
             SubmissionProfile newProfile = new SubmissionProfile();
-            wcSession().localContext().insertObject( newProfile );
+            localContext().insertObject( newProfile );
             Assignment selectedAssignment =
                 thisAssignment.assignment();
             selectedAssignment.setSubmissionProfileRelationship( newProfile );
-            newProfile.setAuthor( wcSession().user() );
+            newProfile.setAuthor( user() );
             result = (WCComponent)pageWithName(
                 EditSubmissionProfilePage.class.getName() );
             result.nextPage = this;
@@ -335,10 +335,9 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent regradeSubsActionOk()
     {
-        wcSession().commitLocalChanges();
-        thisAssignment.regradeMostRecentSubsForAll(
-            wcSession().localContext() );
-        wcSession().commitLocalChanges();
+        if (!applyLocalChanges()) return null;
+        thisAssignment.regradeMostRecentSubsForAll( localContext() );
+        applyLocalChanges();
         return null;
     }
 
@@ -400,10 +399,10 @@ public class EditAssignmentPage
         {
             StepConfig thisConfig = thisStep.config();
             thisStep.setConfigRelationship( null );
-            wcSession().localContext().deleteObject( thisConfig );
+            localContext().deleteObject( thisConfig );
         }
-        wcSession().localContext().deleteObject( thisStep );
-        wcSession().localContext().saveChanges();
+        localContext().deleteObject( thisStep );
+        localContext().saveChanges();
         return null;
     }
 
@@ -500,7 +499,7 @@ public class EditAssignmentPage
     public WOComponent clearGraph()
     {
         thisAssignment.clearGraphSummary();
-        wcSession().commitLocalChanges();
+        applyLocalChanges();
         return null;
     }
 
@@ -515,7 +514,7 @@ public class EditAssignmentPage
              && name != null )
         {
             NSArray similar = AssignmentOffering.offeringsWithSimilarNames(
-                wcSession().localContext(),
+                localContext(),
                 name,
                 thisAssignment.courseOffering(),
                 1 );
@@ -534,15 +533,15 @@ public class EditAssignmentPage
     public WOComponent deleteActionOk()
     {
         prefs().setAssignmentOfferingRelationship( null );
-        wcSession().commitLocalChanges();
+        if (!applyLocalChanges()) return null;
         Assignment assignment = thisAssignment.assignment();
-        wcSession().localContext().deleteObject(thisAssignment);
-        wcSession().commitLocalChanges();
+        localContext().deleteObject(thisAssignment);
+        if (!applyLocalChanges()) return null;
         thisAssignment = null;
         if (assignment.offerings().count() == 0)
         {
-            wcSession().localContext().deleteObject(assignment);
-            wcSession().commitLocalChanges();
+            localContext().deleteObject(assignment);
+            if (!applyLocalChanges()) return null;
         }
         return finish();
     }
@@ -566,7 +565,8 @@ public class EditAssignmentPage
                 confirmPage.message +=
                     "<p>Since this is the only offering of the selected "
                     + "assignment, this action will also <b>delete the "
-                    + "assignment altogether</b>.</p>";
+                    + "assignment altogether</b>.  This action cannot be "
+                    + "undone.</p>";
             }
             confirmPage.actionReceiver = this;
             confirmPage.actionOk       = "deleteActionOk";
@@ -595,7 +595,7 @@ public class EditAssignmentPage
         if ( upcomingAssignments == null )
         {
             upcomingAssignments = AssignmentOffering.objectsForAllOfferings(
-                wcSession().localContext() ).mutableClone();
+                localContext() ).mutableClone();
             upcomingAssignments.removeObject( thisAssignment );
         }
         return upcomingAssignments;

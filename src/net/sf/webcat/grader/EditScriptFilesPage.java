@@ -176,7 +176,7 @@ public class EditScriptFilesPage
     // ----------------------------------------------------------
     public WOComponent createFolder()
     {
-        wcSession().commitLocalChanges();
+        if (!applyLocalChanges()) return null;
         if ( folderName == null || folderName.length() == 0 )
         {
             error( "Please enter a folder name." );
@@ -203,7 +203,7 @@ public class EditScriptFilesPage
     // ----------------------------------------------------------
     public WOComponent uploadFile()
     {
-        wcSession().commitLocalChanges();
+        if (!applyLocalChanges()) return null;
         if ( unzip && WCFile.isArchiveFile( uploadedFileName2 ) )
         {
             File target =
@@ -241,7 +241,7 @@ public class EditScriptFilesPage
         if ( scriptFile != null )
         {
             scriptFile.initializeConfigAttributes();
-            wcSession().commitLocalChanges();
+            applyLocalChanges();
         }
         return null;
     }
@@ -250,7 +250,7 @@ public class EditScriptFilesPage
     // ----------------------------------------------------------
     public WOComponent replaceEntireFolder()
     {
-        wcSession().commitLocalChanges();
+        if (!applyLocalChanges()) return null;
         if ( WCFile.isArchiveFile( uploadedFileName3 ) )
         {
             net.sf.webcat.archives.FileUtilities.deleteDirectory( base );
@@ -269,7 +269,7 @@ public class EditScriptFilesPage
             if ( scriptFile != null )
             {
                 scriptFile.initializeConfigAttributes();
-                wcSession().commitLocalChanges();
+                applyLocalChanges();
             }
             folderList = null;
         }
@@ -311,7 +311,7 @@ public class EditScriptFilesPage
         {
             scriptFile.initializeConfigAttributes();
             scriptFile.setLastModified( new NSTimestamp() );
-            wcSession().commitLocalChanges();
+            applyLocalChanges();
         }
     }
 

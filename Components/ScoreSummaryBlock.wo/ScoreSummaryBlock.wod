@@ -65,7 +65,7 @@ HasToolGrade: WOConditional {
 }
 
 HideGraphs: WOConditional {
-    condition = session.userPreferences.FinalReportShowGraphs;
+    condition = user.preferences.FinalReportShowGraphs;
     negate    = true;
 }
 
@@ -92,7 +92,7 @@ PossibleScore: WOString {
 }
 
 ShowGraphs: WOConditional {
-    condition = session.userPreferences.FinalReportShowGraphs;
+    condition = user.preferences.FinalReportShowGraphs;
 }
 
 ShowGraphsButton: WOSubmitButton {

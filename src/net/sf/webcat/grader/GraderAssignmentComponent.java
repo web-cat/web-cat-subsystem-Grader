@@ -72,13 +72,13 @@ public class GraderAssignmentComponent
         if ( aoid != null )
         {
             result = startWith( AssignmentOffering
-                .forId( wcSession().localContext(), aoid ) );
+                .forId( localContext(), aoid ) );
         }
         else
         {
             String aid = stringValueForKey( params, Assignment.ID_FORM_KEY );
             result = startWith( Assignment
-                .forId( wcSession().localContext(), aid ) );
+                .forId( localContext(), aid ) );
         }
         return result;
     }
@@ -94,7 +94,7 @@ public class GraderAssignmentComponent
     protected boolean startWith( Assignment assignment )
     {
         return assignment != null && startWith( assignment.offeringForUser(
-            wcSession().user() ) );
+            user() ) );
     }
 
 

@@ -79,15 +79,15 @@ public class EditStepPage
         log.debug( "appendToResponse()" );
         step = prefs().step();
         stepConfigList = StepConfig.configsForUserAndCourseScriptIncludingMine(
-            wcSession().localContext(),
-            wcSession().user(),
+            localContext(),
+            user(),
             step.script(),
             prefs().assignmentOffering().courseOffering().course(),
             step.config() );
         if ( baseDir == null )
         {
             baseDir = new java.io.File ( ScriptFile.userScriptDirName(
-                wcSession().user(), true ).toString() );
+                user(), true ).toString() );
         }
         if ( log.isDebugEnabled() )
         {

@@ -50,7 +50,7 @@ public class SelectSubmissionProfile
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public SelectSubmissionProfile( WOContext context )
@@ -79,7 +79,7 @@ public class SelectSubmissionProfile
         qualifiers.addObject( new EOKeyValueQualifier(
                                       SubmissionProfile.AUTHOR_KEY,
                                       EOQualifier.QualifierOperatorEqual,
-                                      wcSession().user()
+                                      user()
                                   ) );
         // Also look for submission profiles used in this class
         qualifiers.addObject( new EOKeyValueQualifier(
@@ -104,7 +104,7 @@ public class SelectSubmissionProfile
                 // Try fetching all of the submission profiles, which should
                 // deepen all the relationships (I hope!)
                 EOUtilities.objectsForEntityNamed(
-                    wcSession().localContext(),
+                    localContext(),
                     SubmissionProfile.ENTITY_NAME );
                 gradingProfileDisplayGroup.setQualifier(
                     new EOOrQualifier( qualifiers ) );
@@ -119,7 +119,7 @@ public class SelectSubmissionProfile
                 // get only this user's stuff
                 gradingProfileDisplayGroup.setQualifier(
                     (EOQualifier)qualifiers.objectAtIndex( 0 ) );
-                gradingProfileDisplayGroup.fetch();                    
+                gradingProfileDisplayGroup.fetch();
             }
         }
 
@@ -266,11 +266,11 @@ public class SelectSubmissionProfile
     {
         log.debug( "createNewProfile()" );
         SubmissionProfile newProfile = new SubmissionProfile();
-        wcSession().localContext().insertObject( newProfile );
+        localContext().insertObject( newProfile );
         Assignment selectedAssignment =
             prefs().assignmentOffering().assignment();
         selectedAssignment.setSubmissionProfileRelationship( newProfile );
-        newProfile.setAuthor( wcSession().user() );
+        newProfile.setAuthor( user() );
     }
 
 

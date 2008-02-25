@@ -68,8 +68,7 @@ public class GraderSubmissionComponent
         String sid = stringValueForKey( params, Submission.ID_FORM_KEY );
         if ( sid != null )
         {
-            result = startWith( Submission
-                .forId( wcSession().localContext(), sid ) );
+            result = startWith( Submission.forId( localContext(), sid ) );
         }
         return result;
     }
@@ -85,7 +84,7 @@ public class GraderSubmissionComponent
     protected boolean startWith( Submission submission )
     {
         boolean result = false;
-        net.sf.webcat.core.User user = wcSession().user();
+        net.sf.webcat.core.User user = user();
         if ( submission != null
              && ( submission.user() == user
                   || submission.assignmentOffering().courseOffering()

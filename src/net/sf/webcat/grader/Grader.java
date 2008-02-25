@@ -151,7 +151,7 @@ public class Grader
         s.tabs.mergeClonedChildren( subsystemTabTemplate );
         try
         {
-            EOUtilities.objectsForEntityNamed( s.localContext(),
+            EOUtilities.objectsForEntityNamed( s.sessionContext(),
                                                Assignment.ENTITY_NAME );
         }
         catch ( Exception e )
@@ -350,7 +350,7 @@ public class Grader
         String fileName = request.stringFormValueForKey( "file1.filename" );
         log.debug( "fileName = " + fileName );
 
-        EOEditingContext ec = session.localContext();
+        EOEditingContext ec = session.sessionContext();
         SubmitResponse result = (SubmitResponse)Application.application()
            .pageWithName( SubmitResponse.class.getName(), context );
         result.sessionID = session.sessionID();
@@ -600,7 +600,8 @@ public class Grader
             }
         }
 
-        GraderComponent genericGComp = new GraderComponent( context );
+        GraderSubmissionUploadComponent genericGComp =
+            new GraderSubmissionUploadComponent( context );
         if ( assignment == null )
         {
             log.debug( "no assignments are open." );
@@ -612,7 +613,7 @@ public class Grader
             return result.generateResponse();
         }
 
-        genericGComp.coreSelections().setCourseOffering(
+        genericGComp.coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering() );
         genericGComp.prefs().setAssignmentOfferingRelationship( assignment );
         NSArray submissions = EOUtilities.objectsMatchingValues(
@@ -648,14 +649,14 @@ public class Grader
         }
 
         genericGComp.startSubmission( currentSubNo, session.user() );
-        genericGComp.prefs().setUploadedFile( file );
-        genericGComp.prefs().setUploadedFileName( fileName );
+        genericGComp.submissionInProcess().setUploadedFile( file );
+        genericGComp.submissionInProcess().setUploadedFileName( fileName );
         if ( file.length() >
              assignment.assignment()
                  .submissionProfile().effectiveMaxFileUploadSize() )
         {
             genericGComp.clearSubmission();
-            genericGComp.prefs().clearUpload();
+            genericGComp.submissionInProcess().clearUpload();
             result.message =
                 "You file exceeds the file size limit for this "
                 + "assignment ("
@@ -673,8 +674,8 @@ public class Grader
         {
             Application.emailExceptionToAdmins( e, context, null );
             genericGComp.clearSubmission();
-            genericGComp.prefs().clearUpload();
-            session.cancelLocalChanges();
+            genericGComp.submissionInProcess().clearUpload();
+            session.cancelSessionChanges();
             result.message =
                 "An unexpected exception occurred while trying to commit "
                 + "your submission.  The error has been reported to the "

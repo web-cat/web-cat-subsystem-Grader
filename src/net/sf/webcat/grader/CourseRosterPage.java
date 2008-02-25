@@ -98,7 +98,7 @@ public class CourseRosterPage
         if ( firstLoad )
         {
             notStudentDisplayGroup.queryMatch().takeValueForKey(
-                wcSession().user().authenticationDomain().propertyName(),
+                user().authenticationDomain().propertyName(),
                 "authenticationDomain.propertyName" );
             firstLoad = false;
         }

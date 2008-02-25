@@ -100,7 +100,7 @@ public class PickStepPage
             "courseOffering"
         );
         assignmentGroup.queryBindings().setObjectForKey(
-            wcSession().user(),
+            user(),
             "user"
         );
         assignmentGroup.fetch();
@@ -110,7 +110,7 @@ public class PickStepPage
             "course"
         );
         scriptGroup.queryBindings().setObjectForKey(
-            wcSession().user(),
+            user(),
             "user"
         );
         scriptGroup.fetch();
@@ -292,8 +292,8 @@ public class PickStepPage
                 return null;
             }
             ScriptFile newScript = ScriptFile.createNewScriptFile(
-                wcSession().localContext(),
-                wcSession().user(),
+                localContext(),
+                user(),
                 uploadedName,
                 uploadedData,
                 false,

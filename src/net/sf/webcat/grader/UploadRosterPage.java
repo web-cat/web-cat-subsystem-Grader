@@ -103,7 +103,7 @@ public class UploadRosterPage
     {
         if ( domain == null )
         {
-            domain = wcSession().user().authenticationDomain();
+            domain = user().authenticationDomain();
         }
         refresh(true, false);
         super.appendToResponse( response, context );
@@ -605,7 +605,7 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     private void readStudentList(boolean execute)
     {
-        EOEditingContext ec = wcSession().localContext();
+        EOEditingContext ec = localContext();
 
         try
         {
@@ -761,7 +761,7 @@ public class UploadRosterPage
                 }
                 if (execute)
                 {
-                    wcSession().commitLocalChanges();
+                    applyLocalChanges();
                 }
                 line = getNonBlankLine( in );
             }

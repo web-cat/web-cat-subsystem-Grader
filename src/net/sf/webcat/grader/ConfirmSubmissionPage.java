@@ -46,14 +46,14 @@ import org.apache.log4j.Logger;
  * @version $Id$
  */
 public class ConfirmSubmissionPage
-    extends GraderComponent
+    extends GraderSubmissionUploadComponent
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public ConfirmSubmissionPage( WOContext context )
@@ -76,7 +76,7 @@ public class ConfirmSubmissionPage
     /**
      * This function is used to provide a notion that the wizard remembers
      * the previous selection
-     * 
+     *
      * @param response The response being built
      * @param context  The context of the request
      */
@@ -84,35 +84,35 @@ public class ConfirmSubmissionPage
     {
         log.debug( "The submission number is "
                    + prefs().submission().submitNumber() );
-        if ( !prefs().hasValidFileUpload() )
+        if ( !submissionInProcess().hasValidFileUpload() )
         {
             WOComponent prevPage = back();
             if ( prevPage != null )
             {
                 log.debug( "skipping to previous page" );
-                response.setContent( 
+                response.setContent(
                     prevPage.generateResponse().content() );
                 // skip calling super.appendToResponse
                 return;
             }
         }
-        if ( prefs().uploadedFileList() == null )
+        if ( submissionInProcess().uploadedFileList() == null )
         {
             // Initialize the list of files contained in this submission,
             // which is cached in the wizard state as a non-persistent
             // NSArray field.  This array is an array of ZipEntry objects.
             try
             {
-                prefs().setUploadedFileList( new NSArray(
+                submissionInProcess().setUploadedFileList( new NSArray(
                     ArchiveManager.getInstance().getContents(
-                        prefs().uploadedFileName(),
-                        prefs().uploadedFile().stream(),
-                        prefs().uploadedFile().length()
+                        submissionInProcess().uploadedFileName(),
+                        submissionInProcess().uploadedFile().stream(),
+                        submissionInProcess().uploadedFile().length()
                     ) ) );
             }
             catch ( Exception e )
             {
-                prefs().clearUpload();
+                submissionInProcess().clearUpload();
                 error(
                     "An error occurred while unpacking "
                     + "your submission.  The error has been "
@@ -150,7 +150,7 @@ public class ConfirmSubmissionPage
     // ----------------------------------------------------------
     public boolean singleFile()
     {
-        NSArray list = prefs().uploadedFileList();
+        NSArray list = submissionInProcess().uploadedFileList();
         return list == null || list.count() <= 1;
     }
 
@@ -164,9 +164,10 @@ public class ConfirmSubmissionPage
             + prefs().assignmentOffering().assignment()
                   .submissionProfile().deadTimeDelta() );
         CourseOffering course = prefs().assignmentOffering().courseOffering();
+        User primeUser = wcSession().primeUser().localInstance(localContext());
         if ( deadline.before( submitTime )
-             && !course.isInstructor( wcSession().primeUser() )
-             && !course.isTA( wcSession().primeUser() ) )
+             && !course.isInstructor( primeUser )
+             && !course.isTA( primeUser ) )
         {
             error(
                 "Unfortunately, the final deadline for this assignment "
@@ -193,7 +194,7 @@ public class ConfirmSubmissionPage
             if ( config != null
                  && config.objectForKey( "resetPrimeUser" ) != null )
             {
-                wcSession().setLocalUser( wcSession().primeUser() );
+                setLocalUser( wcSession().primeUser() );
             }
             return super.next();
         }
@@ -208,7 +209,7 @@ public class ConfirmSubmissionPage
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
     }

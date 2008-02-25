@@ -95,11 +95,11 @@ public class PickCourseEnrolledPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        User user = wcSession().user();
+        User user = user();
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( wcSession().localContext() );
+                Semester.objectsForFetchAll( localContext() );
             Object semesterPref =
                 user.preferences().valueForKey( SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)
@@ -109,7 +109,7 @@ public class PickCourseEnrolledPage
             }
             else
             {
-                semester = Semester.forId( wcSession().localContext(),
+                semester = Semester.forId( localContext(),
                     ERXValueUtilities.intValue( semesterPref ) );
             }
         }
@@ -198,7 +198,7 @@ public class PickCourseEnrolledPage
                  && selectedInstructorIndex == NSArray.NotFound
                  && selectedAdminIndex == NSArray.NotFound )
             {
-                coreSelections().setCourseOffering( null );
+                coreSelections().setCourseOfferingRelationship( null );
                 selectedCourse = null;
             }
         }
@@ -207,7 +207,7 @@ public class PickCourseEnrolledPage
             if ( courseDisplayGroup.displayedObjects().count() > 0 )
             {
                 selectedCourseIndex = 0;
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                      (CourseOffering)courseDisplayGroup.displayedObjects().
                          objectAtIndex( selectedCourseIndex )
                 );
@@ -215,7 +215,7 @@ public class PickCourseEnrolledPage
             else if ( coursesTAed.count() > 0 )
             {
                 selectedTAIndex = courseDisplayGroup.displayedObjects().count();
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                      (CourseOffering)coursesTAed.
                          objectAtIndex( 0 ) );
             }
@@ -224,7 +224,7 @@ public class PickCourseEnrolledPage
                 selectedInstructorIndex =
                     courseDisplayGroup.displayedObjects().count()
                     + coursesTAed.count();
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                      (CourseOffering)coursesTaught.objectAtIndex( 0 ) );
             }
             else if ( coursesAdmined.count() > 0 )
@@ -233,7 +233,7 @@ public class PickCourseEnrolledPage
                     courseDisplayGroup.displayedObjects().count()
                     + coursesTAed.count()
                     + coursesTaught.count();
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                      (CourseOffering)coursesAdmined.objectAtIndex( 0 ) );
             }
         }
@@ -264,7 +264,7 @@ public class PickCourseEnrolledPage
         if ( selectedCourseIndex >= 0 )
         {
             log.debug( "choosing enrolled course " + selectedCourseIndex );
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)courseDisplayGroup.displayedObjects()
                     .objectAtIndex( selectedCourseIndex ) );
             return super.next();
@@ -273,7 +273,7 @@ public class PickCourseEnrolledPage
         {
             selectedTAIndex -= courseDisplayGroup.displayedObjects().count();
             log.debug( "choosing TAed course " + selectedTAIndex );
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)coursesTAed
                     .objectAtIndex( selectedTAIndex ) );
             return super.next();
@@ -284,7 +284,7 @@ public class PickCourseEnrolledPage
                 courseDisplayGroup.displayedObjects().count();
             selectedInstructorIndex -= coursesTAed.count();
             log.debug( "choosing taught course " + selectedInstructorIndex );
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)coursesTaught
                     .objectAtIndex( selectedInstructorIndex ) );
             return super.next();
@@ -296,7 +296,7 @@ public class PickCourseEnrolledPage
             selectedAdminIndex -= coursesTAed.count();
             selectedAdminIndex -= coursesTaught.count();
             log.debug( "choosing admin'ed course " + selectedInstructorIndex );
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)coursesAdmined
                     .objectAtIndex( selectedAdminIndex ) );
             return super.next();

@@ -150,11 +150,12 @@ public class ScoreSummaryBlock
     public WOComponent toggleShowGraphs()
     {
         boolean showGraphs = ERXValueUtilities.booleanValue(
-            wcSession().userPreferences.objectForKey( showGraphsKey ) );
+            user().preferences().objectForKey( showGraphsKey ) );
         log.debug( "toggleShowGraphs: was " + showGraphs );
         showGraphs = !showGraphs;
-        wcSession().userPreferences.setObjectForKey(
+        user().preferences().setObjectForKey(
             Boolean.valueOf( showGraphs ), showGraphsKey );
+        user().savePreferences();
         return context().page();
     }
 
@@ -166,7 +167,7 @@ public class ScoreSummaryBlock
         {
             correctnessToolsDataset = new SubmissionResultDataset(
                 SubmissionResult.objectsForUser(
-                    wcSession().localContext(),
+                    localContext(),
                     submission.assignmentOffering(),
                     result.submission().user() ),
                 SubmissionResultDataset.TESTING_AND_STATIC_TOOLS_SCORE_SERIES );

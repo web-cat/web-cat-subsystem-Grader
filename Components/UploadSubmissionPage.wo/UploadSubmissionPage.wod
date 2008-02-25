@@ -24,12 +24,12 @@ OkayToSubmit: WOConditional {
 }
 
 HasValidFileUpload: WOConditional {
-	condition = prefs.hasValidFileUpload;
+	condition = submissionInProcess.hasValidFileUpload;
 }
 
 FileUpload1: WOFileUpload {
-	data = prefs.uploadedFile;
-	filePath = prefs.uploadedFileName;
+	data = submissionInProcess.uploadedFile;
+	filePath = submissionInProcess.uploadedFileName;
 }
 
 Repetition1: WORepetition {
@@ -44,7 +44,7 @@ Instructions: WOString {
 }
 
 FileName: WOString {
-	value = prefs.uploadedFileName;
+	value = submissionInProcess.uploadedFileName;
 }
 
 FileSize: WOString {
@@ -66,7 +66,7 @@ String3: WOString {
 }
 
 StudentName: WOString {
-	value = session.user.nameAndUid;
+	value = user.nameAndUid;
 }
 
 TR: net.sf.webcat.core.TableRow {

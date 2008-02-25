@@ -49,7 +49,7 @@ public class OldEditScriptPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public OldEditScriptPage( WOContext context )
@@ -133,9 +133,9 @@ public class OldEditScriptPage
             {
                 selectedIndex = 0;
                 file = (File)fileDisplayGroup.displayedObjects()
-                    .objectAtIndex( selectedIndex ); 
+                    .objectAtIndex( selectedIndex );
                 script.setMainFileName( fileName() );
-            }   
+            }
         }
         super.appendToResponse( response, context );
     }
@@ -175,7 +175,7 @@ public class OldEditScriptPage
             else if ( script.uploadedFileName() == null )
             {
                 log.debug( "recovering from failed script upload" );
-            } 
+            }
             else
             {
                 log.debug( "replacing an existing script" );
@@ -279,7 +279,7 @@ public class OldEditScriptPage
         else if ( selectedIndex > -1 )
         {
             file = (File)fileDisplayGroup.displayedObjects()
-                .objectAtIndex( selectedIndex ); 
+                .objectAtIndex( selectedIndex );
             script.setMainFileName( fileName() );
             needsEditing = false;
         }
@@ -330,10 +330,10 @@ public class OldEditScriptPage
     public ScriptFile createNewScript()
     {
         ScriptFile newScript = new ScriptFile();
-        wcSession().localContext().insertObject( newScript );
+        localContext().insertObject( newScript );
         Step selectedStep = prefs().step();
         selectedStep.setScriptRelationship( newScript );
-        newScript.setAuthorRelationship( wcSession().user() );
+        newScript.setAuthorRelationship( user() );
         return newScript;
     }
 

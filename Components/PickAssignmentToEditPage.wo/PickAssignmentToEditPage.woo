@@ -1,26 +1,26 @@
 {
-    "WebObjects Release" = "WebObjects 5.0"; 
-    encoding = NSUTF8StringEncoding; 
+    "WebObjects Release" = "WebObjects 5.0";
+    encoding = NSUTF8StringEncoding;
     variables = {
         assignmentDisplayGroup = {
             class = WODisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
-                editingContext = session.localContext; 
+                editingContext = localContext;
                 fetchSpecification = {
-                    class = EOFetchSpecification; 
-                    entityName = AssignmentOffering; 
-                    fetchLimit = 0; 
-                    isDeep = YES; 
-                }; 
-            }; 
+                    class = EOFetchSpecification;
+                    entityName = AssignmentOffering;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                };
+            };
 //            fetchesOnLoad = YES;
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
             sortOrdering = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; },
-                            {class = EOSortOrdering; key = assignment.name; selectorName = "compareCaseInsensitiveAscending:"; }); 
-        }; 
-    }; 
+                            {class = EOSortOrdering; key = assignment.name; selectorName = "compareCaseInsensitiveAscending:"; });
+        };
+    };
 }

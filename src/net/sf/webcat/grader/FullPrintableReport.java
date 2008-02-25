@@ -75,7 +75,7 @@ public class FullPrintableReport
     {
         if ( task == null )
         {
-            task = new LongResponseTask( wcSession().user(), result );
+            task = new LongResponseTask( user(), result );
         }
         return task;
     }
@@ -99,7 +99,7 @@ public class FullPrintableReport
                     Pair pair = new Pair();
                     formattedFiles.addObject( pair );
                     pair.file = rawPairs[i].file
-                        .localInstance( wcSession().localContext() );
+                        .localInstance( localContext() );
                     pair.html = rawPairs[i].html;
                 }
             }

@@ -96,7 +96,7 @@ public class EditStaffPage
         if ( firstLoad )
         {
             potentialDisplayGroup.queryMatch().takeValueForKey(
-                wcSession().user().authenticationDomain().propertyName(),
+                user().authenticationDomain().propertyName(),
                 "authenticationDomain.propertyName" );
             firstLoad = false;
         }

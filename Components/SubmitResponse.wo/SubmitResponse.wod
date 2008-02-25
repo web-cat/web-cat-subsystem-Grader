@@ -30,7 +30,7 @@ GradingNotPaused: WOConditional {
 }
 
 String2: WOString {
-	value = session.user.email;
+	value = user.email;
 }
 
 GradingHalted: WOConditional {

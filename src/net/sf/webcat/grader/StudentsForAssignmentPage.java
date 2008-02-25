@@ -111,7 +111,7 @@ public class StudentsForAssignmentPage
                 Submission gradedSubmission = null;
                 // Find the submission
                 NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
-                        wcSession().localContext(),
+                        localContext(),
                         Submission.ENTITY_NAME,
                         new NSDictionary(
                             new Object[] {
@@ -255,9 +255,11 @@ public class StudentsForAssignmentPage
             if ( sub.result().status() == Status.UNFINISHED )
             {
                 sub.result().setStatus( Status.CHECK );
-                wcSession().commitLocalChanges();
-                sub.emailNotificationToStudent(
-                    "has been updated by the course staff" );
+                if (applyLocalChanges())
+                {
+                    sub.emailNotificationToStudent(
+                        "has been updated by the course staff" );
+                }
             }
         }
         return null;

@@ -49,7 +49,7 @@ public class EditPluginGlobalsPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditPluginGlobalsPage( WOContext context )
@@ -73,7 +73,7 @@ public class EditPluginGlobalsPage
         if ( baseDir == null )
         {
             baseDir = new java.io.File ( ScriptFile.userScriptDirName(
-                wcSession().user(), true ).toString() );
+                user(), true ).toString() );
         }
         if ( log.isDebugEnabled() )
         {
@@ -82,7 +82,7 @@ public class EditPluginGlobalsPage
         }
         super.appendToResponse( response, context );
     }
-    
+
 
     // ----------------------------------------------------------
     public WOComponent defaultAction()

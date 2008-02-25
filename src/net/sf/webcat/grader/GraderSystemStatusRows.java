@@ -97,7 +97,7 @@ public class GraderSystemStatusRows
         try
         {
             haltedAssignments = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).localContext(),
+                ( (Session)session() ).sessionContext(),
                 AssignmentOffering.ENTITY_NAME,
                 new NSDictionary(
                     new Object[] { ERXConstant.integerForInt( 1 ) },
@@ -109,7 +109,7 @@ public class GraderSystemStatusRows
         {
             log.debug( "Retrying halted fetch" );
             haltedAssignments = EOUtilities.objectsMatchingValues(
-                            ( (Session)session() ).localContext(),
+                            ( (Session)session() ).sessionContext(),
                             AssignmentOffering.ENTITY_NAME,
                             new NSDictionary(
                                 new Object[] { ERXConstant.integerForInt( 1 ) },
@@ -135,7 +135,7 @@ public class GraderSystemStatusRows
             try
             {
                 jobs = EOUtilities.objectsMatchingValues(
-                    ( (Session)session() ).localContext(),
+                    ( (Session)session() ).sessionContext(),
                     EnqueuedJob.ENTITY_NAME,
                     new NSDictionary(
                         new Object[] { ERXConstant.integerForInt( 0 )  },
@@ -147,7 +147,7 @@ public class GraderSystemStatusRows
             {
                 log.debug( "Retrying queued job fetch" );
                 jobs = EOUtilities.objectsMatchingValues(
-                    ( (Session)session() ).localContext(),
+                    ( (Session)session() ).sessionContext(),
                     EnqueuedJob.ENTITY_NAME,
                     new NSDictionary(
                         new Object[] { ERXConstant.integerForInt( 0 )  },
@@ -172,7 +172,7 @@ public class GraderSystemStatusRows
         try
         {
             jobs = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).localContext(),
+                ( (Session)session() ).sessionContext(),
                 EnqueuedJob.ENTITY_NAME,
                 new NSDictionary(
                     new Object[] { ERXConstant.integerForInt( 1 )  },
@@ -184,7 +184,7 @@ public class GraderSystemStatusRows
         {
             log.debug( "Retrying queued job fetch" );
             jobs = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).localContext(),
+                ( (Session)session() ).sessionContext(),
                 EnqueuedJob.ENTITY_NAME,
                 new NSDictionary(
                     new Object[] { ERXConstant.integerForInt( 1 )  },

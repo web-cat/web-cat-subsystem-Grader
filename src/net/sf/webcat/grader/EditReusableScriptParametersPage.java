@@ -53,7 +53,7 @@ public class EditReusableScriptParametersPage
     // ----------------------------------------------------------
     /**
      * This is the default constructor
-     * 
+     *
      * @param context The page's context
      */
     public EditReusableScriptParametersPage( WOContext context )
@@ -81,15 +81,15 @@ public class EditReusableScriptParametersPage
         if ( baseDir == null )
         {
             baseDir = new java.io.File ( ScriptFile.userScriptDirName(
-                wcSession().user(), true ).toString() );
+                user(), true ).toString() );
         }
         if ( step.config() == null )
         {
             log.debug( "null config detected, populating it" );
             StepConfig newConfig = new StepConfig();
-            wcSession().localContext().insertObject( newConfig );
+            localContext().insertObject( newConfig );
             step.setConfigRelationship( newConfig );
-            newConfig.setAuthor( wcSession().user() );
+            newConfig.setAuthor( user() );
         }
         assignmentStepGroup.setObjectArray( step.config().steps() );
         if ( log.isDebugEnabled() )

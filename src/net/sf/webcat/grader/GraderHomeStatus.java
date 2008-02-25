@@ -30,8 +30,8 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.*;
-import er.extensions.ERXConstant;
 import net.sf.webcat.core.*;
+
 import org.apache.log4j.*;
 
 // -------------------------------------------------------------------------
@@ -81,7 +81,7 @@ public class GraderHomeStatus
     {
         log.debug( "starting appendToResponse()" );
         enqueuedJobGroup.queryBindings().setObjectForKey(
-                wcSession().user(),
+                user(),
                 "user"
             );
         enqueuedJobGroup.fetch();
@@ -106,7 +106,7 @@ public class GraderHomeStatus
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
                 EOQualifier.QualifierOperatorContains,
-                wcSession().user()
+                user()
             ) );
 //        assignmentGroup.setQualifier(
 //                        new EOAndQualifier( qualifiers ) );
@@ -117,12 +117,12 @@ public class GraderHomeStatus
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
                 EOQualifier.QualifierOperatorContains,
-                wcSession().user()
+                user()
             ) );
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_TAS_KEY,
                 EOQualifier.QualifierOperatorContains,
-                wcSession().user()
+                user()
             ) );
 //        assignmentGroup.setQualifier(
 //                        new EOOrQualifier( qualifiers ) );
@@ -170,7 +170,7 @@ public class GraderHomeStatus
     public Number mostRecentScore()
     {
         SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
-            wcSession().user() );
+            user() );
         return ( subResult == null )
             ? null
             : new Double( subResult.graphableScore() );
@@ -185,7 +185,7 @@ public class GraderHomeStatus
      */
     public boolean canEditAssignment()
     {
-        return assignment.courseOffering().isInstructor( wcSession().user() );
+        return assignment.courseOffering().isInstructor( user() );
     }
 
 
@@ -198,8 +198,8 @@ public class GraderHomeStatus
     public boolean canGradeAssignment()
     {
         boolean result =
-            assignment.courseOffering().isInstructor( wcSession().user() )
-            || assignment.courseOffering().isTA( wcSession().user() );
+            assignment.courseOffering().isInstructor( user() )
+            || assignment.courseOffering().isTA( user() );
         log.debug( "can grade = " + result );
         return result;
     }
@@ -213,7 +213,7 @@ public class GraderHomeStatus
      */
     public WOComponent submitAssignment()
     {
-        coreSelections().setCourseOffering( assignment.courseOffering() );
+        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "UploadSubmission" ).pageName() );
@@ -228,10 +228,10 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        coreSelections().setCourseOffering( assignment.courseOffering() );
+        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
-            wcSession().user() );
+            user() );
         String destinationPageName = null;
         if ( subResult != null )
         {
@@ -256,7 +256,7 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        coreSelections().setCourseOffering( assignment.courseOffering() );
+        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "GraphResults" ).pageName() );
@@ -271,7 +271,7 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
-        coreSelections().setCourseOffering( assignment.courseOffering() );
+        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "AssignmentProperties" ).pageName() );
@@ -286,7 +286,7 @@ public class GraderHomeStatus
      */
     public WOComponent gradeAssignment()
     {
-        coreSelections().setCourseOffering( assignment.courseOffering() );
+        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
         prefs().setAssignmentOfferingRelationship( assignment );
         return pageWithName(
             wcSession().tabs.selectById( "EnterGrades" ).pageName() );
@@ -303,9 +303,9 @@ public class GraderHomeStatus
      */
     public boolean assignmentHasSuspendedSubs()
     {
-        return ( wcSession().user().hasAdminPrivileges()
+        return ( user().hasAdminPrivileges()
                  || assignment.courseOffering().instructors()
-                     .containsObject( wcSession().user() ) )
+                     .containsObject( user() ) )
                && assignment.getSuspendedSubs().count() > 0;
     }
 

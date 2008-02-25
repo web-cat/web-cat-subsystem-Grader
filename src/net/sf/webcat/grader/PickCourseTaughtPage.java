@@ -85,11 +85,11 @@ public class PickCourseTaughtPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        User user = wcSession().user();
+        User user = user();
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( wcSession().localContext() );
+                Semester.objectsForFetchAll( localContext() );
             Object semesterPref = user.preferences()
                 .valueForKey( PickCourseEnrolledPage.SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)
@@ -99,7 +99,7 @@ public class PickCourseTaughtPage
             }
             else
             {
-                semester = Semester.forId( wcSession().localContext(),
+                semester = Semester.forId( localContext(),
                     ERXValueUtilities.intValue( semesterPref ) );
             }
         }
@@ -137,7 +137,7 @@ public class PickCourseTaughtPage
         if ( selectedStaffIndex == NSArray.NotFound
              && selectedAdminIndex == NSArray.NotFound )
         {
-            coreSelections().setCourseOffering( null );
+            coreSelections().setCourseOfferingRelationship( null );
             selectedCourse = null;
         }
         if ( selectedCourse == null  )
@@ -145,14 +145,14 @@ public class PickCourseTaughtPage
             if ( staffCourses.count() > 0 )
             {
                 selectedStaffIndex = 0;
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                     (CourseOffering)staffCourses.objectAtIndex(
                         selectedStaffIndex ) );
             }
             else if ( adminCourses.count() > 0 )
             {
                 selectedAdminIndex = 0;
-                coreSelections().setCourseOffering(
+                coreSelections().setCourseOfferingRelationship(
                     (CourseOffering)adminCourses.objectAtIndex(
                         selectedAdminIndex ) );
                 selectedAdminIndex += staffCourses.count();
@@ -168,7 +168,7 @@ public class PickCourseTaughtPage
     {
         if ( selectedStaffIndex >= 0 )
         {
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)staffCourses.objectAtIndex(
                     selectedStaffIndex ) );
             return super.next();
@@ -176,7 +176,7 @@ public class PickCourseTaughtPage
         else if ( selectedAdminIndex >= 0 )
         {
             selectedAdminIndex -= staffCourses.count();
-            coreSelections().setCourseOffering(
+            coreSelections().setCourseOfferingRelationship(
                 (CourseOffering)adminCourses.objectAtIndex(
                     selectedAdminIndex ) );
             return super.next();
@@ -228,7 +228,7 @@ public class PickCourseTaughtPage
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {
-            wcSession().setLocalUser( wcSession().primeUser() );
+            setLocalUser( wcSession().primeUser() );
         }
         super.cancelLocalChanges();
     }

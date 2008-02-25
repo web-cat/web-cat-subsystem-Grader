@@ -351,7 +351,7 @@ public class EditFileCommentsPage
         throws Exception
     {
         double taPts = 0.0;
-        EOEditingContext ec = wcSession().localContext();
+        EOEditingContext ec = localContext();
         if ( codeWithCommentsToStore == null )
         {
             return taPts;
@@ -424,15 +424,14 @@ public class EditFileCommentsPage
                  SubmissionFileComment thisComment =
                      (SubmissionFileComment)comments.objectAtIndex( i );
                  // if its the current users comments
-                 if ( wcSession().user() == thisComment.author() )
+                 if ( user() == thisComment.author() )
                  {
                      log.debug( "Deleting comment, line "
                                 + thisComment.lineNo() );
                      ec.deleteObject( thisComment );
                  }
             }
-            // TODO:
-            wcSession().commitLocalChanges();
+            applyLocalChanges();
 
             // check all children for comment box (id should have I) and
             // then extract values
@@ -470,8 +469,8 @@ public class EditFileCommentsPage
                         SubmissionFileComment comment =
                             new SubmissionFileComment();
                         ec.insertObject( comment );
-                        wcSession().commitLocalChanges();
-                        comment.setAuthorRelationship( wcSession().user() );
+                        applyLocalChanges();
+                        comment.setAuthorRelationship( user() );
                         comment.setSubmissionFileStatsRelationship(
                             prefs().submissionFileStats() );
                         Element target =
@@ -533,7 +532,7 @@ public class EditFileCommentsPage
                         log.debug( "  message = '" + comment.message() + "'" );
                         comment.setLineNo( rownum );
                         log.debug( "  line = " + comment.lineNo() );
-                        wcSession().commitLocalChanges();
+                        applyLocalChanges();
                         log.debug( "result = " + comment );
                     }
                     else
@@ -587,7 +586,7 @@ public class EditFileCommentsPage
         try
         {
             codeWithComments = prefs().submissionFileStats()
-                .codeWithComments( wcSession().user(), isGrading() );
+                .codeWithComments( user(), isGrading() );
             if ( log.isDebugEnabled() )
             {
                 log.debug( "codeWithComments = "
@@ -641,10 +640,10 @@ public class EditFileCommentsPage
             }
         }
         buffer.append( "editor.generate();\n" );
-        if ( wcSession() != null && wcSession().user() != null )
+        if ( wcSession() != null && user() != null )
         {
             buffer.append( "editor.config.userName = \"" );
-            buffer.append( wcSession().user().name() );
+            buffer.append( user().name() );
                 buffer.append( "\";\n" );
         }
         buffer.append( "editor.config.numComments = " );

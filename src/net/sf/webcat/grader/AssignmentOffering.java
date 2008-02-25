@@ -585,7 +585,10 @@ public class AssignmentOffering
         // there are any at all
         spec.setFetchLimit(1);
         NSArray result = editingContext().objectsWithFetchSpecification( spec );
-        log.debug("fetch = " + result);
+        if (log.isDebugEnabled())
+        {
+            log.debug("hasStudentSubmissions(): fetch = " + result);
+        }
         return result.count() > 0;
     }
 

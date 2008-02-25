@@ -68,14 +68,14 @@ public class AssignmentGraphPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         SubmissionResult subResult = prefs().assignmentOffering()
-            .mostRecentSubmissionResultFor( wcSession().user() );
+            .mostRecentSubmissionResultFor( user() );
         mostRecentScore = ( subResult == null )
             ? null
             : new Double( subResult.graphableScore() );
         pastSubResults = SubmissionResult.objectsForUser(
-            wcSession().localContext(),
+            localContext(),
             prefs().assignmentOffering(),
-            wcSession().user() );
+            user() );
         hasSubmissions = pastSubResults != null
             && pastSubResults.count() > 0;
         correctnessToolsDataset = new SubmissionResultDataset(
@@ -92,8 +92,8 @@ public class AssignmentGraphPage
     public boolean isStaff()
     {
         CourseOffering course = prefs().assignmentOffering().courseOffering();
-        boolean result = course.isInstructor( wcSession().user() )
-            || course.isTA( wcSession().user() );
+        boolean result = course.isInstructor( user() )
+            || course.isTA( user() );
         System.out.println( "isStaff = " + result );
         return result;
     }
@@ -106,8 +106,7 @@ public class AssignmentGraphPage
         {
             subResultsByNumber =
                 SubmissionResult.objectsForMostRecentSubmissionsByNumber(
-                    wcSession().localContext(),
-                    prefs().assignmentOffering() );
+                    localContext(), prefs().assignmentOffering() );
         }
         return subResultsByNumber;
     }

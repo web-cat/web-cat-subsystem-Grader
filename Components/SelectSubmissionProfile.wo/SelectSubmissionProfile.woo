@@ -1,30 +1,30 @@
 {
-    "WebObjects Release" = "WebObjects 5.0"; 
-    encoding = NSUTF8StringEncoding; 
+    "WebObjects Release" = "WebObjects 5.0";
+    encoding = NSUTF8StringEncoding;
     variables = {
         gradingProfileDisplayGroup = {
-            class = WODisplayGroup; 
+            class = WODisplayGroup;
             dataSource = {
-                class = EODatabaseDataSource; 
-                editingContext = session.localContext; 
+                class = EODatabaseDataSource;
+                editingContext = localContext;
                 fetchSpecification = {
-                    class = EOFetchSpecification; 
-                    entityName = SubmissionProfile; 
-                    fetchLimit = 0; 
-                    isDeep = YES; 
-                }; 
-            }; 
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
+                    class = EOFetchSpecification;
+                    entityName = SubmissionProfile;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                };
+            };
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {
-                    class = EOSortOrdering; 
-                    key = name; 
-                    selectorName = "compareCaseInsensitiveAscending:"; 
+                    class = EOSortOrdering;
+                    key = name;
+                    selectorName = "compareCaseInsensitiveAscending:";
                 }
-            ); 
-        }; 
-    }; 
+            );
+        };
+    };
 }

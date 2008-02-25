@@ -70,7 +70,7 @@ public class GraderCourseComponent
         if ( crn != null )
         {
             result = startWith( CourseOffering
-                .offeringForCrn( wcSession().localContext(), crn ) );
+                .offeringForCrn( localContext(), crn ) );
         }
         return result;
     }
@@ -86,15 +86,15 @@ public class GraderCourseComponent
     protected boolean startWith( CourseOffering offering )
     {
         boolean result = false;
-        User user = wcSession().user();
+        User user = user();
         if ( offering != null
              && ( user.enrolledIn().contains(  offering )
                   || offering.isInstructor( user )
                   || offering.isTA( user ) ) )
         {
             result = true;
-            coreSelections().setCourse( offering.course() );
-            coreSelections().setCourseOffering( offering );
+            coreSelections().setCourseRelationship( offering.course() );
+            coreSelections().setCourseOfferingRelationship( offering );
         }
         return result;
     }

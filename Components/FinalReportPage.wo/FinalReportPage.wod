@@ -194,7 +194,7 @@ String1: WOString {
 }
 
 String2: WOString {
-	value = session.user.email;
+	value = user.email;
 }
 
 SubmissionChosen: WOConditional {

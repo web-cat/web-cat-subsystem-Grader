@@ -1,81 +1,81 @@
 {
-    "WebObjects Release" = "WebObjects 5.2"; 
-    encoding = NSUTF8StringEncoding; 
+    "WebObjects Release" = "WebObjects 5.2";
+    encoding = NSUTF8StringEncoding;
     variables = {
         enqueuedJobGroup = {
-            class = WODisplayGroup; 
+            class = WODisplayGroup;
             dataSource = {
-                class = EODatabaseDataSource; 
-                editingContext = session.localContext; 
+                class = EODatabaseDataSource;
+                editingContext = session.sessionContext;
                 fetchSpecification = {
-                    class = EOFetchSpecification; 
-                    entityName = EnqueuedJob; 
-                    fetchLimit = 0; 
-                    isDeep = YES; 
+                    class = EOFetchSpecification;
+                    entityName = EnqueuedJob;
+                    fetchLimit = 0;
+                    isDeep = YES;
                     qualifier = {
-                        class = EOKeyValueQualifier; 
-                        key = submission.user; 
-                        selectorName = "isEqualTo:"; 
-                        value = {_key = user; class = EOQualifierVariable; }; 
-                    }; 
-                }; 
-            }; 
-            fetchesOnLoad = NO; 
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
+                        class = EOKeyValueQualifier;
+                        key = submission.user;
+                        selectorName = "isEqualTo:";
+                        value = {_key = user; class = EOQualifierVariable; };
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
                     key = submission.submitTime;
                     selectorName = "compareAscending:"; }
-            ); 
-        }; 
+            );
+        };
         assignmentGroup = {
-            class = WODisplayGroup; 
+            class = WODisplayGroup;
             dataSource = {
-                class = EODatabaseDataSource; 
-                editingContext = session.localContext; 
+                class = EODatabaseDataSource;
+                editingContext = session.sessionContext;
                 fetchSpecification = {
-                    class = EOFetchSpecification; 
-                    entityName = AssignmentOffering; 
-                    fetchLimit = 0; 
-                    isDeep = YES; 
-                }; 
-            }; 
-            fetchesOnLoad = NO; 
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
+                    class = EOFetchSpecification;
+                    entityName = AssignmentOffering;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
                     key = dueDate;
                     selectorName = "compareAscending:"; }
-            ); 
-        }; 
+            );
+        };
         upcomingAssignmentsGroup = {
-            class = WODisplayGroup; 
+            class = WODisplayGroup;
             dataSource = {
-                class = EODatabaseDataSource; 
-                editingContext = session.localContext; 
+                class = EODatabaseDataSource;
+                editingContext = session.sessionContext;
                 fetchSpecification = {
-                    class = EOFetchSpecification; 
-                    entityName = AssignmentOffering; 
-                    fetchLimit = 0; 
-                    isDeep = YES; 
-                }; 
-            }; 
-            fetchesOnLoad = NO; 
-            formatForLikeQualifier = "%@*"; 
-            localKeys = (); 
-            numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
+                    class = EOFetchSpecification;
+                    entityName = AssignmentOffering;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
                     key = dueDate;
                     selectorName = "compareAscending:"; }
-            ); 
-        }; 
-    }; 
+            );
+        };
+    };
 }

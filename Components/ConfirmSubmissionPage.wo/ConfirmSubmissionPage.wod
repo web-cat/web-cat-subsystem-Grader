@@ -22,7 +22,7 @@ IsMultipleFiles: WOConditional {
 
 Repetition1: WORepetition {
 	item = file;
-	list = prefs.uploadedFileList;
+	list = submissionInProcess.uploadedFileList;
 	index = index;
 }
 
@@ -35,7 +35,7 @@ String3: WOString {
 }
 
 StudentName: WOString {
-	value = session.user.nameAndUid;
+	value = user.nameAndUid;
 }
 
 TR: net.sf.webcat.core.TableRow {
