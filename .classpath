@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="/DBUpdateEngine"/>
 	<classpathentry kind="src" path="/EOJDBCPrototypes"/>
 	<classpathentry kind="src" path="/Bootstrap"/>
-	<classpathentry kind="con" path="org.objectstyle.wolips.WO_CLASSPATH/Core/DBUpdateEngine/EOJDBCPrototypes/ERExtensions/ERJars/ExternalJars/JavaWOExtensions/WOUnitTest/JavaEOAccess/JavaEOControl/JavaFoundation/JavaJDBCAdaptor/JavaWebObjects/JavaXML/JDBCEOAdaptor"/>
+	<classpathentry kind="con" path="org.objectstyle.wolips.WO_CLASSPATH/Core/DBUpdateEngine/EOJDBCPrototypes/ERExtensions/ERJars/ExternalJars/JavaWOExtensions/WOUnitTest/JavaEOAccess/JavaEOControl/JavaFoundation/JavaJDBCAdaptor/JavaWebObjects"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ExternalJars"/>
 	<classpathentry kind="output" path="bin"/>
