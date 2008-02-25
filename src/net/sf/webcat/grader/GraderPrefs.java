@@ -27,8 +27,11 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
-
 import java.io.*;
+
+import org.apache.log4j.*;
+
+import net.sf.webcat.core.User;
 
 // -------------------------------------------------------------------------
 /**
@@ -57,158 +60,186 @@ public class GraderPrefs
 
     // ----------------------------------------------------------
     /**
-     * Returns the current uploaded file's data.
-     * @return The file's data
+     * Retrieve the entity pointed to by the <code>assignmentOffering</code>
+     * relationship.
+     * @return the entity in the relationship
      */
-    public NSData uploadedFile()
+    public AssignmentOffering assignmentOffering()
     {
-        return uploadedFile;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Set the current uploaded file's data.
-     * @param data The file's data
-     */
-    public void setUploadedFile( NSData data )
-    {
-        uploadedFile = data;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Returns the current uploaded file's name.
-     * @return The file's name
-     */
-    public String uploadedFileName()
-    {
-        return uploadedFileName;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Set the current uploaded file's name.
-     * @param name The file's name
-     */
-    public void setUploadedFileName( String name )
-    {
-        uploadedFileName = name;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Returns the stored list of the internal contents of the
-     * current uploaded file (if it is a zip or jar).
-     * @return A list of its files
-     */
-    public NSArray uploadedFileList()
-    {
-        return uploadedFileList;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Set the current uploaded file's list of internal contents.
-     * @param list An array of files contained within this zip or jar
-     */
-    public void setUploadedFileList( NSArray list )
-    {
-        uploadedFileList = list;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Determine if a submission has been started, but not yet committed.
-     * @return True if a submission is in progress
-     */
-    public boolean submissionInProcess()
-    {
-        return submissionInProcess;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Set or clear the flag for a submission currently in progress.
-     * @param value The flag's new value
-     */
-    public void setSubmissionInProcess( boolean value )
-    {
-        submissionInProcess = value;
-    }
-    
-    
-    // ----------------------------------------------------------
-    /**
-     * Checks whether the state contains a valid file upload
-     * (non-null, non-zero-length data, plus non-null, non-empty
-     * file name).
-     * @return true if the uploaded file data and name are valid
-     */
-    public boolean hasValidFileUpload()
-    {
-        if ( uploadedFileName != null )
+        try
         {
-            uploadedFileName = ( new File( uploadedFileName ) ).getName();
+            AssignmentOffering result =  super.assignmentOffering();
+            if ( result != null )
+                result.dueDate();  // Force access of this object
+            return result;
         }
-        return (    uploadedFile          != null
-                 && uploadedFile.length() != 0
-                 && uploadedFileName      != null
-                 && !uploadedFileName.equals( "" ) );
+        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        {
+            log.debug("assignmentOffering(): attempting to force null after "
+                + e);
+            if (log.isDebugEnabled())
+            {
+                // cut off debugging in base class to avoid recursive
+                // calls to this method!
+                Level oldLevel = log.getLevel();
+                try
+                {
+                    log.setLevel( Level.OFF );
+                    // Do NOT call setAssignmentOfferingRelationship, since
+                    // it in turn calls assignmentOffering()!
+                    super.setAssignmentOffering( null );
+                }
+                finally
+                {
+                    log.setLevel( oldLevel );
+                }
+            }
+            else
+            {
+                // Do NOT call setAssignmentOfferingRelationship, since it in
+                // turn calls assignmentOffering()!
+                super.setAssignmentOffering( null );
+            }
+            return super.assignmentOffering();
+        }
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Clear info related to the uploaded file.
+     * Retrieve the entity pointed to by the <code>step</code>
+     * relationship.
+     * @return the entity in the relationship
      */
-    public void clearUpload()
+    public Step step()
     {
-        uploadedFile     = null;
-        uploadedFileName = null;
-        uploadedFileList = null;
+        try
+        {
+            Step result =  super.step();
+            if ( result != null )
+                result.order();  // Force access of this object
+            return result;
+        }
+        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        {
+            log.debug("step(): attempting to force null after " + e);
+            if (log.isDebugEnabled())
+            {
+                // cut off debugging in base class to avoid recursive
+                // calls to this method!
+                Level oldLevel = log.getLevel();
+                try
+                {
+                    log.setLevel( Level.OFF );
+                    // Do NOT call setStepRelationship, since it in
+                    // turn calls step()!
+                    super.setStep( null );
+                }
+                finally
+                {
+                    log.setLevel( oldLevel );
+                }
+            }
+            else
+            {
+                // Do NOT call setStepRelationship, since it in
+                // turn calls step()!
+                super.setStep( null );
+            }
+            return super.step();
+        }
     }
 
 
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>submission</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public Submission submission()
+    {
+        try
+        {
+            Submission result =  super.submission();
+            if ( result != null )
+                result.submitNumber();  // Force access of this object
+            return result;
+        }
+        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        {
+            log.debug("submission(): attempting to force null after " + e);
+            if (log.isDebugEnabled())
+            {
+                // cut off debugging in base class to avoid recursive
+                // calls to this method!
+                Level oldLevel = log.getLevel();
+                try
+                {
+                    log.setLevel( Level.OFF );
+                    // Do NOT call setSubmissionRelationship, since it in
+                    // turn calls submission()!
+                    super.setSubmission( null );
+                }
+                finally
+                {
+                    log.setLevel( oldLevel );
+                }
+            }
+            else
+            {
+                // Do NOT call setSubmissionRelationship, since it in
+                // turn calls submission()!
+                super.setSubmission( null );
+            }
+            return super.submission();
+        }
+    }
 
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
 
-
-    //~ Instance/static variables .............................................
-
-    private NSData  uploadedFile;
-    private String  uploadedFileName;
-    private NSArray uploadedFileList;
-    private boolean submissionInProcess = false;
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>submissionFileStats</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public SubmissionFileStats submissionFileStats()
+    {
+        try
+        {
+            SubmissionFileStats result =  super.submissionFileStats();
+            if ( result != null )
+                result.loc();  // Force access of this object
+            return result;
+        }
+        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        {
+            log.debug("submissionFileStats(): attempting to force null after "
+                + e);
+            if (log.isDebugEnabled())
+            {
+                // cut off debugging in base class to avoid recursive
+                // calls to this method!
+                Level oldLevel = log.getLevel();
+                try
+                {
+                    log.setLevel( Level.OFF );
+                    // Do NOT call setSubmissionFileStatsRelationship, since
+                    // it in turn calls submissionFileStats()!
+                    super.setSubmissionFileStats( null );
+                }
+                finally
+                {
+                    log.setLevel( oldLevel );
+                }
+            }
+            else
+            {
+                // Do NOT call setSubmissionFileStatsRelationship, since it in
+                // turn calls submissionFileStats()!
+                super.setSubmissionFileStats( null );
+            }
+            return super.submissionFileStats();
+        }
+    }
 }

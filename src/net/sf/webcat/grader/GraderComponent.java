@@ -73,82 +73,6 @@ public class GraderComponent
 
     // ----------------------------------------------------------
     /**
-     * Returns the currently selected assignment offering.
-     * @return The assignment offering
-     */
-    public GraderPrefs prefs()
-    {
-        if ( prefs == null )
-        {
-            prefs = (GraderPrefs)wcSession().subsystemData.valueForKey(
-                GRADER_PREFS_KEY );
-        }
-        if ( prefs == null )
-        {
-            User prime = wcSession().primeUser();
-            if ( prime.editingContext() != wcSession().localContext() )
-            {
-                prime = prime.localInstance( wcSession().localContext() );
-            }
-            NSArray results = null;
-            try
-            {
-                results = GraderPrefs.objectsForUser(
-                    wcSession().localContext(), prime );
-            }
-            catch ( java.lang.IllegalStateException e )
-            {
-                // Just try again, in case this is a failure due to the
-                // use of shared contexts under Win2K
-                results = GraderPrefs.objectsForUser(
-                    wcSession().localContext(), prime );
-            }
-            if ( results.count() > 0 )
-            {
-                prefs = (GraderPrefs)results.objectAtIndex( 0 );
-            }
-            else
-            {
-                GraderPrefs newPrefs = new GraderPrefs();
-                EOEditingContext ec = Application.newPeerEditingContext();
-                try
-                {
-                    ec.lock();
-                    ec.insertObject( newPrefs );
-                    User localPrime = prime.localInstance( ec );
-                    newPrefs.setUserRelationship( localPrime );
-                    ec.saveChanges();
-                    prefs =
-                        newPrefs.localInstance( wcSession().localContext() );
-                }
-                catch ( Exception e)
-                {
-                    Application.emailExceptionToAdmins(
-                        e, context(), "failure initializing prefs!" );
-                }
-                finally
-                {
-                    ec.unlock();
-                    Application.releasePeerEditingContext( ec );
-                }
-            }
-            if ( prefs != null )
-            {
-                wcSession().subsystemData.takeValueForKey(
-                    prefs, GRADER_PREFS_KEY );
-            }
-        }
-        if ( prefs == null )
-        {
-            log.error( "null prefs!", new Exception( "here" ) );
-            log.error( Application.extraInfoForContext( context() ) );
-        }
-        return prefs;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Determine whether "Finish" can be pressed for this task.
      * @return true if a submission is stored
      */
@@ -160,176 +84,106 @@ public class GraderComponent
 
     // ----------------------------------------------------------
     /**
-     * Creates a fresh (but not saved or committed) submission
-     * object and binds it to the submission key.
-     * @param submitNumber the number of the new submission
-     * @param user the person making the submission
+     * Access the user's current grader preferences.
+     * @return the grader preferences manager for this page
      */
-    public void startSubmission( int submitNumber, User user )
+    public GraderPrefsManager prefs()
     {
-        Submission submission = new Submission();
-        wcSession().localContext().insertObject( submission );
-        submission.setSubmitNumber( submitNumber );
-        submission.setUserRelationship( user );
-        log.debug( "startSubmission( " + submitNumber + ", " + user + " )" );
-        prefs().setSubmission( submission );
-        prefs().setSubmissionInProcess( true );
+        if (prefs == null)
+        {
+            prefs = new GraderPrefsManager(getGraderPrefs(), ecManager());
+        }
+        return prefs;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public WOComponent pageWithName( String name )
+    {
+        WOComponent result = super.pageWithName( name );
+        if (result instanceof GraderComponent && prefs != null)
+        {
+            ((GraderComponent)result).prefs =
+                (GraderPrefsManager)prefs.clone();
+        }
+        return result;
+    }
+
+
+    //~ Private Methods .......................................................
+
+    // ----------------------------------------------------------
+    private IndependentEOManager.ECManager ecManager()
+    {
+        IndependentEOManager.ECManager result = (IndependentEOManager.ECManager)
+            wcSession().transientState().valueForKey(KEY);
+        if (result == null)
+        {
+            result = new IndependentEOManager.ECManager();
+            wcSession().transientState().takeValueForKey(result, KEY);
+        }
+        return result;
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Enters the current submission into the editing context,
-     * establishes all the necessary relationships, and saves the
-     * uploaded file to disk.
-     *
-     * @param  context    the context of the request
-     * @param  submitTime the time to record for this submission
-     * @return a string error message, or null if there were no errors
+     * Returns the currently selected assignment offering.
+     * @return The assignment offering
      */
-    public String commitSubmission( WOContext context,
-                                    NSTimestamp submitTime )
+    private GraderPrefs getGraderPrefs()
     {
-        String errorMessage = null;
-        log.debug( "committing submission" );
-        Submission submission = prefs().submission();
-        String uploadedFileName = prefs().uploadedFileName();
-        submission.setSubmitTime( submitTime );
-        submission.setFileName( uploadedFileName );
-        // wcSession().localContext().insertObject( submission );
-        //      ec.saveChanges();
-        submission.setAssignmentOfferingRelationship(
-            prefs().assignmentOffering() );
-        prefs().assignmentOffering().addToSubmissionsRelationship( submission );
-        log.debug( "Uploaded file name: " + uploadedFileName );
-
-        // First, make the necessary directory
+        NSArray results = null;
         try
         {
-            File dirFile = new File( submission.dirName() );
-            dirFile.mkdirs();
+            results = GraderPrefs.objectsForUser(localContext(), user());
         }
-        catch ( Exception e )
+        catch ( java.lang.IllegalStateException e )
         {
-            // Security exception
-            Application.emailExceptionToAdmins(
-                    e,
-                    context,
-                    "Exception creating submission directory"
-                );
-            wcSession().localContext().deleteObject( submission );
-            prefs().setSubmissionRelationship( null );
-            prefs().setSubmissionInProcess( false );
-            wcSession().commitLocalChanges();
-            return "A file error occurred while saving your "
-                   + "submission.  The error has been reported "
-                   + "to the administrator.  Please try your "
-                   + "submission again later once the problem "
-                   + "has been corrected.";
+            // Just try again, in case this is a failure due to the
+            // use of shared contexts under Win2K
+            results = GraderPrefs.objectsForUser(localContext(), user());
         }
-
-        // Next, write out the file
-        try
+        if ( results.count() > 0 )
         {
-            File outFile = submission.file();
-            log.debug( "Local file name: " + outFile.getPath() );
-            FileOutputStream out = new FileOutputStream( outFile );
-            prefs().uploadedFile().writeToStream( out );
-            out.close();
+            return (GraderPrefs)results.objectAtIndex(0);
         }
-        catch ( Exception e )
+        else
         {
-            // Do something with the exception
-            Application.emailExceptionToAdmins(
-                    e,
-                    context,
-                    "Exception uploading submission file"
-                );
-            wcSession().localContext().deleteObject( submission );
-            prefs().setSubmissionRelationship( null );
-            prefs().setSubmissionInProcess( false );
-            wcSession().commitLocalChanges();
-            return "A file error occurred while saving your "
-                   + "submission.  The error has been reported "
-                   + "to the administrator.  Please try your "
-                   + "submission again later once the problem "
-                   + "has been corrected.";
-        }
-
-        // Clear out older jobs
-        try
-        {
-            NSArray oldJobs = EOUtilities.objectsMatchingValues(
-                    wcSession().localContext(),
-                    EnqueuedJob.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  wcSession().user(),
-                                        submission.assignmentOffering()    },
-                        new Object[] { EnqueuedJob.USER_KEY,
-                                       EnqueuedJob.ASSIGNMENT_OFFERING_KEY }
-                ) );
-            for ( int i = 0; i < oldJobs.count(); i++ )
+            EOEditingContext ec = Application.newPeerEditingContext();
+            GraderPrefs newPrefs = null;
+            try
             {
-                EnqueuedJob job = (EnqueuedJob)oldJobs.objectAtIndex( i );
-                job.setDiscarded( true );
+                ec.lock();
+                newPrefs = GraderPrefs.create(ec);
+                newPrefs.setUserRelationship(user().localInstance(ec));
+                ec.saveChanges();
+                newPrefs = newPrefs.localInstance(localContext());
             }
-        }
-        catch ( Exception e )
-        {
-            // ignore it
-        }
-
-        // Queue it up for the grader
-        EnqueuedJob job = new EnqueuedJob();
-//      job.setSubmission( submission );
-        wcSession().localContext().insertObject( job );
-        job.setSubmissionRelationship( submission );
-        job.setQueueTime( new NSTimestamp() );
-        wcSession().commitLocalChanges();
-
-        Grader.getInstance().graderQueue().enqueue( null );
-
-        prefs().clearUpload();
-        prefs().setSubmissionInProcess( false );
-
-        return errorMessage;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Erases the submission in progress and nulls out the corresponding
-     * data members.
-     */
-    public void clearSubmission()
-    {
-        if ( prefs().submissionInProcess() )
-        {
-            Submission submission = prefs().submission();
-            if ( submission != null && submission.result() == null )
+            catch ( Exception e)
             {
-                wcSession().localContext().deleteObject( submission );
-                prefs().setSubmissionRelationship( null );
+                Application.emailExceptionToAdmins(
+                    e, context(), "failure initializing prefs!" );
             }
-            prefs().setSubmissionInProcess( false );
+            finally
+            {
+                ec.unlock();
+                Application.releasePeerEditingContext( ec );
+            }
+            if ( prefs == null )
+            {
+                log.error( "null prefs!", new Exception( "here" ) );
+                log.error( Application.extraInfoForContext( context() ) );
+            }
+            return newPrefs;
         }
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Cancels any editing in progress.  Typically called when pressing
-     * a cancel button or using a tab to transfer to a different page.
-     */
-    public void cancelLocalChanges()
-    {
-        clearSubmission();
-        super.cancelLocalChanges();
     }
 
 
     //~ Instance/static variables .............................................
 
-    private GraderPrefs prefs;
+    private GraderPrefsManager prefs;
+    private static final String KEY = GraderPrefsManager.class.getName();
     static Logger log = Logger.getLogger( GraderComponent.class );
 }
