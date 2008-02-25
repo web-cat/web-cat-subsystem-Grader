@@ -159,6 +159,7 @@ public abstract class _AssignmentOffering
     public static final String ASSIGNMENT_KEY = "assignment";
     public static final String COURSE_OFFERING_KEY = "courseOffering";
     // To-many relationships ---
+    public static final String GRADER_PREFS_KEY = "graderPrefs";
     public static final String SUBMISSIONS_KEY = "submissions";
     // Fetch specifications ---
     public static final String ALL_OFFERINGS_FSPEC = "allOfferings";
@@ -754,6 +755,181 @@ public abstract class _AssignmentOffering
         {
             addObjectToBothSidesOfRelationshipWithKey( value, "courseOffering" );
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>graderPrefs</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    public NSArray graderPrefs()
+    {
+        return (NSArray)storedValueForKey( "graderPrefs" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>graderPrefs</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setGraderPrefs( NSMutableArray value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setGraderPrefs("
+                + value + "): was " + graderPrefs() );
+        }
+        takeStoredValueForKey( value, "graderPrefs" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>graderPrefs</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToGraderPrefsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToGraderPrefs( net.sf.webcat.grader.GraderPrefs value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToGraderPrefs("
+                + value + "): was " + graderPrefs() );
+        }
+        NSMutableArray array = (NSMutableArray)graderPrefs();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>graderPrefs</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromGraderPrefsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromGraderPrefs( net.sf.webcat.grader.GraderPrefs value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromGraderPrefs("
+                + value + "): was " + graderPrefs() );
+        }
+        NSMutableArray array = (NSMutableArray)graderPrefs();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>graderPrefs</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToGraderPrefsRelationship( net.sf.webcat.grader.GraderPrefs value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToGraderPrefsRelationship("
+                + value + "): was " + graderPrefs() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "graderPrefs" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>graderPrefs</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromGraderPrefsRelationship( net.sf.webcat.grader.GraderPrefs value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromGraderPrefsRelationship("
+                + value + "): was " + graderPrefs() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "graderPrefs" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>graderPrefs</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.GraderPrefs createGraderPrefsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createGraderPrefsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "GraderPrefs" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "graderPrefs" );
+        return (net.sf.webcat.grader.GraderPrefs)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>graderPrefs</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deleteGraderPrefsRelationship( net.sf.webcat.grader.GraderPrefs value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteGraderPrefsRelationship("
+                + value + "): was " + graderPrefs() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "graderPrefs" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>graderPrefs</code> relationship.
+     */
+    public void deleteAllGraderPrefsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllGraderPrefsRelationships(): was "
+                + graderPrefs() );
+        }
+        Enumeration objects = graderPrefs().objectEnumerator();
+        while ( objects.hasMoreElements() )
+            deleteGraderPrefsRelationship(
+                (net.sf.webcat.grader.GraderPrefs)objects.nextElement() );
     }
 
 

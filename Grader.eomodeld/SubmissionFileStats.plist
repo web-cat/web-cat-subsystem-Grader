@@ -1,19 +1,19 @@
 
 {
-    attributes = 
+    attributes =
     (
-       
+
        {
            columnName = CCLASSNAME;
            name = className;
            prototypeName = tinyText;
-       }, 
-       
+       },
+
        {
            columnName = CCONDITIONALS;
            name = conditionals;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -21,13 +21,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CCONDITIONALSCOVERED;
            name = conditionalsCovered;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -35,13 +35,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CDEDUCTIONS;
            name = deductions;
            prototypeName = double;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = doubleValue;
@@ -49,13 +49,13 @@
                type = double;
                valueClassName = Double;
            };
-       }, 
-       
+       },
+
        {
            columnName = CELEMENTS;
            name = elements;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -63,13 +63,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CELEMENTSCOVERED;
            name = elementsCovered;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -77,18 +77,18 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            name = id;
            prototypeName = id;
-       }, 
-       
+       },
+
        {
            columnName = CLOC;
            name = loc;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -96,19 +96,19 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CMARKUPFILENAME;
            name = markupFileNameRaw;
            prototypeName = tinyText;
-       }, 
-       
+       },
+
        {
            columnName = CMETHODS;
            name = methods;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -116,13 +116,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CMETHODSCOVERED;
            name = methodsCovered;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -130,13 +130,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CNCCLOC;
            name = ncloc;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -144,19 +144,19 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CPKGNAME;
            name = pkgName;
            prototypeName = tinyText;
-       }, 
-       
+       },
+
        {
            columnName = CREMARKS;
            name = remarks;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -164,25 +164,25 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CRESULTID;
            name = resultId;
            prototypeName = foreignId;
-       }, 
-       
+       },
+
        {
            columnName = CSOURCEFILENAME;
            name = sourceFileNameRaw;
            prototypeName = tinyText;
-       }, 
-       
+       },
+
        {
            columnName = CSTATEMENTS;
            name = statements;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -190,13 +190,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CSTATEMENTSCOVERED;
            name = statementsCovered;
            prototypeName = integer;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = intValue;
@@ -204,13 +204,13 @@
                type = int;
                valueClassName = Integer;
            };
-       }, 
-       
+       },
+
        {
            columnName = CSTATUS;
            name = status;
            prototypeName = tinyInteger;
-           userInfo = 
+           userInfo =
            {
                isScalar = true;
                scalarConversionMethodName = byteValue;
@@ -220,69 +220,85 @@
            };
        }
     );
-    attributesUsedForLocking = 
+    attributesUsedForLocking =
     (
-       className, 
-       conditionals, 
-       conditionalsCovered, 
-       deductions, 
-       elements, 
-       elementsCovered, 
-       loc, 
-       markupFileNameRaw, 
-       methods, 
-       methodsCovered, 
-       ncloc, 
-       pkgName, 
-       remarks, 
-       resultId, 
-       sourceFileNameRaw, 
-       statements, 
-       statementsCovered, 
+       className,
+       conditionals,
+       conditionalsCovered,
+       deductions,
+       elements,
+       elementsCovered,
+       loc,
+       markupFileNameRaw,
+       methods,
+       methodsCovered,
+       ncloc,
+       pkgName,
+       remarks,
+       resultId,
+       sourceFileNameRaw,
+       statements,
+       statementsCovered,
        status
     );
     className = net.sf.webcat.grader.SubmissionFileStats;
-    classProperties = 
+    classProperties =
     (
-       className, 
-       comments, 
-       conditionals, 
-       conditionalsCovered, 
-       deductions, 
-       elements, 
-       elementsCovered, 
-       loc, 
-       markupFileNameRaw, 
-       methods, 
-       methodsCovered, 
-       ncloc, 
-       pkgName, 
-       remarks, 
-       sourceFileNameRaw, 
-       statements, 
-       statementsCovered, 
-       status, 
+       className,
+       comments,
+       conditionals,
+       conditionalsCovered,
+       deductions,
+       elements,
+       elementsCovered,
+       graderPrefs,
+       loc,
+       markupFileNameRaw,
+       methods,
+       methodsCovered,
+       ncloc,
+       pkgName,
+       remarks,
+       sourceFileNameRaw,
+       statements,
+       statementsCovered,
+       status,
        submissionResult
     );
     externalName = TSUBMISSIONFILESTATS;
-    internalInfo = 
+    internalInfo =
     {};
     name = SubmissionFileStats;
-    primaryKeyAttributes = 
+    primaryKeyAttributes =
     (
        id
     );
-    relationships = 
+    relationships =
     (
-       
+
+       {
+           destination = GraderPrefs;
+           isToMany = Y;
+           joinSemantic = EOInnerJoin;
+           joins =
+           (
+
+              {
+                  destinationAttribute = submissionFileStatsId;
+                  sourceAttribute = id;
+              }
+           );
+           name = graderPrefs;
+       },
+
        {
            deleteRule = EODeleteRuleCascade;
            destination = SubmissionFileComment;
            isToMany = Y;
            joinSemantic = EOInnerJoin;
-           joins = 
+           joins =
            (
-              
+
               {
                   destinationAttribute = submissionFileStatsId;
                   sourceAttribute = id;
@@ -290,15 +306,15 @@
            );
            name = comments;
            ownsDestination = Y;
-       }, 
-       
+       },
+
        {
            destination = SubmissionResult;
            isToMany = N;
            joinSemantic = EOInnerJoin;
-           joins = 
+           joins =
            (
-              
+
               {
                   destinationAttribute = id;
                   sourceAttribute = resultId;
