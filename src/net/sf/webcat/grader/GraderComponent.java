@@ -73,6 +73,39 @@ public class GraderComponent
 
     // ----------------------------------------------------------
     /**
+     * Grab user's current selections when waking, if necessary.
+     */
+    @Override
+    public void awake()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug("awake(): begin " + getClass().getName());
+        }
+        super.awake();
+        if (prefs == null)
+        {
+            Object inheritedPrefs = transientState().valueForKey( GP_KEY );
+            if (inheritedPrefs == null)
+            {
+                prefs = new GraderPrefsManager(
+                    getGraderPrefs(), ecManager());
+            }
+            else
+            {
+                prefs = (GraderPrefsManager)
+                    ((GraderPrefsManager)inheritedPrefs).clone();
+            }
+        }
+        if (log.isDebugEnabled())
+        {
+            log.debug("awake(): end " + getClass().getName());
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Determine whether "Finish" can be pressed for this task.
      * @return true if a submission is stored
      */
@@ -89,10 +122,6 @@ public class GraderComponent
      */
     public GraderPrefsManager prefs()
     {
-        if (prefs == null)
-        {
-            prefs = new GraderPrefsManager(getGraderPrefs(), ecManager());
-        }
         return prefs;
     }
 
@@ -101,12 +130,11 @@ public class GraderComponent
     @Override
     public WOComponent pageWithName( String name )
     {
-        WOComponent result = super.pageWithName( name );
-        if (result instanceof GraderComponent && prefs != null)
+        if (prefs != null)
         {
-            ((GraderComponent)result).prefs =
-                (GraderPrefsManager)prefs.clone();
+            transientState().takeValueForKey( prefs, GP_KEY );
         }
+        WOComponent result = super.pageWithName( name );
         return result;
     }
 
@@ -117,11 +145,11 @@ public class GraderComponent
     private IndependentEOManager.ECManager ecManager()
     {
         IndependentEOManager.ECManager result = (IndependentEOManager.ECManager)
-            wcSession().transientState().valueForKey(KEY);
+            transientState().valueForKey(ECMANAGER_KEY);
         if (result == null)
         {
             result = new IndependentEOManager.ECManager();
-            wcSession().transientState().takeValueForKey(result, KEY);
+            transientState().takeValueForKey(result, ECMANAGER_KEY);
         }
         return result;
     }
@@ -184,6 +212,9 @@ public class GraderComponent
     //~ Instance/static variables .............................................
 
     private GraderPrefsManager prefs;
-    private static final String KEY = GraderPrefsManager.class.getName();
+    private static final String GP_KEY =
+        GraderPrefsManager.class.getName();
+    private static final String ECMANAGER_KEY =
+        IndependentEOManager.ECManager.class.getName();
     static Logger log = Logger.getLogger( GraderComponent.class );
 }
