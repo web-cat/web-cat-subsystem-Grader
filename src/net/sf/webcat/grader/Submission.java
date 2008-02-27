@@ -430,6 +430,93 @@ public class Submission
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Returns a value indicating if this submission is the "submission for
+     * grading" of the user who submitted it for a particular assignment
+     * offering. The "submission for grading" is the one that would be exported
+     * by the grader and the one that should normally be considered for
+     * reporting; specifically, it is either the most recent graded submission,
+     * or if none have yet been graded, it is the most recent overall
+     * submission.
+     * 
+     * @return true if this submission is the "submission for grading" for its
+     *     user and assignment offering; false if otherwise.
+     */
+    public boolean isSubmissionForGrading()
+    {
+        Submission primarySubmission = null;
+        Submission gradedSubmission = null;
+        
+        // Find the submission
+        NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
+                editingContext(),
+                Submission.ENTITY_NAME,
+                new NSDictionary(
+                    new Object[] {
+                        user(),
+                        assignmentOffering()
+                    },
+                    new Object[] {
+                        Submission.USER_KEY,
+                        Submission.ASSIGNMENT_OFFERING_KEY
+                    }
+                )
+            );
+
+        for ( int j = 0; j < thisSubmissionSet.count(); j++ )
+        {
+            Submission sub =
+                (Submission)thisSubmissionSet.objectAtIndex( j );
+
+            if ( sub.result() != null /* && !sub.partnerLink() */ )
+            {
+                if ( primarySubmission == null )
+                {
+                    primarySubmission = sub;
+                }
+                else if ( sub.submitNumberRaw() != null )
+                {
+                    int num = sub.submitNumber();
+                    if ( num > primarySubmission.submitNumber() )
+                    {
+                        primarySubmission = sub;
+                    }
+                }
+                if ( sub.result().status() != Status.TO_DO )
+                {
+                    if ( gradedSubmission == null )
+                    {
+                        gradedSubmission = sub;
+                    }
+                    else if ( sub.submitNumberRaw() != null )
+                    {
+                        int num = sub.submitNumber();
+                        if ( num > gradedSubmission.submitNumber() )
+                        {
+                            gradedSubmission = sub;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ( gradedSubmission != null )
+        {
+            primarySubmission = gradedSubmission;
+        }
+
+        if ( primarySubmission != null )
+        {
+        	return this.equals(primarySubmission);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    
     //~ Instance/static variables .............................................
 
     private String cachedPermalink;
