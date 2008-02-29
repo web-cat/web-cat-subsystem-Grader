@@ -621,7 +621,7 @@ public class EditFileCommentsPage
         buffer.append( "editor = new HTMLArea(\"source\");\n" );
         {
             String url = WCResourceManager.resourceURLFor(
-                "htmlarea/htmlarea.js", "Grader", null, null );
+                "htmlarea/htmlarea.js", "Grader", null, context().request() );
             if ( url != null )
             {
                 buffer.append( "editor.config.editorURL = \"");
@@ -630,7 +630,7 @@ public class EditFileCommentsPage
                 buffer.append( "\";\n");
             }
             url = WCResourceManager.resourceURLFor(
-                "images/blank.gif", "Core", null, null );
+                "images/blank.gif", "Core", null, context().request() );
             if ( url != null )
             {
                 buffer.append( "editor.config.coreResourceURL = \"");
