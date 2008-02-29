@@ -97,7 +97,7 @@ public class SubmissionFileDetailsPage
         try
         {
             String result = thisFile.codeWithComments(
-                user(), false );
+                user(), false, context().request() );
             return result;
         }
         catch ( Exception e )

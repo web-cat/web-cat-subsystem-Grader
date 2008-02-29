@@ -236,7 +236,7 @@ public class FullPrintableReport
             {
                 ec.lock();
                 pairs[stepNumber].html = pairs[stepNumber].file
-                    .codeWithComments( user, false );
+                    .codeWithComments( user, false, context().request() );
             }
             catch ( Exception e )
             {

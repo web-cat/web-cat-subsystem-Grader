@@ -586,7 +586,7 @@ public class EditFileCommentsPage
         try
         {
             codeWithComments = prefs().submissionFileStats()
-                .codeWithComments( user(), isGrading() );
+                .codeWithComments( user(), isGrading(), context().request() );
             if ( log.isDebugEnabled() )
             {
                 log.debug( "codeWithComments = "

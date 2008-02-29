@@ -202,7 +202,10 @@ public class SubmissionFileStats
 
 
     // ----------------------------------------------------------
-    public String codeWithComments( User user, boolean isGrading )
+    public String codeWithComments(
+        User user,
+        boolean isGrading,
+        com.webobjects.appserver.WORequest request )
         throws Exception
     {
         File file = markupFile();
@@ -211,9 +214,10 @@ public class SubmissionFileStats
 //        contents.append( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 " );
 //        contents.append( "Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD" );
 //        contents.append( "/xhtml1-strict.dtd\">\n" );
-        contents.append( "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
+        contents.append(
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
         contents.append( WCResourceManager.resourceURLFor(
-            "wc-code.css", "Grader", null, null ) );
+            "wc-code.css", "Grader", null, request ) );
         contents.append( "\"/>\n" );
 
         //get the array of file comments from the database
