@@ -351,13 +351,13 @@ public class UploadRosterPage
                 numberOfRecords++;
                 if ( numberOfRecords <= NUM_PREVIEW_LINES )
                 {
-                    previewLines.add( new NSMutableArray( line ) );
+                    previewLines.add( new NSMutableArray( (Object[])line ) );
                 }
                 else
                 {
                     if ( line.length > maxRecordLength )
                     {
-                        longPreviewLine = new NSMutableArray( line );
+                        longPreviewLine = new NSMutableArray( (Object[])line );
                         gapBeforeLongLine =
                             numberOfRecords > NUM_PREVIEW_LINES + 1;
                     }
