@@ -56,7 +56,7 @@ public class MiniBarGraph
         String name, NSDictionary associations, WOElement children )
     {
         super( name, associations, children );
-        
+
         // Validate bindings
         if ( !hasAssociationForKey( GRAPH_SUMMARY_KEY ) )
         {
@@ -82,7 +82,7 @@ public class MiniBarGraph
      * @param aResponse the response being built
      * @param aContext  the request context
      */
-    public void appendToResponse( WOResponse aResponse, WOContext aContext ) 
+    public void appendToResponse( WOResponse aResponse, WOContext aContext )
     {
         WOComponent c = aContext.component();
 
@@ -108,7 +108,7 @@ public class MiniBarGraph
         else if ( largest < 0.3 ) { zoomFactor = 3.0f; }
         else if ( largest < 0.4 ) { zoomFactor = 2.0f; }
         else if ( largest < 0.6 ) { zoomFactor = 1.5f; }
-        
+
         Object markScoreObject =
             associationValueForKey( MARK_SCORE_KEY, c );
         if ( markScoreObject != null && !( markScoreObject instanceof Number ) )
@@ -159,7 +159,7 @@ public class MiniBarGraph
      * @param aComponent the current component
      * @return the array of data values
      */
-    public float[] dataValues( WOComponent aComponent ) 
+    public float[] dataValues( WOComponent aComponent )
     {
         AssignmentSummary summary = (AssignmentSummary)associationValueForKey(
             GRAPH_SUMMARY_KEY, aComponent );
@@ -173,7 +173,7 @@ public class MiniBarGraph
      * @param aComponent the current component
      * @return the array of data values
      */
-    public float scaleFactor( WOComponent aComponent ) 
+    public float scaleFactor( WOComponent aComponent )
     {
         return associationFloatValueForKey( MAX_VALUE_KEY, aComponent );
     }
@@ -182,12 +182,12 @@ public class MiniBarGraph
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
-    private String markerUrlPrefix() 
+    private String markerUrlPrefix()
     {
         if ( _markerUrlPrefix == null )
         {
             _markerUrlPrefix = ((WCResourceManager)Application.application()
-                .resourceManager() ).urlForStaticHtmlResourceNamed(
+                .resourceManager() ).urlForResourceNamed(
                     "images/marker0.gif", "Grader", null, null );
             if ( _markerUrlPrefix != null )
             {
