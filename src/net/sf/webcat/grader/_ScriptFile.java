@@ -932,7 +932,6 @@ public abstract class _ScriptFile
         defaultConfigSettingsRawCache  = null;
         globalConfigSettingsCache = null;
         globalConfigSettingsRawCache  = null;
-        setUpdateMutableFields( false );
         super.flushCaches();
     }
 

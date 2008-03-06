@@ -450,7 +450,6 @@ public abstract class _StepConfig
         log.debug("flushCaches()");
         configSettingsCache = null;
         configSettingsRawCache  = null;
-        setUpdateMutableFields( false );
         super.flushCaches();
     }
 

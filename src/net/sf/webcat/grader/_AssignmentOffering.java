@@ -621,7 +621,6 @@ public abstract class _AssignmentOffering
         log.debug("flushCaches()");
         graphSummaryCache = null;
         graphSummaryRawCache  = null;
-        setUpdateMutableFields( false );
         super.flushCaches();
     }
 
