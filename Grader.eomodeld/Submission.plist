@@ -114,6 +114,7 @@
        },
 
        {
+           deleteRule = EODeleteRuleCascade;
            destination = EnqueuedJob;
            isToMany = Y;
            joinSemantic = EOInnerJoin;
