@@ -475,6 +475,7 @@ public class AssignmentOffering
     public void mightDelete()
     {
         log.debug("mightDelete()");
+        if (isNewObject()) return;
         if (hasStudentSubmissions())
         {
             log.debug("mightDelete(): offering has non-staff submissions");
@@ -504,6 +505,7 @@ public class AssignmentOffering
     @Override
     public void didDelete( EOEditingContext context )
     {
+        log.debug("didDelete()");
         super.didDelete( context );
         // should check to see if this is a child ec
         EOObjectStore parent = context.parentObjectStore();
@@ -540,6 +542,7 @@ public class AssignmentOffering
      */
     public boolean hasStudentSubmissions()
     {
+        if (isNewObject()) return false;
         NSMutableArray qualifiers = new NSMutableArray();
         // Must be a submission to this assignment
         qualifiers.add(new EOKeyValueQualifier(
