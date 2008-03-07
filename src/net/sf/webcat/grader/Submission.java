@@ -92,7 +92,9 @@ public class Submission
         else
         {
             StringBuffer dir =
-                user().authenticationDomain().submissionBaseDirBuffer();
+                ( user() == null )
+                ? new StringBuffer("<null>")
+                : user().authenticationDomain().submissionBaseDirBuffer();
             if ( assignmentOffering() != null )
             {
                 assignmentOffering().addSubdirTo( dir );
@@ -102,7 +104,9 @@ public class Submission
                 dir.append( "/ASSIGNMENT" );
             }
             dir.append( '/' );
-            dir.append( user().userName() );
+            dir.append( ( user() == null )
+                ? new StringBuffer("<null>")
+                : user().userName() );
             dir.append( '/' );
             dir.append( submitNumber() );
             return dir.toString();
@@ -439,7 +443,7 @@ public class Submission
      * reporting; specifically, it is either the most recent graded submission,
      * or if none have yet been graded, it is the most recent overall
      * submission.
-     * 
+     *
      * @return true if this submission is the "submission for grading" for its
      *     user and assignment offering; false if otherwise.
      */
@@ -447,7 +451,7 @@ public class Submission
     {
         Submission primarySubmission = null;
         Submission gradedSubmission = null;
-        
+
         // Find the submission
         NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
                 editingContext(),
@@ -515,10 +519,43 @@ public class Submission
             return false;
         }
     }
-    
-    
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void mightDelete()
+    {
+        log.debug("mightDelete()");
+        subdirToDelete = dirName();
+        super.mightDelete();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void didDelete( EOEditingContext context )
+    {
+        log.debug("didDelete()");
+        super.didDelete( context );
+        // should check to see if this is a child ec
+        EOObjectStore parent = context.parentObjectStore();
+        if (parent == null || !(parent instanceof EOEditingContext))
+        {
+            if (subdirToDelete != null)
+            {
+                File dir = new File(subdirToDelete);
+                if (dir.exists())
+                {
+                    net.sf.webcat.archives.FileUtilities.deleteDirectory(dir);
+                }
+            }
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
     private String cachedPermalink;
+    private String subdirToDelete;
     static Logger log = Logger.getLogger( Submission.class );
 }
