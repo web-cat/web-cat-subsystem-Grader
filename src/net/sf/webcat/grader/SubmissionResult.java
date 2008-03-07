@@ -28,11 +28,10 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import com.webobjects.foundation.NSValidation.*;
 import er.extensions.*;
 import java.io.File;
-
 import net.sf.webcat.core.*;
-
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -353,7 +352,7 @@ public class SubmissionResult
         if ( propertiesFile == null )
         {
             propertiesFile =
-                new File( submission().resultDirName(), propertiesFileName() );            
+                new File( submission().resultDirName(), propertiesFileName() );
         }
         return propertiesFile;
     }
@@ -437,7 +436,7 @@ public class SubmissionResult
     // ----------------------------------------------------------
     /**
      * Get the corresponding icon URL for this file's grading status.
-     * 
+     *
      * @return The image URL as a string
      */
     public String statusURL()
@@ -469,7 +468,7 @@ public class SubmissionResult
     /**
      * Change the value of this object's <code>isMostRecent</code>
      * property.
-     * 
+     *
      * @param value The new value for this property
      */
     public void setIsMostRecent( boolean value )
@@ -603,38 +602,46 @@ public class SubmissionResult
     }
 
 
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
+    // ----------------------------------------------------------
+    @Override
+    public void mightDelete()
+    {
+        log.debug("mightDelete()");
+        Submission sub = submission();
+        if (sub != null)
+        {
+            subdirToDelete = sub.resultDirName();
+        }
+        super.mightDelete();
+    }
 
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
+
+    // ----------------------------------------------------------
+    @Override
+    public void didDelete( EOEditingContext context )
+    {
+        log.debug("didDelete()");
+        super.didDelete( context );
+        // should check to see if this is a child ec
+        EOObjectStore parent = context.parentObjectStore();
+        if (parent == null || !(parent instanceof EOEditingContext))
+        {
+            if (subdirToDelete != null)
+            {
+                File dir = new File(subdirToDelete);
+                if (dir.exists())
+                {
+                    net.sf.webcat.archives.FileUtilities.deleteDirectory(dir);
+                }
+            }
+        }
+    }
 
 
     //~ Instance/static variables .............................................
 
     private File propertiesFile;
     private WCProperties properties;
+    private String subdirToDelete;
     static Logger log = Logger.getLogger( SubmissionResult.class );
 }
