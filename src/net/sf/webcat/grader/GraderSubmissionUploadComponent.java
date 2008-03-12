@@ -96,8 +96,7 @@ public class GraderSubmissionUploadComponent
         submission.setSubmitNumber( submitNumber );
         submission.setUserRelationship( user );
         log.debug( "startSubmission( " + submitNumber + ", " + user + " )" );
-        prefs().setSubmissionRelationship( submission );
-        submissionInProcess().setSubmissionInProcess( true );
+        submissionInProcess().setSubmission( submission );
     }
 
 
@@ -116,7 +115,7 @@ public class GraderSubmissionUploadComponent
     {
         String errorMessage = null;
         log.debug( "committing submission" );
-        Submission submission = prefs().submission();
+        Submission submission = submissionInProcess().submission();
         String uploadedFileName = submissionInProcess().uploadedFileName();
         submission.setSubmitTime( submitTime );
         submission.setFileName( uploadedFileName );
@@ -143,7 +142,7 @@ public class GraderSubmissionUploadComponent
                 );
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
-            submissionInProcess().setSubmissionInProcess( false );
+            submissionInProcess().setSubmission( null );
             applyLocalChanges();
             return "A file error occurred while saving your "
                    + "submission.  The error has been reported "
@@ -171,7 +170,7 @@ public class GraderSubmissionUploadComponent
                 );
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
-            submissionInProcess().setSubmissionInProcess( false );
+            submissionInProcess().setSubmission( null );
             applyLocalChanges();
             return "A file error occurred while saving your "
                    + "submission.  The error has been reported "
@@ -210,11 +209,12 @@ public class GraderSubmissionUploadComponent
         job.setSubmissionRelationship( submission );
         job.setQueueTime( new NSTimestamp() );
         applyLocalChanges();
+        prefs().setSubmissionRelationship(submission);
 
         Grader.getInstance().graderQueue().enqueue( null );
 
         submissionInProcess().clearUpload();
-        submissionInProcess().setSubmissionInProcess( false );
+        submissionInProcess().setSubmission(null);
 
         return errorMessage;
     }
@@ -229,13 +229,13 @@ public class GraderSubmissionUploadComponent
     {
         if ( submissionInProcess().submissionInProcess() )
         {
-            Submission submission = prefs().submission();
+            Submission submission = submissionInProcess().submission();
             if ( submission != null && submission.result() == null )
             {
                 localContext().deleteObject( submission );
                 prefs().setSubmissionRelationship( null );
             }
-            submissionInProcess().setSubmissionInProcess( false );
+            submissionInProcess().setSubmission(null);
         }
     }
 

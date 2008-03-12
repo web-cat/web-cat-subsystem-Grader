@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
  *  @version $Id$
  */
 public class SubmitResponse
-    extends GraderComponent
+    extends GraderSubmissionUploadComponent
 {
     //~ Constructors ..........................................................
 

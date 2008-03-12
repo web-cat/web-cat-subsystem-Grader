@@ -126,18 +126,30 @@ public class SubmissionInProcess
      */
     public boolean submissionInProcess()
     {
-        return submissionInProcess;
+        return submission != null;
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Set or clear the flag for a submission currently in progress.
-     * @param value The flag's new value
+     * Get the submission currently in progress.
+     * @return The submission object, or null if none is in procress
      */
-    public void setSubmissionInProcess( boolean value )
+    public Submission submission()
     {
-        submissionInProcess = value;
+        return submission;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the submission currently in progress.
+     * @param submission The submission object, or null to indicate no
+     * submission is in progress anymore
+     */
+    public void setSubmission( Submission submission )
+    {
+        this.submission = submission;
     }
 
 
@@ -178,5 +190,5 @@ public class SubmissionInProcess
     private NSData  uploadedFile;
     private String  uploadedFileName;
     private NSArray uploadedFileList;
-    private boolean submissionInProcess = false;
+    private Submission submission;
 }
