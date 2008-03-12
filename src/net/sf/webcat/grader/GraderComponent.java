@@ -83,20 +83,7 @@ public class GraderComponent
             log.debug("awake(): begin " + getClass().getName());
         }
         super.awake();
-        if (prefs == null)
-        {
-            Object inheritedPrefs = transientState().valueForKey( GP_KEY );
-            if (inheritedPrefs == null)
-            {
-                prefs = new GraderPrefsManager(
-                    getGraderPrefs(), ecManager());
-            }
-            else
-            {
-                prefs = (GraderPrefsManager)
-                    ((GraderPrefsManager)inheritedPrefs).clone();
-            }
-        }
+        prefs();
         if (log.isDebugEnabled())
         {
             log.debug("awake(): end " + getClass().getName());
@@ -122,6 +109,20 @@ public class GraderComponent
      */
     public GraderPrefsManager prefs()
     {
+        if (prefs == null)
+        {
+            Object inheritedPrefs = transientState().valueForKey( GP_KEY );
+            if (inheritedPrefs == null)
+            {
+                prefs = new GraderPrefsManager(
+                    getGraderPrefs(), ecManager());
+            }
+            else
+            {
+                prefs = (GraderPrefsManager)
+                    ((GraderPrefsManager)inheritedPrefs).clone();
+            }
+        }
         return prefs;
     }
 
