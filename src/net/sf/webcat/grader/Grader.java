@@ -350,9 +350,9 @@ public class Grader
         String fileName = request.stringFormValueForKey( "file1.filename" );
         log.debug( "fileName = " + fileName );
 
-        EOEditingContext ec = session.sessionContext();
         SubmitResponse result = (SubmitResponse)Application.application()
            .pageWithName( SubmitResponse.class.getName(), context );
+        EOEditingContext ec = result.localContext();
         result.sessionID = session.sessionID();
         log.debug( "handleSubmission(): sessionID = " + result.sessionID );
         NSTimestamp currentTime   = new NSTimestamp();
@@ -600,8 +600,6 @@ public class Grader
             }
         }
 
-        GraderSubmissionUploadComponent genericGComp =
-            new GraderSubmissionUploadComponent( context );
         if ( assignment == null )
         {
             log.debug( "no assignments are open." );
@@ -613,14 +611,14 @@ public class Grader
             return result.generateResponse();
         }
 
-        genericGComp.coreSelections().setCourseOfferingRelationship(
+        result.coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering() );
-        genericGComp.prefs().setAssignmentOfferingRelationship( assignment );
+        result.prefs().setAssignmentOfferingRelationship( assignment );
         NSArray submissions = EOUtilities.objectsMatchingValues(
                 ec,
                 Submission.ENTITY_NAME,
                 new NSDictionary(
-                        new Object[] {  session.user(),
+                        new Object[] {  result.user(),
                                         assignment
                                      },
                         new Object[] { Submission.USER_KEY,
@@ -648,15 +646,15 @@ public class Grader
             return result.generateResponse();
         }
 
-        genericGComp.startSubmission( currentSubNo, session.user() );
-        genericGComp.submissionInProcess().setUploadedFile( file );
-        genericGComp.submissionInProcess().setUploadedFileName( fileName );
+        result.startSubmission( currentSubNo, result.user() );
+        result.submissionInProcess().setUploadedFile( file );
+        result.submissionInProcess().setUploadedFileName( fileName );
         if ( file.length() >
              assignment.assignment()
                  .submissionProfile().effectiveMaxFileUploadSize() )
         {
-            genericGComp.clearSubmission();
-            genericGComp.submissionInProcess().clearUpload();
+            result.clearSubmission();
+            result.submissionInProcess().clearUpload();
             result.message =
                 "You file exceeds the file size limit for this "
                 + "assignment ("
@@ -668,14 +666,14 @@ public class Grader
         try
         {
             result.message =
-                genericGComp.commitSubmission( context, currentTime );
+                result.commitSubmission( context, currentTime );
         }
         catch ( Exception e )
         {
             Application.emailExceptionToAdmins( e, context, null );
-            genericGComp.clearSubmission();
-            genericGComp.submissionInProcess().clearUpload();
-            session.cancelSessionChanges();
+            result.clearSubmission();
+            result.submissionInProcess().clearUpload();
+            result.cancelLocalChanges();
             result.message =
                 "An unexpected exception occurred while trying to commit "
                 + "your submission.  The error has been reported to the "
@@ -705,7 +703,9 @@ public class Grader
     {
         log.debug( "handleReport()" );
         WOActionResults result = null;
-        GraderComponent genericGComp = new GraderComponent( context );
+        GraderComponent genericGComp =
+            (GraderComponent)Application.application().pageWithName(
+                PickCourseEnrolledPage.class.getName(), context);
         if ( genericGComp.wcSession().primeUser() == null
              || genericGComp.prefs().submission() == null )
         {
@@ -715,9 +715,12 @@ public class Grader
         }
         else
         {
-            result = Application.application().pageWithName(
-                session.tabs.selectById( "MostRecent" ).pageName(),
-                context ).generateResponse();
+//            result = Application.application().pageWithName(
+//                session.tabs.selectById( "MostRecent" ).pageName(),
+//                context ).generateResponse();
+            result = genericGComp.pageWithName(
+                session.tabs.selectById( "MostRecent" ).pageName())
+                .generateResponse();
         }
         log.debug( "handleReport() returning" );
         return result;
