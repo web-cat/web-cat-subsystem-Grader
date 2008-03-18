@@ -114,8 +114,7 @@ public class GraderComponent
             Object inheritedPrefs = transientState().valueForKey( GP_KEY );
             if (inheritedPrefs == null)
             {
-                prefs = new GraderPrefsManager(
-                    getGraderPrefs(), ecManager());
+                reloadGraderPrefs();
             }
             else
             {
@@ -137,6 +136,19 @@ public class GraderComponent
         }
         WOComponent result = super.pageWithName( name );
         return result;
+    }
+
+
+    //~ Protected Methods .....................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Forces current prefs values to be reloaded from the database.
+     */
+    protected void reloadGraderPrefs()
+    {
+        prefs = new GraderPrefsManager(
+            getGraderPrefs(), ecManager());
     }
 
 

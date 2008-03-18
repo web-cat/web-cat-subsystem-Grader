@@ -234,14 +234,16 @@ public class PickSubmissionPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
+        WOComponent result = null;
         if ( saveSelectionCanContinue() )
         {
-            return super.next();
+            result = super.next();
+            if (result instanceof GraderComponent)
+            {
+                ((GraderComponent)result).reloadGraderPrefs();
+            }
         }
-        else
-        {
-            return null;
-        }
+        return result;
     }
 
 
