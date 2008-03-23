@@ -6,7 +6,7 @@
             class = WODisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
-                editingContext = session.sessionContext;
+                editingContext = localContext;
                 fetchSpecification = {
                     class = EOFetchSpecification;
                     entityName = EnqueuedJob;
@@ -35,7 +35,7 @@
             class = WODisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
-                editingContext = session.sessionContext;
+                editingContext = localContext;
                 fetchSpecification = {
                     class = EOFetchSpecification;
                     entityName = AssignmentOffering;
@@ -58,7 +58,7 @@
             class = WODisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
-                editingContext = session.sessionContext;
+                editingContext = localContext;
                 fetchSpecification = {
                     class = EOFetchSpecification;
                     entityName = AssignmentOffering;

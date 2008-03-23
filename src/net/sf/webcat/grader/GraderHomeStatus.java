@@ -93,11 +93,6 @@ public class GraderHomeStatus
                 EOQualifier.QualifierOperatorLessThan,
                 currentTime
             ) );
-//        assignmentGroup.setQualifier(
-//                        new EOAndQualifier( qualifiers ) );
-//        log.debug( "qualifier = " + assignmentGroup.qualifier() );
-//        assignmentGroup.fetch();
-//        log.debug( "results = " + assignmentGroup.displayedObjects() );
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.PUBLISH_KEY,
                 EOQualifier.QualifierOperatorEqual,
@@ -108,11 +103,6 @@ public class GraderHomeStatus
                 EOQualifier.QualifierOperatorContains,
                 user()
             ) );
-//        assignmentGroup.setQualifier(
-//                        new EOAndQualifier( qualifiers ) );
-//        log.debug( "qualifier = " + assignmentGroup.qualifier() );
-//        assignmentGroup.fetch();
-//        log.debug( "results = " + assignmentGroup.displayedObjects() );
         qualifiers = new NSMutableArray( new EOAndQualifier( qualifiers ) );
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
@@ -124,11 +114,6 @@ public class GraderHomeStatus
                 EOQualifier.QualifierOperatorContains,
                 user()
             ) );
-//        assignmentGroup.setQualifier(
-//                        new EOOrQualifier( qualifiers ) );
-//        log.debug( "qualifier = " + assignmentGroup.qualifier() );
-//        assignmentGroup.fetch();
-//        log.debug( "results = " + assignmentGroup.displayedObjects() );
         qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
         EOQualifier deadlineQualifier = new EOKeyValueQualifier(
             AssignmentOffering.LATE_DEADLINE_KEY,
@@ -138,9 +123,18 @@ public class GraderHomeStatus
         qualifiers.addObject( deadlineQualifier );
         EOQualifier assignmentQualifier = new EOAndQualifier( qualifiers );
         assignmentGroup.setQualifier( assignmentQualifier );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "qualifier = " + assignmentGroup.qualifier() );
+        }
         assignmentGroup.fetch();
-        qualifiers.removeAllObjects();
-        qualifiers.addObject( deadlineQualifier );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "results = " + assignmentGroup.displayedObjects() );
+        }
+
+        // Now set up the upcoming assignments list
+        qualifiers = new NSMutableArray( deadlineQualifier );
         // Also, more recent than two weeks ago
         qualifiers.addObject( new EOKeyValueQualifier(
             AssignmentOffering.DUE_DATE_KEY,
