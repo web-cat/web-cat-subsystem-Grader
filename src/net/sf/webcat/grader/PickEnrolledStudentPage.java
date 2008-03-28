@@ -75,6 +75,13 @@ public class PickEnrolledStudentPage
 
 
     // ----------------------------------------------------------
+    public User localUser()
+    {
+        return user();
+    }
+
+
+    // ----------------------------------------------------------
     public void cancelLocalChanges()
     {
         NSDictionary config = wcSession().tabs.selectedDescendant().config();

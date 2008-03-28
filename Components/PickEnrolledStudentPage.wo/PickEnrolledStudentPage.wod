@@ -27,7 +27,7 @@ String6: WOString {
 
 StudentRadioButton: WORadioButton {
     name = "Group";
-    selection = user;
+    selection = localUser;
     value = student;
 }
 
