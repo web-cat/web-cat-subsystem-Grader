@@ -186,9 +186,8 @@ public class MiniBarGraph
     {
         if ( _markerUrlPrefix == null )
         {
-            _markerUrlPrefix = ((WCResourceManager)Application.application()
-                .resourceManager() ).urlForResourceNamed(
-                    "images/marker0.gif", "Grader", null, null );
+            _markerUrlPrefix = WCResourceManager.resourceURLFor(
+                "images/marker0.gif", "Grader", null, null );
             if ( _markerUrlPrefix != null )
             {
                 _markerUrlPrefix = _markerUrlPrefix.substring( 0,
