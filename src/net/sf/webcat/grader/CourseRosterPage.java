@@ -102,7 +102,10 @@ public class CourseRosterPage
                 "authenticationDomain.propertyName" );
             firstLoad = false;
         }
-        notStudentDisplayGroup.fetch();
+        if (manuallyAdding)
+        {
+            notStudentDisplayGroup.fetch();
+        }
         super.appendToResponse( response, context );
         oldBatchSize1  = studentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex1 = studentDisplayGroup.currentBatchIndex();
