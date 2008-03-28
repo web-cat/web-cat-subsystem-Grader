@@ -9,7 +9,7 @@ Grader.version.revision=14
 Grader.requires=Core, EOJDBCPrototypes, DBUpdateEngine
 Grader.depends=env, pluginProperties
 
-Grader.copyright=(c) 2006, 2007 Virginia Tech Department of Computer Science
+Grader.copyright=(c) 2006-2008 Virginia Tech Department of Computer Science
 Grader.provider=Virginia Tech Computer Science
 Grader.provider.url=http\://web-cat.cs.vt.edu/updates
 Grader.info.url=http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem
