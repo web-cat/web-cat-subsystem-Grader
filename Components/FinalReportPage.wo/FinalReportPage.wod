@@ -19,7 +19,7 @@ EstimatedWait: WOString {
 
 FileDeduction: WOString {
 	numberformat = "0.0";
-	value        = stats.deductions;
+	value        = stats.toolDeductions;
 }
 
 FileName: WOString {
@@ -29,6 +29,16 @@ FileName: WOString {
 FileRemarks: WOString {
 	numberformat = "0";
 	value        = stats.remarks;
+}
+
+FileStaffDeduction: WOString {
+	numberformat = "0.0";
+	value        = stats.staffDeductions;
+}
+
+FileStaffRemarks: WOString {
+	numberformat = "0";
+	value        = stats.staffRemarks;
 }
 
 Form1: WOForm {
@@ -232,7 +242,7 @@ WCSortOrder1: net.sf.webcat.core.WCSortOrder {
 
 WCSortOrder2: net.sf.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
-	displayKey = "Deductions";
+	displayKey = "Automatically Graded Points Lost";
 	key = "deductions";
 }
 
@@ -244,6 +254,18 @@ WCSortOrder3: net.sf.webcat.core.WCSortOrder {
 
 WCSortOrder4: net.sf.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
-	displayKey = "Remarks";
+	displayKey = "Automatically Graded Feedback Comments";
 	key = "remarks";
+}
+
+WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Staff Feedback Comments";
+	key = "staffRemarks";
+}
+
+WCSortOrder6: net.sf.webcat.core.WCSortOrder {
+	displayGroup = statsDisplayGroup;
+	displayKey = "Staff Points Lost";
+	key = "taDeductions";
 }

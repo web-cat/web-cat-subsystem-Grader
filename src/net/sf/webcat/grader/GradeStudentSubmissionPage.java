@@ -91,6 +91,15 @@ public class GradeStudentSubmissionPage
             throw new RuntimeException( "null submission result" );
         }
         result = prefs().submission().result();
+        if (log.isDebugEnabled())
+        {
+            log.debug( "result = " + result);
+            if (result != null)
+            {
+                log.debug( "result = " + result.hashCode());
+                log.debug( "result EC = " + result.editingContext().hashCode());
+            }
+        }
         hasFileStats = ( result.submissionFileStats().count() > 0 );
         statsDisplayGroup.setObjectArray( result.submissionFileStats() );
         showCoverageData = null;
@@ -397,9 +406,39 @@ public class GradeStudentSubmissionPage
     }
 
 
+    // ----------------------------------------------------------
+    public Boolean showAutoGradedComments()
+    {
+        if (showAutoGradedComments == null)
+        {
+            if (result.submission().assignmentOffering().assignment()
+                    .submissionProfile().toolPoints() > 0.0)
+            {
+                showAutoGradedComments = Boolean.TRUE;
+            }
+            else
+            {
+                showAutoGradedComments = Boolean.FALSE;
+                for (int i = 0; i < result.submissionFileStats().count(); i++)
+                {
+                    SubmissionFileStats thisStats = (SubmissionFileStats)
+                        result.submissionFileStats().objectAtIndex(i);
+                    if (thisStats.remarks() > 0)
+                    {
+                        showAutoGradedComments = Boolean.TRUE;
+                        break;
+                    }
+                }
+            }
+        }
+        return showAutoGradedComments;
+    }
+
+
     //~ Instance/static variables .............................................
 
     private Boolean showCoverageData;
     private String priorComments;
+    private Boolean showAutoGradedComments;
     static Logger log = Logger.getLogger( GradeStudentSubmissionPage.class );
 }

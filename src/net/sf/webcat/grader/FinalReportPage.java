@@ -483,6 +483,35 @@ public class FinalReportPage
 
 
     // ----------------------------------------------------------
+    public Boolean showAutoGradedComments()
+    {
+        if (showAutoGradedComments == null)
+        {
+            if (submission.assignmentOffering().assignment()
+                    .submissionProfile().toolPoints() > 0.0)
+            {
+                showAutoGradedComments = Boolean.TRUE;
+            }
+            else
+            {
+                showAutoGradedComments = Boolean.FALSE;
+                for (int i = 0; i < result.submissionFileStats().count(); i++)
+                {
+                    SubmissionFileStats thisStats = (SubmissionFileStats)
+                        result.submissionFileStats().objectAtIndex(i);
+                    if (thisStats.remarks() > 0)
+                    {
+                        showAutoGradedComments = Boolean.TRUE;
+                        break;
+                    }
+                }
+            }
+        }
+        return showAutoGradedComments;
+    }
+
+
+    // ----------------------------------------------------------
     static private class JobData
     {
         public NSArray jobs;
@@ -565,6 +594,7 @@ public class FinalReportPage
     private JobData jobData;
     private int     oldQueuePos = -1;
     private Boolean showCoverageData;
+    private Boolean showAutoGradedComments;
 
     private static String blankGifUrl;
     static Logger log = Logger.getLogger( FinalReportPage.class );

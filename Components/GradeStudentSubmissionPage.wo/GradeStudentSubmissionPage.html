@@ -3,17 +3,25 @@
 <webobject name="ScoreSummary"/>
 <webobject name="HasFileStats">
 <div class="shadow"><table>
-  <tr><th class="sm">Done?<webobject name="WCSortOrder5"/></th>
+  <tr><th class="sm">Done?<webobject name="WCSortOrder7"/></th>
     <th>File<webobject name="WCSortOrder1"/></th>
-    <th class="sm">Remarks<webobject name="WCSortOrder4"/></th>
-    <th class="sm">Deductions<webobject name="WCSortOrder2"/></th>
+        <th class="sm">Staff<br/>Cmts<webobject name="WCSortOrder5"/></th>
+        <th class="sm">Staff<br/>Pts<webobject name="WCSortOrder6"/></th>
+        <wo:if condition="$showAutoGradedComments">
+        <th class="sm">Other<br/>Cmts<webobject name="WCSortOrder4"/></th>
+        </wo:if>
+        <th class="sm">Other<br/>Pts<webobject name="WCSortOrder2"/></th>
     <webobject name="ShowCoverageData">
-      <th colspan="2" align="left"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
+      <th class="sm" colspan="2" align="left"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
     </webobject></tr>
   <webobject name="StatRepetition"><webobject name="TR">
     <td><webobject name="FileStatus"/></td>
     <td><webobject name="ShowDetails"/>&nbsp;<webobject name="FileName"/></td>
+    <td class="n"><webobject name="FileStaffRemarks"/></td>
+    <td class="n"><webobject name="FileStaffDeduction"/></td>
+    <wo:if condition="$showAutoGradedComments">
     <td class="n"><webobject name="FileRemarks"/></td>
+    </wo:if>
     <td class="n"><webobject name="FileDeduction"/></td>
     <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
       <td class="n"><webobject name="Coverage"/>%</td>
