@@ -198,11 +198,13 @@ public class GraderComponent
                 ec.unlock();
                 Application.releasePeerEditingContext( ec );
             }
-            if ( prefs == null )
+            /*  Appears to be unnecessary ...
+            if ( newPrefs == null )
             {
                 log.error( "null prefs!", new Exception( "here" ) );
                 log.error( Application.extraInfoForContext( context() ) );
             }
+            */
             return newPrefs;
         }
     }
