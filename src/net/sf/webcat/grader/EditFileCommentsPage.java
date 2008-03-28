@@ -73,7 +73,17 @@ public class EditFileCommentsPage
      */
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        log.debug( "beginning appendToResponse()" );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "beginning appendToResponse()" );
+            SubmissionResult result = prefs().submission().result();
+            log.debug( "result = " + result);
+            if (result != null)
+            {
+                log.debug( "result = " + result.hashCode());
+                log.debug( "result EC = " + result.editingContext().hashCode());
+            }
+        }
         initializeCodeWithComments();
         super.appendToResponse( response, context );
         codeWithComments = null;
@@ -145,65 +155,24 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    public double fileTaDeductions()
-    {
-        taDeduction = 0.0;
-        NSArray comments = prefs().submissionFileStats().comments();
-        for ( int i = 0; i < comments.count(); i++ )
-        {
-            SubmissionFileComment thisComment =
-                (SubmissionFileComment)comments.objectAtIndex( i );
-            taDeduction += thisComment.deduction();
-        }
-        log.debug( " TA deductions = " + taDeduction );
-        return taDeduction;
-    }
-
-
-    // ----------------------------------------------------------
-    public double fileToolDeductions()
-    {
-        //for the tool/test
-        double total = prefs().submissionFileStats().deductions();
-        total -= fileTaDeductions();
-        return total;
-    }
-
-
-    // ----------------------------------------------------------
     public double toolTestingOtherFiles()
     {
-        toolTestingOtherFiles = 0.0;
-        SubmissionFileStats stats = prefs().submissionFileStats();
-        NSArray otherStats =
-            prefs().submission().result().submissionFileStats();
-        for ( int i = 0; i < otherStats.count(); i++ )
-        {
-            SubmissionFileStats thisFile =
-                (SubmissionFileStats)otherStats.objectAtIndex( i );
-            if ( thisFile != stats )
-            {
-                toolTestingOtherFiles += thisFile.deductions();
-            }
-        }
-        return toolTestingOtherFiles;
+        return otherFilesDeductions() - otherFilesTaDeductions();
     }
 
 
     // ----------------------------------------------------------
-    public double OtherFilesTaDeductions()
+    public double otherFilesTaDeductions()
     {
-        return projectTADeduction() - fileTaDeductions();
+        return projectTADeduction()
+            - prefs().submissionFileStats().staffDeductions();
     }
 
 
     //---------------------------------------------
-    public double OtherFilesDeductions()
+    public double otherFilesDeductions()
     {
-        double total = 0.0;
-        total += projectTADeduction() - fileTaDeductions();
-        total += toolTestingOtherFiles();
-        return total;
+        return projectDeductions() - prefs().submissionFileStats().deductions();
     }
 
 
@@ -222,20 +191,12 @@ public class EditFileCommentsPage
     {
         SubmissionResult result = prefs().submission().result();
         Number taScore = result.taScoreRaw();
-        Number possible = prefs().assignmentOffering().assignment()
-            .submissionProfile().taPointsRaw();
         projectTADeduction = 0.0;
         if ( taScore != null )
         {
             projectTADeduction += taScore.doubleValue();
-            if ( possible != null )
-            {
-                projectTADeduction -= possible.doubleValue();
-            }
-            else
-            {
-                projectTADeduction *= -1.0;
-            }
+            projectTADeduction -= prefs().assignmentOffering().assignment()
+                .submissionProfile().taPoints();
         }
         return projectTADeduction;
     }
@@ -250,14 +211,7 @@ public class EditFileCommentsPage
             .assignment().submissionProfile();
 
         projectToolTestingDeduction = result.toolScore();
-        if ( profile.toolPointsRaw() != null )
-        {
-            projectToolTestingDeduction -= profile.toolPoints();
-        }
-        else
-        {
-            projectToolTestingDeduction *= -1.0;
-        }
+        projectToolTestingDeduction -= profile.toolPoints();
         if ( correctnessScore != null )
         {
             double correctnessPossible = 0.0;
@@ -285,10 +239,6 @@ public class EditFileCommentsPage
             //calculate the TA score
             score = taScore.doubleValue();
             log.debug( "  TA score = " + score );
-            // add the old score back
-            score -= taDeduction;
-            log.debug( " After adding old score back, score now is = "
-                       + score );
             // now subtract the new score, which takes care of the
             // difference in the scores
             score += ptsTakenOff;
@@ -304,12 +254,15 @@ public class EditFileCommentsPage
                 score += ptsTakenOff; // adding the deductions
                 result.setTaScore( score );
             }
-            // else I dont know what to do
+            else
+            {
+                result.setTaScore(result.taScore() + ptsTakenOff);
+            }
         }
         SubmissionFileStats stats = prefs().submissionFileStats();
         double oldDeductions = stats.deductions();
         log.debug( "old deductions = " + oldDeductions );
-        stats.setDeductions( oldDeductions - taDeduction + ptsTakenOff );
+        stats.setDeductions( oldDeductions + ptsTakenOff );
         log.debug( "new deductions = " + stats.deductions() );
     }
 
@@ -428,6 +381,7 @@ public class EditFileCommentsPage
                  {
                      log.debug( "Deleting comment, line "
                                 + thisComment.lineNo() );
+                     taPts -= thisComment.deduction();
                      ec.deleteObject( thisComment );
                  }
             }
@@ -707,7 +661,6 @@ public class EditFileCommentsPage
 
     //~ Instance/static variables .............................................
 
-    private double taDeduction                 = 0.0;
     private double projectTADeduction          = 0.0;
     private double toolTestingOtherFiles       = 0.0;
     private double projectToolTestingDeduction = 0.0;

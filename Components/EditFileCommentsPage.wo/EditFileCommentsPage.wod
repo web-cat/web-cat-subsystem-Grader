@@ -19,21 +19,19 @@ Code: WOText {
 FileDeduction: WOString {
 	numberformat = "0.0";
 	value        = prefs.submissionFileStats.deductionsRaw;
-//	value = totalFileDeductions;
 }
 
 
 
 FileTaDeduction: WOString {
 	numberformat = "0.0";
-	value = fileTaDeductions;
+	value = prefs.submissionFileStats.staffDeductions;
 }
 
 
 FileToolTestingDeduction: WOString {
 	numberformat = "0.0";
-//	value        = prefs.submissionFileStats.deductionsRaw;
-    value        = fileToolDeductions;
+    value        = prefs.submissionFileStats.toolDeductions;
 }
 
 Form1: WOForm {
@@ -57,12 +55,12 @@ IsGrading: WOConditional {
 
 OtherFilesDeduction: WOString {
 	numberformat = "0.0";
-	value        = OtherFilesDeductions; //state.submissionFileStats.nDeductions;
+	value        = otherFilesDeductions; //state.submissionFileStats.nDeductions;
 }
 
 OtherFilesTADeduction: WOString {
 	numberformat = "0.0";
-	value        = OtherFilesTaDeductions; //state.submissionFileStats.nDeductions;
+	value        = otherFilesTaDeductions; //state.submissionFileStats.nDeductions;
 }
 
 OtherFilesToolTestingDeduction: WOString {
