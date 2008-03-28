@@ -83,7 +83,11 @@ public class ScoreSummaryBlock
     public boolean hasTAGrade()
     {
         return submission.assignmentOffering().assignment()
-            .submissionProfile().taPoints() > 0 || allowScoreEdit;
+            .submissionProfile().taPoints() > 0.0
+            || (result != null
+                && result.taScoreRaw() != null
+                && result.taScore() != 0.0)
+            || allowScoreEdit;
     }
 
 
