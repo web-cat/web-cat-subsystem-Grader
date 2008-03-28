@@ -105,7 +105,10 @@ public class UploadRosterPage
         {
             domain = user().authenticationDomain();
         }
-        refresh(true, false);
+        if (previewLines == null)
+        {
+            refresh(true, false);
+        }
         super.appendToResponse( response, context );
     }
 
@@ -761,7 +764,7 @@ public class UploadRosterPage
                 }
                 if (execute)
                 {
-                    applyLocalChanges();
+                    super.applyLocalChanges();
                 }
                 line = getNonBlankLine( in );
             }
