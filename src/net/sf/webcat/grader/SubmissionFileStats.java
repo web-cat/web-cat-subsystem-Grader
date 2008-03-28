@@ -25,12 +25,13 @@
 
 package net.sf.webcat.grader;
 
+import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import net.sf.webcat.core.*;
 
@@ -186,18 +187,176 @@ public class SubmissionFileStats
 
     // ----------------------------------------------------------
     /**
-     * Retrieve this object's <code>remarks</code> value.
+     * Retrieve the number of TA/instructor remarks made on this file.
+     * @return a count of manual comments entered for this file
+     */
+    public int staffRemarks()
+    {
+        NSArray comments = comments();
+        return comments == null
+            ? 0
+            : comments.count();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the total number of remarks on this file: auto-graded +
+     * manual.
      * @return the value of the attribute
      */
-    public int remarks()
+    public int totalRemarks()
     {
-        int result = super.remarks();
-        NSArray comments = comments();
-        if ( comments != null )
+        return remarks() + staffRemarks();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the total number of manual point deductions on this file.
+     * @return the value of the attribute
+     */
+    public double staffDeductions()
+    {
+        if (!staffDeductionsIsValid)
         {
-            result += comments.count();
+            staffDeductions = 0.0;
+            NSArray comments = comments();
+            for ( int i = 0; i < comments.count(); i++ )
+            {
+                SubmissionFileComment thisComment =
+                    (SubmissionFileComment)comments.objectAtIndex( i );
+                staffDeductions += thisComment.deduction();
+            }
+            staffDeductionsIsValid = true;
         }
-        return result;
+        return staffDeductions;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the total number of automated grading point deductions
+     * on this file.
+     * @return the value of the attribute
+     */
+    public double toolDeductions()
+    {
+        return deductions() - staffDeductions();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>comments</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToCommentsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToComments( net.sf.webcat.grader.SubmissionFileComment value )
+    {
+        staffDeductionsIsValid = false;
+        super.addToComments(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>comments</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromCommentsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromComments( net.sf.webcat.grader.SubmissionFileComment value )
+    {
+        staffDeductionsIsValid = false;
+        super.removeFromComments(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>comments</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
+    {
+        staffDeductionsIsValid = false;
+        super.addToCommentsRelationship(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>comments</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
+    {
+        staffDeductionsIsValid = false;
+        super.removeFromCommentsRelationship(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>comments</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.SubmissionFileComment createCommentsRelationship()
+    {
+        staffDeductionsIsValid = false;
+        return super.createCommentsRelationship();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity that is a member of the
+     * <code>comments</code> relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void deleteCommentsRelationship( net.sf.webcat.grader.SubmissionFileComment value )
+    {
+        staffDeductionsIsValid = false;
+        super.deleteCommentsRelationship(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>comments</code> relationship.
+     */
+    public void deleteAllCommentsRelationships()
+    {
+        staffDeductionsIsValid = false;
+        super.deleteAllCommentsRelationships();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>deductions</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setDeductionsRaw( Number value )
+    {
+        staffDeductionsIsValid = false;
+        super.setDeductionsRaw(value);
     }
 
 
@@ -540,5 +699,8 @@ public class SubmissionFileStats
 
 
     //~ Instance/static variables .............................................
+    private double staffDeductions;
+    private boolean staffDeductionsIsValid;
+
     static Logger log = Logger.getLogger( SubmissionFileStats.class );
 }
