@@ -83,7 +83,7 @@ public class ConfirmSubmissionPage
     public void appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "The submission number is "
-                   + prefs().submission().submitNumber() );
+                   + submissionInProcess().submission().submitNumber() );
         if ( !submissionInProcess().hasValidFileUpload() )
         {
             WOComponent prevPage = back();
