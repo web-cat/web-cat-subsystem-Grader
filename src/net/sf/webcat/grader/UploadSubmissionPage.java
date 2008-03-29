@@ -315,13 +315,14 @@ public class UploadSubmissionPage
         }
         catch ( Exception e )
         {
-            error( e.getMessage() );
-            Application.emailExceptionToAdmins( e, arg1,
-                "In UploadSubmissionPage:takeValuesFromRequest(), a post "
-                + "request without an attached file submission was received\n."
-                + "Browser info = \n"
-                + context().request().headerForKey("user-agent")
-                );
+            // Ignore it
+//            error( e.getMessage() );
+//            Application.emailExceptionToAdmins( e, arg1,
+//                "In UploadSubmissionPage:takeValuesFromRequest(), a post "
+//                + "request without an attached file submission was received\n."
+//                + "Browser info = \n"
+//                + context().request().headerForKey("user-agent")
+//                );
         }
     }
 
