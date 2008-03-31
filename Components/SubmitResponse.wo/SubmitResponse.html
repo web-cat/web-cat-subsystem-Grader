@@ -1,42 +1,41 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META NAME="generator" CONTENT="WebObjects 5">
-<TITLE>Web-CAT Grader Submission Response</TITLE>
-</HEAD>
-<BODY BGCOLOR=#FFFFFF>
-<webobject name="NoCriticalError">
-<WEBOBJECT NAME=Accepting>
-    <WEBOBJECT NAME=GradingPaused>
-        <p>An internal error occured while the Grader was processing
-	your submission.  The administrator has been notifed of the error.
-	An e-mail message will be sent to you at
-	<WEBOBJECT NAME=String2></WEBOBJECT>
-	once the results for this submission are available.</p>
-    </WEBOBJECT>
-    <WEBOBJECT NAME=GradingNotPaused>
-        <WEBOBJECT NAME=GradingHalted>
-        <p>Processing of submissions for this assignment has been
-	temporarily halted.  Your submission has been received and
-	the time has been properly recorded.  It will be processed
-	once the instructor has resolved the issue.
-	If the delay is long, an e-mail message will be sent to you at
-	<WEBOBJECT NAME=String2></WEBOBJECT>
-	once the results for this submission are available.</p>
-	</WEBOBJECT>
-	<WEBOBJECT NAME=GradingNotHalted>
-    <p>Your submission has been received by the Web-CAT Grader
-	and is being processed.  You can
-	<WEBOBJECT NAME=Hyperlink1>view your graded results</WEBOBJECT>
-	on-line.</p>
-    </WEBOBJECT>
-    </WEBOBJECT>
-</WEBOBJECT>
-<WEBOBJECT NAME=NotAccepting>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head>
+<title>Web-CAT Grader Submission Response</title>
+</head><body>
+<wo:not condition="$criticalError">
+  <wo:if condition="$notAcceptingSubmissions">
     <p>Web-CAT refused to accept your submission.</p>
-</WEBOBJECT>
-</webobject>
+  </wo:if>
+  <wo:else>
+    <wo:if condition="$gradingPaused">
+      <p>An internal error occured while the Grader was processing
+      your submission.  The administrator has been notifed of the error.
+      An e-mail message will be sent to you at
+      <wo:str value="$user.email"/>
+      once the results for this submission are available.</p>
+    </wo:if>
+    <wo:else>
+      <wo:if condition="$prefs.assignmentOffering.gradingSuspended">
+        <p>Processing of submissions for this assignment has been
+        temporarily halted.  Your submission has been received and
+        the time has been properly recorded.  It will be processed
+        once the instructor has resolved the issue.
+        If the delay is long, an e-mail message will be sent to you at
+        <wo:str value="$user.email"/>
+        once the results for this submission are available.</p>
+      </wo:if>
+      <wo:else>
+        <p>Your submission has been received by the Web-CAT Grader
+        and is being processed.  You can
+        <wo:link href="$resultsURL">view your graded results</wo:link>
+        on-line.</p>
+      </wo:else>
+    </wo:else>
+  </wo:else>
+</wo:not>
 
-<WEBOBJECT NAME=Conditional1><p><font color="red"><WEBOBJECT NAME="String1"/></font></p></WEBOBJECT>
-</BODY>
-</HTML>
+<wo:if condition="$error"><p>
+  <span stlye="color:red"><wo:str value="$message"/></span>
+</p></wo:if>
+</body></html>
