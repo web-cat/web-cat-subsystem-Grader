@@ -237,14 +237,28 @@ public class SubmissionProfile
             return factor;
         }
 
-        public long unitsFromRaw( long raw )
+        public Long unitsFromRaw( Long raw )
         {
-            return raw / factor;
+            if (raw == null)
+            {
+                return raw;
+            }
+            else
+            {
+                return raw.longValue() / factor;
+            }
         }
 
-        public long rawFromUnits( long units )
+        public Long rawFromUnits( Long units )
         {
-            return units * factor;
+            if (units == null)
+            {
+                return units;
+            }
+            else
+            {
+                return units.longValue() * factor;
+            }
         }
 
         public boolean isUnitFor( long raw )

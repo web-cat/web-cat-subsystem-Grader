@@ -59,8 +59,8 @@ public class EditSubmissionProfilePage
     public SubmissionProfile submissionProfile;
     public Long availableTimeDelta; // null for no limit
     public Long deadTimeDelta;      // null for no late submissions
-    public long earlyBonusUnitTime;
-    public long latePenaltyUnitTime;
+    public Long earlyBonusUnitTime;
+    public Long latePenaltyUnitTime;
     public SubmissionProfile.TimeUnit unit;
     public SubmissionProfile.TimeUnit availableTimeDeltaUnit;
     public SubmissionProfile.TimeUnit deadTimeDeltaUnit;
@@ -107,9 +107,8 @@ public class EditSubmissionProfilePage
                          storedAvailableTimeDelta ) ||
                      i == 0 )
                 {
-                    availableTimeDelta =
-                        new Long( availableTimeDeltaUnit.unitsFromRaw(
-                        storedAvailableTimeDelta ) );
+                    availableTimeDelta = availableTimeDeltaUnit.unitsFromRaw(
+                        storedAvailableTimeDelta);
                     break;
                 }
             }
@@ -130,8 +129,8 @@ public class EditSubmissionProfilePage
                 if ( deadTimeDeltaUnit.isUnitFor( storedDeadTimeDelta ) ||
                      i == 0 )
                 {
-                    deadTimeDelta = new Long( deadTimeDeltaUnit.unitsFromRaw(
-                        storedDeadTimeDelta ) );
+                    deadTimeDelta = deadTimeDeltaUnit.unitsFromRaw(
+                        storedDeadTimeDelta );
                     break;
                 }
             }
@@ -188,30 +187,14 @@ public class EditSubmissionProfilePage
     // ----------------------------------------------------------
     public void saveTimeFields()
     {
-        if ( availableTimeDelta == null )
-        {
-            submissionProfile.setAvailableTimeDeltaRaw( null );
-        }
-        else
-        {
-            submissionProfile.setAvailableTimeDelta(
-                availableTimeDeltaUnit.rawFromUnits(
-                          availableTimeDelta.longValue() ) );
-        }
-        if ( deadTimeDelta == null )
-        {
-            submissionProfile.setDeadTimeDeltaRaw( null );
-        }
-        else
-        {
-            submissionProfile.setDeadTimeDelta(
-                deadTimeDeltaUnit.rawFromUnits(
-                    deadTimeDelta.longValue() ) );
-        }
-        submissionProfile.setEarlyBonusUnitTime(
-            earlyUnitTimeUnit.rawFromUnits( earlyBonusUnitTime ) );
-        submissionProfile.setLatePenaltyUnitTime(
-            lateUnitTimeUnit.rawFromUnits( latePenaltyUnitTime ) );
+        submissionProfile.setAvailableTimeDeltaRaw(
+            availableTimeDeltaUnit.rawFromUnits(availableTimeDelta) );
+        submissionProfile.setDeadTimeDeltaRaw(
+            deadTimeDeltaUnit.rawFromUnits(deadTimeDelta) );
+        submissionProfile.setEarlyBonusUnitTimeRaw(
+            earlyUnitTimeUnit.rawFromUnits(earlyBonusUnitTime) );
+        submissionProfile.setLatePenaltyUnitTimeRaw(
+            lateUnitTimeUnit.rawFromUnits(latePenaltyUnitTime) );
     }
 
 

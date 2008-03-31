@@ -109,13 +109,13 @@ TextField4: WOTextField {
 }
 
 TextField5: WOTextField {
-	numberformat = "0";
+	numberformat = "0.##";
 	size = 3;
 	value = submissionProfile.earlyBonusMaxPtsRaw;
 }
 
 TextField6: WOTextField {
-	numberformat = "0";
+	numberformat = "0.##";
 	size = 3;
 	value = submissionProfile.earlyBonusUnitPtsRaw;
 }
@@ -127,13 +127,13 @@ TextField7: WOTextField {
 }
 
 TextField8: WOTextField {
-	numberformat = "0";
+	numberformat = "0.##";
 	size = 3;
 	value = submissionProfile.latePenaltyMaxPtsRaw;
 }
 
 TextField9: WOTextField {
-	numberformat = "0";
+	numberformat = "0.##";
 	size = 3;
 	value = submissionProfile.latePenaltyUnitPtsRaw;
 }
