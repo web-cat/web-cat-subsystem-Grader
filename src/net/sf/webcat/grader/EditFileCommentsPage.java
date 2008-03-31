@@ -662,7 +662,6 @@ public class EditFileCommentsPage
     //~ Instance/static variables .............................................
 
     private double projectTADeduction          = 0.0;
-    private double toolTestingOtherFiles       = 0.0;
     private double projectToolTestingDeduction = 0.0;
     private String codeWithComments            = null;
     private String codeWithCommentsToStore     = null;
