@@ -1,13 +1,13 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006 Virginia Tech
+ |  Copyright (C) 2006-2008 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
  |  Web-CAT is free software; you can redistribute it and/or modify
- |  it under the terms of the GNU General Public License as published by
- |  the Free Software Foundation; either version 2 of the License, or
+ |  it under the terms of the GNU Affero General Public License as published
+ |  by the Free Software Foundation; either version 3 of the License, or
  |  (at your option) any later version.
  |
  |  Web-CAT is distributed in the hope that it will be useful,
@@ -15,12 +15,8 @@
  |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  |  GNU General Public License for more details.
  |
- |  You should have received a copy of the GNU General Public License
- |  along with Web-CAT; if not, write to the Free Software
- |  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- |
- |  Project manager: Stephen Edwards <edwards@cs.vt.edu>
- |  Virginia Tech CS Dept, 660 McBryde Hall (0106), Blacksburg, VA 24061 USA
+ |  You should have received a copy of the GNU Affero General Public License
+ |  along with Web-CAT; if not, see <http://www.gnu.org/licenses/>.
 \*==========================================================================*/
 
 package net.sf.webcat.grader.graphs;
@@ -28,9 +24,7 @@ package net.sf.webcat.grader.graphs;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import er.extensions.ERXConstant;
-
 import net.sf.webcat.grader.*;
-
 import org.jfree.chart.*;
 import org.jfree.chart.axis.*;
 import org.jfree.data.xy.*;
@@ -101,8 +95,8 @@ public class SubmissionCountChart
         {
             return 1;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Comparable getSeriesKey( int series )
         {
@@ -110,8 +104,8 @@ public class SubmissionCountChart
                 ? SUBMISSION_COUNT_KEY
                 : null;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public int indexOf( Comparable seriesKey )
         {
@@ -119,100 +113,100 @@ public class SubmissionCountChart
                 ? 0
                 : -1;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public int getItemCount( int series )
         {
             return submissionResults.count();
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Number getX( int series, int item )
         {
             return ERXConstant.integerForInt( item + 1 );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getXValue( int series, int item )
         {
             return item + 1;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Number getY( int series, int item )
         {
             return ERXConstant.integerForInt(
                 submissionResult( item ).submission().submitNumber() );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getYValue( int series, int item )
         {
             return submissionResult( item ).submission().submitNumber();
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Number getEndX( int series, int item )
         {
             return new Double( getEndXValue( series, item ) );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getEndXValue( int series, int item )
         {
             return getXValue( series, item ) + 0.5;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Number getEndY( int series, int item )
         {
             return getY( series, item );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getEndYValue( int series, int item )
         {
             return getYValue( series, item );
         }
-        
-    
+
+
         // ----------------------------------------------------------
         public Number getStartX( int series, int item )
         {
             return new Double( getStartXValue( series, item ) );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getStartXValue( int series, int item )
         {
             return getXValue( series, item ) - 0.5;
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public Number getStartY( int series, int item )
         {
             return getY( series, item );
         }
-    
-    
+
+
         // ----------------------------------------------------------
         public double getStartYValue( int series, int item )
         {
             return getYValue( series, item );
         }
-        
-        
+
+
         // ----------------------------------------------------------
         private SubmissionResult submissionResult( int item )
         {

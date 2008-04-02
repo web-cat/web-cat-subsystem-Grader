@@ -15,8 +15,8 @@ Grader.provider.url=http\://web-cat.cs.vt.edu/updates
 Grader.info.url=http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem
 Grader.history.url=\
 	http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem/ChangeHistory
-Grader.license=GNU General Public License v.2
-Grader.license.url=http\://www.gnu.org/copyleft/gpl.html
+Grader.license=GNU Affero General Public License v.3
+Grader.license.url=http\://www.gnu.org/licenses/agpl.html
 
 Grader.description=\
     This subsystem provides all of Web-CAT's automated grading services.  \
