@@ -11,7 +11,7 @@ UserRole: WOString {
 }
 
 Repetition2: WORepetition {
-	item = user;
+	item = aUser;
 	list = staffDisplayGroup.displayedObjects;
 	index = index;
 }
@@ -25,17 +25,17 @@ Remove: WOImageButton {
 }
 
 UserID: WOString {
-	value = user.userName;
+	value = aUser.userName;
 }
 
 Name: WOHyperlink {
-    href = user.url;
-    string = user.name_LF;
+    href = aUser.url;
+    string = aUser.name_LF;
 }
 
 Email: WOHyperlink {
-    href = user.emailHref;
-    string = user.email;
+    href = aUser.emailHref;
+    string = aUser.email;
 }
 
 WCSortOrder3: net.sf.webcat.core.WCSortOrder {
@@ -51,7 +51,7 @@ WCSortOrder4: net.sf.webcat.core.WCSortOrder {
 }
 
 Repetition1: WORepetition {
-	item  = user;
+	item  = aUser;
 	list  = potentialDisplayGroup.displayedObjects;
 	index = index;
 }

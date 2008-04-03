@@ -57,7 +57,7 @@ public class EditStaffPage
 
     public WODisplayGroup      staffDisplayGroup;
     public WODisplayGroup      potentialDisplayGroup;
-    public User                user;
+    public User                aUser;
     public int                 index;
     public boolean             editInstructors = true;
     public String              sideStepTitle;
@@ -108,7 +108,7 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public boolean isStaff()
     {
-        return staffDisplayGroup.allObjects().containsObject( user );
+        return staffDisplayGroup.allObjects().containsObject( aUser );
     }
 
 
@@ -124,15 +124,15 @@ public class EditStaffPage
     {
         if ( editInstructors )
         {
-            courseOffering().addToInstructorsRelationship( user );
+            courseOffering().addToInstructorsRelationship( aUser );
         }
         else
         {
-            if ( user.accessLevel() < User.GTA_PRIVILEGES )
+            if ( aUser.accessLevel() < User.GTA_PRIVILEGES )
             {
-                user.setAccessLevel( User.GTA_PRIVILEGES );
+                aUser.setAccessLevel( User.GTA_PRIVILEGES );
             }
-            courseOffering().addToTAsRelationship( user );
+            courseOffering().addToTAsRelationship( aUser );
         }
         return null;
     }
@@ -143,11 +143,11 @@ public class EditStaffPage
     {
         if ( editInstructors )
         {
-            courseOffering().removeFromInstructorsRelationship( user );
+            courseOffering().removeFromInstructorsRelationship( aUser );
         }
         else
         {
-            courseOffering().removeFromTAsRelationship( user );
+            courseOffering().removeFromTAsRelationship( aUser );
         }
         return null;
     }

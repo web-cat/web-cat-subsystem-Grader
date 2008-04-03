@@ -46,12 +46,12 @@ DateRangeInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 Email: WOHyperlink {
-    href = user.emailHref;
-    string = user.email;
+    href = aUser.emailHref;
+    string = aUser.email;
 }
 
 InstructorRepetition: WORepetition {
-	item  = user;
+	item  = aUser;
 	list  = instructorDisplayGroup.displayedObjects;
 	index = index;
 }
@@ -101,8 +101,8 @@ MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 Name: WOHyperlink {
-    href = user.url;
-    string = user.name;
+    href = aUser.url;
+    string = aUser.name;
 }
 
 NotThisUser: WOConditional {
@@ -148,7 +148,7 @@ SemesterList: WOPopUpButton {
 }
 
 TARepetition: WORepetition {
-	item  = user;
+	item  = aUser;
 	list  = TADisplayGroup.displayedObjects;
 	index = index;
 }
@@ -168,5 +168,5 @@ URLInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 UserID: WOString {
-    value = user.userName;
+    value = aUser.userName;
 }

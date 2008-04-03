@@ -57,7 +57,7 @@ public class EditCoursePage
     public WODisplayGroup      instructorDisplayGroup;
     public WODisplayGroup      TADisplayGroup;
     public Course              course;
-    public User                user;
+    public User                aUser;
     public int                 index;
     public NSArray             semesters;
     public Semester            aSemester;
@@ -102,7 +102,7 @@ public class EditCoursePage
      */
     public boolean matchesUser()
     {
-        return user == user();
+        return aUser == user();
     }
 
 
@@ -113,7 +113,7 @@ public class EditCoursePage
      */
     public WOComponent removeInstructor()
     {
-        courseOffering().removeFromInstructorsRelationship( user );
+        courseOffering().removeFromInstructorsRelationship( aUser );
         return null;
     }
 
@@ -125,7 +125,7 @@ public class EditCoursePage
      */
     public WOComponent removeTA()
     {
-        courseOffering().removeFromTAsRelationship( user );
+        courseOffering().removeFromTAsRelationship( aUser );
         return null;
     }
 
