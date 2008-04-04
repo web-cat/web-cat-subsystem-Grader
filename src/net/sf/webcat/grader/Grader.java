@@ -81,19 +81,10 @@ public class Grader
      */
     public void init()
     {
-        // Apply any pending database updates for the grader
-        UpdateEngine.instance().applyNecessaryUpdates(
-                        new GraderDatabaseUpdates() );
+        super.init();
 
         // Install or update any plug-ins that need it
         ScriptFile.autoUpdateAndInstall();
-
-        {
-            NSBundle myBundle = NSBundle.bundleForClass( Grader.class );
-            subsystemTabTemplate = TabDescriptor.tabsFromPropertyList(
-                new NSData ( myBundle.bytesForResourcePath(
-                                 TabDescriptor.TAB_DEFINITIONS ) ) );
-        }
 
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();
@@ -144,7 +135,7 @@ public class Grader
      */
     public void initializeSessionData( Session s )
     {
-        s.tabs.mergeClonedChildren( subsystemTabTemplate );
+        super.initializeSessionData(s);
         try
         {
             EOUtilities.objectsForEntityNamed( s.sessionContext(),
@@ -724,8 +715,6 @@ public class Grader
 
 
     //~ Instance/static variables .............................................
-
-    private static NSArray subsystemTabTemplate;
 
     /**
      * This is a reference to the single instance of this class, representing
