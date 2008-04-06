@@ -1222,7 +1222,8 @@ public abstract class _SubmissionFileStats
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray comments()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.SubmissionFileComment> comments()
     {
         return (NSArray)storedValueForKey( "comments" );
     }
@@ -1235,7 +1236,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new set of entities to relate to
      */
-    public void setComments( NSMutableArray value )
+    public void setComments( NSMutableArray<net.sf.webcat.grader.SubmissionFileComment>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1262,7 +1263,8 @@ public abstract class _SubmissionFileStats
             log.debug( "addToComments("
                 + value + "): was " + comments() );
         }
-        NSMutableArray array = (NSMutableArray)comments();
+        NSMutableArray<net.sf.webcat.grader.SubmissionFileComment> array =
+            (NSMutableArray<net.sf.webcat.grader.SubmissionFileComment>)comments();
         willChange();
         array.addObject( value );
     }
@@ -1284,7 +1286,8 @@ public abstract class _SubmissionFileStats
             log.debug( "RemoveFromComments("
                 + value + "): was " + comments() );
         }
-        NSMutableArray array = (NSMutableArray)comments();
+        NSMutableArray<net.sf.webcat.grader.SubmissionFileComment> array =
+            (NSMutableArray<net.sf.webcat.grader.SubmissionFileComment>)comments();
         willChange();
         array.removeObject( value );
     }
@@ -1396,7 +1399,8 @@ public abstract class _SubmissionFileStats
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray graderPrefs()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.GraderPrefs> graderPrefs()
     {
         return (NSArray)storedValueForKey( "graderPrefs" );
     }
@@ -1409,7 +1413,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new set of entities to relate to
      */
-    public void setGraderPrefs( NSMutableArray value )
+    public void setGraderPrefs( NSMutableArray<net.sf.webcat.grader.GraderPrefs>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1436,7 +1440,8 @@ public abstract class _SubmissionFileStats
             log.debug( "addToGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.addObject( value );
     }
@@ -1458,7 +1463,8 @@ public abstract class _SubmissionFileStats
             log.debug( "RemoveFromGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.removeObject( value );
     }

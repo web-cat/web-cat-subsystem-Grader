@@ -1070,7 +1070,8 @@ public abstract class _ScriptFile
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray courseOfferings()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.core.CourseOffering> courseOfferings()
     {
         return (NSArray)storedValueForKey( "courseOfferings" );
     }
@@ -1083,7 +1084,7 @@ public abstract class _ScriptFile
      *
      * @param value The new set of entities to relate to
      */
-    public void setCourseOfferings( NSMutableArray value )
+    public void setCourseOfferings( NSMutableArray<net.sf.webcat.core.CourseOffering>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1110,7 +1111,8 @@ public abstract class _ScriptFile
             log.debug( "addToCourseOfferings("
                 + value + "): was " + courseOfferings() );
         }
-        NSMutableArray array = (NSMutableArray)courseOfferings();
+        NSMutableArray<net.sf.webcat.core.CourseOffering> array =
+            (NSMutableArray<net.sf.webcat.core.CourseOffering>)courseOfferings();
         willChange();
         array.addObject( value );
     }
@@ -1132,7 +1134,8 @@ public abstract class _ScriptFile
             log.debug( "RemoveFromCourseOfferings("
                 + value + "): was " + courseOfferings() );
         }
-        NSMutableArray array = (NSMutableArray)courseOfferings();
+        NSMutableArray<net.sf.webcat.core.CourseOffering> array =
+            (NSMutableArray<net.sf.webcat.core.CourseOffering>)courseOfferings();
         willChange();
         array.removeObject( value );
     }
@@ -1245,7 +1248,8 @@ public abstract class _ScriptFile
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray steps()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.Step> steps()
     {
         return (NSArray)storedValueForKey( "steps" );
     }
@@ -1258,7 +1262,7 @@ public abstract class _ScriptFile
      *
      * @param value The new set of entities to relate to
      */
-    public void setSteps( NSMutableArray value )
+    public void setSteps( NSMutableArray<net.sf.webcat.grader.Step>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1285,7 +1289,8 @@ public abstract class _ScriptFile
             log.debug( "addToSteps("
                 + value + "): was " + steps() );
         }
-        NSMutableArray array = (NSMutableArray)steps();
+        NSMutableArray<net.sf.webcat.grader.Step> array =
+            (NSMutableArray<net.sf.webcat.grader.Step>)steps();
         willChange();
         array.addObject( value );
     }
@@ -1307,7 +1312,8 @@ public abstract class _ScriptFile
             log.debug( "RemoveFromSteps("
                 + value + "): was " + steps() );
         }
-        NSMutableArray array = (NSMutableArray)steps();
+        NSMutableArray<net.sf.webcat.grader.Step> array =
+            (NSMutableArray<net.sf.webcat.grader.Step>)steps();
         willChange();
         array.removeObject( value );
     }

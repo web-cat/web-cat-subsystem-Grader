@@ -759,7 +759,8 @@ public abstract class _AssignmentOffering
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray graderPrefs()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.GraderPrefs> graderPrefs()
     {
         return (NSArray)storedValueForKey( "graderPrefs" );
     }
@@ -772,7 +773,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new set of entities to relate to
      */
-    public void setGraderPrefs( NSMutableArray value )
+    public void setGraderPrefs( NSMutableArray<net.sf.webcat.grader.GraderPrefs>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -799,7 +800,8 @@ public abstract class _AssignmentOffering
             log.debug( "addToGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.addObject( value );
     }
@@ -821,7 +823,8 @@ public abstract class _AssignmentOffering
             log.debug( "RemoveFromGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.removeObject( value );
     }
@@ -934,7 +937,8 @@ public abstract class _AssignmentOffering
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray submissions()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.Submission> submissions()
     {
         return (NSArray)storedValueForKey( "submissions" );
     }
@@ -947,7 +951,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new set of entities to relate to
      */
-    public void setSubmissions( NSMutableArray value )
+    public void setSubmissions( NSMutableArray<net.sf.webcat.grader.Submission>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -974,7 +978,8 @@ public abstract class _AssignmentOffering
             log.debug( "addToSubmissions("
                 + value + "): was " + submissions() );
         }
-        NSMutableArray array = (NSMutableArray)submissions();
+        NSMutableArray<net.sf.webcat.grader.Submission> array =
+            (NSMutableArray<net.sf.webcat.grader.Submission>)submissions();
         willChange();
         array.addObject( value );
     }
@@ -996,7 +1001,8 @@ public abstract class _AssignmentOffering
             log.debug( "RemoveFromSubmissions("
                 + value + "): was " + submissions() );
         }
-        NSMutableArray array = (NSMutableArray)submissions();
+        NSMutableArray<net.sf.webcat.grader.Submission> array =
+            (NSMutableArray<net.sf.webcat.grader.Submission>)submissions();
         willChange();
         array.removeObject( value );
     }
@@ -1111,7 +1117,8 @@ public abstract class _AssignmentOffering
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForAllOfferings(
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForAllOfferings(
             EOEditingContext context
         )
     {
@@ -1138,7 +1145,8 @@ public abstract class _AssignmentOffering
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForCourseOffering(
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForCourseOffering(
             EOEditingContext context,
             net.sf.webcat.core.CourseOffering courseOfferingBinding
         )
@@ -1146,11 +1154,14 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "courseOffering", "AssignmentOffering" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( courseOfferingBinding != null )
+        {
             bindings.setObjectForKey( courseOfferingBinding,
                                       "courseOffering" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
@@ -1174,7 +1185,8 @@ public abstract class _AssignmentOffering
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForStaff(
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForStaff(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
         )
@@ -1182,11 +1194,14 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "staff", "AssignmentOffering" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( userBinding != null )
+        {
             bindings.setObjectForKey( userBinding,
                                       "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
@@ -1210,7 +1225,8 @@ public abstract class _AssignmentOffering
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForStudent(
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForStudent(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
         )
@@ -1218,11 +1234,14 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "student", "AssignmentOffering" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( userBinding != null )
+        {
             bindings.setObjectForKey( userBinding,
                                       "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
@@ -1245,7 +1264,8 @@ public abstract class _AssignmentOffering
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForSubmitterEngineBase(
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForSubmitterEngineBase(
             EOEditingContext context
         )
     {

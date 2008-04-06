@@ -537,7 +537,8 @@ public abstract class _GraderPrefs
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForUser(
+    @SuppressWarnings("unchecked")
+    public static NSArray<GraderPrefs> objectsForUser(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
         )
@@ -545,11 +546,14 @@ public abstract class _GraderPrefs
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "user", "GraderPrefs" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( userBinding != null )
+        {
             bindings.setObjectForKey( userBinding,
                                       "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );

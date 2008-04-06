@@ -93,10 +93,8 @@ public class Assignment
         String result = name();
         if ( offerings().count() > 0 )
         {
-            result += " (" +
-                ( (AssignmentOffering)offerings().objectAtIndex( 0 ) )
-                    .courseOffering().course().deptNumber()
-                + ")";
+            result += " (" + offerings().objectAtIndex( 0 ).courseOffering()
+                .course().deptNumber() + ")";
         }
         return result;
     }

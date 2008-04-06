@@ -1386,7 +1386,8 @@ public abstract class _GradingCriteria
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray assignment()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.Assignment> assignment()
     {
         return (NSArray)storedValueForKey( "assignment" );
     }
@@ -1399,7 +1400,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new set of entities to relate to
      */
-    public void setAssignment( NSMutableArray value )
+    public void setAssignment( NSMutableArray<net.sf.webcat.grader.Assignment>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1426,7 +1427,8 @@ public abstract class _GradingCriteria
             log.debug( "addToAssignment("
                 + value + "): was " + assignment() );
         }
-        NSMutableArray array = (NSMutableArray)assignment();
+        NSMutableArray<net.sf.webcat.grader.Assignment> array =
+            (NSMutableArray<net.sf.webcat.grader.Assignment>)assignment();
         willChange();
         array.addObject( value );
     }
@@ -1448,7 +1450,8 @@ public abstract class _GradingCriteria
             log.debug( "RemoveFromAssignment("
                 + value + "): was " + assignment() );
         }
-        NSMutableArray array = (NSMutableArray)assignment();
+        NSMutableArray<net.sf.webcat.grader.Assignment> array =
+            (NSMutableArray<net.sf.webcat.grader.Assignment>)assignment();
         willChange();
         array.removeObject( value );
     }

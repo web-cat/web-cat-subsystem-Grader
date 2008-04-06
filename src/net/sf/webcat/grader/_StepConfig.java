@@ -527,7 +527,8 @@ public abstract class _StepConfig
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray steps()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.Step> steps()
     {
         return (NSArray)storedValueForKey( "steps" );
     }
@@ -540,7 +541,7 @@ public abstract class _StepConfig
      *
      * @param value The new set of entities to relate to
      */
-    public void setSteps( NSMutableArray value )
+    public void setSteps( NSMutableArray<net.sf.webcat.grader.Step>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -567,7 +568,8 @@ public abstract class _StepConfig
             log.debug( "addToSteps("
                 + value + "): was " + steps() );
         }
-        NSMutableArray array = (NSMutableArray)steps();
+        NSMutableArray<net.sf.webcat.grader.Step> array =
+            (NSMutableArray<net.sf.webcat.grader.Step>)steps();
         willChange();
         array.addObject( value );
     }
@@ -589,7 +591,8 @@ public abstract class _StepConfig
             log.debug( "RemoveFromSteps("
                 + value + "): was " + steps() );
         }
-        NSMutableArray array = (NSMutableArray)steps();
+        NSMutableArray<net.sf.webcat.grader.Step> array =
+            (NSMutableArray<net.sf.webcat.grader.Step>)steps();
         willChange();
         array.removeObject( value );
     }
@@ -706,7 +709,8 @@ public abstract class _StepConfig
      * @param courseBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForCourseAndScript(
+    @SuppressWarnings("unchecked")
+    public static NSArray<StepConfig> objectsForCourseAndScript(
             EOEditingContext context,
             net.sf.webcat.grader.ScriptFile scriptFileBinding,
             net.sf.webcat.core.Course courseBinding
@@ -715,14 +719,19 @@ public abstract class _StepConfig
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "courseAndScript", "StepConfig" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( scriptFileBinding != null )
+        {
             bindings.setObjectForKey( scriptFileBinding,
                                       "scriptFile" );
+        }
         if ( courseBinding != null )
+        {
             bindings.setObjectForKey( courseBinding,
                                       "course" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
@@ -747,7 +756,8 @@ public abstract class _StepConfig
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForUser(
+    @SuppressWarnings("unchecked")
+    public static NSArray<StepConfig> objectsForUser(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
         )
@@ -755,11 +765,14 @@ public abstract class _StepConfig
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "user", "StepConfig" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( userBinding != null )
+        {
             bindings.setObjectForKey( userBinding,
                                       "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );

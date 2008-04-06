@@ -749,7 +749,8 @@ public abstract class _Step
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray graderPrefs()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.GraderPrefs> graderPrefs()
     {
         return (NSArray)storedValueForKey( "graderPrefs" );
     }
@@ -762,7 +763,7 @@ public abstract class _Step
      *
      * @param value The new set of entities to relate to
      */
-    public void setGraderPrefs( NSMutableArray value )
+    public void setGraderPrefs( NSMutableArray<net.sf.webcat.grader.GraderPrefs>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -789,7 +790,8 @@ public abstract class _Step
             log.debug( "addToGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.addObject( value );
     }
@@ -811,7 +813,8 @@ public abstract class _Step
             log.debug( "RemoveFromGraderPrefs("
                 + value + "): was " + graderPrefs() );
         }
-        NSMutableArray array = (NSMutableArray)graderPrefs();
+        NSMutableArray<net.sf.webcat.grader.GraderPrefs> array =
+            (NSMutableArray<net.sf.webcat.grader.GraderPrefs>)graderPrefs();
         willChange();
         array.removeObject( value );
     }

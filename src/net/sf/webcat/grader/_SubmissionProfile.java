@@ -1458,7 +1458,8 @@ public abstract class _SubmissionProfile
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray assignment()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.Assignment> assignment()
     {
         return (NSArray)storedValueForKey( "assignment" );
     }
@@ -1471,7 +1472,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new set of entities to relate to
      */
-    public void setAssignment( NSMutableArray value )
+    public void setAssignment( NSMutableArray<net.sf.webcat.grader.Assignment>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1498,7 +1499,8 @@ public abstract class _SubmissionProfile
             log.debug( "addToAssignment("
                 + value + "): was " + assignment() );
         }
-        NSMutableArray array = (NSMutableArray)assignment();
+        NSMutableArray<net.sf.webcat.grader.Assignment> array =
+            (NSMutableArray<net.sf.webcat.grader.Assignment>)assignment();
         willChange();
         array.addObject( value );
     }
@@ -1520,7 +1522,8 @@ public abstract class _SubmissionProfile
             log.debug( "RemoveFromAssignment("
                 + value + "): was " + assignment() );
         }
-        NSMutableArray array = (NSMutableArray)assignment();
+        NSMutableArray<net.sf.webcat.grader.Assignment> array =
+            (NSMutableArray<net.sf.webcat.grader.Assignment>)assignment();
         willChange();
         array.removeObject( value );
     }
@@ -1633,7 +1636,8 @@ public abstract class _SubmissionProfile
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
-    public NSArray courseOfferings()
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.core.CourseOffering> courseOfferings()
     {
         return (NSArray)storedValueForKey( "courseOfferings" );
     }
@@ -1646,7 +1650,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new set of entities to relate to
      */
-    public void setCourseOfferings( NSMutableArray value )
+    public void setCourseOfferings( NSMutableArray<net.sf.webcat.core.CourseOffering>  value )
     {
         if (log.isDebugEnabled())
         {
@@ -1673,7 +1677,8 @@ public abstract class _SubmissionProfile
             log.debug( "addToCourseOfferings("
                 + value + "): was " + courseOfferings() );
         }
-        NSMutableArray array = (NSMutableArray)courseOfferings();
+        NSMutableArray<net.sf.webcat.core.CourseOffering> array =
+            (NSMutableArray<net.sf.webcat.core.CourseOffering>)courseOfferings();
         willChange();
         array.addObject( value );
     }
@@ -1695,7 +1700,8 @@ public abstract class _SubmissionProfile
             log.debug( "RemoveFromCourseOfferings("
                 + value + "): was " + courseOfferings() );
         }
-        NSMutableArray array = (NSMutableArray)courseOfferings();
+        NSMutableArray<net.sf.webcat.core.CourseOffering> array =
+            (NSMutableArray<net.sf.webcat.core.CourseOffering>)courseOfferings();
         willChange();
         array.removeObject( value );
     }
@@ -1811,7 +1817,8 @@ public abstract class _SubmissionProfile
      * @param courseBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForCourse(
+    @SuppressWarnings("unchecked")
+    public static NSArray<SubmissionProfile> objectsForCourse(
             EOEditingContext context,
             net.sf.webcat.core.Course courseBinding
         )
@@ -1819,11 +1826,14 @@ public abstract class _SubmissionProfile
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "course", "SubmissionProfile" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( courseBinding != null )
+        {
             bindings.setObjectForKey( courseBinding,
                                       "course" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
@@ -1847,7 +1857,8 @@ public abstract class _SubmissionProfile
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray objectsForUser(
+    @SuppressWarnings("unchecked")
+    public static NSArray<SubmissionProfile> objectsForUser(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
         )
@@ -1855,11 +1866,14 @@ public abstract class _SubmissionProfile
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "user", "SubmissionProfile" );
 
-        NSMutableDictionary bindings = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
 
         if ( userBinding != null )
+        {
             bindings.setObjectForKey( userBinding,
                                       "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );

@@ -415,7 +415,7 @@ public class GradeStudentSubmissionPage
                 showAutoGradedComments = Boolean.FALSE;
                 for (int i = 0; i < result.submissionFileStats().count(); i++)
                 {
-                    SubmissionFileStats thisStats = (SubmissionFileStats)
+                    SubmissionFileStats thisStats =
                         result.submissionFileStats().objectAtIndex(i);
                     if (thisStats.remarks() > 0)
                     {
