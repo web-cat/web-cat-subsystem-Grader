@@ -182,13 +182,7 @@ public class ConfirmSubmissionPage
         }
         else
         {
-            NSDictionary config =
-                wcSession().tabs.selectedDescendant().config();
-            if ( config != null
-                 && config.objectForKey( "resetPrimeUser" ) != null )
-            {
-                setLocalUser( wcSession().primeUser() );
-            }
+            resetPrimeUser();
             return super.next();
         }
     }
@@ -198,12 +192,7 @@ public class ConfirmSubmissionPage
     public void cancelLocalChanges()
     {
         clearSubmission();
-        NSDictionary config = wcSession().tabs.selectedDescendant().config();
-        if ( config != null
-             && config.objectForKey( "resetPrimeUser" ) != null )
-        {
-            setLocalUser( wcSession().primeUser() );
-        }
+        resetPrimeUser();
         super.cancelLocalChanges();
     }
 

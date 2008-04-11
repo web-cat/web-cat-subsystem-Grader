@@ -25,6 +25,7 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+
 import er.extensions.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -131,6 +132,15 @@ public class GraderComponent
     }
 
 
+    // ----------------------------------------------------------
+    @Override
+    public void changeWorkflow()
+    {
+        super.changeWorkflow();
+        resetPrimeUser();
+    }
+
+
     //~ Protected Methods .....................................................
 
     // ----------------------------------------------------------
@@ -141,6 +151,22 @@ public class GraderComponent
     {
         prefs = new GraderPrefsManager(
             getGraderPrefs(), ecManager());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * If the current page should reset the prime user when you leave it,
+     * this method will do the job.
+     */
+    public void resetPrimeUser()
+    {
+        NSDictionary config = currentTab().config();
+        if ( config != null
+             && config.objectForKey( "resetPrimeUser" ) != null )
+        {
+            setLocalUser( wcSession().primeUser() );
+        }
     }
 
 

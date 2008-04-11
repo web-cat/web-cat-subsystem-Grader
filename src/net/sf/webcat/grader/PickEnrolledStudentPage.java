@@ -78,12 +78,7 @@ public class PickEnrolledStudentPage
     // ----------------------------------------------------------
     public void cancelLocalChanges()
     {
-        NSDictionary config = wcSession().tabs.selectedDescendant().config();
-        if ( config != null
-             && config.objectForKey( "resetPrimeUser" ) != null )
-        {
-            setLocalUser( wcSession().primeUser() );
-        }
+        resetPrimeUser();
         super.cancelLocalChanges();
     }
 

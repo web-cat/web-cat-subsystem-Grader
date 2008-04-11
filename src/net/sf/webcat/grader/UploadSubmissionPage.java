@@ -289,12 +289,7 @@ public class UploadSubmissionPage
     public void cancelLocalChanges()
     {
         clearSubmission();
-        NSDictionary config = wcSession().tabs.selectedDescendant().config();
-        if ( config != null
-             && config.objectForKey( "resetPrimeUser" ) != null )
-        {
-            setLocalUser( wcSession().primeUser() );
-        }
+        resetPrimeUser();
         super.cancelLocalChanges();
     }
 
