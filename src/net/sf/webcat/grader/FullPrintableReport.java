@@ -70,7 +70,7 @@ public class FullPrintableReport
     {
         if ( task == null )
         {
-            task = new LongResponseTask( user(), result );
+            task = new LongResponseTask( user(), result, context() );
         }
         return task;
     }
@@ -155,13 +155,15 @@ public class FullPrintableReport
      * response.  The return value produced by performAction() is an
      * array of {@link Pair}s.
      */
-    public class LongResponseTask
+    public static class LongResponseTask
         extends InterpolatingLongResponseTask
     {
 
         // ----------------------------------------------------------
-        public LongResponseTask( User viewer, SubmissionResult theResult )
+        public LongResponseTask(
+            User viewer, SubmissionResult theResult, WOContext context)
         {
+            this.context = context;
             // Create a local EC, transfer the result into it, and
             // store both locally
             ec = Application.newPeerEditingContext();
@@ -210,7 +212,7 @@ public class FullPrintableReport
             }
             catch ( Exception e )
             {
-                Application.emailExceptionToAdmins( e, context(),
+                Application.emailExceptionToAdmins( e, context,
                     "Exception in setUpTask() preparing full printable report."
                     );
             }
@@ -231,7 +233,7 @@ public class FullPrintableReport
             {
                 ec.lock();
                 pairs[stepNumber].html = pairs[stepNumber].file
-                    .codeWithComments( user, false, context().request() );
+                    .codeWithComments( user, false, context.request() );
             }
             catch ( Exception e )
             {
@@ -264,6 +266,7 @@ public class FullPrintableReport
         private EOEditingContext ec;
         private SubmissionResult submissionResult;
         private User             user;
+        private WOContext        context;
     }
 
 

@@ -22,7 +22,7 @@
           <th colspan="2"><webobject name="StatsLabel"/></th>
         </webobject></tr>
       <webobject name="StatRepetition"><webobject name="TR">
-        <td><webobject name="FileName"/></td>
+        <td><wo:str value="$stats.file.sourceFileName"/></td>
         <td class="n"><webobject name="FileRemarks"/></td>
         <td class="n"><webobject name="FileDeduction"/></td>
         <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
@@ -36,10 +36,10 @@
   <webobject name="PartialInlineReport"/>
 
   <webobject name="StatRepetition">
-  <h2 class="collapsible"><a title="show/hide" href="javascript:void(0);" onclick="showHide(this, 'srcexp<webobject name="SrcIndex"></webobject>');"><webobject name="Expanded"/><webobject name="FileName"/></a></h2>
-  <div class="expboxcontent" id="srcexp<webobject name="SrcIndex"></webobject>">
-  <webobject name="FileHTML"/>
-  </div></webobject>
+  <h2 class="collapsible"><wo name="CollapsibleAnchor"><wo name="Expanded"/><wo:str value="$stats.file.sourceFileName"/></wo></h2>
+  <wo name="CollapsibleDiv">
+  <wo:str value="$stats.html" escapeHTML="$false"/>
+  </wo></webobject>
 
 <webobject name="Form"><p><webobject name="Return"/></p></webobject>
 </webobject></div></div></webobject>

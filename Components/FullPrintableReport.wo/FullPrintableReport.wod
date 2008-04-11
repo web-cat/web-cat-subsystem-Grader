@@ -2,6 +2,19 @@ AssignmentName: WOString {
     value = result.submission.assignmentOffering.assignment.name;
 }
 
+CollapsibleAnchor: WOGenericContainer {
+    elementName = "a";
+    title       = "show/hide";
+    href        = "javascript:void(0)";
+    onclick     = "~ \"showHide(this, 'srcexp\" + index + \"');\"";
+}
+
+CollapsibleDiv: WOGenericContainer {
+    elementName = "div";
+    class       = "expboxcontent";
+    id          = "~ \"srcexp\" + index";
+}
+
 Coverage: WOString {
 	numberformat = "0.0";
 	value        = stats.file.gradedElementsCoveragePercent;
@@ -28,15 +41,6 @@ Expanded : WOImage {
 FileDeduction: WOString {
 	numberformat = "0.0";
 	value        = stats.file.deductions;
-}
-
-FileHTML: WOString {
-	value = stats.html;
-	escapeHTML = false;
-}
-
-FileName: WOString {
-	value = stats.file.sourceFileName;
 }
 
 FileRemarks: WOString {
