@@ -210,21 +210,9 @@
 //            };
         };
     };
-    "Plug-ins" = {
-        accessLevel = 50;
-        priority = 140;
-        children = {
-            Manage = {
-                pageName = net.sf.webcat.grader.PluginManagerPage;
-                accessLevel = 50;
-                priority = 1;
-                wantsStart = YES;
-            };
-        };
-    };
     Grading = {
         accessLevel = 40;
-        priority = 150;
+        priority = 140;
         children = {
 //            Status = {
 //                pageName = TBDPage; // net.sf.webcat.grader.GradingStatusPage;
@@ -323,6 +311,18 @@
                 		priority    = 6;
             		};
                 };
+            };
+        };
+    };
+    "Plug-ins" = {
+        accessLevel = 50;
+        priority = 150;
+        children = {
+            Manage = {
+                pageName = net.sf.webcat.grader.PluginManagerPage;
+                accessLevel = 50;
+                priority = 1;
+                wantsStart = YES;
             };
         };
     };
