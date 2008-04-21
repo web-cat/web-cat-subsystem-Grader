@@ -251,6 +251,7 @@ PersonalPluginRepetition: WORepetition {
 PluginUpload: WOFileUpload {
 	data     = uploadedData;
 	filePath = uploadedName;
+	size     = 60;
 }
 
 ProviderURL: WOTextField {

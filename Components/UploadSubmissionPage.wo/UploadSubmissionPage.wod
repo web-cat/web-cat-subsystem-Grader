@@ -30,6 +30,7 @@ HasValidFileUpload: WOConditional {
 FileUpload1: WOFileUpload {
 	data = submissionInProcess.uploadedFile;
 	filePath = submissionInProcess.uploadedFileName;
+	size = 60;
 }
 
 Repetition1: WORepetition {

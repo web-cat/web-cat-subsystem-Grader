@@ -51,6 +51,7 @@ TR: net.sf.webcat.core.TableRow {
 UploadScript: WOFileUpload {
 	data     = uploadedData;
 	filePath = uploadedName;
+	size     = 60;
 }
 
 Page: net.sf.webcat.core.WizardPage {
