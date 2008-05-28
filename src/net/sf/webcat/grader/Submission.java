@@ -442,6 +442,8 @@ public class Submission
      */
     public boolean isSubmissionForGrading()
     {
+        if (user() == null || assignmentOffering() == null) return false;
+
         Submission primarySubmission = null;
         Submission gradedSubmission = null;
 
