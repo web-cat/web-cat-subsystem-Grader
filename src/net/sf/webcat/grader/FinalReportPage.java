@@ -138,6 +138,7 @@ public class FinalReportPage
         if (selectedReport == null)
         {
             error("Please select a file to download first.");
+            return null;
         }
         DeliverFile download =
             (DeliverFile)pageWithName( DeliverFile.class.getName() );
