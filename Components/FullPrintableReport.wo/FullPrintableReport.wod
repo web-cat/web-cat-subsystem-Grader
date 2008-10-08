@@ -103,10 +103,6 @@ ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
     submission = result.submission;
 }
 
-SrcIndex : WOString {
-    value = index;
-}
-
 ShowCoverageData: WOConditional {
     condition = showCoverageData;
 }

@@ -3,3 +3,7 @@ AssignmentRepetition: WORepetition {
     list  = assignmentsToDisplay;
     index = index;
 }
+
+InstructorEmail: WOString {
+    value = "~anAssignmentOffering.courseOffering.instructors[0].email"; //VALID
+}

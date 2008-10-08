@@ -78,11 +78,11 @@ LastTATR: net.sf.webcat.core.TableRow {
     index = TADisplayGroup.displayedObjects.count;
 }
 
-MoodleGroupId: WOTextField {
-	size = 8;
-	numberformat = "0";
-	value = courseOffering.moodleGroupId;
-}
+//MoodleGroupId: WOTextField {
+//	size = 8;
+//	numberformat = "0";
+//	value = courseOffering.moodleGroupId;
+//}
 
 MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
     title   = "Moodle Group Id";

@@ -9,6 +9,6 @@ SUMMARY:<wo:str value="$anAssignmentOffering.courseOffering.course.deptNumber" e
 <wo:if condition="$anAssignmentOffering.assignment.url">URL:<wo:str value="$anAssignmentOffering.assignment.url" escapeHTML="false"/>
 DESCRIPTION: Submit to Web-CAT at: <wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
 </wo:if><wo:else>URL:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
-</wo:else>ORGANIZER:MAILTO:<wo:str value="~anAssignmentOffering.courseOffering.instructors[0].email"/>
+</wo:else>ORGANIZER:MAILTO:<wo name="InstructorEmail"/>
 END:VTODO
 </wo></wo:if>END:VCALENDAR
