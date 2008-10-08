@@ -24,6 +24,8 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.ERXEOControlUtilities;
+import er.extensions.ERXQ;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -442,6 +444,10 @@ public class Submission
      */
     public boolean isSubmissionForGrading()
     {
+        // TODO eliminate when the isSubmissionForGrading property is reified
+        // in the database. (It will be replaced by an auto-generated method in
+        // the underscore-prefixed superclass.)
+
         if (user() == null || assignmentOffering() == null) return false;
 
         Submission primarySubmission = null;
@@ -507,11 +513,185 @@ public class Submission
 
         if ( primarySubmission != null )
         {
-        	return this.equals(primarySubmission);
+            return this.equals(primarySubmission);
         }
         else
         {
             return false;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the array of all submissions in the submission chain that contains
+     * this submission (that is, all submissions for this submission's user and
+     * assignment offering). The returned array is sorted by submission time in
+     * ascending order.
+     *
+     * @return an NSArray containing the Submission objects in this submission
+     *     chain
+     */
+    public NSArray<Submission> allSubmissions()
+    {
+        if (user() == null || assignmentOffering() == null)
+            return NSArray.EmptyArray;
+
+        return objectsForAllForUserAndAssignmentOffering(editingContext(),
+                user(), assignmentOffering());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the submission in this submission chain that represents the
+     * "submission for grading". If no manual grading has yet occurred, then
+     * this is equivalent to {@link #latestSubmission()}. Otherwise, if a TA
+     * has manually graded one or more submissions, then this method returns
+     * the latest of those.
+     *
+     * @return the submission for grading in this submission chain
+     */
+    public Submission gradedSubmission()
+    {
+        // TODO replace this code with a fetch specification when the
+        // isSubmissionForGrading property is reified in the database.
+
+        NSArray<Submission> subs = allSubmissions();
+
+        for (Submission sub : subs)
+        {
+            if (sub.isSubmissionForGrading())
+            {
+                return sub;
+            }
+        }
+
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest (in other words, first) submission made in this
+     * submission chain.
+     *
+     * @return the earliest submission in the submission chain
+     */
+    public Submission earliestSubmission()
+    {
+        if (user() == null || assignmentOffering() == null) return null;
+
+        NSArray<Submission> subs =
+            objectsForEarliestForUserAndAssignmentOffering(editingContext(),
+                    user(), assignmentOffering());
+
+        if (subs != null && subs.count() >= 1)
+        {
+            return subs.objectAtIndex(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the latest (in other words, last) submission made in this
+     * submission chain. Typically clients should prefer to use the
+     * {@link #gradedSubmission()} method over this one, depending on their
+     * policy regarding the grading of submissions that are not the most recent
+     * one; this method exists for symmetry and to allow clients to distinguish
+     * between the graded submission and the last one, if necessary.
+     *
+     * @return the latest submission in the submission chain
+     */
+    public Submission latestSubmission()
+    {
+        if (user() == null || assignmentOffering() == null) return null;
+
+        NSArray<Submission> subs =
+            objectsForLatestForUserAndAssignmentOffering(editingContext(),
+                    user(), assignmentOffering());
+
+        if (subs != null && subs.count() >= 1)
+        {
+            return subs.objectAtIndex(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the previous submission to this one in the submission chain.
+     *
+     * @return the previous submission, or null if it is the first one (or
+     *     there was an error)
+     */
+    public Submission previousSubmission()
+    {
+        if (user() == null || assignmentOffering() == null ||
+                submitNumberRaw() == null) return null;
+
+        int submitNo = submitNumber();
+
+        if (submitNo == 1) return null;
+
+        NSArray<Submission> subs =
+            objectsForUserAssignmentOfferingAndSubmitNumber(editingContext(),
+                    user(), assignmentOffering(), submitNo - 1);
+
+        if (subs != null && subs.count() >= 1)
+        {
+            return subs.objectAtIndex(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the next submission following this one in the submission chain.
+     *
+     * @return the next submission, or null if it is the first one (or
+     *     there was an error)
+     */
+    public Submission nextSubmission()
+    {
+        if (user() == null || assignmentOffering() == null ||
+                submitNumberRaw() == null) return null;
+
+        int submitNo = submitNumber();
+
+        EOQualifier q =
+            ERXQ.equals("user", user()).and(
+                ERXQ.equals("assignmentOffering", assignmentOffering()));
+
+        int count = ERXEOControlUtilities.objectCountWithQualifier(
+                editingContext(), ENTITY_NAME, q);
+
+        if (submitNo == count) return null;
+
+        NSArray<Submission> subs =
+            objectsForUserAssignmentOfferingAndSubmitNumber(editingContext(),
+                    user(), assignmentOffering(), submitNo + 1);
+
+        if (subs != null && subs.count() >= 1)
+        {
+            return subs.objectAtIndex(0);
+        }
+        else
+        {
+            return null;
         }
     }
 

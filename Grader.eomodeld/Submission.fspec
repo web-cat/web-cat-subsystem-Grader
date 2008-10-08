@@ -35,4 +35,154 @@
             }
         );
     };
+    userAssignmentOfferingAndSubmitNumber = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        fetchLimit = 1;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+               {
+                   class = EOKeyValueQualifier;
+                   key = user;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = user;
+                       class = EOQualifierVariable;
+                   };
+               },
+               {
+                   class = EOKeyValueQualifier;
+                   key = assignmentOffering;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = assignmentOffering;
+                       class = EOQualifierVariable;
+                   };
+               },
+               {
+                   class = EOKeyValueQualifier;
+                   key = submitNumber;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = submitNumber;
+                       class = EOQualifierVariable;
+                   };
+               }
+            );
+        };
+    };
+    allForUserAndAssignmentOffering = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+               {
+                   class = EOKeyValueQualifier;
+                   key = user;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = user;
+                       class = EOQualifierVariable;
+                   };
+               },
+               {
+                   class = EOKeyValueQualifier;
+                   key = assignmentOffering;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = assignmentOffering;
+                       class = EOQualifierVariable;
+                   };
+               }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = compareAscending:;
+            }
+        );
+    };
+    earliestForUserAndAssignmentOffering = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        fetchLimit = 1;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+               {
+                   class = EOKeyValueQualifier;
+                   key = user;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = user;
+                       class = EOQualifierVariable;
+                   };
+               },
+               {
+                   class = EOKeyValueQualifier;
+                   key = assignmentOffering;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = assignmentOffering;
+                       class = EOQualifierVariable;
+                   };
+               }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = compareAscending:;
+            }
+        );
+    };
+    latestForUserAndAssignmentOffering = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        fetchLimit = 1;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+               {
+                   class = EOKeyValueQualifier;
+                   key = user;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = user;
+                       class = EOQualifierVariable;
+                   };
+               },
+               {
+                   class = EOKeyValueQualifier;
+                   key = assignmentOffering;
+                   selectorName = isEqualTo:;
+                   value =
+                   {
+                       _key = assignmentOffering;
+                       class = EOQualifierVariable;
+                   };
+               }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = compareDescending:;
+            }
+        );
+    };
 }
