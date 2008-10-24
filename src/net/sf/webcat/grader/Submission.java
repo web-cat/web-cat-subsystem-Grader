@@ -153,7 +153,7 @@ public class Submission
             {
                 subInfo = ee.toString();
             }
-            ((Application)Application.application()).emailExceptionToAdmins(
+            Application.emailExceptionToAdmins(
                 e, null, "An exception was generated trying to retrieve the "
                 + "id for a submission.\n\nSubmission = " + subInfo );
             return er.extensions.ERXConstant.ZeroInteger;

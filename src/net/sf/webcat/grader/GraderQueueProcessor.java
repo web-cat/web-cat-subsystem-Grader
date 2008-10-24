@@ -966,11 +966,11 @@ public class GraderQueueProcessor
 
         generateCompositeResultFile(
             new File( job.submission().resultDirName(),
-                      submissionResult.resultFileName() ),
+                      SubmissionResult.resultFileName() ),
             inlineStudentReports );
         generateCompositeResultFile(
             new File( job.submission().resultDirName(),
-                      submissionResult.staffResultFileName() ),
+                      SubmissionResult.staffResultFileName() ),
             inlineStaffReports );
 
         editingContext.saveChanges();
