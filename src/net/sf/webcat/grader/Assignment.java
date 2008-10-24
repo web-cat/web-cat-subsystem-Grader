@@ -350,7 +350,6 @@ public class Assignment
      */
     public static class NonDuplicateAssignmentNameQualifier
         extends EOQualifier
-        implements EOQualifierEvaluation
     {
         // ----------------------------------------------------------
         /**
