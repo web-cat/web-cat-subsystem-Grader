@@ -678,7 +678,7 @@ public class UploadRosterPage
                             setPropertyIfMissing( user, User.LAST_NAME_KEY,
                                 name.last );
                             setPropertyIfMissing( user,
-                                User.UNIVERSITY_IDNO_KEY, idNo );
+                                User.UNIVERSITY_ID_NO_KEY, idNo );
                             setPropertyIfMissing( user, User.EMAIL_KEY,
                                 email );
                             setPropertyIfMissing( user, User.URL_KEY, url );

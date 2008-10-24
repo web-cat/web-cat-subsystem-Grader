@@ -96,7 +96,7 @@ public class Step
 
 
     // ----------------------------------------------------------
-    public void setTimeoutRaw( Number value )
+    public void setTimeoutRaw( Integer value )
     {
         if ( value != null && !timeoutIsWithinLimits( value.intValue() ) )
         {

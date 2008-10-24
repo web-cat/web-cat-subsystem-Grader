@@ -1,188 +1,152 @@
 {
+    allForAssignmentOfferingAndUser = {
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        qualifier = {
+            class = EOAndQualifier; 
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
+            }
+        ); 
+    }; 
+    earliestForAssignmentOfferingAndUser = {
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
+        qualifier = {
+            class = EOAndQualifier; 
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
+            }
+        ); 
+    }; 
     earliestForCourseOffering = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOKeyValueQualifier;
-            key = assignmentOffering.courseOffering;
-            selectorName = "isEqualTo:";
-            value = {_key = courseOffering; class = EOQualifierVariable; };
-        };
+            class = EOKeyValueQualifier; 
+            key = "assignmentOffering.courseOffering"; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = compareAscending:;
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
             }
-        );
-    };
+        ); 
+    }; 
+    latestForAssignmentOfferingAndUser = {
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
+        qualifier = {
+            class = EOAndQualifier; 
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
+            }
+        ); 
+    }; 
     latestForCourseOffering = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOKeyValueQualifier;
-            key = assignmentOffering.courseOffering;
-            selectorName = "isEqualTo:";
-            value = {_key = courseOffering; class = EOQualifierVariable; };
-        };
+            class = EOKeyValueQualifier; 
+            key = "assignmentOffering.courseOffering"; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = compareDescending:;
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
-    userAssignmentOfferingAndSubmitNumber = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        ); 
+    }; 
+    specificSubmission = {
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
-               {
-                   class = EOKeyValueQualifier;
-                   key = user;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = user;
-                       class = EOQualifierVariable;
-                   };
-               },
-               {
-                   class = EOKeyValueQualifier;
-                   key = assignmentOffering;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = assignmentOffering;
-                       class = EOQualifierVariable;
-                   };
-               },
-               {
-                   class = EOKeyValueQualifier;
-                   key = submitNumber;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = submitNumber;
-                       class = EOQualifierVariable;
-                   };
-               }
-            );
-        };
-    };
-    allForUserAndAssignmentOffering = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        qualifier = {
-            class = EOAndQualifier;
-            qualifiers = (
-               {
-                   class = EOKeyValueQualifier;
-                   key = user;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = user;
-                       class = EOQualifierVariable;
-                   };
-               },
-               {
-                   class = EOKeyValueQualifier;
-                   key = assignmentOffering;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = assignmentOffering;
-                       class = EOQualifierVariable;
-                   };
-               }
-            );
-        };
-        sortOrderings = (
-            {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = compareAscending:;
-            }
-        );
-    };
-    earliestForUserAndAssignmentOffering = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
-        qualifier = {
-            class = EOAndQualifier;
-            qualifiers = (
-               {
-                   class = EOKeyValueQualifier;
-                   key = user;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = user;
-                       class = EOQualifierVariable;
-                   };
-               },
-               {
-                   class = EOKeyValueQualifier;
-                   key = assignmentOffering;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = assignmentOffering;
-                       class = EOQualifierVariable;
-                   };
-               }
-            );
-        };
-        sortOrderings = (
-            {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = compareAscending:;
-            }
-        );
-    };
-    latestForUserAndAssignmentOffering = {
-        class = EOFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
-        qualifier = {
-            class = EOAndQualifier;
-            qualifiers = (
-               {
-                   class = EOKeyValueQualifier;
-                   key = user;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = user;
-                       class = EOQualifierVariable;
-                   };
-               },
-               {
-                   class = EOKeyValueQualifier;
-                   key = assignmentOffering;
-                   selectorName = isEqualTo:;
-                   value =
-                   {
-                       _key = assignmentOffering;
-                       class = EOQualifierVariable;
-                   };
-               }
-            );
-        };
-        sortOrderings = (
-            {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = compareDescending:;
-            }
-        );
-    };
+                {
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = submitNumber; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = submitNumber; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+    }; 
 }

@@ -223,7 +223,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary configDescription()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "configDescription" );
         if ( configDescriptionRawCache != dbValue )
         {
@@ -326,7 +326,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary defaultConfigSettings()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "defaultConfigSettings" );
         if ( defaultConfigSettingsRawCache != dbValue )
         {
@@ -429,7 +429,7 @@ public abstract class _ScriptFile
      */
     public net.sf.webcat.core.MutableDictionary globalConfigSettings()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "globalConfigSettings" );
         if ( globalConfigSettingsRawCache != dbValue )
         {
@@ -528,8 +528,8 @@ public abstract class _ScriptFile
      */
     public boolean isConfigFile()
     {
-        Number result =
-            (Number)storedValueForKey( "isConfigFile" );
+        Integer result =
+            (Integer)storedValueForKey( "isConfigFile" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -550,9 +550,9 @@ public abstract class _ScriptFile
             log.debug( "setIsConfigFile("
                 + value + "): was " + isConfigFile() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIsConfigFileRaw( actual );
+            setIsConfigFileRaw( actual );
     }
 
 
@@ -561,9 +561,9 @@ public abstract class _ScriptFile
      * Retrieve this object's <code>isConfigFile</code> value.
      * @return the value of the attribute
      */
-    public Number isConfigFileRaw()
+    public Integer isConfigFileRaw()
     {
-        return (Number)storedValueForKey( "isConfigFile" );
+        return (Integer)storedValueForKey( "isConfigFile" );
     }
 
 
@@ -574,7 +574,7 @@ public abstract class _ScriptFile
      *
      * @param value The new value for this property
      */
-    public void setIsConfigFileRaw( Number value )
+    public void setIsConfigFileRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -592,8 +592,8 @@ public abstract class _ScriptFile
      */
     public boolean isPublished()
     {
-        Number result =
-            (Number)storedValueForKey( "isPublished" );
+        Integer result =
+            (Integer)storedValueForKey( "isPublished" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -614,9 +614,9 @@ public abstract class _ScriptFile
             log.debug( "setIsPublished("
                 + value + "): was " + isPublished() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIsPublishedRaw( actual );
+            setIsPublishedRaw( actual );
     }
 
 
@@ -625,9 +625,9 @@ public abstract class _ScriptFile
      * Retrieve this object's <code>isPublished</code> value.
      * @return the value of the attribute
      */
-    public Number isPublishedRaw()
+    public Integer isPublishedRaw()
     {
-        return (Number)storedValueForKey( "isPublished" );
+        return (Integer)storedValueForKey( "isPublished" );
     }
 
 
@@ -638,7 +638,7 @@ public abstract class _ScriptFile
      *
      * @param value The new value for this property
      */
-    public void setIsPublishedRaw( Number value )
+    public void setIsPublishedRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -772,8 +772,8 @@ public abstract class _ScriptFile
      */
     public boolean updateMutableFields()
     {
-        Number result =
-            (Number)storedValueForKey( "updateMutableFields" );
+        Integer result =
+            (Integer)storedValueForKey( "updateMutableFields" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -794,9 +794,9 @@ public abstract class _ScriptFile
             log.debug( "setUpdateMutableFields("
                 + value + "): was " + updateMutableFields() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setUpdateMutableFieldsRaw( actual );
+            setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -805,9 +805,9 @@ public abstract class _ScriptFile
      * Retrieve this object's <code>updateMutableFields</code> value.
      * @return the value of the attribute
      */
-    public Number updateMutableFieldsRaw()
+    public Integer updateMutableFieldsRaw()
     {
-        return (Number)storedValueForKey( "updateMutableFields" );
+        return (Integer)storedValueForKey( "updateMutableFields" );
     }
 
 
@@ -818,7 +818,7 @@ public abstract class _ScriptFile
      *
      * @param value The new value for this property
      */
-    public void setUpdateMutableFieldsRaw( Number value )
+    public void setUpdateMutableFieldsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {

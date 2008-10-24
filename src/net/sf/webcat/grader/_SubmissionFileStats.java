@@ -243,8 +243,8 @@ public abstract class _SubmissionFileStats
      */
     public int conditionals()
     {
-        Number result =
-            (Number)storedValueForKey( "conditionals" );
+        Integer result =
+            (Integer)storedValueForKey( "conditionals" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -265,9 +265,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setConditionals("
                 + value + "): was " + conditionals() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setConditionalsRaw( actual );
+            setConditionalsRaw( actual );
     }
 
 
@@ -276,9 +276,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>conditionals</code> value.
      * @return the value of the attribute
      */
-    public Number conditionalsRaw()
+    public Integer conditionalsRaw()
     {
-        return (Number)storedValueForKey( "conditionals" );
+        return (Integer)storedValueForKey( "conditionals" );
     }
 
 
@@ -289,7 +289,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setConditionalsRaw( Number value )
+    public void setConditionalsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -307,8 +307,8 @@ public abstract class _SubmissionFileStats
      */
     public int conditionalsCovered()
     {
-        Number result =
-            (Number)storedValueForKey( "conditionalsCovered" );
+        Integer result =
+            (Integer)storedValueForKey( "conditionalsCovered" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -329,9 +329,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setConditionalsCovered("
                 + value + "): was " + conditionalsCovered() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setConditionalsCoveredRaw( actual );
+            setConditionalsCoveredRaw( actual );
     }
 
 
@@ -340,9 +340,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>conditionalsCovered</code> value.
      * @return the value of the attribute
      */
-    public Number conditionalsCoveredRaw()
+    public Integer conditionalsCoveredRaw()
     {
-        return (Number)storedValueForKey( "conditionalsCovered" );
+        return (Integer)storedValueForKey( "conditionalsCovered" );
     }
 
 
@@ -353,7 +353,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setConditionalsCoveredRaw( Number value )
+    public void setConditionalsCoveredRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -371,8 +371,8 @@ public abstract class _SubmissionFileStats
      */
     public double deductions()
     {
-        Number result =
-            (Number)storedValueForKey( "deductions" );
+        Double result =
+            (Double)storedValueForKey( "deductions" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -393,9 +393,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setDeductions("
                 + value + "): was " + deductions() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setDeductionsRaw( actual );
+            setDeductionsRaw( actual );
     }
 
 
@@ -404,9 +404,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>deductions</code> value.
      * @return the value of the attribute
      */
-    public Number deductionsRaw()
+    public Double deductionsRaw()
     {
-        return (Number)storedValueForKey( "deductions" );
+        return (Double)storedValueForKey( "deductions" );
     }
 
 
@@ -417,7 +417,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setDeductionsRaw( Number value )
+    public void setDeductionsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -435,8 +435,8 @@ public abstract class _SubmissionFileStats
      */
     public int elements()
     {
-        Number result =
-            (Number)storedValueForKey( "elements" );
+        Integer result =
+            (Integer)storedValueForKey( "elements" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -457,9 +457,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setElements("
                 + value + "): was " + elements() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setElementsRaw( actual );
+            setElementsRaw( actual );
     }
 
 
@@ -468,9 +468,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>elements</code> value.
      * @return the value of the attribute
      */
-    public Number elementsRaw()
+    public Integer elementsRaw()
     {
-        return (Number)storedValueForKey( "elements" );
+        return (Integer)storedValueForKey( "elements" );
     }
 
 
@@ -481,7 +481,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setElementsRaw( Number value )
+    public void setElementsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -499,8 +499,8 @@ public abstract class _SubmissionFileStats
      */
     public int elementsCovered()
     {
-        Number result =
-            (Number)storedValueForKey( "elementsCovered" );
+        Integer result =
+            (Integer)storedValueForKey( "elementsCovered" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -521,9 +521,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setElementsCovered("
                 + value + "): was " + elementsCovered() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setElementsCoveredRaw( actual );
+            setElementsCoveredRaw( actual );
     }
 
 
@@ -532,9 +532,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>elementsCovered</code> value.
      * @return the value of the attribute
      */
-    public Number elementsCoveredRaw()
+    public Integer elementsCoveredRaw()
     {
-        return (Number)storedValueForKey( "elementsCovered" );
+        return (Integer)storedValueForKey( "elementsCovered" );
     }
 
 
@@ -545,7 +545,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setElementsCoveredRaw( Number value )
+    public void setElementsCoveredRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -563,8 +563,8 @@ public abstract class _SubmissionFileStats
      */
     public int loc()
     {
-        Number result =
-            (Number)storedValueForKey( "loc" );
+        Integer result =
+            (Integer)storedValueForKey( "loc" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -585,9 +585,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setLoc("
                 + value + "): was " + loc() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setLocRaw( actual );
+            setLocRaw( actual );
     }
 
 
@@ -596,9 +596,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>loc</code> value.
      * @return the value of the attribute
      */
-    public Number locRaw()
+    public Integer locRaw()
     {
-        return (Number)storedValueForKey( "loc" );
+        return (Integer)storedValueForKey( "loc" );
     }
 
 
@@ -609,7 +609,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setLocRaw( Number value )
+    public void setLocRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -656,8 +656,8 @@ public abstract class _SubmissionFileStats
      */
     public int methods()
     {
-        Number result =
-            (Number)storedValueForKey( "methods" );
+        Integer result =
+            (Integer)storedValueForKey( "methods" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -678,9 +678,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setMethods("
                 + value + "): was " + methods() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setMethodsRaw( actual );
+            setMethodsRaw( actual );
     }
 
 
@@ -689,9 +689,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>methods</code> value.
      * @return the value of the attribute
      */
-    public Number methodsRaw()
+    public Integer methodsRaw()
     {
-        return (Number)storedValueForKey( "methods" );
+        return (Integer)storedValueForKey( "methods" );
     }
 
 
@@ -702,7 +702,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setMethodsRaw( Number value )
+    public void setMethodsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -720,8 +720,8 @@ public abstract class _SubmissionFileStats
      */
     public int methodsCovered()
     {
-        Number result =
-            (Number)storedValueForKey( "methodsCovered" );
+        Integer result =
+            (Integer)storedValueForKey( "methodsCovered" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -742,9 +742,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setMethodsCovered("
                 + value + "): was " + methodsCovered() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setMethodsCoveredRaw( actual );
+            setMethodsCoveredRaw( actual );
     }
 
 
@@ -753,9 +753,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>methodsCovered</code> value.
      * @return the value of the attribute
      */
-    public Number methodsCoveredRaw()
+    public Integer methodsCoveredRaw()
     {
-        return (Number)storedValueForKey( "methodsCovered" );
+        return (Integer)storedValueForKey( "methodsCovered" );
     }
 
 
@@ -766,7 +766,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setMethodsCoveredRaw( Number value )
+    public void setMethodsCoveredRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -784,8 +784,8 @@ public abstract class _SubmissionFileStats
      */
     public int ncloc()
     {
-        Number result =
-            (Number)storedValueForKey( "ncloc" );
+        Integer result =
+            (Integer)storedValueForKey( "ncloc" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -806,9 +806,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setNcloc("
                 + value + "): was " + ncloc() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setNclocRaw( actual );
+            setNclocRaw( actual );
     }
 
 
@@ -817,9 +817,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>ncloc</code> value.
      * @return the value of the attribute
      */
-    public Number nclocRaw()
+    public Integer nclocRaw()
     {
-        return (Number)storedValueForKey( "ncloc" );
+        return (Integer)storedValueForKey( "ncloc" );
     }
 
 
@@ -830,7 +830,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setNclocRaw( Number value )
+    public void setNclocRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -877,8 +877,8 @@ public abstract class _SubmissionFileStats
      */
     public int remarks()
     {
-        Number result =
-            (Number)storedValueForKey( "remarks" );
+        Integer result =
+            (Integer)storedValueForKey( "remarks" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -899,9 +899,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setRemarks("
                 + value + "): was " + remarks() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setRemarksRaw( actual );
+            setRemarksRaw( actual );
     }
 
 
@@ -910,9 +910,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>remarks</code> value.
      * @return the value of the attribute
      */
-    public Number remarksRaw()
+    public Integer remarksRaw()
     {
-        return (Number)storedValueForKey( "remarks" );
+        return (Integer)storedValueForKey( "remarks" );
     }
 
 
@@ -923,7 +923,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setRemarksRaw( Number value )
+    public void setRemarksRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -970,8 +970,8 @@ public abstract class _SubmissionFileStats
      */
     public int statements()
     {
-        Number result =
-            (Number)storedValueForKey( "statements" );
+        Integer result =
+            (Integer)storedValueForKey( "statements" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -992,9 +992,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setStatements("
                 + value + "): was " + statements() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setStatementsRaw( actual );
+            setStatementsRaw( actual );
     }
 
 
@@ -1003,9 +1003,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>statements</code> value.
      * @return the value of the attribute
      */
-    public Number statementsRaw()
+    public Integer statementsRaw()
     {
-        return (Number)storedValueForKey( "statements" );
+        return (Integer)storedValueForKey( "statements" );
     }
 
 
@@ -1016,7 +1016,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setStatementsRaw( Number value )
+    public void setStatementsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1034,8 +1034,8 @@ public abstract class _SubmissionFileStats
      */
     public int statementsCovered()
     {
-        Number result =
-            (Number)storedValueForKey( "statementsCovered" );
+        Integer result =
+            (Integer)storedValueForKey( "statementsCovered" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -1056,9 +1056,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setStatementsCovered("
                 + value + "): was " + statementsCovered() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setStatementsCoveredRaw( actual );
+            setStatementsCoveredRaw( actual );
     }
 
 
@@ -1067,9 +1067,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>statementsCovered</code> value.
      * @return the value of the attribute
      */
-    public Number statementsCoveredRaw()
+    public Integer statementsCoveredRaw()
     {
-        return (Number)storedValueForKey( "statementsCovered" );
+        return (Integer)storedValueForKey( "statementsCovered" );
     }
 
 
@@ -1080,7 +1080,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setStatementsCoveredRaw( Number value )
+    public void setStatementsCoveredRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1098,8 +1098,8 @@ public abstract class _SubmissionFileStats
      */
     public byte status()
     {
-        Number result =
-            (Number)storedValueForKey( "status" );
+        Integer result =
+            (Integer)storedValueForKey( "status" );
         return ( result == null )
             ? net.sf.webcat.core.Status.TO_DO
             : result.byteValue();
@@ -1120,9 +1120,9 @@ public abstract class _SubmissionFileStats
             log.debug( "setStatus("
                 + value + "): was " + status() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setStatusRaw( actual );
+            setStatusRaw( actual );
     }
 
 
@@ -1131,9 +1131,9 @@ public abstract class _SubmissionFileStats
      * Retrieve this object's <code>status</code> value.
      * @return the value of the attribute
      */
-    public Number statusRaw()
+    public Integer statusRaw()
     {
-        return (Number)storedValueForKey( "status" );
+        return (Integer)storedValueForKey( "status" );
     }
 
 
@@ -1144,7 +1144,7 @@ public abstract class _SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setStatusRaw( Number value )
+    public void setStatusRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {

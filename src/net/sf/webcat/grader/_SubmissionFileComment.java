@@ -207,8 +207,8 @@ public abstract class _SubmissionFileComment
      */
     public byte categoryNo()
     {
-        Number result =
-            (Number)storedValueForKey( "categoryNo" );
+        Integer result =
+            (Integer)storedValueForKey( "categoryNo" );
         return ( result == null )
             ? 0
             : result.byteValue();
@@ -229,9 +229,9 @@ public abstract class _SubmissionFileComment
             log.debug( "setCategoryNo("
                 + value + "): was " + categoryNo() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setCategoryNoRaw( actual );
+            setCategoryNoRaw( actual );
     }
 
 
@@ -240,9 +240,9 @@ public abstract class _SubmissionFileComment
      * Retrieve this object's <code>categoryNo</code> value.
      * @return the value of the attribute
      */
-    public Number categoryNoRaw()
+    public Integer categoryNoRaw()
     {
-        return (Number)storedValueForKey( "categoryNo" );
+        return (Integer)storedValueForKey( "categoryNo" );
     }
 
 
@@ -253,7 +253,7 @@ public abstract class _SubmissionFileComment
      *
      * @param value The new value for this property
      */
-    public void setCategoryNoRaw( Number value )
+    public void setCategoryNoRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -271,8 +271,8 @@ public abstract class _SubmissionFileComment
      */
     public double deduction()
     {
-        Number result =
-            (Number)storedValueForKey( "deduction" );
+        Double result =
+            (Double)storedValueForKey( "deduction" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -293,9 +293,9 @@ public abstract class _SubmissionFileComment
             log.debug( "setDeduction("
                 + value + "): was " + deduction() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setDeductionRaw( actual );
+            setDeductionRaw( actual );
     }
 
 
@@ -304,9 +304,9 @@ public abstract class _SubmissionFileComment
      * Retrieve this object's <code>deduction</code> value.
      * @return the value of the attribute
      */
-    public Number deductionRaw()
+    public Double deductionRaw()
     {
-        return (Number)storedValueForKey( "deduction" );
+        return (Double)storedValueForKey( "deduction" );
     }
 
 
@@ -317,7 +317,7 @@ public abstract class _SubmissionFileComment
      *
      * @param value The new value for this property
      */
-    public void setDeductionRaw( Number value )
+    public void setDeductionRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -393,8 +393,8 @@ public abstract class _SubmissionFileComment
      */
     public boolean limitExceeded()
     {
-        Number result =
-            (Number)storedValueForKey( "limitExceeded" );
+        Integer result =
+            (Integer)storedValueForKey( "limitExceeded" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -415,9 +415,9 @@ public abstract class _SubmissionFileComment
             log.debug( "setLimitExceeded("
                 + value + "): was " + limitExceeded() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setLimitExceededRaw( actual );
+            setLimitExceededRaw( actual );
     }
 
 
@@ -426,9 +426,9 @@ public abstract class _SubmissionFileComment
      * Retrieve this object's <code>limitExceeded</code> value.
      * @return the value of the attribute
      */
-    public Number limitExceededRaw()
+    public Integer limitExceededRaw()
     {
-        return (Number)storedValueForKey( "limitExceeded" );
+        return (Integer)storedValueForKey( "limitExceeded" );
     }
 
 
@@ -439,7 +439,7 @@ public abstract class _SubmissionFileComment
      *
      * @param value The new value for this property
      */
-    public void setLimitExceededRaw( Number value )
+    public void setLimitExceededRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -457,8 +457,8 @@ public abstract class _SubmissionFileComment
      */
     public int lineNo()
     {
-        Number result =
-            (Number)storedValueForKey( "lineNo" );
+        Integer result =
+            (Integer)storedValueForKey( "lineNo" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -479,9 +479,9 @@ public abstract class _SubmissionFileComment
             log.debug( "setLineNo("
                 + value + "): was " + lineNo() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setLineNoRaw( actual );
+            setLineNoRaw( actual );
     }
 
 
@@ -490,9 +490,9 @@ public abstract class _SubmissionFileComment
      * Retrieve this object's <code>lineNo</code> value.
      * @return the value of the attribute
      */
-    public Number lineNoRaw()
+    public Integer lineNoRaw()
     {
-        return (Number)storedValueForKey( "lineNo" );
+        return (Integer)storedValueForKey( "lineNo" );
     }
 
 
@@ -503,7 +503,7 @@ public abstract class _SubmissionFileComment
      *
      * @param value The new value for this property
      */
-    public void setLineNoRaw( Number value )
+    public void setLineNoRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -550,8 +550,8 @@ public abstract class _SubmissionFileComment
      */
     public byte toNo()
     {
-        Number result =
-            (Number)storedValueForKey( "toNo" );
+        Integer result =
+            (Integer)storedValueForKey( "toNo" );
         return ( result == null )
             ? 0
             : result.byteValue();
@@ -572,9 +572,9 @@ public abstract class _SubmissionFileComment
             log.debug( "setToNo("
                 + value + "): was " + toNo() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setToNoRaw( actual );
+            setToNoRaw( actual );
     }
 
 
@@ -583,9 +583,9 @@ public abstract class _SubmissionFileComment
      * Retrieve this object's <code>toNo</code> value.
      * @return the value of the attribute
      */
-    public Number toNoRaw()
+    public Integer toNoRaw()
     {
-        return (Number)storedValueForKey( "toNo" );
+        return (Integer)storedValueForKey( "toNo" );
     }
 
 
@@ -596,7 +596,7 @@ public abstract class _SubmissionFileComment
      *
      * @param value The new value for this property
      */
-    public void setToNoRaw( Number value )
+    public void setToNoRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {

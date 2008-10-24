@@ -1,172 +1,94 @@
-
 {
-    attributes =
-    (
-
-       {
-           columnName = CASSIGNMENTID;
-           name = assignmentId;
-           prototypeName = foreignId;
-       },
-
-       {
-           columnName = CCONFIGSETTINGS;
-           name = configSettings;
-           prototypeName = mutableDictionary;
-           userInfo =
-           {
-               adaptorValueConversionMethodName = archiveData;
-               isMutable = true;
-               valueClassName = net.sf.webcat.core.MutableDictionary;
-               valueFactoryMethodName = objectWithArchiveData;
-           };
-       },
-
-       {
-           name = id;
-           prototypeName = id;
-       },
-
-       {
-           columnName = CORDER;
-           name = order;
-           prototypeName = integer;
-           userInfo =
-           {
-               isScalar = true;
-               scalarConversionMethodName = intValue;
-               scalarDefault = 0;
-               type = int;
-               valueClassName = Integer;
-           };
-       },
-
-       {
-           columnName = CSCRIPTID;
-           name = scriptId;
-           prototypeName = foreignId;
-       },
-
-       {
-           columnName = CSTEPCONFIGID;
-           name = stepConfigId;
-           prototypeName = foreignId;
-       },
-
-       {
-           columnName = CTIMEOUT;
-           name = timeout;
-           prototypeName = integer;
-           userInfo =
-           {
-               isScalar = true;
-               scalarConversionMethodName = intValue;
-               scalarDefault = 0;
-               type = int;
-               valueClassName = Integer;
-           };
-       },
-
-       {
-           name = updateMutableFields;
-           prototypeName = updateMutableFields;
-           userInfo =
-           {
-               isScalar = true;
-               scalarDefault = false;
-               type = boolean;
-           };
-       }
-    );
-    attributesUsedForLocking =
-    (
-       assignmentId,
-       order,
-       scriptId,
-       timeout,
-       updateMutableFields
-    );
-    className = net.sf.webcat.grader.Step;
-    classProperties =
-    (
-       assignment,
-       config,
-       configSettings,
-       graderPrefs,
-       order,
-       script,
-       timeout,
-       updateMutableFields
-    );
-    externalName = TSTEP;
-    internalInfo =
-    {};
-    name = Step;
-    primaryKeyAttributes =
-    (
-       id
-    );
-    relationships =
-    (
-
-       {
-           destination = Assignment;
-           isToMany = N;
-           joinSemantic = EOInnerJoin;
-           joins =
-           (
-
-              {
-                  destinationAttribute = id;
-                  sourceAttribute = assignmentId;
-              }
-           );
-           name = assignment;
-       },
-
-       {
-           destination = GraderPrefs;
-           isToMany = Y;
-           joinSemantic = EOInnerJoin;
-           joins =
-           (
-
-              {
-                  destinationAttribute = stepId;
-                  sourceAttribute = id;
-              }
-           );
-           name = graderPrefs;
-       },
-
-       {
-           destination = StepConfig;
-           isToMany = N;
-           joinSemantic = EOInnerJoin;
-           joins =
-           (
-
-              {
-                  destinationAttribute = id;
-                  sourceAttribute = stepConfigId;
-              }
-           );
-           name = config;
-       },
-
-       {
-           destination = ScriptFile;
-           isToMany = N;
-           joinSemantic = EOInnerJoin;
-           joins =
-           (
-
-              {
-                  destinationAttribute = id;
-                  sourceAttribute = scriptId;
-              }
-           );
-           name = script;
-       }
-    );
+    attributes = (
+        {columnName = CASSIGNMENTID; name = assignmentId; prototypeName = foreignId; }, 
+        {
+            columnName = CCONFIGSETTINGS; 
+            name = configSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "net.sf.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {name = id; prototypeName = id; }, 
+        {
+            columnName = CORDER; 
+            name = order; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {columnName = CSCRIPTID; name = scriptId; prototypeName = foreignId; }, 
+        {columnName = CSTEPCONFIGID; name = stepConfigId; prototypeName = foreignId; }, 
+        {
+            columnName = CTIMEOUT; 
+            name = timeout; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }
+    ); 
+    attributesUsedForLocking = (assignmentId, order, scriptId, timeout, updateMutableFields); 
+    className = "net.sf.webcat.grader.Step"; 
+    classProperties = (
+        assignment, 
+        config, 
+        configSettings, 
+        graderPrefs, 
+        order, 
+        script, 
+        timeout, 
+        updateMutableFields
+    ); 
+    externalName = TSTEP; 
+    fetchSpecificationDictionary = {}; 
+    name = Step; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = Assignment; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentId; }); 
+            name = assignment; 
+        }, 
+        {
+            destination = GraderPrefs; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = stepId; sourceAttribute = id; }); 
+            name = graderPrefs; 
+        }, 
+        {
+            destination = StepConfig; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = stepConfigId; }); 
+            name = config; 
+        }, 
+        {
+            destination = ScriptFile; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = scriptId; }); 
+            name = script; 
+        }
+    ); 
 }

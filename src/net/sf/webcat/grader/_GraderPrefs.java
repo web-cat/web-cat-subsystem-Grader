@@ -560,7 +560,6 @@ public abstract class _GraderPrefs
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
-            
                 + ", " + userBinding
                 + "): " + result );
         }

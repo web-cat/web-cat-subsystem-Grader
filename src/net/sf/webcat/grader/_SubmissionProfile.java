@@ -229,8 +229,8 @@ public abstract class _SubmissionProfile
      */
     public double availablePoints()
     {
-        Number result =
-            (Number)storedValueForKey( "availablePoints" );
+        Double result =
+            (Double)storedValueForKey( "availablePoints" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -251,9 +251,9 @@ public abstract class _SubmissionProfile
             log.debug( "setAvailablePoints("
                 + value + "): was " + availablePoints() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setAvailablePointsRaw( actual );
+            setAvailablePointsRaw( actual );
     }
 
 
@@ -262,9 +262,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>availablePoints</code> value.
      * @return the value of the attribute
      */
-    public Number availablePointsRaw()
+    public Double availablePointsRaw()
     {
-        return (Number)storedValueForKey( "availablePoints" );
+        return (Double)storedValueForKey( "availablePoints" );
     }
 
 
@@ -275,7 +275,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setAvailablePointsRaw( Number value )
+    public void setAvailablePointsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -293,8 +293,8 @@ public abstract class _SubmissionProfile
      */
     public long availableTimeDelta()
     {
-        Number result =
-            (Number)storedValueForKey( "availableTimeDelta" );
+        Long result =
+            (Long)storedValueForKey( "availableTimeDelta" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -315,9 +315,9 @@ public abstract class _SubmissionProfile
             log.debug( "setAvailableTimeDelta("
                 + value + "): was " + availableTimeDelta() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setAvailableTimeDeltaRaw( actual );
+            setAvailableTimeDeltaRaw( actual );
     }
 
 
@@ -326,9 +326,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>availableTimeDelta</code> value.
      * @return the value of the attribute
      */
-    public Number availableTimeDeltaRaw()
+    public Long availableTimeDeltaRaw()
     {
-        return (Number)storedValueForKey( "availableTimeDelta" );
+        return (Long)storedValueForKey( "availableTimeDelta" );
     }
 
 
@@ -339,7 +339,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setAvailableTimeDeltaRaw( Number value )
+    public void setAvailableTimeDeltaRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -357,8 +357,8 @@ public abstract class _SubmissionProfile
      */
     public boolean awardEarlyBonus()
     {
-        Number result =
-            (Number)storedValueForKey( "awardEarlyBonus" );
+        Integer result =
+            (Integer)storedValueForKey( "awardEarlyBonus" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -379,9 +379,9 @@ public abstract class _SubmissionProfile
             log.debug( "setAwardEarlyBonus("
                 + value + "): was " + awardEarlyBonus() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setAwardEarlyBonusRaw( actual );
+            setAwardEarlyBonusRaw( actual );
     }
 
 
@@ -390,9 +390,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>awardEarlyBonus</code> value.
      * @return the value of the attribute
      */
-    public Number awardEarlyBonusRaw()
+    public Integer awardEarlyBonusRaw()
     {
-        return (Number)storedValueForKey( "awardEarlyBonus" );
+        return (Integer)storedValueForKey( "awardEarlyBonus" );
     }
 
 
@@ -403,7 +403,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setAwardEarlyBonusRaw( Number value )
+    public void setAwardEarlyBonusRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -421,8 +421,8 @@ public abstract class _SubmissionProfile
      */
     public long deadTimeDelta()
     {
-        Number result =
-            (Number)storedValueForKey( "deadTimeDelta" );
+        Long result =
+            (Long)storedValueForKey( "deadTimeDelta" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -443,9 +443,9 @@ public abstract class _SubmissionProfile
             log.debug( "setDeadTimeDelta("
                 + value + "): was " + deadTimeDelta() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setDeadTimeDeltaRaw( actual );
+            setDeadTimeDeltaRaw( actual );
     }
 
 
@@ -454,9 +454,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>deadTimeDelta</code> value.
      * @return the value of the attribute
      */
-    public Number deadTimeDeltaRaw()
+    public Long deadTimeDeltaRaw()
     {
-        return (Number)storedValueForKey( "deadTimeDelta" );
+        return (Long)storedValueForKey( "deadTimeDelta" );
     }
 
 
@@ -467,7 +467,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setDeadTimeDeltaRaw( Number value )
+    public void setDeadTimeDeltaRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -485,8 +485,8 @@ public abstract class _SubmissionProfile
      */
     public boolean deductLatePenalty()
     {
-        Number result =
-            (Number)storedValueForKey( "deductLatePenalty" );
+        Integer result =
+            (Integer)storedValueForKey( "deductLatePenalty" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -507,9 +507,9 @@ public abstract class _SubmissionProfile
             log.debug( "setDeductLatePenalty("
                 + value + "): was " + deductLatePenalty() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setDeductLatePenaltyRaw( actual );
+            setDeductLatePenaltyRaw( actual );
     }
 
 
@@ -518,9 +518,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>deductLatePenalty</code> value.
      * @return the value of the attribute
      */
-    public Number deductLatePenaltyRaw()
+    public Integer deductLatePenaltyRaw()
     {
-        return (Number)storedValueForKey( "deductLatePenalty" );
+        return (Integer)storedValueForKey( "deductLatePenalty" );
     }
 
 
@@ -531,7 +531,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setDeductLatePenaltyRaw( Number value )
+    public void setDeductLatePenaltyRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -549,8 +549,8 @@ public abstract class _SubmissionProfile
      */
     public double earlyBonusMaxPts()
     {
-        Number result =
-            (Number)storedValueForKey( "earlyBonusMaxPts" );
+        Double result =
+            (Double)storedValueForKey( "earlyBonusMaxPts" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -571,9 +571,9 @@ public abstract class _SubmissionProfile
             log.debug( "setEarlyBonusMaxPts("
                 + value + "): was " + earlyBonusMaxPts() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setEarlyBonusMaxPtsRaw( actual );
+            setEarlyBonusMaxPtsRaw( actual );
     }
 
 
@@ -582,9 +582,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>earlyBonusMaxPts</code> value.
      * @return the value of the attribute
      */
-    public Number earlyBonusMaxPtsRaw()
+    public Double earlyBonusMaxPtsRaw()
     {
-        return (Number)storedValueForKey( "earlyBonusMaxPts" );
+        return (Double)storedValueForKey( "earlyBonusMaxPts" );
     }
 
 
@@ -595,7 +595,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setEarlyBonusMaxPtsRaw( Number value )
+    public void setEarlyBonusMaxPtsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -613,8 +613,8 @@ public abstract class _SubmissionProfile
      */
     public double earlyBonusUnitPts()
     {
-        Number result =
-            (Number)storedValueForKey( "earlyBonusUnitPts" );
+        Double result =
+            (Double)storedValueForKey( "earlyBonusUnitPts" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -635,9 +635,9 @@ public abstract class _SubmissionProfile
             log.debug( "setEarlyBonusUnitPts("
                 + value + "): was " + earlyBonusUnitPts() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setEarlyBonusUnitPtsRaw( actual );
+            setEarlyBonusUnitPtsRaw( actual );
     }
 
 
@@ -646,9 +646,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>earlyBonusUnitPts</code> value.
      * @return the value of the attribute
      */
-    public Number earlyBonusUnitPtsRaw()
+    public Double earlyBonusUnitPtsRaw()
     {
-        return (Number)storedValueForKey( "earlyBonusUnitPts" );
+        return (Double)storedValueForKey( "earlyBonusUnitPts" );
     }
 
 
@@ -659,7 +659,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setEarlyBonusUnitPtsRaw( Number value )
+    public void setEarlyBonusUnitPtsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -677,8 +677,8 @@ public abstract class _SubmissionProfile
      */
     public long earlyBonusUnitTime()
     {
-        Number result =
-            (Number)storedValueForKey( "earlyBonusUnitTime" );
+        Long result =
+            (Long)storedValueForKey( "earlyBonusUnitTime" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -699,9 +699,9 @@ public abstract class _SubmissionProfile
             log.debug( "setEarlyBonusUnitTime("
                 + value + "): was " + earlyBonusUnitTime() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setEarlyBonusUnitTimeRaw( actual );
+            setEarlyBonusUnitTimeRaw( actual );
     }
 
 
@@ -710,9 +710,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>earlyBonusUnitTime</code> value.
      * @return the value of the attribute
      */
-    public Number earlyBonusUnitTimeRaw()
+    public Long earlyBonusUnitTimeRaw()
     {
-        return (Number)storedValueForKey( "earlyBonusUnitTime" );
+        return (Long)storedValueForKey( "earlyBonusUnitTime" );
     }
 
 
@@ -723,7 +723,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setEarlyBonusUnitTimeRaw( Number value )
+    public void setEarlyBonusUnitTimeRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -799,8 +799,8 @@ public abstract class _SubmissionProfile
      */
     public double latePenaltyMaxPts()
     {
-        Number result =
-            (Number)storedValueForKey( "latePenaltyMaxPts" );
+        Double result =
+            (Double)storedValueForKey( "latePenaltyMaxPts" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -821,9 +821,9 @@ public abstract class _SubmissionProfile
             log.debug( "setLatePenaltyMaxPts("
                 + value + "): was " + latePenaltyMaxPts() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setLatePenaltyMaxPtsRaw( actual );
+            setLatePenaltyMaxPtsRaw( actual );
     }
 
 
@@ -832,9 +832,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>latePenaltyMaxPts</code> value.
      * @return the value of the attribute
      */
-    public Number latePenaltyMaxPtsRaw()
+    public Double latePenaltyMaxPtsRaw()
     {
-        return (Number)storedValueForKey( "latePenaltyMaxPts" );
+        return (Double)storedValueForKey( "latePenaltyMaxPts" );
     }
 
 
@@ -845,7 +845,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setLatePenaltyMaxPtsRaw( Number value )
+    public void setLatePenaltyMaxPtsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -863,8 +863,8 @@ public abstract class _SubmissionProfile
      */
     public double latePenaltyUnitPts()
     {
-        Number result =
-            (Number)storedValueForKey( "latePenaltyUnitPts" );
+        Double result =
+            (Double)storedValueForKey( "latePenaltyUnitPts" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -885,9 +885,9 @@ public abstract class _SubmissionProfile
             log.debug( "setLatePenaltyUnitPts("
                 + value + "): was " + latePenaltyUnitPts() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setLatePenaltyUnitPtsRaw( actual );
+            setLatePenaltyUnitPtsRaw( actual );
     }
 
 
@@ -896,9 +896,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>latePenaltyUnitPts</code> value.
      * @return the value of the attribute
      */
-    public Number latePenaltyUnitPtsRaw()
+    public Double latePenaltyUnitPtsRaw()
     {
-        return (Number)storedValueForKey( "latePenaltyUnitPts" );
+        return (Double)storedValueForKey( "latePenaltyUnitPts" );
     }
 
 
@@ -909,7 +909,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setLatePenaltyUnitPtsRaw( Number value )
+    public void setLatePenaltyUnitPtsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -927,8 +927,8 @@ public abstract class _SubmissionProfile
      */
     public long latePenaltyUnitTime()
     {
-        Number result =
-            (Number)storedValueForKey( "latePenaltyUnitTime" );
+        Long result =
+            (Long)storedValueForKey( "latePenaltyUnitTime" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -949,9 +949,9 @@ public abstract class _SubmissionProfile
             log.debug( "setLatePenaltyUnitTime("
                 + value + "): was " + latePenaltyUnitTime() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setLatePenaltyUnitTimeRaw( actual );
+            setLatePenaltyUnitTimeRaw( actual );
     }
 
 
@@ -960,9 +960,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>latePenaltyUnitTime</code> value.
      * @return the value of the attribute
      */
-    public Number latePenaltyUnitTimeRaw()
+    public Long latePenaltyUnitTimeRaw()
     {
-        return (Number)storedValueForKey( "latePenaltyUnitTime" );
+        return (Long)storedValueForKey( "latePenaltyUnitTime" );
     }
 
 
@@ -973,7 +973,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setLatePenaltyUnitTimeRaw( Number value )
+    public void setLatePenaltyUnitTimeRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -991,8 +991,8 @@ public abstract class _SubmissionProfile
      */
     public long maxFileUploadSize()
     {
-        Number result =
-            (Number)storedValueForKey( "maxFileUploadSize" );
+        Long result =
+            (Long)storedValueForKey( "maxFileUploadSize" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -1013,9 +1013,9 @@ public abstract class _SubmissionProfile
             log.debug( "setMaxFileUploadSize("
                 + value + "): was " + maxFileUploadSize() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setMaxFileUploadSizeRaw( actual );
+            setMaxFileUploadSizeRaw( actual );
     }
 
 
@@ -1024,9 +1024,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>maxFileUploadSize</code> value.
      * @return the value of the attribute
      */
-    public Number maxFileUploadSizeRaw()
+    public Long maxFileUploadSizeRaw()
     {
-        return (Number)storedValueForKey( "maxFileUploadSize" );
+        return (Long)storedValueForKey( "maxFileUploadSize" );
     }
 
 
@@ -1037,7 +1037,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setMaxFileUploadSizeRaw( Number value )
+    public void setMaxFileUploadSizeRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -1055,8 +1055,8 @@ public abstract class _SubmissionProfile
      */
     public int maxSubmissions()
     {
-        Number result =
-            (Number)storedValueForKey( "maxSubmissions" );
+        Integer result =
+            (Integer)storedValueForKey( "maxSubmissions" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -1077,9 +1077,9 @@ public abstract class _SubmissionProfile
             log.debug( "setMaxSubmissions("
                 + value + "): was " + maxSubmissions() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setMaxSubmissionsRaw( actual );
+            setMaxSubmissionsRaw( actual );
     }
 
 
@@ -1088,9 +1088,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>maxSubmissions</code> value.
      * @return the value of the attribute
      */
-    public Number maxSubmissionsRaw()
+    public Integer maxSubmissionsRaw()
     {
-        return (Number)storedValueForKey( "maxSubmissions" );
+        return (Integer)storedValueForKey( "maxSubmissions" );
     }
 
 
@@ -1101,7 +1101,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setMaxSubmissionsRaw( Number value )
+    public void setMaxSubmissionsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1206,8 +1206,8 @@ public abstract class _SubmissionProfile
      */
     public byte submissionMethod()
     {
-        Number result =
-            (Number)storedValueForKey( "submissionMethod" );
+        Integer result =
+            (Integer)storedValueForKey( "submissionMethod" );
         return ( result == null )
             ? 0
             : result.byteValue();
@@ -1228,9 +1228,9 @@ public abstract class _SubmissionProfile
             log.debug( "setSubmissionMethod("
                 + value + "): was " + submissionMethod() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setSubmissionMethodRaw( actual );
+            setSubmissionMethodRaw( actual );
     }
 
 
@@ -1239,9 +1239,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>submissionMethod</code> value.
      * @return the value of the attribute
      */
-    public Number submissionMethodRaw()
+    public Integer submissionMethodRaw()
     {
-        return (Number)storedValueForKey( "submissionMethod" );
+        return (Integer)storedValueForKey( "submissionMethod" );
     }
 
 
@@ -1252,7 +1252,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setSubmissionMethodRaw( Number value )
+    public void setSubmissionMethodRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1270,8 +1270,8 @@ public abstract class _SubmissionProfile
      */
     public double taPoints()
     {
-        Number result =
-            (Number)storedValueForKey( "taPoints" );
+        Double result =
+            (Double)storedValueForKey( "taPoints" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -1292,9 +1292,9 @@ public abstract class _SubmissionProfile
             log.debug( "setTaPoints("
                 + value + "): was " + taPoints() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setTaPointsRaw( actual );
+            setTaPointsRaw( actual );
     }
 
 
@@ -1303,9 +1303,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>taPoints</code> value.
      * @return the value of the attribute
      */
-    public Number taPointsRaw()
+    public Double taPointsRaw()
     {
-        return (Number)storedValueForKey( "taPoints" );
+        return (Double)storedValueForKey( "taPoints" );
     }
 
 
@@ -1316,7 +1316,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setTaPointsRaw( Number value )
+    public void setTaPointsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -1334,8 +1334,8 @@ public abstract class _SubmissionProfile
      */
     public double toolPoints()
     {
-        Number result =
-            (Number)storedValueForKey( "toolPoints" );
+        Double result =
+            (Double)storedValueForKey( "toolPoints" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -1356,9 +1356,9 @@ public abstract class _SubmissionProfile
             log.debug( "setToolPoints("
                 + value + "): was " + toolPoints() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setToolPointsRaw( actual );
+            setToolPointsRaw( actual );
     }
 
 
@@ -1367,9 +1367,9 @@ public abstract class _SubmissionProfile
      * Retrieve this object's <code>toolPoints</code> value.
      * @return the value of the attribute
      */
-    public Number toolPointsRaw()
+    public Double toolPointsRaw()
     {
-        return (Number)storedValueForKey( "toolPoints" );
+        return (Double)storedValueForKey( "toolPoints" );
     }
 
 
@@ -1380,7 +1380,7 @@ public abstract class _SubmissionProfile
      *
      * @param value The new value for this property
      */
-    public void setToolPointsRaw( Number value )
+    public void setToolPointsRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -1840,7 +1840,6 @@ public abstract class _SubmissionProfile
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForCourse(ec"
-            
                 + ", " + courseBinding
                 + "): " + result );
         }
@@ -1880,7 +1879,6 @@ public abstract class _SubmissionProfile
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
-            
                 + ", " + userBinding
                 + "): " + result );
         }

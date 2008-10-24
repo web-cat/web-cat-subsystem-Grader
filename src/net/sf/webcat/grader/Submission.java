@@ -537,8 +537,8 @@ public class Submission
         if (user() == null || assignmentOffering() == null)
             return NSArray.EmptyArray;
 
-        return objectsForAllForUserAndAssignmentOffering(editingContext(),
-                user(), assignmentOffering());
+        return objectsForAllForAssignmentOfferingAndUser(editingContext(),
+                assignmentOffering(), user());
     }
 
 
@@ -583,8 +583,8 @@ public class Submission
         if (user() == null || assignmentOffering() == null) return null;
 
         NSArray<Submission> subs =
-            objectsForEarliestForUserAndAssignmentOffering(editingContext(),
-                    user(), assignmentOffering());
+            objectsForEarliestForAssignmentOfferingAndUser(editingContext(),
+                    assignmentOffering(), user());
 
         if (subs != null && subs.count() >= 1)
         {
@@ -613,8 +613,8 @@ public class Submission
         if (user() == null || assignmentOffering() == null) return null;
 
         NSArray<Submission> subs =
-            objectsForLatestForUserAndAssignmentOffering(editingContext(),
-                    user(), assignmentOffering());
+            objectsForLatestForAssignmentOfferingAndUser(editingContext(),
+                    assignmentOffering(), user());
 
         if (subs != null && subs.count() >= 1)
         {
@@ -644,8 +644,8 @@ public class Submission
         if (submitNo == 1) return null;
 
         NSArray<Submission> subs =
-            objectsForUserAssignmentOfferingAndSubmitNumber(editingContext(),
-                    user(), assignmentOffering(), submitNo - 1);
+            objectsForSpecificSubmission(editingContext(),
+                    assignmentOffering(), submitNo - 1, user());
 
         if (subs != null && subs.count() >= 1)
         {
@@ -682,8 +682,8 @@ public class Submission
         if (submitNo == count) return null;
 
         NSArray<Submission> subs =
-            objectsForUserAssignmentOfferingAndSubmitNumber(editingContext(),
-                    user(), assignmentOffering(), submitNo + 1);
+            objectsForSpecificSubmission(editingContext(),
+                    assignmentOffering(), submitNo + 1, user());
 
         if (subs != null && subs.count() >= 1)
         {

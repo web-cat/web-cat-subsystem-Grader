@@ -210,7 +210,7 @@ public abstract class _Step
      */
     public net.sf.webcat.core.MutableDictionary configSettings()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "configSettings" );
         if ( configSettingsRawCache != dbValue )
         {
@@ -309,8 +309,8 @@ public abstract class _Step
      */
     public int order()
     {
-        Number result =
-            (Number)storedValueForKey( "order" );
+        Integer result =
+            (Integer)storedValueForKey( "order" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -331,9 +331,9 @@ public abstract class _Step
             log.debug( "setOrder("
                 + value + "): was " + order() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setOrderRaw( actual );
+            setOrderRaw( actual );
     }
 
 
@@ -342,9 +342,9 @@ public abstract class _Step
      * Retrieve this object's <code>order</code> value.
      * @return the value of the attribute
      */
-    public Number orderRaw()
+    public Integer orderRaw()
     {
-        return (Number)storedValueForKey( "order" );
+        return (Integer)storedValueForKey( "order" );
     }
 
 
@@ -355,7 +355,7 @@ public abstract class _Step
      *
      * @param value The new value for this property
      */
-    public void setOrderRaw( Number value )
+    public void setOrderRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -373,8 +373,8 @@ public abstract class _Step
      */
     public int timeout()
     {
-        Number result =
-            (Number)storedValueForKey( "timeout" );
+        Integer result =
+            (Integer)storedValueForKey( "timeout" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -395,9 +395,9 @@ public abstract class _Step
             log.debug( "setTimeout("
                 + value + "): was " + timeout() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setTimeoutRaw( actual );
+            setTimeoutRaw( actual );
     }
 
 
@@ -406,9 +406,9 @@ public abstract class _Step
      * Retrieve this object's <code>timeout</code> value.
      * @return the value of the attribute
      */
-    public Number timeoutRaw()
+    public Integer timeoutRaw()
     {
-        return (Number)storedValueForKey( "timeout" );
+        return (Integer)storedValueForKey( "timeout" );
     }
 
 
@@ -419,7 +419,7 @@ public abstract class _Step
      *
      * @param value The new value for this property
      */
-    public void setTimeoutRaw( Number value )
+    public void setTimeoutRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -437,8 +437,8 @@ public abstract class _Step
      */
     public boolean updateMutableFields()
     {
-        Number result =
-            (Number)storedValueForKey( "updateMutableFields" );
+        Integer result =
+            (Integer)storedValueForKey( "updateMutableFields" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -459,9 +459,9 @@ public abstract class _Step
             log.debug( "setUpdateMutableFields("
                 + value + "): was " + updateMutableFields() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setUpdateMutableFieldsRaw( actual );
+            setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -470,9 +470,9 @@ public abstract class _Step
      * Retrieve this object's <code>updateMutableFields</code> value.
      * @return the value of the attribute
      */
-    public Number updateMutableFieldsRaw()
+    public Integer updateMutableFieldsRaw()
     {
-        return (Number)storedValueForKey( "updateMutableFields" );
+        return (Integer)storedValueForKey( "updateMutableFields" );
     }
 
 
@@ -483,7 +483,7 @@ public abstract class _Step
      *
      * @param value The new value for this property
      */
-    public void setUpdateMutableFieldsRaw( Number value )
+    public void setUpdateMutableFieldsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {

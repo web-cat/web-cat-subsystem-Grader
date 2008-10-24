@@ -210,14 +210,14 @@ public class EditSubmissionProfilePage
 
 
     // ----------------------------------------------------------
-    public Number maxFileUploadSize()
+    public Long maxFileUploadSize()
     {
         return submissionProfile.maxFileUploadSizeRaw();
     }
 
 
     // ----------------------------------------------------------
-    public void setMaxFileUploadSize( Number value )
+    public void setMaxFileUploadSize( Long value )
     {
         if ( value != null
              && !SubmissionProfile.maxFileUploadSizeIsWithinLimits(

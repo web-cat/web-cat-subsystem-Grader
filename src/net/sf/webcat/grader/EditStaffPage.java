@@ -76,7 +76,7 @@ public class EditStaffPage
         staffDisplayGroup.setMasterObject( courseOffering() );
         staffDisplayGroup.setDetailKey( editInstructors
                         ? CourseOffering.INSTRUCTORS_KEY
-                        : CourseOffering.TAS_KEY );
+                        : CourseOffering.T_AS_KEY );
         staffDisplayGroup.fetch();
         log.debug(
             "current size = " + potentialDisplayGroup.numberOfObjectsPerBatch()

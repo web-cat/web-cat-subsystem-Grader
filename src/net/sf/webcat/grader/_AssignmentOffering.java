@@ -248,8 +248,8 @@ public abstract class _AssignmentOffering
      */
     public boolean gradingSuspended()
     {
-        Number result =
-            (Number)storedValueForKey( "gradingSuspended" );
+        Integer result =
+            (Integer)storedValueForKey( "gradingSuspended" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -270,9 +270,9 @@ public abstract class _AssignmentOffering
             log.debug( "setGradingSuspended("
                 + value + "): was " + gradingSuspended() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setGradingSuspendedRaw( actual );
+            setGradingSuspendedRaw( actual );
     }
 
 
@@ -281,9 +281,9 @@ public abstract class _AssignmentOffering
      * Retrieve this object's <code>gradingSuspended</code> value.
      * @return the value of the attribute
      */
-    public Number gradingSuspendedRaw()
+    public Integer gradingSuspendedRaw()
     {
-        return (Number)storedValueForKey( "gradingSuspended" );
+        return (Integer)storedValueForKey( "gradingSuspended" );
     }
 
 
@@ -294,7 +294,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new value for this property
      */
-    public void setGradingSuspendedRaw( Number value )
+    public void setGradingSuspendedRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -316,7 +316,7 @@ public abstract class _AssignmentOffering
      */
     public net.sf.webcat.grader.graphs.AssignmentSummary graphSummary()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "graphSummary" );
         if ( graphSummaryRawCache != dbValue )
         {
@@ -413,9 +413,9 @@ public abstract class _AssignmentOffering
      * Retrieve this object's <code>moodleId</code> value.
      * @return the value of the attribute
      */
-    public Number moodleId()
+    public Long moodleId()
     {
-        return (Number)storedValueForKey( "moodleId" );
+        return (Long)storedValueForKey( "moodleId" );
     }
 
 
@@ -426,7 +426,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new value for this property
      */
-    public void setMoodleId( Number value )
+    public void setMoodleId( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -444,8 +444,8 @@ public abstract class _AssignmentOffering
      */
     public boolean publish()
     {
-        Number result =
-            (Number)storedValueForKey( "publish" );
+        Integer result =
+            (Integer)storedValueForKey( "publish" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -466,9 +466,9 @@ public abstract class _AssignmentOffering
             log.debug( "setPublish("
                 + value + "): was " + publish() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setPublishRaw( actual );
+            setPublishRaw( actual );
     }
 
 
@@ -477,9 +477,9 @@ public abstract class _AssignmentOffering
      * Retrieve this object's <code>publish</code> value.
      * @return the value of the attribute
      */
-    public Number publishRaw()
+    public Integer publishRaw()
     {
-        return (Number)storedValueForKey( "publish" );
+        return (Integer)storedValueForKey( "publish" );
     }
 
 
@@ -490,7 +490,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new value for this property
      */
-    public void setPublishRaw( Number value )
+    public void setPublishRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -508,8 +508,8 @@ public abstract class _AssignmentOffering
      */
     public boolean updateMutableFields()
     {
-        Number result =
-            (Number)storedValueForKey( "updateMutableFields" );
+        Integer result =
+            (Integer)storedValueForKey( "updateMutableFields" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -530,9 +530,9 @@ public abstract class _AssignmentOffering
             log.debug( "setUpdateMutableFields("
                 + value + "): was " + updateMutableFields() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setUpdateMutableFieldsRaw( actual );
+            setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -541,9 +541,9 @@ public abstract class _AssignmentOffering
      * Retrieve this object's <code>updateMutableFields</code> value.
      * @return the value of the attribute
      */
-    public Number updateMutableFieldsRaw()
+    public Integer updateMutableFieldsRaw()
     {
-        return (Number)storedValueForKey( "updateMutableFields" );
+        return (Integer)storedValueForKey( "updateMutableFields" );
     }
 
 
@@ -554,7 +554,7 @@ public abstract class _AssignmentOffering
      *
      * @param value The new value for this property
      */
-    public void setUpdateMutableFieldsRaw( Number value )
+    public void setUpdateMutableFieldsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1129,7 +1129,6 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForAllOfferings(ec"
-            
                 + "): " + result );
         }
         return result;
@@ -1168,7 +1167,6 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForCourseOffering(ec"
-            
                 + ", " + courseOfferingBinding
                 + "): " + result );
         }
@@ -1208,7 +1206,6 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForStaff(ec"
-            
                 + ", " + userBinding
                 + "): " + result );
         }
@@ -1248,7 +1245,6 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForStudent(ec"
-            
                 + ", " + userBinding
                 + "): " + result );
         }
@@ -1276,7 +1272,6 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForSubmitterEngineBase(ec"
-            
                 + "): " + result );
         }
         return result;

@@ -244,8 +244,8 @@ public abstract class _GradingCriteria
      */
     public double blankLinePt()
     {
-        Number result =
-            (Number)storedValueForKey( "blankLinePt" );
+        Double result =
+            (Double)storedValueForKey( "blankLinePt" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -266,9 +266,9 @@ public abstract class _GradingCriteria
             log.debug( "setBlankLinePt("
                 + value + "): was " + blankLinePt() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setBlankLinePtRaw( actual );
+            setBlankLinePtRaw( actual );
     }
 
 
@@ -277,9 +277,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>blankLinePt</code> value.
      * @return the value of the attribute
      */
-    public Number blankLinePtRaw()
+    public Double blankLinePtRaw()
     {
-        return (Number)storedValueForKey( "blankLinePt" );
+        return (Double)storedValueForKey( "blankLinePt" );
     }
 
 
@@ -290,7 +290,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setBlankLinePtRaw( Number value )
+    public void setBlankLinePtRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -308,8 +308,8 @@ public abstract class _GradingCriteria
      */
     public long deadTimeDelta()
     {
-        Number result =
-            (Number)storedValueForKey( "deadTimeDelta" );
+        Long result =
+            (Long)storedValueForKey( "deadTimeDelta" );
         return ( result == null )
             ? 0L
             : result.longValue();
@@ -330,9 +330,9 @@ public abstract class _GradingCriteria
             log.debug( "setDeadTimeDelta("
                 + value + "): was " + deadTimeDelta() );
         }
-        Number actual =
+        Long actual =
             new Long( value );
-        setDeadTimeDeltaRaw( actual );
+            setDeadTimeDeltaRaw( actual );
     }
 
 
@@ -341,9 +341,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>deadTimeDelta</code> value.
      * @return the value of the attribute
      */
-    public Number deadTimeDeltaRaw()
+    public Long deadTimeDeltaRaw()
     {
-        return (Number)storedValueForKey( "deadTimeDelta" );
+        return (Long)storedValueForKey( "deadTimeDelta" );
     }
 
 
@@ -354,7 +354,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setDeadTimeDeltaRaw( Number value )
+    public void setDeadTimeDeltaRaw( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -372,8 +372,8 @@ public abstract class _GradingCriteria
      */
     public boolean diffLineSyncing()
     {
-        Number result =
-            (Number)storedValueForKey( "diffLineSyncing" );
+        Integer result =
+            (Integer)storedValueForKey( "diffLineSyncing" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -394,9 +394,9 @@ public abstract class _GradingCriteria
             log.debug( "setDiffLineSyncing("
                 + value + "): was " + diffLineSyncing() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setDiffLineSyncingRaw( actual );
+            setDiffLineSyncingRaw( actual );
     }
 
 
@@ -405,9 +405,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>diffLineSyncing</code> value.
      * @return the value of the attribute
      */
-    public Number diffLineSyncingRaw()
+    public Integer diffLineSyncingRaw()
     {
-        return (Number)storedValueForKey( "diffLineSyncing" );
+        return (Integer)storedValueForKey( "diffLineSyncing" );
     }
 
 
@@ -418,7 +418,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setDiffLineSyncingRaw( Number value )
+    public void setDiffLineSyncingRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -436,8 +436,8 @@ public abstract class _GradingCriteria
      */
     public double extraLinePt()
     {
-        Number result =
-            (Number)storedValueForKey( "extraLinePt" );
+        Double result =
+            (Double)storedValueForKey( "extraLinePt" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -458,9 +458,9 @@ public abstract class _GradingCriteria
             log.debug( "setExtraLinePt("
                 + value + "): was " + extraLinePt() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setExtraLinePtRaw( actual );
+            setExtraLinePtRaw( actual );
     }
 
 
@@ -469,9 +469,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>extraLinePt</code> value.
      * @return the value of the attribute
      */
-    public Number extraLinePtRaw()
+    public Double extraLinePtRaw()
     {
-        return (Number)storedValueForKey( "extraLinePt" );
+        return (Double)storedValueForKey( "extraLinePt" );
     }
 
 
@@ -482,7 +482,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setExtraLinePtRaw( Number value )
+    public void setExtraLinePtRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -500,8 +500,8 @@ public abstract class _GradingCriteria
      */
     public boolean floatComparisonStyle()
     {
-        Number result =
-            (Number)storedValueForKey( "floatComparisonStyle" );
+        Integer result =
+            (Integer)storedValueForKey( "floatComparisonStyle" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -522,9 +522,9 @@ public abstract class _GradingCriteria
             log.debug( "setFloatComparisonStyle("
                 + value + "): was " + floatComparisonStyle() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setFloatComparisonStyleRaw( actual );
+            setFloatComparisonStyleRaw( actual );
     }
 
 
@@ -533,9 +533,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>floatComparisonStyle</code> value.
      * @return the value of the attribute
      */
-    public Number floatComparisonStyleRaw()
+    public Integer floatComparisonStyleRaw()
     {
-        return (Number)storedValueForKey( "floatComparisonStyle" );
+        return (Integer)storedValueForKey( "floatComparisonStyle" );
     }
 
 
@@ -546,7 +546,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setFloatComparisonStyleRaw( Number value )
+    public void setFloatComparisonStyleRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -564,8 +564,8 @@ public abstract class _GradingCriteria
      */
     public double floatNegativeDelta()
     {
-        Number result =
-            (Number)storedValueForKey( "floatNegativeDelta" );
+        Double result =
+            (Double)storedValueForKey( "floatNegativeDelta" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -586,9 +586,9 @@ public abstract class _GradingCriteria
             log.debug( "setFloatNegativeDelta("
                 + value + "): was " + floatNegativeDelta() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setFloatNegativeDeltaRaw( actual );
+            setFloatNegativeDeltaRaw( actual );
     }
 
 
@@ -597,9 +597,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>floatNegativeDelta</code> value.
      * @return the value of the attribute
      */
-    public Number floatNegativeDeltaRaw()
+    public Double floatNegativeDeltaRaw()
     {
-        return (Number)storedValueForKey( "floatNegativeDelta" );
+        return (Double)storedValueForKey( "floatNegativeDelta" );
     }
 
 
@@ -610,7 +610,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setFloatNegativeDeltaRaw( Number value )
+    public void setFloatNegativeDeltaRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -628,8 +628,8 @@ public abstract class _GradingCriteria
      */
     public double floatPositiveDelta()
     {
-        Number result =
-            (Number)storedValueForKey( "floatPositiveDelta" );
+        Double result =
+            (Double)storedValueForKey( "floatPositiveDelta" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -650,9 +650,9 @@ public abstract class _GradingCriteria
             log.debug( "setFloatPositiveDelta("
                 + value + "): was " + floatPositiveDelta() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setFloatPositiveDeltaRaw( actual );
+            setFloatPositiveDeltaRaw( actual );
     }
 
 
@@ -661,9 +661,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>floatPositiveDelta</code> value.
      * @return the value of the attribute
      */
-    public Number floatPositiveDeltaRaw()
+    public Double floatPositiveDeltaRaw()
     {
-        return (Number)storedValueForKey( "floatPositiveDelta" );
+        return (Double)storedValueForKey( "floatPositiveDelta" );
     }
 
 
@@ -674,7 +674,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setFloatPositiveDeltaRaw( Number value )
+    public void setFloatPositiveDeltaRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -692,8 +692,8 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreBlankLines()
     {
-        Number result =
-            (Number)storedValueForKey( "ignoreBlankLines" );
+        Integer result =
+            (Integer)storedValueForKey( "ignoreBlankLines" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -714,9 +714,9 @@ public abstract class _GradingCriteria
             log.debug( "setIgnoreBlankLines("
                 + value + "): was " + ignoreBlankLines() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIgnoreBlankLinesRaw( actual );
+            setIgnoreBlankLinesRaw( actual );
     }
 
 
@@ -725,9 +725,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>ignoreBlankLines</code> value.
      * @return the value of the attribute
      */
-    public Number ignoreBlankLinesRaw()
+    public Integer ignoreBlankLinesRaw()
     {
-        return (Number)storedValueForKey( "ignoreBlankLines" );
+        return (Integer)storedValueForKey( "ignoreBlankLines" );
     }
 
 
@@ -738,7 +738,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setIgnoreBlankLinesRaw( Number value )
+    public void setIgnoreBlankLinesRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -756,8 +756,8 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreCase()
     {
-        Number result =
-            (Number)storedValueForKey( "ignoreCase" );
+        Integer result =
+            (Integer)storedValueForKey( "ignoreCase" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -778,9 +778,9 @@ public abstract class _GradingCriteria
             log.debug( "setIgnoreCase("
                 + value + "): was " + ignoreCase() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIgnoreCaseRaw( actual );
+            setIgnoreCaseRaw( actual );
     }
 
 
@@ -789,9 +789,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>ignoreCase</code> value.
      * @return the value of the attribute
      */
-    public Number ignoreCaseRaw()
+    public Integer ignoreCaseRaw()
     {
-        return (Number)storedValueForKey( "ignoreCase" );
+        return (Integer)storedValueForKey( "ignoreCase" );
     }
 
 
@@ -802,7 +802,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setIgnoreCaseRaw( Number value )
+    public void setIgnoreCaseRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -820,8 +820,8 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreNonprinting()
     {
-        Number result =
-            (Number)storedValueForKey( "ignoreNonprinting" );
+        Integer result =
+            (Integer)storedValueForKey( "ignoreNonprinting" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -842,9 +842,9 @@ public abstract class _GradingCriteria
             log.debug( "setIgnoreNonprinting("
                 + value + "): was " + ignoreNonprinting() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIgnoreNonprintingRaw( actual );
+            setIgnoreNonprintingRaw( actual );
     }
 
 
@@ -853,9 +853,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>ignoreNonprinting</code> value.
      * @return the value of the attribute
      */
-    public Number ignoreNonprintingRaw()
+    public Integer ignoreNonprintingRaw()
     {
-        return (Number)storedValueForKey( "ignoreNonprinting" );
+        return (Integer)storedValueForKey( "ignoreNonprinting" );
     }
 
 
@@ -866,7 +866,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setIgnoreNonprintingRaw( Number value )
+    public void setIgnoreNonprintingRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -884,8 +884,8 @@ public abstract class _GradingCriteria
      */
     public boolean ignorePunctuation()
     {
-        Number result =
-            (Number)storedValueForKey( "ignorePunctuation" );
+        Integer result =
+            (Integer)storedValueForKey( "ignorePunctuation" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -906,9 +906,9 @@ public abstract class _GradingCriteria
             log.debug( "setIgnorePunctuation("
                 + value + "): was " + ignorePunctuation() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIgnorePunctuationRaw( actual );
+            setIgnorePunctuationRaw( actual );
     }
 
 
@@ -917,9 +917,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>ignorePunctuation</code> value.
      * @return the value of the attribute
      */
-    public Number ignorePunctuationRaw()
+    public Integer ignorePunctuationRaw()
     {
-        return (Number)storedValueForKey( "ignorePunctuation" );
+        return (Integer)storedValueForKey( "ignorePunctuation" );
     }
 
 
@@ -930,7 +930,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setIgnorePunctuationRaw( Number value )
+    public void setIgnorePunctuationRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -948,8 +948,8 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreWhitespace()
     {
-        Number result =
-            (Number)storedValueForKey( "ignoreWhitespace" );
+        Integer result =
+            (Integer)storedValueForKey( "ignoreWhitespace" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -970,9 +970,9 @@ public abstract class _GradingCriteria
             log.debug( "setIgnoreWhitespace("
                 + value + "): was " + ignoreWhitespace() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIgnoreWhitespaceRaw( actual );
+            setIgnoreWhitespaceRaw( actual );
     }
 
 
@@ -981,9 +981,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>ignoreWhitespace</code> value.
      * @return the value of the attribute
      */
-    public Number ignoreWhitespaceRaw()
+    public Integer ignoreWhitespaceRaw()
     {
-        return (Number)storedValueForKey( "ignoreWhitespace" );
+        return (Integer)storedValueForKey( "ignoreWhitespace" );
     }
 
 
@@ -994,7 +994,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setIgnoreWhitespaceRaw( Number value )
+    public void setIgnoreWhitespaceRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1041,8 +1041,8 @@ public abstract class _GradingCriteria
      */
     public boolean normalizeWhitespace()
     {
-        Number result =
-            (Number)storedValueForKey( "normalizeWhitespace" );
+        Integer result =
+            (Integer)storedValueForKey( "normalizeWhitespace" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -1063,9 +1063,9 @@ public abstract class _GradingCriteria
             log.debug( "setNormalizeWhitespace("
                 + value + "): was " + normalizeWhitespace() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setNormalizeWhitespaceRaw( actual );
+            setNormalizeWhitespaceRaw( actual );
     }
 
 
@@ -1074,9 +1074,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>normalizeWhitespace</code> value.
      * @return the value of the attribute
      */
-    public Number normalizeWhitespaceRaw()
+    public Integer normalizeWhitespaceRaw()
     {
-        return (Number)storedValueForKey( "normalizeWhitespace" );
+        return (Integer)storedValueForKey( "normalizeWhitespace" );
     }
 
 
@@ -1087,7 +1087,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setNormalizeWhitespaceRaw( Number value )
+    public void setNormalizeWhitespaceRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1134,8 +1134,8 @@ public abstract class _GradingCriteria
      */
     public int stringComparsionStyle()
     {
-        Number result =
-            (Number)storedValueForKey( "stringComparsionStyle" );
+        Integer result =
+            (Integer)storedValueForKey( "stringComparsionStyle" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -1156,9 +1156,9 @@ public abstract class _GradingCriteria
             log.debug( "setStringComparsionStyle("
                 + value + "): was " + stringComparsionStyle() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setStringComparsionStyleRaw( actual );
+            setStringComparsionStyleRaw( actual );
     }
 
 
@@ -1167,9 +1167,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>stringComparsionStyle</code> value.
      * @return the value of the attribute
      */
-    public Number stringComparsionStyleRaw()
+    public Integer stringComparsionStyleRaw()
     {
-        return (Number)storedValueForKey( "stringComparsionStyle" );
+        return (Integer)storedValueForKey( "stringComparsionStyle" );
     }
 
 
@@ -1180,7 +1180,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setStringComparsionStyleRaw( Number value )
+    public void setStringComparsionStyleRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1198,8 +1198,8 @@ public abstract class _GradingCriteria
      */
     public boolean tokenizingStyle()
     {
-        Number result =
-            (Number)storedValueForKey( "tokenizingStyle" );
+        Integer result =
+            (Integer)storedValueForKey( "tokenizingStyle" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -1220,9 +1220,9 @@ public abstract class _GradingCriteria
             log.debug( "setTokenizingStyle("
                 + value + "): was " + tokenizingStyle() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setTokenizingStyleRaw( actual );
+            setTokenizingStyleRaw( actual );
     }
 
 
@@ -1231,9 +1231,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>tokenizingStyle</code> value.
      * @return the value of the attribute
      */
-    public Number tokenizingStyleRaw()
+    public Integer tokenizingStyleRaw()
     {
-        return (Number)storedValueForKey( "tokenizingStyle" );
+        return (Integer)storedValueForKey( "tokenizingStyle" );
     }
 
 
@@ -1244,7 +1244,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setTokenizingStyleRaw( Number value )
+    public void setTokenizingStyleRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -1262,8 +1262,8 @@ public abstract class _GradingCriteria
      */
     public boolean trimWhitespace()
     {
-        Number result =
-            (Number)storedValueForKey( "trimWhitespace" );
+        Integer result =
+            (Integer)storedValueForKey( "trimWhitespace" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -1284,9 +1284,9 @@ public abstract class _GradingCriteria
             log.debug( "setTrimWhitespace("
                 + value + "): was " + trimWhitespace() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setTrimWhitespaceRaw( actual );
+            setTrimWhitespaceRaw( actual );
     }
 
 
@@ -1295,9 +1295,9 @@ public abstract class _GradingCriteria
      * Retrieve this object's <code>trimWhitespace</code> value.
      * @return the value of the attribute
      */
-    public Number trimWhitespaceRaw()
+    public Integer trimWhitespaceRaw()
     {
-        return (Number)storedValueForKey( "trimWhitespace" );
+        return (Integer)storedValueForKey( "trimWhitespace" );
     }
 
 
@@ -1308,7 +1308,7 @@ public abstract class _GradingCriteria
      *
      * @param value The new value for this property
      */
-    public void setTrimWhitespaceRaw( Number value )
+    public void setTrimWhitespaceRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {

@@ -465,7 +465,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public Number stepTimeout()
+    public Integer stepTimeout()
     {
         log.debug( "step = " + thisStep );
         log.debug( "num steps = "
@@ -475,7 +475,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public void setStepTimeout( Number value )
+    public void setStepTimeout( Integer value )
     {
         if ( value != null && !Step.timeoutIsWithinLimits( value ) )
         {

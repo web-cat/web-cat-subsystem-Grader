@@ -209,7 +209,7 @@ public abstract class _StepConfig
      */
     public net.sf.webcat.core.MutableDictionary configSettings()
     {
-    	NSData dbValue =
+        NSData dbValue =
             (NSData)storedValueForKey( "configSettings" );
         if ( configSettingsRawCache != dbValue )
         {
@@ -337,8 +337,8 @@ public abstract class _StepConfig
      */
     public boolean updateMutableFields()
     {
-        Number result =
-            (Number)storedValueForKey( "updateMutableFields" );
+        Integer result =
+            (Integer)storedValueForKey( "updateMutableFields" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -359,9 +359,9 @@ public abstract class _StepConfig
             log.debug( "setUpdateMutableFields("
                 + value + "): was " + updateMutableFields() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setUpdateMutableFieldsRaw( actual );
+            setUpdateMutableFieldsRaw( actual );
     }
 
 
@@ -370,9 +370,9 @@ public abstract class _StepConfig
      * Retrieve this object's <code>updateMutableFields</code> value.
      * @return the value of the attribute
      */
-    public Number updateMutableFieldsRaw()
+    public Integer updateMutableFieldsRaw()
     {
-        return (Number)storedValueForKey( "updateMutableFields" );
+        return (Integer)storedValueForKey( "updateMutableFields" );
     }
 
 
@@ -383,7 +383,7 @@ public abstract class _StepConfig
      *
      * @param value The new value for this property
      */
-    public void setUpdateMutableFieldsRaw( Number value )
+    public void setUpdateMutableFieldsRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -705,15 +705,15 @@ public abstract class _StepConfig
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param scriptFileBinding fetch spec parameter
      * @param courseBinding fetch spec parameter
+     * @param scriptFileBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
     @SuppressWarnings("unchecked")
     public static NSArray<StepConfig> objectsForCourseAndScript(
             EOEditingContext context,
-            net.sf.webcat.grader.ScriptFile scriptFileBinding,
-            net.sf.webcat.core.Course courseBinding
+            net.sf.webcat.core.Course courseBinding,
+            net.sf.webcat.grader.ScriptFile scriptFileBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
@@ -722,15 +722,15 @@ public abstract class _StepConfig
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( scriptFileBinding != null )
-        {
-            bindings.setObjectForKey( scriptFileBinding,
-                                      "scriptFile" );
-        }
         if ( courseBinding != null )
         {
             bindings.setObjectForKey( courseBinding,
                                       "course" );
+        }
+        if ( scriptFileBinding != null )
+        {
+            bindings.setObjectForKey( scriptFileBinding,
+                                      "scriptFile" );
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
@@ -738,9 +738,8 @@ public abstract class _StepConfig
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForCourseAndScript(ec"
-            
-                + ", " + scriptFileBinding
                 + ", " + courseBinding
+                + ", " + scriptFileBinding
                 + "): " + result );
         }
         return result;
@@ -779,7 +778,6 @@ public abstract class _StepConfig
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
-            
                 + ", " + userBinding
                 + "): " + result );
         }

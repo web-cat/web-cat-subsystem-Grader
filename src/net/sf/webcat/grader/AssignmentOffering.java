@@ -68,7 +68,7 @@ public class AssignmentOffering
     public static final String COURSE_OFFERING_INSTRUCTORS_KEY  =
         COURSE_OFFERING_KEY + "." + CourseOffering.INSTRUCTORS_KEY;
     public static final String COURSE_OFFERING_TAS_KEY  =
-        COURSE_OFFERING_KEY + "." + CourseOffering.TAS_KEY;
+        COURSE_OFFERING_KEY + "." + CourseOffering.T_AS_KEY;
     public static final String COURSE_OFFERING_CRN_KEY  =
         COURSE_OFFERING_KEY + "." + CourseOffering.CRN_KEY;
     public static final String COURSE_NUMBER_KEY  =
@@ -440,9 +440,9 @@ public class AssignmentOffering
      * Retrieve this object's <code>moodleId</code> value.
      * @return the value of the attribute
      */
-    public Number moodleId()
+    public Long moodleId()
     {
-        Number result = super.moodleId();
+        Long result = super.moodleId();
         if ( result == null && assignment() != null )
         {
             result = assignment().moodleId();

@@ -213,8 +213,8 @@ public abstract class _SubmissionResult
      */
     public byte commentFormat()
     {
-        Number result =
-            (Number)storedValueForKey( "commentFormat" );
+        Integer result =
+            (Integer)storedValueForKey( "commentFormat" );
         return ( result == null )
             ? 0
             : result.byteValue();
@@ -235,9 +235,9 @@ public abstract class _SubmissionResult
             log.debug( "setCommentFormat("
                 + value + "): was " + commentFormat() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setCommentFormatRaw( actual );
+            setCommentFormatRaw( actual );
     }
 
 
@@ -246,9 +246,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>commentFormat</code> value.
      * @return the value of the attribute
      */
-    public Number commentFormatRaw()
+    public Integer commentFormatRaw()
     {
-        return (Number)storedValueForKey( "commentFormat" );
+        return (Integer)storedValueForKey( "commentFormat" );
     }
 
 
@@ -259,7 +259,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setCommentFormatRaw( Number value )
+    public void setCommentFormatRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -306,8 +306,8 @@ public abstract class _SubmissionResult
      */
     public double correctnessScore()
     {
-        Number result =
-            (Number)storedValueForKey( "correctnessScore" );
+        Double result =
+            (Double)storedValueForKey( "correctnessScore" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -328,9 +328,9 @@ public abstract class _SubmissionResult
             log.debug( "setCorrectnessScore("
                 + value + "): was " + correctnessScore() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setCorrectnessScoreRaw( actual );
+            setCorrectnessScoreRaw( actual );
     }
 
 
@@ -339,9 +339,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>correctnessScore</code> value.
      * @return the value of the attribute
      */
-    public Number correctnessScoreRaw()
+    public Double correctnessScoreRaw()
     {
-        return (Number)storedValueForKey( "correctnessScore" );
+        return (Double)storedValueForKey( "correctnessScore" );
     }
 
 
@@ -352,7 +352,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setCorrectnessScoreRaw( Number value )
+    public void setCorrectnessScoreRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -370,8 +370,8 @@ public abstract class _SubmissionResult
      */
     public boolean isMostRecent()
     {
-        Number result =
-            (Number)storedValueForKey( "isMostRecent" );
+        Integer result =
+            (Integer)storedValueForKey( "isMostRecent" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -392,9 +392,9 @@ public abstract class _SubmissionResult
             log.debug( "setIsMostRecent("
                 + value + "): was " + isMostRecent() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setIsMostRecentRaw( actual );
+            setIsMostRecentRaw( actual );
     }
 
 
@@ -403,9 +403,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>isMostRecent</code> value.
      * @return the value of the attribute
      */
-    public Number isMostRecentRaw()
+    public Integer isMostRecentRaw()
     {
-        return (Number)storedValueForKey( "isMostRecent" );
+        return (Integer)storedValueForKey( "isMostRecent" );
     }
 
 
@@ -416,7 +416,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setIsMostRecentRaw( Number value )
+    public void setIsMostRecentRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -463,8 +463,8 @@ public abstract class _SubmissionResult
      */
     public byte status()
     {
-        Number result =
-            (Number)storedValueForKey( "status" );
+        Integer result =
+            (Integer)storedValueForKey( "status" );
         return ( result == null )
             ? net.sf.webcat.core.Status.TO_DO
             : result.byteValue();
@@ -485,9 +485,9 @@ public abstract class _SubmissionResult
             log.debug( "setStatus("
                 + value + "): was " + status() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setStatusRaw( actual );
+            setStatusRaw( actual );
     }
 
 
@@ -496,9 +496,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>status</code> value.
      * @return the value of the attribute
      */
-    public Number statusRaw()
+    public Integer statusRaw()
     {
-        return (Number)storedValueForKey( "status" );
+        return (Integer)storedValueForKey( "status" );
     }
 
 
@@ -509,7 +509,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setStatusRaw( Number value )
+    public void setStatusRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -527,8 +527,8 @@ public abstract class _SubmissionResult
      */
     public double taScore()
     {
-        Number result =
-            (Number)storedValueForKey( "taScore" );
+        Double result =
+            (Double)storedValueForKey( "taScore" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -549,9 +549,9 @@ public abstract class _SubmissionResult
             log.debug( "setTaScore("
                 + value + "): was " + taScore() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setTaScoreRaw( actual );
+            setTaScoreRaw( actual );
     }
 
 
@@ -560,9 +560,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>taScore</code> value.
      * @return the value of the attribute
      */
-    public Number taScoreRaw()
+    public Double taScoreRaw()
     {
-        return (Number)storedValueForKey( "taScore" );
+        return (Double)storedValueForKey( "taScore" );
     }
 
 
@@ -573,7 +573,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setTaScoreRaw( Number value )
+    public void setTaScoreRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -591,8 +591,8 @@ public abstract class _SubmissionResult
      */
     public double toolScore()
     {
-        Number result =
-            (Number)storedValueForKey( "toolScore" );
+        Double result =
+            (Double)storedValueForKey( "toolScore" );
         return ( result == null )
             ? 0.0
             : result.doubleValue();
@@ -613,9 +613,9 @@ public abstract class _SubmissionResult
             log.debug( "setToolScore("
                 + value + "): was " + toolScore() );
         }
-        Number actual =
+        Double actual =
             new Double( value );
-        setToolScoreRaw( actual );
+            setToolScoreRaw( actual );
     }
 
 
@@ -624,9 +624,9 @@ public abstract class _SubmissionResult
      * Retrieve this object's <code>toolScore</code> value.
      * @return the value of the attribute
      */
-    public Number toolScoreRaw()
+    public Double toolScoreRaw()
     {
-        return (Number)storedValueForKey( "toolScore" );
+        return (Double)storedValueForKey( "toolScore" );
     }
 
 
@@ -637,7 +637,7 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setToolScoreRaw( Number value )
+    public void setToolScoreRaw( Double value )
     {
         if (log.isDebugEnabled())
         {
@@ -1219,7 +1219,6 @@ public abstract class _SubmissionResult
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentByDate(ec"
-            
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );
@@ -1267,7 +1266,6 @@ public abstract class _SubmissionResult
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmission(ec"
-            
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );
@@ -1308,7 +1306,6 @@ public abstract class _SubmissionResult
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmissions(ec"
-            
                 + ", " + assignmentOfferingBinding
                 + "): " + result );
         }
@@ -1348,7 +1345,6 @@ public abstract class _SubmissionResult
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmissionsByNumber(ec"
-            
                 + ", " + assignmentOfferingBinding
                 + "): " + result );
         }
@@ -1395,7 +1391,6 @@ public abstract class _SubmissionResult
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
-            
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );

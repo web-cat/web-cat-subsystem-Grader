@@ -129,7 +129,7 @@ public class StepConfig
         er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
             objectsForCourseAndScript(
-                context, scriptFileBinding, courseBinding )
+                context, courseBinding, scriptFileBinding )
             );
         if ( mine != null && !results.containsObject( mine ) )
         {

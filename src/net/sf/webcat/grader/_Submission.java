@@ -150,12 +150,12 @@ public abstract class _Submission
     public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     // Fetch specifications ---
-    public static final String ALL_FOR_USER_AND_ASSIGNMENT_OFFERING_FSPEC = "allForUserAndAssignmentOffering";
+    public static final String ALL_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "allForAssignmentOfferingAndUser";
+    public static final String EARLIEST_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "earliestForAssignmentOfferingAndUser";
     public static final String EARLIEST_FOR_COURSE_OFFERING_FSPEC = "earliestForCourseOffering";
-    public static final String EARLIEST_FOR_USER_AND_ASSIGNMENT_OFFERING_FSPEC = "earliestForUserAndAssignmentOffering";
+    public static final String LATEST_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "latestForAssignmentOfferingAndUser";
     public static final String LATEST_FOR_COURSE_OFFERING_FSPEC = "latestForCourseOffering";
-    public static final String LATEST_FOR_USER_AND_ASSIGNMENT_OFFERING_FSPEC = "latestForUserAndAssignmentOffering";
-    public static final String USER_ASSIGNMENT_OFFERING_AND_SUBMIT_NUMBER_FSPEC = "userAssignmentOfferingAndSubmitNumber";
+    public static final String SPECIFIC_SUBMISSION_FSPEC = "specificSubmission";
     public static final String ENTITY_NAME = "Submission";
 
 
@@ -241,8 +241,8 @@ public abstract class _Submission
      */
     public boolean partnerLink()
     {
-        Number result =
-            (Number)storedValueForKey( "partnerLink" );
+        Integer result =
+            (Integer)storedValueForKey( "partnerLink" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -263,9 +263,9 @@ public abstract class _Submission
             log.debug( "setPartnerLink("
                 + value + "): was " + partnerLink() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setPartnerLinkRaw( actual );
+            setPartnerLinkRaw( actual );
     }
 
 
@@ -274,9 +274,9 @@ public abstract class _Submission
      * Retrieve this object's <code>partnerLink</code> value.
      * @return the value of the attribute
      */
-    public Number partnerLinkRaw()
+    public Integer partnerLinkRaw()
     {
-        return (Number)storedValueForKey( "partnerLink" );
+        return (Integer)storedValueForKey( "partnerLink" );
     }
 
 
@@ -287,7 +287,7 @@ public abstract class _Submission
      *
      * @param value The new value for this property
      */
-    public void setPartnerLinkRaw( Number value )
+    public void setPartnerLinkRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -305,8 +305,8 @@ public abstract class _Submission
      */
     public int submitNumber()
     {
-        Number result =
-            (Number)storedValueForKey( "submitNumber" );
+        Integer result =
+            (Integer)storedValueForKey( "submitNumber" );
         return ( result == null )
             ? 0
             : result.intValue();
@@ -327,9 +327,9 @@ public abstract class _Submission
             log.debug( "setSubmitNumber("
                 + value + "): was " + submitNumber() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value );
-        setSubmitNumberRaw( actual );
+            setSubmitNumberRaw( actual );
     }
 
 
@@ -338,9 +338,9 @@ public abstract class _Submission
      * Retrieve this object's <code>submitNumber</code> value.
      * @return the value of the attribute
      */
-    public Number submitNumberRaw()
+    public Integer submitNumberRaw()
     {
-        return (Number)storedValueForKey( "submitNumber" );
+        return (Integer)storedValueForKey( "submitNumber" );
     }
 
 
@@ -351,7 +351,7 @@ public abstract class _Submission
      *
      * @param value The new value for this property
      */
-    public void setSubmitNumberRaw( Number value )
+    public void setSubmitNumberRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -932,46 +932,92 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>AllForUserAndAssignmentOffering</code>
+     * Retrieve object according to the <code>AllForAssignmentOfferingAndUser</code>
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param userBinding fetch spec parameter
      * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
     @SuppressWarnings("unchecked")
-    public static NSArray<Submission> objectsForAllForUserAndAssignmentOffering(
+    public static NSArray<Submission> objectsForAllForAssignmentOfferingAndUser(
             EOEditingContext context,
-            net.sf.webcat.core.User userBinding,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            net.sf.webcat.core.User userBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "allForUserAndAssignmentOffering", "Submission" );
+            .fetchSpecificationNamed( "allForAssignmentOfferingAndUser", "Submission" );
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
-        {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        }
         if ( assignmentOfferingBinding != null )
         {
             bindings.setObjectForKey( assignmentOfferingBinding,
                                       "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForAllForUserAndAssignmentOffering(ec"
-            
-                + ", " + userBinding
+            log.debug( "objectsForAllForAssignmentOfferingAndUser(ec"
                 + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>EarliestForAssignmentOfferingAndUser</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<Submission> objectsForEarliestForAssignmentOfferingAndUser(
+            EOEditingContext context,
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "earliestForAssignmentOfferingAndUser", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForEarliestForAssignmentOfferingAndUser(ec"
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
                 + "): " + result );
         }
         return result;
@@ -1010,7 +1056,6 @@ public abstract class _Submission
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForEarliestForCourseOffering(ec"
-            
                 + ", " + courseOfferingBinding
                 + "): " + result );
         }
@@ -1020,46 +1065,45 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>EarliestForUserAndAssignmentOffering</code>
+     * Retrieve object according to the <code>LatestForAssignmentOfferingAndUser</code>
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param userBinding fetch spec parameter
      * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
     @SuppressWarnings("unchecked")
-    public static NSArray<Submission> objectsForEarliestForUserAndAssignmentOffering(
+    public static NSArray<Submission> objectsForLatestForAssignmentOfferingAndUser(
             EOEditingContext context,
-            net.sf.webcat.core.User userBinding,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            net.sf.webcat.core.User userBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "earliestForUserAndAssignmentOffering", "Submission" );
+            .fetchSpecificationNamed( "latestForAssignmentOfferingAndUser", "Submission" );
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
-        {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        }
         if ( assignmentOfferingBinding != null )
         {
             bindings.setObjectForKey( assignmentOfferingBinding,
                                       "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForEarliestForUserAndAssignmentOffering(ec"
-            
-                + ", " + userBinding
+            log.debug( "objectsForLatestForAssignmentOfferingAndUser(ec"
                 + ", " + assignmentOfferingBinding
+                + ", " + userBinding
                 + "): " + result );
         }
         return result;
@@ -1098,7 +1142,6 @@ public abstract class _Submission
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForLatestForCourseOffering(ec"
-            
                 + ", " + courseOfferingBinding
                 + "): " + result );
         }
@@ -1108,82 +1151,29 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>LatestForUserAndAssignmentOffering</code>
+     * Retrieve object according to the <code>SpecificSubmission</code>
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param userBinding fetch spec parameter
-     * @param assignmentOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    @SuppressWarnings("unchecked")
-    public static NSArray<Submission> objectsForLatestForUserAndAssignmentOffering(
-            EOEditingContext context,
-            net.sf.webcat.core.User userBinding,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "latestForUserAndAssignmentOffering", "Submission" );
-
-        NSMutableDictionary<String, Object> bindings =
-            new NSMutableDictionary<String, Object>();
-
-        if ( userBinding != null )
-        {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        }
-        if ( assignmentOfferingBinding != null )
-        {
-            bindings.setObjectForKey( assignmentOfferingBinding,
-                                      "assignmentOffering" );
-        }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        NSArray result = context.objectsWithFetchSpecification( spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "objectsForLatestForUserAndAssignmentOffering(ec"
-            
-                + ", " + userBinding
-                + ", " + assignmentOfferingBinding
-                + "): " + result );
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>UserAssignmentOfferingAndSubmitNumber</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param userBinding fetch spec parameter
      * @param assignmentOfferingBinding fetch spec parameter
      * @param submitNumberBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
     @SuppressWarnings("unchecked")
-    public static NSArray<Submission> objectsForUserAssignmentOfferingAndSubmitNumber(
+    public static NSArray<Submission> objectsForSpecificSubmission(
             EOEditingContext context,
-            net.sf.webcat.core.User userBinding,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
-            Number submitNumberBinding
+            Integer submitNumberBinding,
+            net.sf.webcat.core.User userBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "userAssignmentOfferingAndSubmitNumber", "Submission" );
+            .fetchSpecificationNamed( "specificSubmission", "Submission" );
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
-        {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        }
         if ( assignmentOfferingBinding != null )
         {
             bindings.setObjectForKey( assignmentOfferingBinding,
@@ -1194,16 +1184,20 @@ public abstract class _Submission
             bindings.setObjectForKey( submitNumberBinding,
                                       "submitNumber" );
         }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
         NSArray result = context.objectsWithFetchSpecification( spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForUserAssignmentOfferingAndSubmitNumber(ec"
-            
-                + ", " + userBinding
+            log.debug( "objectsForSpecificSubmission(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + submitNumberBinding
+                + ", " + userBinding
                 + "): " + result );
         }
         return result;

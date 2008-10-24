@@ -346,7 +346,7 @@ public class SubmissionFileStats
      *
      * @param value The new value for this property
      */
-    public void setDeductionsRaw( Number value )
+    public void setDeductionsRaw( Double value )
     {
         staffDeductionsIsValid = false;
         super.setDeductionsRaw(value);

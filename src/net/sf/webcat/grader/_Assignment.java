@@ -233,9 +233,9 @@ public abstract class _Assignment
      * Retrieve this object's <code>moodleId</code> value.
      * @return the value of the attribute
      */
-    public Number moodleId()
+    public Long moodleId()
     {
-        return (Number)storedValueForKey( "moodleId" );
+        return (Long)storedValueForKey( "moodleId" );
     }
 
 
@@ -246,7 +246,7 @@ public abstract class _Assignment
      *
      * @param value The new value for this property
      */
-    public void setMoodleId( Number value )
+    public void setMoodleId( Long value )
     {
         if (log.isDebugEnabled())
         {
@@ -915,7 +915,6 @@ public abstract class _Assignment
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForNeighborAssignments(ec"
-            
                 + ", " + courseOfferingBinding
                 + "): " + result );
         }
@@ -962,7 +961,6 @@ public abstract class _Assignment
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForReuseInCourse(ec"
-            
                 + ", " + courseBinding
                 + ", " + courseOfferingBinding
                 + "): " + result );

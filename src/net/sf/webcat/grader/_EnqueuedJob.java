@@ -208,8 +208,8 @@ public abstract class _EnqueuedJob
      */
     public boolean discarded()
     {
-        Number result =
-            (Number)storedValueForKey( "discarded" );
+        Integer result =
+            (Integer)storedValueForKey( "discarded" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -230,9 +230,9 @@ public abstract class _EnqueuedJob
             log.debug( "setDiscarded("
                 + value + "): was " + discarded() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setDiscardedRaw( actual );
+            setDiscardedRaw( actual );
     }
 
 
@@ -241,9 +241,9 @@ public abstract class _EnqueuedJob
      * Retrieve this object's <code>discarded</code> value.
      * @return the value of the attribute
      */
-    public Number discardedRaw()
+    public Integer discardedRaw()
     {
-        return (Number)storedValueForKey( "discarded" );
+        return (Integer)storedValueForKey( "discarded" );
     }
 
 
@@ -254,7 +254,7 @@ public abstract class _EnqueuedJob
      *
      * @param value The new value for this property
      */
-    public void setDiscardedRaw( Number value )
+    public void setDiscardedRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -272,8 +272,8 @@ public abstract class _EnqueuedJob
      */
     public boolean paused()
     {
-        Number result =
-            (Number)storedValueForKey( "paused" );
+        Integer result =
+            (Integer)storedValueForKey( "paused" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -294,9 +294,9 @@ public abstract class _EnqueuedJob
             log.debug( "setPaused("
                 + value + "): was " + paused() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setPausedRaw( actual );
+            setPausedRaw( actual );
     }
 
 
@@ -305,9 +305,9 @@ public abstract class _EnqueuedJob
      * Retrieve this object's <code>paused</code> value.
      * @return the value of the attribute
      */
-    public Number pausedRaw()
+    public Integer pausedRaw()
     {
-        return (Number)storedValueForKey( "paused" );
+        return (Integer)storedValueForKey( "paused" );
     }
 
 
@@ -318,7 +318,7 @@ public abstract class _EnqueuedJob
      *
      * @param value The new value for this property
      */
-    public void setPausedRaw( Number value )
+    public void setPausedRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
@@ -365,8 +365,8 @@ public abstract class _EnqueuedJob
      */
     public boolean regrading()
     {
-        Number result =
-            (Number)storedValueForKey( "regrading" );
+        Integer result =
+            (Integer)storedValueForKey( "regrading" );
         return ( result == null )
             ? false
             : ( result.intValue() > 0 );
@@ -387,9 +387,9 @@ public abstract class _EnqueuedJob
             log.debug( "setRegrading("
                 + value + "): was " + regrading() );
         }
-        Number actual =
+        Integer actual =
             er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
-        setRegradingRaw( actual );
+            setRegradingRaw( actual );
     }
 
 
@@ -398,9 +398,9 @@ public abstract class _EnqueuedJob
      * Retrieve this object's <code>regrading</code> value.
      * @return the value of the attribute
      */
-    public Number regradingRaw()
+    public Integer regradingRaw()
     {
-        return (Number)storedValueForKey( "regrading" );
+        return (Integer)storedValueForKey( "regrading" );
     }
 
 
@@ -411,7 +411,7 @@ public abstract class _EnqueuedJob
      *
      * @param value The new value for this property
      */
-    public void setRegradingRaw( Number value )
+    public void setRegradingRaw( Integer value )
     {
         if (log.isDebugEnabled())
         {
