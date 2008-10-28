@@ -96,7 +96,7 @@ public class PickAssignmentToSubmitPage
             // assigments which are still open
             //
             if ( !(  selectedCourse.isInstructor( user() )
-                            || selectedCourse.isTA( user() ) ) )
+                            || selectedCourse.isGrader( user() ) ) )
             {
                 qualifiers.addObject( new EOKeyValueQualifier(
                                   AssignmentOffering.AVAILABLE_FROM_KEY,
@@ -120,7 +120,7 @@ public class PickAssignmentToSubmitPage
         // assignments which are published
         //
         if ( !(  selectedCourse.isInstructor( user() )
-              || selectedCourse.isTA( user() ) ) )
+              || selectedCourse.isGrader( user() ) ) )
         {
             log.debug( "hiding unpublished assignments" );
             qualifiers.addObject( new EOKeyValueQualifier(

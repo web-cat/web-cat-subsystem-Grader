@@ -176,7 +176,7 @@ public class SubmissionFileComment
             .submission().assignmentOffering().courseOffering();
         if ( target <= TO_FACULTY_AND_TAS )
         {
-            NSArray tas = course.TAs();
+            NSArray tas = course.graders();
             for ( int i = 0; i < tas.count(); i++ )
             {
                 if ( user == tas.objectAtIndex( i ) )

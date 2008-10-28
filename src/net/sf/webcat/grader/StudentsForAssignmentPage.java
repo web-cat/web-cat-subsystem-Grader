@@ -90,7 +90,7 @@ public class StudentsForAssignmentPage
             coreSelections().courseOffering().instructors() );
         er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
-            coreSelections().courseOffering().TAs() );
+            coreSelections().courseOffering().graders() );
         NSMutableArray submissions = new NSMutableArray();
         highScore = 0.0;
         lowScore  = 0.0;

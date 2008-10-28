@@ -126,8 +126,8 @@ public class PickCourseEnrolledPage
                 semester ));
             courseDisplayGroup.updateDisplayedObjects();
         }
-        coursesTAed = user.TAForButNotStudent(semester);
-        coursesTaught = user.instructorForButNotTAOrStudent(semester);
+        coursesTAed = user.graderForButNotStudent(semester);
+        coursesTaught = user.instructorForButNotGraderOrStudent(semester);
         coursesAdmined = user.adminForButNoOtherRelationships(semester);
         if ( log.isDebugEnabled() )
         {

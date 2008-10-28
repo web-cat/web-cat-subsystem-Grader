@@ -39,7 +39,7 @@
             class = WODisplayGroup;
             dataSource = {
                 class = EODetailDataSource;
-                detailKey = TAs;
+                detailKey = graders;
                 masterClassDescription = CourseOffering;
             };
             fetchesOnLoad = YES;

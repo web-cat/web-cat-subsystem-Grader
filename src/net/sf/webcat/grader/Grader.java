@@ -483,7 +483,7 @@ public class Grader
                            + thisAssignment.assignment().name() );
                 CourseOffering co = thisAssignment.courseOffering();
                 if ( co.isInstructor( session.user() )
-                     || co.isTA( session.user() )
+                     || co.isGrader( session.user() )
                      || ( currentTime.after( thisAssignment.availableFrom() )
                      && currentTime.before( thisAssignment.lateDeadline() ) ) )
                 {
@@ -558,7 +558,7 @@ public class Grader
                         CourseOffering co = ao.courseOffering();
                         if ( session.user().hasAdminPrivileges()
                              || co.isInstructor(session.user())
-                             || co.isTA(session.user()) )
+                             || co.isGrader(session.user()) )
                         {
                             i++;
                         }

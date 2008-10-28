@@ -86,7 +86,7 @@ public class GraderSubmissionComponent
                   || submission.assignmentOffering().courseOffering()
                       .isInstructor( user )
                   || submission.assignmentOffering().courseOffering()
-                      .isTA( user ) )
+                      .isGrader( user ) )
              && startWith( submission.assignmentOffering().courseOffering() ) )
         {
             prefs().setSubmissionRelationship( submission );

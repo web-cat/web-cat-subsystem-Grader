@@ -76,7 +76,7 @@ public class EditStaffPage
         staffDisplayGroup.setMasterObject( courseOffering() );
         staffDisplayGroup.setDetailKey( editInstructors
                         ? CourseOffering.INSTRUCTORS_KEY
-                        : CourseOffering.T_AS_KEY );
+                        : CourseOffering.GRADERS_KEY );
         staffDisplayGroup.fetch();
         log.debug(
             "current size = " + potentialDisplayGroup.numberOfObjectsPerBatch()
@@ -132,7 +132,7 @@ public class EditStaffPage
             {
                 aUser.setAccessLevel( User.GTA_PRIVILEGES );
             }
-            courseOffering().addToTAsRelationship( aUser );
+            courseOffering().addToGradersRelationship( aUser );
         }
         return null;
     }
@@ -147,7 +147,7 @@ public class EditStaffPage
         }
         else
         {
-            courseOffering().removeFromTAsRelationship( aUser );
+            courseOffering().removeFromGradersRelationship( aUser );
         }
         return null;
     }

@@ -125,7 +125,7 @@ public class EditCoursePage
      */
     public WOComponent removeTA()
     {
-        courseOffering().removeFromTAsRelationship( aUser );
+        courseOffering().removeFromGradersRelationship( aUser );
         return null;
     }
 
@@ -249,7 +249,7 @@ public class EditCoursePage
         if ( offering != null
              && ( sessionUser.enrolledIn().contains(  offering )
                   || offering.isInstructor( sessionUser )
-                  || offering.isTA( sessionUser ) ) )
+                  || offering.isGrader( sessionUser ) ) )
         {
             result = true;
             coreSelections().setCourseRelationship( offering.course() );

@@ -86,7 +86,7 @@ public class GraderCourseComponent
         if ( offering != null
              && ( user.enrolledIn().contains(  offering )
                   || offering.isInstructor( user )
-                  || offering.isTA( user ) ) )
+                  || offering.isGrader( user ) ) )
         {
             result = true;
             coreSelections().setCourseRelationship( offering.course() );

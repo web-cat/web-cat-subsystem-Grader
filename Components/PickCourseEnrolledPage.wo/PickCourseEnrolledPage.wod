@@ -58,7 +58,7 @@ HasInstructorCourses: WOConditional {
 }
 
 HasTACourses: WOConditional {
-    condition = user.TAFor.count;
+    condition = user.graderFor.count;
 }
 
 CourseRepetition: WORepetition {

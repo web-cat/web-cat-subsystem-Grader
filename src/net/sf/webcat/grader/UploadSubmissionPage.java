@@ -181,7 +181,7 @@ public class UploadSubmissionPage
                 wcSession().primeUser().localInstance(localContext());
             if ( deadline.before( new NSTimestamp() )
                  && !course.isInstructor( primeUser )
-                 && !course.isTA( primeUser ) )
+                 && !course.isGrader( primeUser ) )
             {
                 error(
                     "Unfortunately, the final deadline for this assignment "

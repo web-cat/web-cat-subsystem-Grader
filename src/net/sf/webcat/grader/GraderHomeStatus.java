@@ -105,7 +105,7 @@ public class GraderHomeStatus
                 user()
             ) );
         qualifiers.addObject( new EOKeyValueQualifier(
-                AssignmentOffering.COURSE_OFFERING_TAS_KEY,
+                AssignmentOffering.COURSE_OFFERING_GRADERS_KEY,
                 EOQualifier.QualifierOperatorContains,
                 user()
             ) );
@@ -188,7 +188,7 @@ public class GraderHomeStatus
     {
         boolean result =
             assignment.courseOffering().isInstructor( user() )
-            || assignment.courseOffering().isTA( user() );
+            || assignment.courseOffering().isGrader( user() );
         log.debug( "can grade = " + result );
         return result;
     }

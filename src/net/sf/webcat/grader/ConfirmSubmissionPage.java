@@ -160,7 +160,7 @@ public class ConfirmSubmissionPage
         User primeUser = wcSession().primeUser().localInstance(localContext());
         if ( deadline.before( submitTime )
              && !course.isInstructor( primeUser )
-             && !course.isTA( primeUser ) )
+             && !course.isGrader( primeUser ) )
         {
             error(
                 "Unfortunately, the final deadline for this assignment "

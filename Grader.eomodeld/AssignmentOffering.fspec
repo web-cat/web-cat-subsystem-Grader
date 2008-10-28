@@ -1,156 +1,95 @@
-
 {
-    allOfferings =
-    {
-        class = EOFetchSpecification;
-        entityName = AssignmentOffering;
-        fetchLimit = 0;
-        isDeep = YES;
-        sortOrderings =
-        (
-
-           {
-               class = EOSortOrdering;
-               key = dueDate;
-               selectorName = compareAscending:;
-           }
-        );
-    };
-    courseOffering =
-    {
-        class = EOFetchSpecification;
-        entityName = AssignmentOffering;
-        fetchLimit = 0;
-        isDeep = YES;
-        qualifier =
-        {
-            class = EOKeyValueQualifier;
-            key = courseOffering;
-            selectorName = isEqualTo:;
-            value =
-            {
-                _key = courseOffering;
-                class = EOQualifierVariable;
-            };
-        };
-        sortOrderings =
-        (
-
-           {
-               class = EOSortOrdering;
-               key = dueDate;
-               selectorName = compareDescending:;
-           }
-        );
-    };
-    submitterEngineBase =
-    {
-        class = EOFetchSpecification;
-        entityName = AssignmentOffering;
-        fetchLimit = 0;
-        isDeep = YES;
-        refreshesRefetchedObjects = YES;
-        sortOrderings =
-        (
-
-           {
-               class = EOSortOrdering;
-               key = courseOffering.course.department.institution.displayableName;
-               selectorName = compareCaseInsensitiveAscending:;
-           },
-
-           {
-               class = EOSortOrdering;
-               key = courseOffering.course.department.abbreviation;
-               selectorName = compareCaseInsensitiveAscending:;
-           },
-
-           {
-               class = EOSortOrdering;
-               key = courseOffering.course.number;
-               selectorName = compareAscending:;
-           },
-
-           {
-               class = EOSortOrdering;
-               key = dueDate;
-               selectorName = compareAscending:;
-           },
-
-           {
-               class = EOSortOrdering;
-               key = assignment.name;
-               selectorName = compareCaseInsensitiveAscending:;
-           }
-        );
-    };
-    student =
-    {
-        class = EOFetchSpecification;
-        entityName = AssignmentOffering;
-        fetchLimit = 0;
-        isDeep = YES;
-        qualifier =
-        {
-            class = EOKeyValueQualifier;
-            key = courseOffering.students;
-            selectorName = doesContain:;
-            value =
-            {
-            	_key = user;
-            	class = EOQualifierVariable;
-            };
-        };
-        sortOrderings =
-        (
-
-           {
-               class = EOSortOrdering;
-               key = dueDate;
-               selectorName = compareDescending:;
-           }
-        );
-    };
-    staff =
-    {
-        class = EOFetchSpecification;
-        entityName = AssignmentOffering;
-        fetchLimit = 0;
-        isDeep = YES;
-        qualifier =
-        {
-            class = EOOrQualifier;
+    allOfferings = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        sortOrderings = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }); 
+    }; 
+    courseOffering = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = courseOffering; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
+        ); 
+    }; 
+    staff = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOOrQualifier; 
             qualifiers = (
-            	{
-            		class = EOKeyValueQualifier;
-            		key = courseOffering.instructors;
-            		selectorName = doesContain:;
-            		value =
-            		{
-                		_key = user;
-                		class = EOQualifierVariable;
-            		};
-            	},
-            	{
-            		class = EOKeyValueQualifier;
-            		key = courseOffering.TAs;
-            		selectorName = doesContain:;
-            		value =
-            		{
-                		_key = user;
-                		class = EOQualifierVariable;
-            		};
-            	}
-            );
-        };
-        sortOrderings =
-        (
-
-           {
-               class = EOSortOrdering;
-               key = dueDate;
-               selectorName = compareDescending:;
-           }
-        );
-    };
+                {
+                    class = EOKeyValueQualifier; 
+                    key = "courseOffering.instructors"; 
+                    selectorName = "doesContain:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = "courseOffering.graders"; 
+                    selectorName = "doesContain:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
+        ); 
+    }; 
+    student = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = "courseOffering.students"; 
+            selectorName = "doesContain:"; 
+            value = {"_key" = user; class = EOQualifierVariable; }; 
+        }; 
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
+        ); 
+    }; 
+    submitterEngineBase = {
+        class = EOFetchSpecification; 
+        entityName = AssignmentOffering; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        refreshesRefetchedObjects = YES; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = "courseOffering.course.department.institution.displayableName"; 
+                selectorName = "compareCaseInsensitiveAscending:"; 
+            }, 
+            {
+                class = EOSortOrdering; 
+                key = "courseOffering.course.department.abbreviation"; 
+                selectorName = "compareCaseInsensitiveAscending:"; 
+            }, 
+            {
+                class = EOSortOrdering; 
+                key = "courseOffering.course.number"; 
+                selectorName = "compareAscending:"; 
+            }, 
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }, 
+            {
+                class = EOSortOrdering; 
+                key = "assignment.name"; 
+                selectorName = "compareCaseInsensitiveAscending:"; 
+            }
+        ); 
+    }; 
 }

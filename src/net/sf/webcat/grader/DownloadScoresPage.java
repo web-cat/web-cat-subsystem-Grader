@@ -236,7 +236,7 @@ public class DownloadScoresPage
             students.removeObjectsInArray(
                 coreSelections().courseOffering().instructors() );
             students.removeObjectsInArray(
-                coreSelections().courseOffering().TAs() );
+                coreSelections().courseOffering().graders() );
         }
         else
         {
@@ -247,7 +247,7 @@ public class DownloadScoresPage
             er.extensions.ERXArrayUtilities
                 .addObjectsFromArrayWithoutDuplicates(
                 students,
-                coreSelections().courseOffering().TAs() );
+                coreSelections().courseOffering().graders() );
         }
         submissionsToExport = new NSMutableArray();
         if ( students != null )
