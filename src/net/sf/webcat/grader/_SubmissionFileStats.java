@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * @version version suppressed to control auto-generation
  */
 public abstract class _SubmissionFileStats
-    extends er.extensions.ERXGenericRecord
+    extends er.extensions.eof.ERXGenericRecord
 {
     //~ Constructors ..........................................................
 
@@ -128,7 +128,7 @@ public abstract class _SubmissionFileStats
     public static SubmissionFileStats forId(
         EOEditingContext ec, String id )
     {
-        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -203,7 +203,7 @@ public abstract class _SubmissionFileStats
         }
         catch (Exception e)
         {
-            return er.extensions.ERXConstant.ZeroInteger;
+            return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
 
@@ -266,7 +266,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + conditionals() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setConditionalsRaw( actual );
     }
 
@@ -330,7 +330,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + conditionalsCovered() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setConditionalsCoveredRaw( actual );
     }
 
@@ -458,7 +458,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + elements() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setElementsRaw( actual );
     }
 
@@ -522,7 +522,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + elementsCovered() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setElementsCoveredRaw( actual );
     }
 
@@ -586,7 +586,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + loc() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setLocRaw( actual );
     }
 
@@ -679,7 +679,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + methods() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setMethodsRaw( actual );
     }
 
@@ -743,7 +743,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + methodsCovered() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setMethodsCoveredRaw( actual );
     }
 
@@ -807,7 +807,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + ncloc() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setNclocRaw( actual );
     }
 
@@ -900,7 +900,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + remarks() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setRemarksRaw( actual );
     }
 
@@ -993,7 +993,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + statements() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setStatementsRaw( actual );
     }
 
@@ -1057,7 +1057,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + statementsCovered() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setStatementsCoveredRaw( actual );
     }
 
@@ -1121,7 +1121,7 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + status() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setStatusRaw( actual );
     }
 

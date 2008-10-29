@@ -24,7 +24,6 @@ package net.sf.webcat.grader.actions;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.*;
 import net.sf.webcat.core.*;
 import net.sf.webcat.grader.*;
 import org.apache.log4j.Logger;

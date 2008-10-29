@@ -24,8 +24,9 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.ERXEOControlUtilities;
-import er.extensions.ERXQ;
+import er.extensions.eof.ERXConstant;
+import er.extensions.eof.ERXEOControlUtilities;
+import er.extensions.eof.ERXQ;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -156,7 +157,7 @@ public class Submission
             Application.emailExceptionToAdmins(
                 e, null, "An exception was generated trying to retrieve the "
                 + "id for a submission.\n\nSubmission = " + subInfo );
-            return er.extensions.ERXConstant.ZeroInteger;
+            return ERXConstant.ZeroInteger;
         }
     }
 

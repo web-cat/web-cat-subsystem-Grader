@@ -25,6 +25,7 @@ import com.Ostermiller.util.ExcelCSVPrinter;
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
+import er.extensions.foundation.ERXArrayUtilities;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import net.sf.webcat.core.*;
@@ -240,12 +241,10 @@ public class DownloadScoresPage
         }
         else
         {
-            er.extensions.ERXArrayUtilities
-                .addObjectsFromArrayWithoutDuplicates(
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
                 students,
                 coreSelections().courseOffering().instructors() );
-            er.extensions.ERXArrayUtilities
-                .addObjectsFromArrayWithoutDuplicates(
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
                 students,
                 coreSelections().courseOffering().graders() );
         }

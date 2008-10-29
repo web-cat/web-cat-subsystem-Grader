@@ -25,7 +25,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import com.webobjects.foundation.NSValidation.*;
-import er.extensions.*;
 import java.io.File;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;

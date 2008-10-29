@@ -23,6 +23,7 @@ package net.sf.webcat.grader;
 
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.foundation.ERXArrayUtilities;
 import net.sf.webcat.core.*;
 
 // -------------------------------------------------------------------------
@@ -126,7 +127,7 @@ public class StepConfig
         // in the second query will overly restrict the results of the first!
         NSMutableArray results = objectsForUser( context, userBinding )
             .mutableClone();
-        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
             objectsForCourseAndScript(
                 context, courseBinding, scriptFileBinding )

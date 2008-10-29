@@ -26,7 +26,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.dbupdate.UpdateEngine;
-import er.extensions.ERXConstant;
+import er.extensions.eof.ERXConstant;
 import java.util.Enumeration;
 import java.io.*;
 import java.util.zip.*;

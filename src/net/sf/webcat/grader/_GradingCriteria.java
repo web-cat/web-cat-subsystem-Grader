@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * @version version suppressed to control auto-generation
  */
 public abstract class _GradingCriteria
-    extends er.extensions.ERXGenericRecord
+    extends er.extensions.eof.ERXGenericRecord
 {
     //~ Constructors ..........................................................
 
@@ -158,7 +158,7 @@ public abstract class _GradingCriteria
     public static GradingCriteria forId(
         EOEditingContext ec, String id )
     {
-        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -233,7 +233,7 @@ public abstract class _GradingCriteria
         }
         catch (Exception e)
         {
-            return er.extensions.ERXConstant.ZeroInteger;
+            return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
 
@@ -395,7 +395,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + diffLineSyncing() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setDiffLineSyncingRaw( actual );
     }
 
@@ -523,7 +523,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + floatComparisonStyle() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setFloatComparisonStyleRaw( actual );
     }
 
@@ -715,7 +715,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + ignoreBlankLines() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setIgnoreBlankLinesRaw( actual );
     }
 
@@ -779,7 +779,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + ignoreCase() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setIgnoreCaseRaw( actual );
     }
 
@@ -843,7 +843,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + ignoreNonprinting() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setIgnoreNonprintingRaw( actual );
     }
 
@@ -907,7 +907,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + ignorePunctuation() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setIgnorePunctuationRaw( actual );
     }
 
@@ -971,7 +971,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + ignoreWhitespace() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setIgnoreWhitespaceRaw( actual );
     }
 
@@ -1064,7 +1064,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + normalizeWhitespace() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setNormalizeWhitespaceRaw( actual );
     }
 
@@ -1157,7 +1157,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + stringComparsionStyle() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setStringComparsionStyleRaw( actual );
     }
 
@@ -1221,7 +1221,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + tokenizingStyle() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setTokenizingStyleRaw( actual );
     }
 
@@ -1285,7 +1285,7 @@ public abstract class _GradingCriteria
                 + value + "): was " + trimWhitespace() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setTrimWhitespaceRaw( actual );
     }
 

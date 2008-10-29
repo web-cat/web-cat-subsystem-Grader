@@ -26,7 +26,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 
-import er.extensions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import net.sf.webcat.core.*;

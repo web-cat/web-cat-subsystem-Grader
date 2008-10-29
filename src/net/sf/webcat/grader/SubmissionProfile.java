@@ -23,6 +23,7 @@ package net.sf.webcat.grader;
 
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -189,7 +190,7 @@ public class SubmissionProfile
     {
         NSMutableArray results =
             objectsForCourse( context, course ).mutableClone();
-        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
             objectsForUser( context, user ) );
         if ( mine != null && !results.containsObject( mine ) )

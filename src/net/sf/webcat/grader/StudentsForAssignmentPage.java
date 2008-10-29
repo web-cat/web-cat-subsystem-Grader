@@ -24,6 +24,7 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
+import er.extensions.foundation.ERXArrayUtilities;
 import java.util.HashMap;
 import java.util.Map;
 import net.sf.webcat.core.*;
@@ -85,10 +86,10 @@ public class StudentsForAssignmentPage
         }
         NSMutableArray students =
             coreSelections().courseOffering().students().mutableClone();
-        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
             coreSelections().courseOffering().instructors() );
-        er.extensions.ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
             coreSelections().courseOffering().graders() );
         NSMutableArray submissions = new NSMutableArray();

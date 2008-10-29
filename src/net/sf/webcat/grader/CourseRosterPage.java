@@ -26,7 +26,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import com.Ostermiller.util.ExcelCSVParser;
-import er.extensions.ERXConstant;
+import er.extensions.eof.ERXConstant;
 import java.io.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;

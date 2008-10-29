@@ -23,7 +23,6 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
-import er.extensions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.zip.ZipFile;

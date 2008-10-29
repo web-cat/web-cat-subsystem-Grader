@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * @version version suppressed to control auto-generation
  */
 public abstract class _SubmissionProfile
-    extends er.extensions.ERXGenericRecord
+    extends er.extensions.eof.ERXGenericRecord
 {
     //~ Constructors ..........................................................
 
@@ -137,7 +137,7 @@ public abstract class _SubmissionProfile
     public static SubmissionProfile forId(
         EOEditingContext ec, String id )
     {
-        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -218,7 +218,7 @@ public abstract class _SubmissionProfile
         }
         catch (Exception e)
         {
-            return er.extensions.ERXConstant.ZeroInteger;
+            return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
 
@@ -380,7 +380,7 @@ public abstract class _SubmissionProfile
                 + value + "): was " + awardEarlyBonus() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setAwardEarlyBonusRaw( actual );
     }
 
@@ -508,7 +508,7 @@ public abstract class _SubmissionProfile
                 + value + "): was " + deductLatePenalty() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setDeductLatePenaltyRaw( actual );
     }
 
@@ -1078,7 +1078,7 @@ public abstract class _SubmissionProfile
                 + value + "): was " + maxSubmissions() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setMaxSubmissionsRaw( actual );
     }
 
@@ -1229,7 +1229,7 @@ public abstract class _SubmissionProfile
                 + value + "): was " + submissionMethod() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value );
+            er.extensions.eof.ERXConstant.integerForInt( value );
             setSubmissionMethodRaw( actual );
     }
 

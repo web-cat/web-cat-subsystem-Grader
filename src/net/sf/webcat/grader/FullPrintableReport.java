@@ -25,7 +25,7 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.*;
+import er.extensions.foundation.ERXArrayUtilities;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 

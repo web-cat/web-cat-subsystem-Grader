@@ -22,7 +22,7 @@
 package net.sf.webcat.grader.graphs;
 
 import com.webobjects.foundation.*;
-import er.extensions.*;
+import er.extensions.eof.ERXConstant;
 import java.io.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;

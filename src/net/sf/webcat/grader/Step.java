@@ -8,7 +8,7 @@ package net.sf.webcat.grader;
 
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.ERXConstant;
+import er.extensions.eof.ERXConstant;
 import java.io.*;
 import org.apache.log4j.Logger;
 

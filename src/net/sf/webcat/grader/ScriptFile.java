@@ -24,6 +24,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.foundation.ERXValueUtilities;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
@@ -304,7 +305,7 @@ public class ScriptFile
                 }
                 setLastModified(
                     new NSTimestamp( configPlist.lastModified() ) );
-                if ( er.extensions.ERXValueUtilities.booleanValue(
+                if ( ERXValueUtilities.booleanValue(
                      configDescription().get( AUTO_PUBLISH_KEY ) ) )
                 {
                     setIsPublished( true );
@@ -331,7 +332,7 @@ public class ScriptFile
      */
     public int timeoutMultiplier()
     {
-        return er.extensions.ERXValueUtilities.intValueWithDefault(
+        return ERXValueUtilities.intValueWithDefault(
             configDescription().valueForKey( "timeoutMultiplier" ), 1 );
     }
 
@@ -343,7 +344,7 @@ public class ScriptFile
      */
     public int timeoutInternalPadding()
     {
-        return er.extensions.ERXValueUtilities.intValueWithDefault(
+        return ERXValueUtilities.intValueWithDefault(
             configDescription().valueForKey( "timeoutInternalPadding" ), 0 );
     }
 

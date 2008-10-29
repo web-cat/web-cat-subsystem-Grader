@@ -24,7 +24,7 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
-import er.extensions.ERXConstant;
+import er.extensions.eof.ERXConstant;
 import net.sf.webcat.core.*;
 import org.apache.log4j.*;
 

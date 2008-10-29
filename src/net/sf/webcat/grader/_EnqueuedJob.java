@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * @version version suppressed to control auto-generation
  */
 public abstract class _EnqueuedJob
-    extends er.extensions.ERXGenericRecord
+    extends er.extensions.eof.ERXGenericRecord
 {
     //~ Constructors ..........................................................
 
@@ -137,7 +137,7 @@ public abstract class _EnqueuedJob
     public static EnqueuedJob forId(
         EOEditingContext ec, String id )
     {
-        return forId( ec, er.extensions.ERXValueUtilities.intValue( id ) );
+        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
     }
 
 
@@ -197,7 +197,7 @@ public abstract class _EnqueuedJob
         }
         catch (Exception e)
         {
-            return er.extensions.ERXConstant.ZeroInteger;
+            return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
 
@@ -231,7 +231,7 @@ public abstract class _EnqueuedJob
                 + value + "): was " + discarded() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setDiscardedRaw( actual );
     }
 
@@ -295,7 +295,7 @@ public abstract class _EnqueuedJob
                 + value + "): was " + paused() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setPausedRaw( actual );
     }
 
@@ -388,7 +388,7 @@ public abstract class _EnqueuedJob
                 + value + "): was " + regrading() );
         }
         Integer actual =
-            er.extensions.ERXConstant.integerForInt( value ? 1 : 0 );
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
             setRegradingRaw( actual );
     }
 

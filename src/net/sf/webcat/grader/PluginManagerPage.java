@@ -24,7 +24,7 @@ package net.sf.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import java.util.*;
-import er.extensions.*;
+import er.extensions.foundation.ERXValueUtilities;
 import net.sf.webcat.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;

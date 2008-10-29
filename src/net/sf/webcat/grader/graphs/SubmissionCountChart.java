@@ -23,7 +23,7 @@ package net.sf.webcat.grader.graphs;
 
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
-import er.extensions.ERXConstant;
+import er.extensions.eof.ERXConstant;
 import net.sf.webcat.grader.*;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.*;

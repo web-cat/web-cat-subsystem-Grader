@@ -22,7 +22,8 @@
 package net.sf.webcat.grader.actions;
 
 import com.webobjects.appserver.*;
-import er.extensions.*;
+
+import er.extensions.appserver.ERXDirectAction;
 
 // -------------------------------------------------------------------------
 /**

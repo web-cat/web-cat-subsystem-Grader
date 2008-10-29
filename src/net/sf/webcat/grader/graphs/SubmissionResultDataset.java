@@ -23,7 +23,6 @@ package net.sf.webcat.grader.graphs;
 
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.NSArray;
-import er.extensions.*;
 import net.sf.webcat.grader.*;
 
 import org.jfree.data.xy.TableXYDataset;
