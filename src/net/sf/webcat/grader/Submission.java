@@ -698,6 +698,194 @@ public class Submission
 
 
     // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission in the submission chain for this user and
+     * assignment offering that has valid non-zero coverage data.
+     * 
+     * @return the earliest submission with valid non-zero coverage data, or
+     *     null if there is no submission satisfying this
+     */
+    public Submission earliestSubmissionWithCoverage()
+    {
+        NSArray<Submission> subs = allSubmissions();
+        
+        for(Submission submission : subs)
+        {
+            if (submission.hasCoverage())
+            {
+                return submission;
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets a value indicating whether the submission has valid non-zero
+     * coverage data. This implies that the submission compiled without error
+     * and executed at least partially (but only for plug-ins that collect code
+     * coverage statistics).
+     * 
+     * @return true if the submission has valid non-zero coverage data,
+     *     otherwise false.
+     */
+    public boolean hasCoverage()
+    {
+        NSArray<SubmissionFileStats> files = result().submissionFileStats();
+        
+        int totalElements = 0;
+
+        for(SubmissionFileStats file : files)
+        {
+            totalElements += file.elements();
+        }
+        
+        return (totalElements > 0);
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission in the submission chain for this user and
+     * assignment offering that has valid lines-of-code data.
+     * 
+     * @return the earliest submission with valid lines-of-code data, or
+     *     null if there is no submission satisfying this
+     */
+    public Submission earliestSubmissionWithLOC()
+    {
+        NSArray<Submission> subs = allSubmissions();
+        
+        for(Submission submission : subs)
+        {
+            if (submission.hasLOC())
+            {
+                return submission;
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets a value indicating whether the submission has valid lines-of-code
+     * data.
+     * 
+     * @return true if the submission has valid non-zero lines-of-code data,
+     *     otherwise false.
+     */
+    public boolean hasLOC()
+    {
+        NSArray<SubmissionFileStats> files = result().submissionFileStats();
+        
+        int totalLOC = 0;
+
+        for(SubmissionFileStats file : files)
+        {
+            totalLOC += file.loc();
+        }
+        
+        return (totalLOC > 0);
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission in the submission chain for this user and
+     * assignment offering that has a non-zero correctness score.
+     * 
+     * @return the earliest submission with a non-zero correctness score, or
+     *     null if there is no submission satisfying this
+     */
+    public Submission earliestSubmissionWithCorrectnessScore()
+    {
+        NSArray<Submission> subs = allSubmissions();
+        
+        for(Submission submission : subs)
+        {
+            if (submission.hasCorrectnessScore())
+            {
+                return submission;
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets a value indicating whether the submission has a non-zero
+     * correctness score. This implies that the code ran, but the converse is
+     * not true of course -- not all code that runs attains a non-zero
+     * correctness score.
+     * 
+     * @return true if the submission has a non-zero correctness score.
+     */
+    public boolean hasCorrectnessScore()
+    {
+        return result().correctnessScore() > 0;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission in the submission chain for this user and
+     * assignment offering that has a non-zero correctness score.
+     * 
+     * @return the earliest submission with a non-zero correctness score, or
+     *     null if there is no submission satisfying this
+     */
+    public Submission earliestSubmissionWithAnyData()
+    {
+        NSArray<Submission> subs = allSubmissions();
+        
+        for(Submission submission : subs)
+        {
+            if (submission.hasAnyData())
+            {
+                return submission;
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets a value indicating whether the submission has any data of interest
+     * as generated by the grading plug-ins and grading process. For now, this
+     * includes the following items: coverage data, lines-of-code, correctness
+     * score.
+     * 
+     * @return true if the submission has any valid grading data, otherwise
+     *     false.
+     */
+    public boolean hasAnyData()
+    {
+        // This method is written like this to effectively short-circuit things
+        // the first time any data is found, rather than wasting time
+        // inefficiently pulling all the data that we're interested in.
+
+        if (hasCoverage())
+            return true;
+        
+        if (hasLOC())
+            return true;
+
+        if (hasCorrectnessScore())
+            return true;
+
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
     @Override
     public void mightDelete()
     {
