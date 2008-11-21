@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="/Core"/>
-	<classpathentry kind="src" path="/DBUpdateEngine"/>
-	<classpathentry kind="src" path="/EOJDBCPrototypes"/>
 	<classpathentry kind="src" path="/Bootstrap"/>
-	<classpathentry kind="con" path="org.objectstyle.wolips.ContainerInitializer/10/1/Core/1/nil/1/nil/1/0/1/false/10/1/DBUpdateEngine/1/nil/1/nil/1/0/1/false/10/1/EOJDBCPrototypes/1/nil/1/nil/1/0/1/false/10/1/ERExtensions/1/nil/1/nil/1/0/1/false/10/1/ERJars/1/nil/1/nil/1/0/1/false/10/1/ExternalJars/1/nil/1/nil/1/0/1/false/10/1/JavaWOExtensions/1/nil/1/nil/1/0/1/false/10/1/WOUnitTest/1/nil/1/nil/1/0/1/false/10/1/JavaEOAccess/1/nil/1/nil/1/0/1/false/10/1/JavaEOControl/1/nil/1/nil/1/0/1/false/10/1/JavaFoundation/1/nil/1/nil/1/0/1/false/10/1/JavaJDBCAdaptor/1/nil/1/nil/1/0/1/false/10/1/JavaWebObjects/1/nil/1/nil/1/0/1/false"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/Core"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/DBUpdateEngine"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/EOJDBCPrototypes"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/ExternalJars"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/WOUnitTest"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/ERExtensions"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/ERJars"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaWOExtensions"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaEOAccess"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaEOControl"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaFoundation"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaJDBCAdaptor"/>
+	<classpathentry exported="true" kind="con" path="WOFramework/JavaWebObjects"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ExternalJars"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
