@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class _Submission
     extends er.extensions.eof.ERXGenericRecord
+    implements net.sf.webcat.core.MigratoryAttributeOwner
 {
     //~ Constructors ..........................................................
 
@@ -139,6 +140,7 @@ public abstract class _Submission
 
     // Attributes ---
     public static final String FILE_NAME_KEY = "fileName";
+    public static final String IS_SUBMISSION_FOR_GRADING_KEY = "isSubmissionForGrading";
     public static final String PARTNER_LINK_KEY = "partnerLink";
     public static final String SUBMIT_NUMBER_KEY = "submitNumber";
     public static final String SUBMIT_TIME_KEY = "submitTime";
@@ -231,6 +233,70 @@ public abstract class _Submission
                 + value + "): was " + fileName() );
         }
         takeStoredValueForKey( value, "fileName" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>isSubmissionForGrading</code> value.
+     * @return the value of the attribute
+     */
+    public boolean isSubmissionForGrading()
+    {
+        Integer result =
+            (Integer)storedValueForKey( "isSubmissionForGrading" );
+        return ( result == null )
+            ? false
+            : ( result.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>isSubmissionForGrading</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setIsSubmissionForGrading( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsSubmissionForGrading("
+                + value + "): was " + isSubmissionForGrading() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setIsSubmissionForGradingRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>isSubmissionForGrading</code> value.
+     * @return the value of the attribute
+     */
+    public Integer isSubmissionForGradingRaw()
+    {
+        return (Integer)storedValueForKey( "isSubmissionForGrading" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>isSubmissionForGrading</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setIsSubmissionForGradingRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsSubmissionForGradingRaw("
+                + value + "): was " + isSubmissionForGradingRaw() );
+        }
+        takeStoredValueForKey( value, "isSubmissionForGrading" );
     }
 
 
@@ -388,6 +454,49 @@ public abstract class _Submission
                 + value + "): was " + submitTime() );
         }
         takeStoredValueForKey( value, "submitTime" );
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void awakeFromFetch(EOEditingContext ec)
+    {
+        super.awakeFromFetch(ec);
+
+        // Only try to migrate if the EC isn't a migrating context. If it is,
+        // we're already trying to migrate and this "awake" is coming from the
+        // child migration context.
+        
+        if (!(ec instanceof net.sf.webcat.core.MigratingEditingContext))
+        {
+            migrateAttributeValuesIfNeeded();
+        }
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #awake} to migrate attribute values if needed when the
+     * object is retrieved.
+     */
+    public void migrateAttributeValuesIfNeeded()
+    {
+        log.debug("migrateAttributeValuesIfNeeded()");
+
+        if ( isSubmissionForGradingRaw() == null )
+        {
+            net.sf.webcat.core.MigratingEditingContext mec =
+                net.sf.webcat.core.Application.newMigratingEditingContext();
+            Submission migratingObject = localInstance(mec);
+
+            if ( migratingObject.isSubmissionForGradingRaw() == null )
+            {
+                migratingObject.isSubmissionForGrading();
+            }
+    
+            mec.saveChanges();
+            net.sf.webcat.core.Application.releaseMigratingEditingContext(mec);
+        }
     }
 
 

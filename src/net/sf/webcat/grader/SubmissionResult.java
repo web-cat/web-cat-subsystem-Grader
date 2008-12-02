@@ -276,8 +276,8 @@ public class SubmissionResult
             + earlyBonus() - latePenalty();
         return ( result >= 0.0 ) ? result : 0.0;
     }
-
-
+    
+    
     // ----------------------------------------------------------
     /**
      * Check whether manual grading has been completed on this
@@ -458,6 +458,19 @@ public class SubmissionResult
         return ( result >= 0.0 ) ? result : 0.0;
     }
 
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean isMostRecent()
+    {
+        if (isMostRecentRaw() == null)
+        {
+            setAsMostRecentIfNecessary();
+        }
+
+        return super.isMostRecent();
+    }
+    
 
     // ----------------------------------------------------------
     /**

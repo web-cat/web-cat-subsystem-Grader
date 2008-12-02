@@ -443,39 +443,43 @@ public class Submission
      * @return true if this submission is the "submission for grading" for its
      *     user and assignment offering; false if otherwise.
      */
+    @Override
     public boolean isSubmissionForGrading()
     {
-        // TODO eliminate when the isSubmissionForGrading property is reified
-        // in the database. (It will be replaced by an auto-generated method in
-        // the underscore-prefixed superclass.)
+        // Migrate the property value if it doesn't yet exist.
 
-        if (user() == null || assignmentOffering() == null) return false;
-
-        Submission primarySubmission = null;
-        Submission gradedSubmission = null;
-
-        // Find the submission
-        NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
-                editingContext(),
-                Submission.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] {
-                        user(),
-                        assignmentOffering()
-                    },
-                    new Object[] {
-                        Submission.USER_KEY,
-                        Submission.ASSIGNMENT_OFFERING_KEY
-                    }
-                )
-            );
-
-        for ( int j = 0; j < thisSubmissionSet.count(); j++ )
+        if (isSubmissionForGradingRaw() == null)
         {
-            Submission sub =
-                (Submission)thisSubmissionSet.objectAtIndex( j );
+            if (user() == null || assignmentOffering() == null)
+            {
+                setIsSubmissionForGrading(false);
+                return false;
+            }
 
-            if ( sub.result() != null /* && !sub.partnerLink() */ )
+            Submission primarySubmission = null;
+            Submission latestGradedSubmission = null;
+    
+            NSArray<Submission> thisSubmissionSet =
+                EOUtilities.objectsMatchingValues(
+                    editingContext(),
+                    Submission.ENTITY_NAME,
+                    new NSDictionary(
+                        new Object[] {
+                            user(),
+                            assignmentOffering()
+                        },
+                        new Object[] {
+                            Submission.USER_KEY,
+                            Submission.ASSIGNMENT_OFFERING_KEY
+                        }
+                    )
+                );
+
+            // Iterate over the whole submission set and find the submission
+            // for grading (which is either the last submission is none are
+            // graded, or the latest of those that are graded).
+
+            for ( Submission sub : thisSubmissionSet )
             {
                 if ( primarySubmission == null )
                 {
@@ -484,42 +488,49 @@ public class Submission
                 else if ( sub.submitNumberRaw() != null )
                 {
                     int num = sub.submitNumber();
+
                     if ( num > primarySubmission.submitNumber() )
                     {
                         primarySubmission = sub;
                     }
                 }
-                if ( sub.result().status() != Status.TO_DO )
+
+                if ( sub.result() != null )
                 {
-                    if ( gradedSubmission == null )
+                    if ( sub.result().status() != Status.TO_DO )
                     {
-                        gradedSubmission = sub;
-                    }
-                    else if ( sub.submitNumberRaw() != null )
-                    {
-                        int num = sub.submitNumber();
-                        if ( num > gradedSubmission.submitNumber() )
+                        if ( latestGradedSubmission == null )
                         {
-                            gradedSubmission = sub;
+                            latestGradedSubmission = sub;
+                        }
+                        else if ( sub.submitNumberRaw() != null )
+                        {
+                            int num = sub.submitNumber();
+                            if ( num > latestGradedSubmission.submitNumber() )
+                            {
+                                latestGradedSubmission = sub;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if ( gradedSubmission != null )
-        {
-            primarySubmission = gradedSubmission;
-        }
+            if ( latestGradedSubmission != null )
+            {
+                primarySubmission = latestGradedSubmission;
+            }
 
-        if ( primarySubmission != null )
-        {
-            return this.equals(primarySubmission);
+            // Now that the entire submission chain is fetched, update the
+            // isSubmissionForGrading property among all of them.
+
+            for (Submission sub : thisSubmissionSet)
+            {
+                boolean isSubForGrading = sub.equals(primarySubmission);
+                sub.setIsSubmissionForGrading(isSubForGrading);
+            }
         }
-        else
-        {
-            return false;
-        }
+        
+        return super.isSubmissionForGrading();
     }
 
 

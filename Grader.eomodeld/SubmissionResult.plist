@@ -27,10 +27,11 @@
         }, 
         {name = id; prototypeName = id; }, 
         {
+            allowsNull = Y; 
             columnName = CISMOSTRECENT; 
             name = isMostRecent; 
             prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; needsMigration = true; }; 
         }, 
         {
             columnName = CSTATELEMENTSLABEL; 
@@ -77,6 +78,7 @@
     attributesUsedForLocking = (
         commentFormat, 
         correctnessScore, 
+        finalScore, 
         isMostRecent, 
         statElementsLabel, 
         status, 
@@ -88,6 +90,7 @@
         commentFormat, 
         comments, 
         correctnessScore, 
+        finalScore, 
         isMostRecent, 
         resultFiles, 
         statElementsLabel, 

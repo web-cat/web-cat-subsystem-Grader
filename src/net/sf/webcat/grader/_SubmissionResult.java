@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class _SubmissionResult
     extends er.extensions.eof.ERXGenericRecord
+    implements net.sf.webcat.core.MigratoryAttributeOwner
 {
     //~ Constructors ..........................................................
 
@@ -61,19 +62,16 @@ public abstract class _SubmissionResult
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param isMostRecent
      * @return The newly created object
      */
     public static SubmissionResult create(
-        EOEditingContext editingContext,
-        boolean isMostRecent
+        EOEditingContext editingContext
         )
     {
         SubmissionResult eoObject = (SubmissionResult)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _SubmissionResult.ENTITY_NAME);
-        eoObject.setIsMostRecent(isMostRecent);
         return eoObject;
     }
 
@@ -645,6 +643,49 @@ public abstract class _SubmissionResult
                 + value + "): was " + toolScoreRaw() );
         }
         takeStoredValueForKey( value, "toolScore" );
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void awakeFromFetch(EOEditingContext ec)
+    {
+        super.awakeFromFetch(ec);
+
+        // Only try to migrate if the EC isn't a migrating context. If it is,
+        // we're already trying to migrate and this "awake" is coming from the
+        // child migration context.
+        
+        if (!(ec instanceof net.sf.webcat.core.MigratingEditingContext))
+        {
+            migrateAttributeValuesIfNeeded();
+        }
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #awake} to migrate attribute values if needed when the
+     * object is retrieved.
+     */
+    public void migrateAttributeValuesIfNeeded()
+    {
+        log.debug("migrateAttributeValuesIfNeeded()");
+
+        if ( isMostRecentRaw() == null )
+        {
+            net.sf.webcat.core.MigratingEditingContext mec =
+                net.sf.webcat.core.Application.newMigratingEditingContext();
+            SubmissionResult migratingObject = localInstance(mec);
+
+            if ( migratingObject.isMostRecentRaw() == null )
+            {
+                migratingObject.isMostRecent();
+            }
+    
+            mec.saveChanges();
+            net.sf.webcat.core.Application.releaseMigratingEditingContext(mec);
+        }
     }
 
 

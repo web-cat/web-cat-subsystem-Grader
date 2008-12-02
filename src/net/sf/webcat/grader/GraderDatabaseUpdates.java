@@ -176,15 +176,29 @@ public class GraderDatabaseUpdates
 
     // ----------------------------------------------------------
     /**
-     * Drop the unused hasSuspendedSubs attribute from AssignmentOffering.
+     * Drop the unused courseOfferingId attribute from GraderPrefs, and add
+     * to Submission a field indicating whether it is the "submission for
+     * grading."
      * @throws SQLException on error
      */
-//    public void updateIncrement7() throws SQLException
-//    {
-//        database().executeSQL(
-//            "alter table TGRADERPREFS drop "
-//            + "CCOURSEOFFERINGID" );
-//    }
+    public void updateIncrement7() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TGRADERPREFS drop "
+            + "CCOURSEOFFERINGID" );
+        
+        database().executeSQL(
+            "alter table TSUBMISSION add "
+            + "CISSUBMISSIONFORGRADING BIT");
+
+        database().executeSQL(
+                "alter table TSUBMISSIONRESULT modify "
+                + "CISMOSTRECENT BIT");
+
+/*        database().executeSQL(
+                "alter table TSUBMISSIONRESULT add "
+                + "CFINALSCORE DOUBLE");*/
+    }
 
 
     //~ Private Methods .......................................................

@@ -8,6 +8,13 @@
         {columnName = CFILENAME; name = fileName; prototypeName = tinyText; }, 
         {name = id; prototypeName = id; }, 
         {
+            allowsNull = Y; 
+            columnName = CISSUBMISSIONFORGRADING; 
+            name = isSubmissionForGrading; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; needsMigration = true; }; 
+        }, 
+        {
             columnName = CPARTNERLINK; 
             externalType = BIT; 
             name = partnerLink; 
@@ -30,13 +37,22 @@
         {columnName = CSUBMITTIME; name = submitTime; prototypeName = dateTime; }, 
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
     ); 
-    attributesUsedForLocking = (assignmentOfferingId, fileName, partnerLink, resultId, submitNumber, userId); 
+    attributesUsedForLocking = (
+        assignmentOfferingId, 
+        fileName, 
+        isSubmissionForGrading, 
+        partnerLink, 
+        resultId, 
+        submitNumber, 
+        userId
+    ); 
     className = "net.sf.webcat.grader.Submission"; 
     classProperties = (
         assignmentOffering, 
         enqueuedJobs, 
         fileName, 
         graderPrefs, 
+        isSubmissionForGrading, 
         partnerLink, 
         result, 
         submitNumber, 
