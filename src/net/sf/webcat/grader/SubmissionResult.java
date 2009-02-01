@@ -25,7 +25,10 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import com.webobjects.foundation.NSValidation.*;
+import er.extensions.foundation.ERXFileUtilities;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
@@ -645,7 +648,7 @@ public class SubmissionResult
         }
     }
 
-
+    
     //~ Instance/static variables .............................................
 
     private File propertiesFile;

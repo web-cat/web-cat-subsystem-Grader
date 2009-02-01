@@ -27,7 +27,9 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXQ;
+import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import net.sf.webcat.core.*;
@@ -641,23 +643,22 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
-     * Gets the previous submission to this one in the submission chain.
+     * Gets from the submission chain the submission with the specified
+     * submission number.
      *
-     * @return the previous submission, or null if it is the first one (or
-     *     there was an error)
+     * @param number the number of the submission to retrieve from the chain
+     * 
+     * @return the specified submission, or null if there was not one with
+     *     that number in the chain (or there was some other error)
      */
-    public Submission previousSubmission()
+    public Submission submissionWithSubmitNumber(int number)
     {
-        if (user() == null || assignmentOffering() == null ||
-                submitNumberRaw() == null) return null;
-
-        int submitNo = submitNumber();
-
-        if (submitNo == 1) return null;
+        if (user() == null || assignmentOffering() == null)
+            return null;
 
         NSArray<Submission> subs =
             objectsForSpecificSubmission(editingContext(),
-                    assignmentOffering(), submitNo - 1, user());
+                    assignmentOffering(), number, user());
 
         if (subs != null && subs.count() >= 1)
         {
@@ -666,6 +667,26 @@ public class Submission
         else
         {
             return null;
+        }
+    }
+
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the previous submission to this one in the submission chain.
+     *
+     * @return the previous submission, or null if it is the first one (or
+     *     there was an error)
+     */
+    public Submission previousSubmission()
+    {
+        if (submitNumberRaw() == null)
+        {
+            return null;
+        }
+        else
+        {
+            return submissionWithSubmitNumber(submitNumber() - 1);
         }
     }
 
@@ -679,31 +700,13 @@ public class Submission
      */
     public Submission nextSubmission()
     {
-        if (user() == null || assignmentOffering() == null ||
-                submitNumberRaw() == null) return null;
-
-        int submitNo = submitNumber();
-
-        EOQualifier q =
-            ERXQ.equals("user", user()).and(
-                ERXQ.equals("assignmentOffering", assignmentOffering()));
-
-        int count = ERXEOControlUtilities.objectCountWithQualifier(
-                editingContext(), ENTITY_NAME, q);
-
-        if (submitNo == count) return null;
-
-        NSArray<Submission> subs =
-            objectsForSpecificSubmission(editingContext(),
-                    assignmentOffering(), submitNo + 1, user());
-
-        if (subs != null && subs.count() >= 1)
+        if (submitNumberRaw() == null)
         {
-            return subs.objectAtIndex(0);
+            return null;
         }
         else
         {
-            return null;
+            return submissionWithSubmitNumber(submitNumber() + 1);
         }
     }
 
@@ -883,19 +886,50 @@ public class Submission
         // the first time any data is found, rather than wasting time
         // inefficiently pulling all the data that we're interested in.
 
+        if (hasCorrectnessScore())
+            return true;
+
         if (hasCoverage())
             return true;
         
         if (hasLOC())
             return true;
 
-        if (hasCorrectnessScore())
-            return true;
-
         return false;
     }
 
 
+    // ----------------------------------------------------------
+    public String contentsOfResultFile(String relativePath) throws IOException
+    {
+        // Massage the path a little so we can prevent access outside the
+        // Results folder.
+
+        relativePath = relativePath.replace('\\', '/');
+        while (relativePath.startsWith("./"))
+        {
+            relativePath = relativePath.substring(2);
+        }
+        
+        if (relativePath.startsWith("../") || relativePath.startsWith("/"))
+        {
+            throw new IllegalArgumentException(
+                    "Path must not include parent directory or root directory" +
+                    "components");
+        }
+        
+        File file = new File(resultDirName(), relativePath);
+        
+        if (file.isDirectory())
+        {
+            throw new IllegalArgumentException(
+                    "Path must be a file, not a directory");
+        }
+
+        return ERXFileUtilities.stringFromFile(file);
+    }
+
+    
     // ----------------------------------------------------------
     @Override
     public void mightDelete()
