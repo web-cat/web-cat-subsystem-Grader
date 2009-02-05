@@ -973,6 +973,9 @@ public class GraderQueueProcessor
                       SubmissionResult.staffResultFileName() ),
             inlineStaffReports );
 
+        // 2009-02-04 (AJA): create result blobs
+        extractResultBlobs( job, submissionResult, properties );
+        
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
@@ -1025,6 +1028,86 @@ public class GraderQueueProcessor
                 "Reports addressed to the adminstrator are attached.\n",
                 adminReports );
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create result blobs from properties in the grading properties file.
+     * 
+     * @param submissionResult
+     * @param properties
+     */
+    private void extractResultBlobs( EnqueuedJob job,
+                                     SubmissionResult submissionResult,
+                                     WCProperties properties )
+    {
+        NSArray<String> blobProps = properties.arrayForKey("blobProperties");
+        
+        if (blobProps != null)
+        {
+            for (String blobProp : blobProps)
+            {
+                Object value = properties.valueForKey(blobProp);
+
+                if (value != null)
+                {
+                    if (value instanceof NSArray)
+                    {
+                        NSArray<?> array = (NSArray<?>) value;
+                        
+                        for (Object elem : array)
+                        {
+                            createResultBlob( job, submissionResult, blobProp,
+                                    elem );
+                        }
+                    }
+                    else
+                    {
+                        createResultBlob( job, submissionResult, blobProp,
+                                value );
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Creates a single result blob from the value of a property in the
+     * grading properties file. If the value is a dictionary, then it is
+     * stored in the blob directly; if it is a scalar value, then it is stored
+     * in the blob contents as a one-element dictionary with the key named
+     * "value".
+     * 
+     * @param submissionResult
+     * @param tag
+     * @param value
+     */
+    private void createResultBlob( EnqueuedJob job,
+                                   SubmissionResult submissionResult,
+                                   String tag,
+                                   Object value )
+    {
+        NSDictionary<String, Object> contents;
+
+        if (!(value instanceof NSDictionary))
+        {
+            contents = new NSDictionary<String, Object>(value, "value");
+        }
+        else
+        {
+            contents = (NSDictionary<String, Object>) value;
+        }
+        
+        ResultBlob blob = new ResultBlob();
+        blob.setTag(tag);
+        blob.setContents(new MutableDictionary(contents));
+        editingContext.insertObject(blob);
+
+        blob.setSubmissionRelationship(job.submission());
+        blob.setSubmissionResultRelationship(submissionResult);
     }
 
 

@@ -31,7 +31,12 @@
             columnName = CISMOSTRECENT; 
             name = isMostRecent; 
             prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; needsMigration = true; }; 
+            userInfo = {
+                isScalar = true; 
+                needsMigration = true; 
+                scalarDefault = false; 
+                type = boolean; 
+            }; 
         }, 
         {
             columnName = CSTATELEMENTSLABEL; 
@@ -78,7 +83,6 @@
     attributesUsedForLocking = (
         commentFormat, 
         correctnessScore, 
-        finalScore, 
         isMostRecent, 
         statElementsLabel, 
         status, 
@@ -90,8 +94,8 @@
         commentFormat, 
         comments, 
         correctnessScore, 
-        finalScore, 
         isMostRecent, 
+        resultBlobs, 
         resultFiles, 
         statElementsLabel, 
         status, 
@@ -104,6 +108,14 @@
     name = SubmissionResult; 
     primaryKeyAttributes = (id); 
     relationships = (
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = ResultBlob; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
+            name = resultBlobs; 
+        }, 
         {
             deleteRule = EODeleteRuleCascade; 
             destination = ResultFile; 

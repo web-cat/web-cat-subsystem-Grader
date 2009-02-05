@@ -514,6 +514,11 @@ public class SubmissionResult
      */
     public void setAsMostRecentIfNecessary()
     {
+        if ( submission() == null )
+        {
+            return;
+        }
+
         EOEditingContext ec = editingContext();
         if ( log.isDebugEnabled() )
         {

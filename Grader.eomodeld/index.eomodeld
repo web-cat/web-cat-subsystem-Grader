@@ -1,117 +1,67 @@
-
 {
-    EOModelVersion = 2.1;
-    adaptorName = JDBC;
-    connectionDictionary = 
-    {
-        username = "";
-        driver = com.mysql.jdbc.Driver;
-        URL = "";
-        password = "";
-        plugin = MySQL;
-    };
-    entities = 
-    (
-       
-       {
-           className = net.sf.webcat.grader.Assignment;
-           name = Assignment;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.AssignmentOffering;
-           name = AssignmentOffering;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.EnqueuedJob;
-           name = EnqueuedJob;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.GraderPrefs;
-           name = GraderPrefs;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.GradingCriteria;
-           name = GradingCriteria;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.ResultFile;
-           name = ResultFile;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.ScriptFile;
-           name = ScriptFile;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.Step;
-           name = Step;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.StepConfig;
-           name = StepConfig;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.Submission;
-           name = Submission;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.SubmissionFileComment;
-           name = SubmissionFileComment;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.SubmissionFileStats;
-           name = SubmissionFileStats;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.SubmissionProfile;
-           name = SubmissionProfile;
-       }, 
-       
-       {
-           className = net.sf.webcat.grader.SubmissionResult;
-           name = SubmissionResult;
-       }
-    );
-    internalInfo = 
-    {
-        _schemaSynchronizationOptions = 
+    EOModelVersion = "2.1"; 
+    adaptorName = JDBC; 
+    connectionDictionary = {
+        URL = ""; 
+        driver = "com.mysql.jdbc.Driver"; 
+        password = ""; 
+        plugin = MySQL; 
+        username = ""; 
+    }; 
+    entities = (
+        {className = "net.sf.webcat.grader.Assignment"; name = Assignment; }, 
         {
-            EOSchemaSynchronizationForeignKeyConstraintsKey = YES;
-            EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES;
-            EOSchemaSynchronizationPrimaryKeySupportKey = YES;
-        };
-    };
-    userInfo = 
-    {
-        _EntityModeler = 
+            className = "net.sf.webcat.grader.AssignmentOffering"; 
+            name = AssignmentOffering; 
+        }, 
+        {className = "net.sf.webcat.grader.EnqueuedJob"; name = EnqueuedJob; }, 
+        {className = "net.sf.webcat.grader.GraderPrefs"; name = GraderPrefs; }, 
+        {className = "net.sf.webcat.grader.GradingCriteria"; name = GradingCriteria; }, 
+        {className = "net.sf.webcat.grader.ResultBlob"; name = ResultBlob; }, 
+        {className = "net.sf.webcat.grader.ResultFile"; name = ResultFile; }, 
+        {className = "net.sf.webcat.grader.ScriptFile"; name = ScriptFile; }, 
+        {className = "net.sf.webcat.grader.Step"; name = Step; }, 
+        {className = "net.sf.webcat.grader.StepConfig"; name = StepConfig; }, 
+        {className = "net.sf.webcat.grader.Submission"; name = Submission; }, 
         {
-            activeDatabaseConfigName = Default;
-            databaseConfigs = 
-            {
-                Default = 
-                {
-                    adaptorName = JDBC;
-                    connectionDictionary = 
-                    {
-                        username = "";
-                        driver = com.mysql.jdbc.Driver;
-                        URL = "";
-                        password = "";
-                        plugin = MySQL;
-                    };
-                };
-            };
-        };
-    };
+            className = "net.sf.webcat.grader.SubmissionFileComment"; 
+            name = SubmissionFileComment; 
+        }, 
+        {
+            className = "net.sf.webcat.grader.SubmissionFileStats"; 
+            name = SubmissionFileStats; 
+        }, 
+        {
+            className = "net.sf.webcat.grader.SubmissionProfile"; 
+            name = SubmissionProfile; 
+        }, 
+        {
+            className = "net.sf.webcat.grader.SubmissionResult"; 
+            name = SubmissionResult; 
+        }
+    ); 
+    internalInfo = {
+        "_schemaSynchronizationOptions" = {
+            EOSchemaSynchronizationForeignKeyConstraintsKey = YES; 
+            EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES; 
+            EOSchemaSynchronizationPrimaryKeySupportKey = YES; 
+        }; 
+    }; 
+    userInfo = {
+        "_EntityModeler" = {
+            activeDatabaseConfigName = Default; 
+            databaseConfigs = {
+                Default = {
+                    adaptorName = JDBC; 
+                    connectionDictionary = {
+                        URL = ""; 
+                        driver = "com.mysql.jdbc.Driver"; 
+                        password = ""; 
+                        plugin = MySQL; 
+                        username = ""; 
+                    }; 
+                }; 
+            }; 
+        }; 
+    }; 
 }

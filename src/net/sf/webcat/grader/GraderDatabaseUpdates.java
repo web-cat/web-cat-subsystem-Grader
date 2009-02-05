@@ -199,6 +199,27 @@ public class GraderDatabaseUpdates
                 "alter table TSUBMISSIONRESULT add "
                 + "CFINALSCORE DOUBLE");*/
     }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Creates the TRESULTBLOB table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement8() throws SQLException
+    {
+        if ( !database().hasTable( "TRESULTBLOB" ) )
+        {
+            log.info( "creating table TRESULTBLOB" );
+            database().executeSQL(
+                "CREATE TABLE TRESULTBLOB "
+                + "(OID INTEGER NOT NULL , CRESULTID INTEGER , "
+                + "CSUBMISSIONID INTEGER , CTAG TINYTEXT , CCONTENTS BLOB , "
+                + "CUPDATEMUTABLEFIELDS BIT NOT NULL )" );
+            database().executeSQL(
+                "ALTER TABLE TRESULTBLOB ADD PRIMARY KEY (OID)" );
+        }
+    }
 
 
     //~ Private Methods .......................................................
