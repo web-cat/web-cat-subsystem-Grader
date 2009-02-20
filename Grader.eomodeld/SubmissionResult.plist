@@ -95,8 +95,8 @@
         comments, 
         correctnessScore, 
         isMostRecent, 
-        resultBlobs, 
         resultFiles, 
+        resultOutcomes, 
         statElementsLabel, 
         status, 
         submissionFileStats, 
@@ -110,20 +110,20 @@
     relationships = (
         {
             deleteRule = EODeleteRuleCascade; 
-            destination = ResultBlob; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
-            name = resultBlobs; 
-        }, 
-        {
-            deleteRule = EODeleteRuleCascade; 
             destination = ResultFile; 
             isToMany = Y; 
             joinSemantic = EOInnerJoin; 
             joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
             name = resultFiles; 
             ownsDestination = Y; 
+        }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = ResultOutcome; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
+            name = resultOutcomes; 
         }, 
         {
             deleteRule = EODeleteRuleCascade; 

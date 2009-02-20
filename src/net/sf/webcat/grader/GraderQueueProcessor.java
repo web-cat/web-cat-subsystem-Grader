@@ -974,7 +974,7 @@ public class GraderQueueProcessor
             inlineStaffReports );
 
         // 2009-02-04 (AJA): create result blobs
-        extractResultBlobs( job, submissionResult, properties );
+        extractResultOutcomes( job, submissionResult, properties );
         
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
@@ -1033,39 +1033,50 @@ public class GraderQueueProcessor
 
     // ----------------------------------------------------------
     /**
-     * Create result blobs from properties in the grading properties file.
+     * Create result outcome objects from properties in the grading properties
+     * file.
      * 
+     * @param job
      * @param submissionResult
      * @param properties
      */
-    private void extractResultBlobs( EnqueuedJob job,
-                                     SubmissionResult submissionResult,
-                                     WCProperties properties )
+    private void extractResultOutcomes( EnqueuedJob job,
+                                        SubmissionResult submissionResult,
+                                        WCProperties properties )
     {
-        NSArray<String> blobProps = properties.arrayForKey("blobProperties");
-        
-        if (blobProps != null)
+        NSArray<String> outcomeProps = properties.arrayForKey(
+                "outcomeProperties");
+
+        // TODO remove this when we're sure the plug-ins have been migrated
+        if (outcomeProps == null)
         {
-            for (String blobProp : blobProps)
+            outcomeProps = properties.arrayForKey("blobProperties");
+        }
+
+        if (outcomeProps != null)
+        {
+            for (String outcomeProp : outcomeProps)
             {
-                Object value = properties.valueForKey(blobProp);
+                Object value = properties.valueForKey(outcomeProp);
 
                 if (value != null)
                 {
                     if (value instanceof NSArray)
                     {
                         NSArray<?> array = (NSArray<?>) value;
-                        
+                        int index = 0;
+
                         for (Object elem : array)
                         {
-                            createResultBlob( job, submissionResult, blobProp,
-                                    elem );
+                            createResultOutcome( job, submissionResult, index,
+                                    outcomeProp, elem );
+                            index++;
                         }
                     }
                     else
                     {
-                        createResultBlob( job, submissionResult, blobProp,
-                                value );
+                        createResultOutcome( job, submissionResult, 0,
+                                outcomeProp, value );
                     }
                 }
             }
@@ -1075,20 +1086,23 @@ public class GraderQueueProcessor
 
     // ----------------------------------------------------------
     /**
-     * Creates a single result blob from the value of a property in the
+     * Creates a single result outcome from the value of a property in the
      * grading properties file. If the value is a dictionary, then it is
-     * stored in the blob directly; if it is a scalar value, then it is stored
-     * in the blob contents as a one-element dictionary with the key named
-     * "value".
-     * 
+     * stored in the outcome directly; if it is a scalar value, then it is
+     * stored in the outcome contents as a one-element dictionary with the key
+     * named "value".
+     *
+     * @param job
      * @param submissionResult
+     * @param index
      * @param tag
      * @param value
      */
-    private void createResultBlob( EnqueuedJob job,
-                                   SubmissionResult submissionResult,
-                                   String tag,
-                                   Object value )
+    private void createResultOutcome( EnqueuedJob job,
+                                      SubmissionResult submissionResult,
+                                      int index,
+                                      String tag,
+                                      Object value )
     {
         NSDictionary<String, Object> contents;
 
@@ -1101,13 +1115,17 @@ public class GraderQueueProcessor
             contents = (NSDictionary<String, Object>) value;
         }
         
-        ResultBlob blob = new ResultBlob();
-        blob.setTag(tag);
-        blob.setContents(new MutableDictionary(contents));
-        editingContext.insertObject(blob);
+        ResultOutcome outcome = new ResultOutcome();
+        outcome.setIndex(index);
+        outcome.setTag(tag);
+        outcome.setContents(new MutableDictionary(contents));
+        editingContext.insertObject(outcome);
 
-        blob.setSubmissionRelationship(job.submission());
-        blob.setSubmissionResultRelationship(submissionResult);
+        // TODO remove this when we fix the SubmissionResult.submission
+        // relationship "problem"
+        outcome.setSubmissionRelationship(job.submission());
+
+        outcome.setSubmissionResultRelationship(submissionResult);
     }
 
 

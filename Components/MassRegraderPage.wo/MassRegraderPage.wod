@@ -1,0 +1,23 @@
+Courses : WOPopUpButton {
+    id = "courseList";
+    list = courseOfferings;
+    noSelectionString = "(no selection)";
+    selection = selectedCourseOffering;
+}
+
+CoursesObserver : AjaxObserveField {
+    observeFieldID = "courseList";
+    updateContainerID = "assignmentList";
+    action = updateAssignments;
+}
+
+Assignment : WOPopUpButton {
+    list = assignmentOfferings;
+    selection = selectedAssignmentOffering;
+    noSelectionString = "(no selection)";
+}
+
+Regrade : WOSubmitButton {
+    value = "Regrade";
+    action = massRegrade;
+}

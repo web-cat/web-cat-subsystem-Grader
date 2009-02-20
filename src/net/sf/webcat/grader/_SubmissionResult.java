@@ -146,8 +146,8 @@ public abstract class _SubmissionResult
     public static final String TOOL_SCORE_KEY = "toolScore";
     // To-one relationships ---
     // To-many relationships ---
-    public static final String RESULT_BLOBS_KEY = "resultBlobs";
     public static final String RESULT_FILES_KEY = "resultFiles";
+    public static final String RESULT_OUTCOMES_KEY = "resultOutcomes";
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
     public static final String SUBMISSIONS_KEY = "submissions";
     // Fetch specifications ---
@@ -692,184 +692,6 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Retrieve the entities pointed to by the <code>resultBlobs</code>
-     * relationship.
-     * @return an NSArray of the entities in the relationship
-     */
-    @SuppressWarnings("unchecked")
-    public NSArray<net.sf.webcat.grader.ResultBlob> resultBlobs()
-    {
-        return (NSArray)storedValueForKey( "resultBlobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Replace the list of entities pointed to by the
-     * <code>resultBlobs</code> relationship.
-     *
-     * @param value The new set of entities to relate to
-     */
-    public void setResultBlobs( NSMutableArray<net.sf.webcat.grader.ResultBlob>  value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setResultBlobs("
-                + value + "): was " + resultBlobs() );
-        }
-        takeStoredValueForKey( value, "resultBlobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>resultBlobs</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>addToResultBlobsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToResultBlobs( net.sf.webcat.grader.ResultBlob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "addToResultBlobs("
-                + value + "): was " + resultBlobs() );
-        }
-        NSMutableArray<net.sf.webcat.grader.ResultBlob> array =
-            (NSMutableArray<net.sf.webcat.grader.ResultBlob>)resultBlobs();
-        willChange();
-        array.addObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>resultBlobs</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>removeFromResultBlobsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromResultBlobs( net.sf.webcat.grader.ResultBlob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "RemoveFromResultBlobs("
-                + value + "): was " + resultBlobs() );
-        }
-        NSMutableArray<net.sf.webcat.grader.ResultBlob> array =
-            (NSMutableArray<net.sf.webcat.grader.ResultBlob>)resultBlobs();
-        willChange();
-        array.removeObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>resultBlobs</code>
-     * relationship.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToResultBlobsRelationship( net.sf.webcat.grader.ResultBlob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "addToResultBlobsRelationship("
-                + value + "): was " + resultBlobs() );
-        }
-        addObjectToBothSidesOfRelationshipWithKey(
-            value, "resultBlobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>resultBlobs</code>
-     * relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromResultBlobsRelationship( net.sf.webcat.grader.ResultBlob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "removeFromResultBlobsRelationship("
-                + value + "): was " + resultBlobs() );
-        }
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "resultBlobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Create a brand new object that is a member of the
-     * <code>resultBlobs</code> relationship.
-     *
-     * @return The new entity
-     */
-    public net.sf.webcat.grader.ResultBlob createResultBlobsRelationship()
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "createResultBlobsRelationship()" );
-        }
-        EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "ResultBlob" );
-        EOEnterpriseObject eoObject = eoClassDesc
-            .createInstanceWithEditingContext( editingContext(), null );
-        editingContext().insertObject( eoObject );
-        addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "resultBlobs" );
-        return (net.sf.webcat.grader.ResultBlob)eoObject;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove and then delete a specific entity that is a member of the
-     * <code>resultBlobs</code> relationship.
-     *
-     * @param value The entity to remove from the relationship and then delete
-     */
-    public void deleteResultBlobsRelationship( net.sf.webcat.grader.ResultBlob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "deleteResultBlobsRelationship("
-                + value + "): was " + resultBlobs() );
-        }
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "resultBlobs" );
-        editingContext().deleteObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove (and then delete, if owned) all entities that are members of the
-     * <code>resultBlobs</code> relationship.
-     */
-    public void deleteAllResultBlobsRelationships()
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "deleteAllResultBlobsRelationships(): was "
-                + resultBlobs() );
-        }
-        Enumeration objects = resultBlobs().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteResultBlobsRelationship(
-                (net.sf.webcat.grader.ResultBlob)objects.nextElement() );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Retrieve the entities pointed to by the <code>resultFiles</code>
      * relationship.
      * @return an NSArray of the entities in the relationship
@@ -1042,6 +864,184 @@ public abstract class _SubmissionResult
         while ( objects.hasMoreElements() )
             deleteResultFilesRelationship(
                 (net.sf.webcat.grader.ResultFile)objects.nextElement() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>resultOutcomes</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    @SuppressWarnings("unchecked")
+    public NSArray<net.sf.webcat.grader.ResultOutcome> resultOutcomes()
+    {
+        return (NSArray)storedValueForKey( "resultOutcomes" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>resultOutcomes</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setResultOutcomes( NSMutableArray<net.sf.webcat.grader.ResultOutcome>  value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setResultOutcomes("
+                + value + "): was " + resultOutcomes() );
+        }
+        takeStoredValueForKey( value, "resultOutcomes" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>resultOutcomes</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToResultOutcomesRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToResultOutcomes( net.sf.webcat.grader.ResultOutcome value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToResultOutcomes("
+                + value + "): was " + resultOutcomes() );
+        }
+        NSMutableArray<net.sf.webcat.grader.ResultOutcome> array =
+            (NSMutableArray<net.sf.webcat.grader.ResultOutcome>)resultOutcomes();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>resultOutcomes</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromResultOutcomesRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromResultOutcomes( net.sf.webcat.grader.ResultOutcome value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromResultOutcomes("
+                + value + "): was " + resultOutcomes() );
+        }
+        NSMutableArray<net.sf.webcat.grader.ResultOutcome> array =
+            (NSMutableArray<net.sf.webcat.grader.ResultOutcome>)resultOutcomes();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>resultOutcomes</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToResultOutcomesRelationship( net.sf.webcat.grader.ResultOutcome value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToResultOutcomesRelationship("
+                + value + "): was " + resultOutcomes() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "resultOutcomes" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>resultOutcomes</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromResultOutcomesRelationship( net.sf.webcat.grader.ResultOutcome value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromResultOutcomesRelationship("
+                + value + "): was " + resultOutcomes() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "resultOutcomes" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>resultOutcomes</code> relationship.
+     *
+     * @return The new entity
+     */
+    public net.sf.webcat.grader.ResultOutcome createResultOutcomesRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createResultOutcomesRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "ResultOutcome" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "resultOutcomes" );
+        return (net.sf.webcat.grader.ResultOutcome)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>resultOutcomes</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deleteResultOutcomesRelationship( net.sf.webcat.grader.ResultOutcome value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteResultOutcomesRelationship("
+                + value + "): was " + resultOutcomes() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "resultOutcomes" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>resultOutcomes</code> relationship.
+     */
+    public void deleteAllResultOutcomesRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllResultOutcomesRelationships(): was "
+                + resultOutcomes() );
+        }
+        Enumeration objects = resultOutcomes().objectEnumerator();
+        while ( objects.hasMoreElements() )
+            deleteResultOutcomesRelationship(
+                (net.sf.webcat.grader.ResultOutcome)objects.nextElement() );
     }
 
 

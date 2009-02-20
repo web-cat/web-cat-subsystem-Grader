@@ -31,16 +31,16 @@ import com.webobjects.foundation.*;
  * @author
  * @version $Id$
  */
-public class ResultBlob
-    extends _ResultBlob
+public class ResultOutcome
+    extends _ResultOutcome
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
-     * Creates a new ResultBlob object.
+     * Creates a new ResultOutcome object.
      */
-    public ResultBlob()
+    public ResultOutcome()
     {
         super();
     }

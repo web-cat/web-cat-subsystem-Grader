@@ -1,0 +1,55 @@
+CourseFilter: WCFilteringSelect {
+    list = courseOfferings;
+    item = courseOfferingInRepetition;
+    selection = selectedCourseOffering;
+    id = idFor.courseSelector;
+    autoComplete = true;
+    invalidMessage = "Invalid course selection";
+}
+
+SemesterFilter: WCFilteringSelect {
+    list = semesters;
+    item = semesterInRepetition;
+    selection = selectedSemester;
+    id = idFor.semesterSelector;
+    autoComplete = true;
+    invalidMessage = "Invalid semester selection";
+}
+
+IncludeWhatImTeaching: WCCheckBox {
+    id = idFor.includeWhatImTeachingCheckbox;
+    checked = includeWhatImTeaching;
+}
+
+IncludeAdminAccess: WCCheckBox {
+    id = idFor.includeAdminAccessCheckbox;
+    checked = includeAdminAccess;
+}
+
+AssignmentFilter: WCFilteringSelect {
+    list = assignments;
+    item = assignmentInRepetition;
+    selection = selectedAssignment;
+    id = idFor.assignmentSelector;
+    autoComplete = true;
+    invalidMessage = "Invalid assignment selection";
+}
+
+ShowUnpublishedAssignments: WCCheckBox {
+    id = idFor.showUnpublishedAssignmentsCheckbox;
+    checked = showUnpublishedAssignments;
+}
+
+ShowClosedAssignments: WCCheckBox {
+    id = idFor.showClosedAssignmentsCheckbox;
+    checked = showClosedAssignments;
+}
+
+OK: WCButton {
+    action = okPressed;
+    class = "pos";
+}
+
+Cancel: WCButton {
+    class = "neg";
+}

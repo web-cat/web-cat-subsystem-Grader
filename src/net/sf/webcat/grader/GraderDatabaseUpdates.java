@@ -203,21 +203,21 @@ public class GraderDatabaseUpdates
     
     // ----------------------------------------------------------
     /**
-     * Creates the TRESULTBLOB table.
+     * Creates the TRESULTOUTCOME table.
      * @throws SQLException on error
      */
     public void updateIncrement8() throws SQLException
     {
-        if ( !database().hasTable( "TRESULTBLOB" ) )
+        if ( !database().hasTable( "TRESULTOUTCOME" ) )
         {
-            log.info( "creating table TRESULTBLOB" );
+            log.info( "creating table TRESULTOUTCOME" );
             database().executeSQL(
-                "CREATE TABLE TRESULTBLOB "
+                "CREATE TABLE TRESULTOUTCOME "
                 + "(OID INTEGER NOT NULL , CRESULTID INTEGER , "
-                + "CSUBMISSIONID INTEGER , CTAG TINYTEXT , CCONTENTS BLOB , "
-                + "CUPDATEMUTABLEFIELDS BIT NOT NULL )" );
+                + "CSUBMISSIONID INTEGER , CINDEX INTEGER , CTAG TINYTEXT , "
+                + "CCONTENTS BLOB , CUPDATEMUTABLEFIELDS BIT NOT NULL )" );
             database().executeSQL(
-                "ALTER TABLE TRESULTBLOB ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TRESULTOUTCOME ADD PRIMARY KEY (OID)" );
         }
     }
 

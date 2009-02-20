@@ -312,6 +312,11 @@
             		};
                 };
             };
+            "Mass Regrade" = {
+                accessLevel = 50;
+                priority = 5;
+                pageName = net.sf.webcat.grader.MassRegraderPage;
+            };
         };
     };
     "Plug-ins" = {
