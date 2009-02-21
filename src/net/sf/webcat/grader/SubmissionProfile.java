@@ -91,27 +91,44 @@ public class SubmissionProfile
     // ----------------------------------------------------------
     public static long maxMaxFileUploadSize()
     {
-        return maxMaxFileUploadSize;
+        return net.sf.webcat.core.Application
+            .configurationProperties()
+            .longForKeyWithDefault("grader.maxFileUploadSize", 200000L);
     }
 
 
     // ----------------------------------------------------------
-    public static boolean maxFileUploadSizeIsWithinLimits( long value )
+    public static long defaultMaxFileUploadSize()
     {
-        return value > 0 && value < maxMaxFileUploadSize;
+    	long result = net.sf.webcat.core.Application
+            .configurationProperties()
+            .longForKeyWithDefault("grader.defaultMaxFileUploadSize", 200000L);
+    	long max = maxMaxFileUploadSize();
+    	return result <= max ? result : max;
     }
+
+
+    // ----------------------------------------------------------
+//    public static boolean maxFileUploadSizeIsWithinLimits( long value )
+//    {
+//        return value > 0 && value < maxMaxFileUploadSize();
+//    }
 
 
     // ----------------------------------------------------------
     public void setMaxFileUploadSize( int value )
     {
-        if ( maxFileUploadSizeIsWithinLimits( value ) )
+    	if (value <= 0 )
+    	{
+    		setMaxFileUploadSizeRaw(null);
+    	}
+    	else if ( value < maxMaxFileUploadSize() )
         {
-            super.setMaxFileUploadSize( value );
+            super.setMaxFileUploadSize(value);
         }
         else
         {
-            super.setMaxFileUploadSize( maxMaxFileUploadSize );
+            super.setMaxFileUploadSize( maxMaxFileUploadSize() );
         }
     }
 
@@ -120,7 +137,7 @@ public class SubmissionProfile
     public long effectiveMaxFileUploadSize()
     {
         long value = maxFileUploadSize();
-        return ( value > 0L ) ? value : maxMaxFileUploadSize;
+        return ( value > 0L ) ? value : defaultMaxFileUploadSize();
     }
 
 
@@ -300,11 +317,11 @@ public class SubmissionProfile
     //~ Instance/static variables .............................................
 
     public static final TimeUnit[] timeUnits = new TimeUnit[] {
-            new TimeUnit( "Minute(s)",                60000L ),
-            new TimeUnit( "Hour(s)",              60L*60000L ),
-            new TimeUnit( "Day(s)",           24L*60L*60000L ),
-            new TimeUnit( "Week(s)",       7L*24L*60L*60000L ),
-            new TimeUnit( "Month(s)",  30L*7L*24L*60L*60000L )
+            new TimeUnit( "Minute(s)",                      60000L ),
+            new TimeUnit( "Hour(s)",                    60L*60000L ),
+            new TimeUnit( "Day(s)",                 24L*60L*60000L ),
+            new TimeUnit( "Week(s)",             7L*24L*60L*60000L ),
+            new TimeUnit( "Month(s) (30 days)", 30L*24L*60L*60000L )
         };
 
     public static final String[] submitters = new String[] {
@@ -316,10 +333,6 @@ public class SubmissionProfile
     public static final NSArray timeUnitsArray = new NSArray( timeUnits );
 
     public static final NSArray submittersArray = new NSArray( submitters );
-
-    static final long maxMaxFileUploadSize = net.sf.webcat.core.Application
-        .configurationProperties()
-        .longForKeyWithDefault( "grader.maxFileUploadSize", 200000L );
 
     static Logger log = Logger.getLogger( SubmissionProfile.class );
 }

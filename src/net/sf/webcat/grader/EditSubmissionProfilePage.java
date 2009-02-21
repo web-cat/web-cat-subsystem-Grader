@@ -220,8 +220,7 @@ public class EditSubmissionProfilePage
     public void setMaxFileUploadSize( Long value )
     {
         if ( value != null
-             && !SubmissionProfile.maxFileUploadSizeIsWithinLimits(
-                             value.longValue() ) )
+             && value.longValue() > SubmissionProfile.maxMaxFileUploadSize() )
         {
             // set error message if size is out of range
             error(
@@ -235,7 +234,7 @@ public class EditSubmissionProfilePage
             clearMessage( "tooLarge" );
         }
         // This will automatically restrict to the max value anyway
-        submissionProfile.setMaxFileUploadSizeRaw( value );
+        submissionProfile.setMaxFileUploadSize( value );
     }
 
 

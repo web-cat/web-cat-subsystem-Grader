@@ -161,6 +161,17 @@
   maximum.";
     },
     {
+        property    = "grader.maxFileUploadSize";
+        type        = integer;
+        default     = 200000;
+        name        = "Default Maximum Upload Size";
+        category    = "Other Settings";
+        description =
+  "Instructors can set the size limit for student submissions in an
+  assignment's submission policy.  This value provides the default to
+  use when no value is set in an assignment's submission policy.";
+    },
+    {
         property    = "grader.willNotAutoUpdatePlugins";
         type        = boolean;
         name        = "Disable Auto-update Support for Plug-ins";
