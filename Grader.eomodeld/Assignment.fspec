@@ -6,6 +6,7 @@
         entityName = Assignment;
         fetchLimit = 0;
         isDeep = YES;
+        usesDistinct = YES;
         qualifier =
         {
             class = EOAndQualifier;
@@ -49,6 +50,7 @@
         entityName = Assignment;
         fetchLimit = 0;
         isDeep = YES;
+        usesDistinct = YES;
         qualifier =
         {
             class = EOKeyValueQualifier;
