@@ -1,145 +1,146 @@
 {
     attributes = (
         {
-            columnName = CCOMMENTFORMAT; 
-            name = commentFormat; 
-            prototypeName = tinyInteger; 
+            columnName = CCOMMENTFORMAT;
+            name = commentFormat;
+            prototypeName = tinyInteger;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = byteValue; 
-                scalarDefault = 0; 
-                type = byte; 
-                valueClassName = Byte; 
-            }; 
-        }, 
-        {columnName = CCOMMENTS; name = comments; prototypeName = mediumText; }, 
+                isScalar = true;
+                scalarConversionMethodName = byteValue;
+                scalarDefault = 0;
+                type = byte;
+                valueClassName = Byte;
+            };
+        },
+        {columnName = CCOMMENTS; name = comments; prototypeName = mediumText; },
         {
-            columnName = CCORRECTNESSSCORE; 
-            name = correctnessScore; 
-            prototypeName = double; 
+            columnName = CCORRECTNESSSCORE;
+            name = correctnessScore;
+            prototypeName = double;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = doubleValue; 
-                scalarDefault = "0.0"; 
-                type = double; 
-                valueClassName = Double; 
-            }; 
-        }, 
-        {name = id; prototypeName = id; }, 
+                isScalar = true;
+                scalarConversionMethodName = doubleValue;
+                scalarDefault = "0.0";
+                type = double;
+                valueClassName = Double;
+            };
+        },
+        {name = id; prototypeName = id; },
         {
-            allowsNull = Y; 
-            columnName = CISMOSTRECENT; 
-            name = isMostRecent; 
-            prototypeName = boolean; 
+            allowsNull = Y;
+            columnName = CISMOSTRECENT;
+            name = isMostRecent;
+            prototypeName = boolean;
             userInfo = {
-                isScalar = true; 
-                needsMigration = true; 
-                scalarDefault = false; 
-                type = boolean; 
-            }; 
-        }, 
+                isScalar = true;
+                needsMigration = true;
+                scalarDefault = false;
+                type = boolean;
+            };
+        },
         {
-            columnName = CSTATELEMENTSLABEL; 
-            name = statElementsLabel; 
-            prototypeName = tinyText; 
-        }, 
+            columnName = CSTATELEMENTSLABEL;
+            name = statElementsLabel;
+            prototypeName = tinyText;
+        },
         {
-            columnName = CSTATUS; 
-            name = status; 
-            prototypeName = tinyInteger; 
+            columnName = CSTATUS;
+            name = status;
+            prototypeName = tinyInteger;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = byteValue; 
-                scalarDefault = "net.sf.webcat.core.Status.TO_DO"; 
-                type = byte; 
-                valueClassName = Byte; 
-            }; 
-        }, 
+                isScalar = true;
+                scalarConversionMethodName = byteValue;
+                scalarDefault = "net.sf.webcat.core.Status.TO_DO";
+                type = byte;
+                valueClassName = Byte;
+            };
+        },
         {
-            columnName = CTASCORE; 
-            name = taScore; 
-            prototypeName = double; 
+            columnName = CTASCORE;
+            name = taScore;
+            prototypeName = double;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = doubleValue; 
-                scalarDefault = "0.0"; 
-                type = double; 
-                valueClassName = Double; 
-            }; 
-        }, 
+                isScalar = true;
+                scalarConversionMethodName = doubleValue;
+                scalarDefault = "0.0";
+                type = double;
+                valueClassName = Double;
+            };
+        },
         {
-            columnName = CTOOLSCORE; 
-            name = toolScore; 
-            prototypeName = double; 
+            columnName = CTOOLSCORE;
+            name = toolScore;
+            prototypeName = double;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = doubleValue; 
-                scalarDefault = "0.0"; 
-                type = double; 
-                valueClassName = Double; 
-            }; 
+                isScalar = true;
+                scalarConversionMethodName = doubleValue;
+                scalarDefault = "0.0";
+                type = double;
+                valueClassName = Double;
+            };
         }
-    ); 
+    );
     attributesUsedForLocking = (
-        commentFormat, 
-        correctnessScore, 
-        isMostRecent, 
-        statElementsLabel, 
-        status, 
-        taScore, 
+        commentFormat,
+        correctnessScore,
+        isMostRecent,
+        statElementsLabel,
+        status,
+        taScore,
         toolScore
-    ); 
-    className = "net.sf.webcat.grader.SubmissionResult"; 
+    );
+    className = "net.sf.webcat.grader.SubmissionResult";
     classProperties = (
-        commentFormat, 
-        comments, 
-        correctnessScore, 
-        isMostRecent, 
-        resultFiles, 
-        resultOutcomes, 
-        statElementsLabel, 
-        status, 
-        submissionFileStats, 
-        submissions, 
-        taScore, 
+        commentFormat,
+        comments,
+        correctnessScore,
+        isMostRecent,
+        resultFiles,
+        resultOutcomes,
+        statElementsLabel,
+        status,
+        submissionFileStats,
+        submissions,
+        taScore,
         toolScore
-    ); 
-    externalName = TSUBMISSIONRESULT; 
-    name = SubmissionResult; 
-    primaryKeyAttributes = (id); 
+    );
+    externalName = TSUBMISSIONRESULT;
+    name = SubmissionResult;
+    primaryKeyAttributes = (id);
     relationships = (
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = ResultFile; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
-            name = resultFiles; 
-            ownsDestination = Y; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = ResultFile;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; });
+            name = resultFiles;
+            ownsDestination = Y;
+        },
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = ResultOutcome; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
-            name = resultOutcomes; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = ResultOutcome;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; });
+            name = resultOutcomes;
+            ownsDestination = Y;
+        },
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = SubmissionFileStats; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
-            name = submissionFileStats; 
-            ownsDestination = Y; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = SubmissionFileStats;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; });
+            name = submissionFileStats;
+            ownsDestination = Y;
+        },
         {
-            destination = Submission; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = resultId; sourceAttribute = id; }); 
-            name = submissions; 
+            destination = Submission;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = resultId; sourceAttribute = id; });
+            name = submissions;
         }
-    ); 
+    );
 }
