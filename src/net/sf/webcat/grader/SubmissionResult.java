@@ -151,45 +151,19 @@ public class SubmissionResult
             submission.assignmentOffering().assignment().submissionProfile();
 
         if ( profile.awardEarlyBonus()
-             && dueTime > submitTime )
+             && dueTime > submitTime
+             && profile.earlyBonusUnitTimeRaw() != null)
         {
-            if ( profile.earlyBonusUnitTimeRaw() != null
-                 && profile.earlyBonusUnitPtsRaw() != null )
+            // Early bonus
+            //
+            long  earlyBonusUnitTime = profile.earlyBonusUnitTime();
+            long  earlyTime  = dueTime - submitTime;
+            float earlyUnits = earlyTime / earlyBonusUnitTime;
+            earlyBonus = earlyUnits * profile.earlyBonusUnitPts();
+            if ( profile.earlyBonusMaxPtsRaw() != null
+                 && earlyBonus > profile.earlyBonusMaxPts() )
             {
-                // Early bonus
-                //
-                long  earlyBonusUnitTime = profile.earlyBonusUnitTime();
-                long  earlyTime  = dueTime - submitTime;
-                float earlyUnits = earlyTime / earlyBonusUnitTime;
-                earlyBonus = earlyUnits * profile.earlyBonusUnitPts();
-                if ( earlyBonus > profile.earlyBonusMaxPts() )
-                {
-                    earlyBonus = profile.earlyBonusMaxPts();
-                }
-                else
-                {
-                    log.warn( "null earlyBonusMaxPts() in '"
-                              + profile.name()
-                              + "', assessing "
-                              + submission );
-                }
-            }
-            else
-            {
-                if ( profile.earlyBonusUnitTimeRaw() == null )
-                {
-                    log.warn( "null earlyBonusUnitTime() in '"
-                              + profile.name()
-                              + "', assessing "
-                              + submission );
-                }
-                if ( profile.earlyBonusUnitPtsRaw() == null )
-                {
-                    log.warn( "null earlyBonusUnitPts() in '"
-                              + profile.name()
-                              + "', assessing "
-                              + submission );
-                }
+                earlyBonus = profile.earlyBonusMaxPts();
             }
         }
         return earlyBonus;
@@ -212,39 +186,21 @@ public class SubmissionResult
         SubmissionProfile profile =
             submission.assignmentOffering().assignment().submissionProfile();
 
-        if ( profile.deductLatePenalty() && dueTime < submitTime )
+        if ( profile.deductLatePenalty()
+             && dueTime < submitTime
+             && profile.latePenaltyUnitTimeRaw() != null)
         {
-            if ( profile.latePenaltyUnitTimeRaw() != null
-                 && profile.latePenaltyUnitPtsRaw() != null )
+            // Late penalty
+            //
+            long latePenaltyUnitTime = profile.latePenaltyUnitTime();
+            long lateTime  = submitTime - dueTime;
+            long lateUnits = (long)java.lang.Math.ceil(
+                ( (double)lateTime ) / (double)latePenaltyUnitTime );
+            latePenalty = lateUnits * profile.latePenaltyUnitPts();
+            if ( profile.latePenaltyMaxPtsRaw() != null
+                 && latePenalty > profile.latePenaltyMaxPts() )
             {
-                // Late penalty
-                //
-                long latePenaltyUnitTime = profile.latePenaltyUnitTime();
-                long lateTime  = submitTime - dueTime;
-                long lateUnits = (long)java.lang.Math.ceil(
-                        ( (double)lateTime ) / (double)latePenaltyUnitTime );
-                latePenalty = lateUnits * profile.latePenaltyUnitPts();
-                if ( latePenalty > profile.latePenaltyMaxPts() )
-                {
-                    latePenalty = profile.latePenaltyMaxPts();
-                }
-            }
-            else
-            {
-                if ( profile.latePenaltyUnitTimeRaw() == null )
-                {
-                    log.warn( "null latePenaltyUnitTime() in '"
-                              + profile.name()
-                              + "', assessing "
-                              + submission );
-                }
-                if ( profile.latePenaltyUnitPtsRaw() == null )
-                {
-                    log.warn( "null latePenaltyUnitPts() in '"
-                              + profile.name()
-                              + "', assessing "
-                              + submission );
-                }
+                latePenalty = profile.latePenaltyMaxPts();
             }
         }
         return latePenalty;
@@ -279,8 +235,8 @@ public class SubmissionResult
             + earlyBonus() - latePenalty();
         return ( result >= 0.0 ) ? result : 0.0;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Check whether manual grading has been completed on this
@@ -473,7 +429,7 @@ public class SubmissionResult
 
         return super.isMostRecent();
     }
-    
+
 
     // ----------------------------------------------------------
     /**
@@ -653,7 +609,7 @@ public class SubmissionResult
         }
     }
 
-    
+
     //~ Instance/static variables .............................................
 
     private File propertiesFile;
