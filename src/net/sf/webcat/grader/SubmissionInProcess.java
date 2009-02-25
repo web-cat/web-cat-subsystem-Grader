@@ -89,6 +89,32 @@ public class SubmissionInProcess
     public void setUploadedFileName( String name )
     {
         uploadedFileName = name;
+        if (uploadedFileName == null) return;
+
+        // Depending on the client's browser and OS, the file name
+        // might be a relative or absolute path, rather than just
+        // a file name.  Try to strip off any leading directory
+        // component in an OS-agnostic way.
+        if (uploadedFileName.endsWith("/") || uploadedFileName.endsWith("\\"))
+        {
+            uploadedFileName = uploadedFileName.substring(
+                0, uploadedFileName.length() - 1);
+        }
+        int pos = uploadedFileName.lastIndexOf('/');
+        if (pos >= 0)
+        {
+            uploadedFileName = uploadedFileName.substring(pos + 1);
+        }
+        pos = uploadedFileName.lastIndexOf('\\');
+        if (pos >= 0)
+        {
+            uploadedFileName = uploadedFileName.substring(pos + 1);
+        }
+        if ("".equals(uploadedFileName))
+        {
+            // Give it a default, if trimming the dir eliminated everything
+            uploadedFileName = "file";
+        }
     }
 
 
