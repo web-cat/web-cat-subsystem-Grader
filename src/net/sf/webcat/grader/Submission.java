@@ -551,8 +551,10 @@ public class Submission
         if (user() == null || assignmentOffering() == null)
             return NSArray.EmptyArray;
 
-        return objectsForAllForAssignmentOfferingAndUser(editingContext(),
-                assignmentOffering(), user());
+        NSArray<Submission> subs = objectsForAllForAssignmentOfferingAndUser(
+                editingContext(), assignmentOffering(), user());
+        
+        return (subs != null) ? subs : NSArray.EmptyArray;
     }
 
 
@@ -747,6 +749,11 @@ public class Submission
      */
     public boolean hasCoverage()
     {
+        if (result() == null)
+        {
+            return false;
+        }
+
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
         
         int totalElements = 0;
@@ -794,6 +801,11 @@ public class Submission
      */
     public boolean hasLOC()
     {
+        if (result() == null)
+        {
+            return false;
+        }
+
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
         
         int totalLOC = 0;
@@ -842,6 +854,11 @@ public class Submission
      */
     public boolean hasCorrectnessScore()
     {
+        if (result() == null)
+        {
+            return false;
+        }
+
         return result().correctnessScore() > 0;
     }
 
