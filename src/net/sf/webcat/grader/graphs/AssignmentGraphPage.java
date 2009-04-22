@@ -66,7 +66,7 @@ public class AssignmentGraphPage
             .mostRecentSubmissionResultFor( user() );
         mostRecentScore = ( subResult == null )
             ? null
-            : new Double( subResult.graphableScore() );
+            : new Double( subResult.automatedScore() );
         pastSubResults = SubmissionResult.objectsForUser(
             localContext(),
             prefs().assignmentOffering(),

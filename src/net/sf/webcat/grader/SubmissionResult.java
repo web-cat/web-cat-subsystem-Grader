@@ -407,12 +407,12 @@ public class SubmissionResult
      * included.
      * @return the score
      */
-    public double graphableScore()
+    public double automatedScore()
     {
         double result = correctnessScore() + toolScore();
         if ( log.isDebugEnabled() )
         {
-            log.debug( "graphableScore() = " + result );
+            log.debug( "automatedScore() = " + result );
         }
         return ( result >= 0.0 ) ? result : 0.0;
     }
@@ -450,12 +450,12 @@ public class SubmissionResult
         if ( wasMostRecent && !value )
         {
             submission().assignmentOffering().graphSummary().removeSubmission(
-                graphableScore() );
+                automatedScore() );
         }
         else if ( !wasMostRecent && value )
         {
             submission().assignmentOffering().graphSummary().addSubmission(
-                graphableScore() );
+                automatedScore() );
         }
         super.setIsMostRecent( value );
     }

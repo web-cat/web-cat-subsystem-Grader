@@ -162,7 +162,7 @@ public class GraderHomeStatus
             user() );
         return ( subResult == null )
             ? null
-            : new Double( subResult.graphableScore() );
+            : new Double( subResult.automatedScore() );
     }
 
 

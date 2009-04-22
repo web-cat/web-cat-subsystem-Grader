@@ -12,7 +12,7 @@ Chart1: net.sf.webcat.grader.graphs.HistogramChart {
     title      = "Score Distribution for the Class";
     xAxisLabel = "Score";
     yAxisLabel = "Students";
-    markValue  = result.graphableScore;
+    markValue  = result.automatedScore;
 }
 
 Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
@@ -49,7 +49,7 @@ Form: WOForm {
 
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = submission.assignmentOffering.graphSummary;
-    markScore    = submission.result.graphableScore;
+    markScore    = submission.result.automatedScore;
 }
 
 HasTAGrade: WOConditional {

@@ -20,13 +20,14 @@ regrade.</p>
 
 </wo:form>
 
-<wo:adiv frequency="10" style="border: 1px solid gray; padding: 4px; max-height: 500px; overflow: auto">
+<wo:adiv frequency="10" style="border: 1px solid gray; padding: 4px">
 <p style="font-size: smaller">
-<b>Submissions being processed: <wo:str value="$submissions.count" /></b><br/>
-<wo:loop list="$submissions" item="$submission">
-User <b><wo:str value="$submission.user.userName"/></b>, attempt <b>#<wo:str value="$submission.submitNumber"/></b> ...
-<wo:if condition="$submission.result"><b>COMPLETED</b></wo:if>
-<br/>
+<p>
+<b>Number of regrading jobs remaining in queue:</b> <wo:str value="$countOfRegradingJobsInQueue" />
+</p>
+<b>Next 10 (or less) regrading jobs:</b><br/>
+<wo:loop list="$next10JobsInQueue" item="$job">
+User <b><wo:str value="$job.submission.user.userName"/></b>, attempt <b>#<wo:str value="$job.submission.submitNumber"/></b> <br/>
 </wo:loop>
 </p>
 </wo:adiv>

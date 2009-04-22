@@ -277,7 +277,7 @@ public class AssignmentOffering
             {
                 SubmissionResult sr =
                     (SubmissionResult)subs.objectAtIndex( i );
-                summary.addSubmission( sr.graphableScore() );
+                summary.addSubmission( sr.automatedScore() );
             }
         }
         return summary;

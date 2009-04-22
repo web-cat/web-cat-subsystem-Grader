@@ -26,7 +26,10 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXEOControlUtilities;
+import er.extensions.eof.ERXKey;
 import er.extensions.eof.ERXQ;
+import er.extensions.eof.ERXS;
+import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
 import java.io.IOException;
@@ -916,6 +919,166 @@ public class Submission
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Gets a qualifier that can be used to fetch only submissions that are in
+     * the same submission chain as this submission; that is, submissions by
+     * the same user to the same assignment offering.
+     * 
+     * @return the qualifier
+     */
+    public EOQualifier qualifierForSubmissionChain()
+    {
+        return ERXQ.and(
+                ERXQ.equals("user", user()),
+                ERXQ.equals("assignmentOffering", assignmentOffering()));
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission that has the highest correctness score
+     * among all the submissions in this submission chain.
+     * 
+     * @return the earliest submission with the highest correctness score
+     */
+    public Submission earliestSubmissionWithMaximumCorrectnessScore()
+    {
+        if (user() == null || assignmentOffering() == null)
+        {
+            return null;
+        }
+
+        ERXSortOrderings orderings = ERXS.sortOrders(
+                RESULT_KEY + "." + SubmissionResult.CORRECTNESS_SCORE_KEY,
+                ERXS.DESC,
+                SUBMIT_TIME_KEY, ERXS.ASC);
+
+        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
+                qualifierForSubmissionChain(), orderings);
+        fspec.setFetchLimit(1);
+        
+        NSArray<Submission> objects =
+            editingContext().objectsWithFetchSpecification(fspec);
+
+        if (objects != null && objects.count() > 0)
+        {
+            if (objects.count() > 1)
+            {
+                log.warn("earliestSubmissionWithMaximumCorrectnessScore "
+                        + "found more than one submission!");
+            }
+            
+            return objects.objectAtIndex(0);
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission that has the highest tool score among all
+     * the submissions in this submission chain.
+     * 
+     * @return the earliest submission with the highest tool score
+     */
+    public Submission earliestSubmissionWithMaximumToolScore()
+    {
+        if (user() == null || assignmentOffering() == null)
+        {
+            return null;
+        }
+
+        ERXSortOrderings orderings = ERXS.sortOrders(
+                RESULT_KEY + "." + SubmissionResult.TOOL_SCORE_KEY, ERXS.DESC,
+                SUBMIT_TIME_KEY, ERXS.ASC);
+
+        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
+                qualifierForSubmissionChain(), orderings);
+        fspec.setFetchLimit(1);
+        
+        NSArray<Submission> objects =
+            editingContext().objectsWithFetchSpecification(fspec);
+
+        if (objects != null && objects.count() > 0)
+        {
+            if (objects.count() > 1)
+            {
+                log.warn("earliestSubmissionWithMaximumToolScore "
+                        + "found more than one submission!");
+            }
+            
+            return objects.objectAtIndex(0);
+        }
+        
+        return null;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Gets the earliest submission that has the highest automated score
+     * (correctness + tool) among all the submissions in this submission chain.
+     * 
+     * @return the earliest submission with the highest automated score
+     */
+    public Submission earliestSubmissionWithMaximumAutomatedScore()
+    {
+        if (user() == null || assignmentOffering() == null)
+        {
+            return null;
+        }
+
+        NSMutableArray<String> rawRowKeyPaths = new NSMutableArray<String>();
+        rawRowKeyPaths.addObject("id");
+        rawRowKeyPaths.addObject("submitTime");
+        rawRowKeyPaths.addObject("result.correctnessScore");
+        rawRowKeyPaths.addObject("result.toolScore");
+
+        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
+                qualifierForSubmissionChain(), null);
+        fspec.setFetchesRawRows(true);
+        fspec.setRawRowKeyPaths(rawRowKeyPaths);
+        
+        NSArray<NSDictionary> objects =
+            editingContext().objectsWithFetchSpecification(fspec);
+
+        NSMutableArray<NSMutableDictionary> newObjects =
+            new NSMutableArray<NSMutableDictionary>();
+
+        if (objects != null && objects.count() > 0)
+        {
+            for (NSDictionary rawRow : objects)
+            {
+                Double correctnessScore = (Double) rawRow.objectForKey(
+                        "result.correctnessScore");
+                Double toolScore = (Double) rawRow.objectForKey(
+                        "result.toolScore");
+                Double automatedScore = correctnessScore + toolScore;
+                
+                NSMutableDictionary newRawRow = rawRow.mutableClone();
+                newRawRow.setObjectForKey(automatedScore, "automatedScore");
+                
+                newObjects.addObject(newRawRow);
+            }
+            
+            ERXSortOrderings orderings = ERXS.sortOrders(
+                    "automatedScore", ERXS.DESC,
+                    "submitTime", ERXS.ASC);
+
+            ERXS.sort(newObjects, orderings);
+
+            Submission maxSub = (Submission) editingContext().faultForRawRow(
+                    newObjects.objectAtIndex(0), ENTITY_NAME);
+            
+            return maxSub;
+        }
+        
+        return null;
+    }
+    
+    
     // ----------------------------------------------------------
     public String contentsOfResultFile(String relativePath) throws IOException
     {
