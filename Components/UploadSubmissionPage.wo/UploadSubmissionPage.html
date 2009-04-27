@@ -1,6 +1,25 @@
-<webobject name="Page"><wo:net.sf.webcat.core.Permalink href="$prefs.assignmentOffering.permalink"/>
+<webobject name="Page"><!--  wo:net.sf.webcat.core.Permalink href="$prefs.assignmentOffering.permalink"/ -->
+<wo:net.sf.webcat.core.WCPageModule title="Select Your File" static="true">
+<div class="floatRight"><wo:net.sf.webcat.grader.GraderNavigator/></div>
 For: <span class="hl"><webobject name="AssignmentName"/></span>
 <webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
+<webobject name="HasInstructions">
+  <p><webobject name="Instructions"/></p>
+</webobject><webobject name="HasValidFileUpload">
+    <p>So far, you have uploaded the file
+    <b><webobject name="FileName"/></b>
+    (<webobject name="FileSize"/>) for submission.  You can
+    replace this with a different file, or choose to continue.</p>
+</webobject><webobject name="OkayToSubmit">
+    <p>Choose the file to upload:</p>
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data">
+<!-- p --><!--  webobject name="FileUpload1"/ --><!-- /p -->
+<p>
+<input size="60" type="file" name="0.0.0.2.3.4.1.10.1" dojoType="dojox.form.FileInput"/></p>
+<p><wo:net.sf.webcat.ui.WCButton>Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
+</wo:WOForm></webobject></wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Previous Submissions" open="false">
 <webobject name="HasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
   <div class="shadow"><table><tbody>
   <tr><td colspan="3" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
@@ -13,14 +32,6 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
     <td align="right"><webobject name="String3"/></td>
   </webobject></webobject></tbody></table></div><div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
-</webobject><webobject name="HasInstructions">
-  <p><webobject name="Instructions"/></p>
-</webobject><webobject name="HasValidFileUpload">
-    <p>So far, you have uploaded the file
-    <b><webobject name="FileName"/></b>
-    (<webobject name="FileSize"/>) for submission.  You can
-    replace this with a different file, or choose to continue.</p>
-</webobject><webobject name="OkayToSubmit">
-    <p>Choose the file to upload:</p>
-    <webobject name="FileUpload1"/>
-</webobject></webobject>
+</webobject></wo:net.sf.webcat.core.WCPageModule>
+
+</webobject>

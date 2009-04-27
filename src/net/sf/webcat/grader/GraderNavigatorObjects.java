@@ -17,33 +17,57 @@ import er.extensions.eof.ERXQ;
 /**
  * This class contains wrapper objects that represent the selectable items in
  * the Web-CAT grader navigator component.
- * 
+ *
  * @author Tony Allevato
  * @version $Id$
  */
 public class GraderNavigatorObjects
 {
     // ----------------------------------------------------------
-    public static class SingleAssignment implements INavigatorObject
+    public static class SingleAssignment
+        implements INavigatorObject
     {
         // ----------------------------------------------------------
         public SingleAssignment(Assignment assignment)
         {
             this.assignment = assignment;
         }
-        
-        
+
+
+        // ----------------------------------------------------------
+        public SingleAssignment(
+            Assignment assignment,
+            boolean unpublished,
+            boolean closed)
+        {
+            this.assignment = assignment;
+            this.unpublished = unpublished;
+            this.closed = closed;
+        }
+
+
         // ----------------------------------------------------------
         public NSArray<?> representedObjects()
         {
             return new NSMutableArray<Assignment>(assignment);
         }
 
-        
+
         // ----------------------------------------------------------
         public String toString()
         {
-            return assignment.titleString();
+            String result = (assignment == null)
+                ? "null"
+                : assignment.titleString();
+            if (unpublished)
+            {
+                result += "(unpub.)";
+            }
+            if (closed)
+            {
+                result += "(closed)";
+            }
+            return result;
         }
 
 
@@ -52,7 +76,7 @@ public class GraderNavigatorObjects
         {
             if (obj instanceof SingleAssignment)
             {
-                SingleAssignment o = (SingleAssignment) obj;                
+                SingleAssignment o = (SingleAssignment) obj;
                 return assignment.equals(o.assignment);
             }
             else
@@ -63,5 +87,7 @@ public class GraderNavigatorObjects
 
 
         private Assignment assignment;
+        private boolean unpublished;
+        private boolean closed;
     }
 }

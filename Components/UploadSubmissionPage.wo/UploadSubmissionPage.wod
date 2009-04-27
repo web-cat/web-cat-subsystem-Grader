@@ -92,8 +92,11 @@ WCSortOrder3: net.sf.webcat.core.WCSortOrder {
 	key = "submitNumber";
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    finishEnabled = false;
+//Page: net.sf.webcat.core.WizardPage {
+//    finishEnabled = false;
+//}
+
+Page: net.sf.webcat.core.WCPageWithNavigation {
 }
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {

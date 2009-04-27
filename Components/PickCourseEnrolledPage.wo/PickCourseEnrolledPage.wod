@@ -12,9 +12,31 @@ CourseName: WOString {
 	value = courseOffering.course.name;
 }
 
-HasNoCourses: WOConditional {
-    condition = user.enrolledIn.count;
-    negate    = true;
+CourseRepetition: WORepetition {
+    item  = courseOffering;
+    list  = courseDisplayGroup.displayedObjects;
+    index = index;
+}
+
+HasAdminCourses: WOConditional {
+    condition = coursesAdmined.count;
+}
+
+HasInstructorCourses: WOConditional {
+    condition = coursesTaught.count;
+}
+
+HasTACourses: WOConditional {
+    condition = user.graderFor.count;
+}
+
+InstructorCourseRepetition: WORepetition {
+    item  = courseOffering;
+    list  = coursesTaught;
+    index = index;
+}
+
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }
 
 Page : net.sf.webcat.core.WizardPage {
@@ -45,34 +67,6 @@ RadioButton4: WORadioButton {
 	value     = index4;
 }
 
-HasAdminCourses: WOConditional {
-    condition = coursesAdmined.count;
-}
-
-HasCourses: WOConditional {
-    condition = user.enrolledIn.count;
-}
-
-HasInstructorCourses: WOConditional {
-    condition = coursesTaught.count;
-}
-
-HasTACourses: WOConditional {
-    condition = user.graderFor.count;
-}
-
-CourseRepetition: WORepetition {
-	item  = courseOffering;
-	list  = courseDisplayGroup.displayedObjects;
-	index = index;
-}
-
-InstructorCourseRepetition: WORepetition {
-	item  = courseOffering;
-	list  = coursesTaught;
-	index = index;
-}
-
 SemesterList: WOPopUpButton {
 	list              = semesters;
 	item              = aSemester;
@@ -85,8 +79,4 @@ TACourseRepetition: WORepetition {
 	item  = courseOffering;
 	list  = coursesTAed;
 	index = index;
-}
-
-TR: net.sf.webcat.core.TableRow {
-    index = index;
 }

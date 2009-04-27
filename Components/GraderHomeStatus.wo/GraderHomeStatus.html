@@ -1,23 +1,23 @@
-<webobject name="HasEnqueuedJobs">
-<h2>Submissions in the Queue</h2>
+<webobject name="HasEnqueuedJobs"><wo:net.sf.webcat.core.WCPageModule title="Submissions in the Queue">
 <p>
 The following submissions are currently queued for processing:
 </p>
-<div class="shadow"><table>
+<table>
 <tr><th>Status</th><th>Submission</th><th>Time</th></tr>
 <webobject name="JobRepetition">
 <webobject name="TR"><td><webobject name="JobIsSuspended">Suspended</webobject>
 <webobject name="JobIsNotSuspended">Queued</webobject></td>
 <td><webobject name="JobAssignmentName"/> try #<webobject name="SubmitNumber"/></td>
 <td><webobject name="JobSubmissionTime"/></td></webobject>
-</webobject></table></div><div class="spacer">&nbsp;</div>
+</webobject></table>
 <p>(<b>Suspended</b> submissions must
 await action from the instructor or adminstrator for completion; red lines
 indicate assignments where the instructor has temporarily suspended all grading.)</p>
+</wo:net.sf.webcat.core.WCPageModule></webobject>
 
-</webobject><h2>Assignments Accepting Submissions</h2>
+<wo:net.sf.webcat.core.WCPageModule title="Assignments Accepting Submissions">
 <webobject name="HasAssignments">
-<div class="shadow"><table>
+<table>
 <tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr>
 <webobject name="AssignmentRepetition">
 <webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="AssignmentIsUnpublished">
@@ -26,14 +26,16 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <td class="nowrap"><webobject name="DueDate"/></td>
 <td valign="center"><webobject name="Graph"/></td>
 <td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="CanGradeAssignment"><webobject name="GradeAssignment"/></webobject><webobject name="CanEditAssignment"><webobject name="EditAssignment"/></webobject></td></webobject>
-</webobject></table></div><div class="spacer">&nbsp;</div>
+</webobject></table>
 </webobject><webobject name="HasNoAssignments">
 <p>There are no assignments currently accepting submissions in your course(s).
 </p>
 </webobject>
+</wo:net.sf.webcat.core.WCPageModule>
+
 <webobject name="IsFacultyUser"><webobject name="HasUpcomingAssignments">
-<h2>Other Upcoming Assignment Deadlines</h2>
-<div class="shadow"><table>
+<wo:net.sf.webcat.core.WCPageModule title="Other Upcoming Assignment Deadlines" open="false">
+<table>
 <tr><th>Assignment</th><th>Due</th><webobject name="IsAdminUser"><th>Action</th></webobject></tr>
 <webobject name="UpcomingAssignmentRepetition">
 <webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="AssignmentIsUnpublished">
@@ -41,5 +43,5 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
 <webobject name="IsAdminUser"><td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="GradeAssignment"/><webobject name="EditAssignment"/></td></webobject></webobject>
-</webobject></table></div><div class="spacer">&nbsp;</div>
-</webobject></webobject>
+</webobject></table>
+</wo:net.sf.webcat.core.WCPageModule></webobject></webobject>

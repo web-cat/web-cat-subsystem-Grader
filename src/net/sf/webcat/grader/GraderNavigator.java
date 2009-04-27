@@ -21,6 +21,10 @@
 
 package net.sf.webcat.grader;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.log4j.Logger;
+import net.sf.webcat.core.CoreNavigator;
 import net.sf.webcat.core.CoreNavigatorObjects;
 import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
@@ -47,7 +51,7 @@ import er.extensions.foundation.ERXArrayUtilities;
 /**
  * The popup assignment selector that serves as the basis for the Web-CAT
  * grader subsystem navigation scheme.
- * 
+ *
  * <h2>Bindings</h2>
  * <dl>
  * <dt>allowsAllSemesters</dt>
@@ -78,66 +82,46 @@ import er.extensions.foundation.ERXArrayUtilities;
  * include assignments that are unpublished. This option is only available if
  * the user has TA privileges or higher. Defaults to false.</dd>
  * </dl>
- * 
+ *
  * @author Tony Allevato
  * @version $Id$
  */
-public class GraderNavigator extends WCComponent
+public class GraderNavigator
+    extends CoreNavigator
 {
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
     /**
-     * TODO: real description
-     * 
+     * Create a new object.
+     *
      * @param context
      */
     public GraderNavigator(WOContext context)
     {
         super(context);
     }
-    
-    
-    //~ KVC attributes (must be public) .......................................
-    
-    public NSMutableArray<INavigatorObject> courseOfferings;
-    public INavigatorObject courseOfferingInRepetition;
-    public INavigatorObject selectedCourseOffering;
 
-    public NSMutableArray<INavigatorObject> semesters;
-    public INavigatorObject semesterInRepetition;
-    public INavigatorObject selectedSemester;
-    
+
+    //~ KVC attributes (must be public) .......................................
+
     public NSMutableArray<INavigatorObject> assignments;
     public INavigatorObject assignmentInRepetition;
     public INavigatorObject selectedAssignment;
-    
-    public boolean allowsAllSemesters = true;
-    public boolean allowsAllOfferingsForCourse = true;
 
-    public boolean includeWhatImTeaching = true;
-    public boolean includeAdminAccess = false;
     public boolean showUnpublishedAssignments = false;
     public boolean showClosedAssignments = false;
-    
-    public ComponentIDGenerator idFor;
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    @Override
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void awake()
     {
-        idFor = new ComponentIDGenerator(this);
-
-        // TODO Grab current selections from session and set the values of
-        // selectedCourseOffering, selectedSemester, and selectedAssignment
-        // to reflect that
-
-        updateSemesters();
-
-        super.appendToResponse(response, context);
+        log.debug("entering awake()");
+        super.awake();
+        log.debug("selected assignment = " + selectedAssignment);
+        log.debug("leaving awake()");
     }
 
 
@@ -145,7 +129,7 @@ public class GraderNavigator extends WCComponent
     /**
      * Gets an array containing the identifiers of the course and assignment
      * panes, for refresh purposes.
-     * 
+     *
      * @return an array containing the course and assignment pane identifiers
      */
     public NSArray<String> idsForCourseAndAssignmentPanes()
@@ -159,116 +143,13 @@ public class GraderNavigator extends WCComponent
 
     // ----------------------------------------------------------
     /**
-     * Updates the list of available semesters, followed by course offerings
-     * and assignments.
-     * 
-     * @return the result is ignored
-     */
-    public WOActionResults updateSemesters()
-    {
-        semesters = new NSMutableArray<INavigatorObject>();
-
-        if (allowsAllSemesters)
-        {
-            semesters.addObject(new CoreNavigatorObjects.AllSemesters(
-                    localContext()));
-        }
-
-        NSArray<Semester> sems = EOUtilities.objectsForEntityNamed(
-                localContext(), Semester.ENTITY_NAME);
-
-        for (Semester sem : sems)
-        {
-            semesters.addObject(new CoreNavigatorObjects.SingleSemester(sem));
-        }
-        
-        if (selectedSemester == null)
-        {
-            selectedSemester = semesters.objectAtIndex(0);
-        }
-        
-        return updateCourseOfferings();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Updates the list of course offerings, followed by assignments.
-     * 
+     *
      * @return the result is ignored
      */
     public WOActionResults updateCourseOfferings()
     {
-        courseOfferings = new NSMutableArray<INavigatorObject>();
-
-        NSArray<Semester> sems = (NSArray<Semester>)
-            selectedSemester.representedObjects();
-
-        NSArray<CourseOffering> offerings;
-
-        // First, get all the course offerings we're interested in based on
-        // the user's access level and selections in the UI. This may include
-        // more offerings that we really need.
-
-        if (user().hasAdminPrivileges() && includeAdminAccess)
-        {
-            offerings = EOUtilities.objectsForEntityNamed(localContext(),
-                    CourseOffering.ENTITY_NAME);
-        }
-        else if (user().hasTAPrivileges() && includeWhatImTeaching)
-        {
-            NSMutableArray<CourseOffering> temp =
-                new NSMutableArray<CourseOffering>();
-            
-            temp.addObjectsFromArray(user().staffFor());
-            temp.addObjectsFromArray(user().enrolledIn());
-            
-            offerings = temp;
-        }
-        else
-        {
-            offerings = user().enrolledIn();
-        }
-
-        // Next, filter the course offerings to include only those that occur
-        // during the semester(s) that the user has selected.
-
-        offerings = ERXQ.filtered(offerings, ERXQ.in("semester", sems));
-
-        // Now sort the course offerings by course department and number.
-        
-        offerings = EOSortOrdering.sortedArrayUsingKeyOrderArray(offerings,
-                EntityUtils.sortOrderingsForEntityNamed(
-                        CourseOffering.ENTITY_NAME));
-
-        // Add each course offering to the list, also adding an "All" option
-        // before a set of courses if the user has access to every offering of
-        // a course and if that option is selected.
-
-        Course lastCourse = null;
-
-        for (CourseOffering offering : offerings)
-        {
-            if (lastCourse == null || !lastCourse.equals(offering.course()))
-            {
-                if (allowsAllOfferingsForCourse &&
-                        userHasAccessToAllOfferingsForCourse(offering.course()))
-                {
-                    INavigatorObject courseWrapper =
-                        new CoreNavigatorObjects.OfferingsForSemestersAndCourse(
-                                localContext(), sems, offering.course());
-                    
-                    courseOfferings.addObject(courseWrapper);
-                }
-
-                lastCourse = offering.course();
-            }
-
-            courseOfferings.addObject(
-                    new CoreNavigatorObjects.SingleCourseOffering(
-                            offering));
-        }
-        
+        super.updateCourseOfferings();
         return updateAssignments();
     }
 
@@ -276,11 +157,12 @@ public class GraderNavigator extends WCComponent
     // ----------------------------------------------------------
     /**
      * Updates the list of available assignments.
-     * 
+     *
      * @return the result is ignored
      */
     public WOActionResults updateAssignments()
     {
+    	log.debug("updateAssignments()");
         assignments = new NSMutableArray<INavigatorObject>();
 
         if (selectedCourseOffering == null)
@@ -292,29 +174,51 @@ public class GraderNavigator extends WCComponent
             selectedCourseOffering.representedObjects();
 
         EOQualifier unpublishedQual = null;
-        
+
         if (!showUnpublishedAssignments)
         {
             unpublishedQual = ERXQ.isTrue("publish");
         }
-        
+
         EOFetchSpecification fspec = new EOFetchSpecification(
                 AssignmentOffering.ENTITY_NAME,
                 ERXQ.and(
                         ERXQ.in("courseOffering", offerings),
                         unpublishedQual),
                 null);
-        
+
         NSArray<AssignmentOffering> assnOffs =
             localContext().objectsWithFetchSpecification(fspec);
+        if (log.isDebugEnabled())
+        {
+        	log.debug("scanning assignment offerings: " + assnOffs);
+        }
 
         // Filter out closed assignments (lateDeadline is not a database
         // property so we have to do it here, in memory.
 
+        NSTimestamp now = new NSTimestamp();
         if (!showClosedAssignments)
         {
             assnOffs = ERXQ.filtered(assnOffs,
-                    ERXQ.greaterThan("lateDeadline", new NSTimestamp()));
+                    ERXQ.greaterThan("lateDeadline", now));
+        }
+        Map<Assignment, Assignment> closedAssigns =
+        	new HashMap<Assignment, Assignment>();
+        Map<Assignment, Assignment> unpublishedAssigns =
+        	new HashMap<Assignment, Assignment>();
+        for (AssignmentOffering ao : assnOffs)
+        {
+            if (!ao.publish())
+            {
+                Assignment a = ao.assignment();
+                unpublishedAssigns.put(a, a);
+            }
+            if (now.after(ao.lateDeadline()))
+            {
+                Assignment a = ao.assignment();
+                closedAssigns.put(a, a);
+            }
         }
 
         NSArray<Assignment> assigns =
@@ -322,63 +226,67 @@ public class GraderNavigator extends WCComponent
                 (NSArray<Assignment>) assnOffs.valueForKey("assignment"));
 
         assigns = EOSortOrdering.sortedArrayUsingKeyOrderArray(assigns,
-                EntityUtils.sortOrderingsForEntityNamed(
-                        Assignment.ENTITY_NAME));
+            EntityUtils.sortOrderingsForEntityNamed(Assignment.ENTITY_NAME));
 
         for (Assignment assignment : assigns)
         {
             assignments.addObject(
-                    new GraderNavigatorObjects.SingleAssignment(
-                            assignment));
+                new GraderNavigatorObjects.SingleAssignment(
+                    assignment,
+                    unpublishedAssigns.containsKey(assignment),
+                    closedAssigns.containsKey(assignment)));
         }
-        
+
+        if (assignments.count() == 0 && user().hasTAPrivileges())
+        {
+        	// If none were found ...
+        	if (!showUnpublishedAssignments)
+        	{
+        		// First, try enabling unpublished assignments
+        		showUnpublishedAssignments = true;
+        		return updateAssignments();
+        	}
+        	else if (!showClosedAssignments)
+        	{
+        		// Then try enabling closed assignments
+        		showClosedAssignments = true;
+        		return updateAssignments();
+        	}
+        }
+
+        if (assignments.count() > 0 && selectedAssignment == null)
+        {
+            selectedAssignment = assignments.objectAtIndex(0);
+        }
+
+        if (log.isDebugEnabled())
+        {
+            log.debug("assignments = " + assignments);
+            log.debug("selected assignment = " + selectedAssignment);
+        }
         return null;
     }
-    
+
 
     // ----------------------------------------------------------
     /**
      * Invoked when the OK button in the dialog is pressed.
-     * 
+     *
      * @return null to reload the current page
      */
     public WOActionResults okPressed()
     {
-        // TODO store the user's current semester, course, and assignment
+    	log.debug("okPressed()");
+
+    	// TODO store the user's current semester, course, and assignment
         // selection in the session or wherever the nav-state is being
         // persisted
-        
-        return null;
+
+        return super.okPressed();
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Returns a value indicating whether the current user has access to all of
-     * the offerings of a particular course.
-     * 
-     * @param course the course
-     * 
-     * @return true if the user has access to all of the offerings; otherwise,
-     *     false
-     */
-    private boolean userHasAccessToAllOfferingsForCourse(Course course)
-    {
-        if (user().hasAdminPrivileges())
-        {
-            return true;
-        }
+    //~ Static/instance variables .............................................
 
-        NSArray<CourseOffering> offerings = course.offerings();
-        
-        for (CourseOffering offering : offerings)
-        {
-            if (!offering.isGrader(user()) && !offering.isInstructor(user()))
-            {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+    static Logger log = Logger.getLogger(GraderNavigator.class);
 }
