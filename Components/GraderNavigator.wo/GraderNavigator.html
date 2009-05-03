@@ -7,31 +7,31 @@
 <ol>
 <li>
 <wo:WCContentPane id="$idFor.coursePane">
-<label for="<wo:str value="$idFor.courseSelector"/>">Course offering:</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.courseSelector">Course offering:</wo:WOGenericContainer>
 <wo name="CourseFilter">
     <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
 </wo>
 </wo:WCContentPane>
 </li>
-<li><label for="<wo:str value="$idFor.semesterSelector"/>">Show semester:</label>
+<li><wo:WOGenericContainer elementName="label" for="$idFor.semesterSelector">Show semester:</wo:WOGenericContainer>
 <wo name="SemesterFilter">
     <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
 </wo>
 </li>
 <wo:if condition="$user.hasTAPrivileges">
-<li><label for="<wo:str value="$idFor.includeWhatImTeachingCheckbox"/>">Include:</label>
+<li><wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeWhatImTeaching">
     <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
 </wo>
-<label for="<wo:str value="$idFor.includeWhatImTeachingCheckbox"/>" class="trailing">what I'm teaching</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox" class="trailing">what I'm teaching</wo:WOGenericContainer>
 </li>
 </wo:if>
 <wo:if condition="$user.hasAdminPrivileges">
-<li><label for="<wo:str value="$idFor.includeAdminAccessCheckbox"/>">Include:</label>
+<li><wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeAdminAccess">
     <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
 </wo>
-<label for="<wo:str value="$idFor.includeAdminAccessCheckbox"/>" class="trailing">admin access</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox" class="trailing">admin access</wo:WOGenericContainer>
 </li>
 </wo:if>
 </ol></fieldset>
@@ -39,24 +39,24 @@
 <legend>Selected Assignment</legend><ol>
 <li>
 <wo:WCContentPane style="padding: 4px" id="$idFor.assignmentPane">
-<label for="<wo:str value="$idFor.assignmentSelector"/>">Assignment:</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.assignmentSelector">Assignment:</wo:WOGenericContainer>
 <wo name="AssignmentFilter">
 </wo>
 </wo:WCContentPane>
 </li>
 <wo:if condition="$user.hasTAPrivileges">
-<li><label for="<wo:str value="$idFor.showUnpublishedAssignmentsCheckbox"/>">Show:</label>
+<li><wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowUnpublishedAssignments">
     <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
 </wo>
-<label for="<wo:str value="$idFor.showUnpublishedAssignmentsCheckbox"/>" class="trailing">unpublished</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox" class="trailing">unpublished</wo:WOGenericContainer>
 </li>
 </wo:if>
-<li><label for="<wo:str value="$idFor.showClosedAssignmentsCheckbox"/>">Show:</label>
+<li><wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowClosedAssignments">
     <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
 </wo>
-<label for="<wo:str value="$idFor.showClosedAssignmentsCheckbox"/>" class="trailing">closed</label>
+<wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox" class="trailing">closed</wo:WOGenericContainer>
 </li>
 </ol></fieldset>
 <div class="center">
