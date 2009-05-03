@@ -8,6 +8,10 @@ AddStep: WOImageButton {
 	titlex    = "Add a plug-in grading step";
 }
 
+CanDelete: WOConditional {
+    condition = "~!thisAssignment.isNewObject && !thisAssignment.hasStudentSubmissions";
+}
+
 CancelSubs: WOSubmitButton {
     action = cancelSuspendedSubs;
     value  = "Cancel Them";

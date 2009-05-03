@@ -1,11 +1,11 @@
 <webobject name="Page">For: <span class="hl"><webobject name="CourseName"/></span>
 <h2>Properties for All Instances of This Assignment</h2>
 <table style="border:none">
-<wo:if condition="~!thisAssignment.isNewObject && !thisAssignment.hasStudentSubmissions">
+<wo name="CanDelete">
 <tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
     <td>You may delete this assignment offering.   It cannot be deleted once
     students (not staff) begin making submissions.</td></tr>
-</wo:if>
+</wo>
 <tr><td class="R">Name:</td>
     <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
 <tr><td class="R">Title:</td>
@@ -15,7 +15,7 @@
     <td><webobject name="URL"/> <webobject name="URLInfo"/></td></TR>
 <tr><td class="R">Moodle Id:</td>
     <td><webobject name="MoodleId"/> <webobject name="MoodleIdInfo"/></td></TR>
-<tr><td class="R" valign="top" style="padding-left: 0">Upload&nbsp;<br>
+<tr><td class="R" valign="top" style="padding-left: 0">Upload&nbsp;<br/>
     Instructions:</td>
     <td valign="top"><webobject name="UploadInstructions"/>
     <webobject name="UploadInstructionsInfo"/></td></tr>
@@ -39,7 +39,7 @@
     <webobject name="LastTR">
     <td></td>
     <td colspan="5"><webobject name="AddStep"/> Add another step</td>
-    </webobject></tbody></table></div><div class="spacer">&nbsp;</div>
+    </webobject></tbody></table></div><div class="spacer">&nbsp;</div></p>
 <h2>Properties Unique to This Course Offering</h2>
 <table style="border:none">
 <tr><td align="right" valign="top">Due:</td>
