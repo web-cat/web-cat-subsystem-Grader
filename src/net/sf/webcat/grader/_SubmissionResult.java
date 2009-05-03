@@ -1008,10 +1008,10 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Remove and then delete a specific entity that is a member of the
+     * Remove a specific entity that is a member of the
      * <code>resultOutcomes</code> relationship.
      *
-     * @param value The entity to remove from the relationship and then delete
+     * @param value The entity to remove from the relationship
      */
     public void deleteResultOutcomesRelationship( net.sf.webcat.grader.ResultOutcome value )
     {
@@ -1022,7 +1022,6 @@ public abstract class _SubmissionResult
         }
         removeObjectFromBothSidesOfRelationshipWithKey(
             value, "resultOutcomes" );
-        editingContext().deleteObject( value );
     }
 
 
