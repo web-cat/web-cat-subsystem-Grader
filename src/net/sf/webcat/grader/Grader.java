@@ -651,7 +651,7 @@ public class Grader
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             result.message =
-                "You file submission is empty.  "
+                "Your file submission is empty.  "
                 + "Please choose an appropriate file.";
             return result.generateResponse();
         }
@@ -661,7 +661,7 @@ public class Grader
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             result.message =
-                "You file exceeds the file size limit for this "
+                "Your file exceeds the file size limit for this "
                 + "assignment ("
                 + assignment.assignment().submissionProfile()
                       .effectiveMaxFileUploadSize()
