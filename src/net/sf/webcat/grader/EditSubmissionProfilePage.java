@@ -210,15 +210,50 @@ public class EditSubmissionProfilePage
 
 
     // ----------------------------------------------------------
-    public Long maxFileUploadSize()
+    public String maxFileUploadSize()
     {
-        return submissionProfile.maxFileUploadSizeRaw();
+        return SubmissionProfile.formatSizeValue(
+            submissionProfile.maxFileUploadSizeRaw());
     }
 
 
     // ----------------------------------------------------------
-    public void setMaxFileUploadSize( Long value )
+    public String maxMaxFileUploadSize()
     {
+        return SubmissionProfile.formatSizeValue(
+            SubmissionProfile.maxMaxFileUploadSize());
+    }
+
+
+    // ----------------------------------------------------------
+    public String defaultMaxFileUploadSize()
+    {
+        return SubmissionProfile.formatSizeValue(
+            SubmissionProfile.defaultMaxFileUploadSize());
+    }
+
+
+    // ----------------------------------------------------------
+    public void setMaxFileUploadSize( String valueAsString )
+    {
+        Long value = null;
+        if (valueAsString != null)
+        {
+            try
+            {
+                value = new Long(
+                    SubmissionProfile.parseFormattedLong(valueAsString));
+            }
+            catch (NumberFormatException e)
+            {
+                // set error message if size is out of range
+                error(
+                    "Unable to interpret \"" + valueAsString + "\" as a "
+                    + "number for the max upload size.",
+                    "formatMaxSize" );
+            }
+        }
+        clearMessage( "formatMaxSize" );
         if ( value != null
              && value.longValue() > SubmissionProfile.maxMaxFileUploadSize() )
         {
@@ -234,7 +269,7 @@ public class EditSubmissionProfilePage
             clearMessage( "tooLarge" );
         }
         // This will automatically restrict to the max value anyway
-        submissionProfile.setMaxFileUploadSize( value );
+        submissionProfile.setMaxFileUploadSize(value);
     }
 
 

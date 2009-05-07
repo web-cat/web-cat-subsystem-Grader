@@ -32,7 +32,8 @@ grader.gracePeriod=15
 grader.mailResultNotificationAfterMinutes=15
 grader.timeout.max=600
 grader.timeout.default=60
-grader.maxFileUploadSize=200000
+grader.maxFileUploadSize=1048576
+grader.defaultMaxFileUploadSize=204800
 grader.resumeSuspendedJobs=true
 
 

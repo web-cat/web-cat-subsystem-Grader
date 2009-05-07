@@ -151,7 +151,7 @@
     {
         property    = "grader.maxFileUploadSize";
         type        = integer;
-        default     = 200000;
+        default     = 1048576;
         name        = "Maximum Submission Upload Size";
         category    = "Other Settings";
         description =
@@ -161,9 +161,9 @@
   maximum.";
     },
     {
-        property    = "grader.maxFileUploadSize";
+        property    = "grader.defaultMaxFileUploadSize";
         type        = integer;
-        default     = 200000;
+        default     = 204800;
         name        = "Default Maximum Upload Size";
         category    = "Other Settings";
         description =

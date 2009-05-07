@@ -89,11 +89,79 @@ public class SubmissionProfile
 
 
     // ----------------------------------------------------------
+    /**
+     * Format a long value as a string, using "k" or "m" for suffixes
+     * if the value is evenly divisible by 1024 or 1024*1024.
+     * @param The value to format
+     * @return The formatted value
+     */
+    public static String formatSizeValue(long size)
+    {
+        if (size % 1048576 == 0)
+        {
+            return (size/1048576) + "m";
+        }
+        else if (size % 1024 == 0)
+        {
+            return (size/1024) + "k";
+        }
+        else
+        {
+            return Long.toString(size);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Format a long value as a string, using "k" or "m" for suffixes
+     * if the value is evenly divisible by 1024 or 1024*1024.
+     * @param The value to format
+     * @return The formatted value
+     */
+    public static String formatSizeValue(Long size)
+    {
+        return (size == null)
+            ? null
+            : formatSizeValue(size.longValue());
+    }
+
+
+    // ----------------------------------------------------------
+    public static long parseFormattedLong(String valueAsString)
+        throws NumberFormatException
+    {
+        long multiplier = 1;
+        if (valueAsString.endsWith("m") || valueAsString.endsWith("M"))
+        {
+            multiplier = 1024 * 1024;
+            valueAsString =
+                valueAsString.substring(0, valueAsString.length() - 1);
+        }
+        else if (valueAsString.endsWith("k") || valueAsString.endsWith("K"))
+        {
+            multiplier = 1024;
+            valueAsString =
+                valueAsString.substring(0, valueAsString.length() - 1);
+        }
+
+        if (valueAsString.contains("."))
+        {
+            return (long)(Double.parseDouble(valueAsString) * multiplier);
+        }
+        else
+        {
+            return Long.parseLong(valueAsString) * multiplier;
+        }
+    }
+
+
+    // ----------------------------------------------------------
     public static long maxMaxFileUploadSize()
     {
         return net.sf.webcat.core.Application
             .configurationProperties()
-            .longForKeyWithDefault("grader.maxFileUploadSize", 200000L);
+            .longForKeyWithDefault("grader.maxFileUploadSize", 1048576L);
     }
 
 
@@ -102,7 +170,7 @@ public class SubmissionProfile
     {
     	long result = net.sf.webcat.core.Application
             .configurationProperties()
-            .longForKeyWithDefault("grader.defaultMaxFileUploadSize", 200000L);
+            .longForKeyWithDefault("grader.defaultMaxFileUploadSize", 204800L);
     	long max = maxMaxFileUploadSize();
     	return result <= max ? result : max;
     }
