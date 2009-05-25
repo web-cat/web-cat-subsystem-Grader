@@ -17,6 +17,16 @@ Assignment : WOPopUpButton {
     noSelectionString = "(no selection)";
 }
 
+SubmissionQualifier : WOTextField {
+    value = qualifierString;
+}
+
+UpdateSubmissionCount : AjaxSubmitButton {
+    action = updateSubmissionCount;
+    value = "Count";
+    updateContainerID = "submissionCount";
+}
+
 Regrade : WOSubmitButton {
     value = "Regrade";
     action = massRegrade;

@@ -28,6 +28,7 @@ import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eoaccess.EOUtilities;
 import com.webobjects.eocontrol.EOFetchSpecification;
+import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
@@ -62,6 +63,9 @@ public class MassRegraderPage extends GraderComponent
 
     public NSArray<AssignmentOffering> assignmentOfferings;
     public AssignmentOffering selectedAssignmentOffering;
+
+    public String qualifierString;
+    public int numberOfSubmissions;
 
     public EnqueuedJob job;
     
@@ -104,8 +108,14 @@ public class MassRegraderPage extends GraderComponent
     // ----------------------------------------------------------
     public WOActionResults massRegrade()
     {
-        if (selectedAssignmentOffering == null
-                || selectedCourseOffering == null)
+        boolean hasQualString = false;
+        if (qualifierString != null && qualifierString.length() > 0)
+        {
+            hasQualString = true;
+        }
+
+        if (!hasQualString && (selectedAssignmentOffering == null
+                || selectedCourseOffering == null))
         {
             return null;
         }
@@ -118,10 +128,19 @@ public class MassRegraderPage extends GraderComponent
                                 EOSortOrdering.CompareAscending)
                 });
 
+        EOQualifier q;
+        
+        if (hasQualString)
+        {
+            q = EOQualifier.qualifierWithQualifierFormat(qualifierString, null);
+        }
+        else
+        {
+            q = ERXQ.is("assignmentOffering", selectedAssignmentOffering);
+        }
+
         EOFetchSpecification fspec = new EOFetchSpecification(
-                Submission.ENTITY_NAME,
-                ERXQ.is("assignmentOffering", selectedAssignmentOffering),
-                sortOrderings);
+                Submission.ENTITY_NAME, q, sortOrderings);
 
         NSArray<Submission> submissions =
             localContext().objectsWithFetchSpecification(fspec);
@@ -141,6 +160,40 @@ public class MassRegraderPage extends GraderComponent
     
 
     // ----------------------------------------------------------
+    public WOActionResults updateSubmissionCount()
+    {
+        boolean hasQualString = false;
+        if (qualifierString != null && qualifierString.length() > 0)
+        {
+            hasQualString = true;
+        }
+
+        if (!hasQualString && (selectedAssignmentOffering == null
+                || selectedCourseOffering == null))
+        {
+            numberOfSubmissions = 0;
+            return null;
+        }
+
+        EOQualifier q;
+        
+        if (hasQualString)
+        {
+            q = EOQualifier.qualifierWithQualifierFormat(qualifierString, null);
+        }
+        else
+        {
+            q = ERXQ.is("assignmentOffering", selectedAssignmentOffering);
+        }
+        
+        numberOfSubmissions = ERXEOControlUtilities.objectCountWithQualifier(
+                localContext(), Submission.ENTITY_NAME, q);
+        
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
     public int countOfRegradingJobsInQueue()
     {
         return ERXEOControlUtilities.objectCountWithQualifier(
@@ -153,10 +206,18 @@ public class MassRegraderPage extends GraderComponent
     // ----------------------------------------------------------
     public NSArray<EnqueuedJob> next10JobsInQueue()
     {
+        NSArray<EOSortOrdering> sortOrderings = new NSArray<EOSortOrdering>(
+                new EOSortOrdering[] {
+                        new EOSortOrdering("submission.user.userName",
+                                EOSortOrdering.CompareCaseInsensitiveAscending),
+                        new EOSortOrdering("submission.submitNumber",
+                                EOSortOrdering.CompareAscending)
+                });
+
         EOFetchSpecification fspec = new EOFetchSpecification(
                 EnqueuedJob.ENTITY_NAME,
                 ERXQ.isTrue(EnqueuedJob.REGRADING_KEY),
-                null);
+                sortOrderings);
         fspec.setFetchLimit(10);
         
         return localContext().objectsWithFetchSpecification(fspec);
