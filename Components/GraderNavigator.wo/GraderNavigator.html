@@ -15,13 +15,13 @@
 </li>
 <li><wo:WOGenericContainer elementName="label" for="$idFor.semesterSelector">Show semester:</wo:WOGenericContainer>
 <wo name="SemesterFilter">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
 </wo>
 </li>
 <wo:if condition="$user.hasTAPrivileges">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeWhatImTeaching">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox" class="trailing">what I'm teaching</wo:WOGenericContainer>
 </li>
@@ -29,7 +29,7 @@
 <wo:if condition="$user.hasAdminPrivileges">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeAdminAccess">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="['coursePane','assignmentPane']"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox" class="trailing">admin access</wo:WOGenericContainer>
 </li>
