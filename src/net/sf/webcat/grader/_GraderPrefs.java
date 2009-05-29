@@ -4,7 +4,7 @@
  |  Created by eogenerator
  |  DO NOT EDIT.  Make changes to GraderPrefs.java instead.
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -137,6 +137,7 @@ public abstract class _GraderPrefs
     // Attributes ---
     public static final String COMMENT_HISTORY_KEY = "commentHistory";
     // To-one relationships ---
+    public static final String ASSIGNMENT_KEY = "assignment";
     public static final String ASSIGNMENT_OFFERING_KEY = "assignmentOffering";
     public static final String STEP_KEY = "step";
     public static final String SUBMISSION_KEY = "submission";
@@ -220,6 +221,67 @@ public abstract class _GraderPrefs
                 + value + "): was " + commentHistory() );
         }
         takeStoredValueForKey( value, "commentHistory" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>assignment</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public net.sf.webcat.grader.Assignment assignment()
+    {
+        return (net.sf.webcat.grader.Assignment)storedValueForKey( "assignment" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>assignment</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>setAssignmentRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setAssignment( net.sf.webcat.grader.Assignment value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignment("
+                + value + "): was " + assignment() );
+        }
+        takeStoredValueForKey( value, "assignment" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>assignment</code>
+     * relationship.  This method is a type-safe version of
+     * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setAssignmentRelationship(
+        net.sf.webcat.grader.Assignment value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAssignmentRelationship("
+                + value + "): was " + assignment() );
+        }
+        if ( value == null )
+        {
+            net.sf.webcat.grader.Assignment object = assignment();
+            if ( object != null )
+                removeObjectFromBothSidesOfRelationshipWithKey( object, "assignment" );
+        }
+        else
+        {
+            addObjectToBothSidesOfRelationshipWithKey( value, "assignment" );
+        }
     }
 
 

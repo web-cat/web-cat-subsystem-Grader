@@ -47,21 +47,4 @@
             EOSchemaSynchronizationPrimaryKeySupportKey = YES; 
         }; 
     }; 
-    userInfo = {
-        "_EntityModeler" = {
-            activeDatabaseConfigName = Default; 
-            databaseConfigs = {
-                Default = {
-                    adaptorName = JDBC; 
-                    connectionDictionary = {
-                        URL = ""; 
-                        driver = "com.mysql.jdbc.Driver"; 
-                        password = ""; 
-                        plugin = MySQL; 
-                        username = ""; 
-                    }; 
-                }; 
-            }; 
-        }; 
-    }; 
 }

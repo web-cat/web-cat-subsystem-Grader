@@ -61,6 +61,13 @@
             name = author; 
         }, 
         {
+            destination = GraderPrefs; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentId; sourceAttribute = id; }); 
+            name = graderPrefs; 
+        }, 
+        {
             destination = GradingCriteria; 
             isToMany = N; 
             joinSemantic = EOInnerJoin; 

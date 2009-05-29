@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,7 +31,8 @@ import org.apache.log4j.Logger;
  * Contains all the submission options for an assignment.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$ $Date$
  */
 public class SubmissionProfile
     extends _SubmissionProfile

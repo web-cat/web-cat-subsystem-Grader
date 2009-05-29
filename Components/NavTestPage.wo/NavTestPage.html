@@ -1,6 +1,15 @@
 <webobject name="Page">
   <wo:net.sf.webcat.core.WCPageModule title="Try the Navigator">
-    <wo name="Navigator"/>
+    <div class="floatRight"><wo name="Navigator"/></div>
+<p>
+Semester: <span class="hl"><wo:str value="$coreSelections.semester"/></span>
+</p><p>
+Course:   <span class="hl"><wo:str value="$coreSelections.course"/></span>
+</p><p>
+Offering: <span class="hl"><wo:str value="$coreSelections.courseOffering"/></span>
+</p><p>
+Assignment: <span class="hl"><wo:str value="$prefs.assignment"/></span>
+</p>
     <p> This is a sample page to test the pop-up navigation controller.</p>
     <p>Access count for this object: <wo:str value="$count"/>.</p>
     <p><wo:link action="$refresh">Refresh</wo:link></p>

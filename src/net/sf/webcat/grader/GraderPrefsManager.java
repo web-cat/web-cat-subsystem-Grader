@@ -22,6 +22,7 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.eocontrol.*;
+import er.extensions.foundation.ERXValueUtilities;
 import net.sf.webcat.core.*;
 
 //-------------------------------------------------------------------------
@@ -51,6 +52,14 @@ public class GraderPrefsManager
     }
 
 
+    //~ Constants .............................................................
+
+    public static final String SHOW_UNPUBLISHED_ASSIGNMENTS_KEY
+        = "showUnpublishedAssignments";
+    public static final String SHOW_CLOSED_ASSIGNMENTS_KEY
+        = "showClosedAssignments";
+
+
     //~ Public Methods ........................................................
 
     // ----------------------------------------------------------
@@ -74,6 +83,32 @@ public class GraderPrefsManager
     public void setCommentHistory(String value)
     {
         takeValueForKey(value, GraderPrefs.COMMENT_HISTORY_KEY);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>assignment</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public Assignment assignment()
+    {
+        return (Assignment)valueForKey(GraderPrefs.ASSIGNMENT_KEY);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>assignment</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setAssignmentRelationship(Assignment value)
+    {
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, GraderPrefs.ASSIGNMENT_KEY);
     }
 
 
@@ -180,4 +215,66 @@ public class GraderPrefsManager
         addObjectToBothSidesOfRelationshipWithKey(
             value, GraderPrefs.SUBMISSION_FILE_STATS_KEY);
     }
+
+
+    // ----------------------------------------------------------
+    public boolean showUnpublishedAssignments()
+    {
+        if (showUnpublishedAssignments == null)
+        {
+            User user = (User)valueForKey(GraderPrefs.USER_KEY);
+            showUnpublishedAssignments = Boolean.valueOf(
+                ERXValueUtilities.booleanValueWithDefault(
+                    user.preferences().valueForKey(
+                        SHOW_UNPUBLISHED_ASSIGNMENTS_KEY),
+                    true));
+        }
+        return showUnpublishedAssignments.booleanValue();
+    }
+
+
+    // ----------------------------------------------------------
+    public void setShowUnpublishedAssignments(boolean value)
+    {
+        showUnpublishedAssignments = Boolean.valueOf(value);
+        User user = (User)valueForKey(GraderPrefs.USER_KEY);
+        user.preferences().takeValueForKey(
+            showUnpublishedAssignments,
+            SHOW_UNPUBLISHED_ASSIGNMENTS_KEY);
+        user.savePreferences();
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean showClosedAssignments()
+    {
+        if (showClosedAssignments == null)
+        {
+            User user = (User)valueForKey(GraderPrefs.USER_KEY);
+            showClosedAssignments = Boolean.valueOf(
+                ERXValueUtilities.booleanValueWithDefault(
+                    user.preferences().valueForKey(
+                        SHOW_CLOSED_ASSIGNMENTS_KEY),
+                    false));
+        }
+        return showClosedAssignments.booleanValue();
+    }
+
+
+    // ----------------------------------------------------------
+    public void setShowClosedAssignments(boolean value)
+    {
+        showClosedAssignments = Boolean.valueOf(value);
+        User user = (User)valueForKey(GraderPrefs.USER_KEY);
+        user.preferences().takeValueForKey(
+            showClosedAssignments,
+            SHOW_CLOSED_ASSIGNMENTS_KEY);
+        user.savePreferences();
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    private Boolean showUnpublishedAssignments;
+    private Boolean showClosedAssignments;
 }

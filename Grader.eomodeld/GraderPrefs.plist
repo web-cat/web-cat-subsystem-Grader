@@ -1,5 +1,6 @@
 {
     attributes = (
+        {columnName = CASSIGNID; name = assignmentId; prototypeName = foreignId; }, 
         {
             columnName = CASSIGNMENTID; 
             name = assignmentOfferingId; 
@@ -21,6 +22,7 @@
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
     ); 
     attributesUsedForLocking = (
+        assignmentId, 
         assignmentOfferingId, 
         commentHistory, 
         stepId, 
@@ -30,6 +32,7 @@
     ); 
     className = "net.sf.webcat.grader.GraderPrefs"; 
     classProperties = (
+        assignment, 
         assignmentOffering, 
         commentHistory, 
         step, 
@@ -41,6 +44,13 @@
     name = GraderPrefs; 
     primaryKeyAttributes = (id); 
     relationships = (
+        {
+            destination = Assignment; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentId; }); 
+            name = assignment; 
+        }, 
         {
             destination = AssignmentOffering; 
             isToMany = N; 

@@ -1,20 +1,20 @@
 {
   staff = {
     children = {
-//      Home = {
-//        children = {
+      Home = {
+        children = {
 //          "Navigation1" = {
 //            pageName   = net.sf.webcat.grader.TransitionalNavTestPage;
 //            accessLevel = 40;
-//            priority   = 500;
+//            priority   = 2000;
 //          };
-//          "Navigation2" = {
-//            pageName   = net.sf.webcat.grader.NavTestPage;
-//            accessLevel = 40;
-//            priority   = 501;
-//          };
-//        };
-//      };
+          "Navigation2" = {
+            pageName   = net.sf.webcat.grader.NavTestPage;
+            accessLevel = 40;
+            priority   = 2001;
+          };
+        };
+      };
       Grading = {
         accessLevel = 40;
         priority = 200;

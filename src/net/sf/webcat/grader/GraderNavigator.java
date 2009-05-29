@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,19 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import net.sf.webcat.core.CoreNavigator;
-import net.sf.webcat.core.CoreNavigatorObjects;
 import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
 import net.sf.webcat.core.EntityUtils;
 import net.sf.webcat.core.INavigatorObject;
-import net.sf.webcat.core.Semester;
-import net.sf.webcat.core.WCComponent;
-import net.sf.webcat.ui.util.ComponentIDGenerator;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WORequest;
-import com.webobjects.appserver.WOResponse;
-import com.webobjects.eoaccess.EOUtilities;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.eocontrol.EOSortOrdering;
@@ -84,7 +77,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  * </dl>
  *
  * @author Tony Allevato
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$ $Date$
  */
 public class GraderNavigator
     extends CoreNavigator
@@ -109,9 +103,6 @@ public class GraderNavigator
     public INavigatorObject assignmentInRepetition;
     public INavigatorObject selectedAssignment;
 
-    public boolean showUnpublishedAssignments = false;
-    public boolean showClosedAssignments = false;
-
 
     //~ Methods ...............................................................
 
@@ -120,6 +111,13 @@ public class GraderNavigator
     {
         log.debug("entering awake()");
         super.awake();
+        if (!(selectionsParent instanceof GraderComponent))
+        {
+            throw new IllegalStateException("GraderNavigator can only be "
+                + "embedded inside a GraderComponent page");
+        }
+        graderParent = (GraderComponent)selectionsParent;
+
         log.debug("selected assignment = " + selectedAssignment);
         log.debug("leaving awake()");
     }
@@ -134,7 +132,7 @@ public class GraderNavigator
      */
     public NSArray<String> idsForCourseAndAssignmentPanes()
     {
-        return new NSMutableArray<String>(new String[] {
+        return new NSArray<String>(new String[] {
                 idFor.valueForKey("coursePane").toString(),
                 idFor.valueForKey("assignmentPane").toString()
         });
@@ -160,6 +158,7 @@ public class GraderNavigator
      *
      * @return the result is ignored
      */
+    @SuppressWarnings("unchecked")
     public WOActionResults updateAssignments()
     {
     	log.debug("updateAssignments()");
@@ -175,7 +174,7 @@ public class GraderNavigator
 
         EOQualifier unpublishedQual = null;
 
-        if (!showUnpublishedAssignments)
+        if (!showUnpublishedAssignments())
         {
             unpublishedQual = ERXQ.isTrue("publish");
         }
@@ -198,7 +197,7 @@ public class GraderNavigator
         // property so we have to do it here, in memory.
 
         NSTimestamp now = new NSTimestamp();
-        if (!showClosedAssignments)
+        if (!showClosedAssignments())
         {
             assnOffs = ERXQ.filtered(assnOffs,
                     ERXQ.greaterThan("lateDeadline", now));
@@ -223,33 +222,48 @@ public class GraderNavigator
 
         NSArray<Assignment> assigns =
             ERXArrayUtilities.arrayWithoutDuplicates(
-                (NSArray<Assignment>) assnOffs.valueForKey("assignment"));
+                (NSArray<Assignment>)assnOffs.valueForKey("assignment"));
 
         assigns = EOSortOrdering.sortedArrayUsingKeyOrderArray(assigns,
             EntityUtils.sortOrderingsForEntityNamed(Assignment.ENTITY_NAME));
 
+        Assignment targetAssignment = graderParent.prefs().assignment();
+        if (targetAssignment == null)
+        {
+            AssignmentOffering ao = graderParent.prefs().assignmentOffering();
+            if (ao != null)
+            {
+                targetAssignment = ao.assignment();
+            }
+        }
+
         for (Assignment assignment : assigns)
         {
-            assignments.addObject(
+            INavigatorObject thisAssignment =
                 new GraderNavigatorObjects.SingleAssignment(
                     assignment,
                     unpublishedAssigns.containsKey(assignment),
-                    closedAssigns.containsKey(assignment)));
+                    closedAssigns.containsKey(assignment));
+            if (assignment == targetAssignment)
+            {
+                selectedAssignment = thisAssignment;
+            }
+            assignments.addObject(thisAssignment);
         }
 
-        if (assignments.count() == 0 && user().hasTAPrivileges())
+        if (assignments.count() == 0 && user().hasTAPrivileges()) // FIXME
         {
         	// If none were found ...
-        	if (!showUnpublishedAssignments)
+        	if (!showUnpublishedAssignments())
         	{
         		// First, try enabling unpublished assignments
-        		showUnpublishedAssignments = true;
+        		setShowUnpublishedAssignments(true);
         		return updateAssignments();
         	}
-        	else if (!showClosedAssignments)
+        	else if (!showClosedAssignments())
         	{
         		// Then try enabling closed assignments
-        		showClosedAssignments = true;
+        		setShowClosedAssignments(true);
         		return updateAssignments();
         	}
         }
@@ -277,16 +291,79 @@ public class GraderNavigator
     public WOActionResults okPressed()
     {
     	log.debug("okPressed()");
+    	WOActionResults result = super.okPressed();
 
-    	// TODO store the user's current semester, course, and assignment
-        // selection in the session or wherever the nav-state is being
-        // persisted
+    	if (selectedAssignment != null)
+    	{
+            NSArray<?> assignArray = selectedAssignment.representedObjects();
+            if (assignArray.count() > 0)
+            {
+                Assignment targetAssignment =
+                    (Assignment)assignArray.objectAtIndex(0);
+                graderParent.prefs().setAssignmentRelationship(
+                    targetAssignment);
+                CourseOffering co =
+                    selectionsParent.coreSelections().courseOffering();
+                Course course = selectionsParent.coreSelections().course();
+                for (AssignmentOffering ao : targetAssignment.offerings())
+                {
+                    if ((co != null && co == ao.courseOffering())
+                        || (co == null
+                            && course == ao.courseOffering().course()))
+                    {
+                        graderParent.prefs().setAssignmentOfferingRelationship(
+                            ao);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                graderParent.prefs().setAssignmentRelationship(null);
+            }
+    	}
+    	else
+    	{
+    	    graderParent.prefs().setAssignmentRelationship(null);
+    	}
 
-        return super.okPressed();
+    	return result;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setShowUnpublishedAssignments(
+        boolean showUnpublishedAssignments)
+    {
+        graderParent.prefs().setShowUnpublishedAssignments(
+            showUnpublishedAssignments);
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean showUnpublishedAssignments()
+    {
+        return graderParent.prefs().showUnpublishedAssignments();
+    }
+
+
+    // ----------------------------------------------------------
+    public void setShowClosedAssignments(boolean showClosedAssignments)
+    {
+        graderParent.prefs().setShowClosedAssignments(
+            showClosedAssignments);
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean showClosedAssignments()
+    {
+        return graderParent.prefs().showClosedAssignments();
     }
 
 
     //~ Static/instance variables .............................................
 
+    protected GraderComponent graderParent;
     static Logger log = Logger.getLogger(GraderNavigator.class);
 }

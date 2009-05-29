@@ -1,4 +1,4 @@
-<wo:WCDiv dojoType="dijit.form.DropDownButton">
+<wo:WCDiv dojoType="dijit.form.DropDownButton" id="$idFor.navigatorButton">
 <span>Change Assignment</span>
 <wo:WCDiv dojoType="dijit.TooltipDialog" title="Choose Assignment">
 <wo:WCForm>
@@ -61,8 +61,11 @@
 </ol></fieldset>
 <div class="center">
 <wo name="OK">OK</wo>
-<wo name="Cancel">Cancel</wo>
+<wo:if negate="true" condition="$startOpen"><wo name="Cancel">Cancel</wo></wo:if>
 </div>
 </wo:WCForm>
 </wo:WCDiv>
-</wo:WCDiv>
+</wo:WCDiv><wo:if condition="$startOpen">
+<script type="text/javascript">
+dojo.addOnLoad(function() { dijit.byId("<wo:str value="$idFor.navigatorButton"/>")._openDropDown(); });
+</script></wo:if>

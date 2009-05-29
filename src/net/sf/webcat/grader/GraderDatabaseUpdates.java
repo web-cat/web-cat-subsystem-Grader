@@ -186,7 +186,7 @@ public class GraderDatabaseUpdates
         database().executeSQL(
             "alter table TGRADERPREFS drop "
             + "CCOURSEOFFERINGID" );
-        
+
         database().executeSQL(
             "alter table TSUBMISSION add "
             + "CISSUBMISSIONFORGRADING BIT");
@@ -199,8 +199,8 @@ public class GraderDatabaseUpdates
                 "alter table TSUBMISSIONRESULT add "
                 + "CFINALSCORE DOUBLE");*/
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Creates the TRESULTOUTCOME table.
@@ -219,6 +219,19 @@ public class GraderDatabaseUpdates
             database().executeSQL(
                 "ALTER TABLE TRESULTOUTCOME ADD PRIMARY KEY (OID)" );
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds support for global configuration parameters for plug-ins.
+     * @throws SQLException on error
+     */
+    public void updateIncrement9() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TGRADERPREFS add "
+            + "CASSIGNID INTEGER" );
     }
 
 

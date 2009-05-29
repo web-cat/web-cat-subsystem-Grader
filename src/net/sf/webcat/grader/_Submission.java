@@ -4,7 +4,7 @@
  |  Created by eogenerator
  |  DO NOT EDIT.  Make changes to Submission.java instead.
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -466,14 +466,14 @@ public abstract class _Submission
         // Only try to migrate if the EC isn't a migrating context. If it is,
         // we're already trying to migrate and this "awake" is coming from the
         // child migration context.
-        
+
         if (!(ec instanceof net.sf.webcat.core.MigratingEditingContext))
         {
             migrateAttributeValuesIfNeeded();
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Called by {@link #awake} to migrate attribute values if needed when the
@@ -493,7 +493,7 @@ public abstract class _Submission
             {
                 migratingObject.isSubmissionForGrading();
             }
-    
+
             mec.saveChanges();
             net.sf.webcat.core.Application.releaseMigratingEditingContext(mec);
         }
