@@ -54,6 +54,63 @@ public class GraderAssignmentComponent
 
     // ----------------------------------------------------------
     /**
+     * This method determines whether any embedded navigator will
+     * automatically pop up to force a selection and page reload.
+     * @return True if the navigator should start out by opening automatically.
+     */
+    public boolean forceNavigatorSelection()
+    {
+        boolean result = super.forceNavigatorSelection();
+        if (prefs().assignment() == null)
+        {
+            result = true;
+        }
+        else if (!result && requiresAssignmentOffering())
+        {
+            AssignmentOffering ao = prefs().assignmentOffering();
+            Assignment assignment = prefs().assignment();
+            if (ao == null && assignment != null)
+            {
+                CourseOffering co = bestMatchingCourseOffering();
+                for (AssignmentOffering offering : assignment.offerings())
+                {
+                    if (offering.courseOffering() == co)
+                    {
+                        prefs().setAssignmentOfferingRelationship(offering);
+                        if (coreSelections().courseOffering() != co)
+                        {
+                            coreSelections().setCourseOfferingRelationship(co);
+                            if (coreSelections().course() != co.course())
+                            {
+                                coreSelections().setCourseRelationship(null);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            result = (prefs().assignmentOffering() == null);
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * This method determines whether the current page requires the
+     * user to have a selected AssignmentOffering.
+     * The default implementation returns true, but is designed
+     * to be overridden in subclasses.
+     * @return True if the page requires a selected assignment offering.
+     */
+    public boolean requiresAssignmentOffering()
+    {
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Extracts assignment identification from the given startup
      * parameters.
      * @param params A dictionary of form values to decode

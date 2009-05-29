@@ -295,6 +295,13 @@ public class UploadSubmissionPage
 
 
     // ----------------------------------------------------------
+    public boolean allowsAllOfferingsForCourse()
+    {
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
     public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
     {
         try

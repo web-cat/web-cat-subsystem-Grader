@@ -52,6 +52,9 @@ FileSize: WOString {
 	value = uploadedFileSize;
 }
 
+Navigator: net.sf.webcat.grader.GraderNavigator {
+}
+
 String1: WOString {
 	value = aSubmission.submitNumber;
 }

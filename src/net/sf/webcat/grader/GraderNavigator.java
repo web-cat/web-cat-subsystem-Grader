@@ -111,12 +111,12 @@ public class GraderNavigator
     {
         log.debug("entering awake()");
         super.awake();
-        if (!(selectionsParent instanceof GraderComponent))
+        if (!(selectionsParent instanceof GraderAssignmentComponent))
         {
             throw new IllegalStateException("GraderNavigator can only be "
-                + "embedded inside a GraderComponent page");
+                + "embedded inside a GraderAssignmentComponent page");
         }
-        graderParent = (GraderComponent)selectionsParent;
+        graderParent = (GraderAssignmentComponent)selectionsParent;
 
         log.debug("selected assignment = " + selectedAssignment);
         log.debug("leaving awake()");
@@ -364,6 +364,6 @@ public class GraderNavigator
 
     //~ Static/instance variables .............................................
 
-    protected GraderComponent graderParent;
+    protected GraderAssignmentComponent graderParent;
     static Logger log = Logger.getLogger(GraderNavigator.class);
 }
