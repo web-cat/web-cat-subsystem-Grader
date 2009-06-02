@@ -551,13 +551,38 @@ public class Submission
      */
     public NSArray<Submission> allSubmissions()
     {
-        if (user() == null || assignmentOffering() == null)
-            return NSArray.EmptyArray;
+        int newAOSubCount = assignmentOffering().submissions().count();
+        if (newAOSubCount != aoSubmissionsCountCache)
+        {
+            allSubmissionsCache = null;
+            aoSubmissionsCountCache = newAOSubCount;
+        }
 
-        NSArray<Submission> subs = objectsForAllForAssignmentOfferingAndUser(
-                editingContext(), assignmentOffering(), user());
+        if (allSubmissionsCache == null)
+        {
+            if (user() != null && assignmentOffering() != null)
+            {
+                allSubmissionsCache = objectsForAllForAssignmentOfferingAndUser(
+                        editingContext(), assignmentOffering(), user());
+            }
+        }
         
-        return (subs != null) ? subs : NSArray.EmptyArray;
+        return (allSubmissionsCache != null) ?
+                allSubmissionsCache : NSArray.EmptyArray;
+    }
+    
+    
+    // ----------------------------------------------------------
+    /**
+     * Flush any cached data stored by the object in memory.
+     */
+    public void flushCaches()
+    {
+        // Clear the in-memory cache of the all-submissions chain so that it
+        // will be fetched again.
+        
+        aoSubmissionsCountCache = 0;
+        allSubmissionsCache = null;
     }
 
 
@@ -601,9 +626,7 @@ public class Submission
     {
         if (user() == null || assignmentOffering() == null) return null;
 
-        NSArray<Submission> subs =
-            objectsForEarliestForAssignmentOfferingAndUser(editingContext(),
-                    assignmentOffering(), user());
+        NSArray<Submission> subs = allSubmissions();
 
         if (subs != null && subs.count() >= 1)
         {
@@ -631,13 +654,11 @@ public class Submission
     {
         if (user() == null || assignmentOffering() == null) return null;
 
-        NSArray<Submission> subs =
-            objectsForLatestForAssignmentOfferingAndUser(editingContext(),
-                    assignmentOffering(), user());
+        NSArray<Submission> subs = allSubmissions();
 
         if (subs != null && subs.count() >= 1)
         {
-            return subs.objectAtIndex(0);
+            return subs.objectAtIndex(subs.count() - 1);
         }
         else
         {
@@ -661,13 +682,12 @@ public class Submission
         if (user() == null || assignmentOffering() == null)
             return null;
 
-        NSArray<Submission> subs =
-            objectsForSpecificSubmission(editingContext(),
-                    assignmentOffering(), number, user());
+        NSArray<Submission> subs = allSubmissions();
 
-        if (subs != null && subs.count() >= 1)
+        if (subs != null && subs.count() >= 1 &&
+                number >= 0 && number < subs.count())
         {
-            return subs.objectAtIndex(0);
+            return subs.objectAtIndex(number);
         }
         else
         {
@@ -759,14 +779,15 @@ public class Submission
 
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
         
-        int totalElements = 0;
-
         for(SubmissionFileStats file : files)
         {
-            totalElements += file.elements();
+            if (file.elements() > 0)
+            {
+                return true;
+            }
         }
         
-        return (totalElements > 0);
+        return false;
     }
     
     
@@ -811,14 +832,15 @@ public class Submission
 
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
         
-        int totalLOC = 0;
-
         for(SubmissionFileStats file : files)
         {
-            totalLOC += file.loc();
+            if (file.loc() > 0)
+            {
+                return true;
+            }
         }
         
-        return (totalLOC > 0);
+        return false;
     }
     
     
@@ -877,7 +899,7 @@ public class Submission
     public Submission earliestSubmissionWithAnyData()
     {
         NSArray<Submission> subs = allSubmissions();
-        
+
         for(Submission submission : subs)
         {
             if (submission.hasAnyData())
@@ -902,20 +924,18 @@ public class Submission
      */
     public boolean hasAnyData()
     {
-        // This method is written like this to effectively short-circuit things
-        // the first time any data is found, rather than wasting time
-        // inefficiently pulling all the data that we're interested in.
+        // The order of these is important; they should be listed from most
+        // efficient to least efficient in order to short-circuit the test as
+        // quickly as possible.
 
-        if (hasCorrectnessScore())
+        if (hasCorrectnessScore() || hasCoverage() || hasLOC())
+        {
             return true;
-
-        if (hasCoverage())
-            return true;
-        
-        if (hasLOC())
-            return true;
-
-        return false;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -949,30 +969,25 @@ public class Submission
             return null;
         }
 
-        ERXSortOrderings orderings = ERXS.sortOrders(
-                RESULT_KEY + "." + SubmissionResult.CORRECTNESS_SCORE_KEY,
-                ERXS.DESC,
-                SUBMIT_TIME_KEY, ERXS.ASC);
-
-        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
-                qualifierForSubmissionChain(), orderings);
-        fspec.setFetchLimit(1);
+        NSArray<Submission> subs = allSubmissions();
+        Submission maxSubmission = null;
+        double maxCorrectnessScore = Double.MIN_VALUE;
         
-        NSArray<Submission> objects =
-            editingContext().objectsWithFetchSpecification(fspec);
-
-        if (objects != null && objects.count() > 0)
+        for (Submission sub : subs)
         {
-            if (objects.count() > 1)
+            SubmissionResult result = sub.result();
+            if (result != null)
             {
-                log.warn("earliestSubmissionWithMaximumCorrectnessScore "
-                        + "found more than one submission!");
+                double score = result.correctnessScore(); 
+                if (score > maxCorrectnessScore)
+                {
+                    maxSubmission = sub;
+                    maxCorrectnessScore = score;
+                }
             }
-            
-            return objects.objectAtIndex(0);
         }
-        
-        return null;
+
+        return maxSubmission;
     }
     
     
@@ -990,29 +1005,25 @@ public class Submission
             return null;
         }
 
-        ERXSortOrderings orderings = ERXS.sortOrders(
-                RESULT_KEY + "." + SubmissionResult.TOOL_SCORE_KEY, ERXS.DESC,
-                SUBMIT_TIME_KEY, ERXS.ASC);
-
-        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
-                qualifierForSubmissionChain(), orderings);
-        fspec.setFetchLimit(1);
+        NSArray<Submission> subs = allSubmissions();
+        Submission maxSubmission = null;
+        double maxToolScore = Double.MIN_VALUE;
         
-        NSArray<Submission> objects =
-            editingContext().objectsWithFetchSpecification(fspec);
-
-        if (objects != null && objects.count() > 0)
+        for (Submission sub : subs)
         {
-            if (objects.count() > 1)
+            SubmissionResult result = sub.result();
+            if (result != null)
             {
-                log.warn("earliestSubmissionWithMaximumToolScore "
-                        + "found more than one submission!");
+                double score = result.toolScore(); 
+                if (score > maxToolScore)
+                {
+                    maxSubmission = sub;
+                    maxToolScore = score;
+                }
             }
-            
-            return objects.objectAtIndex(0);
         }
-        
-        return null;
+
+        return maxSubmission;
     }
     
     
@@ -1030,52 +1041,25 @@ public class Submission
             return null;
         }
 
-        NSMutableArray<String> rawRowKeyPaths = new NSMutableArray<String>();
-        rawRowKeyPaths.addObject("id");
-        rawRowKeyPaths.addObject("submitTime");
-        rawRowKeyPaths.addObject("result.correctnessScore");
-        rawRowKeyPaths.addObject("result.toolScore");
-
-        EOFetchSpecification fspec = new EOFetchSpecification(ENTITY_NAME,
-                qualifierForSubmissionChain(), null);
-        fspec.setFetchesRawRows(true);
-        fspec.setRawRowKeyPaths(rawRowKeyPaths);
+        NSArray<Submission> subs = allSubmissions();
+        Submission maxSubmission = null;
+        double maxAutomatedScore = Double.MIN_VALUE;
         
-        NSArray<NSDictionary> objects =
-            editingContext().objectsWithFetchSpecification(fspec);
-
-        NSMutableArray<NSMutableDictionary> newObjects =
-            new NSMutableArray<NSMutableDictionary>();
-
-        if (objects != null && objects.count() > 0)
+        for (Submission sub : subs)
         {
-            for (NSDictionary rawRow : objects)
+            SubmissionResult result = sub.result();
+            if (result != null)
             {
-                Double correctnessScore = (Double) rawRow.objectForKey(
-                        "result.correctnessScore");
-                Double toolScore = (Double) rawRow.objectForKey(
-                        "result.toolScore");
-                Double automatedScore = correctnessScore + toolScore;
-                
-                NSMutableDictionary newRawRow = rawRow.mutableClone();
-                newRawRow.setObjectForKey(automatedScore, "automatedScore");
-                
-                newObjects.addObject(newRawRow);
+                double score = result.automatedScore(); 
+                if (score > maxAutomatedScore)
+                {
+                    maxSubmission = sub;
+                    maxAutomatedScore = score;
+                }
             }
-            
-            ERXSortOrderings orderings = ERXS.sortOrders(
-                    "automatedScore", ERXS.DESC,
-                    "submitTime", ERXS.ASC);
-
-            ERXS.sort(newObjects, orderings);
-
-            Submission maxSub = (Submission) editingContext().faultForRawRow(
-                    newObjects.objectAtIndex(0), ENTITY_NAME);
-            
-            return maxSub;
         }
-        
-        return null;
+
+        return maxSubmission;
     }
     
     
@@ -1143,6 +1127,9 @@ public class Submission
 
 
     //~ Instance/static variables .............................................
+
+    private int aoSubmissionsCountCache;
+    private NSArray<Submission> allSubmissionsCache;
 
     private String cachedPermalink;
     private String subdirToDelete;
