@@ -35,7 +35,7 @@ import net.sf.webcat.core.WCComponent;
 *  @version $Id$
 */
 public class NavTestPage
-    extends GraderComponent
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 

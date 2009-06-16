@@ -1,11 +1,10 @@
-<webobject name="Page"><!--  wo:net.sf.webcat.core.Permalink href="$prefs.assignmentOffering.permalink"/ -->
-<wo:if condition="$forceNavigatorSelection"><div style="width:50%;">
-<wo:net.sf.webcat.core.WCPageModule title="Select Your File">
+<wo name="Page"><!--  wo:net.sf.webcat.core.Permalink href="$prefs.assignmentOffering.permalink"/ -->
+<wo:if condition="$forceNavigatorSelection">
+<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
 <div class="floatRight"><wo name="Navigator"/></div>
-Please select the course and assignment.
-</wo:net.sf.webcat.core.WCPageModule>
-</div></wo:if><wo:else>
-<wo:net.sf.webcat.core.WCPageModule title="Select Your File">
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
 <div class="floatRight"><wo name="Navigator"/></div>
 For: <span class="hl"><webobject name="AssignmentName"/></span>
 <webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
@@ -13,15 +12,15 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
   <p><webobject name="Instructions"/></p>
 </webobject><webobject name="HasValidFileUpload">
     <p>So far, you have uploaded the file
-    <b><webobject name="FileName"/></b>
-    (<webobject name="FileSize"/>) for submission.  You can
+    <b><wo:str value="$submissionInProcess.uploadedFileName"/></b>
+    (<wo:str value="$uploadedFileSize"/>) for submission.  You can
     replace this with a different file, or choose to continue.</p>
 </webobject><webobject name="OkayToSubmit">
     <p>Choose the file to upload:</p>
-<wo:WOForm multipleSubmit="true" enctype="multipart/form-data">
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <p><webobject name="FileUpload1"/></p>
 <!-- p --><!-- input size="60" type="file" name="0.0.0.2.3.4.1.10.1" dojoType="dojox.form.FileInput"/ --><!-- /p -->
-<p><wo:net.sf.webcat.ui.WCButton>Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
+<p><wo:net.sf.webcat.ui.WCButton action="$next">Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
 </wo:WOForm></webobject></wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Previous Submissions" open="false">
@@ -39,4 +38,4 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
 </webobject></wo:net.sf.webcat.core.WCPageModule>
 </wo:else>
-</webobject>
+</wo>

@@ -31,9 +31,12 @@ Chart4: net.sf.webcat.grader.graphs.SubmissionCountChart {
     yAxisLabel        = "No. of Submissions";
 }
 
-IsStaff: WOConditional {
-    condition = isStaff;
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }
 
-Page : net.sf.webcat.core.PageWithNavigation {
+Page : net.sf.webcat.core.WCPageWithNavigation {
+}
+
+Panel1: net.sf.webcat.core.WCPageModule {
+    title = session.tabs.selectedDescendant.label;
 }

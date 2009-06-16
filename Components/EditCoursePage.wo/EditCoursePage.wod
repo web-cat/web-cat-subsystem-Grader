@@ -18,6 +18,10 @@ AddTA: WOImageButton {
 	title    = "Add another grader/TA";
 }
 
+CanDelete: WOConditional {
+    condition = "~!courseOffering.isNewObject && courseOffering.canDelete";
+}
+
 CourseList: WOPopUpButton {
 	list              = courseDisplayGroup.allObjects;
 	selection         = courseOffering.course;

@@ -1,10 +1,10 @@
 <webobject name="Page"><table style="border: none;">
-<wo:if condition="~!courseOffering.isNewObject && courseOffering.canDelete">
+<wo name="CanDelete">
 <tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
     <td>You may delete this course offering.   It cannot be deleted if
     it has any assignments (remove them first, but only if no students have
     made submissions yet).</td></tr>
-</wo:if>
+</wo>
 <tr><td class="R">Semester:</td><td><wo name="SemesterList"/> <wo name="SemesterInfo"/></td></tr>
 <tr><td class="R">Course:</td><td><wo name="CourseList"/> <wo name="CourseInfo"/></td></tr>
 <tr><td class="R">CRN:</td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>

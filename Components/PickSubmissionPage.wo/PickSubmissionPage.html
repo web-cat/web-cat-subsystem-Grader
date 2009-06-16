@@ -1,19 +1,34 @@
-<webobject name="Page">For: <span class="hl"><webobject name="AssignmentName"/></span><webobject name="Conditional1"><webobject name="DifferentStudent">
-  <p>Select from all submissions by <webobject name="StudentName"/> for this assignment.</p>
-</webobject>
+<wo name="Page"><wo:if condition="$forceNavigatorSelection">
+<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
+<div class="floatRight"><wo name="Navigator"/></div>
+<p>For: <span class="hl"><wo:if condition="$prefs.assignmentOffering"><wo:str value="$prefs.assignmentOffering.titleString"/></wo:if><wo:else><wo:str value="$prefs.assignment.titleString"/></wo:else></span></p>
+<wo:if condition="$previousSubmissions"><wo:if condition="$selectingForDifferentUser">
+  <p>Select from all submissions by <wo:str value="$prefs.submission.user.nameAndUid"/> for this assignment.</p>
+</wo:if>
   <p>Select the assignment submission to view:</p>
-  <div class="shadow"><table>
-  <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
-    <tr><th>&nbsp;</th><th>No.</th><th>Time</th><th>Score</th></tr>
-    <webobject name="Repetition1"><webobject name="TR">
-      <td><webobject name="RadioButton1"/></td>
-      <td align="right"><webobject name="String1"/></td>
-      <td><webobject name="String2"/></td>
-      <webobject name=HasResult>
-        <td align="right"><webobject name="String3"/></td>
-      </webobject><webobject name="HasNoResult">
-        <td style="color:red">&lt;<webobject name="String4"/>&gt;</td>
-      </webobject>
-    </webobject></webobject>
-    </table></div>
-</webobject></webobject>
+  <table>
+    <tr><td colspan="3" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
+    <tr><th>No.</th><th>Time</th><th>Score</th></tr>
+    <wo name="Repetition1"><wo name="TR">
+      <wo:if condition="$hasResult">
+        <td align="right"><wo:link action="$selectSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
+        <td><wo:link action="$selectSubmission"><wo name="String2"/></wo:link></td>
+        <td align="right"><wo:link action="$selectSubmission"><wo name="String3"/></wo:link></td>
+      </wo:if><wo:else>
+        <td align="right"><wo:str value="$aSubmission.submitNumber"/></td>
+        <td><wo name="String2"/></td>
+        <td style="color:red">&lt;<wo:str value="$submissionStatus"/>&gt;</td>
+      </wo:else>
+    </wo></wo>
+  </table>
+</wo:if><wo:else>
+<wo:if condition="$selectingForDifferentUser">
+  <p><wo:str value="$prefs.submission.user.nameAndUid"/> has not made any
+  submissions for the selected assignment.</p>
+</wo:if><wo:else>
+  <p>You have not made any submissions for the selected assignment.</p>
+</wo:else></wo:else></wo:net.sf.webcat.core.WCPageModule></wo:else></wo>

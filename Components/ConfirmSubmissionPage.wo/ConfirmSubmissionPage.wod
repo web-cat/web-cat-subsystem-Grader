@@ -1,24 +1,13 @@
-AssignmentName: WOString {
-    value = prefs.assignmentOffering.titleString;
+FileName: WOString {
+    value = file.getName;       // VALID
 }
 
-Conditional1: WOConditional {
-	condition = hasMessages;
-	negate    = true;
+Page: net.sf.webcat.core.WCPageWithNavigation {
 }
 
-DifferentStudent: WOConditional {
-	condition = session.impersonatingAnotherUser;
-}
-
-IsSingleFile: WOConditional {
-	condition = singleFile;
-}
-
-IsMultipleFiles: WOConditional {
-	condition = singleFile;
-	negate    = true;
-}
+// Page: net.sf.webcat.core.WizardPage {
+//     finishEnabled = false;
+// }
 
 Repetition1: WORepetition {
 	item = file;
@@ -26,22 +15,6 @@ Repetition1: WORepetition {
 	index = index;
 }
 
-String1: WOString {
-	value = file.getName;		// VALID
-}
-
-String3: WOString {
-	value = fileSize;
-}
-
-StudentName: WOString {
-	value = user.nameAndUid;
-}
-
 TR: net.sf.webcat.core.TableRow {
 	index = index;
-}
-
-Page: net.sf.webcat.core.WizardPage {
-    finishEnabled = false;
 }

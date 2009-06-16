@@ -1,18 +1,22 @@
-<webobject name="Page"><webobject name="Conditional1">For: <span class="hl"><webobject name="AssignmentName"/></span>
-<webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
+<wo name="Page"><wo:if negate="true" condition="$hasMessages">
+<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
+For: <span class="hl"><wo:str value="$prefs.assignmentOffering.titleString"/></span>
+<wo:if condition="$session.impersonatingAnotherUser"><p>Submitting as: <span class="hl"><wo:str value="$user.nameAndUid"/></span></p></wo:if>
 <p>Please make sure that
-<webobject name="IsMultipleFiles">these files constitute</webobject>
-<webobject name="IsSingleFile">this file constitutes</webobject>
+<wo:if condition="$singleFile">this file constitutes</wo:if>
+<wo:else>these files constitute</wo:else>
 your full submission, and that you have not accidentally uploaded
 an incorrect file.</p>
-<div class="shadow"><table><tbody>
+<table><tbody>
   <tr><th>File</th><th>Size</th></tr>
-  <webobject name="Repetition1"><webobject name="TR">
-    <td><webobject name="String1"/></td>
-	<td align="right"><webobject name="String3"/></td>
-  </webobject></webobject>
-</tbody></table></div><div class="spacer">&nbsp;</div>
-<p>Click the <b>Next</b> button to confirm your submission.</p>
-<p>You cannot take back a submission once you have clicked <b>Next</b>.
-If you wish to make any changes, click the <b>Back</b> button instead.</p>
-</webobject></webobject>
+  <wo name="Repetition1"><wo name="TR">
+    <td><wo name="FileName"/></td>
+	<td align="right"><wo:str value="$fileSize"/></td>
+  </wo></wo>
+</tbody></table>
+
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
+<p><wo:net.sf.webcat.ui.WCButton action="$back">Change File</wo:net.sf.webcat.ui.WCButton>
+<wo:net.sf.webcat.ui.WCButton action="$next">Confirm</wo:net.sf.webcat.ui.WCButton></p>
+</wo:WOForm>
+</wo:net.sf.webcat.core.WCPageModule></wo:if></wo>

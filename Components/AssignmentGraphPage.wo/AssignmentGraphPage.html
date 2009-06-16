@@ -1,8 +1,22 @@
-<webobject name="Page"><p>For: <span class="hl"><webobject name="AssignmentName"/></span></p>
-<p><webobject name="Chart1"/></p>
-<p><webobject name="Chart2"/></p>
-<p><webobject name="Chart3"/></p>
-<webobject name="IsStaff">
-<p><webobject name="Chart4"/></p>
-</webobject>
-</webobject>
+<wo name="Page"><wo:if condition="$forceNavigatorSelection">
+<wo name="Panel1">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo></wo:if><wo:else>
+<wo name="Panel1">
+<div class="floatRight"><wo name="Navigator"/></div>
+<p>For: <span class="hl"><webobject name="AssignmentName"/></span></p>
+<wo name="Chart1"/>
+</wo>
+<wo:net.sf.webcat.core.WCPageModule title="Your Score Over Time">
+<wo name="Chart2"/>
+</wo:net.sf.webcat.core.WCPageModule>
+<wo:net.sf.webcat.core.WCPageModule title="Opportunities for Improvement">
+<webobject name="Chart3"/>
+</wo:net.sf.webcat.core.WCPageModule>
+<wo:if condition="$isStaff">
+<wo:net.sf.webcat.core.WCPageModule title="Submissions by Student">
+<webobject name="Chart4"/>
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:if>
+</wo:else></wo>

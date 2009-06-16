@@ -88,11 +88,11 @@ public class PickSubmissionPage
         submissions = EOUtilities.objectsMatchingValues(
                 localContext(),
                 Submission.ENTITY_NAME,
-                new NSDictionary(
+                new NSDictionary<String, Object>(
                         new Object[] {  user,
                                         prefs().assignmentOffering()
                                      },
-                        new Object[] { Submission.USER_KEY,
+                        new String[] { Submission.USER_KEY,
                                        Submission.ASSIGNMENT_OFFERING_KEY }
                 )
             );
@@ -222,6 +222,14 @@ public class PickSubmissionPage
     public boolean nextEnabled()
     {
         return previousSubmissions  &&  super.nextEnabled();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent selectSubmission()
+    {
+        selectedIndex = index;
+        return next();
     }
 
 

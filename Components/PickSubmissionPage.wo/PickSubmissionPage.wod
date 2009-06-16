@@ -1,25 +1,18 @@
-AssignmentName: WOString {
-    value = prefs.assignmentOffering.titleString;
+BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = submissionDisplayGroup;
+    persistentKey = "PickSubmissionPage.batchSize";
 }
 
-Conditional1: WOConditional {
-	condition = previousSubmissions;
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }
 
-RadioButton1: WORadioButton {
-	name = "Group";
-	selection = selectedIndex;
-	value = index;
+Page: net.sf.webcat.core.WCPageWithNavigation {
 }
 
 Repetition1: WORepetition {
 	item = aSubmission;
 	list = submissionDisplayGroup.displayedObjects;
 	index = index;
-}
-
-String1: WOString {
-	value = aSubmission.submitNumber;
 }
 
 String2: WOString {
@@ -32,37 +25,6 @@ String3: WOString {
 	value        = aSubmission.result.finalScore;
 }
 
-String4: WOString {
-	value = submissionStatus;
-}
-
-HasResult: WOConditional {
-	condition = hasResult;
-}
-
-HasNoResult: WOConditional {
-	condition = hasResult;
-	negate    = true;
-}
-
-DifferentStudent: WOConditional {
-	condition = selectingForDifferentUser;
-}
-
-StudentName: WOString {
-	value = prefs.submission.user.nameAndUid;
-}
-
 TR: net.sf.webcat.core.TableRow {
 	index = index;
-}
-
-Page: net.sf.webcat.core.WizardPage {
-    finishEnabled = false;
-    sideStepTitle = sideStepTitle;
-}
-
-BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
-    displayGroup = submissionDisplayGroup;
-    persistentKey = "PickSubmissionPage.batchSize";
 }
