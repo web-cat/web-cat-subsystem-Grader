@@ -1,20 +1,6 @@
 {
   staff = {
     children = {
-      Home = {
-        children = {
-//          "Navigation1" = {
-//            pageName   = net.sf.webcat.grader.TransitionalNavTestPage;
-//            accessLevel = 40;
-//            priority   = 2000;
-//          };
-          "Navigation2" = {
-            pageName   = net.sf.webcat.grader.NavTestPage;
-            accessLevel = 40;
-            priority   = 2001;
-          };
-        };
-      };
       Grading = {
         accessLevel = 40;
         priority = 200;
@@ -215,16 +201,6 @@
             priority   = 1;
             wantsStart = YES;
             children = {
-//              "Pick the Course" = {
-//                pageName   = net.sf.webcat.grader.PickCourseEnrolledPage;
-//                priority   = 1;
-//                id         = NewSubmission;
-//                wantsStart = YES;
-//              };
-//              "Pick the Assignment" = {
-//                pageName = net.sf.webcat.grader.PickAssignmentToSubmitPage;
-//                priority = 2;
-//              };
               "Upload Your File(s)" = {
                 pageName = net.sf.webcat.grader.UploadSubmissionPage;
                 priority = 3;
@@ -254,17 +230,6 @@
           "Past Results" = {
             priority = 2;
             children = {
-              "Pick the Course" = {
-                pageName   = net.sf.webcat.grader.PickCourseEnrolledPage;
-                priority   = 1;
-                id         = PastResults;
-                wantsStart = YES;
-              };
-              "Pick the Assignment" = {
-                pageName = net.sf.webcat.grader.PickAssignmentToSubmitPage;
-                priority = 2;
-                config = { all = true; };
-              };
               "Pick the Submission" = {
                 pageName = net.sf.webcat.grader.PickSubmissionPage;
                 priority = 3;
@@ -279,17 +244,6 @@
           "Graphs" = {
             priority = 3;
             children = {
-              "Pick the Course" = {
-                pageName   = net.sf.webcat.grader.PickCourseEnrolledPage;
-                priority   = 1;
-                id     = PastGraphs;
-                wantsStart = YES;
-              };
-              "Pick the Assignment" = {
-                pageName = net.sf.webcat.grader.PickAssignmentToSubmitPage;
-                priority = 2;
-                config = { all = true; };
-              };
               "Graphical Performance Summary" = {
                 pageName = net.sf.webcat.grader.graphs.AssignmentGraphPage;
                 id     = GraphResults;
