@@ -31,7 +31,12 @@ FinalScore: WOString {
 Form: WOForm {
 }
 
-Go: WOActiveImage {
+Go: WCButton {
+    action = viewNextFile;
+    label  = "Go";
+}
+
+Go2: WOActiveImage {
 	action = viewNextFile;
 	filename  = "icons/go.gif";
 	framework = "Core";
@@ -42,10 +47,9 @@ Go: WOActiveImage {
 	style     = "vertical-align:middle;";
 }
 
-Page: net.sf.webcat.core.PageWithNavigation {
+Page: net.sf.webcat.core.WCPageWithNavigation {
     title      = thisFile.sourceFileName;
-    stylesheet = "Grader.framework/WebServerResources/wc-code.css";
-    hideSteps  = true;
+/*    stylesheet = "Grader.framework/WebServerResources/wc-code.css"; */
 }
 
 SubmitNumber: WOString {

@@ -1,0 +1,14 @@
+Chart1: net.sf.webcat.grader.graphs.HistogramChart {
+    dataset    = submission.assignmentOffering.graphSummary.frequencyDataset;
+    title      = "Score Distribution for the Class";
+    xAxisLabel = "Score";
+    yAxisLabel = "Students";
+    markValue  = result.automatedScore;
+}
+
+Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
+    dataset    = correctnessToolsDataset;
+    title      = "Your Score Across Your Submissions";
+    xAxisLabel = "Date";
+    yAxisLabel = "Your Score";
+}

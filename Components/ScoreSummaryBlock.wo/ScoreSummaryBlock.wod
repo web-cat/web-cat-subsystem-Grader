@@ -7,21 +7,6 @@ CannotEditDeduction: WOConditional {
     negate    = true;
 }
 
-Chart1: net.sf.webcat.grader.graphs.HistogramChart {
-    dataset    = submission.assignmentOffering.graphSummary.frequencyDataset;
-    title      = "Score Distribution for the Class";
-    xAxisLabel = "Score";
-    yAxisLabel = "Students";
-    markValue  = result.automatedScore;
-}
-
-Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
-    dataset    = correctnessToolsDataset;
-    title      = "Your Score Across Your Submissions";
-    xAxisLabel = "Date";
-    yAxisLabel = "Your Score";
-}
-
 Deduction: WOString {
 	numberformat = "0.0";
 	value        = taScore;
@@ -43,10 +28,6 @@ FinalScore: WOString {
 	value        = result.finalScore;
 }
 
-Form: WOForm {
-    multipleSubmit = true;
-}
-
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = submission.assignmentOffering.graphSummary;
     markScore    = submission.result.automatedScore;
@@ -64,40 +45,8 @@ HasToolGrade: WOConditional {
 	condition = submission.assignmentOffering.assignment.usesToolCheckScore;
 }
 
-HideGraphs: WOConditional {
-    condition = user.preferences.FinalReportShowGraphs;
-    negate    = true;
-}
-
-HideGraphsButton: WOSubmitButton {
-    value  = "Hide Graphs";
-    action = toggleShowGraphs;
-}
-
-IncludeSeparator: WOConditional {
-    condition = includeSeparator;
-}
-
-IsInForm: WOConditional {
-    condition = context.isInForm;
-}
-
-IsNotInForm: WOConditional {
-    condition = context.isInForm;
-    negate    = true;
-}
-
 PossibleScore: WOString {
 	value = submission.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
-}
-
-ShowGraphs: WOConditional {
-    condition = user.preferences.FinalReportShowGraphs;
-}
-
-ShowGraphsButton: WOSubmitButton {
-    value  = "Show Graphs";
-    action = toggleShowGraphs;
 }
 
 TAMeter: WOString {

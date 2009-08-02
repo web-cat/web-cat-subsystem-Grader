@@ -1,4 +1,12 @@
-<webobject name="Page"><table style="border: none;">
+<webobject name="Page">
+<wo:if condition="$forceNavigatorSelection">
+<wo:net.sf.webcat.core.WCPageModule title="Select Your Course Offering">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course offering.</p></div>
+</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:net.sf.webcat.core.WCPageModule title="Selected Course Offering">
+<div class="floatRight"><wo name="Navigator"/></div>
+<wo:form><table style="border: none;">
 <wo name="CanDelete">
 <tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
     <td>You may delete this course offering.   It cannot be deleted if
@@ -10,22 +18,21 @@
 <tr><td class="R">CRN:</td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
 <tr><td class="R">Label:</td><td><webobject name="Label"/> <wo name="LabelInfo"/></td></tr>
 <tr><td class="R">URL:</td><td><wo name="URL"/> <wo name="URLInfo"/></td></tr>
-<tr><td class="R">Moodle Id:</td><td><wo name="MoodleId"/>
+<wo:if condition="false"><tr><td class="R">Moodle Id:</td><td><wo name="MoodleId"/>
 <wo name="MoodleIdInfo"/>&nbsp; Group Id:&nbsp;<wo name="MoodleId"/>
-<wo name="MoodleGroupIdInfo"/></td></tr>
-<tr><td></td><td><wo:if condition="$earliestAndLatestComputed">
-<wo:if condition="$earliest">
-Submission date range:
-<wo:str value="$earliest" formatter="$session.timeFormatter"/>
--
-<wo:str value="$latest" formatter="$session.timeFormatter"/>
-</wo:if><wo:else>
-No submissions found for any assignment in this course offering.
-</wo:else></wo:if><wo:else>
-<wo:submit value="Show Submission Date Range" action="$computeSubmissionDateRange"/>
-<wo name="DateRangeInfo"/></wo:else></td></tr>
-</table><div class="spacer">&nbsp;</div>
-<div class="shadow"><table>
+<wo name="MoodleGroupIdInfo"/></td></tr></wo:if>
+<tr><td></td><td><wo:submit action="$applyLocalChanges" value="Apply"/></td></tr>
+</table></wo:form>
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Instructors" open="false">
+
+<wo:WCContentPane id="hhh">
+<p><wo:str value="$accum"/></p>
+</wo:WCContentPane>
+<wo:WCForm><wo:WCLink action="$accumulate" remote.refreshPanes="hhh" label="add"><wo:image filename="images/add-sm-btn.gif"/></wo:WCLink></wo:WCForm>
+
+<wo:form><table>
   <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr>
   <webobject name="InstructorRepetition"><webobject name="TR">
     <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
@@ -36,8 +43,14 @@ No submissions found for any assignment in this course offering.
   <webobject name="LastInstrTR">
 	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
   </webobject>
-</table></div><div class="spacer">&nbsp;</div>
-<div class="shadow"><table>
+</table></wo:form>
+<wo:net.sf.webcat.core.WCPageModule title="Show more stuff" open="false">
+here is more stuff
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="false">
+<wo:form><table>
   <tr><th>User ID</th><th>Graders/Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr>
   <webobject name="TARepetition"><webobject name="TR">
     <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
@@ -48,5 +61,28 @@ No submissions found for any assignment in this course offering.
   <webobject name="LastTATR">
 	<td colspan="4"><webobject name="AddTA"/> Add another grader/TA</td>
   </webobject>
-</table></div><div class="spacer">&nbsp;</div>
-</webobject>
+</table></wo:form>
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Student Roster" open="false">
+TBD
+
+<wo:net.sf.webcat.core.WCPageModule title="Upload Roster CSV File" open="false">
+TBD
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Add Existing Student Accounts by Hand" open="false">
+TBD
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Submission Date Range" open="false">
+<wo:if condition="$earliest">
+<p>Submission date range:
+<wo:str value="$earliest" formatter="$session.timeFormatter"/>
+-
+<wo:str value="$latest" formatter="$session.timeFormatter"/></p>
+</wo:if><wo:else>
+<p>No submissions found for any assignment in this course offering.</p>
+</wo:else>
+</wo:net.sf.webcat.core.WCPageModule></wo:else></webobject>

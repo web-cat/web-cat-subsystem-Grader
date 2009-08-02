@@ -109,13 +109,16 @@ Name: WOHyperlink {
     string = aUser.name;
 }
 
+Navigator: net.sf.webcat.core.CoreNavigator {
+}
+
 NotThisUser: WOConditional {
     condition = matchesUser;
     negate    = true;
 }
 
-Page : net.sf.webcat.core.WizardPage {
-    applyEnabled = true;
+Page : net.sf.webcat.core.WCPageWithNavigation {
+    title = "Edit Course Properties";
 }
 
 RemoveInstructor: WOImageButton {

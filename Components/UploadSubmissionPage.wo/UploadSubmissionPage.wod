@@ -93,6 +93,7 @@ WCSortOrder3: net.sf.webcat.core.WCSortOrder {
 //}
 
 Page: net.sf.webcat.core.WCPageWithNavigation {
+    permalink = prefs.assignmentOffering.permalink;
 }
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {

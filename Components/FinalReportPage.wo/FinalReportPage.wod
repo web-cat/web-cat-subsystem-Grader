@@ -1,7 +1,3 @@
-AreNonInlineReports: WOConditional {
-	condition = reportArray.count;
-}
-
 Coverage: WOString {
 	numberformat = "0.0";
 	value        = stats.gradedElementsCoveragePercent;
@@ -22,10 +18,6 @@ FileDeduction: WOString {
 	value        = stats.toolDeductions;
 }
 
-FileName: WOString {
-	value = stats.sourceFileName;
-}
-
 FileRemarks: WOString {
 	numberformat = "0";
 	value        = stats.remarks;
@@ -41,16 +33,9 @@ FileStaffRemarks: WOString {
 	value        = stats.staffRemarks;
 }
 
-Form1: WOForm {
-	target = "_blank";
-}
-
-Form2: WOForm {
-}
-
-FullPrintableReport: WOSubmitButton {
+FullPrintableReport: WCButton {
 	action = fullPrintableReport;
-	value = "Full Printable Report";
+	label  = "Full Printable Report";
 }
 
 GradingHalted: WOConditional {
@@ -60,40 +45,6 @@ GradingHalted: WOConditional {
 GradingNotHalted: WOConditional {
 	condition = submission.assignmentOffering.gradingSuspended;
 	negate    = true;
-}
-
-GradingNotPaused: WOConditional {
-	condition = gradingPaused;
-	negate = true;
-}
-
-GradingPaused: WOConditional {
-	condition = gradingPaused;
-}
-
-HasCoverageData: WOConditional {
-	condition = stats.elementsRaw;
-}
-
-HasFileStats: WOConditional {
-	condition = result.submissionFileStats.count;
-}
-
-HasNoCoverageData: WOConditional {
-	condition = stats.elementsRaw;
-	negate    = true;
-}
-
-HasNonZeroScore: WOConditional {
-	condition = hasNonZeroScore;
-}
-
-HasTAComments: WOConditional {
-	condition = hasTAComments;
-}
-
-Hyperlink1: WOHyperlink {
-	action = refreshAction;
 }
 
 Image: WOImage {
@@ -113,18 +64,9 @@ MostRecentJobWait: WOString {
 	dateformat = mostRecentJobWaitFormat;
 }
 
-NoSubmissionChosen: WOConditional {
-    condition = submissionChosen;
-    negate    = true;
-}
-
-Page: net.sf.webcat.core.PageWithNavigation {
-    title = "Your Assignment Submission Results";
-    hideSteps = true;
-}
-
-PartialInlineReport: PartialInlineReport {
-    file = result.resultFile;
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title     = "Your Assignment Submission Results";
+    permalink = submission.permalink;
 }
 
 PastResults: WOHyperlink {
@@ -132,61 +74,14 @@ PastResults: WOHyperlink {
 	string = "Past Results";
 }
 
-PopUpButton1: WOPopUpButton {
-        list		  = reportArray;
-        item   		  = report;
-	selection         = selectedReport;
-	displayString 	  = report.label;
-//	noSelectionString = "Select from your files ...";
-}
-
-QueuedJobCount: WOString {
-	value = queuedJobCount;
-}
-
-QueuePosition: WOString {
-	value = queuePosition;
-}
-
-ReportNotReady: WOConditional {
-	condition = reportIsReady;
-	negate = true;
-}
-
-ReportReady: WOConditional {
-	condition = reportIsReady;
-}
-
-ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
-    submission = submission;
-}
-
-ReturnToGrading: WOSubmitButton {
-    value = " < Return to Grading ";
+ReturnToGrading: WCButton {
+    label  = "< Return to Grading";
     action = next;
 }
-
-RTGForm: WOForm {}
 
 ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = false;
     submission = submission;
-}
-
-ShowCoverageData: WOConditional {
-    condition = showCoverageData;
-}
-
-ShowDetails: WOHyperlink {
-	action = fileStatsDetails;
-}
-
-ShowReturnToGrading: WOConditional {
-    condition = showReturnToGrading;
-}
-
-ShowSubmitAgain: WOConditional {
-    condition = canSubmitAgain;
 }
 
 StatsLabel: WOString {
@@ -199,30 +94,9 @@ StatRepetition: WORepetition {
 	index = index;
 }
 
-String1: WOString {
-	value = refreshTimeout;
-}
-
-String2: WOString {
-	value = user.email;
-}
-
-SubmissionChosen: WOConditional {
-    condition = submissionChosen;
-}
-
-SubmitAgain: WOSubmitButton {
-    value = " Submit Again ";
+SubmitAgain: WCButton {
+    label  = "Submit Again";
     action = submitAgain;
-}
-
-SubmitButton1: WOSubmitButton {
-	action = fileDeliveryAction;
-	value = "Download Selected File";
-}
-
-SummaryReport: PartialInlineReport {
-    file = result.summaryFile;
 }
 
 TAComments: net.sf.webcat.core.FormattedString {

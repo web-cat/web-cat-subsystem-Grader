@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -59,26 +59,31 @@ public class EditCoursePage
     public Course              course;
     public User                aUser;
     public int                 index;
-    public NSArray             semesters;
+    public NSArray<Semester>   semesters;
     public Semester            aSemester;
-    public NSTimestamp         earliest;
-    public NSTimestamp         latest;
     public boolean             earliestAndLatestComputed;
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse arg0, WOContext arg1 )
+    public void appendToResponse(WOResponse arg0, WOContext arg1)
     {
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( localContext() );
+                Semester.objectsForFetchAll(localContext());
         }
-        instructorDisplayGroup.setMasterObject( courseOffering() );
-        TADisplayGroup.setMasterObject( courseOffering() );
-        super.appendToResponse( arg0, arg1 );
+        instructorDisplayGroup.setMasterObject(courseOffering());
+        TADisplayGroup.setMasterObject(courseOffering());
+        super.appendToResponse(arg0, arg1);
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean allowsAllOfferingsForCourse()
+    {
+        return false;
     }
 
 
@@ -113,7 +118,7 @@ public class EditCoursePage
      */
     public WOComponent removeInstructor()
     {
-        courseOffering().removeFromInstructorsRelationship( aUser );
+        courseOffering().removeFromInstructorsRelationship(aUser);
         return null;
     }
 
@@ -125,7 +130,7 @@ public class EditCoursePage
      */
     public WOComponent removeTA()
     {
-        courseOffering().removeFromGradersRelationship( aUser );
+        courseOffering().removeFromGradersRelationship(aUser);
         return null;
     }
 
@@ -138,7 +143,7 @@ public class EditCoursePage
     public WOComponent addInstructor()
     {
         EditStaffPage addPage = (EditStaffPage)pageWithName(
-            EditStaffPage.class.getName() );
+            EditStaffPage.class.getName());
         addPage.editInstructors = true;
         addPage.nextPage = this;
         return addPage;
@@ -153,7 +158,7 @@ public class EditCoursePage
     public WOComponent addTA()
     {
         EditStaffPage addPage = (EditStaffPage)pageWithName(
-            EditStaffPage.class.getName() );
+            EditStaffPage.class.getName());
         addPage.editInstructors = false;
         addPage.nextPage = this;
         return addPage;
@@ -166,7 +171,7 @@ public class EditCoursePage
         if (!applyLocalChanges()) return null;
         CourseOffering thisOffering = courseOffering();
         setCourseOffering(null);
-        coreSelections().setCourseOfferingRelationship( null );
+        coreSelections().setCourseOfferingRelationship(null);
         localContext().deleteObject(thisOffering);
         return finish();
     }
@@ -177,14 +182,14 @@ public class EditCoursePage
     {
         ConfirmPage confirmPage = null;
         confirmPage =
-            (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+            (ConfirmPage)pageWithName(ConfirmPage.class.getName());
         confirmPage.nextPage       = this;
         confirmPage.message        =
             "This action will <b>delete the course offering</b>. "
             + "This action cannot be undone.</p>";
         confirmPage.actionReceiver = this;
         confirmPage.actionOk       = "deleteActionOk";
-        confirmPage.setTitle( "Confirm Delete Request" );
+        confirmPage.setTitle("Confirm Delete Request");
         return confirmPage;
     }
 
@@ -197,16 +202,47 @@ public class EditCoursePage
      */
     public WOComponent computeSubmissionDateRange()
     {
-        NSArray subs = Submission.objectsForEarliestForCourseOffering(
+        log.debug("computeSubmissionDateRange()");
+        NSArray<Submission> subs = Submission.objectsForEarliestForCourseOffering(
             localContext(), courseOffering());
         if (subs.count() > 0)
         {
-            earliest = ((Submission)subs.objectAtIndex(0)).submitTime();
+            earliest = subs.objectAtIndex(0).submitTime();
             subs = Submission.objectsForLatestForCourseOffering(
                 localContext(), courseOffering());
-            latest = ((Submission)subs.objectAtIndex(0)).submitTime();
+            latest = subs.objectAtIndex(0).submitTime();
         }
         earliestAndLatestComputed = true;
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSTimestamp earliest()
+    {
+        if (!earliestAndLatestComputed)
+        {
+            computeSubmissionDateRange();
+        }
+        return earliest;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSTimestamp latest()
+    {
+        if (!earliestAndLatestComputed)
+        {
+            computeSubmissionDateRange();
+        }
+        return latest;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOResponse accumulate()
+    {
+        accum += " and another";
         return null;
     }
 
@@ -220,14 +256,14 @@ public class EditCoursePage
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
-    public boolean startWith( NSDictionary params )
+    public boolean startWith(NSDictionary params)
     {
         boolean result = false;
-        String crn = stringValueForKey( params, CourseOffering.CRN_KEY );
-        if ( crn != null )
+        String crn = stringValueForKey(params, CourseOffering.CRN_KEY);
+        if (crn != null)
         {
-            result = startWith( CourseOffering
-                .offeringForCrn( localContext(), crn ) );
+            result = startWith(CourseOffering
+                .offeringForCrn(localContext(), crn));
         }
         return result;
     }
@@ -242,18 +278,18 @@ public class EditCoursePage
      * @param offering the course offering to use for generating settings
      * @return True if successful, false if the course offering is not valid
      */
-    protected boolean startWith( CourseOffering offering )
+    protected boolean startWith(CourseOffering offering)
     {
         boolean result = false;
         User sessionUser = user();
-        if ( offering != null
-             && ( sessionUser.enrolledIn().contains(  offering )
-                  || offering.isInstructor( sessionUser )
-                  || offering.isGrader( sessionUser ) ) )
+        if (offering != null
+             && (sessionUser.enrolledIn().contains(offering)
+                  || offering.isInstructor(sessionUser)
+                  || offering.isGrader(sessionUser)))
         {
             result = true;
-            coreSelections().setCourseRelationship( offering.course() );
-            coreSelections().setCourseOfferingRelationship( offering );
+            coreSelections().setCourseRelationship(offering.course());
+            coreSelections().setCourseOfferingRelationship(offering);
         }
         return result;
     }
@@ -261,5 +297,9 @@ public class EditCoursePage
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( EditCoursePage.class );
+    private NSTimestamp  earliest;
+    private NSTimestamp  latest;
+    public  String       accum = "A";
+
+    static Logger log = Logger.getLogger(EditCoursePage.class);
 }

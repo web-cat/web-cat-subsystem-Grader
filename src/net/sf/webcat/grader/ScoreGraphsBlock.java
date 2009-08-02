@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  *  @author  Stephen Edwards
  *  @version $Id$
  */
-public class ScoreSummaryBlock
+public class ScoreGraphsBlock
     extends GraderComponent
 {
     //~ Constructors ..........................................................
@@ -46,7 +46,7 @@ public class ScoreSummaryBlock
      * Default constructor.
      * @param context The page's context
      */
-    public ScoreSummaryBlock( WOContext context )
+    public ScoreGraphsBlock( WOContext context )
     {
         super( context );
     }
@@ -54,10 +54,11 @@ public class ScoreSummaryBlock
 
     //~ KVC Attributes (must be public) .......................................
 
-    public boolean          allowScoreEdit   = false;
     public Submission       submission;
     public SubmissionResult result;
     public int              rowNumber;
+
+    public static final String showGraphsKey = "FinalReportShowGraphs";
 
 
     //~ Methods ...............................................................
@@ -72,77 +73,38 @@ public class ScoreSummaryBlock
 
 
     // ----------------------------------------------------------
-    public boolean hasTAGrade()
+    public WOComponent toggleShowGraphs()
     {
-        return submission.assignmentOffering().assignment()
-            .submissionProfile().taPoints() > 0.0
-            || (result != null
-                && result.taScoreRaw() != null
-                && result.taScore() != 0.0)
-            || allowScoreEdit;
+        boolean showGraphs = ERXValueUtilities.booleanValue(
+            user().preferences().objectForKey( showGraphsKey ) );
+        log.debug( "toggleShowGraphs: was " + showGraphs );
+        showGraphs = !showGraphs;
+        user().preferences().setObjectForKey(
+            Boolean.valueOf( showGraphs ), showGraphsKey );
+        user().savePreferences();
+        return context().page();
     }
 
 
     // ----------------------------------------------------------
-    public Object taScore()
+    public SubmissionResultDataset correctnessToolsDataset()
     {
-        return ( result.status() == Status.CHECK )
-            ? result.taScoreRaw()
-            : null;
-    }
-
-
-    // ----------------------------------------------------------
-    public String taMeter()
-    {
-        Number taPossibleNum = submission.assignmentOffering()
-            .assignment().submissionProfile().taPointsRaw();
-        double taPossible = ( taPossibleNum == null )
-            ? 1.0 : taPossibleNum.doubleValue();
-        Number taPtsNum = result.taScoreRaw();
-        if ( taPtsNum == null ||
-             ( !allowScoreEdit && result.status() != Status.CHECK ) )
+        if ( correctnessToolsDataset == null )
         {
-            return "&lt;Awaiting TA&gt;";
+            correctnessToolsDataset = new SubmissionResultDataset(
+                SubmissionResult.objectsForUser(
+                    localContext(),
+                    submission.assignmentOffering(),
+                    result.submission().user() ),
+                SubmissionResultDataset.TESTING_AND_STATIC_TOOLS_SCORE_SERIES );
         }
-        double taPts = taPtsNum.doubleValue();
-        return FinalReportPage.meter( taPts / taPossible );
-    }
-
-
-    // ----------------------------------------------------------
-    public String toolMeter()
-    {
-        Number toolPossibleNum = submission.assignmentOffering()
-            .assignment().submissionProfile().toolPointsRaw();
-        double toolPossible = ( toolPossibleNum == null )
-            ? 1.0 : toolPossibleNum.doubleValue();
-        double toolPts = result.toolScore();
-        return FinalReportPage.meter( toolPts / toolPossible );
-    }
-
-
-    // ----------------------------------------------------------
-    public String correctnessMeter()
-    {
-        double possible = submission.assignmentOffering()
-            .assignment().submissionProfile().correctnessPoints();
-        double pts = result.correctnessScore();
-        return FinalReportPage.meter( pts / possible );
-    }
-
-
-    // ----------------------------------------------------------
-    public String finalMeter()
-    {
-        double possible = submission.assignmentOffering()
-            .assignment().submissionProfile().availablePoints();
-        double pts = result.finalScore();
-        return FinalReportPage.meter( pts / possible );
+        return correctnessToolsDataset;
     }
 
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( ScoreSummaryBlock.class );
+    private SubmissionResultDataset correctnessToolsDataset;
+
+    static Logger log = Logger.getLogger( ScoreGraphsBlock.class );
 }
