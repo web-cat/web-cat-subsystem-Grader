@@ -101,8 +101,8 @@
       <p>Your submission has been received for grading by the course staff.</p>
     </wo:net.sf.webcat.core.WCPageModule>
   </wo:if>
-  <wo:PartialInlineReport file="$result.summaryFile" title="Summary of Automated Feedback"/><!-- open="~@java.lang.Boolean@TRUE"/ -->
-  <wo:PartialInlineReport file="$result.resultFile" title="Automated Feedback"/><!-- open="~@java.lang.Boolean@TRUE"/ -->
+  <wo:PartialInlineReport file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
+  <wo:PartialInlineReport file="$result.resultFile" title="Automated Feedback" open="$true"/>
   <wo:if condition="$reportArray.count">
     <wo:net.sf.webcat.core.WCPageModule title="Downloadables" open="false">
     <table><tbody>
