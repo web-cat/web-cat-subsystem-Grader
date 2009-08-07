@@ -1,8 +1,9 @@
 <wo name="PageWrapper">
+<wo:WCPageModule title="$session.tabs.selectedDescendant.label">
 <wo name="LongResponse">
 <wo:if condition="$longResponse.cancelled">
 <p>Generation of the CSV file was cancelled.</p>
 </wo><wo:else>
 <p>CSV file generation complete:
 <wo:link action="$downloadFile">Download CSV file</wo:link>.</p></wo:else>
-</wo></wo>
+</wo></wo:WCPageModule></wo>

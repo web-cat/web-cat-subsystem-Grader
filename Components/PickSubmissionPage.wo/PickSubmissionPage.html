@@ -10,9 +10,9 @@
   <p>Select from all submissions by <wo:str value="$prefs.submission.user.nameAndUid"/> for this assignment.</p>
 </wo:if>
   <p>Select the assignment submission to view:</p>
-  <table>
+  <table><thead>
     <tr><td colspan="3" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
-    <tr><th>No.</th><th>Time</th><th>Score</th></tr>
+    <tr><th>No.</th><th>Time</th><th>Score</th></tr></thead><tbody>
     <wo name="Repetition1"><wo name="TR">
       <wo:if condition="$hasResult">
         <td align="right"><wo:link action="$selectSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
@@ -24,7 +24,7 @@
         <td style="color:red">&lt;<wo:str value="$submissionStatus"/>&gt;</td>
       </wo:else>
     </wo></wo>
-  </table>
+  </tbody></table>
 </wo:if><wo:else>
 <wo:if condition="$selectingForDifferentUser">
   <p><wo:str value="$prefs.submission.user.nameAndUid"/> has not made any

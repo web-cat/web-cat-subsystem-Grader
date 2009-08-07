@@ -32,8 +32,8 @@
 </wo:WCContentPane>
 <wo:WCForm><wo:WCLink action="$accumulate" remote.refreshPanes="hhh" label="add"><wo:image filename="images/add-sm-btn.gif"/></wo:WCLink></wo:WCForm>
 
-<wo:form><table>
-  <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr>
+<wo:form><table><thead>
+  <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="InstructorRepetition"><webobject name="TR">
     <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
     <td><webobject name="Email"/></td>
@@ -43,15 +43,15 @@
   <webobject name="LastInstrTR">
 	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
   </webobject>
-</table></wo:form>
+</tbody></table></wo:form>
 <wo:net.sf.webcat.core.WCPageModule title="Show more stuff" open="false">
 here is more stuff
 </wo:net.sf.webcat.core.WCPageModule>
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="false">
-<wo:form><table>
-  <tr><th>User ID</th><th>Graders/Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr>
+<wo:form><table><thead>
+  <tr><th>User ID</th><th>Graders/Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="TARepetition"><webobject name="TR">
     <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
     <td><webobject name="Email"/></td>
@@ -61,7 +61,7 @@ here is more stuff
   <webobject name="LastTATR">
 	<td colspan="4"><webobject name="AddTA"/> Add another grader/TA</td>
   </webobject>
-</table></wo:form>
+</tbody></table></wo:form>
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Student Roster" open="false">
@@ -85,4 +85,10 @@ TBD
 </wo:if><wo:else>
 <p>No submissions found for any assignment in this course offering.</p>
 </wo:else>
-</wo:net.sf.webcat.core.WCPageModule></wo:else></webobject>
+</wo:net.sf.webcat.core.WCPageModule></wo:else>
+
+<wo:net.sf.webcat.core.WCPageModule title="Test User List Browser" open="false">
+<wo:UserListBrowser master="$courseOffering" keyPath="students"/>
+</wo:net.sf.webcat.core.WCPageModule>
+
+</webobject>

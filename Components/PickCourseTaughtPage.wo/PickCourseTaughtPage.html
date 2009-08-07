@@ -7,7 +7,7 @@ function submitForm() { document.WizardForm.submit(); }
 Show courses for: <wo name="SemesterList"/>
 </wo:if><webobject name="TeachingCourses"><p>You are an
 <b>instructor</b> or <b>TA</b> for these courses:</p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <webobject name="TeachingRepetition">
 <webobject name="TR">
 <td><webobject name="RadioButton1"/></td>
@@ -18,7 +18,7 @@ Show courses for: <wo name="SemesterList"/>
 <p>You are not currently registered as the <b>instructor</b> or <b>TA</b> for any courses<wo:if condition="$semester"> in the selected semester</wo:if>.</p>
 </webobject><webobject name="HasAdminCourses">You have
 <b>administrative access</b> to these courses:<p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <webobject name="AdminRepetition">
 <webobject name="TR">
 <td><webobject name="RadioButton2"/></td>

@@ -4,6 +4,6 @@ LongResponse : net.sf.webcat.core.LongResponse {
 	message = "Generating the CSV file ...";
 }
 
-PageWrapper: net.sf.webcat.core.PageWithNavigation {
+PageWrapper: net.sf.webcat.core.WCPageWithNavigation {
     title = "Assignment Scheduling/Grading Data";
 }

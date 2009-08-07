@@ -8,19 +8,19 @@
   <webobject name="HasNonZeroScore"><webobject name="ScoreSummary"/></webobject>
   <webobject name="SummaryReport"/>
   <webobject name="HasTAComments">
-    <div class="shadow"><table><tbody>
-      <tr><th>TA/Instructor Comments</th></tr>
+    <div class="shadow"><table><thead>
+      <tr><th>TA/Instructor Comments</th></tr></thead><tbody>
       <tr class="o"><td><webobject name="TAComments"/></td></tr>
     </tbody></table></div><div class="spacer">&nbsp;</div>
   </webobject>
   <webobject name="HasFileStats">
-    <div class="shadow"><table><tbody>
+    <div class="shadow"><table><thead>
       <tr><th>File</th>
         <th class="sm">Remarks</th>
         <th class="sm">Deductions</th>
         <webobject name="ShowCoverageData">
           <th colspan="2"><webobject name="StatsLabel"/></th>
-        </webobject></tr>
+        </webobject></tr></thead><tbody>
       <webobject name="StatRepetition"><webobject name="TR">
         <td><wo:str value="$stats.file.sourceFileName"/></td>
         <td class="n"><webobject name="FileRemarks"/></td>

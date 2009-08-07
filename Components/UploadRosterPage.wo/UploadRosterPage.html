@@ -18,8 +18,8 @@ column names <wo name="FirstLineInfo"/></p>
 <wo:if condition="$previewLines.count">
 <p>Data preview (<wo:str value="$numberOfRecords"/> entries):
 <wo name="DataPreviewInfo"/></p>
-<div class="shadow"><table class="colborder">
-<tr><wo name="ColHeaderRepetition"><th><wo name="ColHeading"/></th></wo></tr>
+<div class="shadow"><table class="colborder"><thead>
+<tr><wo name="ColHeaderRepetition"><th><wo name="ColHeading"/></th></wo></tr></thead><tbody>
 <wo name="LineRepetition"><wo name="TR">
 <wo name="ColRepetition"><td><wo:str value="$cell"/></td></wo>
 </wo name="TR"></wo name="LineRepetition">
@@ -32,7 +32,7 @@ colspan="$maxRecordLength">
 <wo:if condition="$gapAfterLongLine"><wo name="TRInc"><wo:WOGenericContainer elementName="td"
 style="text-align:center" colspan="$maxRecordLength">
 . . .</wo></wo></wo:if>
-</table></div><div class="spacer">&nbsp;</div>
+</tbody></table></div><div class="spacer">&nbsp;</div>
 <p><wo:if condition="$nextEnabled"><wo:submit action="$refresh" value="Refresh Preview"/></wo:if>
 <wo:else><wo:submit action="$refresh" value="Re-check Columns"/></wo:else></p>
 </wo:if><wo:else><p>No data available to preview.</p></wo>

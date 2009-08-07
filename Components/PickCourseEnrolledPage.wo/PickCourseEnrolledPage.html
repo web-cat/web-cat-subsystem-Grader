@@ -6,7 +6,7 @@ function submitForm() { document.WizardForm.submit(); }
 </script>
 Show courses for: <wo name="SemesterList"/>
 </wo:if><wo:if condition="$user.enrolledIn.count"><p>You are <b>enrolled in</b> these courses:</p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <wo name="CourseRepetition">
 <wo:tr index="$index">
 <td><wo name="RadioButton1"/></td>
@@ -17,7 +17,7 @@ Show courses for: <wo name="SemesterList"/>
 <p>You are not currently <b>enrolled in</b> any courses<wo:if condition="$semester"> in the selected semester</wo:if>.</p>
 </wo:else><webobject name="HasTACourses"><div class="spacer">&nbsp;</div>
 <p>You are <b>grading</b> these courses:</p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <webobject name="TACourseRepetition">
 <wo:tr index="$index">
 <td><webobject name="RadioButton2"/></td>
@@ -26,7 +26,7 @@ Show courses for: <wo name="SemesterList"/>
 </wo:tr></webobject></tbody></table></div>
 </webobject><webobject name="HasInstructorCourses"><div class="spacer">&nbsp;</div>
 <p>You are <b>teaching</b> these courses:</p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <webobject name="InstructorCourseRepetition">
 <wo:tr index="$index">
 <td><webobject name="RadioButton3"/></td>
@@ -35,7 +35,7 @@ Show courses for: <wo name="SemesterList"/>
 </wo:tr></webobject></tbody></table></div>
 </webobject><webobject name="HasAdminCourses"><div class="spacer">&nbsp;</div>
 <p>You have <b>administrative access</b> to these courses:</p>
-<div class="shadow"><table><tbody><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr>
+<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Course</th><th>Name</th></tr></thead><tbody>
 <webobject name="AdminCourseRepetition">
 <wo:tr index="$index">
 <td><webobject name="RadioButton4"/></td>

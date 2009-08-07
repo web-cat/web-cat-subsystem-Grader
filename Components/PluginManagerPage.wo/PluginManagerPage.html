@@ -1,10 +1,11 @@
-<webobject name="Page"><webobject name="Form1">
+<webobject name="Page"><wo:WCPageModule title="$session.tabs.selectedDescendant.label">
+<webobject name="Form1">
 <h2>Published Plug-ins (Available to All)</h2>
 <webobject name="HasPublishedPlugins">
-<div class="shadow"><table><tbody><tr><th>Published Plug-ins
+<div class="shadow"><table><thead><tr><th>Published Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
-</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
 <webobject name="PublishedPluginRepetition">
 <webobject name="TR">
 <td><b><webobject name="Name"/> <webobject name="Version"/></b>
@@ -29,10 +30,10 @@ is available</b></webobject><webobject name="HasHistory">, <webobject name="Hist
 <webobject name="HasAdminPrivileges">
 <h2>Unpublished Plug-ins (for Individual Use)</h2>
 <webobject name="HasUnpublishedPlugins">
-<div class="shadow"><table><tbody><tr><th>Unpublished Plug-ins
+<div class="shadow"><table><thead><tr><th>Unpublished Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
-</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
 <webobject name="UnpublishedPluginRepetition">
 <webobject name="TR">
 <td><b><webobject name="Name"/> <webobject name="Version"/></b>
@@ -58,10 +59,10 @@ is available</b></webobject><webobject name="HasHistory">, <webobject name="Hist
 <webobject name="HasNoAdminPrivileges">
 <h2>Personal Plug-ins (for Your Individual Use)</h2>
 <webobject name="HasPersonalPlugins">
-<div class="shadow"><table><tbody><tr><th>Your Personal Plug-ins
+<div class="shadow"><table><thead><tr><th>Your Personal Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
-</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr>
+</th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
 <webobject name="PersonalPluginRepetition">
 <webobject name="TR">
 <td><b><webobject name="Name"/> <webobject name="Version"/></b>
@@ -87,10 +88,10 @@ is available</b>)</webobject>
 
 <h2>Available for Web-based Installation</h2>
 <webobject name="NewPluginsAvailable">
-<div class="shadow"><table><tbody><tr><th>Available for Installation
+<div class="shadow"><table><thead><tr><th>Available for Installation
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
-</th><th class="sm">Build Date</th><th>Download?</th></tr>
+</th><th class="sm">Build Date</th><th>Download?</th></tr></thead><tbody>
 <webobject name="AvailablePluginRepetition">
 <webobject name="TR">
 <td><b><webobject name="NewName"/> <webobject name="ProviderVersion"/></b>
@@ -148,4 +149,4 @@ web using the download icons in the table.
 Downloaded plug-ins will <span class="hl">be installed immediately.</span>
 </p></webobject>
 
-</webobject></webobject>
+</webobject></wo:WCPageModule></webobject>

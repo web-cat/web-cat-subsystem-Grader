@@ -25,9 +25,9 @@
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
 <webobject name="SubmissionProfileInfo"/></p>
 <p>Automatically grade using <b>these steps</b> in sequence:<br/>
-<div class="shadow"><table><tbody>
+<div class="shadow"><table><thead>
     <tr><th>Order</th><th>Plug-in</th><th class="sm">Time Limit (sec)</th>
-      <th>Move</th><th>Action</th></tr>
+      <th>Move</th><th>Action</th></tr></thead><tbody>
     <webobject name="StepRepetition"><webobject name="TR">
         <td align="center"><webobject name="Order"/></td>
         <td><webobject name="ScriptName"/></td>
@@ -56,13 +56,13 @@
     });
 </script>
 <webobject name="UpcomingAssignments">
-<div class="shadow"><table>
-<tr><th>Assignment</th><th>Due</th></tr>
+<div class="shadow"><table><thead>
+<tr><th>Assignment</th><th>Due</th></tr></thead><tbody>
 <webobject name="UpcomingAssignmentRepetition">
 <webobject name="TR2"><td><webobject name="UpcomingAssignmentName"/><webobject name="UpcomingIsUnpublished">
 <span style="background-color:yellow">(unpublished)</span></webobject></td>
 <td class="nowrap"><webobject name="UpcomingDueDate"/></td>
-</webobject></webobject></table></div>
+</webobject></webobject></tbody></table></div>
 </webobject>
 </td></tr>
 <tr><td align="right">Score Summary:</td><td><webobject name="Graph"/></td>
