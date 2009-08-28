@@ -900,13 +900,13 @@ public class UploadRosterPage
 
     private static final int[] BANNER_COLUMNS = new int[]{
         -1,     // Unused
-        2,      // First Name
-        1,      // Last Name
+        4,      // First Name
+        3,      // Last Name
         -1,     // Last, First
-        6,      // E-mail
+        8,      // E-mail
         -1,     // User Name
         -1,     // Password
-        0,      // ID No.
+        -1,      // ID No.
         -1      // URL
     };
 
