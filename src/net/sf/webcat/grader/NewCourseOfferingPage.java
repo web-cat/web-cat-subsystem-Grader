@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,8 +21,8 @@
 
 package net.sf.webcat.grader;
 
+import org.apache.log4j.Logger;
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.core.*;
@@ -31,8 +31,9 @@ import net.sf.webcat.core.*;
 /**
  * Allows the user to create a new course offering.
  *
- *  @author Stephen Edwards
- *  @version $Id$
+ * @author Stephen Edwards
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class NewCourseOfferingPage
     extends GraderCourseEditComponent
@@ -55,9 +56,13 @@ public class NewCourseOfferingPage
 
     public Course               course;
     public WODisplayGroup       courseDisplayGroup;
-    public NSArray              institutions;
+    public NSArray<AuthenticationDomain> institutions;
     public AuthenticationDomain institution;
     public AuthenticationDomain anInstitution;
+    public Semester            semester;
+    public NSArray<Semester>   semesters;
+    public Semester            aSemester;
+    public String              crn;
 
 
     //~ Methods ...............................................................
@@ -69,8 +74,13 @@ public class NewCourseOfferingPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void appendToResponse(WOResponse response, WOContext context)
     {
+        if ( semesters == null )
+        {
+            semesters =
+                Semester.objectsForFetchAll(localContext());
+        }
         if (institutions == null)
         {
             institutions = AuthenticationDomain.authDomains();
@@ -78,23 +88,23 @@ public class NewCourseOfferingPage
         }
         if (institution == null)
         {
-            courseDisplayGroup.setQualifier( null );
+            courseDisplayGroup.setQualifier(null);
         }
         else
         {
-            courseDisplayGroup.setQualifier( new EOKeyValueQualifier(
+            courseDisplayGroup.setQualifier(new EOKeyValueQualifier(
                 Course.iNSTITUTION_KEY,
                 EOQualifier.QualifierOperatorEqual,
                 institution
                 ));
         }
         courseDisplayGroup.updateDisplayedObjects();
-        if ( coreSelections().courseOffering() != null )
+        if (coreSelections().courseOffering() != null)
         {
             coreSelections().setCourseRelationship(
-                coreSelections().courseOffering().course() );
+                coreSelections().courseOffering().course());
         }
-        super.appendToResponse( response, context );
+        super.appendToResponse(response, context);
     }
 
 
@@ -116,20 +126,27 @@ public class NewCourseOfferingPage
     {
         if (coreSelections().course() == null)
         {
-            error( "Please select a course." );
+            error("Please select a course.");
+            return null;
+        }
+        if (crn == null || crn.length() == 0)
+        {
+            error("Please enter a CRN (unique identifier) for your course offering.");
             return null;
         }
         CourseOffering newOffering = new CourseOffering();
-        localContext().insertObject( newOffering );
-        newOffering.setCourseRelationship( coreSelections().course() );
-        // TODO: use date-based search instead of just creation ordering
-        NSArray semesters = EOUtilities.objectsForEntityNamed(
-                        localContext(), Semester.ENTITY_NAME );
-        newOffering.setSemesterRelationship(
-                        (Semester)semesters.lastObject() );
-        newOffering.addToInstructorsRelationship( user() );
-        // wcSession().setCourseOfferingRelationship( newOffering );
+        localContext().insertObject(newOffering);
+        newOffering.setCourseRelationship(coreSelections().course());
+        newOffering.setSemesterRelationship(semester);
+        newOffering.addToInstructorsRelationship(user());
+        newOffering.setCrn(crn);
         setCourseOffering(newOffering);
+        apply();
         return super.next();
     }
+
+
+    //~ Instance/static variables .............................................
+
+    static Logger log = Logger.getLogger(NewCourseOfferingPage.class);
 }

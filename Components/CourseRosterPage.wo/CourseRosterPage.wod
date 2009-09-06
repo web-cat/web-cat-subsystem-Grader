@@ -4,6 +4,9 @@ AddStudent: WOImageButton {
 	border   = "0";
 	width    = "46";
 	height   = "17";
+    title    = "Enroll this student";
+    alt      = "Enroll this student";
+    class    = "icon";
 }
 
 BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
@@ -37,7 +40,8 @@ NotStudentRepetition: WORepetition {
 	index = index;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title = "Edit Your Course Roster";
 }
 
 RemoveStudent: WOImageButton {
@@ -47,6 +51,9 @@ RemoveStudent: WOImageButton {
 	border    = "0";
 	width     = "14";
 	height    = "17";
+    title    = "Remove this student from the course";
+    alt      = "Remove this student from the course";
+    class    = "icon";
 }
 
 StudentRepetition: WORepetition {

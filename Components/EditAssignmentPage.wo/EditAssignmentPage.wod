@@ -1,29 +1,29 @@
 AddStep: WOImageButton {
     filename = "images/add-sm-btn.gif";
 	action   = addStep;
-	border   = "0";
 	width    = "46";
 	height   = "17";
 	alt      = "Add a plug-in grading step";
-	titlex    = "Add a plug-in grading step";
+	title    = "Add a plug-in grading step";
+	class    = "icon";
 }
 
 CanDelete: WOConditional {
     condition = "~!thisAssignment.isNewObject && !thisAssignment.hasStudentSubmissions";
 }
 
-CancelSubs: WOSubmitButton {
+CancelSubs: WCButton {
     action = cancelSuspendedSubs;
-    value  = "Cancel Them";
+    label  = "Cancel Them";
 }
 
-ClearGraph: WOSubmitButton {
+ClearGraph: WCButton {
     action = clearGraph;
-    value  = "Refresh Cached Graph Data";
+    label  = "Refresh Cached Graph Data";
 }
 
-CourseName: WOString {
-    value = thisAssignment.courseOffering.deptNumberAndName;
+CourseOfferingSection: WCPageModule {
+    title = "~ \"Properties for \" + thisAssignment.courseOffering.deptNumberAndName";
 }
 
 Description: WOTextField {
@@ -36,57 +36,40 @@ DescriptionInfo: net.sf.webcat.core.PopUpInfo {
     message = "Place the title of your assignment here, like &quot;Word Ladder Finder&quot;.  This value is used as a supplementary description when there is space to display more than just the name.";
 }
 
-DueDate: WOTextField {
-	size      = 20;
-    formatter = session.timeFormatter;
-	value     = thisAssignment.dueDate;
-	id        = "DueDate";
-	readonly  = 1;
-}
-
-DueDateSelector: WOImage {
-	filename = "icons/cal.gif";
-	width    = 16;
-	height   = 16;
-	alt      = "Select due date";
-	title    = "Select due date";
-	id       = "DueDateSelector";
+DueDate2: WCDateTimePicker {
+     value      = thisAssignment.dueDate;
+     dateformat = user.dateFormat;
+     timeformat = user.timeFormat;
+     dateWidth  = "8em";
+     timeWidth  = "6em";
+     timeZone   = timeZone;
 }
 
 EditStep: WOImageButton {
     filename  = "icons/edit.gif";
     framework = "Core";
 	action    = editStep;
-	border    = "0";
 	width     = "18";
 	height    = "17";
 	alt       = "Set/edit parameters for this step";
 	title     = "Set/edit parameters for this step";
+    class     = "icon";
 }
 
 EditSubmissionProfile: WOImageButton {
     filename  = "icons/edit.gif";
     framework = "Core";
 	action    = editSubmissionProfile;
-	border    = "0";
 	width     = "18";
 	height    = "17";
 	alt       = "Edit selected submission rules";
 	title     = "Edit selected submission rules";
+    class     = "icon";
 }
 
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = thisAssignment.graphSummary;
 }
-
-//HasNoSubmissionProfile: WOConditional {
-//    condition = hasSubmissionProfile;
-//    negate    = true;
-//}
-
-//HasSubmissionProfile: WOConditional {
-//    condition = hasSubmissionProfile;
-//}
 
 HasSuspendedSubs: WOConditional {
     condition = hasSuspendedSubs;
@@ -118,22 +101,22 @@ MoveStepDown: WOImageButton {
     filename  = "icons/arrowDown.gif";
     framework = "Core";
 	action    = moveStepDown;
-	border    = "0";
 	width     = "15";
 	height    = "13";
 	alt       = "Move this step down";
 	title     = "Move this step down";
+    class     = "icon";
 }
 
 MoveStepUp: WOImageButton {
     filename  = "icons/arrowUp.gif";
     framework = "Core";
 	action    = moveStepUp;
-	border    = "0";
 	width     = "15";
 	height    = "13";
 	alt       = "Move this step up";
 	title     = "Move this step up";
+    class     = "icon";
 }
 
 Name: WOTextField {
@@ -146,9 +129,12 @@ NameInfo: net.sf.webcat.core.PopUpInfo {
     message = "Use a short 1-3 word assignment name, like &quot;Program 1&quot; or &quot;Lab 04&quot;.  The name cannot be blank.  This name is used to construct human-readable directory names for the assignment, and is also used as a shorthand for referring to the assignment in student feedback.";
 }
 
-NewSubmissionProfile: WOSubmitButton {
+Navigator: net.sf.webcat.grader.GraderNavigator {
+}
+
+NewSubmissionProfile: WCButton {
     action = newSubmissionProfile;
-    value  = "New";
+    label  = "New";
 }
 
 NumSuspended: WOString {
@@ -159,11 +145,10 @@ Order: WOString {
 	value = thisStep.order;
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    finishEnabled = true;
-    applyEnabled  = true;
-    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
-    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js";
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title = "Edit Assignment Properties";
+//    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
+//    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js";
 }
 
 PublishIt: WOCheckBox {
@@ -175,26 +160,20 @@ PublishItInfo: net.sf.webcat.core.PopUpInfo {
     message = "Determines whether or not the assignment is visible and available to students. When this box is unchecked, only course staff can access the assignment.";
 }
 
-RegradeSubs: WOSubmitButton {
-    action = regradeSubs;
-    value  = "Regrade Everyone";
-	alt    = "Regrade everyone's most recent submission";
-}
-
-ReleaseSubs: WOSubmitButton {
+ReleaseSubs: WCButton {
     action = releaseSuspendedSubs;
-    value  = "Re-grade Them";
+    label  = "Re-grade Them";
 }
 
 RemoveStep: WOImageButton {
     filename  = "icons/trash.gif";
     framework = "Core";
 	action    = removeStep;
-	border    = "0";
 	width     = "14";
 	height    = "17";
 	alt       = "Delete this step";
 	title     = "Delete this step";
+    class     = "icon";
 }
 
 ScriptName: WOString {
@@ -257,9 +236,10 @@ TR2: net.sf.webcat.core.TableRow {
 }
 
 UploadInstructions: WOText {
-	rows  = 8;
-	cols  = 60;
- 	value = thisAssignment.assignment.fileUploadMessage;
+	rows     = 8;
+	cols     = 60;
+ 	value    = thisAssignment.assignment.fileUploadMessage;
+//    dojoType = "dijit.form.Textarea";
 }
 
 UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {

@@ -15,7 +15,7 @@ function submitForm() { document.WizardForm.submit(); }
 <webobject name="AssignmentRepetition">
 <webobject name="TR">
 <td><webobject name="RadioButton"/></td>
-<td><webobject name="Name"/></td>
+<td><wo:if condition="$assignment.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$assignment.name"/></wo:else></td>
 <td><webobject name="Description"/></td>
 <td><webobject name="Author"/></td>
 </webobject></webobject></tbody></table></div>

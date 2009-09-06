@@ -1,14 +1,14 @@
-<webobject name="Page"><wo:WCPageModule title="$session.tabs.selectedDescendant.label">
-<webobject name="Form1">
-<h2>Published Plug-ins (Available to All)</h2>
-<webobject name="HasPublishedPlugins">
-<div class="shadow"><table><thead><tr><th>Published Plug-ins
+<webobject name="Page">
+<wo:WCPageModule title="Published Plug-ins (Available to All)">
+<wo:if condition="$publishedPluginGroup.displayedObjects.count">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+<table><thead><tr><th>Published Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
 </th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
 <webobject name="PublishedPluginRepetition">
 <webobject name="TR">
-<td><b><webobject name="Name"/> <webobject name="Version"/></b>
+<td><b><wo:if condition="$pluginInfoUrl"><webobject name="Name"/></wo:if><wo:else><wo:str value="$plugin.name"/></wo:else> <webobject name="Version"/></b>
 <webobject name="UpToDate">(<webobject name="CanDownload">up to date</webobject></webobject><webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
 is available</b></webobject><webobject name="HasHistory">, <webobject name="History">history</webobject></webobject>)
 <webobject name="IsVerbose"><br/><b>Title:</b> <webobject name="Title"/><br/>
@@ -21,22 +21,24 @@ is available</b></webobject><webobject name="HasHistory">, <webobject name="Hist
   <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
 </webobject></webobject></td>
 <td style="white-space:nowrap"><webobject name="CanEdit"><webobject name="DownloadNow"/><webobject name="Unpublish"/></webobject><webobject name="EditFiles"/><webobject name="CanEdit"><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></webobject></td>
-</webobject></webobject></tbody></table></div>
-<div class="spacer">&nbsp;</div>
-</webobject><webobject name="HasNoPublishedPlugins">
+</webobject></webobject></tbody></table>
+</wo:WCForm></wo:if>
+<wo:else>
 <p><span class="hl">No published plug-ins</span> have been installed.</p>
-</webobject>
+</wo:else>
+</wo:WCPageModule>
 
-<webobject name="HasAdminPrivileges">
-<h2>Unpublished Plug-ins (for Individual Use)</h2>
-<webobject name="HasUnpublishedPlugins">
-<div class="shadow"><table><thead><tr><th>Unpublished Plug-ins
+<wo:if condition="$user.hasAdminPrivileges">
+<wo:WCPageModule title="Unpublished Plug-ins (for Individual Use)" open="$unpublishedPluginGroup.displayedObjects.count">
+<wo:if condition="$unpublishedPluginGroup.displayedObjects.count">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+<table><thead><tr><th>Unpublished Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
 </th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
 <webobject name="UnpublishedPluginRepetition">
 <webobject name="TR">
-<td><b><webobject name="Name"/> <webobject name="Version"/></b>
+<td><b><wo:if condition="$pluginInfoUrl"><webobject name="Name"/></wo:if><wo:else><wo:str value="$plugin.name"/></wo:else> <webobject name="Version"/></b>
 <webobject name="UpToDate">(<webobject name="CanDownload">up to date</webobject></webobject><webobject name="OutOfDate">(<b class="warn">v.<webobject name="NewVersion"/>
 is available</b></webobject><webobject name="HasHistory">, <webobject name="History">history</webobject></webobject>)
 <webobject name="IsVerbose"><br/><b>Title:</b> <webobject name="Title"/><br/>
@@ -49,17 +51,18 @@ is available</b></webobject><webobject name="HasHistory">, <webobject name="Hist
   <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
 </webobject></webobject></td>
 <td style="white-space:nowrap"><webobject name="CanEdit"><webobject name="CanDownload"><webobject name="DownloadNow"/></webobject><webobject name="Publish"/><webobject name="EditFiles"/><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></webobject></td>
-</webobject></webobject></tbody></table></div>
-<div class="spacer">&nbsp;</div>
-</webobject><webobject name="HasNoUnpublishedPlugins">
+</webobject></webobject></tbody></table>
+</wo:WCForm></wo:if><wo:else>
 <p><span class="hl">No unpublished plug-ins</span> have been installed.</p>
-</webobject>
-</webobject>
+</wo:else>
+</wo:WCPageModule>
+</wo:if>
 
-<webobject name="HasNoAdminPrivileges">
-<h2>Personal Plug-ins (for Your Individual Use)</h2>
-<webobject name="HasPersonalPlugins">
-<div class="shadow"><table><thead><tr><th>Your Personal Plug-ins
+<wo:else>
+<wo:WCPageModule title="Personal Plug-ins (for Your Individual Use)" open="$personalPluginGroup.displayedObjects.count">
+<wo:if condition="$personalPluginGroup.displayedObjects.count">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+<table><thead><tr><th>Your Personal Plug-ins
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
 </th><th class="sm">Last Modified</th><th>Will Update?</th><th>Action</th></tr></thead><tbody>
@@ -79,16 +82,16 @@ is available</b>)</webobject>
   <webobject name="AutoUpdateNotEnabled"><webobject name="WillNotUpdate"/></webobject>
 </webobject></td>
 <td style="white-space:nowrap"><webobject name="CanDownload"><webobject name="DownloadNow"/></webobject><webobject name="IsNotPublished"><webobject name="Publish"/></webobject><webobject name="IsPublished"><webobject name="Unpublish"/></webobject><webobject name="EditFiles"/><webobject name="HasGlobalSettings"><webobject name="Edit"/></webobject><webobject name="ReloadConfig"/></td>
-</webobject></webobject></tbody></table></div>
-<div class="spacer">&nbsp;</div>
-</webobject><webobject name="HasNoPersonalPlugins">
+</webobject></webobject></tbody></table>
+</wo:WCForm></wo:if><wo:else>
 <p>You have not yet installed any personal plug-ins.</p>
-</webobject>
-</webobject>
+</wo:else>
+</wo:WCPageModule></wo:else>
 
-<h2>Available for Web-based Installation</h2>
+<wo:WCPageModule title="Available for Web-based Installation" open="false">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <webobject name="NewPluginsAvailable">
-<div class="shadow"><table><thead><tr><th>Available for Installation
+<table><thead><tr><th>Available for Installation
 <webobject name="IsVerbose"><webobject name="TerseDescriptions"/></webobject>
 <webobject name="IsTerse"><webobject name="VerboseDescriptions"/></webobject>
 </th><th class="sm">Build Date</th><th>Download?</th></tr></thead><tbody>
@@ -103,28 +106,33 @@ is available</b>)</webobject>
 <webobject name="NewDescription"/></webobject></td>
 <td><webobject name="NewDate"/></td>
 <td><webobject name="DownloadNewNow"/></td>
-</webobject></webobject></tbody></table></div>
-<div class="spacer">&nbsp;</div>
+</webobject></webobject></tbody></table>
 </webobject><webobject name="NoNewPluginsAvailable">
 <p>After scanning known providers, no new plug-ins were detected.</p>
 </webobject>
 <p>Add provider URL:
 <webobject name="ProviderURL"/><webobject name="ScanNow"/>
 </p>
+</wo:WCForm>
+</wo:WCPageModule>
 
-<h2>Manually Upload a New Plug-in</h2>
+<wo:WCPageModule title="Manually Upload a New Plug-in" open="false">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <p>Upload a new plug-in: <webobject name="PluginUpload"/>
 <webobject name="Upload"/></p>
 <p>A plug-in is packaged as a jar file that contains meta-data describing the
 plug-in's capabilities and configuration scheme.</p>
+</wo:WCForm>
+</wo:WCPageModule>
 
-<webobject name="HasAdminPrivileges"><h2>Automatic Updates</h2>
-<p>Automatic updates:
+<wo:if condition="$user.hasAdminPrivileges">
+<wo:WCPageModule title="Automatic Updates" open="false">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <webobject name="AutoUpdateEnabled"><b class="check">Enabled</b>
 <webobject name="DisableAutoUpdates"/></webobject>
 <webobject name="AutoUpdateNotEnabled"><b class="warn">Disabled</b>
 <webobject name="EnableAutoUpdates"/></webobject>
-</p><p>
+<p>
 This application is capable of downloading and installing new updates to
 plug-ins that are currently installed.  When enabled, Web-CAT will check
 for newer versions of all installed plug-ins on each restart, and download
@@ -132,14 +140,16 @@ any available updates at that time.  You can also <span class="hl">manually
 download</span> updates on demand using the download icons in the table.
 Downloaded updates will <span class="hl">be applied immediately.</span>
 </p>
+</wo:WCForm>
+</wo:WCPageModule>
 
-<h2>Automatic Installation</h2>
-<p>Automatic installation:
+<wo:WCPageModule title="Automatic Installation" open="false">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <webobject name="AutoInstallEnabled"><b class="check">Enabled</b>
 <webobject name="DisableAutoInstalls"/></webobject>
 <webobject name="AutoInstallNotEnabled"><b class="warn">Disabled</b>
 <webobject name="EnableAutoInstalls"/></webobject>
-</p><p>
+<p>
 This application is capable of automatically downloading and installing new
 plug-ins that are available from known providers.  When enabled, Web-CAT will
 check for brand new plug-ins on each restart, and automatically download
@@ -147,6 +157,9 @@ and install any that are available at that time.  You can also
 <span class="hl">manually install</span> new plug-ins available on the
 web using the download icons in the table.
 Downloaded plug-ins will <span class="hl">be installed immediately.</span>
-</p></webobject>
+</p>
+</wo:WCForm>
+</wo:WCPageModule>
+</wo:if>
 
-</webobject></wo:WCPageModule></webobject>
+</webobject>

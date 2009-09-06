@@ -1,13 +1,45 @@
-CompactName: WOString {
-    value = courseOffering.compactName;
+Add: WOImageButton {
+    filename = "images/add-sm-btn.gif";
+    action   = addStaff;
+    border   = "0";
+    width    = "46";
+    height   = "17";
+    title     = "Add this staff member";
+    alt       = "Add this staff member";
+    class    = "icon";
 }
 
-CourseName: WOString {
-    value = courseOffering.course.name;
+BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = potentialDisplayGroup;
+    persistentKey = "EditStaffPage.batchSize";
 }
 
-UserRole: WOString {
-    value = userRole;
+Name: WOHyperlink {
+    href = aUser.url;
+    string = aUser.name_LF;
+}
+
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title = sideStepTitle;
+//    applyEnabled = true;
+}
+
+Remove: WOImageButton {
+    action    = removeStaff;
+    filename  = "icons/trash.gif";
+    framework = "Core";
+    border    = "0";
+    width     = "14";
+    height    = "17";
+    title     = "Remove this staff member";
+    alt       = "Remove this staff member";
+    class     = "icon";
+}
+
+Repetition1: WORepetition {
+    item  = aUser;
+    list  = potentialDisplayGroup.displayedObjects;
+    index = index;
 }
 
 Repetition2: WORepetition {
@@ -16,26 +48,28 @@ Repetition2: WORepetition {
 	index = index;
 }
 
-Remove: WOImageButton {
-    filename = "images/remv-sm-btn.gif";
-	action   = removeStaff;
-	border   = "0";
-	width    = "46";
-	height   = "17";
+StaffSection: WCPageModule {
+    title = "~userRole + \"(s) for \" + courseOffering.compactName + \" \" + courseOffering.course.name";
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
 }
 
 UserID: WOString {
 	value = aUser.userName;
 }
 
-Name: WOHyperlink {
-    href = aUser.url;
-    string = aUser.name_LF;
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+    displayGroup = potentialDisplayGroup;
+    displayKey = "Name";
+    key = "name_LF";
 }
 
-Email: WOHyperlink {
-    href = aUser.emailHref;
-    string = aUser.email;
+WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+    displayGroup = potentialDisplayGroup;
+    displayKey = "User Name";
+    key = "userName";
 }
 
 WCSortOrder3: net.sf.webcat.core.WCSortOrder {
@@ -48,63 +82,4 @@ WCSortOrder4: net.sf.webcat.core.WCSortOrder {
 	displayGroup = staffDisplayGroup;
 	displayKey = "User Name";
 	key = "userName";
-}
-
-Repetition1: WORepetition {
-	item  = aUser;
-	list  = potentialDisplayGroup.displayedObjects;
-	index = index;
-}
-
-BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
-    displayGroup = potentialDisplayGroup;
-    persistentKey = "EditStaffPage.batchSize";
-}
-
-Add: WOImageButton {
-    filename = "images/add-sm-btn.gif";
-	action   = addStaff;
-	border   = "0";
-	width    = "46";
-	height   = "17";
-}
-
-TR: net.sf.webcat.core.TableRow {
-	index = index;
-}
-
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
-	displayGroup = potentialDisplayGroup;
-	displayKey = "Name";
-	key = "name_LF";
-}
-
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
-	displayGroup = potentialDisplayGroup;
-	displayKey = "User Name";
-	key = "userName";
-}
-
-IsStaff: WOConditional {
-	condition = isStaff;
-}
-
-IsNotStaff: WOConditional {
-	condition = isStaff;
-	negate    = true;
-}
-
-Page: net.sf.webcat.core.WizardPage {
-    sideStepTitle = sideStepTitle;
-    applyEnabled = true;
-}
-
-NoStaff: WOConditional {
-	condition = staffDisplayGroup.displayedObjects.count;
-	negate    = true;
-}
-
-NoPotentialStaff: WOConditional {
-	condition = potentialDisplayGroup.displayedObjects.count;
-	negate    = true;
 }

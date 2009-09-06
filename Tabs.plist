@@ -111,26 +111,26 @@
           Properties = {
             accessLevel = 50;
             priority = 2;
-            children = {
-              "Pick the Course" = {
-                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
-                accessLevel = 50;
-                priority = 1;
-                wantsStart = YES;
-              };
-              "Pick the Assignment" = {
-                pageName = net.sf.webcat.grader.PickAssignmentToEditPage;
-                accessLevel = 50;
-                priority = 2;
-                config = { allowCreate = true; };
-              };
-              "Edit Assignment Properties" = {
+//            children = {
+//              "Pick the Course" = {
+//                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
+//                accessLevel = 50;
+//                priority = 1;
+//                wantsStart = YES;
+//              };
+//              "Pick the Assignment" = {
+//                pageName = net.sf.webcat.grader.PickAssignmentToEditPage;
+//                accessLevel = 50;
+//                priority = 2;
+//                config = { allowCreate = true; };
+//              };
+//              "Edit Assignment Properties" = {
                 pageName = net.sf.webcat.grader.EditAssignmentPage;
-                accessLevel = 50;
-                priority = 3;
+//                accessLevel = 50;
+//                priority = 3;
                 id = AssignmentProperties;
-              };
-            };
+//              };
+//            };
           };
           "Plug-ins" = {
             pageName = net.sf.webcat.grader.PluginManagerPage;
@@ -146,31 +146,32 @@
           Properties = {
             accessLevel = 50;
             priority = 2;
-            pageName  = net.sf.webcat.grader.EditCoursePage;
-            id      = EditCourseProperties;
-//                children = {
+//            pageName = net.sf.webcat.grader.EditCoursePage;
+//            id       = EditCourseProperties;
+                children = {
 //                  "Pick the Course" = {
 //                    pageName = net.sf.webcat.grader.PickCourseTaughtPage;
 //                    accessLevel = 50;
 //                    priority = 1;
 //                    wantsStart = YES;
 //                  };
-//                  "Edit Course Properties" = {
-//                    pageName  = net.sf.webcat.grader.EditCoursePage;
-//                    accessLevel = 50;
-//                    priority  = 2;
-//                    id      = EditCourseProperties;
-//                  };
-//                  "Edit Student Roster" = {
-//                    pageName = net.sf.webcat.grader.CourseRosterPage;
-//                    accessLevel = 50;
-//                    priority = 3;
-//                  };
-//              };
+                  "Edit Course Properties" = {
+                    pageName  = net.sf.webcat.grader.EditCoursePage;
+                    accessLevel = 50;
+                    priority  = 2;
+                    id      = EditCourseProperties;
+                  };
+                  "Edit Student Roster" = {
+                    pageName = net.sf.webcat.grader.CourseRosterPage;
+                    accessLevel = 50;
+                    priority = 3;
+                  };
+              };
           };
           New = {
             accessLevel = 50;
             priority = 3;
+//            pageName = net.sf.webcat.grader.NewCourseOfferingPage;
                 children = {
                   "Pick the Course" = {
                     pageName = net.sf.webcat.grader.NewCourseOfferingPage;
@@ -183,11 +184,11 @@
                     priority = 2;
                     config = { jumpTo = EditCourseProperties; };
                   };
-                  "Edit Student Roster" = {
-                    pageName = net.sf.webcat.grader.CourseRosterPage;
-                    accessLevel = 50;
-                    priority = 3;
-                  };
+//                  "Edit Student Roster" = {
+//                    pageName = net.sf.webcat.grader.CourseRosterPage;
+//                    accessLevel = 50;
+//                    priority = 3;
+//                  };
               };
           };
         };

@@ -6,6 +6,7 @@ AddInstructor: WOImageButton {
 	height   = "17";
 	alt      = "Add another instructor";
 	title    = "Add another instructor";
+    class    = "icon";
 }
 
 AddTA: WOImageButton {
@@ -16,6 +17,7 @@ AddTA: WOImageButton {
 	height   = "17";
 	alt      = "Add another grader/TA";
 	title    = "Add another grader/TA";
+    class    = "icon";
 }
 
 CanDelete: WOConditional {
@@ -130,6 +132,7 @@ RemoveInstructor: WOImageButton {
 	height    = "17";
 	title     = "Remove this instructor";
 	alt       = "Remove this instructor";
+    class     = "icon";
 }
 
 RemoveTA: WOImageButton {
@@ -141,6 +144,7 @@ RemoveTA: WOImageButton {
 	height    = "17";
 	title     = "Remove this grader/TA";
 	alt       = "Remove this grader/TA";
+    class     = "icon";
 }
 
 SemesterInfo: net.sf.webcat.core.PopUpInfo {
@@ -149,9 +153,9 @@ SemesterInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 SemesterList: WOPopUpButton {
-	list              = semesters;
-	item              = aSemester;
-	selection         = courseOffering.semester;
+	list      = semesters;
+	item      = aSemester;
+	selection = courseOffering.semester;
 }
 
 TARepetition: WORepetition {

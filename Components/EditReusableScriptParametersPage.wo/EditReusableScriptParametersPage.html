@@ -6,7 +6,7 @@ option settings that are shared by the following assignment(s):</p>
 <div class="shadow"><table><thead><tr><th>Assignment</th><th>Description</th><th>Instances</th></tr></thead><tbody>
 <webobject name="Repetition3">
 <webobject name="TR">
-<td><webobject name="AssignmentName"/></td>
+<td><wo:if condition="$otherAssignmentStep.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$otherAssignmentStep.assignment.name"/></wo:else></td>
 <td><webobject name="AssignmentDescription"/></td>
 <td><webobject name="AssignmentInstanceCount"/></td>
 </webobject></webobject>

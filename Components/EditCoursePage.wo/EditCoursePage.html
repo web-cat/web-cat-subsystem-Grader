@@ -6,9 +6,9 @@
 </wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
 <wo:net.sf.webcat.core.WCPageModule title="Selected Course Offering">
 <div class="floatRight"><wo name="Navigator"/></div>
-<wo:form><table style="border: none;">
+<wo:WCForm multipleSubmit="true"><table class="layout">
 <wo name="CanDelete">
-<tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
+<tr><td align="right"><wo:submit action="$delete" value="Delete" class="neg"/></td>
     <td>You may delete this course offering.   It cannot be deleted if
     it has any assignments (remove them first, but only if no students have
     made submissions yet).</td></tr>
@@ -21,21 +21,22 @@
 <wo:if condition="false"><tr><td class="R">Moodle Id:</td><td><wo name="MoodleId"/>
 <wo name="MoodleIdInfo"/>&nbsp; Group Id:&nbsp;<wo name="MoodleId"/>
 <wo name="MoodleGroupIdInfo"/></td></tr></wo:if>
-<tr><td></td><td><wo:submit action="$applyLocalChanges" value="Apply"/></td></tr>
-</table></wo:form>
+<tr><td></td><td><wo:WCButton action="$apply" class="pos" label="Save"/>
+  <wo:WCButton action="$cancel" class="neg" label="Cancel"/></td></tr>
+</table></wo:WCForm>
 </wo:net.sf.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Instructors" open="false">
+<wo:net.sf.webcat.core.WCPageModule title="Instructors" open="true">
 
-<wo:WCContentPane id="hhh">
-<p><wo:str value="$accum"/></p>
-</wo:WCContentPane>
-<wo:WCForm><wo:WCLink action="$accumulate" remote.refreshPanes="hhh" label="add"><wo:image filename="images/add-sm-btn.gif"/></wo:WCLink></wo:WCForm>
+<!-- wo:WCContentPane id="hhh" -->
+<!-- p --><!-- wo:str value="$accum"/ --><!-- /p -->
+<!-- /wo:WCContentPane -->
+<!-- wo:WCForm --><!-- wo:WCLink action="$accumulate" remote.refreshPanes="hhh" label="add" --><!-- wo:image filename="images/add-sm-btn.gif"/ --><!-- /wo:WCLink --><!-- /wo:WCForm -->
 
 <wo:form><table><thead>
   <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="InstructorRepetition"><webobject name="TR">
-    <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
+    <td><webobject name="UserID"/></td><td><wo:if condition="$aUser.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$aUser.name"/></wo:else></td>
     <td><webobject name="Email"/></td>
     <td><webobject name="NotThisUser"><webobject name="RemoveInstructor"/>
         </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
@@ -44,16 +45,13 @@
 	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
   </webobject>
 </tbody></table></wo:form>
-<wo:net.sf.webcat.core.WCPageModule title="Show more stuff" open="false">
-here is more stuff
-</wo:net.sf.webcat.core.WCPageModule>
 </wo:net.sf.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="false">
+<wo:net.sf.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="true">
 <wo:form><table><thead>
   <tr><th>User ID</th><th>Graders/Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="TARepetition"><webobject name="TR">
-    <td><webobject name="UserID"/></td><td><webobject name="Name"/></td>
+    <td><webobject name="UserID"/></td><td><wo:if condition="$aUser.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$aUser.name"/></wo:else></td>
     <td><webobject name="Email"/></td>
     <td><webobject name="NotThisUser"><webobject name="RemoveTA"/>
         </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
@@ -64,31 +62,23 @@ here is more stuff
 </tbody></table></wo:form>
 </wo:net.sf.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Student Roster" open="false">
-TBD
-
-<wo:net.sf.webcat.core.WCPageModule title="Upload Roster CSV File" open="false">
-TBD
-</wo:net.sf.webcat.core.WCPageModule>
-
-<wo:net.sf.webcat.core.WCPageModule title="Add Existing Student Accounts by Hand" open="false">
-TBD
-</wo:net.sf.webcat.core.WCPageModule>
+<wo:net.sf.webcat.core.WCPageModule title="Student Roster" open="true">
+  <wo:link action="$editRoster">Edit student roster</wo:link>
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Submission Date Range" open="false">
 <wo:if condition="$earliest">
 <p>Submission date range:
 <wo:str value="$earliest" formatter="$session.timeFormatter"/>
--
+
 <wo:str value="$latest" formatter="$session.timeFormatter"/></p>
 </wo:if><wo:else>
 <p>No submissions found for any assignment in this course offering.</p>
 </wo:else>
 </wo:net.sf.webcat.core.WCPageModule></wo:else>
 
-<wo:net.sf.webcat.core.WCPageModule title="Test User List Browser" open="false">
-<wo:UserListBrowser master="$courseOffering" keyPath="students"/>
-</wo:net.sf.webcat.core.WCPageModule>
+<!-- wo:net.sf.webcat.core.WCPageModule title="Test User List Browser" open="false" -->
+<!-- wo:UserListBrowser master="$courseOffering" keyPath="students"/ -->
+<!-- /wo:net.sf.webcat.core.WCPageModule -->
 
 </webobject>

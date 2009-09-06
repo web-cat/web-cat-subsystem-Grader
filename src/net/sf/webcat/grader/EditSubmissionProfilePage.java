@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author Last changed by $Author$
  * @version $Revision$ $Date$
  */
 public class EditSubmissionProfilePage
@@ -197,7 +197,15 @@ public class EditSubmissionProfilePage
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        saveTimeFields();
+        applyLocalChanges();
+        return super.next();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent cancel()
+    {
+        cancelLocalChanges();
         return super.next();
     }
 

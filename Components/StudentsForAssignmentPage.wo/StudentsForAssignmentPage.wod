@@ -59,10 +59,10 @@ LowScore: WOString {
 }
 
 MarkAsComplete: WOSubmitButton {
-    value  = "Mark All as Complete";
+    value  = "Show All Scores to Students";
     action = markAsComplete;
-    alt    = "Mark all partially graded submissions as complete";
-    title  = "Mark all partially graded submissions as complete";
+    alt    = "Make all entered scores visible to students and send e-mail";
+    title  = "Make all entered scores visible to students and send e-mail";
 }
 
 MorePartners: WOConditional {

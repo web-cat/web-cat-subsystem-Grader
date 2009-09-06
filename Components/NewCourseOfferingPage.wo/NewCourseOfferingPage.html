@@ -1,14 +1,14 @@
 <webobject name="Page">
-Create at institution:
-<wo name="InstitutionList"/>
-<script language="JavaScript">
-<!--
-function submitForm() { document.WizardForm.submit(); }
-//-->
-</script>
-<p>
-Create a <span class="hl">new course offering</span>
-(section) for the following course:
-</p>
-<webobject name="CourseList"/>
+<wo:net.sf.webcat.core.WCPageModule title="Define Your Course Offering">
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
+<table class="layout"><tbody>
+<tr><td class="R">Semester:</td><td><wo name="SemesterList"/> <wo name="SemesterInfo"/></td></tr>
+<wo:if condition="$user.hasAdminPrivileges">
+<tr><td class="R">Institution:</td><td><wo name="InstitutionList"/> <wo name="InstitutionInfo"/></td></tr>
+</wo:if>
+<tr><td class="R">Course:</td><td><wo name="CourseList"/> <wo name="CourseInfo"/></td></tr>
+<tr><td class="R">CRN:</td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
+<tr><td></td><td><wo:WCButton action="$next">Create</wo:WCButton></td></tr>
+</tbody></table>
+</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
 </webobject>

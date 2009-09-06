@@ -1,24 +1,33 @@
 <webobject name="Page">
-<webobject name="CanEdit">
+<wo name="Section">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+
+<wo:if condition="$isEditable"><p>
 Any file modifications made on this page will cause all pending changes
-to be applied.  All file actions will take effect immediately.</webobject>
-<p>
-<webobject name="FileBrowser"/>
-</p>
-<webobject name="CanEdit">
+to be applied.  All file actions will take effect immediately.</p></wo:if>
+
+<wo:WCButton action="$next" label="&lt; Back"/>
+
+<wo name="FileBrowser"/>
+
+<wo:if condition="$isEditable">
 <h2>Create a New Subfolder</h2>
-<p>In: <webobject name="FolderList1"/>
-new folder name: <webobject name="FolderName"/>
-<webobject name="CreateFolder"/></p>
+<p>In: <wo name="FolderList1"/>
+new folder name: <wo name="FolderName"/>
+<wo name="CreateFolder"/></p>
 
 <h2>Upload a New File</h2>
-<p>In: <webobject name="FolderList2"/>
-upload: <webobject name="UploadFile2"/>
-<webobject name="Upload"/><br />
-(<webobject name="Unzip"/> unzip/expand archive in target folder)
+<p>In: <wo name="FolderList2"/>
+upload: <wo name="UploadFile2"/>
+<wo name="Upload"/><br />
+(<wo name="Unzip"/> unzip/expand archive in target folder)
 </p>
 
 <h2>Replace This Entire Folder</h2>
-<p>Replace with contents of this zip or jar file: <webobject name="UploadFile3"/>
-<webobject name="Replace"/></p>
-</webobject></webobject>
+<p>Replace with contents of this zip or jar file: <wo name="UploadFile3"/>
+<wo name="Replace"/></p>
+</wo:if>
+
+<wo:WCButton action="$next" label="&lt; Back"/>
+
+</wo:WCForm></wo></webobject>

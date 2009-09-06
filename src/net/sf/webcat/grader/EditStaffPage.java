@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -35,7 +35,8 @@ import org.apache.log4j.Logger;
  * results).
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class EditStaffPage
     extends GraderCourseEditComponent
@@ -68,11 +69,11 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        sideStepTitle = "Edit course "
+        sideStepTitle = "Edit Course "
             + ( editInstructors
-                    ? "instructor"
+                    ? "Instructor"
                     : "TA" )
-            + " list";
+            + " List";
         staffDisplayGroup.setMasterObject( courseOffering() );
         staffDisplayGroup.setDetailKey( editInstructors
                         ? CourseOffering.INSTRUCTORS_KEY
@@ -122,18 +123,19 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public WOComponent addStaff()
     {
-        if ( editInstructors )
+        if( editInstructors)
         {
-            courseOffering().addToInstructorsRelationship( aUser );
+            courseOffering().addToInstructorsRelationship(aUser);
         }
         else
         {
-            if ( aUser.accessLevel() < User.GTA_PRIVILEGES )
+            if (aUser.accessLevel() < User.GTA_PRIVILEGES)
             {
-                aUser.setAccessLevel( User.GTA_PRIVILEGES );
+                aUser.setAccessLevel(User.GTA_PRIVILEGES);
             }
-            courseOffering().addToGradersRelationship( aUser );
+            courseOffering().addToGradersRelationship(aUser);
         }
+        applyLocalChanges();
         return null;
     }
 
@@ -141,14 +143,15 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public WOComponent removeStaff()
     {
-        if ( editInstructors )
+        if (editInstructors)
         {
-            courseOffering().removeFromInstructorsRelationship( aUser );
+            courseOffering().removeFromInstructorsRelationship(aUser);
         }
         else
         {
-            courseOffering().removeFromGradersRelationship( aUser );
+            courseOffering().removeFromGradersRelationship(aUser);
         }
+        applyLocalChanges();
         return null;
     }
 

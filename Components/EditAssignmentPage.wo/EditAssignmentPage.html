@@ -1,8 +1,15 @@
-<webobject name="Page">For: <span class="hl"><webobject name="CourseName"/></span>
-<h2>Properties for All Instances of This Assignment</h2>
-<table style="border:none">
+<webobject name="Page">
+<wo:if condition="$forceNavigatorSelection">
+<wo:WCPageModule title="Select Your Assignment">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the assignment to edit.</p></div>
+</wo:WCPageModule></wo:if><wo:else>
+<wo:WCPageModule title="Properties for All Instances of This Assignment">
+<div class="floatRight"><wo name="Navigator"/></div>
+<wo:WCForm multipleSubmit="true">
+<table class="layout">
 <wo name="CanDelete">
-<tr><td align="right"><wo:submit action="$delete" value="Delete"/></td>
+<tr><td align="right"><wo:WCButton action="$delete" label="Delete" class="neg"/></td>
     <td>You may delete this assignment offering.   It cannot be deleted once
     students (not staff) begin making submissions.</td></tr>
 </wo>
@@ -19,13 +26,15 @@
     Instructions:</td>
     <td valign="top"><webobject name="UploadInstructions"/>
     <webobject name="UploadInstructionsInfo"/></td></tr>
+<tr><td></td><td><wo:WCButton action="$apply" class="pos" label="Save"/>
+  <wo:WCButton action="$cancel" class="neg" label="Cancel"/></td></tr>
 </table>
 <h3>Grading Scheme for All Instances</h3>
 <p>Submission Rules:
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
 <webobject name="SubmissionProfileInfo"/></p>
-<p>Automatically grade using <b>these steps</b> in sequence:<br/>
-<div class="shadow"><table><thead>
+<p>Automatically grade using <b>these steps</b> in sequence:</p>
+<table><thead>
     <tr><th>Order</th><th>Plug-in</th><th class="sm">Time Limit (sec)</th>
       <th>Move</th><th>Action</th></tr></thead><tbody>
     <webobject name="StepRepetition"><webobject name="TR">
@@ -39,30 +48,24 @@
     <webobject name="LastTR">
     <td></td>
     <td colspan="5"><webobject name="AddStep"/> Add another step</td>
-    </webobject></tbody></table></div><div class="spacer">&nbsp;</div></p>
-<h2>Properties Unique to This Course Offering</h2>
-<table style="border:none">
+    </webobject></tbody></table>
+<wo:WCButton action="$apply" class="pos" label="Save"/>
+<wo:WCButton action="$cancel" class="neg" label="Cancel"/>
+</wo:WCForm></wo:WCPageModule>
+
+<wo name="CourseOfferingSection">
+<wo:WCForm multipleSubmit="true"><table class="layout">
 <tr><td align="right" valign="top">Due:</td>
-    <td colspan="2"><webobject name="DueDate"/>&nbsp;<webobject name="DueDateSelector"/><br/>
-<script type="text/javascript">
-    Calendar.setup({
-        inputField     :    "DueDate",
-        ifFormat       :    "<webobject name="TimeFormat"/>",
-        button         :    "DueDateSelector",
-        align          :    "bl",
-        showsTime      :    true,
-        timeFormat     :    12,
-        singleClick    :    false
-    });
-</script>
+    <td colspan="2">
+    <wo name="DueDate2"/><br/>
 <webobject name="UpcomingAssignments">
-<div class="shadow"><table><thead>
+<table><thead>
 <tr><th>Assignment</th><th>Due</th></tr></thead><tbody>
 <webobject name="UpcomingAssignmentRepetition">
-<webobject name="TR2"><td><webobject name="UpcomingAssignmentName"/><webobject name="UpcomingIsUnpublished">
+<webobject name="TR2"><td><wo:if condition="$upcomingAssignment.assignment.url"><webobject name="UpcomingAssignmentName"/></wo:if><wo:else><wo:str value="$upcomingAssignment.titleString"/></wo:else><webobject name="UpcomingIsUnpublished">
 <span style="background-color:yellow">(unpublished)</span></webobject></td>
 <td class="nowrap"><webobject name="UpcomingDueDate"/></td>
-</webobject></webobject></tbody></table></div>
+</webobject></webobject></tbody></table>
 </webobject>
 </td></tr>
 <tr><td align="right">Score Summary:</td><td><webobject name="Graph"/></td>
@@ -75,8 +78,8 @@
     &nbsp;&nbsp;&nbsp;&nbsp;Suspend&nbsp;all&nbsp;grading:&nbsp;
     <webobject name="Suspend"/> <webobject name="SuspendInfo"/></td></tr>
 <webobject name="HasSuspendedSubs">
-<tr><td>&nbsp;</td><td colspan="2">
-<table style="border:none">
+<tr><td></td><td colspan="2">
+<table class="layout">
 <tr><td colspan="3" style="color:red">
 &nbsp;<b><webobject name="NumSuspended"/> submissions</b> currently
 suspended&nbsp;</td></tr>
@@ -85,8 +88,10 @@ suspended&nbsp;</td></tr>
 <td align="right"><webobject name="CancelSubs"/></td></tr></table>
 </td></tr>
 </webobject>
-<tr><td>&nbsp;</td><td colspan="2"><webobject name="RegradeSubs"/>
-</td></tr>
+<tr><td></td><td colspan="2"><wo:WCButton action="$apply" class="pos" label="Save"/>
+  <wo:WCButton action="$cancel" class="neg" label="Cancel"/>
+  <wo:WCButton action="$regradeSubs" label="Regrade Everyone"/></td></tr>
 </table>
-<div class="spacer">&nbsp;</div>
+</wo:WCForm></wo>
+</wo:else>
 </webobject>

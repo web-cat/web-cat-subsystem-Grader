@@ -104,54 +104,12 @@ EnableAutoUpdates: WOSubmitButton {
     action = toggleAutoUpdates;
 }
 
-Form1: WOForm {
-    multipleSubmit = true;
-    enctype="multipart/form-data";
-//    otherTagString="enctype=\"multipart/form-data\"";
-}
-
-HasAdminPrivileges: WOConditional {
-    condition = user.hasAdminPrivileges;
-}
-
 HasGlobalSettings: WOConditional {
     condition = plugin.configDescription.globalOptions.count;
 }
 
 HasHistory: WOConditional {
     condition = pluginHistoryUrl;
-}
-
-HasNoAdminPrivileges: WOConditional {
-    condition = user.hasAdminPrivileges;
-    negate = true;
-}
-
-HasNoPersonalPlugins: WOConditional {
-    condition = personalPluginGroup.displayedObjects.count;
-    negate = true;
-}
-
-HasNoPublishedPlugins: WOConditional {
-    condition = publishedPluginGroup.displayedObjects.count;
-    negate = true;
-}
-
-HasNoUnpublishedPlugins: WOConditional {
-    condition = unpublishedPluginGroup.displayedObjects.count;
-    negate = true;
-}
-
-HasPersonalPlugins: WOConditional {
-    condition = personalPluginGroup.displayedObjects.count;
-}
-
-HasPublishedPlugins: WOConditional {
-    condition = publishedPluginGroup.displayedObjects.count;
-}
-
-HasUnpublishedPlugins: WOConditional {
-    condition = unpublishedPluginGroup.displayedObjects.count;
 }
 
 History: WOHyperlink {
@@ -238,7 +196,7 @@ OutOfDate: WOConditional {
     condition = plugin.descriptor.updateIsAvailable;
 }
 
-Page : net.sf.webcat.core.PageWithNavigation {
+Page : net.sf.webcat.core.WCPageWithNavigation {
     title = "Manage Plug-ins";
 }
 

@@ -1,4 +1,4 @@
-<webobject name="Page"><webobject name="Somebody">For: <span class="hl"><webobject name="AssignmentName"/></span>
+<webobject name="Page"><webobject name="Somebody">For: <span class="hl"><wo:if condition="$prefs.assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$prefs.assignmentOffering.titleString"/></wo:else></span>
     <p><b>Score Summary:</b>
     High: <span class="hl"><webobject name="HighScore"/></span>
     Mean: <span class="hl"><webobject name="AvgScore"/></span>
@@ -34,7 +34,7 @@
         <td class="n"><webobject name="FinalScore"/></td>
     </webobject></webobject>
     </tbody></table></div>
-    <webobject name="MarkAsComplete"/></p>
+    <wo name="MarkAsComplete"/></p>
 </webobject><webobject name="Nobody">
 <p>No submissions matching your criteria have been found.</p>
 </webobject></webobject>

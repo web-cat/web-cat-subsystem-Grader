@@ -1,3 +1,8 @@
+CourseInfo: PopUpInfo {
+    title   = "Course";
+    message = "Use the Course drop-down list to change the course for your new course offering.";
+}
+
 CourseList: WOPopUpButton {
 	list              = courseDisplayGroup.displayedObjects;
 	selection         = coreSelections.course;
@@ -5,12 +10,40 @@ CourseList: WOPopUpButton {
 	displayString     = course.deptNumberAndName;
 }
 
+CRN: WOTextField {
+    value = crn;
+    size = 40;
+}
+
+CRNInfo: PopUpInfo {
+    title   = "CRN";
+    message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
+}
+
+InstitutionInfo: PopUpInfo {
+    title   = "Institution";
+    message = "Use the Institution drop-down list to change the department/institution to which your course offering belongs.";
+}
+
 InstitutionList: WOPopUpButton{
 	list              = institutions;
 	item              = anInstitution;
 	selection         = institution;
     onchange          = "submitForm()";
+    displayString     = anInstitution.displayableName;
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : WCPageWithNavigation {
+    title = "Create a New Course Offering";
+}
+
+SemesterInfo: PopUpInfo {
+    title   = "Semester";
+    message = "Use the Semester drop-down list to change the semester with which this offering will be associated.";
+}
+
+SemesterList: WOPopUpButton {
+    list      = semesters;
+    item      = aSemester;
+    selection = semester;
 }

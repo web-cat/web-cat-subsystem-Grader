@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -35,7 +35,8 @@ import org.apache.log4j.Logger;
  * An assignment that can be given in one or more classes.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class Assignment
     extends _Assignment
@@ -300,20 +301,16 @@ public class Assignment
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
-    public NSArray objectsForNeighborAssignments(
+    public NSArray<Assignment> objectsForNeighborAssignments(
             EOEditingContext context
         )
     {
-        NSMutableArray results = new NSMutableArray();
-        NSArray myOfferings = offerings();
-        for (int i = 0; i < myOfferings.count(); i++)
+        NSMutableArray<Assignment> results = new NSMutableArray<Assignment>();
+        for (AssignmentOffering offering : offerings())
         {
-            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates( results,
-                objectsForNeighborAssignments( context,
-                    ( (AssignmentOffering)myOfferings.objectAtIndex(i) )
-                        .courseOffering()
-                    )
-                );
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(results,
+                objectsForNeighborAssignments(
+                    context, offering.courseOffering()));
         }
         results.remove(this);
         return results;
@@ -361,15 +358,13 @@ public class Assignment
         {
             if (courseOffering != null)
             {
-                lcNames = new HashSet();
-                NSArray assignments =
+                lcNames = new HashSet<String>();
+                NSArray<AssignmentOffering> assignments =
                     AssignmentOffering.objectsForCourseOffering(
                         courseOffering.editingContext(), courseOffering );
-                for (int i = 0; i < assignments.count(); i++)
+                for (AssignmentOffering ao : assignments)
                 {
-                    String newName =
-                        ((AssignmentOffering)assignments.objectAtIndex(i))
-                        .assignment().subdirName();
+                    String newName = ao.assignment().subdirName();
                     if (newName != null)
                     {
                         lcNames.add( newName.toLowerCase() );
@@ -385,7 +380,7 @@ public class Assignment
          * @param lcNames the set of existing assignment names (assumed to all
          * be lowercase-only) to check against
          */
-        public NonDuplicateAssignmentNameQualifier(Set lcNames)
+        public NonDuplicateAssignmentNameQualifier(Set<String> lcNames)
         {
             this.lcNames = lcNames;
         }
@@ -444,7 +439,7 @@ public class Assignment
 
         //~ Instance/static variables .........................................
 
-        private Set lcNames;
+        private Set<String> lcNames;
     }
 
 
@@ -453,7 +448,8 @@ public class Assignment
     // ----------------------------------------------------------
     private boolean conflictingSubdirNameExists( String subdir )
     {
-        NSArray neighbors = objectsForNeighborAssignments( editingContext() );
+        NSArray<Assignment> neighbors =
+            objectsForNeighborAssignments(editingContext());
         if (log.isDebugEnabled())
         {
             log.debug( "neighbors = " + neighbors );
@@ -462,9 +458,8 @@ public class Assignment
         {
             subdir = subdir.toLowerCase();
         }
-        for (int i = 0; i < neighbors.count(); i++)
+        for (Assignment asgn : neighbors)
         {
-            Assignment asgn = (Assignment)neighbors.objectAtIndex(i);
             String yourSub = asgn.subdirName();
             if (yourSub != null)
             {

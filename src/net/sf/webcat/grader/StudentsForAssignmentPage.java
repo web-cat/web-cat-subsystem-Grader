@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -36,7 +36,8 @@ import org.apache.log4j.Logger;
  * to download them in spreadsheet form or edit them one at a time.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class StudentsForAssignmentPage
     extends GraderAssignmentComponent
@@ -278,7 +279,7 @@ public class StudentsForAssignmentPage
             "You are about to mark all <b>partially graded</b> submissions "
             + "as now complete.  Submissions that have no remarks or manual "
             + "scoring information will not be affected.  All students who "
-            + "are affected will be receive an e-mail notification.";
+            + "are affected will receive an e-mail notification.";
         confirmPage.actionReceiver = this;
         confirmPage.actionOk       = "markAsCompleteActionOk";
         confirmPage.setTitle( "Confirm Grading Is Complete" );

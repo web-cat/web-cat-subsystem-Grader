@@ -160,9 +160,7 @@ MaxFileUploadSizeInfo: net.sf.webcat.core.PopUpInfo {
     message = "~\"Specify the maximum size allowed for student uploads to this assignment.  Leave blank for the system default of \" + defaultMaxFileUploadSize + \".  You may use &quot;k&quot; or &quot;K&quot; as suffixes to indicate kilobytes, or use &quot;m&quot; or &quot;M&quot; to indicate megabytes.  The limit may not exceed the system maximum of \" + maxMaxFileUploadSize + \".  Contact your administrator if you need to go even larger.\"";
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    finishEnabled = true;
-    applyEnabled  = true;
-    sideStepTitle = "Edit Submission Profile";
-    inlineHeaderContents = inlineJavaScript;
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title = "Edit Submission Profile";
+//    inlineHeaderContents = inlineJavaScript;
 }

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,11 +22,11 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.TimeZone;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
@@ -34,8 +34,9 @@ import org.apache.log4j.Logger;
 /**
  *  This class presents an assignment's properties so they can be edited.
  *
- *  @author Stephen Edwards
- *  @version $Id$
+ * @author Stephen Edwards
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class EditAssignmentPage
     extends GraderAssignmentComponent
@@ -69,9 +70,19 @@ public class EditAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+//    public boolean requiresAssignmentOffering()
+//    {
+//        // Want to show all offerings for this assignment.
+//        return false;
+//    }
+
+
+    // ----------------------------------------------------------
     public void appendToResponse(WOResponse response, WOContext context )
     {
-        log.debug( "starting appendToResponse()" );
+        log.debug("starting appendToResponse()");
+        // log.debug("time format = " + user().timeFormat());
+        // log.debug("date format = " + user().dateFormat());
         upcomingAssignments = null;
         currentTime = new NSTimestamp();
         if (thisAssignment == null)
@@ -594,6 +605,13 @@ public class EditAssignmentPage
             upcomingAssignments.removeObject( thisAssignment );
         }
         return upcomingAssignments;
+    }
+
+
+    // ----------------------------------------------------------
+    public TimeZone timeZone()
+    {
+        return TimeZone.getTimeZone(user().timeZoneName());
     }
 
 

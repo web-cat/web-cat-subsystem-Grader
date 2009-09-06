@@ -28,12 +28,13 @@ import org.apache.log4j.Logger;
 
 //-------------------------------------------------------------------------
 /**
-* Represents a standard Web-CAT page that has not yet been implemented
-* (is "to be defined").
-*
-*  @author Stephen Edwards
-*  @version $Id$
-*/
+ * Represents a standard Web-CAT page that has not yet been implemented
+ * (is "to be defined").
+ *
+ * @author Stephen Edwards
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
+ */
 public class EditCoursePage
     extends GraderCourseEditComponent
 {
@@ -88,13 +89,10 @@ public class EditCoursePage
 
 
     // ----------------------------------------------------------
-    public WOComponent defaultAction()
+    public WOComponent cancel()
     {
-        // apply();
-        // return super.defaultAction();
-
-        // When semester list changes, make sure not to take the
-        // default action, which is to click "next".
+        clearMessages();
+        cancelLocalChanges();
         return null;
     }
 
@@ -119,7 +117,7 @@ public class EditCoursePage
     public WOComponent removeInstructor()
     {
         courseOffering().removeFromInstructorsRelationship(aUser);
-        return null;
+        return apply();
     }
 
 
@@ -131,7 +129,7 @@ public class EditCoursePage
     public WOComponent removeTA()
     {
         courseOffering().removeFromGradersRelationship(aUser);
-        return null;
+        return apply();
     }
 
 
@@ -162,6 +160,20 @@ public class EditCoursePage
         addPage.editInstructors = false;
         addPage.nextPage = this;
         return addPage;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Edit the student roster.
+     * @return the roster page
+     */
+    public WOComponent editRoster()
+    {
+        CourseRosterPage page = (CourseRosterPage)pageWithName(
+            CourseRosterPage.class.getName());
+        page.nextPage = this;
+        return page;
     }
 
 

@@ -1,10 +1,11 @@
 <webobject name="Page">
-<table style="border:none"><tbody>
-<tr><th colspan="2">Basic Properties</th></tr>
+<wo:WCForm multipleSubmit="true">
+<wo:WCPageModule title="Basic Properties">
+<table class="layout"><tbody>
 <tr><td align="right">Name:</td>
     <td><webobject name="TextField1"/></td></tr>
 <tr><td align="right" valign="top">Points available:</td>
-    <td><table style="border:none">
+    <td><table class="layout">
 <tr><td><webobject name="TextField14"/></td>
     <td>from TA</td></tr>
 <tr><td><webobject name="TextField15"/></td>
@@ -27,8 +28,13 @@
 <tr><td align="right">Stop accepting:</td>
     <td><webobject name="TextField4"/>
         <webobject name="PopUpButton2"/> after due date</td></tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><th colspan="2">Bonuses/Penalties</th></tr>
+<tr><td></td><td><wo:WCButton action="$next" label="Save" class="pos"/>
+  <wo:WCButton action="$cancel" label="Cancel" class="neg"/></td></tr>
+</tbody></table>
+</wo:WCPageModule>
+
+<wo:WCPageModule title="Bonuses and Penalties">
+<table class="layout"><tbody>
 <tr><td colspan="2"><webobject name="CheckBox1"/>
     Award bonus points for early submissions</td></tr>
 <tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Award at most
@@ -43,8 +49,11 @@
     in increments of <webobject name="TextField9"/>
     for every <webobject name="TextField10"/>
     <webobject name="PopUpButton4"/> late</td></tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><th colspan="2">External Submission Engines/Plug-ins</th></tr>
+</tbody></table>
+</wo:WCPageModule>
+
+<wo:WCPageModule title="External Submission Engines/Plug-ins">
+<table class="layout"><tbody>
 <tr><td colspan="2">List assignment for submission using:
     <webobject name="Submitter"/></td></tr>
 <tr><td alight="right">Exclude file patterns:</td><td><webobject name="ExcludedFilePatterns"/></td></tr>
@@ -53,4 +62,7 @@
 <tr><td></td><td>(use commas to separate multiple patterns)</td></tr>
 </tbody>
 </table>
+</wo:WCPageModule>
+</wo:WCForm>
+
 </webobject>

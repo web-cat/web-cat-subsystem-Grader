@@ -1,4 +1,4 @@
-<webobject name="Page">For: <span class="hl"><webobject name="AssignmentName"/></span><p>
+<webobject name="Page">For: <span class="hl"><wo:if condition="$prefs.assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$prefs.assignmentOffering.titleString"/></wo:else></span><p>
 <div class="shadow"><table><thead>
 <tr><th>&nbsp;</th><th>Available Formats</th></tr></thead><tbody>
 <tr class="o"><td><webobject name="Blackboard"/></td><td>Blackboard-compatible CSV</td></tr>

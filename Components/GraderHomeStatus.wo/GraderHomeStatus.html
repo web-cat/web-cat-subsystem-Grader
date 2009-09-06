@@ -7,7 +7,7 @@ The following submissions are currently queued for processing:
 <webobject name="JobRepetition">
 <webobject name="TR"><td><webobject name="JobIsSuspended">Suspended</webobject>
 <webobject name="JobIsNotSuspended">Queued</webobject></td>
-<td><webobject name="JobAssignmentName"/> try #<webobject name="SubmitNumber"/></td>
+<td><wo:if condition="$job.submission.assignmentOffering.assignment.url"><webobject name="JobAssignmentName"/></wo:if><wo:else><wo:str value="$job.submission.assignmentOffering.titleString"/></wo:else> try #<webobject name="SubmitNumber"/></td>
 <td><webobject name="JobSubmissionTime"/></td></webobject>
 </webobject></tbody></table>
 <p>(<b>Suspended</b> submissions must
@@ -20,7 +20,7 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <table><thead>
 <tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr></thead><tbody>
 <webobject name="AssignmentRepetition">
-<webobject name="TR2"><td><webobject name="AssignmentName"/><webobject name="AssignmentIsUnpublished">
+<webobject name="TR2"><td><wo:if condition="$assignment.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$assignment.titleString"/></wo:else><webobject name="AssignmentIsUnpublished">
 <span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
 <span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
