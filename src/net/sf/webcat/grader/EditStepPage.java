@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -23,10 +23,6 @@ package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.zip.ZipFile;
-import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -35,7 +31,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class EditStepPage
     extends GraderComponent
@@ -128,6 +125,7 @@ public class EditStepPage
                     + ") =\n" + step.config().configSettings() );
             }
         }
+        applyLocalChanges();
         return super.next();
     }
 
@@ -155,6 +153,18 @@ public class EditStepPage
     public WOComponent defaultAction()
     {
         return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public String title()
+    {
+        String plugin = "Plug-in";
+        if (step != null && step.script() != null)
+        {
+            plugin = step.script().displayableName();
+        }
+        return "Configure " + plugin;
     }
 
 

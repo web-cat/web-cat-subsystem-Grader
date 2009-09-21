@@ -16,29 +16,17 @@ EditReusableConfig: WOImageButton {
 	height    = "17";
 	alt       = "Edit selected option set";
 	title     = "Edit selected option set";
+	class     = "icon";
 }
 
-ForAssignmentName: WOString {
-    value = step.assignment.titleString;
-}
-
-HasNoOptions: WOConditional {
-    condition = step.script.configDescription.options.count;
-    negate    = true;
-}
-
-HasOptions: WOConditional {
-    condition = step.script.configDescription.options.count;
-}
-
-NewReusableConfig: WOSubmitButton {
+NewReusableConfig: WCButton {
     action = newReusableConfig;
-    value  = "New";
+    label  = "New";
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    sideStepTitle = "Configure Plug-in";
-    applyEnabled  = true;
+Page: net.sf.webcat.core.WCPageWithNavigation {
+//    title = "Configure Plug-in";
+//    title = "~ \"Configure \" + step.script.displayableName";
 }
 
 ReusableList: WOPopUpButton {
@@ -47,8 +35,4 @@ ReusableList: WOPopUpButton {
     displayString = stepConfig.name;
     selection     = step.config;
     noSelectionString = "(plug-in defaults only)";
-}
-
-ScriptName: WOString {
-    value = step.script.displayableName;
 }

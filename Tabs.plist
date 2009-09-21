@@ -98,7 +98,7 @@
             };
           };
           "Mass Regrade" = {
-            accessLevel = 50;
+            accessLevel = 90;
             priority = 5;
             pageName = net.sf.webcat.grader.MassRegraderPage;
           };

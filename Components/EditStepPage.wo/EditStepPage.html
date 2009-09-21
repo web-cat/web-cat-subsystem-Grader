@@ -1,19 +1,25 @@
-<webobject name="Page">Plug-in: <span class="hl"><webobject name="ScriptName"/></span>
-<p>For: <span class="hl"><webobject name="ForAssignmentName"/></span></p>
+<wo name="Page">
+<wo:WCForm multipleSubmit="true">
 
-<h2>Reusable Configuration Options</h2>
-<webobject name="HasOptions">
+<wo:WCPageModule title="Assignment-Specific Options">
+<p>For: <span class="hl"><wo:str value="$step.assignment.titleString"/></span><br/>
+<wo:WCButton label="Return to Assignment Properties" action="$next"/>
+</p>
+<wo name="AssignmentOptionEditor"/>
+<wo:WCButton label="Return to Assignment Properties" action="$next"/>
+</wo:WCPageModule>
+
+<wo:WCPageModule title="Reusable Configuration Options">
+<wo:if condition="$step.script.configDescription.options.count">
 <p>This plug-in supports additional option settings that can be placed in a
 named configuration profile that is shared among several assignments.</p>
 
 <p>Reusable option set:
-<webobject name="ReusableList"/><webobject name="EditReusableConfig"/>
-<webobject name="NewReusableConfig"/></p>
+<wo name="ReusableList"/><wo name="EditReusableConfig"/>
+<wo name="NewReusableConfig"/></p>
 
-</webobject><webobject name="HasNoOptions">
+</wo:if><wo:else>
 <p>This plug-in has no reusable configuration options.</p>
-</webobject>
-
-<h2>Assignment-Specific Options</h2>
-<webobject name="AssignmentOptionEditor"/>
-</webobject>
+</wo:else>
+</wo:WCPageModule>
+</wo:WCForm></wo>

@@ -26,9 +26,8 @@ OptionEditor: net.sf.webcat.core.OptionSetEditor {
     base              = baseDir;
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    sideStepTitle = "Edit Reusable Options";
-    applyEnabled  = true;
+Page: net.sf.webcat.core.WCPageWithNavigation {
+//    title = "Edit Reusable Options";
 }
 
 Repetition3: WORepetition {

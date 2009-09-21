@@ -278,7 +278,7 @@ public class EditSubmissionProfilePage
             clearMessage( "tooLarge" );
         }
         // This will automatically restrict to the max value anyway
-        submissionProfile.setMaxFileUploadSize(value);
+        submissionProfile.setMaxFileUploadSizeRaw(value);
     }
 
 

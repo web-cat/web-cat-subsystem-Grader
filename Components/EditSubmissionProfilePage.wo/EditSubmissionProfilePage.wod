@@ -162,5 +162,5 @@ MaxFileUploadSizeInfo: net.sf.webcat.core.PopUpInfo {
 
 Page: net.sf.webcat.core.WCPageWithNavigation {
     title = "Edit Submission Profile";
-//    inlineHeaderContents = inlineJavaScript;
+    inlineHeaderContents = inlineJavaScript;
 }

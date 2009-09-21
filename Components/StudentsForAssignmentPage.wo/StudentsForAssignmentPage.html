@@ -21,7 +21,7 @@
         <th class="sm">Score<webobject name="WCSortOrder5"/></th>
     </tr></thead><tbody>
     <webobject name="Repetition1"><webobject name="TR">
-	    <td><webobject name="Status"/></td>
+	    <td><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
         <td><webobject name="Name"/><webobject name="HasPartners"><webobject name="PartnerRepetition"><webobject name="IsAPartner"><webobject name="MorePartners">,<br/></webobject><webobject name="LastPartner"><webobject name="HasMultiplePartners">,</webobject><br/>and</webobject>
 <webobject name="PartnerName"/></webobject></webobject></webobject></td>
         <td class="n"><webobject name="SubmitNumber"/><webobject name="NotMostRecent">

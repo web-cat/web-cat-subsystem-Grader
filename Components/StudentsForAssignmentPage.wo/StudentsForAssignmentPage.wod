@@ -120,6 +120,30 @@ Somebody: WOConditional {
 	condition = submissionDisplayGroup.allObjects.count;
 }
 
+StatusToDo: WOImage {
+    border    = "0";
+    filename  = "icons/pb-empty.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
+StatusUnfinished: WOImage {
+    border    = "0";
+    filename  = "icons/pb-partial.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
+StatusDone: WOImage {
+    border    = "0";
+    filename  = "icons/pb-full2.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
 Status: WOImage {
 	border    = "0";
 	filename  = aSubmission.result.statusURL;
