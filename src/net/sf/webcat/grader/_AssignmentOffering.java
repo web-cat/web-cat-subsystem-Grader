@@ -159,6 +159,7 @@ public abstract class _AssignmentOffering
     public static final String SUBMISSIONS_KEY = "submissions";
     // Fetch specifications ---
     public static final String ALL_OFFERINGS_FSPEC = "allOfferings";
+    public static final String COURSE_FSPEC = "course";
     public static final String COURSE_OFFERING_FSPEC = "courseOffering";
     public static final String STAFF_FSPEC = "staff";
     public static final String STUDENT_FSPEC = "student";
@@ -1129,6 +1130,45 @@ public abstract class _AssignmentOffering
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForAllOfferings(ec"
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>Course</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsForCourse(
+            EOEditingContext context,
+            net.sf.webcat.core.Course courseBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "course", "AssignmentOffering" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( courseBinding != null )
+        {
+            bindings.setObjectForKey( courseBinding,
+                                      "course" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForCourse(ec"
+                + ", " + courseBinding
                 + "): " + result );
         }
         return result;

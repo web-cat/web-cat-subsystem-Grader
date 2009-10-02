@@ -9,7 +9,7 @@ AddStep: WOImageButton {
 }
 
 CanDelete: WOConditional {
-    condition = "~!thisAssignment.isNewObject && !thisAssignment.hasStudentSubmissions";
+    condition = "~!thisOffering.isNewObject && !thisOffering.hasStudentSubmissions";
 }
 
 CancelSubs: WCButton {
@@ -23,12 +23,12 @@ ClearGraph: WCButton {
 }
 
 CourseOfferingSection: WCPageModule {
-    title = "~ \"Properties for \" + thisAssignment.courseOffering.deptNumberAndName";
+    title = "~ \"Properties for \" + thisOffering.courseOffering.deptNumberAndName";
 }
 
 Description: WOTextField {
 	size = 40;
-	value = thisAssignment.assignment.shortDescription;
+	value = assignment.shortDescription;
 }
 
 DescriptionInfo: net.sf.webcat.core.PopUpInfo {
@@ -37,7 +37,7 @@ DescriptionInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 DueDate2: WCDateTimePicker {
-     value      = thisAssignment.dueDate;
+     value      = thisOffering.dueDate;
      dateformat = user.dateFormat;
      timeformat = user.timeFormat;
      dateWidth  = "8em";
@@ -68,7 +68,7 @@ EditSubmissionProfile: WOImageButton {
 }
 
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
-    graphSummary = thisAssignment.graphSummary;
+    graphSummary = thisOffering.graphSummary;
 }
 
 HasSuspendedSubs: WOConditional {
@@ -82,7 +82,7 @@ LastTR: net.sf.webcat.core.TableRow {
 MoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = thisAssignment.assignment.moodleId;
+	value = thisOffering.assignment.moodleId;
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -93,7 +93,7 @@ MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
 OverrideMoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = thisAssignment.moodleId;
+	value = thisOffering.moodleId;
 }
 
 
@@ -120,7 +120,7 @@ MoveStepUp: WOImageButton {
 }
 
 Name: WOTextField {
-	value = thisAssignment.assignment.name;
+	value = assignment.name;
 	size  = 40;
 }
 
@@ -152,7 +152,7 @@ Page: net.sf.webcat.core.WCPageWithNavigation {
 }
 
 PublishIt: WOCheckBox {
-	checked = thisAssignment.publish;
+	checked = thisOffering.publish;
 }
 
 PublishItInfo: net.sf.webcat.core.PopUpInfo {
@@ -199,7 +199,7 @@ SubmissionProfileList: WOPopUpButton {
     list          = submissionProfileDisplayGroup.displayedObjects;
     item          = submissionProfile;
     displayString = submissionProfile.name;
-    selection     = thisAssignment.assignment.submissionProfile;
+    selection     = assignment.submissionProfile;
 }
 
 //SubmissionProfileName: WOString {
@@ -221,24 +221,20 @@ Timeout: WOTextField {
 	value = stepTimeout;
 }
 
-TimeFormat: WOString {
-    value = session.timeFormatter.pattern;
-}
-
 TR: net.sf.webcat.core.TableRow {
 	index = index;
 }
 
 TR2: net.sf.webcat.core.TableRow {
 	index = index;
-    showCaution = upcomingAssignmentIsLate;
-    showError   = upcomingAssignment.gradingSuspended;
+    showCaution = upcomingOfferingIsLate;
+    showError   = upcomingOffering.gradingSuspended;
 }
 
 UploadInstructions: WOText {
 	rows     = 8;
 	cols     = 60;
- 	value    = thisAssignment.assignment.fileUploadMessage;
+ 	value    = assignment.fileUploadMessage;
 //    dojoType = "dijit.form.Textarea";
 }
 
@@ -248,34 +244,29 @@ UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 UpcomingAssignmentName: WOHyperlink {
-    string = upcomingAssignment.titleString;
-    href   = upcomingAssignment.assignment.url;
+    string = upcomingOffering.titleString;
+    href   = upcomingOffering.assignment.url;
 }
 
 UpcomingAssignmentRepetition: WORepetition {
-	item  = upcomingAssignment;
-	list  = upcomingAssignments;
+	item  = upcomingOffering;
+	list  = upcomingOfferings;
 	index = index;
-}
-
-UpcomingAssignments: WOCollapsibleComponentContent {
-	openedLabel = "Hide upcoming assignment deadlines";
-	closedLabel = "Show upcoming assignment deadlines";
 }
 
 UpcomingDueDate: WOString {
     formatter = session.timeFormatter;
-    value     = upcomingAssignment.dueDate;
+    value     = upcomingOffering.dueDate;
 }
 
 UpcomingIsUnpublished: WOConditional {
-    condition = upcomingAssignment.publish;
+    condition = upcomingOffering.publish;
     negate = true;
 }
 
 URL: WOTextField {
 	size = 40;
-	value = thisAssignment.assignment.url;
+	value = assignment.url;
 }
 
 URLInfo: net.sf.webcat.core.PopUpInfo {

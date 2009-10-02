@@ -132,6 +132,22 @@
 //              };
 //            };
           };
+          New = {
+            accessLevel = 50;
+            priority = 100;
+            children = {
+                "Create an Assignment" = {
+                    pageName = net.sf.webcat.grader.NewAssignmentPage;
+                    accessLevel = 50;
+                    priority = 1;
+                };
+                "Edit Assignment Properties" = {
+                    accessLevel = 50;
+                    priority = 2;
+                    config = { jumpTo = AssignmentProperties; };
+                };
+            };
+          };
           "Plug-ins" = {
             pageName = net.sf.webcat.grader.PluginManagerPage;
             accessLevel = 50;

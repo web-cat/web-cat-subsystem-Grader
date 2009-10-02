@@ -15,14 +15,24 @@ Authenticator: WOGenericContainer {
     value = authenticator;
 }
 
-BeginCourseGroup: WOGenericElement {
-    elementName = "assignment-group";
-    name = courseName;
+LB: WOString {
+    value = "<";
+    escapeHTML = false;
 }
 
-BeginInstitutionGroup: WOGenericElement {
-    elementName = "assignment-group";
-    name = anAssignmentOffering.courseOffering.course.department.institution.displayableName;
+RB: WOString {
+    value = ">";
+    escapeHTML = false;
+}
+
+BeginCourseGroup: WOString {
+    value = "~\"<assignment-group name=\\\"\" + courseName + \"\\\">";
+    escapeHTML = false;
+}
+
+BeginInstitutionGroup: WOString {
+    value = "~\"<assignment-group name=\\\"\" + anAssignmentOffering.courseOffering.course.department.institution.displayableName + \"\\\">";
+    escapeHTML = false;
 }
 
 CourseNumber: WOGenericContainer {

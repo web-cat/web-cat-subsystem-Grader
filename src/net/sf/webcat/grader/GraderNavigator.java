@@ -302,6 +302,7 @@ public class GraderNavigator
                     (Assignment)assignArray.objectAtIndex(0);
                 graderParent.prefs().setAssignmentRelationship(
                     targetAssignment);
+                graderParent.prefs().setAssignmentOfferingRelationship(null);
                 CourseOffering co =
                     selectionsParent.coreSelections().courseOffering();
                 Course course = selectionsParent.coreSelections().course();

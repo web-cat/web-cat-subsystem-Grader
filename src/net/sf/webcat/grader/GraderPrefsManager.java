@@ -136,6 +136,10 @@ public class GraderPrefsManager
     {
         addObjectToBothSidesOfRelationshipWithKey(
             value, GraderPrefs.ASSIGNMENT_OFFERING_KEY);
+        if (value != null)
+        {
+            setAssignmentRelationship(value.assignment());
+        }
     }
 
 

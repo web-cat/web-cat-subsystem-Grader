@@ -42,7 +42,7 @@ public class NewCourseOfferingPage
 
     // ----------------------------------------------------------
     /**
-     * Creates a new TBDPage object.
+     * Creates a new object.
      *
      * @param context The context to use
      */

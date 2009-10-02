@@ -82,7 +82,8 @@ public class GraderHomeStatus
         enqueuedJobGroup.fetch();
 
         currentTime = new NSTimestamp();
-        NSMutableArray qualifiers = new NSMutableArray();
+        NSMutableArray<EOQualifier> qualifiers =
+            new NSMutableArray<EOQualifier>();
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.AVAILABLE_FROM_KEY,
                 EOQualifier.QualifierOperatorLessThan,
@@ -98,7 +99,8 @@ public class GraderHomeStatus
                 EOQualifier.QualifierOperatorContains,
                 user()
             ) );
-        qualifiers = new NSMutableArray( new EOAndQualifier( qualifiers ) );
+        qualifiers = new NSMutableArray<EOQualifier>(
+            new EOAndQualifier(qualifiers));
         qualifiers.addObject( new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
                 EOQualifier.QualifierOperatorContains,
@@ -109,7 +111,8 @@ public class GraderHomeStatus
                 EOQualifier.QualifierOperatorContains,
                 user()
             ) );
-        qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
+        qualifiers = new NSMutableArray<EOQualifier>(
+            new EOOrQualifier(qualifiers));
         EOQualifier deadlineQualifier = new EOKeyValueQualifier(
             AssignmentOffering.LATE_DEADLINE_KEY,
             EOQualifier.QualifierOperatorGreaterThan,
@@ -129,7 +132,7 @@ public class GraderHomeStatus
         }
 
         // Now set up the upcoming assignments list
-        qualifiers = new NSMutableArray( deadlineQualifier );
+        qualifiers = new NSMutableArray<EOQualifier>(deadlineQualifier);
         // Also, more recent than two weeks ago
         qualifiers.addObject( new EOKeyValueQualifier(
             AssignmentOffering.DUE_DATE_KEY,
@@ -159,10 +162,10 @@ public class GraderHomeStatus
     public Number mostRecentScore()
     {
         SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
-            user() );
-        return ( subResult == null )
+            user());
+        return (subResult == null)
             ? null
-            : new Double( subResult.automatedScore() );
+            : new Double(subResult.automatedScore());
     }
 
 
@@ -187,9 +190,9 @@ public class GraderHomeStatus
     public boolean canGradeAssignment()
     {
         boolean result =
-            assignment.courseOffering().isInstructor( user() )
-            || assignment.courseOffering().isGrader( user() );
-        log.debug( "can grade = " + result );
+            assignment.courseOffering().isInstructor(user())
+            || assignment.courseOffering().isGrader(user());
+        log.debug("can grade = " + result);
         return result;
     }
 
@@ -202,10 +205,11 @@ public class GraderHomeStatus
      */
     public WOComponent submitAssignment()
     {
-        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
-        prefs().setAssignmentOfferingRelationship( assignment );
+        coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
-            wcSession().tabs.selectById( "UploadSubmission" ).pageName() );
+            wcSession().tabs.selectById("UploadSubmission").pageName());
     }
 
 
@@ -217,23 +221,24 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
-        prefs().setAssignmentOfferingRelationship( assignment );
-        SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
-            user() );
+        coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        prefs().setAssignmentOfferingRelationship(assignment);
+        SubmissionResult subResult =
+            assignment.mostRecentSubmissionResultFor(user());
         String destinationPageName = null;
-        if ( subResult != null )
+        if (subResult != null)
         {
-            prefs().setSubmissionRelationship(  subResult.submission() );
+            prefs().setSubmissionRelationship( subResult.submission());
             destinationPageName =
-                wcSession().tabs.selectById( "MostRecent" ).pageName();
+                wcSession().tabs.selectById("MostRecent").pageName();
         }
         else
         {
             destinationPageName =
-                wcSession().tabs.selectById( "PickSubmission" ).pageName();
+                wcSession().tabs.selectById("PickSubmission").pageName();
         }
-        return pageWithName( destinationPageName );
+        return pageWithName(destinationPageName);
     }
 
 
@@ -245,10 +250,11 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
-        prefs().setAssignmentOfferingRelationship( assignment );
+        coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
-            wcSession().tabs.selectById( "GraphResults" ).pageName() );
+            wcSession().tabs.selectById("GraphResults").pageName());
     }
 
 
@@ -260,10 +266,11 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
-        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
-        prefs().setAssignmentOfferingRelationship( assignment );
+        coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
-            wcSession().tabs.selectById( "AssignmentProperties" ).pageName() );
+            wcSession().tabs.selectById("AssignmentProperties").pageName());
     }
 
 
@@ -275,10 +282,11 @@ public class GraderHomeStatus
      */
     public WOComponent gradeAssignment()
     {
-        coreSelections().setCourseOfferingRelationship( assignment.courseOffering() );
-        prefs().setAssignmentOfferingRelationship( assignment );
+        coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
-            wcSession().tabs.selectById( "EnterGrades" ).pageName() );
+            wcSession().tabs.selectById("EnterGrades").pageName());
     }
 
 

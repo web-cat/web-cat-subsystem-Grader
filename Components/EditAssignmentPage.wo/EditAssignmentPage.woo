@@ -16,6 +16,20 @@
             selectsFirstObjectAfterFetch = YES; 
             sortOrdering = ({class = EOSortOrdering; key = order; selectorName = "compareAscending:"; }); 
         }; 
+        offeringGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = offerings; 
+                masterClassDescription = AssignmentOffering; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = courseOffering.crn; selectorName = "compareAscending:"; }); 
+        }; 
 	    submissionProfileDisplayGroup = {
 	        class = WODisplayGroup; 
 	        formatForLikeQualifier = "%@*"; 

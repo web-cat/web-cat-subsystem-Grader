@@ -69,6 +69,7 @@ public class PickStepPage
     public boolean        createNew               = false;
     public NSData         uploadedData;
     public String         uploadedName;
+    public Assignment     targetAssignment;
 
 
     //~ Methods ...............................................................
@@ -88,6 +89,14 @@ public class PickStepPage
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
+        if (targetAssignment == null)
+        {
+            targetAssignment = prefs().assignment();
+            if (targetAssignment == null)
+            {
+                targetAssignment = prefs().assignmentOffering().assignment();
+            }
+        }
         assignmentGroup.queryBindings().setObjectForKey(
             coreSelections().courseOffering(),
             "courseOffering"
@@ -295,29 +304,29 @@ public class PickStepPage
             );
             if ( newScript != null )
             {
-                prefs().assignmentOffering().assignment().addNewStep(
-                    newScript );
+                targetAssignment.addNewStep(newScript);
             }
         }
         else if ( selectedAssignmentIndex >= 0 )
         {
             log.debug(" selected assignment = " + selectedAssignmentIndex );
-            Assignment copyTo = prefs().assignmentOffering().assignment();
+            Assignment copyTo = targetAssignment;
             Assignment copyFrom = (Assignment)assignmentGroup
                 .displayedObjects().objectAtIndex( selectedAssignmentIndex );
-            Enumeration steps = copyFrom.steps().objectEnumerator();
-            while ( steps.hasMoreElements() )
+            for (Step step : copyFrom.steps())
             {
-                copyTo.copyStep( (Step)steps.nextElement(), true );
+                copyTo.copyStep(step, true);
             }
+            applyLocalChanges();
         }
         else if ( publishedScriptIndex >= 0 )
         {
             publishedScriptIndex -= assignmentGroup.displayedObjects().count();
             log.debug(" selected published  = " + publishedScriptIndex );
-            prefs().assignmentOffering().assignment().addNewStep(
+            targetAssignment.addNewStep(
                 (ScriptFile)publishedScriptGroup.displayedObjects()
                     .objectAtIndex( publishedScriptIndex ) );
+            applyLocalChanges();
         }
         else if ( selectedScriptIndex >= 0 )
         {
@@ -325,9 +334,10 @@ public class PickStepPage
             selectedScriptIndex -=
                 publishedScriptGroup.displayedObjects().count();
             log.debug(" selected script     = " + selectedScriptIndex );
-            prefs().assignmentOffering().assignment().addNewStep(
+            targetAssignment.addNewStep(
                 (ScriptFile)scriptGroup.displayedObjects()
                     .objectAtIndex( selectedScriptIndex ) );
+            applyLocalChanges();
         }
         else
         {

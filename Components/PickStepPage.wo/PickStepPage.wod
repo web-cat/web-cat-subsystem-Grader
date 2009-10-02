@@ -29,10 +29,8 @@ HasPersonalScripts: WOConditional {
     condition = scriptGroup.displayedObjects.count;
 }
 
-Page: net.sf.webcat.core.WizardPage {
-    sideStepTitle = "Add Step(s)";
-    finishEnabled = false;
-    applyEnabled  = false;
+Page: net.sf.webcat.core.WCPageWithNavigation {
+    title = "Add Grading Plug-in to Assignment";
 }
 
 RadioButton1: WORadioButton {

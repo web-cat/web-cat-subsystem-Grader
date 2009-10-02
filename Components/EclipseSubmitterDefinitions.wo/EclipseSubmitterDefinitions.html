@@ -26,10 +26,10 @@
 <webobject name="HasAssignments"><webobject name="AssignmentRepetition">
 <webobject name="GroupByInstitution"><webobject name="StartNewInstitution"><webobject name="IsNotFirst">  <webobject name="EndCourseGroup"/>
 <webobject name="EndInstitutionGroup"/>
-</webobject><webobject name="BeginInstitutionGroup"/></webobject></webobject>
+</webobject><wo name="LB"/>assignment-group name="<wo:str value="$anAssignmentOffering.courseOffering.course.department.institution.displayableName"/>"<wo name="RB"/></webobject></webobject>
 <webobject name="StartNewCourse"><webobject name="IsNotFirstInInstitution">  <webobject name="EndCourseGroup"/>
 
-</webobject>  <webobject name="BeginCourseGroup"/>
+</webobject>  <wo name="LB"/>assignment-group name="<wo:str value="$courseName"/>"<wo name="RB"/>
 
 </webobject>    <webobject name="Assignment"><webobject name="InclusionRep">
       <webobject name="IncludePattern"/></webobject><webobject name="ExclusionRep">

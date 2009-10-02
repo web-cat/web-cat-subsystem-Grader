@@ -57,46 +57,59 @@ public class EditAssignmentPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup scriptDisplayGroup;
-    public int            index;
-    public Step           thisStep;
-    public boolean        isSuspended;
-    public WODisplayGroup    submissionProfileDisplayGroup;
-    public SubmissionProfile submissionProfile; // For Repetition1
-    public AssignmentOffering upcomingAssignment;
-    public AssignmentOffering thisAssignment;
+    public WODisplayGroup     scriptDisplayGroup;
+    public int                index;
+    public Step               thisStep;
+    public WODisplayGroup     submissionProfileDisplayGroup;
+    public SubmissionProfile  submissionProfile; // For Repetition1
+    public AssignmentOffering upcomingOffering;
+    public AssignmentOffering thisOffering;
+    public Assignment         assignment;
+    public AssignmentOffering selectedOffering;
+    public WODisplayGroup     offeringGroup;
+
+    public boolean isSuspended; // TODO: fix this!
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-//    public boolean requiresAssignmentOffering()
-//    {
-//        // Want to show all offerings for this assignment.
-//        return false;
-//    }
-
-
-    // ----------------------------------------------------------
     public void appendToResponse(WOResponse response, WOContext context )
     {
         log.debug("starting appendToResponse()");
-        // log.debug("time format = " + user().timeFormat());
-        // log.debug("date format = " + user().dateFormat());
-        upcomingAssignments = null;
         currentTime = new NSTimestamp();
-        if (thisAssignment == null)
+        if (selectedOffering == null)
         {
-            thisAssignment = prefs().assignmentOffering();
+            selectedOffering = prefs().assignmentOffering();
         }
-        scriptDisplayGroup.setMasterObject( thisAssignment.assignment() );
-        isSuspended = thisAssignment.gradingSuspended();
+        if (assignment == null)
+        {
+            assignment = prefs().assignment();
+            if (assignment == null && selectedOffering != null)
+            {
+                assignment = selectedOffering.assignment();
+            }
+            Semester selectedSemester = coreSelections().semester();
+            offeringGroup.setMasterObject(assignment);
+            if (selectedSemester == null)
+            {
+                offeringGroup.queryMatch().remove("courseOffering.semester");
+            }
+            else
+            {
+                offeringGroup.queryMatch().put(
+                    "courseOffering.semester", selectedSemester);
+            }
+            offeringGroup.qualifyDisplayGroup();
+        }
+        scriptDisplayGroup.setMasterObject(assignment);
+        isSuspended = selectedOffering.gradingSuspended();
         submissionProfileDisplayGroup.setObjectArray(
             SubmissionProfile.profilesForCourseIncludingMine(
                 localContext(),
                 user(),
-                thisAssignment.courseOffering().course(),
-                thisAssignment.assignment().submissionProfile() )
+                selectedOffering.courseOffering().course(),
+                assignment.submissionProfile() )
              );
         log.debug( "starting super.appendToResponse()" );
         super.appendToResponse( response, context );
@@ -129,6 +142,29 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
+    public boolean allowsAllOfferingsForCourse()
+    {
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean requiresAssignmentOffering()
+    {
+        // Want to show all offerings for this assignment.
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    public void flushNavigatorDerivedData()
+    {
+        selectedOffering = null;
+        assignment = null;
+    }
+
+
+    // ----------------------------------------------------------
     /* Checks for errors, then records the current selections.
      *
      * @returns false if there is an error message to display.
@@ -146,44 +182,43 @@ public class EditAssignmentPage
      *        trigger a false result
      * @returns false if there is an error message to display.
      */
-    protected boolean saveAndCanProceed( boolean requireProfile )
+    protected boolean saveAndCanProceed(boolean requireProfile)
     {
-        if (thisAssignment == null) return true;
-        boolean offeringIsSuspended =
-            thisAssignment.gradingSuspended();
-        if ( offeringIsSuspended != isSuspended )
+        if (thisOffering != null)
         {
-            if ( ! offeringIsSuspended )
+            boolean offeringIsSuspended =
+                thisOffering.gradingSuspended();
+            if ( offeringIsSuspended != isSuspended )
             {
-                log.debug( "suspending grading on this assignment" );
-                thisAssignment.setGradingSuspended( true );
-                isSuspended = true;
-            }
-            else
-            {
-                log.debug( "resuming grading on this assignment" );
-                thisAssignment.setGradingSuspended( false );
-                // Have to save this change first!
-                if (!applyLocalChanges()) return false;
-                releaseSuspendedSubs();
+                if ( ! offeringIsSuspended )
+                {
+                    log.debug( "suspending grading on this assignment" );
+                    thisOffering.setGradingSuspended( true );
+                    isSuspended = true;
+                }
+                else
+                {
+                    log.debug( "resuming grading on this assignment" );
+                    thisOffering.setGradingSuspended( false );
+                    // Have to save this change first!
+                    if (!applyLocalChanges()) return false;
+                    releaseSuspendedSubs();
+                }
             }
         }
-        if ( requireProfile &&
-             thisAssignment.assignment().submissionProfile()
-             == null )
+        if (requireProfile  &&  assignment.submissionProfile() == null)
         {
             error(
                 "please select submission rules for this assignment." );
         }
-        return  validateURL( thisAssignment.assignment().url() )
-            && !hasMessages();
+        return  validateURL(assignment.url()) && !hasMessages();
     }
 
 
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        if ( saveAndCanProceed() )
+        if (saveAndCanProceed())
         {
             return super.next();
         }
@@ -218,8 +253,7 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public boolean hasSubmissionProfile()
     {
-        return null !=
-            thisAssignment.assignment().submissionProfile();
+        return null != assignment.submissionProfile();
     }
 
 
@@ -230,9 +264,9 @@ public class EditAssignmentPage
         if ( saveAndCanProceed() )
         {
 //            result = (WCComponent)pageWithName(
-//                SelectSubmissionProfile.class.getName() );
+//                SelectSubmissionProfile.class.getName());
             result = (WCComponent)pageWithName(
-                EditSubmissionProfilePage.class.getName() );
+                EditSubmissionProfilePage.class.getName());
             result.nextPage = this;
         }
         return result;
@@ -243,16 +277,14 @@ public class EditAssignmentPage
     public WOComponent newSubmissionProfile()
     {
         WCComponent result = null;
-        if ( saveAndCanProceed( false ) )
+        if (saveAndCanProceed(false))
         {
             SubmissionProfile newProfile = new SubmissionProfile();
-            localContext().insertObject( newProfile );
-            Assignment selectedAssignment =
-                thisAssignment.assignment();
-            selectedAssignment.setSubmissionProfileRelationship( newProfile );
-            newProfile.setAuthor( user() );
+            localContext().insertObject(newProfile);
+            assignment.setSubmissionProfileRelationship(newProfile);
+            newProfile.setAuthor(user());
             result = (WCComponent)pageWithName(
-                EditSubmissionProfilePage.class.getName() );
+                EditSubmissionProfilePage.class.getName());
             result.nextPage = this;
         }
         return result;
@@ -262,10 +294,10 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public boolean hasSuspendedSubs()
     {
-        log.debug( "script count = "
-                   + scriptDisplayGroup.displayedObjects().count() );
+        log.debug(
+            "script count = " + scriptDisplayGroup.displayedObjects().count());
         suspendedSubmissionCount =
-            thisAssignment.getSuspendedSubs().count();
+            thisOffering.getSuspendedSubs().count();
         return suspendedSubmissionCount > 0;
     }
 
@@ -280,30 +312,29 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent releaseSuspendedSubs()
     {
-        log.info( "releasing all paused assignments: "
-              + thisAssignment.titleString() );
+        log.info("releasing all paused assignments: "
+              + thisOffering.titleString());
         EOEditingContext ec = Application.newPeerEditingContext();
         try
         {
             ec.lock();
-            AssignmentOffering localAO = thisAssignment.localInstance( ec );
-            NSArray jobList = localAO.getSuspendedSubs();
-            for ( int i = 0; i < jobList.count(); i++ )
+            AssignmentOffering localAO = thisOffering.localInstance(ec);
+            NSArray<EnqueuedJob> jobList = localAO.getSuspendedSubs();
+            for (EnqueuedJob job : jobList)
             {
-                EnqueuedJob job = (EnqueuedJob)jobList.objectAtIndex( i );
-                job.setPaused( false );
-                job.setQueueTime( new NSTimestamp() );
+                job.setPaused(false);
+                job.setQueueTime(new NSTimestamp());
             }
-            log.info( "released " + jobList.count() + " jobs" );
+            log.info("released " + jobList.count() + " jobs");
             ec.saveChanges();
         }
         finally
         {
             ec.unlock();
-            Application.releasePeerEditingContext( ec );
+            Application.releasePeerEditingContext(ec);
         }
         // trigger the grading queue to read the released jobs
-        Grader.getInstance().graderQueue().enqueue( null );
+        Grader.getInstance().graderQueue().enqueue(null);
         return null;
     }
 
@@ -315,24 +346,24 @@ public class EditAssignmentPage
         try
         {
             ec.lock();
-            AssignmentOffering localAO = thisAssignment.localInstance( ec );
-            log.info( "cancelling all paused assignments: "
-                      + coreSelections().courseOffering().course().deptNumber()
-                      + " "
-                      + localAO.assignment().name() );
-            NSArray jobList = localAO.getSuspendedSubs();
-            for ( int i = 0; i < jobList.count(); i++ )
+            AssignmentOffering localAO = thisOffering.localInstance(ec);
+            log.info(
+                "cancelling all paused assignments: "
+                + coreSelections().courseOffering().course().deptNumber()
+                + " "
+                + localAO.assignment().name());
+            NSArray<EnqueuedJob> jobList = localAO.getSuspendedSubs();
+            for (EnqueuedJob job : jobList)
             {
-                EnqueuedJob job = (EnqueuedJob)jobList.objectAtIndex( i );
-                ec.deleteObject( job );
+                ec.deleteObject(job);
             }
-            log.info( "cancelled " + jobList.count() + " jobs" );
+            log.info("cancelled " + jobList.count() + " jobs");
             ec.saveChanges();
         }
         finally
         {
             ec.unlock();
-            Application.releasePeerEditingContext( ec );
+            Application.releasePeerEditingContext(ec);
         }
         return null;
     }
@@ -342,7 +373,7 @@ public class EditAssignmentPage
     public WOComponent regradeSubsActionOk()
     {
         if (!applyLocalChanges()) return null;
-        thisAssignment.regradeMostRecentSubsForAll( localContext() );
+        thisOffering.regradeMostRecentSubsForAll(localContext());
         applyLocalChanges();
         return null;
     }
@@ -352,10 +383,10 @@ public class EditAssignmentPage
     public WOComponent regradeSubs()
     {
         ConfirmPage confirmPage = null;
-        if ( saveAndCanProceed() )
+        if (saveAndCanProceed())
         {
             confirmPage =
-                (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+                (ConfirmPage)pageWithName(ConfirmPage.class.getName());
             confirmPage.nextPage       = this;
             confirmPage.message        =
                 "This action will <b>regrade the most recent submission "
@@ -369,7 +400,7 @@ public class EditAssignmentPage
                 + "when their new results are available.";
             confirmPage.actionReceiver = this;
             confirmPage.actionOk       = "regradeSubsActionOk";
-            confirmPage.setTitle( "Confirm Regrade of All Submissions" );
+            confirmPage.setTitle("Confirm Regrade of All Submissions");
         }
         return confirmPage;
     }
@@ -378,12 +409,12 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent addStep()
     {
-        WCComponent result = null;
-        if ( saveAndCanProceed() )
+        PickStepPage result = null;
+        if (saveAndCanProceed())
         {
-            result = (WCComponent)pageWithName(
-                PickStepPage.class.getName() );
+            result = (PickStepPage)pageWithName(PickStepPage.class.getName());
             result.nextPage = this;
+            result.targetAssignment = assignment;
         }
         return result;
     }
@@ -393,21 +424,21 @@ public class EditAssignmentPage
     public WOComponent removeStep()
     {
         int pos = thisStep.order();
-        for ( int i = pos;
-              i < scriptDisplayGroup.displayedObjects().count();
-              i++ )
+        for (int i = pos;
+             i < scriptDisplayGroup.displayedObjects().count();
+             i++)
         {
-            ( (Step)scriptDisplayGroup.displayedObjects()
-                .objectAtIndex( i ) ).setOrder( i );
+            ((Step)scriptDisplayGroup.displayedObjects()
+                .objectAtIndex(i)).setOrder(i);
         }
-        if (    thisStep.config() != null
-             && thisStep.config().steps().count() == 1 )
+        if (   thisStep.config() != null
+            && thisStep.config().steps().count() == 1)
         {
             StepConfig thisConfig = thisStep.config();
-            thisStep.setConfigRelationship( null );
-            localContext().deleteObject( thisConfig );
+            thisStep.setConfigRelationship(null);
+            localContext().deleteObject(thisConfig);
         }
-        localContext().deleteObject( thisStep );
+        localContext().deleteObject(thisStep);
         localContext().saveChanges();
         return null;
     }
@@ -427,7 +458,7 @@ public class EditAssignmentPage
         if ( saveAndCanProceed() )
         {
             log.debug( "step = " + thisStep );
-            prefs().setAssignmentOfferingRelationship( thisAssignment );
+            prefs().setAssignmentOfferingRelationship(selectedOffering);
             prefs().setStepRelationship( thisStep );
             result = (WCComponent)pageWithName(
                 EditStepPage.class.getName() );
@@ -504,32 +535,31 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent clearGraph()
     {
-        thisAssignment.clearGraphSummary();
+        thisOffering.clearGraphSummary();
         applyLocalChanges();
         return null;
     }
 
 
     // ----------------------------------------------------------
-    public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
+    public void takeValuesFromRequest(WORequest arg0, WOContext arg1)
     {
-        super.takeValuesFromRequest( arg0, arg1 );
-        String name = thisAssignment.assignment().name();
-        if ( thisAssignment.assignment().submissionProfile()
-             == null
+        super.takeValuesFromRequest(arg0, arg1);
+        String name = assignment.name();
+        if ( assignment.submissionProfile() == null
              && name != null )
         {
-            NSArray similar = AssignmentOffering.offeringsWithSimilarNames(
-                localContext(),
-                name,
-                thisAssignment.courseOffering(),
-                1 );
-            if ( similar.count() > 0 )
+            NSArray<AssignmentOffering> similar = AssignmentOffering
+                .offeringsWithSimilarNames(
+                    localContext(),
+                    name,
+                    selectedOffering.courseOffering(),
+                    1);
+            if (similar.count() > 0)
             {
-                AssignmentOffering ao =
-                    (AssignmentOffering)similar.objectAtIndex( 0 );
-                thisAssignment.assignment().setSubmissionProfile(
-                    ao.assignment().submissionProfile() );
+                AssignmentOffering ao = similar.objectAtIndex(0);
+                assignment.setSubmissionProfile(
+                    ao.assignment().submissionProfile());
             }
         }
     }
@@ -538,18 +568,32 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent deleteActionOk()
     {
-        prefs().setAssignmentOfferingRelationship( null );
+        prefs().setAssignmentOfferingRelationship(null);
+        NSArray<AssignmentOffering> offerings =
+            offeringGroup.displayedObjects();
+        for (AssignmentOffering ao : offerings)
+        {
+            if (ao != thisOffering)
+            {
+                prefs().setAssignmentOfferingRelationship(ao);
+                break;
+            }
+        }
         if (!applyLocalChanges()) return null;
-        Assignment assignment = thisAssignment.assignment();
-        localContext().deleteObject(thisAssignment);
+        localContext().deleteObject(thisOffering);
         if (!applyLocalChanges()) return null;
-        thisAssignment = null;
         if (assignment.offerings().count() == 0)
         {
+            prefs().setAssignmentOfferingRelationship(null);
+            prefs().setAssignmentRelationship(null);
             localContext().deleteObject(assignment);
             if (!applyLocalChanges()) return null;
+            return finish();
         }
-        return finish();
+        else
+        {
+            return null;
+        }
     }
 
 
@@ -557,16 +601,16 @@ public class EditAssignmentPage
     public WOComponent delete()
     {
         ConfirmPage confirmPage = null;
-        if ( saveAndCanProceed() )
+        if (saveAndCanProceed())
         {
             confirmPage =
-                (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+                (ConfirmPage)pageWithName(ConfirmPage.class.getName());
             confirmPage.nextPage       = this;
             confirmPage.message        =
                 "This action will <b>delete the assignment offering</b>, "
                 + "together with any staff submissions that have been "
                 + "made to it.</p>";
-            if (thisAssignment.assignment().offerings().count() > 1)
+            if (thisOffering.assignment().offerings().count() > 1)
             {
                 confirmPage.message +=
                     "<p>Since this is the only offering of the selected "
@@ -576,7 +620,7 @@ public class EditAssignmentPage
             }
             confirmPage.actionReceiver = this;
             confirmPage.actionOk       = "deleteActionOk";
-            confirmPage.setTitle( "Confirm Delete Request" );
+            confirmPage.setTitle("Confirm Delete Request");
         }
         return confirmPage;
     }
@@ -589,22 +633,22 @@ public class EditAssignmentPage
      * @return true if any submissions to this assignment will be counted
      *         as late
      */
-    public boolean upcomingAssignmentIsLate()
+    public boolean upcomingOfferingIsLate()
     {
-        return upcomingAssignment.dueDate().before( currentTime );
+        return upcomingOffering.dueDate().before(currentTime);
     }
 
 
     // ----------------------------------------------------------
-    public NSArray upcomingAssignments()
+    public NSArray<AssignmentOffering> upcomingOfferings()
     {
-        if ( upcomingAssignments == null )
+        if (upcomingOfferings == null)
         {
-            upcomingAssignments = AssignmentOffering.objectsForAllOfferings(
-                localContext() ).mutableClone();
-            upcomingAssignments.removeObject( thisAssignment );
+            upcomingOfferings = AssignmentOffering.objectsForAllOfferings(
+                localContext()).mutableClone();
+            upcomingOfferings.removeObject(selectedOffering);
         }
-        return upcomingAssignments;
+        return upcomingOfferings;
     }
 
 
@@ -618,7 +662,7 @@ public class EditAssignmentPage
     //~ Instance/static variables .............................................
 
     private int            suspendedSubmissionCount = 0;
-    private NSMutableArray upcomingAssignments;
+    private NSMutableArray<AssignmentOffering> upcomingOfferings;
     private NSTimestamp    currentTime;
 
     static Logger log = Logger.getLogger( EditAssignmentPage.class );

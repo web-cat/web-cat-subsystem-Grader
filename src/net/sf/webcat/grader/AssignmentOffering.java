@@ -293,7 +293,8 @@ public class AssignmentOffering
      * @return an NSArray of EnqueuedJob objects representing suspended
      *         submissions
      */
-    public NSArray getSuspendedSubs()
+    @SuppressWarnings("unchecked")
+    public NSArray<EnqueuedJob> getSuspendedSubs()
     {
         return EOUtilities.objectsMatchingValues(
             editingContext(),
@@ -612,29 +613,73 @@ public class AssignmentOffering
      * @return an NSArray of the entities retrieved, sorted in descending order
      * by due date (latest due date first)
      */
-    public static NSMutableArray offeringsWithSimilarNames(
+    public static NSMutableArray<AssignmentOffering> offeringsWithSimilarNames(
             EOEditingContext context,
             String targetName,
             net.sf.webcat.core.CourseOffering courseOffering,
             int limit
         )
     {
-        NSMutableArray others = new NSMutableArray();
-        NSArray sameSection = AssignmentOffering.objectsForCourseOffering(
-            context, courseOffering );
-        for ( int i = 0; i < sameSection.count()
-                         && ( limit < 1 || others.count() < limit ); i++ )
+        NSMutableArray<AssignmentOffering> others =
+            new NSMutableArray<AssignmentOffering>();
+        NSArray<AssignmentOffering> sameSection = AssignmentOffering
+            .objectsForCourseOffering(context, courseOffering);
+        for (int i = 0; i < sameSection.count()
+                        && ( limit < 1 || others.count() < limit ); i++)
         {
-            AssignmentOffering ao =
-                (AssignmentOffering)sameSection.objectAtIndex( i );
+            AssignmentOffering ao = sameSection.objectAtIndex(i);
             String name = ao.assignment().name();
-            if ( !targetName.equals( name )
-                 && Assignment.namesAreSimilar( name, targetName ) )
+            if (!targetName.equals( name )
+                && Assignment.namesAreSimilar(name, targetName))
             {
-                log.debug( "matching assignment offering (target = '"
-                           + targetName + "'): "
-                           + ao.titleString() + ", " + ao.dueDate() );
-                others.addObject( ao );
+                log.debug("matching assignment offering (target = '"
+                    + targetName + "'): "
+                    + ao.titleString() + ", " + ao.dueDate());
+                others.addObject(ao);
+            }
+        }
+        return others;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a set of assignment offerings for a given course with names
+     * similar to some string.  Here, "similar" means that the name of
+     * the assignment associated with an offering is similar to the target
+     * name, as defined by {@link Assignment#namesAreSimilar(String,String)}.
+     *
+     * @param context The editing context to use
+     * @param targetName The name that results should be similar to
+     * @param course The course to search for
+     * @param limit the maximum number of assignment offerings to return
+     * (or zero, if all should be returned)
+     * @return an NSArray of the entities retrieved, sorted in descending order
+     * by due date (latest due date first)
+     */
+    public static NSMutableArray<AssignmentOffering> offeringsWithSimilarNames(
+            EOEditingContext context,
+            String targetName,
+            net.sf.webcat.core.Course course,
+            int limit
+        )
+    {
+        NSMutableArray<AssignmentOffering> others =
+            new NSMutableArray<AssignmentOffering>();
+        NSArray<AssignmentOffering> sameSection = AssignmentOffering
+            .objectsForCourse(context, course);
+        for (int i = 0; i < sameSection.count()
+                        && ( limit < 1 || others.count() < limit ); i++)
+        {
+            AssignmentOffering ao = sameSection.objectAtIndex(i);
+            String name = ao.assignment().name();
+            if (!targetName.equals( name )
+                && Assignment.namesAreSimilar(name, targetName))
+            {
+                log.debug("matching assignment offering (target = '"
+                    + targetName + "'): "
+                    + ao.titleString() + ", " + ao.dueDate());
+                others.addObject(ao);
             }
         }
         return others;
