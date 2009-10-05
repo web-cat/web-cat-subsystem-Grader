@@ -207,6 +207,14 @@ public class CourseRosterPage
 
 
     // ----------------------------------------------------------
+    public String forceManuallyAdding()
+    {
+        manuallyAdding = true;
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Toggle the manuallyAdding KVC property.
      * @return always null
