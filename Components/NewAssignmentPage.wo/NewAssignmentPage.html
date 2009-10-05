@@ -1,0 +1,59 @@
+<webobject name="Page">
+<wo:net.sf.webcat.core.WCPageModule title="For Which Course?">
+<table class="layout"><tbody>
+<tr><td class="R">In course(s):</td>
+    <td><wo:str value="$targetCourse"/> <wo:CoreNavigator/> <wo name="CourseInfo"/></td></tr>
+</tbody></table>
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
+<table class="layout"><tbody>
+<tr><td class="R">Name:</td>
+    <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
+<tr><td class="R">Title:</td>
+    <td><webobject name="Title"/>
+    <webobject name="TitleInfo"/></td></tr>
+<wo:not condition="$coreSelections.course"><wo:if condition="$hasMultipleSections">
+<tr><td></td>
+    <td><wo:checkbox checked="$forAllSections"/> Create for all sections in
+    <wo:str value="$coreSelections.courseOffering.semester"/>
+    </td></tr>
+</wo:if></wo:not>
+<tr><td></td><td><wo:WCButton action="$next">Create</wo:WCButton></td></tr>
+</tbody></table>
+</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
+
+<wo:net.sf.webcat.core.WCPageModule title="Re-offer an Existing Assignment" open="$reuseOpen" id="$idFor.reofferPane">
+<p>You can reuse (or re-offer) an existing assignment in a different course
+offering by picking where you want to add the re-offered
+assignment:</p>
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data">
+<fieldset class="reoffer">
+<legend>Select Where to Re-offer an Existing Assignment</legend>
+<ol>
+<li>
+<wo:WOGenericContainer elementName="label" for="$idFor.toSemesterSelector">Re-offer in semester:</wo:WOGenericContainer>
+<wo name="ToSemesterFilter">
+  <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
+</wo></li>
+<wo:if condition="$toSemester">
+  <li><wo:WOGenericContainer elementName="label" for="$idFor.toCourseSelector">Re-offer in course:</wo:WOGenericContainer>
+  <wo name="ToCourseFilter">
+    <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
+  </wo></li>
+  <wo:if condition="$toCourseOffering">
+    <wo:if condition="$assignments.count">
+      <li><wo:WOGenericContainer elementName="label" for="$idFor.assignmentSelector">Assignment to reoffer:</wo:WOGenericContainer>
+      <wo name="AssignmentFilter"/></li>
+      <li><label></label><wo:WCButton label="Re-offer This Assignment" action="$reoffer"/></li>
+    </wo:if><wo:else>
+    <li><p>No assignments are available to re-offer in the selected course
+    offering.  Remember that you can only re-offer an assignment in the
+    selected course offering if there is not already another assignment
+    offering with the same name in the selected course offering.
+    </p></li>
+    </wo:else>
+  </wo:if>
+</wo:if>
+</ol></fieldset>
+</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
+
+</webobject>

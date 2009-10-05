@@ -25,13 +25,19 @@ import java.util.GregorianCalendar;
 import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
 import net.sf.webcat.core.Semester;
+import net.sf.webcat.ui.util.ComponentIDGenerator;
 import org.apache.log4j.Logger;
+import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
+import com.webobjects.eocontrol.EOKeyValueQualifier;
+import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSTimestamp;
+import er.extensions.foundation.ERXArrayUtilities;
+import er.extensions.foundation.ERXValueUtilities;
 
 //-------------------------------------------------------------------------
 /**
@@ -65,6 +71,17 @@ public class NewAssignmentPage
     public String targetCourse;
     public boolean reuseOpen = false;
 
+    public ComponentIDGenerator idFor;
+    public Semester          toSemester;
+    public CourseOffering    toCourseOffering;
+    public Assignment        assignmentToReoffer;
+
+    public Semester                semesterInRepetition;
+    public NSArray<CourseOffering> toCourseOfferings;
+    public CourseOffering          courseOfferingInRepetition;
+    public NSArray<Assignment>     assignments;
+    public Assignment              assignmentInRepetition;
+
 
     //~ Methods ...............................................................
 
@@ -77,6 +94,7 @@ public class NewAssignmentPage
      */
     public void appendToResponse(WOResponse response, WOContext context)
     {
+        idFor = new ComponentIDGenerator(this);
         if (coreSelections().course() == null
             && coreSelections().courseOffering() == null)
         {
@@ -100,29 +118,20 @@ public class NewAssignmentPage
         }
         else if (coreSelections().course() != null)
         {
+            Semester semester = coreSelections().semester();
             targetCourse = coreSelections().course().toString()
-                + " (all offerings)";
-            if (forAllSections == null)
-            {
-                forAllSections = Boolean.TRUE;
-            }
+                + " (all offerings, "
+                + ((semester == null) ? "all semesters" : semester.toString())
+                + ")";
+            forAllSections = Boolean.TRUE;
         }
         else
         {
             targetCourse = coreSelections().courseOffering().compactName();
             if (forAllSections == null)
             {
-                forAllSections = Boolean.FALSE;
+                forAllSections = Boolean.TRUE;
             }
-        }
-        Semester semester = coreSelections().semester();
-        if (semester == null)
-        {
-            targetCourse += ", all semesters";
-        }
-        else
-        {
-            targetCourse += ", " + semester;
         }
         super.appendToResponse(response, context);
     }
@@ -144,6 +153,21 @@ public class NewAssignmentPage
 
 
     // ----------------------------------------------------------
+    public WOComponent reoffer()
+    {
+        AssignmentOffering newOffering = new AssignmentOffering();
+        localContext().insertObject(newOffering);
+        newOffering.setAssignmentRelationship(assignmentToReoffer);
+        prefs().setAssignmentOfferingRelationship(newOffering);
+        prefs().setAssignmentRelationship(assignmentToReoffer);
+        newOffering.setCourseOfferingRelationship(toCourseOffering);
+        configureNewAssignmentOffering(newOffering, null);
+        applyLocalChanges();
+        return super.next();
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Create a new assignment object as well as its associated assignment
      * offering objects, and then move on to an edit page.
@@ -160,6 +184,13 @@ public class NewAssignmentPage
         Semester semester = coreSelections().semester();
         Course course = coreSelections().course();
         NSArray<CourseOffering> offerings = null;
+        if (course == null
+            && forAllSections()
+            && coreSelections().courseOffering() != null)
+        {
+            course = coreSelections().courseOffering().course();
+            semester = coreSelections().courseOffering().semester();
+        }
         if (course != null)
         {
             offerings = course.offerings();
@@ -247,14 +278,20 @@ public class NewAssignmentPage
         // as a default
         {
             AssignmentOffering other = null;
-            NSArray<AssignmentOffering> others =
-                prefs().assignmentOffering().assignment().offerings();
-            for (AssignmentOffering ao : others)
+            if (prefs().assignmentOffering() != null)
             {
-                if (ao != prefs().assignmentOffering())
+                System.out.println("ao = " + prefs().assignmentOffering());
+                System.out.println("assignment = " + prefs().assignmentOffering().assignment());
+                System.out.println("offerings = " + prefs().assignmentOffering().assignment().offerings());
+                NSArray<AssignmentOffering> others =
+                    prefs().assignmentOffering().assignment().offerings();
+                for (AssignmentOffering ao : others)
                 {
-                    other = ao;
-                    break;
+                    if (ao != prefs().assignmentOffering())
+                    {
+                        other = ao;
+                        break;
+                    }
                 }
             }
             if (other == null)
@@ -363,6 +400,109 @@ public class NewAssignmentPage
     }
 
 
+    // ----------------------------------------------------------
+    public boolean hasMultipleSections()
+    {
+        Course course = coreSelections().courseOffering().course();
+        Semester semester = coreSelections().courseOffering().semester();
+        NSArray<CourseOffering> offerings =
+            CourseOffering.objectsForForSemesterAndCourse(
+                localContext(), course, semester);
+        return offerings != null && offerings.count() > 1;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSArray<Semester> semesters()
+    {
+        if ( semesters == null )
+        {
+            semesters =
+                Semester.objectsForFetchAll( localContext() );
+            toSemester = coreSelections().semester();
+
+            updateReofferPane();
+
+        }
+        return semesters;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults updateReofferPane()
+    {
+        if (myCourses == null)
+        {
+            myCourses = ERXArrayUtilities.sortedArraySortedWithKeys(
+                user().teaching(),
+                new NSArray<String>(
+                    new String[] {"course.number", "label", "crn" }),
+                null);
+        }
+
+        if (savedToSemester != toSemester)
+        {
+            toCourseOfferings = null;
+            savedToSemester = toSemester;
+        }
+
+        if (toCourseOfferings == null)
+        {
+            toCourseOffering = null;
+            toCourseOfferings =
+                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                    myCourses,
+                    new EOKeyValueQualifier(
+                        "semester",
+                        EOQualifier.QualifierOperatorEqual,
+                        toSemester));
+        }
+
+        if (toCourseOffering == null)
+        {
+            assignments = null;
+            Course selected = coreSelections().course();
+            if (selected == null && coreSelections().courseOffering() != null)
+            {
+                selected = coreSelections().courseOffering().course();
+            }
+            if (selected != null)
+            {
+                toCourseOffering = (CourseOffering)
+                    ERXArrayUtilities.firstObjectWithValueForKeyPath(
+                        toCourseOfferings, selected, "course");
+            }
+        }
+
+        if (savedToCourseOffering != toCourseOffering)
+        {
+            assignments = null;
+            savedToCourseOffering = toCourseOffering;
+        }
+
+        if (assignments == null && toCourseOffering != null)
+        {
+            assignmentToReoffer = null;
+            assignments =
+                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                    Assignment.objectsForReuseInCourse(
+                        localContext(),
+                        toCourseOffering.course(),
+                        toCourseOffering),
+                    new Assignment.NonDuplicateAssignmentNameQualifier(
+                        toCourseOffering));
+        }
+
+        if (assignmentToReoffer == null && assignments.count() > 0)
+        {
+            assignmentToReoffer = assignments.objectAtIndex(0);
+        }
+
+        reuseOpen = true;
+        return null;
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
@@ -396,6 +536,10 @@ public class NewAssignmentPage
 
     //~ Instance/static variables .............................................
 
+    private NSArray<Semester>       semesters;
     private Boolean forAllSections = null;
+    private Semester          savedToSemester;
+    private CourseOffering    savedToCourseOffering;
+    private NSArray<CourseOffering> myCourses;
     static Logger log = Logger.getLogger(NewAssignmentPage.class);
 }
