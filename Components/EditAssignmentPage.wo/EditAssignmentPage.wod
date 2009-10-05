@@ -82,7 +82,7 @@ LastTR: net.sf.webcat.core.TableRow {
 MoodleId: WOTextField {
 	size = 8;
 	numberformat = "0";
-	value = thisOffering.assignment.moodleId;
+	value = assignment.moodleId;
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
