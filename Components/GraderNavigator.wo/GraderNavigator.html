@@ -44,7 +44,7 @@
 </wo>
 </wo:WCContentPane>
 </li>
-<wo:if condition="$user.hasTAPrivileges">
+<wo:if condition="$userIsStaffForSelectedCourse">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowUnpublishedAssignments">
     <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
@@ -52,12 +52,14 @@
 <wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox" class="trailing">unpublished</wo:WOGenericContainer>
 </li>
 </wo:if>
+<wo:if negate="true" condition="$hideClosedAssignmentsFromStudents">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowClosedAssignments">
     <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox" class="trailing">closed</wo:WOGenericContainer>
 </li>
+</wo:if>
 </ol></fieldset>
 <div class="center">
 <wo name="OK">OK</wo>

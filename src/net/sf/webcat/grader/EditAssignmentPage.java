@@ -635,7 +635,17 @@ public class EditAssignmentPage
      */
     public boolean upcomingOfferingIsLate()
     {
-        return upcomingOffering.dueDate().before(currentTime);
+        NSTimestamp dueDate = upcomingOffering.dueDate();
+        
+        if (dueDate != null)
+        {
+            return dueDate.before(currentTime);
+        }
+        else
+        {
+            // FIXME is this the best answer?
+            return true;
+        }
     }
 
 

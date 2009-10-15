@@ -129,6 +129,50 @@ public class UploadSubmissionPage
         cachedUploadedFileName = submissionInProcess().uploadedFileName();
         cachedUploadedFileList = submissionInProcess().uploadedFileList();
     }
+    
+    
+    // ----------------------------------------------------------
+    public String permalink()
+    {
+        if (prefs().assignmentOffering() != null)
+        {
+            return prefs().assignmentOffering().permalink();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * This method determines whether any embedded navigator will
+     * automatically pop up to force a selection and page reload.
+     * @return True if the navigator should start out by opening automatically.
+     */
+    public boolean forceNavigatorSelection()
+    {
+        boolean result = super.forceNavigatorSelection();
+        
+        if (!result)
+        {
+            // If the assignment is closed and the user is not allowed to
+            // submit to it (i.e., not a grader or instructor), then force the
+            // assignment offering selection to be null and pop open the
+            // navigator.
+
+            AssignmentOffering assnOff = prefs().assignmentOffering();
+
+            if (!user().hasAdminPrivileges() && !assnOff.userCanSubmit(user()))
+            {
+                prefs().setAssignmentOfferingRelationship(null);
+                result = true;
+            }
+        }
+        
+        return result;
+    }
 
 
     // ----------------------------------------------------------

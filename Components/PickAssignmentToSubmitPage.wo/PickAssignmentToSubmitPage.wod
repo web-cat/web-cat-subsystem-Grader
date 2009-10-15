@@ -1,12 +1,3 @@
-AssignmentHasSuspendedSubs: WOConditional {
-    condition = assignmentHasSuspendedSubs;
-}
-
-AssignmentIsUnpublished: WOConditional {
-    condition = anAssignmentOffering.publish;
-    negate = true;
-}
-
 AssignmentRepetition: WORepetition {
     item  = anAssignmentOffering;
     list  = assignmentDisplayGroup.displayedObjects;
@@ -26,15 +17,6 @@ Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = anAssignmentOffering.graphSummary;
 }
 
-HasAssignments: WOConditional {
-    condition = assignmentDisplayGroup.displayedObjects.count;
-}
-
-HasNoAssignments: WOConditional {
-    condition = assignmentDisplayGroup.displayedObjects.count;
-    negate    = true;
-}
-
 Name: WOHyperlink {
 	href   = anAssignmentOffering.assignment.url;
 	target = "_new";
@@ -45,14 +27,10 @@ Page : net.sf.webcat.core.WizardPage {
     finishEnabled = false;
 }
 
-RadioButton: WORadioButton {
+RadioButton: WCRadioButton {
     name      = "Group";
     selection = selectedIndex;
     value     = index;
-}
-
-ShowHaltedMessage: WOConditional {
-	condition = showHaltedMessage;
 }
 
 SuspendedCount: WOString {

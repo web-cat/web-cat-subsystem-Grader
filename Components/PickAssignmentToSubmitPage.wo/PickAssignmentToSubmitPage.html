@@ -1,20 +1,37 @@
-<webobject name="Page"><webobject name="HasAssignments">For: <span class="hl"><webobject name="CourseName"/></span>
-<div class="shadow"><table><thead><tr><th>&nbsp;</th><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th></tr></thead><tbody>
-<webobject name="AssignmentRepetition">
-<webobject name="TR">
-<td><webobject name="RadioButton"/></td>
-<td><wo:if condition="$anAssignmentOffering.assignment.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$anAssignmentOffering.assignment.titleString"/></wo:else><webobject name="AssignmentIsUnpublished">
-<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
-<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
-<td class="nowrap"><webobject name="Deadline"/></td>
-<td><webobject name="Graph"/></td>
-</webobject></webobject></tbody></table></div>
-<webobject name="ShowHaltedMessage"><div class="spacer">&nbsp;</div><p>
+<wo name="Page">
+<wo:if condition="$assignmentDisplayGroup.displayedObjects.count">
+For: <span class="hl"><wo name="CourseName"/></span>
+<div class="shadow"><table><thead>
+    <tr><th>&nbsp;</th><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th></tr>
+</thead><tbody>
+    <wo name="AssignmentRepetition">
+    <wo name="TR">
+        <td><wo name="RadioButton"/></td>
+        <td><wo:if condition="$anAssignmentOffering.assignment.url">
+            <wo name="Name"/>
+        </wo:if><wo:else>
+            <wo:str value="$anAssignmentOffering.assignment.titleString"/>
+        </wo:else>
+        <wo:if negate="true" condition="$anAssignmentOffering.publish">
+            <span style="background-color:yellow">(unpublished)</span>
+        </wo:if><wo:if name="$assignmentHasSuspendedSubs">
+            <span style="background-color:yellow">(<wo name="SuspendedCount"/> suspended)</span>
+        </wo:if></td>
+        <td class="nowrap"><wo name="Deadline"/></td>
+        <td><wo name="Graph"/></td>
+    </wo>
+    </wo>
+</tbody></table></div>
+<wo:if condition="$showHaltedMessage">
+<div class="spacer">&nbsp;</div><p>
 Processing of submissions for assignment(s) in red is <b>currently
 halted</b>.  You can still submit, but your solution will not be
 automatically graded until the issue is resolved by the instructor
 (the correct submission time will still be recorded, however).
-</p></webobject></webobject><webobject name="HasNoAssignments">
+</p>
+</wo:if>
+</wo:if><wo:else>
 <p><span class="hl"><webobject name="CourseName"/></span> has no
 assignments open for submission at this time.</p>
-</webobject></webobject>
+</wo:else>
+</wo>
