@@ -1,7 +1,7 @@
 CommentFormat: WOPopUpButton {
         list		  = formats;
         item   		  = aFormat;
-	selection         = result.commentFormatRaw;
+	selection         = result.commentFormat;
 	displayString 	  = formatLabel;
 //	noSelectionString = "Select from your files ...";
 }

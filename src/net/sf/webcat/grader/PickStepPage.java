@@ -97,24 +97,23 @@ public class PickStepPage
                 targetAssignment = prefs().assignmentOffering().assignment();
             }
         }
-        assignmentGroup.queryBindings().setObjectForKey(
-            coreSelections().courseOffering(),
-            "courseOffering"
-        );
-        assignmentGroup.queryBindings().setObjectForKey(
-            user(),
-            "user"
-        );
-        assignmentGroup.fetch();
+//        assignmentGroup.queryBindings().setObjectForKey(
+//            coreSelections().courseOffering(),
+//            "courseOffering"
+//        );
+//        assignmentGroup.queryBindings().setObjectForKey(
+//            user(),
+//            "user"
+//        );
+//        assignmentGroup.fetch();
 
-        scriptGroup.queryBindings().setObjectForKey(
-            coreSelections().courseOffering().course(),
-            "course"
-        );
-        scriptGroup.queryBindings().setObjectForKey(
-            user(),
-            "user"
-        );
+        Course course = coreSelections().course();
+        if (coreSelections().courseOffering() != null)
+        {
+            course = coreSelections().courseOffering().course();
+        }
+        scriptGroup.queryBindings().setObjectForKey(course, "course");
+        scriptGroup.queryBindings().setObjectForKey(user(), "user");
         scriptGroup.fetch();
 
 //        NSMutableArray qualifiers = new NSMutableArray();
@@ -193,11 +192,11 @@ public class PickStepPage
 
         if ( publishedScriptGroup.displayedObjects().count() > 0 )
         {
-            publishedScriptIndex = assignmentGroup.displayedObjects().count();
+            publishedScriptIndex = 0;//assignmentGroup.displayedObjects().count();
         }
         else if ( scriptGroup.displayedObjects().count() > 0 )
         {
-            selectedScriptIndex = assignmentGroup.displayedObjects().count();
+            selectedScriptIndex = 0;//assignmentGroup.displayedObjects().count();
         }
         else
         {
@@ -307,21 +306,21 @@ public class PickStepPage
                 targetAssignment.addNewStep(newScript);
             }
         }
-        else if ( selectedAssignmentIndex >= 0 )
-        {
-            log.debug(" selected assignment = " + selectedAssignmentIndex );
-            Assignment copyTo = targetAssignment;
-            Assignment copyFrom = (Assignment)assignmentGroup
-                .displayedObjects().objectAtIndex( selectedAssignmentIndex );
-            for (Step step : copyFrom.steps())
-            {
-                copyTo.copyStep(step, true);
-            }
-            applyLocalChanges();
-        }
+//        else if ( selectedAssignmentIndex >= 0 )
+//        {
+//            log.debug(" selected assignment = " + selectedAssignmentIndex );
+//            Assignment copyTo = targetAssignment;
+//            Assignment copyFrom = (Assignment)assignmentGroup
+//                .displayedObjects().objectAtIndex( selectedAssignmentIndex );
+//            for (Step step : copyFrom.steps())
+//            {
+//                copyTo.copyStep(step, true);
+//            }
+//            applyLocalChanges();
+//        }
         else if ( publishedScriptIndex >= 0 )
         {
-            publishedScriptIndex -= assignmentGroup.displayedObjects().count();
+//            publishedScriptIndex -= assignmentGroup.displayedObjects().count();
             log.debug(" selected published  = " + publishedScriptIndex );
             targetAssignment.addNewStep(
                 (ScriptFile)publishedScriptGroup.displayedObjects()
@@ -330,7 +329,7 @@ public class PickStepPage
         }
         else if ( selectedScriptIndex >= 0 )
         {
-            selectedScriptIndex -= assignmentGroup.displayedObjects().count();
+//            selectedScriptIndex -= assignmentGroup.displayedObjects().count();
             selectedScriptIndex -=
                 publishedScriptGroup.displayedObjects().count();
             log.debug(" selected script     = " + selectedScriptIndex );
@@ -368,7 +367,7 @@ public class PickStepPage
     // ----------------------------------------------------------
     public int index2()
     {
-        return index1() + assignmentGroup.displayedObjects().count();
+        return index1();// + assignmentGroup.displayedObjects().count();
     }
 
 

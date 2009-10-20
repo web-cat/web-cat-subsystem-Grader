@@ -69,6 +69,7 @@ public class EditAssignmentPage
     public WODisplayGroup     offeringGroup;
 
     public boolean isSuspended; // TODO: fix this!
+    public AssignmentOffering offeringToDelete;
 
 
     //~ Methods ...............................................................
@@ -103,6 +104,7 @@ public class EditAssignmentPage
             offeringGroup.qualifyDisplayGroup();
         }
         scriptDisplayGroup.setMasterObject(assignment);
+        // TODO: Fix NPEs on this page when no selectedOffering
         isSuspended = selectedOffering.gradingSuspended();
         submissionProfileDisplayGroup.setObjectArray(
             SubmissionProfile.profilesForCourseIncludingMine(
@@ -206,12 +208,13 @@ public class EditAssignmentPage
                 }
             }
         }
-        if (requireProfile  &&  assignment.submissionProfile() == null)
+        if (requireProfile
+            && assignment.submissionProfile() == null)
         {
             error(
                 "please select submission rules for this assignment." );
         }
-        return  validateURL(assignment.url()) && !hasMessages();
+        return validateURL(assignment.url()) && !hasMessages();
     }
 
 
@@ -566,6 +569,14 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
+    private WOComponent flush(WOComponent page)
+    {
+        flushNavigatorDerivedData();
+        return page;
+    }
+
+
+    // ----------------------------------------------------------
     public WOComponent deleteActionOk()
     {
         prefs().setAssignmentOfferingRelationship(null);
@@ -573,27 +584,23 @@ public class EditAssignmentPage
             offeringGroup.displayedObjects();
         for (AssignmentOffering ao : offerings)
         {
-            if (ao != thisOffering)
+            if (ao != offeringToDelete)
             {
                 prefs().setAssignmentOfferingRelationship(ao);
                 break;
             }
         }
-        if (!applyLocalChanges()) return null;
-        localContext().deleteObject(thisOffering);
-        if (!applyLocalChanges()) return null;
+        if (!applyLocalChanges()) return flush(null);
+        localContext().deleteObject(offeringToDelete);
+        if (!applyLocalChanges()) return flush(null);
         if (assignment.offerings().count() == 0)
         {
             prefs().setAssignmentOfferingRelationship(null);
             prefs().setAssignmentRelationship(null);
             localContext().deleteObject(assignment);
-            if (!applyLocalChanges()) return null;
-            return finish();
+            applyLocalChanges();
         }
-        else
-        {
-            return null;
-        }
+        return flush(null);
     }
 
 
@@ -607,7 +614,9 @@ public class EditAssignmentPage
                 (ConfirmPage)pageWithName(ConfirmPage.class.getName());
             confirmPage.nextPage       = this;
             confirmPage.message        =
-                "This action will <b>delete the assignment offering</b>, "
+                "This action will <b>delete the assignment offering \""
+                + thisOffering
+                + "\"</b>, "
                 + "together with any staff submissions that have been "
                 + "made to it.</p>";
             if (thisOffering.assignment().offerings().count() > 1)
@@ -620,6 +629,7 @@ public class EditAssignmentPage
             }
             confirmPage.actionReceiver = this;
             confirmPage.actionOk       = "deleteActionOk";
+            offeringToDelete = thisOffering;
             confirmPage.setTitle("Confirm Delete Request");
         }
         return confirmPage;
@@ -636,7 +646,7 @@ public class EditAssignmentPage
     public boolean upcomingOfferingIsLate()
     {
         NSTimestamp dueDate = upcomingOffering.dueDate();
-        
+
         if (dueDate != null)
         {
             return dueDate.before(currentTime);

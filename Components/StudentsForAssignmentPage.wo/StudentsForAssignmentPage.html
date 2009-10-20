@@ -35,6 +35,19 @@
     </webobject></webobject>
     </tbody></table></div>
     <wo name="MarkAsComplete"/></p>
+
+    <wo:if condition="$user.hasAdminPrivileges">
+    <div class="spacer"></div>
+    <div class="shadow"><table><thead>
+    <tr><th>Have Text Comments</th></tr>
+    </thead><tbody>
+    </tbody></table></div>
+    <div class="spacer"></div>
+    <div class="shadow"><table><thead>
+    <tr><th>Have HTML Comments</th></tr>
+    </thead><tbody>
+    </tbody></table></div>
+    </wo:if>
 </webobject><webobject name="Nobody">
 <p>No submissions matching your criteria have been found.</p>
 </webobject></webobject>

@@ -34,7 +34,8 @@ import org.apache.log4j.Logger;
  *  Generates the grader subsystem's rows in the system status block.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderHomeStatus
     extends GraderComponent
@@ -75,6 +76,7 @@ public class GraderHomeStatus
     public void appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "starting appendToResponse()" );
+
         enqueuedJobGroup.queryBindings().setObjectForKey(
                 user(),
                 "user"

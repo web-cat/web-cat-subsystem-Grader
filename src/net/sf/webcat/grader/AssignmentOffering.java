@@ -42,7 +42,8 @@ import org.apache.log4j.Logger;
  * (i.e., giving a specific assignment in a given section of a course).
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class AssignmentOffering
     extends _AssignmentOffering
@@ -236,11 +237,26 @@ public class AssignmentOffering
     public String titleString()
     {
         CourseOffering course = courseOffering();
+        return (course == null)
+            ? titleString(null)
+            : titleString(course.semester());
+    }
+
+
+    // ----------------------------------------------------------
+    public String titleString(Semester semester)
+    {
+        CourseOffering course = courseOffering();
         Assignment assignment = assignment();
         String result = "";
         if ( course != null )
         {
-            result += course.compactName() + " ";
+            result += course.compactName();
+            if (course.semester() != semester)
+            {
+                result += "[" + course.semester() + "]";
+            }
+            result += " ";
         }
         if ( assignment != null )
         {

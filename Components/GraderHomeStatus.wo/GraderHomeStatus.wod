@@ -8,9 +8,8 @@ AssignmentIsUnpublished: WOConditional {
 }
 
 AssignmentName: WOHyperlink {
-    string = assignment.titleString;
+    string = "~assignment.titleString(coreSelections.semester)";
     href   = assignment.assignment.url;
-	target = "_new";
 }
 
 AssignmentRepetition: WORepetition {

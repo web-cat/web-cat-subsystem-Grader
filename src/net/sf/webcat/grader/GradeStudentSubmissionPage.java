@@ -113,8 +113,8 @@ public class GradeStudentSubmissionPage
             comments = null;
         }
         if (     result.status() == Status.TO_DO
-             && (    result.taScoreRaw() != null
-                  || result.comments() != null ) )
+             && ( result.taScoreRaw() != null
+                  || comments != null ) )
         {
             result.setStatus( Status.UNFINISHED );
         }

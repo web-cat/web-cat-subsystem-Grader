@@ -69,7 +69,8 @@ public class GraderPrefsManager
      */
     public String commentHistory()
     {
-        return (String)valueForKey(GraderPrefs.COMMENT_HISTORY_KEY);
+        return (String)handleQueryWithUnboundKey(
+            GraderPrefs.COMMENT_HISTORY_KEY);
     }
 
 
@@ -82,7 +83,7 @@ public class GraderPrefsManager
      */
     public void setCommentHistory(String value)
     {
-        takeValueForKey(value, GraderPrefs.COMMENT_HISTORY_KEY);
+        handleTakeValueForUnboundKey(value, GraderPrefs.COMMENT_HISTORY_KEY);
     }
 
 
@@ -94,7 +95,8 @@ public class GraderPrefsManager
      */
     public Assignment assignment()
     {
-        return (Assignment)valueForKey(GraderPrefs.ASSIGNMENT_KEY);
+        return (Assignment)handleQueryWithUnboundKey(
+            GraderPrefs.ASSIGNMENT_KEY);
     }
 
 
@@ -120,7 +122,7 @@ public class GraderPrefsManager
      */
     public AssignmentOffering assignmentOffering()
     {
-        return (AssignmentOffering)valueForKey(
+        return (AssignmentOffering)handleQueryWithUnboundKey(
             GraderPrefs.ASSIGNMENT_OFFERING_KEY);
     }
 
@@ -151,7 +153,7 @@ public class GraderPrefsManager
      */
     public Step step()
     {
-        return (Step)valueForKey(GraderPrefs.STEP_KEY);
+        return (Step)handleQueryWithUnboundKey(GraderPrefs.STEP_KEY);
     }
 
 
@@ -176,7 +178,8 @@ public class GraderPrefsManager
      */
     public Submission submission()
     {
-        return (Submission)valueForKey(GraderPrefs.SUBMISSION_KEY);
+        return (Submission)handleQueryWithUnboundKey(
+            GraderPrefs.SUBMISSION_KEY);
     }
 
 
@@ -202,7 +205,7 @@ public class GraderPrefsManager
      */
     public SubmissionFileStats submissionFileStats()
     {
-        return (SubmissionFileStats)valueForKey(
+        return (SubmissionFileStats)handleQueryWithUnboundKey(
             GraderPrefs.SUBMISSION_FILE_STATS_KEY);
     }
 
@@ -226,7 +229,7 @@ public class GraderPrefsManager
     {
         if (showUnpublishedAssignments == null)
         {
-            User user = (User)valueForKey(GraderPrefs.USER_KEY);
+            User user = (User)handleQueryWithUnboundKey(GraderPrefs.USER_KEY);
             showUnpublishedAssignments = Boolean.valueOf(
                 ERXValueUtilities.booleanValueWithDefault(
                     user.preferences().valueForKey(
@@ -241,7 +244,7 @@ public class GraderPrefsManager
     public void setShowUnpublishedAssignments(boolean value)
     {
         showUnpublishedAssignments = Boolean.valueOf(value);
-        User user = (User)valueForKey(GraderPrefs.USER_KEY);
+        User user = (User)handleQueryWithUnboundKey(GraderPrefs.USER_KEY);
         user.preferences().takeValueForKey(
             showUnpublishedAssignments,
             SHOW_UNPUBLISHED_ASSIGNMENTS_KEY);
@@ -254,7 +257,7 @@ public class GraderPrefsManager
     {
         if (showClosedAssignments == null)
         {
-            User user = (User)valueForKey(GraderPrefs.USER_KEY);
+            User user = (User)handleQueryWithUnboundKey(GraderPrefs.USER_KEY);
             showClosedAssignments = Boolean.valueOf(
                 ERXValueUtilities.booleanValueWithDefault(
                     user.preferences().valueForKey(
@@ -269,7 +272,7 @@ public class GraderPrefsManager
     public void setShowClosedAssignments(boolean value)
     {
         showClosedAssignments = Boolean.valueOf(value);
-        User user = (User)valueForKey(GraderPrefs.USER_KEY);
+        User user = (User)handleQueryWithUnboundKey(GraderPrefs.USER_KEY);
         user.preferences().takeValueForKey(
             showClosedAssignments,
             SHOW_CLOSED_ASSIGNMENTS_KEY);
