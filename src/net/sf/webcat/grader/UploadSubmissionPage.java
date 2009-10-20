@@ -72,7 +72,7 @@ public class UploadSubmissionPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    protected void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "primeUser = " + wcSession().primeUser()
                    + ", localUser = " + user() );
@@ -122,7 +122,7 @@ public class UploadSubmissionPage
                    .submissionProfile().deadTimeDelta() );
         log.debug( "time = " + deadline );
 
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
         cachedUploadedFile     = submissionInProcess().uploadedFile();
@@ -131,20 +131,6 @@ public class UploadSubmissionPage
     }
     
     
-    // ----------------------------------------------------------
-    public String permalink()
-    {
-        if (prefs().assignmentOffering() != null)
-        {
-            return prefs().assignmentOffering().permalink();
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-
     // ----------------------------------------------------------
     /**
      * This method determines whether any embedded navigator will
@@ -363,6 +349,27 @@ public class UploadSubmissionPage
 //                + context().request().headerForKey("user-agent")
 //                );
         }
+    }
+    
+    
+    // ----------------------------------------------------------
+    public String permalink()
+    {
+        if (prefs().assignmentOffering() != null)
+        {
+            return prefs().assignmentOffering().permalink();
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    
+    // ----------------------------------------------------------
+    public void setPermalink(String value)
+    {
+        // Do nothing.
     }
 
 
