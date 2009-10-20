@@ -14,7 +14,7 @@ For: <span class="hl"><wo name="CourseName"/></span>
         </wo:else>
         <wo:if negate="true" condition="$anAssignmentOffering.publish">
             <span style="background-color:yellow">(unpublished)</span>
-        </wo:if><wo:if name="$assignmentHasSuspendedSubs">
+        </wo:if><wo:if condition="$assignmentHasSuspendedSubs">
             <span style="background-color:yellow">(<wo name="SuspendedCount"/> suspended)</span>
         </wo:if></td>
         <td class="nowrap"><wo name="Deadline"/></td>
