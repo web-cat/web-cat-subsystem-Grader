@@ -35,7 +35,7 @@ dojo.declare("webcat.grader.MassRegraderWatcher", null,
             this._refresh();
 		    this._interval = setInterval(dojo.hitch(this, function() {
                 this._refresh();
-		    }), 1000);
+		    }), 5000);
 		}
     },
 
