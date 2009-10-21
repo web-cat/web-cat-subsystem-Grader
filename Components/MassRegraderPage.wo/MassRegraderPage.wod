@@ -1,33 +1,28 @@
-Courses : WOPopUpButton {
-    id = "courseList";
-    list = courseOfferings;
-    noSelectionString = "(no selection)";
-    selection = selectedCourseOffering;
+Page : WCPageWithNavigation {
+    title = "Mass Regrader";
 }
 
-CoursesObserver : AjaxObserveField {
-    observeFieldID = "courseList";
-    updateContainerID = "assignmentList";
-    action = updateAssignments;
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }
 
-Assignment : WOPopUpButton {
-    list = assignmentOfferings;
-    selection = selectedAssignmentOffering;
-    noSelectionString = "(no selection)";
+AssignmentName: WOString {
+    value = prefs.assignmentOffering.titleString;
 }
 
-SubmissionQualifier : WOTextField {
+SubmissionQualifier : WCSimpleTextArea {
+    cols = 60;
+    rows = 4;
     value = qualifierString;
 }
 
-UpdateSubmissionCount : AjaxSubmitButton {
-    action = updateSubmissionCount;
-    value = "Count";
-    updateContainerID = "submissionCount";
+QualifierErrors: net.sf.webcat.core.ErrorDictionaryPanel {
+    errorMessages          = qualifierErrors;
+    shouldShowNewlineAbove = true;
+    shouldShowNewlineBelow = true;
 }
 
-Regrade : WOSubmitButton {
-    value = "Regrade";
+Regrade : WCButton {
+    label = "Add to Grading Queue";
+    remote = true;
     action = massRegrade;
 }

@@ -1,42 +1,88 @@
-<wo:PageWithNavigation>
-<wo:form>
-
-<p>Select the <b>course</b> containing the submissions that you want to
-regrade.</p>
- 
-<wo name="Courses" />
-<wo name="CoursesObserver" />
-
-<p>Select the <b>assignment</b> containing the submissions that you want to
-regrade.</p>
-
-<wo:adiv id="assignmentList">
-<wo name="Assignment" />
-</wo:adiv>
-
-<p><b>Or,</b> enter a qualifier string for submissions:</p>
-<wo name="SubmissionQualifier" />
-<wo name="UpdateSubmissionCount"/>
-<wo:aspan id="submissionCount">
-(<wo:str value="$numberOfSubmissions" /> submissions)
-</wo:aspan>
-
+<wo name="Page">
+<script type="text/javascript">
+var regraderWatcher = null;
+dojo.addOnLoad(function() {
+    regraderWatcher = new webcat.grader.MassRegraderWatcher();
+});
+</script>
+<wo:WCPageModule title="Choose Course and Assignment">
+<wo:if condition="$forceNavigatorSelection">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo:if><wo:else>
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>
+For: <span class="hl"><webobject name="AssignmentName"/></span>
+</p></div>
+</wo:else>
+<div style="clear: both">&nbsp;</div>
+<wo:WCForm>
+<p><b>Or,</b> advanced users may enter a qualifier string for submissions. If
+use this option it will <b>override</b> your current course and assignment
+selection above.</p>
 <p>
-<wo name="Regrade" />
+<wo name="SubmissionQualifier"><wo:WCConnectAction event="onBlur" action="$updateSubmissionCount" remote.refreshPanes="['submissionCount', 'qualifierErrors']"/></wo>
 </p>
-
-</wo:form>
-
-<wo:adiv frequency="10" style="border: 1px solid gray; padding: 4px">
-<p style="font-size: smaller">
+<wo:WCContentPane id="qualifierErrors">
+<wo:if condition="$qualifierErrors">
+    <wo name="QualifierErrors"/>
+</wo:if>
+</wo:WCContentPane>
+<hr/>
 <p>
-<b>Number of regrading jobs remaining in queue:</b> <wo:str value="$countOfRegradingJobsInQueue" />
+<wo name="Regrade">
+    <wo:WCConnectAction event="onClick" action="massRegrade" remote="true" />
+    <script type="dojo/connect" event="onRemoteEnd">
+        regraderWatcher.start();
+    </script>
+</wo>
+<wo:WCContentSpan id="submissionCount">
+(<wo:str value="$numberOfSubmissions" /> submission(s) will be added)
+</wo:WCContentSpan>
 </p>
-<b>Next 10 (or less) regrading jobs:</b><br/>
-<wo:loop list="$next10JobsInQueue" item="$job">
-User <b><wo:str value="$job.submission.user.userName"/></b>, attempt <b>#<wo:str value="$job.submission.submitNumber"/></b> <br/>
+</wo:WCForm>
+</wo:WCPageModule>
+<wo:WCPageModule title="Regrading Status">
+<wo:WCContentPane id="queuePane">
+<wo:if condition="$updateCountOfRegradingJobsInQueue">
+<p>
+There <wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">are</wo:if><wo:else>is</wo:else>
+<b><wo:str value="$cachedCountOfRegradingJobsInQueue"/></b>
+regrading job<wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">s</wo:if>
+remaining in the queue.
+<wo:if condition="~cachedCountOfRegradingJobsInQueue gt 10">
+The next 10 are shown below.
+</wo:if><wo:else>
+<wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">
+They are
+</wo:if><wo:else>
+It is
+</wo:else>
+shown below.
+</wo:else>
+</p>
+<table>
+<thead><tr>
+<th>Course and Assignment</th><th>User</th><th>Submission No.</th>
+</tr></thead>
+<tbody>
+<wo:loop list="$nextSetOfJobsInQueue" item="$job" index="$index">
+<wo:tr index="$index">
+<td><wo:str value="$job.submission.assignmentOffering.toString"/></td>
+<td><wo:str value="$job.submission.user.userName"/></td>
+<td><wo:str value="$job.submission.submitNumber"/></td>
+</wo:tr>
 </wo:loop>
+</tbody>
+</table>
+</wo:if><wo:else>
+<p>
+There are currently <b>no</b> regrading jobs in the queue.
 </p>
-</wo:adiv>
-
-</wo:PageWithNavigation>
+<script type="text/javascript">
+    if (regraderWatcher) regraderWatcher.stop();
+</script>
+</wo:else>
+</wo:WCContentPane>
+</wo:WCPageModule>
+</wo>

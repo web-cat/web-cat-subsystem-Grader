@@ -32,6 +32,7 @@ import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSMutableDictionary;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXQ;
 import er.extensions.foundation.ERXArrayUtilities;
@@ -45,7 +46,7 @@ import er.extensions.foundation.ERXArrayUtilities;
  * @author Tony Allevato
  * @version $Id$
  */
-public class MassRegraderPage extends GraderComponent
+public class MassRegraderPage extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
     
@@ -58,16 +59,14 @@ public class MassRegraderPage extends GraderComponent
 
     //~ KVC attributes (must be public) .......................................
 
-    public NSArray<CourseOffering> courseOfferings;
-    public CourseOffering selectedCourseOffering;
-
-    public NSArray<AssignmentOffering> assignmentOfferings;
-    public AssignmentOffering selectedAssignmentOffering;
-
     public String qualifierString;
+    public NSMutableDictionary<String, String> qualifierErrors;
     public int numberOfSubmissions;
 
     public EnqueuedJob job;
+    public int index;
+    
+    public int cachedCountOfRegradingJobsInQueue = 0;
     
 
     //~ Methods ...............................................................
@@ -76,46 +75,27 @@ public class MassRegraderPage extends GraderComponent
     @Override
     public void appendToResponse(WOResponse response, WOContext context)
     {
-        if (courseOfferings == null)
-        {
-            courseOfferings =
-                ERXArrayUtilities.arrayByAddingObjectsFromArrayWithoutDuplicates(
-                        user().teaching(),
-                        user().adminForButNoOtherRelationships());
-        }
+        updateSubmissionCount();
 
         super.appendToResponse(response, context);
-    }
-
-    
-    // ----------------------------------------------------------
-    public WOActionResults updateAssignments()
-    {
-        selectedAssignmentOffering = null;
-        
-        EOFetchSpecification fspec = new EOFetchSpecification(
-                AssignmentOffering.ENTITY_NAME,
-                ERXQ.equals("courseOffering", selectedCourseOffering),
-                null);
-
-        assignmentOfferings =
-            localContext().objectsWithFetchSpecification(fspec);
-
-        return null;
     }
 
 
     // ----------------------------------------------------------
     public WOActionResults massRegrade()
     {
+        EOQualifier q;
+        qualifierErrors = null;
+
         boolean hasQualString = false;
-        if (qualifierString != null && qualifierString.length() > 0)
+        if (qualifierString != null && qualifierString.trim().length() > 0)
         {
             hasQualString = true;
         }
 
-        if (!hasQualString && (selectedAssignmentOffering == null
-                || selectedCourseOffering == null))
+        if (!hasQualString &&
+                (prefs().assignment() == null &&
+                        prefs().assignmentOffering() == null))
         {
             return null;
         }
@@ -128,32 +108,66 @@ public class MassRegraderPage extends GraderComponent
                                 EOSortOrdering.CompareAscending)
                 });
 
-        EOQualifier q;
-        
         if (hasQualString)
         {
-            q = EOQualifier.qualifierWithQualifierFormat(qualifierString, null);
+            try
+            {
+                q = EOQualifier.qualifierWithQualifierFormat(
+                        qualifierString, null);
+            }
+            catch (Exception e)
+            {
+                String msg = e.getMessage();
+                qualifierErrors = new NSMutableDictionary<String, String>();
+                qualifierErrors.setObjectForKey(msg, msg);
+                q = null;
+            }
         }
         else
         {
-            q = ERXQ.is("assignmentOffering", selectedAssignmentOffering);
+            if (prefs().assignmentOffering() != null)
+            {
+                q = ERXQ.is("assignmentOffering", prefs().assignmentOffering());
+            }
+            else
+            {
+                q = ERXQ.is("assignmentOffering.assignment",
+                        prefs().assignment());
+            }
         }
 
-        EOFetchSpecification fspec = new EOFetchSpecification(
-                Submission.ENTITY_NAME, q, sortOrderings);
-
-        NSArray<Submission> submissions =
-            localContext().objectsWithFetchSpecification(fspec);
-
-        // Enqueue the whole lot of submissions for regrading.
-
-        for (Submission sub : submissions)
+        if (q != null)
         {
-            sub.requeueForGrading( localContext() );
-        }
+            NSArray<Submission> submissions = null;
 
-        localContext().saveChanges();
-        Grader.getInstance().graderQueue().enqueue( null );
+            try
+            {
+                EOFetchSpecification fspec = new EOFetchSpecification(
+                        Submission.ENTITY_NAME, q, sortOrderings);
+        
+                submissions =
+                    localContext().objectsWithFetchSpecification(fspec);
+            }
+            catch (Exception e)
+            {
+                String msg = e.getMessage();
+                qualifierErrors = new NSMutableDictionary<String, String>();
+                qualifierErrors.setObjectForKey(msg, msg);
+            }
+    
+            // Enqueue the whole lot of submissions for regrading.
+
+            if (submissions != null)
+            {
+                for (Submission sub : submissions)
+                {
+                    sub.requeueForGrading( localContext() );
+                }
+        
+                localContext().saveChanges();
+                Grader.getInstance().graderQueue().enqueue( null );
+            }
+        }
         
         return null;
     }
@@ -162,49 +176,91 @@ public class MassRegraderPage extends GraderComponent
     // ----------------------------------------------------------
     public WOActionResults updateSubmissionCount()
     {
+        EOQualifier q;
+        qualifierErrors = null;
+
         boolean hasQualString = false;
-        if (qualifierString != null && qualifierString.length() > 0)
+        if (qualifierString != null && qualifierString.trim().length() > 0)
         {
             hasQualString = true;
         }
 
-        if (!hasQualString && (selectedAssignmentOffering == null
-                || selectedCourseOffering == null))
+        if (!hasQualString &&
+                (prefs().assignment() == null &&
+                        prefs().assignmentOffering() == null))
         {
             numberOfSubmissions = 0;
             return null;
         }
 
-        EOQualifier q;
-        
         if (hasQualString)
         {
-            q = EOQualifier.qualifierWithQualifierFormat(qualifierString, null);
+            try
+            {
+                q = EOQualifier.qualifierWithQualifierFormat(
+                        qualifierString, null);
+            }
+            catch (Exception e)
+            {
+                String msg = e.getMessage();
+                qualifierErrors = new NSMutableDictionary<String, String>();
+                qualifierErrors.setObjectForKey(msg, msg);
+                q = null;
+            }
         }
         else
         {
-            q = ERXQ.is("assignmentOffering", selectedAssignmentOffering);
+            if (prefs().assignmentOffering() != null)
+            {
+                q = ERXQ.is("assignmentOffering", prefs().assignmentOffering());
+            }
+            else
+            {
+                q = ERXQ.is("assignmentOffering.assignment",
+                        prefs().assignment());
+            }
         }
-        
-        numberOfSubmissions = ERXEOControlUtilities.objectCountWithQualifier(
-                localContext(), Submission.ENTITY_NAME, q);
+
+        if (q != null)
+        {
+            try
+            {
+                numberOfSubmissions =
+                    ERXEOControlUtilities.objectCountWithQualifier(
+                        localContext(), Submission.ENTITY_NAME, q);
+            }
+            catch (Exception e)
+            {
+                String msg = e.getMessage();
+                qualifierErrors = new NSMutableDictionary<String, String>();
+                qualifierErrors.setObjectForKey(msg, msg);
+                numberOfSubmissions = 0;
+            }
+        }
+        else
+        {
+            numberOfSubmissions = 0;
+        }
         
         return null;
     }
 
 
     // ----------------------------------------------------------
-    public int countOfRegradingJobsInQueue()
+    public int updateCountOfRegradingJobsInQueue()
     {
-        return ERXEOControlUtilities.objectCountWithQualifier(
+        cachedCountOfRegradingJobsInQueue =
+            ERXEOControlUtilities.objectCountWithQualifier(
                 localContext(),
                 EnqueuedJob.ENTITY_NAME,
                 ERXQ.isTrue(EnqueuedJob.REGRADING_KEY));
+
+        return cachedCountOfRegradingJobsInQueue;
     }
     
     
     // ----------------------------------------------------------
-    public NSArray<EnqueuedJob> next10JobsInQueue()
+    public NSArray<EnqueuedJob> nextSetOfJobsInQueue()
     {
         NSArray<EOSortOrdering> sortOrderings = new NSArray<EOSortOrdering>(
                 new EOSortOrdering[] {
