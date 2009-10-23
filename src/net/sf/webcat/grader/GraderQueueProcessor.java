@@ -99,7 +99,7 @@ public class GraderQueueProcessor
                     new EOAndQualifier( regradingJobQualifiers ),
                     new NSArray( new Object[]{
                             new EOSortOrdering(
-                                    EnqueuedJob.SUBMIT_TIME_KEY,
+                                    EnqueuedJob.QUEUE_TIME_KEY,
                                     EOSortOrdering.CompareAscending
                                 )
                         } )
