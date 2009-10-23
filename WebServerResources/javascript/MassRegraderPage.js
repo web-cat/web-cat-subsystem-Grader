@@ -25,35 +25,82 @@
  */
 dojo.declare("webcat.grader.MassRegraderWatcher", null,
 {
-    _interval: null,
+    _gradingStatusInterval: null,
+    _enqueueInterval: null,
 
     // ----------------------------------------------------------
-    start: function()
+    startGradingStatusMonitor: function()
     {
-        if (!this._interval)
+        if (!this.isGradingStatusMonitorRunning())
         {
-            this._refresh();
-		    this._interval = setInterval(dojo.hitch(this, function() {
-                this._refresh();
+            this._refreshGradingStatusMonitor();
+		    this._gradingStatusInterval = setInterval(
+		    dojo.hitch(this, function() {
+                this._refreshGradingStatusMonitor();
 		    }), 5000);
 		}
     },
 
 
     // ----------------------------------------------------------
-    stop: function()
+    stopGradingStatusMonitor: function()
     {
-        if (this._interval)
+        if (this.isGradingStatusMonitorRunning())
         {
-            clearInterval(this._interval);
-            this._interval = null;
+            clearInterval(this._gradingStatusInterval);
+            this._gradingStatusInterval = null;
         }
     },
     
 
     // ----------------------------------------------------------
-    _refresh: function()
+    isGradingStatusMonitorRunning: function()
     {
-        webcat.refreshContentPanes([ "queuePane", "qualifierErrors" ]);
+        return (this._gradingStatusInterval != null);
+    },
+
+
+    // ----------------------------------------------------------
+    _refreshGradingStatusMonitor: function()
+    {
+        webcat.refreshContentPanes("queuePane");
+    },
+
+
+    // ----------------------------------------------------------
+    startEnqueueMonitor: function()
+    {
+        if (!this.isEnqueueMonitorRunning())
+        {
+            this._refreshEnqueueMonitor();
+            this._enqueueInterval = setInterval(dojo.hitch(this, function() {
+                this._refreshEnqueueMonitor();
+            }), 2500);
+        }
+    },
+
+
+    // ----------------------------------------------------------
+    stopEnqueueMonitor: function()
+    {
+        if (this.isEnqueueMonitorRunning())
+        {
+            clearInterval(this._enqueueInterval);
+            this._enqueueInterval = null;
+        }
+    },
+    
+
+    // ----------------------------------------------------------
+    isEnqueueMonitorRunning: function()
+    {
+        return (this._enqueueInterval != null);
+    },
+
+
+    // ----------------------------------------------------------
+    _refreshEnqueueMonitor: function()
+    {
+        webcat.refreshContentPanes([ "qualifierErrors", "enqueueProgress" ]);
     }
 });

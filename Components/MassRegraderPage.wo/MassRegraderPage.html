@@ -3,6 +3,12 @@
 var regraderWatcher = null;
 dojo.addOnLoad(function() {
     regraderWatcher = new webcat.grader.MassRegraderWatcher();
+<wo:if condition="$updateCountOfRegradingJobsInQueue">
+    regraderWatcher.startGradingStatusMonitor();
+</wo:if>
+<wo:if condition="$isCurrentlyEnqueuing">
+    regraderWatcher.startEnqueueMonitor();
+</wo:if>
 });
 </script>
 <wo:WCPageModule title="Choose Course and Assignment">
@@ -33,14 +39,28 @@ selection above.</p>
 <wo name="Regrade">
     <wo:WCConnectAction event="onClick" action="massRegrade" remote="true" />
     <script type="dojo/connect" event="onRemoteEnd">
-        regraderWatcher.start();
+        regraderWatcher.startEnqueueMonitor();
     </script>
 </wo>
 <wo:WCContentSpan id="submissionCount">
-(<wo:str value="$numberOfSubmissions" /> submission(s) will be added)
+(<wo:str value="$numberOfSubmissions" /> submission(s) match the current selection.)
 </wo:WCContentSpan>
 </p>
 </wo:WCForm>
+<wo:WCContentPane id="enqueueProgress">
+<wo:if condition="$isCurrentlyEnqueuing">
+<wo name="EnqueueProgressBar"/>
+Enqueued <wo:str value="$submissionsEnqueuedSoFar"/> of <wo:str value="$totalSubmissionsToEnqueue"/> submissions.
+</wo:if><wo:else>
+<script type="text/javascript">
+    if (regraderWatcher)
+    {
+        regraderWatcher.stopEnqueueMonitor();
+        regraderWatcher.startGradingStatusMonitor();
+    }
+</script>
+</wo:else>
+</wo:WCContentPane>
 </wo:WCPageModule>
 <wo:WCPageModule title="Regrading Status">
 <wo:WCContentPane id="queuePane">
@@ -48,7 +68,7 @@ selection above.</p>
 <p>
 There <wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">are</wo:if><wo:else>is</wo:else>
 <b><wo:str value="$cachedCountOfRegradingJobsInQueue"/></b>
-regrading job<wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">s</wo:if>
+active regrading job<wo:if condition="~cachedCountOfRegradingJobsInQueue gt 1">s</wo:if>
 remaining in the queue.
 <wo:if condition="~cachedCountOfRegradingJobsInQueue gt 10">
 The next 10 are shown below.
@@ -60,6 +80,10 @@ It is
 </wo:else>
 shown below.
 </wo:else>
+<wo:if condition="$updateCountOfSuspendedJobsInQueue">
+There are also <wo:str value="$cachedCountOfSuspendedJobsInQueue"/>
+<span style="color: red">suspended regrading jobs</span> in the queue.
+</wo:if>
 </p>
 <table>
 <thead><tr>
@@ -77,10 +101,14 @@ shown below.
 </table>
 </wo:if><wo:else>
 <p>
-There are currently <b>no</b> regrading jobs in the queue.
+There are currently <b>no</b> active regrading jobs in the queue.
+<wo:if condition="$updateCountOfSuspendedJobsInQueue">
+There are <wo:str value="$cachedCountOfSuspendedJobsInQueue"/>
+<span style="color: red">suspended regrading jobs</span>.
+</wo:if>
 </p>
 <script type="text/javascript">
-    if (regraderWatcher) regraderWatcher.stop();
+    if (regraderWatcher) regraderWatcher.stopGradingStatusMonitor();
 </script>
 </wo:else>
 </wo:WCContentPane>

@@ -26,3 +26,8 @@ Regrade : WCButton {
     remote = true;
     action = massRegrade;
 }
+
+EnqueueProgressBar: WCDiv {
+    dojoType = "dijit.ProgressBar";
+    progress = enqueueProgress;
+}
