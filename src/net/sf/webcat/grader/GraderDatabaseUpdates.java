@@ -235,6 +235,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds support for tagging files during grading.
+     * @throws SQLException on error
+     */
+    public void updateIncrement10() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONFILESTATS add "
+            + "CTAGS TEXT" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

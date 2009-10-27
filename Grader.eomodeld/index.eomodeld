@@ -41,7 +41,6 @@
         }
     ); 
     internalInfo = {
-        "_deletedEntityNamesInObjectStore" = (SubmissionFileStats); 
         "_schemaSynchronizationOptions" = {
             EOSchemaSynchronizationForeignKeyConstraintsKey = YES; 
             EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES; 

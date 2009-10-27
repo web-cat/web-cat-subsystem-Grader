@@ -170,7 +170,7 @@
                 valueClassName = Byte; 
             }; 
         }, 
-        {columnName = CTAGS; name = tags; prototypeName = mediumText; }
+        {columnName = CTAGS; name = tags; prototypeName = text; }
     ); 
     attributesUsedForLocking = (
         className, 
