@@ -152,6 +152,7 @@ public abstract class _SubmissionFileStats
     public static final String STATEMENTS_KEY = "statements";
     public static final String STATEMENTS_COVERED_KEY = "statementsCovered";
     public static final String STATUS_KEY = "status";
+    public static final String TAGS_KEY = "tags";
     // To-one relationships ---
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
     // To-many relationships ---
@@ -1152,6 +1153,35 @@ public abstract class _SubmissionFileStats
                 + value + "): was " + statusRaw() );
         }
         takeStoredValueForKey( value, "status" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>tags</code> value.
+     * @return the value of the attribute
+     */
+    public String tags()
+    {
+        return (String)storedValueForKey( "tags" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>tags</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTags( String value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTags("
+                + value + "): was " + tags() );
+        }
+        takeStoredValueForKey( value, "tags" );
     }
 
 

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Pattern;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 import org.jdom.*;
@@ -350,6 +351,25 @@ public class SubmissionFileStats
     {
         staffDeductionsIsValid = false;
         super.setDeductionsRaw(value);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A convenience method that returns true if this file has been tagged with
+     * the specified tag.
+     *
+     * @param tag the tag to search for
+     * @return true if the file has been tagged with the specified tag
+     */
+    public boolean hasTag(String tag)
+    {
+        // As noted in GraderQueueProcessor, we always search for the tag with
+        // surrounding spaces so that tags that are infixes of other tags do
+        // not return false positives. The tags() attribute is guaranteed to
+        // have leading and trailing spaces as well so that this always works.
+
+        return tags().contains(" " + tag + " ");
     }
 
 

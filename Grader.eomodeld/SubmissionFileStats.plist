@@ -169,7 +169,8 @@
                 type = byte; 
                 valueClassName = Byte; 
             }; 
-        }
+        }, 
+        {columnName = CTAGS; name = tags; prototypeName = mediumText; }
     ); 
     attributesUsedForLocking = (
         className, 
@@ -189,7 +190,8 @@
         sourceFileNameRaw, 
         statements, 
         statementsCovered, 
-        status
+        status, 
+        tags
     ); 
     className = "net.sf.webcat.grader.SubmissionFileStats"; 
     classProperties = (
@@ -212,7 +214,8 @@
         statements, 
         statementsCovered, 
         status, 
-        submissionResult
+        submissionResult, 
+        tags
     ); 
     externalName = TSUBMISSIONFILESTATS; 
     fetchSpecificationDictionary = {}; 
