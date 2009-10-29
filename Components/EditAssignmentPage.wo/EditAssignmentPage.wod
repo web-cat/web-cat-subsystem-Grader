@@ -1,11 +1,15 @@
-AddStep: WOImageButton {
-    filename = "images/add-sm-btn.gif";
-	action   = addStep;
-	width    = "46";
-	height   = "17";
-	alt      = "Add a plug-in grading step";
-	title    = "Add a plug-in grading step";
-	class    = "icon";
+AddStep: WCButton {
+    action              = addStep;
+    label               = "Add";
+    remote.refreshPanes = "gradingSteps";
+}
+
+GradingPluginsToAdd: WCFilteringSelect {
+    list          = gradingPluginsToAdd;
+    item          = gradingPluginToAdd;
+    selection     = selectedGradingPluginToAdd;
+    displayString = displayStringForGradingPluginToAdd;
+    noSelectionString = "(no selection)";
 }
 
 CanDelete: WOConditional {
@@ -20,6 +24,7 @@ CancelSubs: WCButton {
 ClearGraph: WCButton {
     action = clearGraph;
     label  = "Refresh Cached Graph Data";
+    remote.refreshPanes = "scoreHistogram";
 }
 
 CourseOfferingSection: WCPageModule {
@@ -27,8 +32,8 @@ CourseOfferingSection: WCPageModule {
 }
 
 Description: WOTextField {
-	size = 40;
-	value = assignment.shortDescription;
+    size = 40;
+    value = assignment.shortDescription;
 }
 
 DescriptionInfo: net.sf.webcat.core.PopUpInfo {
@@ -48,22 +53,22 @@ DueDate2: WCDateTimePicker {
 EditStep: WOImageButton {
     filename  = "icons/edit.gif";
     framework = "Core";
-	action    = editStep;
-	width     = "18";
-	height    = "17";
-	alt       = "Set/edit parameters for this step";
-	title     = "Set/edit parameters for this step";
+    action    = editStep;
+    width     = "18";
+    height    = "17";
+    alt       = "Set/edit parameters for this step";
+    title     = "Set/edit parameters for this step";
     class     = "icon";
 }
 
 EditSubmissionProfile: WOImageButton {
     filename  = "icons/edit.gif";
     framework = "Core";
-	action    = editSubmissionProfile;
-	width     = "18";
-	height    = "17";
-	alt       = "Edit selected submission rules";
-	title     = "Edit selected submission rules";
+    action    = editSubmissionProfile;
+    width     = "18";
+    height    = "17";
+    alt       = "Edit selected submission rules";
+    title     = "Edit selected submission rules";
     class     = "icon";
 }
 
@@ -76,13 +81,13 @@ HasSuspendedSubs: WOConditional {
 }
 
 LastTR: net.sf.webcat.core.TableRow {
-	index = scriptDisplayGroup.displayedObjects.count;
+    index = index;
 }
 
 MoodleId: WOTextField {
-	size = 8;
-	numberformat = "0";
-	value = assignment.moodleId;
+    size = 8;
+    numberformat = "0";
+    value = assignment.moodleId;
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -91,37 +96,45 @@ MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 OverrideMoodleId: WOTextField {
-	size = 8;
-	numberformat = "0";
-	value = thisOffering.moodleId;
+    size = 8;
+    numberformat = "0";
+    value = thisOffering.moodleId;
 }
 
 
-MoveStepDown: WOImageButton {
+MoveStepDown: WCLink {
+    action = moveStepDown;
+    remote.refreshPanes = "gradingSteps";
+}
+
+MoveStepDownImage: WOImage {
     filename  = "icons/arrowDown.gif";
     framework = "Core";
-	action    = moveStepDown;
-	width     = "15";
-	height    = "13";
-	alt       = "Move this step down";
-	title     = "Move this step down";
+    width     = "15";
+    height    = "13";
+    alt       = "Move this step down";
+    title     = "Move this step down";
     class     = "icon";
 }
 
-MoveStepUp: WOImageButton {
+MoveStepUp: WCLink {
+    action = moveStepUp;
+    remote.refreshPanes = "gradingSteps";
+}
+
+MoveStepUpImage: WOImage {
     filename  = "icons/arrowUp.gif";
     framework = "Core";
-	action    = moveStepUp;
-	width     = "15";
-	height    = "13";
-	alt       = "Move this step up";
-	title     = "Move this step up";
+    width     = "15";
+    height    = "13";
+    alt       = "Move this step up";
+    title     = "Move this step up";
     class     = "icon";
 }
 
 Name: WOTextField {
-	value = assignment.name;
-	size  = 40;
+    value = assignment.name;
+    size  = 40;
 }
 
 NameInfo: net.sf.webcat.core.PopUpInfo {
@@ -142,7 +155,7 @@ NumSuspended: WOString {
 }
 
 Order: WOString {
-	value = thisStep.order;
+    value = thisStep.order;
 }
 
 Page: net.sf.webcat.core.WCPageWithNavigation {
@@ -152,7 +165,7 @@ Page: net.sf.webcat.core.WCPageWithNavigation {
 }
 
 PublishIt: WOCheckBox {
-	checked = thisOffering.publish;
+    checked = thisOffering.publish;
 }
 
 PublishItInfo: net.sf.webcat.core.PopUpInfo {
@@ -165,19 +178,23 @@ ReleaseSubs: WCButton {
     label  = "Re-grade Them";
 }
 
-RemoveStep: WOImageButton {
+RemoveStep: WCLink {
+    action              = removeStep;
+    remote.refreshPanes = "gradingSteps";
+}
+
+RemoveStepImage: WOImage {
     filename  = "icons/trash.gif";
     framework = "Core";
-	action    = removeStep;
-	width     = "14";
-	height    = "17";
-	alt       = "Delete this step";
-	title     = "Delete this step";
+    width     = "14";
+    height    = "17";
+    alt       = "Delete this step";
+    title     = "Delete this step";
     class     = "icon";
 }
 
 ScriptName: WOString {
-	value = thisStep.script.displayableName;
+    value = thisStep.script.displayableName;
 }
 
 StepAllowsTimeout: WOConditional {
@@ -185,9 +202,9 @@ StepAllowsTimeout: WOConditional {
 }
 
 StepRepetition: WORepetition {
-	item  = thisStep;
-	list  = scriptDisplayGroup.displayedObjects;
-	index = index;
+    item  = thisStep;
+    list  = scriptDisplayGroup.displayedObjects;
+    index = index;
 }
 
 SubmissionProfileInfo: net.sf.webcat.core.PopUpInfo {
@@ -207,7 +224,7 @@ SubmissionProfileList: WOPopUpButton {
 //}
 
 Suspend: WOCheckBox {
-	checked = isSuspended;
+    checked = isSuspended;
 }
 
 SuspendInfo: net.sf.webcat.core.PopUpInfo {
@@ -216,25 +233,25 @@ SuspendInfo: net.sf.webcat.core.PopUpInfo {
 }
 
 Timeout: WOTextField {
-	numberformat = "0";
-	size = 4;
-	value = stepTimeout;
+    numberformat = "0";
+    size = 4;
+    value = stepTimeout;
 }
 
 TR: net.sf.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 
 TR2: net.sf.webcat.core.TableRow {
-	index = index;
+    index = index;
     showCaution = upcomingOfferingIsLate;
     showError   = upcomingOffering.gradingSuspended;
 }
 
 UploadInstructions: WOText {
-	rows     = 8;
-	cols     = 60;
- 	value    = assignment.fileUploadMessage;
+    rows     = 8;
+    cols     = 60;
+     value    = assignment.fileUploadMessage;
 //    dojoType = "dijit.form.Textarea";
 }
 
@@ -249,9 +266,9 @@ UpcomingAssignmentName: WOHyperlink {
 }
 
 UpcomingAssignmentRepetition: WORepetition {
-	item  = upcomingOffering;
-	list  = upcomingOfferings;
-	index = index;
+    item  = upcomingOffering;
+    list  = upcomingOfferings;
+    index = index;
 }
 
 UpcomingDueDate: WOString {
@@ -265,8 +282,8 @@ UpcomingIsUnpublished: WOConditional {
 }
 
 URL: WOTextField {
-	size = 40;
-	value = assignment.url;
+    size = 40;
+    value = assignment.url;
 }
 
 URLInfo: net.sf.webcat.core.PopUpInfo {

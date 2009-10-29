@@ -163,6 +163,7 @@ public abstract class _ScriptFile
     public static final String COURSE_OFFERINGS_KEY = "courseOfferings";
     public static final String STEPS_KEY = "steps";
     // Fetch specifications ---
+    public static final String AVAILABLE_TO_USER_FSPEC = "availableToUser";
     public static final String ENTITY_NAME = "ScriptFile";
 
 
@@ -1417,6 +1418,45 @@ public abstract class _ScriptFile
         while ( objects.hasMoreElements() )
             deleteStepsRelationship(
                 (net.sf.webcat.grader.Step)objects.nextElement() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>AvailableToUser</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param authorBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<ScriptFile> objectsForAvailableToUser(
+            EOEditingContext context,
+            net.sf.webcat.core.User authorBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "availableToUser", "ScriptFile" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( authorBinding != null )
+        {
+            bindings.setObjectForKey( authorBinding,
+                                      "author" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray result = context.objectsWithFetchSpecification( spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForAvailableToUser(ec"
+                + ", " + authorBinding
+                + "): " + result );
+        }
+        return result;
     }
 
 

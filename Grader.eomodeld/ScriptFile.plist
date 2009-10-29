@@ -97,7 +97,6 @@
         uploadedFileName
     ); 
     externalName = TUPLOADEDSCRIPTFILES; 
-    fetchSpecificationDictionary = {}; 
     name = ScriptFile; 
     primaryKeyAttributes = (id); 
     relationships = (

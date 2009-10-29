@@ -27,21 +27,26 @@
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
 <webobject name="SubmissionProfileInfo"/></p>
 <p>Automatically grade using <b>these steps</b> in sequence:</p>
+<wo:WCContentPane id="gradingSteps">
 <table><thead>
-    <tr><th>Order</th><th>Plug-in</th><th class="sm">Time Limit (sec)</th>
-      <th>Move</th><th>Action</th></tr></thead><tbody>
-    <webobject name="StepRepetition"><webobject name="TR">
+    <tr>
+      <th>Order</th><th>Plug-in</th><th class="sm">Time Limit (sec)</th>
+      <th>Move</th><th>Action</th>
+    </tr>
+</thead><tbody>
+    <wo name="StepRepetition"><wo name="TR">
         <td align="center"><webobject name="Order"/></td>
         <td><webobject name="ScriptName"/></td>
         <td align="center"><webobject name="StepAllowsTimeout"><webobject name="Timeout"/></webobject></td>
-        <td align="center"><webobject name="MoveStepUp"/>
-            <webobject name="MoveStepDown"/></td>
-        <td><webobject name="EditStep"/> <webobject name="RemoveStep"/></td>
-    </webobject></webobject>
-    <webobject name="LastTR">
-    <td></td>
-    <td colspan="5"><webobject name="AddStep"/> Add another step</td>
-    </webobject></tbody></table>
+        <td align="center"><wo name="MoveStepUp"><wo name="MoveStepUpImage"/></wo> <wo name="MoveStepDown"><wo name="MoveStepDownImage"/></wo></td>
+        <td><webobject name="EditStep"/> <wo name="RemoveStep"><wo name="RemoveStepImage"/></wo></td>
+    </wo></wo>
+    <wo name="LastTR">
+        <td colspan="5">
+            Add a step: <wo name="GradingPluginsToAdd"/> <webobject name="AddStep"/>
+        </td>
+    </wo></tbody></table>
+</wo:WCContentPane>
 </wo:WCPageModule>
 
 <wo:loop list="$offeringGroup.displayedObjects" item="$thisOffering">
@@ -56,8 +61,8 @@
     <td>
     <wo name="DueDate2"/></td></tr>
 <tr><td class="R">Score Summary:</td><td><table class="layout" style="margin: 0;"><tr>
-    <td style="padding: 0 0.6em 0 0;"><webobject name="Graph"/></td>
-    <td style="padding: 0 0 0 0.6em;"><webobject name="ClearGraph"/></td></tr></table></td></tr>
+    <td style="padding: 0 0.6em 0 0;"><wo:WCContentSpan id="scoreHistogram"><wo name="Graph"/></wo></td>
+    <td style="padding: 0 0 0 0.6em;"><wo name="ClearGraph"/></td></tr></table></td></tr>
 <tr><td class="R">Moodle Id:</td>
     <td><webobject name="OverrideMoodleId"/> (overrides shared value if set)</td></TR>
 <tr><td class="R">Publish it:</td>
