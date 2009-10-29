@@ -24,7 +24,7 @@ CancelSubs: WCButton {
 ClearGraph: WCButton {
     action = clearGraph;
     label  = "Refresh Cached Graph Data";
-    remote.refreshPanes = "scoreHistogram";
+    remote.refreshPanes = "~'scoreHistogram' + thisOffering.id";
 }
 
 CourseOfferingSection: WCPageModule {
