@@ -78,23 +78,29 @@ public class EditAssignmentPage
 
     //~ Methods ...............................................................
 
-    // ----------------------------------------------------------
-    public String displayStringForGradingPluginToAdd()
+    public void awake()
     {
-        String name = gradingPluginToAdd.name();
+        long timeStart = System.currentTimeMillis();
+        super.awake();
+        long timeTaken = System.currentTimeMillis() - timeStart;
+        log.debug("Time in awake(): " + timeTaken + " ms");
+    }
 
-        if (!gradingPluginToAdd.isPublished())
-        {
-            name += " (private)";
-        }
 
-        return name;
+    public void sleep()
+    {
+        long timeStart = System.currentTimeMillis();
+        super.sleep();
+        long timeTaken = System.currentTimeMillis() - timeStart;
+        log.debug("Time in sleep(): " + timeTaken + " ms");
     }
 
 
     // ----------------------------------------------------------
     public void appendToResponse(WOResponse response, WOContext context )
     {
+        long timeStart = System.currentTimeMillis();
+
         log.debug("starting appendToResponse()");
         currentTime = new NSTimestamp();
 
@@ -128,18 +134,24 @@ public class EditAssignmentPage
         }
         scriptDisplayGroup.setMasterObject(assignment);
         // TODO: Fix NPEs on this page when no selectedOffering
-        isSuspended = selectedOffering.gradingSuspended();
-        submissionProfileDisplayGroup.setObjectArray(
-            SubmissionProfile.profilesForCourseIncludingMine(
-                localContext(),
-                user(),
-                selectedOffering.courseOffering().course(),
-                assignment.submissionProfile() )
-             );
+        if (selectedOffering != null)
+        {
+            isSuspended = selectedOffering.gradingSuspended();
+            submissionProfileDisplayGroup.setObjectArray(
+                SubmissionProfile.profilesForCourseIncludingMine(
+                    localContext(),
+                    user(),
+                    selectedOffering.courseOffering().course(),
+                    assignment.submissionProfile() )
+                 );
+        }
         log.debug( "starting super.appendToResponse()" );
         super.appendToResponse( response, context );
         log.debug( "finishing super.appendToResponse()" );
         log.debug( "finishing appendToResponse()" );
+
+        long timeTaken = System.currentTimeMillis() - timeStart;
+        log.debug("Time in appendToResponse(): " + timeTaken + " ms");
     }
 
 
@@ -314,6 +326,20 @@ public class EditAssignmentPage
             result.nextPage = this;
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    public String displayStringForGradingPluginToAdd()
+    {
+        String name = gradingPluginToAdd.name();
+
+        if (!gradingPluginToAdd.isPublished())
+        {
+            name += " (private)";
+        }
+
+        return name;
     }
 
 
@@ -581,24 +607,33 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public void takeValuesFromRequest(WORequest arg0, WOContext arg1)
     {
+        long timeStart = System.currentTimeMillis();
+
         super.takeValuesFromRequest(arg0, arg1);
-        String name = assignment.name();
-        if ( assignment.submissionProfile() == null
-             && name != null )
+
+        if (assignment != null)
         {
-            NSArray<AssignmentOffering> similar = AssignmentOffering
-                .offeringsWithSimilarNames(
-                    localContext(),
-                    name,
-                    selectedOffering.courseOffering(),
-                    1);
-            if (similar.count() > 0)
+            String name = assignment.name();
+            if ( assignment.submissionProfile() == null
+                 && name != null )
             {
-                AssignmentOffering ao = similar.objectAtIndex(0);
-                assignment.setSubmissionProfile(
-                    ao.assignment().submissionProfile());
+                NSArray<AssignmentOffering> similar = AssignmentOffering
+                    .offeringsWithSimilarNames(
+                        localContext(),
+                        name,
+                        selectedOffering.courseOffering(),
+                        1);
+                if (similar.count() > 0)
+                {
+                    AssignmentOffering ao = similar.objectAtIndex(0);
+                    assignment.setSubmissionProfile(
+                        ao.assignment().submissionProfile());
+                }
             }
         }
+
+        long timeTaken = System.currentTimeMillis() - timeStart;
+        log.debug("Time in takeValuesFromRequest(): " + timeTaken + " ms");
     }
 
 
