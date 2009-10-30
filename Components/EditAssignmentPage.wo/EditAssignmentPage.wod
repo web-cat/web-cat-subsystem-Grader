@@ -2,6 +2,7 @@ AddStep: WCButton {
     action              = addStep;
     label               = "Add";
     remote.refreshPanes = "gradingSteps";
+    remote.block        = "gradingSteps";
 }
 
 GradingPluginsToAdd: WCFilteringSelect {
@@ -31,7 +32,7 @@ CourseOfferingSection: WCPageModule {
     title = "~ \"Properties for \" + thisOffering.courseOffering.deptNumberAndName";
 }
 
-Description: WOTextField {
+Description: WCTextBox {
     size = 40;
     value = assignment.shortDescription;
 }
@@ -84,7 +85,7 @@ LastTR: net.sf.webcat.core.TableRow {
     index = index;
 }
 
-MoodleId: WOTextField {
+MoodleId: WCTextBox {
     size = 8;
     numberformat = "0";
     value = assignment.moodleId;
@@ -95,7 +96,7 @@ MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
     message = "If you are using our Moodle for your course web site and it has extensions to support uploading CSV gradebook information, place your Moodle course\'s ID in this slot.  Otherwise, leave it blank.";
 }
 
-OverrideMoodleId: WOTextField {
+OverrideMoodleId: WCTextBox {
     size = 8;
     numberformat = "0";
     value = thisOffering.moodleId;
@@ -105,6 +106,7 @@ OverrideMoodleId: WOTextField {
 MoveStepDown: WCLink {
     action = moveStepDown;
     remote.refreshPanes = "gradingSteps";
+    remote.block        = "gradingSteps";
 }
 
 MoveStepDownImage: WOImage {
@@ -120,6 +122,7 @@ MoveStepDownImage: WOImage {
 MoveStepUp: WCLink {
     action = moveStepUp;
     remote.refreshPanes = "gradingSteps";
+    remote.block        = "gradingSteps";
 }
 
 MoveStepUpImage: WOImage {
@@ -132,7 +135,7 @@ MoveStepUpImage: WOImage {
     class     = "icon";
 }
 
-Name: WOTextField {
+Name: WCTextBox {
     value = assignment.name;
     size  = 40;
 }
@@ -164,7 +167,7 @@ Page: net.sf.webcat.core.WCPageWithNavigation {
 //    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js";
 }
 
-PublishIt: WOCheckBox {
+PublishIt: WCCheckBox {
     checked = thisOffering.publish;
 }
 
@@ -181,6 +184,7 @@ ReleaseSubs: WCButton {
 RemoveStep: WCLink {
     action              = removeStep;
     remote.refreshPanes = "gradingSteps";
+    remote.block        = "gradingSteps";
 }
 
 RemoveStepImage: WOImage {
@@ -212,7 +216,7 @@ SubmissionProfileInfo: net.sf.webcat.core.PopUpInfo {
     message = "The <b>submission rules</b> define the policy that governs acceptance of student submissions, including the points available, limits on the number or size of submissions, the applicable late policy, and any penalties for late submissions, etc.  Click the edit icon to edit the selected rules, or click the New button to create a new rule set.";
 }
 
-SubmissionProfileList: WOPopUpButton {
+SubmissionProfileList: WCFilteringSelect {
     list          = submissionProfileDisplayGroup.displayedObjects;
     item          = submissionProfile;
     displayString = submissionProfile.name;
@@ -223,7 +227,7 @@ SubmissionProfileList: WOPopUpButton {
 //	value = thisAssignment.assignment.submissionProfile.name;
 //}
 
-Suspend: WOCheckBox {
+Suspend: WCCheckBox {
     checked = isSuspended;
 }
 
@@ -232,7 +236,7 @@ SuspendInfo: net.sf.webcat.core.PopUpInfo {
     message = "Disables processing of any further submissions for an assignment. Any submissions made will be accepted and queued up, but will not be processed. If this box is already checked, when you uncheck it and then click &quot;Apply All&quot; or &quot;Finish&quot;, all submissions that have been queued up will be processed.";
 }
 
-Timeout: WOTextField {
+Timeout: WCTextBox {
     numberformat = "0";
     size = 4;
     value = stepTimeout;
@@ -240,6 +244,13 @@ Timeout: WOTextField {
 
 TR: net.sf.webcat.core.TableRow {
     index = index;
+    dragHandle = "dragHandle";
+}
+
+DragHandle: WOGenericContainer {
+    elementName = "div";
+    class = "dojoDndHandle";
+    id = "dragHandle";
 }
 
 TR2: net.sf.webcat.core.TableRow {
@@ -248,7 +259,7 @@ TR2: net.sf.webcat.core.TableRow {
     showError   = upcomingOffering.gradingSuspended;
 }
 
-UploadInstructions: WOText {
+UploadInstructions: WCSimpleTextArea {
     rows     = 8;
     cols     = 60;
      value    = assignment.fileUploadMessage;
@@ -281,7 +292,7 @@ UpcomingIsUnpublished: WOConditional {
     negate = true;
 }
 
-URL: WOTextField {
+URL: WCTextBox {
     size = 40;
     value = assignment.url;
 }
