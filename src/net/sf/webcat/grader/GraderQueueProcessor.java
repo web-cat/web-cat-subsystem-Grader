@@ -39,7 +39,8 @@ import org.apache.log4j.Logger;
  * job.
  *
  * @author Amit Kulkarni
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class GraderQueueProcessor
     extends Thread
@@ -1253,10 +1254,10 @@ public class GraderQueueProcessor
         job.setPaused( true );
         faultOccurredInStep = true;
 
-        Vector attachments = null;
+        Vector<String> attachments = null;
         if ( attachmentsDir != null  &&  attachmentsDir.exists() )
         {
-            attachments = new Vector();
+            attachments = new Vector<String>();
             File[] fileList = attachmentsDir.listFiles();
             for ( int i = 0; i < fileList.length; i++ )
             {
