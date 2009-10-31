@@ -77,19 +77,31 @@ HasFileStats: WOConditional {
 	condition = hasFileStats;
 }
 
+HasNextStudent: WOConditional {
+    condition = "~availableSubmissions.count > (thisSubmissionIndex + 1)";
+}
+
 HasNoCoverageData: WOConditional {
 	condition = stats.elementsRaw;
 	negate    = true;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+NextButton: WOSubmitButton {
+    action   = saveThenList;
+    value    = "Save, then List";
+    name     = "NextButton";
+}
+
+NextStudentButton: WOSubmitButton {
+    action   = saveThenNextStudent;
+    value    = "Save, then Next Student";
+}
+
+Page: net.sf.webcat.core.PageWithNavigation {
+//Page: net.sf.webcat.core.WizardPage {
     sideStepTitle = "Grade One Submission";
-    hideSteps     = true;
-    applyEnabled  = true;
-//    stylesheet           = "/htmlarea/htmlarea.css";
-//    externalJavascript   = "/htmlarea/htmlarea.js,/htmlarea/htmlarea-lang-en.js,/htmlarea/dialog.js";
-//    inlineHeaderContents = javascriptText;
-//    onLoad               = "initEditor()";
+    hideSteps = true;
+//    applyEnabled = true;
 }
 
 Regrade: WOSubmitButton {
@@ -130,6 +142,7 @@ ShowDetails: WOImageButton {
 
 StaffInlineReport: PartialInlineReport {
     file = result.staffResultFile;
+    substituteOldCollapsingRegions = false;
 }
 
 StatRepetition: WORepetition {
@@ -144,10 +157,12 @@ StatsLabel: WOString {
 
 StudentInlineReport: PartialInlineReport {
     file = result.resultFile;
+    substituteOldCollapsingRegions = false;
 }
 
 SummaryReport: PartialInlineReport {
     file = result.summaryFile;
+    substituteOldCollapsingRegions = false;
 }
 
 TR: net.sf.webcat.core.TableRow {
@@ -199,4 +214,16 @@ WCSortOrder6: net.sf.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "Staff Points Lost";
 	key = "taDeductions";
+}
+
+WizardForm: WOForm {
+    multipleSubmit = true;
+    action         = defaultAction;
+
+    // This works stand-alone, but not in a servlet
+    enctype        = "multipart/form-data";
+    name           = "WizardForm";
+
+    // So use this instead.
+//    otherTagString = "enctype=\"multipart/form-data\" name=\"WizardForm\"";
 }

@@ -31,7 +31,8 @@ import org.apache.log4j.Logger;
  * Allow the user to enter/edit "TA" comments for a submission.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class GradeStudentSubmissionPage
     extends GraderComponent
@@ -71,20 +72,26 @@ public class GradeStudentSubmissionPage
     public NSArray formats = SubmissionResult.formats;
     public byte aFormat;
 
+    public NSArray availableSubmissions;
+    public int     thisSubmissionIndex;
+
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        if ( prefs().submission() == null )
+        if (result == null)
         {
-            throw new RuntimeException( "null submission selected" );
+            if ( prefs().submission() == null )
+            {
+                throw new RuntimeException( "null submission selected" );
+            }
+            if ( prefs().submission().result() == null )
+            {
+                throw new RuntimeException( "null submission result" );
+            }
+            result = prefs().submission().result();
         }
-        if ( prefs().submission().result() == null )
-        {
-            throw new RuntimeException( "null submission result" );
-        }
-        result = prefs().submission().result();
         if (log.isDebugEnabled())
         {
             log.debug( "result = " + result);
@@ -92,6 +99,7 @@ public class GradeStudentSubmissionPage
             {
                 log.debug( "result = " + result.hashCode());
                 log.debug( "result EC = " + result.editingContext().hashCode());
+                log.debug( "snapshot = " + result.snapshot());
             }
         }
         hasFileStats = ( result.submissionFileStats().count() > 0 );
@@ -160,7 +168,46 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        saveGrading();
+        return applyLocalChanges()
+            ? super.next()
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent saveThenList()
+    {
+        return next();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent saveThenNextStudent()
+    {
+        if (availableSubmissions == null
+            || thisSubmissionIndex >= availableSubmissions.count() - 1)
+        {
+            // If there's no place to go, then go back to the list
+            return saveThenList();
+        }
+
+        if (applyLocalChanges())
+        {
+            thisSubmissionIndex++;
+            Submission target = (Submission)availableSubmissions
+                .objectAtIndex(thisSubmissionIndex);
+            prefs().setSubmissionRelationship(target);
+            prefs().setSubmissionFileStatsRelationship(null);
+            result = null;
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent cancel()
+    {
+        super.cancel();
         return super.next();
     }
 
@@ -207,6 +254,7 @@ public class GradeStudentSubmissionPage
     public boolean applyLocalChanges()
     {
         saveGrading();
+        log.debug("Before commiting, result = " + result.snapshot());
         return super.applyLocalChanges();
     }
 
