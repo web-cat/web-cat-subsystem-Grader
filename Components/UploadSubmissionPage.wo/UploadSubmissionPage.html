@@ -16,6 +16,9 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
     (<wo:str value="$uploadedFileSize"/>) for submission.  You can
     replace this with a different file, or choose to continue.</p>
 </webobject><webobject name="OkayToSubmit">
+<wo:if condition="$showStudentSelector">
+    <p>Submit for student: <wo name="StudentList"/></p>
+</wo:if>
     <p>Choose the file to upload:</p>
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <p><webobject name="FileUpload1"/></p>
@@ -23,6 +26,7 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
 <p><wo:net.sf.webcat.ui.WCButton action="$next">Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
 </wo:WOForm></webobject></wo:net.sf.webcat.core.WCPageModule>
 
+<wo:not condition="$showStudentSelector">
 <wo:net.sf.webcat.core.WCPageModule title="Previous Submissions" open="false">
 <webobject name="HasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
   <div class="shadow"><table><thead>
@@ -37,5 +41,5 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
   </webobject></webobject></tbody></table></div><div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
 </webobject></wo:net.sf.webcat.core.WCPageModule>
-</wo:else>
+</wo:not></wo:else>
 </wo>

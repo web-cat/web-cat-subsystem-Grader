@@ -63,6 +63,14 @@ String3: WOString {
 	value        = aSubmission.result.finalScore;
 }
 
+StudentList: WCFilteringSelect {
+    list = studentDisplayGroup.displayedObjects;
+    item = student;
+    selection = submitAsStudent;
+    autoComplete = true;
+    invalidMessage = "Invalid student selection";
+}
+
 StudentName: WOString {
 	value = user.nameAndUid;
 }

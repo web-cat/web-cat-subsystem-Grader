@@ -1,5 +1,5 @@
 {
-    "WebObjects Release" = "WebObjects 5.0"; 
+    "WebObjects Release" = "WebObjects 5.1"; 
     encoding = NSUTF8StringEncoding; 
     variables = {
         submissionDisplayGroup = {
@@ -14,6 +14,18 @@
 		    selectorName = "compareDescending:";
 		}
 	    ); 
+        }; 
+        studentDisplayGroup = {
+            class = WODisplayGroup; 
+            dataSource = {
+                class = EODetailDataSource; 
+                detailKey = students; 
+                masterClassDescription = CourseOffering; 
+            }; 
+            fetchesOnLoad = YES; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
         }; 
     }; 
 }

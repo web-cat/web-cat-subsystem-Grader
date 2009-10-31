@@ -59,30 +59,30 @@
             accessLevel = 40;
             priority = 4;
             children = {
-              "Pick the Course" = {
-                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
-                accessLevel = 40;
-                priority = 1;
-                wantsStart = YES;
-                config    = { resetPrimeUser = true; };
-              };
-              "Pick the Assignment" = {
-                pageName  = net.sf.webcat.grader.PickAssignmentToEditPage;
-                accessLevel = 40;
-                priority  = 2;
-                config    = { resetPrimeUser = true; };
-              };
-              "Pick the Student" = {
-                pageName  = net.sf.webcat.grader.PickEnrolledStudentPage;
-                accessLevel = 40;
-                priority  = 3;
-                config    = { resetPrimeUser = true; };
-              };
+//              "Pick the Course" = {
+//                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
+//                accessLevel = 40;
+//                priority = 1;
+//                wantsStart = YES;
+//                config    = { resetPrimeUser = true; };
+//              };
+//              "Pick the Assignment" = {
+//                pageName  = net.sf.webcat.grader.PickAssignmentToEditPage;
+//                accessLevel = 40;
+//                priority  = 2;
+//                config    = { resetPrimeUser = true; };
+//              };
+//             "Pick the Student" = {
+//                pageName  = net.sf.webcat.grader.PickEnrolledStudentPage;
+//                accessLevel = 40;
+//                priority  = 3;
+//                config    = { resetPrimeUser = true; };
+//              };
               "Upload Student's File(s)" = {
                 pageName  = net.sf.webcat.grader.UploadSubmissionPage;
                 accessLevel = 40;
                 priority  = 4;
-                config    = { resetPrimeUser = true; };
+                config    = { showStudentSelector = true; };
               };
               "Confirm Student's Submission" = {
                 pageName  = net.sf.webcat.grader.ConfirmSubmissionPage;

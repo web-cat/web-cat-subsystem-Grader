@@ -33,7 +33,8 @@ import org.apache.log4j.Logger;
  * to upload a program file for the current (new) submission.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class UploadSubmissionPage
     extends GraderSubmissionUploadComponent
@@ -61,6 +62,11 @@ public class UploadSubmissionPage
     public int index;
     /** true if there are previous submissions */
     public boolean hasPreviousSubmissions;
+    public Boolean showStudentSelector;
+
+    public WODisplayGroup      studentDisplayGroup;
+    public User                student;
+    public User                submitAsStudent;
 
 
     //~ Methods ...............................................................
@@ -76,29 +82,28 @@ public class UploadSubmissionPage
     {
         log.debug( "primeUser = " + wcSession().primeUser()
                    + ", localUser = " + user() );
-        NSArray submissions = EOUtilities.objectsMatchingValues(
-                localContext(),
-                Submission.ENTITY_NAME,
-                new NSDictionary(
-                        new Object[] {  user(),
-                                        prefs().assignmentOffering()
-                                     },
-                        new Object[] {  Submission.USER_KEY,
-                                        Submission.ASSIGNMENT_OFFERING_KEY }
-                )
-            );
-        submissionDisplayGroup.setObjectArray( submissions );
-        int currentSubNo = submissions.count() + 1;
-        for ( int i = 0; i < submissions.count(); i++ )
+        if (showStudentSelector == null)
         {
-            int sno = ( (Submission)submissions.objectAtIndex( i ) )
-                .submitNumber();
-            if ( sno >= currentSubNo )
+            NSDictionary<?, ?> config =
+                wcSession().tabs.selectedDescendant().config();
+            showStudentSelector = Boolean.valueOf(
+                config != null
+                && config.containsKey("showStudentSelector"));
+        }
+        if (showStudentSelector)
+        {
+            studentDisplayGroup.setMasterObject(
+                prefs().assignmentOffering().courseOffering());
+            if (submitAsStudent == null
+                && studentDisplayGroup.displayedObjects().count() > 0)
             {
-                currentSubNo = sno + 1;
+                submitAsStudent = (User)
+                    studentDisplayGroup.displayedObjects().objectAtIndex(0);
             }
         }
-        hasPreviousSubmissions = ( submissions.count() > 0 );
+        int currentSubNo = fillDisplayGroup(user());
+        hasPreviousSubmissions = submissionDisplayGroup.displayedObjects()
+            .count() > 0;
 
         Number maxSubmissions = prefs().assignmentOffering()
             .assignment().submissionProfile().maxSubmissionsRaw();
@@ -107,7 +112,7 @@ public class UploadSubmissionPage
 
         if ( okayToSubmit )
         {
-            startSubmission( currentSubNo, user() );
+            startSubmission(currentSubNo, user());
         }
 
         log.debug( "due = "
@@ -129,8 +134,8 @@ public class UploadSubmissionPage
         cachedUploadedFileName = submissionInProcess().uploadedFileName();
         cachedUploadedFileList = submissionInProcess().uploadedFileList();
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * This method determines whether any embedded navigator will
@@ -140,7 +145,7 @@ public class UploadSubmissionPage
     public boolean forceNavigatorSelection()
     {
         boolean result = super.forceNavigatorSelection();
-        
+
         if (!result)
         {
             // If the assignment is closed and the user is not allowed to
@@ -156,7 +161,7 @@ public class UploadSubmissionPage
                 result = true;
             }
         }
-        
+
         return result;
     }
 
@@ -197,6 +202,11 @@ public class UploadSubmissionPage
             log.debug(" form values = " + context().request().formValues() );
             log.debug(" multipart = "
                 + context().request().isMultipartFormData() );
+        }
+        if (showStudentSelector && submitAsStudent == null)
+        {
+            error("Please select a student for this submission.");
+            return null;
         }
         if ( okayToSubmit )
         {
@@ -254,6 +264,14 @@ public class UploadSubmissionPage
                     state.navigator().currentPage() + 1 );
         }
 */
+            if (showStudentSelector)
+            {
+                setLocalUser(submitAsStudent);
+                int currentSubNo = fillDisplayGroup(user());
+                submissionInProcess().submission().setSubmitNumber(
+                    currentSubNo);
+                submissionInProcess().submission().setUserRelationship(user());
+            }
             return super.next();
         }
         else
@@ -350,8 +368,8 @@ public class UploadSubmissionPage
 //                );
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public String permalink()
     {
@@ -364,12 +382,41 @@ public class UploadSubmissionPage
             return null;
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public void setPermalink(String value)
     {
         // Do nothing.
+    }
+
+
+    // ----------------------------------------------------------
+    private int fillDisplayGroup(User user)
+    {
+        NSArray<?> submissions = EOUtilities.objectsMatchingValues(
+            localContext(),
+            Submission.ENTITY_NAME,
+            new NSDictionary<String, Object>(
+                    new Object[] {  user,
+                                    prefs().assignmentOffering()
+                                 },
+                    new String[] {  Submission.USER_KEY,
+                                    Submission.ASSIGNMENT_OFFERING_KEY }
+            )
+        );
+        submissionDisplayGroup.setObjectArray(submissions);
+        int currentSubNo = submissions.count() + 1;
+        for (int i = 0; i < submissions.count(); i++)
+        {
+            int sno = ( (Submission)submissions.objectAtIndex(i) )
+                .submitNumber();
+            if (sno >= currentSubNo)
+            {
+                currentSubNo = sno + 1;
+            }
+        }
+        return currentSubNo;
     }
 
 
