@@ -28,7 +28,7 @@
 <webobject name="SubmissionProfileInfo"/></p>
 <p>Automatically grade using <b>these steps</b> in sequence:</p>
 <wo:WCContentPane id="gradingSteps">
-<table><thead>
+<table id="gradingStepsTable"><thead>
     <tr>
       <th>Order</th><th>Plug-in</th><th class="sm">Time Limit (sec)</th>
       <th>Move</th><th>Action</th>
@@ -39,7 +39,7 @@
         <td><webobject name="ScriptName"/></td>
         <td align="center"><webobject name="StepAllowsTimeout"><webobject name="Timeout"/></webobject></td>
         <td align="center"><wo name="MoveStepUp"><wo name="MoveStepUpImage"/></wo> <wo name="MoveStepDown"><wo name="MoveStepDownImage"/></wo></td>
-        <td><webobject name="EditStep"/> <wo name="RemoveStep"><wo name="RemoveStepImage"/></wo></td>
+        <td><webobject name="EditStep"/> <wo name="RemoveStep"><wo name="RemoveStepImage"/></wo><wo name="RemoveStepFunction"/></td>
     </wo></wo>
     <wo name="LastTR">
         <td colspan="5">

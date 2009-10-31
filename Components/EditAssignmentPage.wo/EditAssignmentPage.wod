@@ -2,7 +2,7 @@ AddStep: WCButton {
     action              = addStep;
     label               = "Add";
     remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingSteps";
+    remote.block        = "gradingStepsTable";
 }
 
 GradingPluginsToAdd: WCFilteringSelect {
@@ -181,10 +181,16 @@ ReleaseSubs: WCButton {
     label  = "Re-grade Them";
 }
 
-RemoveStep: WCLink {
+RemoveStep: WOGenericContainer {
+    elementName = "a";
+    onClick     = "~'removeGradingStep(removeStepAction_' + index + ');'"
+}
+
+RemoveStepFunction: WCActionFunction {
+    jsId                = "~'removeStepAction_' + index";
     action              = removeStep;
     remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingSteps";
+    remote.block        = "gradingStepsTable";
 }
 
 RemoveStepImage: WOImage {
@@ -192,8 +198,8 @@ RemoveStepImage: WOImage {
     framework = "Core";
     width     = "14";
     height    = "17";
-    alt       = "Delete this step";
-    title     = "Delete this step";
+    alt       = "Remove this step";
+    title     = "Remove this step";
     class     = "icon";
 }
 
