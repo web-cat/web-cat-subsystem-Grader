@@ -44,20 +44,20 @@ import er.extensions.foundation.ERXArrayUtilities;
  * Implements a simple interface for performing mass-regrades of submissions to
  * an assignment (typically for data collection with an updated grading
  * plug-in).
- * 
+ *
  * @author Tony Allevato
  * @version $Id$
  */
 public class MassRegraderPage extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
-    
+
     // ----------------------------------------------------------
     public MassRegraderPage(WOContext context)
     {
         super(context);
     }
-    
+
 
     //~ KVC attributes (must be public) .......................................
 
@@ -67,10 +67,10 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
     public EnqueuedJob job;
     public int index;
-    
+
     public int cachedCountOfRegradingJobsInQueue = 0;
     public int cachedCountOfSuspendedJobsInQueue = 0;
-    
+
 
     //~ Methods ...............................................................
 
@@ -147,7 +147,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
             {
                 EOFetchSpecification fspec = new EOFetchSpecification(
                         Submission.ENTITY_NAME, q, sortOrderings);
-        
+
                 submissions =
                     localContext().objectsWithFetchSpecification(fspec);
             }
@@ -157,9 +157,9 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 qualifierErrors = new NSMutableDictionary<String, String>();
                 qualifierErrors.setObjectForKey(msg, msg);
             }
-    
+
             // Enqueue the whole lot of submissions for regrading.
-            
+
             if (submissions != null)
             {
                 if (enqueueThread == null)
@@ -174,10 +174,10 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 }
             }
         }
-        
+
         return null;
     }
-    
+
 
     // ----------------------------------------------------------
     public boolean isCurrentlyEnqueuing()
@@ -194,7 +194,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -225,14 +225,14 @@ public class MassRegraderPage extends GraderAssignmentComponent
             return 0;
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public String enqueueProgress()
     {
         int soFar = submissionsEnqueuedSoFar();
         int total = totalSubmissionsToEnqueue();
-        
+
         if (total == 0)
         {
             return "100%";
@@ -313,7 +313,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
         {
             numberOfSubmissions = 0;
         }
-        
+
         return null;
     }
 
@@ -331,8 +331,8 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
         return cachedCountOfRegradingJobsInQueue;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public int updateCountOfSuspendedJobsInQueue()
     {
@@ -346,7 +346,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
         return cachedCountOfSuspendedJobsInQueue;
     }
-    
+
 
     // ----------------------------------------------------------
     public NSArray<EnqueuedJob> nextSetOfJobsInQueue()
@@ -358,10 +358,10 @@ public class MassRegraderPage extends GraderAssignmentComponent
                         ERXQ.isFalse(EnqueuedJob.PAUSED_KEY)),
                 null);
         fspec.setFetchLimit(10);
-        
+
         return localContext().objectsWithFetchSpecification(fspec);
     }
-    
+
 
     //~ Private classes .......................................................
 
@@ -388,22 +388,35 @@ public class MassRegraderPage extends GraderAssignmentComponent
         {
             EOEditingContext ec = Application.newPeerEditingContext();
 
+            int countForRecycling = 0;
             clearEnqueuedSoFar();
 
             while (hasMoreSubmissions())
             {
                 popNextSubmission().requeueForGrading(ec);
                 incrementEnqueuedSoFar();
+
+                // Recycle the editing context every 100 submissions.
+
+                countForRecycling++;
+                if (countForRecycling == 100)
+                {
+                    ec.saveChanges();
+                    Application.releasePeerEditingContext(ec);
+                    ec = Application.newPeerEditingContext();
+
+                    countForRecycling = 0;
+                }
             }
 
             setIsDone(true);
 
             ec.saveChanges();
             Grader.getInstance().graderQueue().enqueue( null );
-            
+
             Application.releasePeerEditingContext(ec);
         }
-        
+
 
         // ----------------------------------------------------------
         public synchronized void addSubmissions(NSArray<Submission> subs)
@@ -433,7 +446,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
             return isDone;
         }
 
-        
+
         // ----------------------------------------------------------
         public synchronized int enqueuedSoFar()
         {
@@ -466,7 +479,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
         private synchronized void setIsDone(boolean value)
         {
             isDone = value;
-            
+
             if (isDone)
             {
                 subsAdded = 0;
@@ -482,7 +495,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
         private int subsAdded = 0;
         private NSMutableArray<Submission> submissions;
     }
-    
+
 
     //~ Static/instance variables .............................................
 
