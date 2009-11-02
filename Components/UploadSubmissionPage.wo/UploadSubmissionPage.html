@@ -16,11 +16,11 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
     (<wo:str value="$uploadedFileSize"/>) for submission.  You can
     replace this with a different file, or choose to continue.</p>
 </webobject><webobject name="OkayToSubmit">
+<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <wo:if condition="$showStudentSelector">
     <p>Submit for student: <wo name="StudentList"/></p>
 </wo:if>
     <p>Choose the file to upload:</p>
-<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <p><webobject name="FileUpload1"/></p>
 <!-- p --><!-- input size="60" type="file" name="0.0.0.2.3.4.1.10.1" dojoType="dojox.form.FileInput"/ --><!-- /p -->
 <p><wo:net.sf.webcat.ui.WCButton action="$next">Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
