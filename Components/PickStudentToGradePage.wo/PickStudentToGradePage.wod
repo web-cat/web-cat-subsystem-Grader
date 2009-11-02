@@ -1,0 +1,207 @@
+AvgScore: WOString {
+    value = avgScore;
+    numberformat = "0.0";
+}
+
+BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+    displayGroup = submissionDisplayGroup;
+    persistentKey = "StudentsForAssignmentPage.batchSize";
+}
+
+EditScore: WOHyperlink {
+    action = editSubmissionScore;
+    alt    = "View, score, or make comments on submission";
+    title  = "View, score, or make comments on submission";
+}
+
+FinalScore: WOString {
+    value = aSubmission.result.finalScore;
+    numberformat = "0.0";
+}
+
+HasMultiplePartners: WOConditional {
+    condition = hasMultiplePartners;
+}
+
+HasPartners: WOConditional {
+    condition = hasPartners;
+}
+
+HasTAScore: WOConditional {
+    condition = hasTAScore;
+}
+
+HighScore: WOString {
+    value = highScore;
+    numberformat = "0.0";
+}
+
+IsAPartner: WOConditional {
+    condition = isAPartner;
+}
+
+LastPartner: WOConditional {
+    condition = morePartners;
+    negate    = true;
+}
+
+LowScore: WOString {
+    value = lowScore;
+    numberformat = "0.0";
+}
+
+MarkAsComplete: WOSubmitButton {
+    value  = "Show All Scores to Students";
+    action = markAsComplete;
+    alt    = "Make all entered scores visible to students and send e-mail";
+    title  = "Make all entered scores visible to students and send e-mail";
+}
+
+MorePartners: WOConditional {
+    condition = morePartners;
+}
+
+MostRecentSubmitNumber: WOString {
+    value = mostRecentSubmissionNo;
+}
+
+Name: WOString {
+    value = aSubmission.user.name;
+}
+
+Navigator: net.sf.webcat.grader.GraderNavigator {
+}
+
+Nobody: WOConditional {
+    condition = submissionDisplayGroup.allObjects.count;
+    negate    = true;
+}
+
+NoTAScore: WOConditional {
+    condition = hasTAScore;
+    negate    = true;
+}
+
+NotMostRecent: WOConditional {
+    condition = isMostRecentSubmission;
+    negate    = true;
+}
+
+Page: net.sf.webcat.core.WCPageWithNavigation {
+}
+
+PartnerName: WOString {
+    value = partnerSubmission.user.name;
+}
+
+PartnerRepetition: WORepetition {
+    list = aSubmission.result.submissions;
+    item = partnerSubmission;
+}
+
+Repetition1: WORepetition {
+    item  = aSubmission;
+    list  = submissionDisplayGroup.displayedObjects;
+    index = index;
+}
+
+ScoreAdjustment: WOString {
+    value = aSubmission.result.scoreAdjustment;
+    numberformat = "0.0";
+}
+
+Somebody: WOConditional {
+    condition = submissionDisplayGroup.allObjects.count;
+}
+
+StatusToDo: WOImage {
+    border    = "0";
+    filename  = "icons/pb-empty.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
+StatusUnfinished: WOImage {
+    border    = "0";
+    filename  = "icons/pb-partial.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
+StatusDone: WOImage {
+    border    = "0";
+    filename  = "icons/pb-full2.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
+}
+
+Status: WOImage {
+    border    = "0";
+    filename  = aSubmission.result.statusURL;
+    framework = "Core";
+    height    = "16";
+    width     = "16";
+}
+
+SubmitNumber: WOString {
+    value = aSubmission.submitNumber;
+}
+
+SubmitTime: WOString {
+    value     = aSubmission.submitTime;
+    formatter = session.timeFormatter;
+}
+
+TAScore: WOString {
+    value = aSubmission.result.taScoreRaw;
+    numberformat = "0.0";
+}
+
+TestingScore: WOString {
+    value = aSubmission.result.correctnessScoreRaw;
+    numberformat = "0.0";
+}
+
+ToolScore: WOString {
+    value = aSubmission.result.toolScoreRaw;
+    numberformat = "0.0";
+}
+
+TR: net.sf.webcat.core.TableRow {
+    index = index;
+}
+
+UsesBonusesOrPenalties: WOConditional {
+    condition = prefs.assignmentOffering.assignment.usesBonusesOrPenalties;
+}
+
+UsesToolCheckScore: WOConditional {
+    condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
+}
+
+WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Name";
+    key = "user.name_LF";
+}
+
+WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Grading Status";
+    key = "result.status";
+}
+
+WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Submission Time";
+    key = "submitTime";
+}
+
+WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Final Score";
+    key = "result.finalScore";
+}
