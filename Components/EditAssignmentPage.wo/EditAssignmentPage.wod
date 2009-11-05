@@ -102,39 +102,6 @@ OverrideMoodleId: WCTextBox {
     value = thisOffering.moodleId;
 }
 
-
-MoveStepDown: WCLink {
-    action = moveStepDown;
-    remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingSteps";
-}
-
-MoveStepDownImage: WOImage {
-    filename  = "icons/arrowDown.gif";
-    framework = "Core";
-    width     = "15";
-    height    = "13";
-    alt       = "Move this step down";
-    title     = "Move this step down";
-    class     = "icon";
-}
-
-MoveStepUp: WCLink {
-    action = moveStepUp;
-    remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingSteps";
-}
-
-MoveStepUpImage: WOImage {
-    filename  = "icons/arrowUp.gif";
-    framework = "Core";
-    width     = "15";
-    height    = "13";
-    alt       = "Move this step up";
-    title     = "Move this step up";
-    class     = "icon";
-}
-
 Name: WCTextBox {
     value = assignment.name;
     size  = 40;
@@ -244,18 +211,24 @@ SuspendInfo: net.sf.webcat.core.PopUpInfo {
 
 Timeout: WCTextBox {
     numberformat = "0";
-    size = 4;
-    value = stepTimeout;
+    style        = "text-align: center; width: 4em";
+    value        = stepTimeout;
+}
+
+GradingStepsTable: WCStyledTable {
+    id           = "gradingStepsTable";
+    onDropMethod = "gradingStepsWereDropped";
+    moveOnly     = true;
+    accept       = "gradingStep";
 }
 
 TR: net.sf.webcat.core.TableRow {
     index = index;
     dragHandle = "dragHandle";
+    dndType = "gradingStep";
 }
 
-DragHandle: WOGenericContainer {
-    elementName = "div";
-    class = "dojoDndHandle";
+DragHandle: WCDragHandle {
     id = "dragHandle";
 }
 

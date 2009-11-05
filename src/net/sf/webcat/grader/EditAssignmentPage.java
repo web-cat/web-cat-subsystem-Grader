@@ -573,7 +573,10 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public void gradingStepsWereDragged(int[] dragIndices, int[] dropIndices)
+    public void gradingStepsWereDropped(
+            String sourceId, int[] dragIndices,
+            String targetId, int[] dropIndices,
+            boolean isCopy)
     {
         NSMutableArray<Step> steps =
             scriptDisplayGroup.displayedObjects().mutableClone();
