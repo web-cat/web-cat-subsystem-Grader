@@ -369,7 +369,14 @@ public class SubmissionFileStats
         // not return false positives. The tags() attribute is guaranteed to
         // have leading and trailing spaces as well so that this always works.
 
-        return tags().contains(" " + tag + " ");
+        if (tags() == null)
+        {
+            return false;
+        }
+        else
+        {
+            return tags().contains(" " + tag + " ");
+        }
     }
 
 
