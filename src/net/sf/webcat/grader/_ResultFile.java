@@ -345,6 +345,8 @@ public abstract class _ResultFile
      *
      * @param context The editing context to use
      * @param fspec The fetch specification to use
+     *
+     * @return an NSArray of the entities retrieved
      */
     @SuppressWarnings("unchecked")
     public static NSArray<ResultFile> objectsWithFetchSpecification(
@@ -352,6 +354,180 @@ public abstract class _ResultFile
         EOFetchSpecification fspec)
     {
         return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects using a qualifier.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<ResultFile> objectsMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier)
+    {
+        return objectsMatchingQualifier(context, qualifier, null);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects using a qualifier and sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings The sort orderings to use
+     *
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<ResultFile> objectsMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        EOFetchSpecification fspec = new EOFetchSpecification(
+            ENTITY_NAME, qualifier, sortOrderings);
+
+        return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a list of keys and values to match, alternating
+     *     "key", "value", "key", "value"...
+     *
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<ResultFile> objectsMatchingValues(
+        EOEditingContext context,
+        Object... keysAndValues)
+    {
+        if (keysAndValues.length % 2 != 0)
+        {
+            throw new IllegalArgumentException("There should a value " +
+                "corresponding to every key that was passed.");
+        }
+
+        NSMutableDictionary<String, Object> valueDictionary =
+            new NSMutableDictionary<String, Object>();
+
+        for (int i = 0; i < keysAndValues.length; i += 2)
+        {
+            Object key = keysAndValues[i];
+            Object value = keysAndValues[i + 1];
+
+            if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException("Keys should be strings.");
+            }
+
+            valueDictionary.setObjectForKey(value, key);
+        }
+
+        return objectsMatchingValues(context, valueDictionary);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects using a dictionary of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a dictionary of keys and values to match
+     *
+     * @return an NSArray of the entities retrieved
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<ResultFile> objectsMatchingValues(
+        EOEditingContext context,
+        NSDictionary<String, Object> keysAndValues)
+    {
+        return EOUtilities.objectsMatchingValues(context, ENTITY_NAME,
+            keysAndValues);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a list of keys and values to match, alternating
+     *     "key", "value", "key", "value"...
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOObjectNotAvailableException
+     *     if there is no matching object
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    @SuppressWarnings("unchecked")
+    public static ResultFile objectMatchingValues(
+        EOEditingContext context,
+        Object... keysAndValues) throws EOObjectNotAvailableException,
+                                        EOUtilities.MoreThanOneException
+    {
+        if (keysAndValues.length % 2 != 0)
+        {
+            throw new IllegalArgumentException("There should a value " +
+                "corresponding to every key that was passed.");
+        }
+
+        NSMutableDictionary<String, Object> valueDictionary =
+            new NSMutableDictionary<String, Object>();
+
+        for (int i = 0; i < keysAndValues.length; i += 2)
+        {
+            Object key = keysAndValues[i];
+            Object value = keysAndValues[i + 1];
+
+            if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException("Keys should be strings.");
+            }
+
+            valueDictionary.setObjectForKey(value, key);
+        }
+
+        return objectMatchingValues(context, valueDictionary);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve an object using a dictionary of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a dictionary of keys and values to match
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOObjectNotAvailableException
+     *     if there is no matching object
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    @SuppressWarnings("unchecked")
+    public static ResultFile objectMatchingValues(
+        EOEditingContext context,
+        NSDictionary<String, Object> keysAndValues)
+        throws EOObjectNotAvailableException,
+               EOUtilities.MoreThanOneException
+    {
+        return (ResultFile) EOUtilities.objectMatchingValues(
+            context, ENTITY_NAME, keysAndValues);
     }
 
 
