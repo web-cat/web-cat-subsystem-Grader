@@ -79,18 +79,6 @@ public class SubmissionProfile
 
     // ----------------------------------------------------------
     /**
-     * Get a human-readable representation of this profile, which is
-     * the same as {@link #userPresentableDescription()}.
-     * @return this profile's name and owner
-     */
-    public String toString()
-    {
-        return userPresentableDescription();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Format a long value as a string, using "k" or "m" for suffixes
      * if the value is evenly divisible by 1024 or 1024*1024.
      * @param The value to format

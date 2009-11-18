@@ -22,7 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.foundation.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import er.extensions.foundation.ERXArrayUtilities;
 import java.io.File;
@@ -98,18 +97,6 @@ public class Assignment
                 .course().deptNumber() + ")";
         }
         return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Get a human-readable representation of this assignment, which is
-     * the same as {@link #userPresentableDescription()}.
-     * @return this user's name
-     */
-    public String toString()
-    {
-        return userPresentableDescription();
     }
 
 
@@ -240,13 +227,11 @@ public class Assignment
     public NSTimestamp commonOfferingsDueDate()
     {
         NSTimestamp common = null;
-        NSArray offerings = offerings();
+        NSArray<AssignmentOffering> offerings = offerings();
         if ( offerings.count() > 1 )
         {
-            for ( int i = 0; i < offerings.count(); i++ )
+            for (AssignmentOffering ao : offerings)
             {
-                AssignmentOffering ao =
-                    (AssignmentOffering)offerings.objectAtIndex( i );
                 if ( common == null )
                 {
                     common = ao.dueDate();
@@ -267,11 +252,12 @@ public class Assignment
     public AssignmentOffering offeringForUser( User user )
     {
         AssignmentOffering offering = null;
-        NSDictionary userBinding = new NSDictionary( user, "user" );
+        NSDictionary<String, Object> userBinding =
+            new NSDictionary<String, Object>( user, "user" );
 
         // First, check to see if the user is a student in any of the
         // course offerings associated with the available assignment offerings
-        NSArray results = ERXArrayUtilities
+        NSArray<?> results = ERXArrayUtilities
             .filteredArrayWithEntityFetchSpecification( offerings(),
                 AssignmentOffering.ENTITY_NAME,
                 AssignmentOffering.STUDENT_FSPEC,
@@ -388,6 +374,7 @@ public class Assignment
 
         // ----------------------------------------------------------
         @Override
+        @SuppressWarnings("unchecked")
         public void addQualifierKeysToSet( NSMutableSet qualifierKeys )
         {
             qualifierKeys.add("subdirName");
@@ -396,6 +383,7 @@ public class Assignment
 
         // ----------------------------------------------------------
         @Override
+        @SuppressWarnings("unchecked")
         public EOQualifier qualifierWithBindings(
             NSDictionary bindings, boolean requiresAll )
         {
@@ -478,21 +466,18 @@ public class Assignment
     // ----------------------------------------------------------
     private void renameSubdirs( String oldSubdir, String newSubdir )
     {
-        NSArray domains = AuthenticationDomain.authDomains();
-        for ( int i = 0; i < domains.count(); i++ )
+        NSArray<AuthenticationDomain> domains =
+            AuthenticationDomain.authDomains();
+        for (AuthenticationDomain domain : domains)
         {
-            AuthenticationDomain domain =
-                (AuthenticationDomain)domains.objectAtIndex( i );
-            NSArray offerings = offerings();
+            NSArray<AssignmentOffering> offerings = offerings();
             StringBuffer dir = domain.submissionBaseDirBuffer();
             int baseDirLen = dir.length();
             String msgs = null;
-            for ( int j = 0; j < offerings.count(); j++ )
+            for (AssignmentOffering offering : offerings)
             {
                 // clear out old suffix
                 dir.delete( baseDirLen, dir.length() );
-                AssignmentOffering offering =
-                    (AssignmentOffering)offerings.objectAtIndex( j );
                 offering.courseOffering().addSubdirTo( dir );
                 dir.append('/');
                 dir.append( oldSubdir );

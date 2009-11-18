@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,7 +21,6 @@
 
 package net.sf.webcat.grader;
 
-import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
@@ -117,18 +116,6 @@ public class AssignmentOffering
             result = super.toString();
         }
         return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Get a human-readable representation of this assignment offering, which
-     * is the same as {@link #userPresentableDescription()}.
-     * @return this user's name
-     */
-    public String toString()
-    {
-        return userPresentableDescription();
     }
 
 

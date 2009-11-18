@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,11 +25,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
-import er.extensions.eof.ERXEOControlUtilities;
-import er.extensions.eof.ERXKey;
 import er.extensions.eof.ERXQ;
-import er.extensions.eof.ERXS;
-import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +39,8 @@ import org.apache.log4j.Logger;
  *  Represents a single student assignment submission.
  *
  *  @author Stephen Edwards
- *  @version $Id$
+ *  @author Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class Submission
     extends _Submission
@@ -70,12 +67,16 @@ public class Submission
     // ----------------------------------------------------------
     /**
      * Get a short (no longer than 60 characters) description of this
-     * submission, which currently returns {@link #dirName()}.
+     * submission, which currently returns {@link #fileName()} or
+     * {@link #dirName()}.
      * @return the description
      */
     public String userPresentableDescription()
     {
-        return dirName();
+        if ( fileName() != null )
+            return file().getPath();
+        else
+            return dirName();
     }
 
 
@@ -123,16 +124,6 @@ public class Submission
     public File file()
     {
         return new File( dirName(), fileName() );
-    }
-
-
-    // ----------------------------------------------------------
-    public String toString()
-    {
-        if ( fileName() != null )
-            return file().getPath();
-        else
-            return dirName();
     }
 
 
@@ -463,7 +454,7 @@ public class Submission
 
             Submission primarySubmission = null;
             Submission latestGradedSubmission = null;
-    
+
             NSArray<Submission> thisSubmissionSet =
                 EOUtilities.objectsMatchingValues(
                     editingContext(),
@@ -534,7 +525,7 @@ public class Submission
                 sub.setIsSubmissionForGrading(isSubForGrading);
             }
         }
-        
+
         return super.isSubmissionForGrading();
     }
 
@@ -566,12 +557,12 @@ public class Submission
                         editingContext(), assignmentOffering(), user());
             }
         }
-        
+
         return (allSubmissionsCache != null) ?
                 allSubmissionsCache : NSArray.EmptyArray;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Flush any cached data stored by the object in memory.
@@ -580,7 +571,7 @@ public class Submission
     {
         // Clear the in-memory cache of the all-submissions chain so that it
         // will be fetched again.
-        
+
         aoSubmissionsCountCache = 0;
         allSubmissionsCache = null;
     }
@@ -673,7 +664,7 @@ public class Submission
      * submission number.
      *
      * @param number the number of the submission to retrieve from the chain
-     * 
+     *
      * @return the specified submission, or null if there was not one with
      *     that number in the chain (or there was some other error)
      */
@@ -695,7 +686,7 @@ public class Submission
         }
     }
 
-    
+
     // ----------------------------------------------------------
     /**
      * Gets the previous submission to this one in the submission chain.
@@ -740,14 +731,14 @@ public class Submission
     /**
      * Gets the earliest submission in the submission chain for this user and
      * assignment offering that has valid non-zero coverage data.
-     * 
+     *
      * @return the earliest submission with valid non-zero coverage data, or
      *     null if there is no submission satisfying this
      */
     public Submission earliestSubmissionWithCoverage()
     {
         NSArray<Submission> subs = allSubmissions();
-        
+
         for(Submission submission : subs)
         {
             if (submission.hasCoverage())
@@ -755,18 +746,18 @@ public class Submission
                 return submission;
             }
         }
-        
+
         return null;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets a value indicating whether the submission has valid non-zero
      * coverage data. This implies that the submission compiled without error
      * and executed at least partially (but only for plug-ins that collect code
      * coverage statistics).
-     * 
+     *
      * @return true if the submission has valid non-zero coverage data,
      *     otherwise false.
      */
@@ -778,7 +769,7 @@ public class Submission
         }
 
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
-        
+
         for(SubmissionFileStats file : files)
         {
             if (file.elements() > 0)
@@ -786,23 +777,23 @@ public class Submission
                 return true;
             }
         }
-        
+
         return false;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets the earliest submission in the submission chain for this user and
      * assignment offering that has valid lines-of-code data.
-     * 
+     *
      * @return the earliest submission with valid lines-of-code data, or
      *     null if there is no submission satisfying this
      */
     public Submission earliestSubmissionWithLOC()
     {
         NSArray<Submission> subs = allSubmissions();
-        
+
         for(Submission submission : subs)
         {
             if (submission.hasLOC())
@@ -810,16 +801,16 @@ public class Submission
                 return submission;
             }
         }
-        
+
         return null;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets a value indicating whether the submission has valid lines-of-code
      * data.
-     * 
+     *
      * @return true if the submission has valid non-zero lines-of-code data,
      *     otherwise false.
      */
@@ -831,7 +822,7 @@ public class Submission
         }
 
         NSArray<SubmissionFileStats> files = result().submissionFileStats();
-        
+
         for(SubmissionFileStats file : files)
         {
             if (file.loc() > 0)
@@ -839,23 +830,23 @@ public class Submission
                 return true;
             }
         }
-        
+
         return false;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets the earliest submission in the submission chain for this user and
      * assignment offering that has a non-zero correctness score.
-     * 
+     *
      * @return the earliest submission with a non-zero correctness score, or
      *     null if there is no submission satisfying this
      */
     public Submission earliestSubmissionWithCorrectnessScore()
     {
         NSArray<Submission> subs = allSubmissions();
-        
+
         for(Submission submission : subs)
         {
             if (submission.hasCorrectnessScore())
@@ -863,18 +854,18 @@ public class Submission
                 return submission;
             }
         }
-        
+
         return null;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets a value indicating whether the submission has a non-zero
      * correctness score. This implies that the code ran, but the converse is
      * not true of course -- not all code that runs attains a non-zero
      * correctness score.
-     * 
+     *
      * @return true if the submission has a non-zero correctness score.
      */
     public boolean hasCorrectnessScore()
@@ -892,7 +883,7 @@ public class Submission
     /**
      * Gets the earliest submission in the submission chain for this user and
      * assignment offering that has a non-zero correctness score.
-     * 
+     *
      * @return the earliest submission with a non-zero correctness score, or
      *     null if there is no submission satisfying this
      */
@@ -907,18 +898,18 @@ public class Submission
                 return submission;
             }
         }
-        
+
         return null;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets a value indicating whether the submission has any data of interest
      * as generated by the grading plug-ins and grading process. For now, this
      * includes the following items: coverage data, lines-of-code, correctness
      * score.
-     * 
+     *
      * @return true if the submission has any valid grading data, otherwise
      *     false.
      */
@@ -950,12 +941,12 @@ public class Submission
     public Submission previousSubmissionWithAnyData()
     {
         Submission prevSub = previousSubmission();
-        
+
         while (prevSub != null && !prevSub.hasAnyData())
         {
             prevSub = prevSub.previousSubmission();
         }
-        
+
         return prevSub;
     }
 
@@ -971,12 +962,12 @@ public class Submission
     public Submission nextSubmissionWithAnyData()
     {
         Submission nextSub = nextSubmission();
-        
+
         while (nextSub != null && !nextSub.hasAnyData())
         {
             nextSub = nextSub.nextSubmission();
         }
-        
+
         return nextSub;
     }
 
@@ -986,7 +977,7 @@ public class Submission
      * Gets a qualifier that can be used to fetch only submissions that are in
      * the same submission chain as this submission; that is, submissions by
      * the same user to the same assignment offering.
-     * 
+     *
      * @return the qualifier
      */
     public EOQualifier qualifierForSubmissionChain()
@@ -995,13 +986,13 @@ public class Submission
                 ERXQ.equals("user", user()),
                 ERXQ.equals("assignmentOffering", assignmentOffering()));
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets the earliest submission that has the highest correctness score
      * among all the submissions in this submission chain.
-     * 
+     *
      * @return the earliest submission with the highest correctness score
      */
     public Submission earliestSubmissionWithMaximumCorrectnessScore()
@@ -1014,13 +1005,13 @@ public class Submission
         NSArray<Submission> subs = allSubmissions();
         Submission maxSubmission = null;
         double maxCorrectnessScore = Double.MIN_VALUE;
-        
+
         for (Submission sub : subs)
         {
             SubmissionResult result = sub.result();
             if (result != null)
             {
-                double score = result.correctnessScore(); 
+                double score = result.correctnessScore();
                 if (score > maxCorrectnessScore)
                 {
                     maxSubmission = sub;
@@ -1031,13 +1022,13 @@ public class Submission
 
         return maxSubmission;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets the earliest submission that has the highest tool score among all
      * the submissions in this submission chain.
-     * 
+     *
      * @return the earliest submission with the highest tool score
      */
     public Submission earliestSubmissionWithMaximumToolScore()
@@ -1050,13 +1041,13 @@ public class Submission
         NSArray<Submission> subs = allSubmissions();
         Submission maxSubmission = null;
         double maxToolScore = Double.MIN_VALUE;
-        
+
         for (Submission sub : subs)
         {
             SubmissionResult result = sub.result();
             if (result != null)
             {
-                double score = result.toolScore(); 
+                double score = result.toolScore();
                 if (score > maxToolScore)
                 {
                     maxSubmission = sub;
@@ -1067,13 +1058,13 @@ public class Submission
 
         return maxSubmission;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     /**
      * Gets the earliest submission that has the highest automated score
      * (correctness + tool) among all the submissions in this submission chain.
-     * 
+     *
      * @return the earliest submission with the highest automated score
      */
     public Submission earliestSubmissionWithMaximumAutomatedScore()
@@ -1086,13 +1077,13 @@ public class Submission
         NSArray<Submission> subs = allSubmissions();
         Submission maxSubmission = null;
         double maxAutomatedScore = Double.MIN_VALUE;
-        
+
         for (Submission sub : subs)
         {
             SubmissionResult result = sub.result();
             if (result != null)
             {
-                double score = result.automatedScore(); 
+                double score = result.automatedScore();
                 if (score > maxAutomatedScore)
                 {
                     maxSubmission = sub;
@@ -1103,8 +1094,8 @@ public class Submission
 
         return maxSubmission;
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public String contentsOfResultFile(String relativePath) throws IOException
     {
@@ -1116,16 +1107,16 @@ public class Submission
         {
             relativePath = relativePath.substring(2);
         }
-        
+
         if (relativePath.startsWith("../") || relativePath.startsWith("/"))
         {
             throw new IllegalArgumentException(
                     "Path must not include parent directory or root directory" +
                     "components");
         }
-        
+
         File file = new File(resultDirName(), relativePath);
-        
+
         if (file.isDirectory())
         {
             throw new IllegalArgumentException(
@@ -1135,7 +1126,7 @@ public class Submission
         return ERXFileUtilities.stringFromFile(file);
     }
 
-    
+
     // ----------------------------------------------------------
     @Override
     public void mightDelete()

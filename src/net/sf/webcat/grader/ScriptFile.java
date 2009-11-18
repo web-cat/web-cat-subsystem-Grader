@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -27,7 +27,6 @@ import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXValueUtilities;
 import java.io.*;
 import java.util.*;
-import java.util.zip.*;
 import net.sf.webcat.FeatureDescriptor;
 import net.sf.webcat.FeatureProvider;
 import net.sf.webcat.core.*;
@@ -38,7 +37,8 @@ import org.apache.log4j.Logger;
  *  Represents an uploaded grading script.
  *
  *  @author Stephen Edwards
- *  @version $Id$
+ *  @author Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class ScriptFile
     extends _ScriptFile
@@ -178,18 +178,6 @@ public class ScriptFile
     public String userPresentableDescription()
     {
         return name();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Get a human-readable representation of this plug-in, which is
-     * the same as {@link #userPresentableDescription()}.
-     * @return this user's name
-     */
-    public String toString()
-    {
-        return userPresentableDescription();
     }
 
 

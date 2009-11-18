@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,12 +21,7 @@
 
 package net.sf.webcat.grader;
 
-import com.webobjects.foundation.*;
-import com.webobjects.eocontrol.*;
-import java.io.*;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import net.sf.webcat.core.User;
 
 // -------------------------------------------------------------------------
 /**
@@ -34,7 +29,8 @@ import net.sf.webcat.core.User;
  * so on used in navigation.
  *
  * @author stedwar2
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$ $Date$
  */
 public class GraderPrefs
     extends _GraderPrefs

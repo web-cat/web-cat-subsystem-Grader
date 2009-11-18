@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2009 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,7 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
@@ -33,7 +32,8 @@ import org.apache.log4j.Logger;
  * assignment so that one submission can be chosen.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class PickSubmissionPage
     extends GraderAssignmentComponent
@@ -64,6 +64,7 @@ public class PickSubmissionPage
     /** true if previous submissions exist */
     public boolean previousSubmissions;
 
+    public boolean showCourseOffering = false;
     public String sideStepTitle;
 
 
@@ -85,62 +86,67 @@ public class PickSubmissionPage
         {
             user = prefs().submission().user();
         }
+        previousSubmissions = false;
         if (prefs().assignmentOffering() != null)
         {
-            submissions = EOUtilities.objectsMatchingValues(
-                    localContext(),
-                    Submission.ENTITY_NAME,
-                    new NSDictionary<String, Object>(
-                            new Object[] {  user,
-                                            prefs().assignmentOffering()
-                                         },
-                            new String[] { Submission.USER_KEY,
-                                           Submission.ASSIGNMENT_OFFERING_KEY }
-                    )
-                );
-            submissionDisplayGroup.setObjectArray( submissions ); // was fetch()
-            previousSubmissions = ( submissions.count() != 0 );
-            if ( !previousSubmissions )
-            {
-                error(
-                    "You have not completed any submissions for this assignment." );
-            }
-            if ( prefs().submission() != null )
-            {
-                log.debug( "Currently has a submission chosen" );
-                if ( submissions.indexOfIdenticalObject( prefs().submission() )
-                     == NSArray.NotFound )
-                {
-                    log.debug( "Invalid submission being cleared" );
-                    prefs().setSubmissionRelationship( null );
-                }
-                else
-                {
-                    selectedIndex = submissionDisplayGroup.displayedObjects().
-                        indexOfIdenticalObject( prefs().submission() );
-                    log.debug( "Attempting to select submission = "
-                               + selectedIndex );
-                }
-            }
-            if ( prefs().submission() == null &&
-                 submissionDisplayGroup.displayedObjects().count() > 0 )
-            {
-                selectedIndex = 0;
-                prefs().setSubmissionRelationship(
-                        (Submission)submissionDisplayGroup.displayedObjects().
-                            objectAtIndex( selectedIndex )
-                    );
-                log.debug( "No selection; selecting index "
-                           + selectedIndex
-                           + ", sub #"
-                           + prefs().submission().submitNumber() );
-            }
-            log.debug( "calling super.appendToResponse()" );
+            submissions =
+                Submission.objectsForAllForAssignmentOfferingAndUserInReverse(
+                    localContext(), prefs().assignmentOffering(), user);
+            submissionDisplayGroup.setObjectArray(submissions);
+            previousSubmissions = (submissions.count() > 0);
         }
-        super.appendToResponse( response, context );
+        if (prefs().assignment() != null
+            && !previousSubmissions
+            && coreSelections().semester() != null)
+        {
+            submissions =
+                Submission.objectsForAllForAssignmentAndUserInReverse(
+                    localContext(),
+                    prefs().assignment(),
+                    coreSelections().semester(),
+                    user);
+            submissionDisplayGroup.setObjectArray(submissions);
+            previousSubmissions = (submissions.count() > 0);
+        }
+        if ( !previousSubmissions )
+        {
+            error(
+                "You have not completed any submissions for this assignment.");
+        }
+        if (prefs().submission() != null)
+        {
+            log.debug( "Currently has a submission chosen" );
+            int idx = submissions.indexOfIdenticalObject(prefs().submission());
+            if (idx == NSArray.NotFound)
+            {
+                log.debug("Invalid submission being cleared");
+                prefs().setSubmissionRelationship(null);
+            }
+            else
+            {
+                selectedIndex = idx;
+                log.debug("Attempting to select submission = "
+                           + selectedIndex);
+            }
+        }
+        if (prefs().submission() == null &&
+            submissionDisplayGroup.displayedObjects().count() > 0)
+        {
+            selectedIndex = 0;
+            prefs().setSubmissionRelationship(
+                    (Submission)submissionDisplayGroup.displayedObjects().
+                        objectAtIndex(selectedIndex));
+            log.debug(
+                "No selection; selecting index "
+                + selectedIndex
+                + ", sub #"
+                + prefs().submission().submitNumber());
+        }
+        log.debug("calling super.appendToResponse()");
+        super.appendToResponse(response, context);
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
-        log.debug( "leaving appendToResponse()" );
+        log.debug("leaving appendToResponse()");
     }
 
 
@@ -151,32 +157,32 @@ public class PickSubmissionPage
      */
     protected boolean saveSelectionCanContinue()
     {
-        if ( selectedIndex < 0 )
+        if (selectedIndex < 0)
         {
-            log.debug( "saveSelectionCanContinue(): no selected "
-                       + "submission, no index" );
-            error( "Please choose a submission." );
+            log.debug("saveSelectionCanContinue(): no selected "
+                + "submission, no index");
+            error("Please choose a submission.");
         }
-        else if ( selectedIndex >= 0 )
+        else if (selectedIndex >= 0)
         {
             prefs().setSubmissionRelationship(
                     (Submission)submissionDisplayGroup.displayedObjects().
-                        objectAtIndex( selectedIndex )
-                );
-            log.debug( "Changing selection; selecting index "
-                       + selectedIndex
-                       + ", sub #"
-                       + prefs().submission().submitNumber() );
+                        objectAtIndex(selectedIndex));
+            log.debug(
+                "Changing selection; selecting index "
+                + selectedIndex
+                + ", sub #"
+                + prefs().submission().submitNumber());
         }
-        if ( prefs().submission() == null )
+        if (prefs().submission() == null)
         {
-            log.warn( "saveSelectionCanContinue(): null submission!" );
-            error( "Please choose a submission." );
+            log.warn("saveSelectionCanContinue(): null submission!");
+            error("Please choose a submission.");
         }
-        else if ( prefs().submission().result() == null )
+        else if (prefs().submission().result() == null)
         {
-            error( "The Grader has not yet completed processing "
-                          + "on that submission." );
+            error("The Grader has not yet completed processing "
+                + "on that submission.");
         }
         return !hasMessages();
     }
@@ -185,8 +191,8 @@ public class PickSubmissionPage
     // ----------------------------------------------------------
     public boolean hasResult()
     {
-        boolean result = ( aSubmission.result() != null );
-        log.debug( "hasResult() = " + result );
+        boolean result = (aSubmission.result() != null);
+        log.debug("hasResult() = " + result);
         return result;
     }
 
@@ -196,15 +202,15 @@ public class PickSubmissionPage
     {
         String result = "suspended";
         EnqueuedJob job = aSubmission.enqueuedJob();
-        if ( job == null )
+        if (job == null)
         {
             result = "cancelled";
         }
-        else if ( !job.paused() )
+        else if (!job.paused())
         {
             result = "queued for grading";
         }
-        log.debug( "submissionStatus() = " + result );
+        log.debug("submissionStatus() = " + result);
         return result;
     }
 
@@ -213,7 +219,7 @@ public class PickSubmissionPage
     public boolean selectingForDifferentUser()
     {
         boolean result = false;
-        if ( prefs().submission() != null )
+        if (prefs().submission() != null)
         {
             result = user() != prefs().submission().user();
         }
@@ -240,7 +246,7 @@ public class PickSubmissionPage
     public WOComponent next()
     {
         WOComponent result = null;
-        if ( saveSelectionCanContinue() )
+        if (saveSelectionCanContinue())
         {
             result = super.next();
             if (result instanceof GraderComponent)
@@ -256,8 +262,8 @@ public class PickSubmissionPage
     public WOComponent defaultAction()
     {
         log.debug( "defaultAction()" );
-        if ( oldBatchSize != submissionDisplayGroup.numberOfObjectsPerBatch()
-             || oldBatchIndex != submissionDisplayGroup.currentBatchIndex() )
+        if (oldBatchSize != submissionDisplayGroup.numberOfObjectsPerBatch()
+            || oldBatchIndex != submissionDisplayGroup.currentBatchIndex())
         {
             return null;
         }
@@ -270,9 +276,9 @@ public class PickSubmissionPage
 
     //~ Instance/static variables .............................................
 
-    protected NSArray submissions;
-    protected int     oldBatchSize;
-    protected int     oldBatchIndex;
+    protected NSArray<Submission> submissions;
+    protected int                 oldBatchSize;
+    protected int                 oldBatchIndex;
 
-    static Logger log = Logger.getLogger( PickSubmissionPage.class );
+    static Logger log = Logger.getLogger(PickSubmissionPage.class);
 }
