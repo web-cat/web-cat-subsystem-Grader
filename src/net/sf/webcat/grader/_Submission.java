@@ -152,7 +152,9 @@ public abstract class _Submission
     public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     // Fetch specifications ---
+    public static final String ALL_FOR_ASSIGNMENT_AND_USER_IN_REVERSE_FSPEC = "allForAssignmentAndUserInReverse";
     public static final String ALL_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "allForAssignmentOfferingAndUser";
+    public static final String ALL_FOR_ASSIGNMENT_OFFERING_AND_USER_IN_REVERSE_FSPEC = "allForAssignmentOfferingAndUserInReverse";
     public static final String EARLIEST_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "earliestForAssignmentOfferingAndUser";
     public static final String EARLIEST_FOR_COURSE_OFFERING_FSPEC = "earliestForCourseOffering";
     public static final String LATEST_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "latestForAssignmentOfferingAndUser";
@@ -1041,6 +1043,76 @@ public abstract class _Submission
 
     // ----------------------------------------------------------
     /**
+     * Retrieve objects using a fetch specification.
+     *
+     * @param context The editing context to use
+     * @param fspec The fetch specification to use
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<Submission> objectsWithFetchSpecification(
+        EOEditingContext context,
+        EOFetchSpecification fspec)
+    {
+        return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>AllForAssignmentAndUserInReverse</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentBinding fetch spec parameter
+     * @param semesterBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Submission> objectsForAllForAssignmentAndUserInReverse(
+            EOEditingContext context,
+            net.sf.webcat.grader.Assignment assignmentBinding,
+            net.sf.webcat.core.Semester semesterBinding,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "allForAssignmentAndUserInReverse", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentBinding != null )
+        {
+            bindings.setObjectForKey( assignmentBinding,
+                                      "assignment" );
+        }
+        if ( semesterBinding != null )
+        {
+            bindings.setObjectForKey( semesterBinding,
+                                      "semester" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForAllForAssignmentAndUserInReverse(ec"
+                + ", " + assignmentBinding
+                + ", " + semesterBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve object according to the <code>AllForAssignmentOfferingAndUser</code>
      * fetch specification.
      *
@@ -1049,7 +1121,6 @@ public abstract class _Submission
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForAllForAssignmentOfferingAndUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1074,10 +1145,56 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForAllForAssignmentOfferingAndUser(ec"
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve object according to the <code>AllForAssignmentOfferingAndUserInReverse</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Submission> objectsForAllForAssignmentOfferingAndUserInReverse(
+            EOEditingContext context,
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "allForAssignmentOfferingAndUserInReverse", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "objectsForAllForAssignmentOfferingAndUserInReverse(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );
@@ -1096,7 +1213,6 @@ public abstract class _Submission
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForEarliestForAssignmentOfferingAndUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1121,7 +1237,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForEarliestForAssignmentOfferingAndUser(ec"
@@ -1142,7 +1258,6 @@ public abstract class _Submission
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForEarliestForCourseOffering(
             EOEditingContext context,
             net.sf.webcat.core.CourseOffering courseOfferingBinding
@@ -1161,7 +1276,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForEarliestForCourseOffering(ec"
@@ -1182,7 +1297,6 @@ public abstract class _Submission
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForLatestForAssignmentOfferingAndUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1207,7 +1321,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForLatestForAssignmentOfferingAndUser(ec"
@@ -1228,7 +1342,6 @@ public abstract class _Submission
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForLatestForCourseOffering(
             EOEditingContext context,
             net.sf.webcat.core.CourseOffering courseOfferingBinding
@@ -1247,7 +1360,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForLatestForCourseOffering(ec"
@@ -1269,7 +1382,6 @@ public abstract class _Submission
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Submission> objectsForSpecificSubmission(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1300,7 +1412,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<Submission> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForSpecificSubmission(ec"
@@ -1310,6 +1422,22 @@ public abstract class _Submission
                 + "): " + result );
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Produce a string representation of this object.  This implementation
+     * calls UserPresentableDescription(), which uses WebObjects' internal
+     * mechanism to print out the visible fields of this object.  Normally,
+     * subclasses would override userPresentableDescription() to change
+     * the way the object is printed.
+     *
+     * @return A string representation of the object's value
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
     }
 
 

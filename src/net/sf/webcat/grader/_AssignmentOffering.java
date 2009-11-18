@@ -1112,13 +1112,28 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Retrieve objects using a fetch specification.
+     *
+     * @param context The editing context to use
+     * @param fspec The fetch specification to use
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<AssignmentOffering> objectsWithFetchSpecification(
+        EOEditingContext context,
+        EOFetchSpecification fspec)
+    {
+        return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve object according to the <code>AllOfferings</code>
      * fetch specification.
      *
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForAllOfferings(
             EOEditingContext context
         )
@@ -1126,7 +1141,7 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "allOfferings", "AssignmentOffering" );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForAllOfferings(ec"
@@ -1145,7 +1160,6 @@ public abstract class _AssignmentOffering
      * @param courseBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForCourse(
             EOEditingContext context,
             net.sf.webcat.core.Course courseBinding
@@ -1164,7 +1178,7 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForCourse(ec"
@@ -1184,7 +1198,6 @@ public abstract class _AssignmentOffering
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForCourseOffering(
             EOEditingContext context,
             net.sf.webcat.core.CourseOffering courseOfferingBinding
@@ -1203,7 +1216,7 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForCourseOffering(ec"
@@ -1223,7 +1236,6 @@ public abstract class _AssignmentOffering
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForStaff(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
@@ -1242,7 +1254,7 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForStaff(ec"
@@ -1262,7 +1274,6 @@ public abstract class _AssignmentOffering
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForStudent(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
@@ -1281,7 +1292,7 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForStudent(ec"
@@ -1300,7 +1311,6 @@ public abstract class _AssignmentOffering
      * @param context The editing context to use
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsForSubmitterEngineBase(
             EOEditingContext context
         )
@@ -1308,13 +1318,29 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "submitterEngineBase", "AssignmentOffering" );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForSubmitterEngineBase(ec"
                 + "): " + result );
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Produce a string representation of this object.  This implementation
+     * calls UserPresentableDescription(), which uses WebObjects' internal
+     * mechanism to print out the visible fields of this object.  Normally,
+     * subclasses would override userPresentableDescription() to change
+     * the way the object is printed.
+     *
+     * @return A string representation of the object's value
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
     }
 
 

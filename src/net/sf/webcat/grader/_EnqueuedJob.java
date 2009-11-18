@@ -483,6 +483,38 @@ public abstract class _EnqueuedJob
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects using a fetch specification.
+     *
+     * @param context The editing context to use
+     * @param fspec The fetch specification to use
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<EnqueuedJob> objectsWithFetchSpecification(
+        EOEditingContext context,
+        EOFetchSpecification fspec)
+    {
+        return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Produce a string representation of this object.  This implementation
+     * calls UserPresentableDescription(), which uses WebObjects' internal
+     * mechanism to print out the visible fields of this object.  Normally,
+     * subclasses would override userPresentableDescription() to change
+     * the way the object is printed.
+     *
+     * @return A string representation of the object's value
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
+    }
+
+
     //~ Instance/static variables .............................................
 
     static Logger log = Logger.getLogger( EnqueuedJob.class );

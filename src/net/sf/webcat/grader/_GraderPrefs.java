@@ -592,6 +592,22 @@ public abstract class _GraderPrefs
 
     // ----------------------------------------------------------
     /**
+     * Retrieve objects using a fetch specification.
+     *
+     * @param context The editing context to use
+     * @param fspec The fetch specification to use
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<GraderPrefs> objectsWithFetchSpecification(
+        EOEditingContext context,
+        EOFetchSpecification fspec)
+    {
+        return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve object according to the <code>User</code>
      * fetch specification.
      *
@@ -599,7 +615,6 @@ public abstract class _GraderPrefs
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<GraderPrefs> objectsForUser(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding
@@ -618,7 +633,7 @@ public abstract class _GraderPrefs
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<GraderPrefs> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
@@ -626,6 +641,22 @@ public abstract class _GraderPrefs
                 + "): " + result );
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Produce a string representation of this object.  This implementation
+     * calls UserPresentableDescription(), which uses WebObjects' internal
+     * mechanism to print out the visible fields of this object.  Normally,
+     * subclasses would override userPresentableDescription() to change
+     * the way the object is printed.
+     *
+     * @return A string representation of the object's value
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
     }
 
 

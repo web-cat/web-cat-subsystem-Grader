@@ -1401,6 +1401,22 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Retrieve objects using a fetch specification.
+     *
+     * @param context The editing context to use
+     * @param fspec The fetch specification to use
+     */
+    @SuppressWarnings("unchecked")
+    public static NSArray<SubmissionResult> objectsWithFetchSpecification(
+        EOEditingContext context,
+        EOFetchSpecification fspec)
+    {
+        return context.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve object according to the <code>MostRecentByDate</code>
      * fetch specification.
      *
@@ -1409,7 +1425,6 @@ public abstract class _SubmissionResult
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsForMostRecentByDate(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1434,7 +1449,7 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentByDate(ec"
@@ -1456,7 +1471,6 @@ public abstract class _SubmissionResult
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsForMostRecentSubmission(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1481,7 +1495,7 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmission(ec"
@@ -1502,7 +1516,6 @@ public abstract class _SubmissionResult
      * @param assignmentOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsForMostRecentSubmissions(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
@@ -1521,7 +1534,7 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmissions(ec"
@@ -1541,7 +1554,6 @@ public abstract class _SubmissionResult
      * @param assignmentOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsForMostRecentSubmissionsByNumber(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
@@ -1560,7 +1572,7 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForMostRecentSubmissionsByNumber(ec"
@@ -1581,7 +1593,6 @@ public abstract class _SubmissionResult
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsForUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
@@ -1606,7 +1617,7 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray result = context.objectsWithFetchSpecification( spec );
+        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "objectsForUser(ec"
@@ -1615,6 +1626,22 @@ public abstract class _SubmissionResult
                 + "): " + result );
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Produce a string representation of this object.  This implementation
+     * calls UserPresentableDescription(), which uses WebObjects' internal
+     * mechanism to print out the visible fields of this object.  Normally,
+     * subclasses would override userPresentableDescription() to change
+     * the way the object is printed.
+     *
+     * @return A string representation of the object's value
+     */
+    public String toString()
+    {
+        return userPresentableDescription();
     }
 
 
