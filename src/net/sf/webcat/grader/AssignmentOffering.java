@@ -590,7 +590,8 @@ public class AssignmentOffering
         // Only need to return 1, since we're just trying to find out if
         // there are any at all
         spec.setFetchLimit(1);
-        NSArray result = editingContext().objectsWithFetchSpecification( spec );
+        NSArray<Submission> result =
+            Submission.objectsWithFetchSpecification(editingContext(),  spec);
         if (log.isDebugEnabled())
         {
             log.debug("hasStudentSubmissions(): fetch = " + result);
@@ -810,7 +811,8 @@ public class AssignmentOffering
                 );
             spec.setSortOrderings( orderings );
         }
-        NSArray results = context.objectsWithFetchSpecification( spec );
+        NSArray<AssignmentOffering> results =
+            objectsWithFetchSpecification(context, spec);
         valueObj = formValueForKey( formValues, "courses" );
         if ( valueObj != null )
         {

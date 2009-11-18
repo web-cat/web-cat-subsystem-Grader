@@ -148,8 +148,8 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 EOFetchSpecification fspec = new EOFetchSpecification(
                         Submission.ENTITY_NAME, q, sortOrderings);
 
-                submissions =
-                    localContext().objectsWithFetchSpecification(fspec);
+                submissions = Submission
+                    .objectsWithFetchSpecification(localContext(), fspec);
             }
             catch (Exception e)
             {
@@ -359,7 +359,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 null);
         fspec.setFetchLimit(10);
 
-        return localContext().objectsWithFetchSpecification(fspec);
+        return EnqueuedJob.objectsWithFetchSpecification(localContext(), fspec);
     }
 
 

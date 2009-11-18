@@ -539,11 +539,12 @@ public class Grader
             }
             try
             {
-                assignments = ec.objectsWithFetchSpecification(
-                                new EOFetchSpecification(
-                                    AssignmentOffering.ENTITY_NAME,
-                                    new EOAndQualifier( qualifiers ),
-                                    null ) );
+                assignments = AssignmentOffering.objectsWithFetchSpecification(
+                    ec,
+                    new EOFetchSpecification(
+                        AssignmentOffering.ENTITY_NAME,
+                        new EOAndQualifier( qualifiers ),
+                        null ) );
                 // Remove any that the user doesn't have staff access to.
                 // Can't put this in an EOOrQualifier, since the generated
                 // SQL will be broken.

@@ -127,19 +127,17 @@ public class GraderQueueProcessor
                 editingContext.lock();
 
                 // Clear discarded jobs
-                NSArray jobList = null;
+                NSArray<EnqueuedJob> jobList = null;
                 try
                 {
-                    jobList = editingContext.objectsWithFetchSpecification(
-                                fetchDiscardedJobs
-                        );
+                    jobList = EnqueuedJob.objectsWithFetchSpecification(
+                        editingContext, fetchDiscardedJobs);
                 }
                 catch ( Exception e )
                 {
                     log.info( "error fetching jobs: ", e );
-                    jobList = editingContext.objectsWithFetchSpecification(
-                                    fetchDiscardedJobs
-                            );
+                    jobList = EnqueuedJob.objectsWithFetchSpecification(
+                        editingContext, fetchDiscardedJobs);
                 }
 
                 if ( jobList != null )
@@ -165,16 +163,14 @@ public class GraderQueueProcessor
                 jobList = null;
                 try
                 {
-                    jobList = editingContext.objectsWithFetchSpecification(
-                                fetchNewJobs
-                        );
+                    jobList = EnqueuedJob.objectsWithFetchSpecification(
+                        editingContext, fetchNewJobs);
                 }
                 catch ( Exception e )
                 {
                     log.info( "error fetching jobs: ", e );
-                    jobList = editingContext.objectsWithFetchSpecification(
-                                    fetchNewJobs
-                            );
+                    jobList = EnqueuedJob.objectsWithFetchSpecification(
+                        editingContext, fetchNewJobs);
                 }
 
                 if ( log.isDebugEnabled() )
@@ -189,16 +185,14 @@ public class GraderQueueProcessor
                 {
                     try
                     {
-                        jobList = editingContext.objectsWithFetchSpecification(
-                                    fetchRegradingJobs
-                            );
+                        jobList = EnqueuedJob.objectsWithFetchSpecification(
+                            editingContext, fetchRegradingJobs);
                     }
                     catch ( Exception e )
                     {
                         log.info( "error fetching jobs: ", e );
-                        jobList = editingContext.objectsWithFetchSpecification(
-                                        fetchRegradingJobs
-                                );
+                        jobList = EnqueuedJob.objectsWithFetchSpecification(
+                            editingContext, fetchRegradingJobs);
                     }
                     if ( log.isDebugEnabled() )
                     {
@@ -214,11 +208,9 @@ public class GraderQueueProcessor
                 // isn't null, even though the try/catch above ensures it
                 if ( jobList != null )
                 {
-                    for ( int i = 0; i < jobList.count(); i++ )
+                    for (EnqueuedJob job : jobList)
                     {
                         NSTimestamp startProcessing = new NSTimestamp();
-                        EnqueuedJob job =
-                            (EnqueuedJob)jobList.objectAtIndex( i );
                         Submission submission = job.submission();
                         if ( submission == null )
                         {
@@ -386,23 +378,21 @@ public class GraderQueueProcessor
         }
 
         // Fetch all the steps in grading this assignment
-        NSArray steps = editingContext.objectsWithFetchSpecification(
-                new EOFetchSpecification(
-                        "Step",
-                        new EOKeyValueQualifier(
-                                "assignment",
-                                EOQualifier.QualifierOperatorEqual,
-                                job.submission().assignmentOffering()
-                                    .assignment()
-                            ),
-                        new NSArray( new Object[]{
-                                new EOSortOrdering(
-                                        "order",
-                                        EOSortOrdering.CompareAscending
-                                    )
-                            } )
-                    )
-            );
+        NSArray<Step> steps = Step.objectsWithFetchSpecification(
+            editingContext,
+            new EOFetchSpecification(
+                "Step",
+                new EOKeyValueQualifier(
+                    "assignment",
+                    EOQualifier.QualifierOperatorEqual,
+                    job.submission().assignmentOffering()
+                        .assignment()),
+                new NSArray( new Object[]{
+                    new EOSortOrdering(
+                        "order",
+                        EOSortOrdering.CompareAscending)
+                    })
+            ));
 
         // Set up the properties to pass to execution scripts
         WCProperties gradingProperties = new WCProperties();

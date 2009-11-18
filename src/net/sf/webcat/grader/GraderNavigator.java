@@ -163,7 +163,6 @@ public class GraderNavigator
      *
      * @return the result is ignored
      */
-    @SuppressWarnings("unchecked")
     public WOActionResults updateAssignments()
     {
     	log.debug("updateAssignments()");
@@ -191,8 +190,8 @@ public class GraderNavigator
                         unpublishedQual),
                 null);
 
-        NSArray<AssignmentOffering> assnOffs =
-            localContext().objectsWithFetchSpecification(fspec);
+        NSArray<AssignmentOffering> assnOffs = AssignmentOffering
+            .objectsWithFetchSpecification(localContext(), fspec);
         if (log.isDebugEnabled())
         {
         	log.debug("scanning assignment offerings: " + assnOffs);
@@ -371,8 +370,8 @@ public class GraderNavigator
     {
         return graderParent.prefs().showClosedAssignments();
     }
-    
-    
+
+
     // ----------------------------------------------------------
     public boolean userIsStaffForSelectedCourse()
     {
@@ -391,7 +390,7 @@ public class GraderNavigator
                 return false;
             }
         }
-        
+
         return true;
     }
 

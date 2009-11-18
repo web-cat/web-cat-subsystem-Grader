@@ -519,7 +519,7 @@ public class FinalReportPage
     // ----------------------------------------------------------
     static private class JobData
     {
-        public NSArray jobs;
+        public NSArray<EnqueuedJob> jobs;
         public int queueSize;
         public int queuePosition;
         long mostRecentWait;
@@ -560,10 +560,8 @@ public class FinalReportPage
                                     )
                             } )
                     );
-            jobData.jobs =
-                localContext().objectsWithFetchSpecification(
-                    fetchSpec
-                );
+            jobData.jobs = EnqueuedJob.objectsWithFetchSpecification(
+                localContext(), fetchSpec);
             jobData.queueSize = jobData.jobs.count();
             if ( oldQueuePos < 0
                  || oldQueuePos >= jobData.queueSize )
