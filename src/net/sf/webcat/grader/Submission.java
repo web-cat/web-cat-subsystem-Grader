@@ -660,6 +660,59 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Gets the index of the submission with the specified submission number in
+     * the allSubmissions array. This function isolates the logic required to
+     * handle the rare but possible case where there are gaps in the submission
+     * numbers of a student's submissions.
+     *
+     * @param number the submission number to search for
+     *
+     * @return the index of that submission in the allSubmissions array
+     */
+    private int indexOfSubmissionWithSubmitNumber(int number)
+    {
+        NSArray<Submission> subs = allSubmissions();
+
+        if (subs.isEmpty())
+        {
+            return -1;
+        }
+
+        int index = number - 1;
+
+        if (index < 0)
+        {
+            index = 0;
+        }
+        else if (index > subs.count() - 1)
+        {
+            index = subs.count() - 1;
+        }
+
+        while (0 <= index && index < subs.count())
+        {
+            Submission sub = subs.objectAtIndex(index);
+
+            if (sub.submitNumber() == number)
+            {
+                return index;
+            }
+            else if (sub.submitNumber() < number)
+            {
+                index++;
+            }
+            else if (sub.submitNumber() > number)
+            {
+                index--;
+            }
+        }
+
+        return -1;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Gets from the submission chain the submission with the specified
      * submission number.
      *
@@ -671,18 +724,19 @@ public class Submission
     public Submission submissionWithSubmitNumber(int number)
     {
         if (user() == null || assignmentOffering() == null)
-            return null;
-
-        NSArray<Submission> subs = allSubmissions();
-
-        if (subs != null && subs.count() >= 1 &&
-                number >= 1 && number <= subs.count())
         {
-            return subs.objectAtIndex(number - 1);
+            return null;
+        }
+
+        int index = indexOfSubmissionWithSubmitNumber(number);
+
+        if (index == -1)
+        {
+            return null;
         }
         else
         {
-            return null;
+            return allSubmissions().objectAtIndex(index);
         }
     }
 
@@ -702,7 +756,17 @@ public class Submission
         }
         else
         {
-            return submissionWithSubmitNumber(submitNumber() - 1);
+            NSArray<Submission> subs = allSubmissions();
+            int index = indexOfSubmissionWithSubmitNumber(submitNumber());
+
+            if (index <= 0)
+            {
+                return null;
+            }
+            else
+            {
+                return subs.objectAtIndex(index - 1);
+            }
         }
     }
 
@@ -722,7 +786,17 @@ public class Submission
         }
         else
         {
-            return submissionWithSubmitNumber(submitNumber() + 1);
+            NSArray<Submission> subs = allSubmissions();
+            int index = indexOfSubmissionWithSubmitNumber(submitNumber());
+
+            if (index == -1 || index == subs.count() - 1)
+            {
+                return null;
+            }
+            else
+            {
+                return subs.objectAtIndex(index + 1);
+            }
         }
     }
 
@@ -917,7 +991,9 @@ public class Submission
     {
         // The order of these is important; they should be listed from most
         // efficient to least efficient in order to short-circuit the test as
-        // quickly as possible.
+        // quickly as possible. Correctness-score only requires checking the
+        // field on the results object; coverage and LOC require fetching all
+        // of the SubmissionFileStats and iterating over them.
 
         if (hasCorrectnessScore() || hasCoverage() || hasLOC())
         {
