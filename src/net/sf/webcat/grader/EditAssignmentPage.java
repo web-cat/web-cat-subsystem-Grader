@@ -224,7 +224,7 @@ public class EditAssignmentPage
      */
     protected boolean saveAndCanProceed(boolean requireProfile)
     {
-        if (thisOffering != null)
+/*        if (thisOffering != null)
         {
             boolean offeringIsSuspended =
                 thisOffering.gradingSuspended();
@@ -241,12 +241,12 @@ public class EditAssignmentPage
                     log.debug( "resuming grading on this assignment" );
                     thisOffering.setGradingSuspended( false );
                     // Have to save this change first!
-                    if (!applyLocalChanges()) return false;
+//                    if (!applyLocalChanges()) return false;
                     releaseSuspendedSubs();
                 }
             }
         }
-        if (requireProfile
+*/      if (requireProfile
             && assignment.submissionProfile() == null)
         {
             error(
@@ -649,12 +649,14 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public void takeValuesFromRequest(WORequest arg0, WOContext arg1)
     {
+        log.debug("takeValuesFromRequest()");
         long timeStart = System.currentTimeMillis();
 
         super.takeValuesFromRequest(arg0, arg1);
 
         if (assignment != null)
         {
+            log.debug("looking for similar submission profile by name");
             String name = assignment.name();
             if ( assignment.submissionProfile() == null
                  && name != null )
@@ -719,7 +721,7 @@ public class EditAssignmentPage
     public WOComponent delete()
     {
         ConfirmPage confirmPage = null;
-        if (saveAndCanProceed())
+        if (applyLocalChanges())
         {
             confirmPage =
                 (ConfirmPage)pageWithName(ConfirmPage.class.getName());

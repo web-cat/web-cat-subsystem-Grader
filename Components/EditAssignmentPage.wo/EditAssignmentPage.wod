@@ -150,7 +150,7 @@ ReleaseSubs: WCButton {
 
 RemoveStep: WOGenericContainer {
     elementName = "a";
-    onClick     = "~'removeGradingStep(removeStepAction_' + index + ');'"
+    onClick     = "~'removeGradingStep(removeStepAction_' + index + ');'";
 }
 
 RemoveStepFunction: WCActionFunction {
