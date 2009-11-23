@@ -81,8 +81,7 @@ public class AssignmentDataPage
     // ----------------------------------------------------------
     public WOComponent downloadFile()
     {
-        DeliverFile csvFile =
-            (DeliverFile)pageWithName( DeliverFile.class.getName() );
+        DeliverFile csvFile = pageWithName(DeliverFile.class);
         csvFile.setFileData( new NSData( (byte[])longResponse().result() ) );
         csvFile.setFileName( new File( "assignment-data.csv" ) );
         csvFile.setContentType( "application/octet-stream" );

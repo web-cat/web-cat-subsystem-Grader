@@ -226,8 +226,8 @@ extends WCComponent
      */
     public WOComponent edit()
     {
-        EditPluginGlobalsPage newPage = (EditPluginGlobalsPage)
-            pageWithName( EditPluginGlobalsPage.class.getName() );
+        EditPluginGlobalsPage newPage =
+            pageWithName(EditPluginGlobalsPage.class);
         newPage.nextPage = this;
         newPage.plugin = plugin;
         return newPage;
@@ -243,8 +243,7 @@ extends WCComponent
      */
     public WOComponent editFiles()
     {
-        EditScriptFilesPage newPage = (EditScriptFilesPage)
-            pageWithName( EditScriptFilesPage.class.getName() );
+        EditScriptFilesPage newPage = pageWithName(EditScriptFilesPage.class);
         newPage.nextPage = this;
         newPage.scriptFile = plugin;
         newPage.hideNextAndBack( true );
