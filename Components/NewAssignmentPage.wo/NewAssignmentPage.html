@@ -1,4 +1,13 @@
 <webobject name="Page">
+<wo:if condition="$coreSelections.semester">
+<wo:net.sf.webcat.core.WCPageModule title="Pick a Semester and Course">
+<div class="floatRight"><wo:CoreNavigator/></div>
+<div style="width:50%;"><p>Please choose a single semester and a
+course (one offering or all offerings).</p></div>
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:if>
+
+<wo:else>
 <wo:net.sf.webcat.core.WCPageModule title="For Which Course?">
 <table class="layout"><tbody>
 <tr><td class="R">In course(s):</td>
@@ -55,5 +64,5 @@ assignment:</p>
 </wo:if>
 </ol></fieldset>
 </wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
-
+</wo:else>
 </webobject>

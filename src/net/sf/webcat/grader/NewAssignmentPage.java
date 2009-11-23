@@ -138,6 +138,14 @@ public class NewAssignmentPage
 
 
     // ----------------------------------------------------------
+    public boolean forceNavigatorSelection()
+    {
+        return super.forceNavigatorSelection() ||
+            coreSelections().semester() == null;
+    }
+
+
+    // ----------------------------------------------------------
     public boolean allowsAllOfferingsForCourse()
     {
         return true;

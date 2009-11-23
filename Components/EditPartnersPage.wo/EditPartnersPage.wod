@@ -107,4 +107,8 @@ NotPartner: WOConditional {
 
 Page: net.sf.webcat.core.WizardPage {
     sideStepTitle = "Assign Partners";
+    hideSteps     = true;
+    cancelEnabled = false;
+    finishEnabled = false;
+    nextEnabled   = false;
 }

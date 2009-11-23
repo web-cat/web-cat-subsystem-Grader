@@ -90,9 +90,9 @@ public class SubmissionResultInfo
         {
             ( (GradeStudentSubmissionPage)parent ).saveGrading();
         }
-        WCComponent reportPage =
-            (WCComponent)pageWithName( EditPartnersPage.class.getName() );
+        EditPartnersPage reportPage = pageWithName(EditPartnersPage.class);
         reportPage.nextPage = (WCComponent)context().page();
+        reportPage.result = submission.result();
         return reportPage;
     }
 }

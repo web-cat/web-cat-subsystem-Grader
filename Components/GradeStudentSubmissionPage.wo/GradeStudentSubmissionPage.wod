@@ -32,7 +32,7 @@ Done: WOCheckBox {
 
 FileBrowser: net.sf.webcat.core.FileBrowser {
     title                 = "Browse Raw Files: Submission and Results";
-    file                  = prefs.submission.file.getParentFile;
+    file                  = submission.file.getParentFile;
     initialExpansionDepth = 1;
 //    includeSeparator = true;
 }
@@ -112,12 +112,12 @@ Regrade: WOSubmitButton {
 ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
     allowPartnerEdit = true;
     includeSeparator = false;
-    submission = prefs.submission;
+    submission = submission;
 }
 
 ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = true;
-    submission = prefs.submission;
+    submission = submission;
 }
 
 SelectSubmission: WOSubmitButton {

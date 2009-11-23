@@ -22,7 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
@@ -34,7 +33,8 @@ import org.apache.log4j.Logger;
  * results).
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class EditPartnersPage
     extends GraderComponent
@@ -73,7 +73,10 @@ public class EditPartnersPage
         log.debug( "selected submission = "
                    + prefs().submission().submitNumber()
                    + " for " + prefs().submission().user().userName() );
-        result = prefs().submission().result();
+        if (result == null)
+        {
+            result = prefs().submission().result();
+        }
         if ( result == null )
         {
             log.error( "appendToResponse(): null submission result" );
@@ -113,21 +116,15 @@ public class EditPartnersPage
     public WOComponent addPartner()
     {
         int submitNumber = 1;
-        NSArray studentSubmissions = EOUtilities.objectsMatchingValues(
+        NSArray<Submission> studentSubmissions =
+            Submission.objectsMatchingValues(
                 localContext(),
-                Submission.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] { prefs().assignmentOffering(),
-                                   student
-                         },
-                    new Object[] { Submission.ASSIGNMENT_OFFERING_KEY,
-                                   Submission.USER_KEY }
-                )
-            );
-        for ( int i = 0; i < studentSubmissions.count(); i++ )
+                Submission.ASSIGNMENT_OFFERING_KEY,
+                prefs().assignmentOffering(),
+                Submission.USER_KEY,
+                student);
+        for (Submission thisSubmission : studentSubmissions)
         {
-            Submission thisSubmission = (Submission)
-                studentSubmissions.objectAtIndex( i );
             int thisSubNo = thisSubmission.submitNumber();
             if ( thisSubNo  >= submitNumber )
             {
@@ -136,8 +133,9 @@ public class EditPartnersPage
         }
         // Don't need the return value: we just want it to be created, and
         // partnerSubmission() will save the changes to the DB
-        prefs().submission().partnerSubmission(
-                student, submitNumber, localContext() );
+        result.submission().partnerSubmission(
+                student, submitNumber, localContext());
+        applyLocalChanges();
         return null;
     }
 
@@ -146,12 +144,13 @@ public class EditPartnersPage
     public WOComponent removePartner()
     {
         log.debug( "selected submission = "
-                   + prefs().submission().submitNumber()
-                   + " for " + prefs().submission().user().userName() );
+                   + result.submission().submitNumber()
+                   + " for " + result.submission().user().userName() );
         log.debug( "removing submission " + partnerSubmission.submitNumber()
                    + " for " + partnerSubmission.user().userName() );
         partnerSubmission.setResultRelationship( null );
         localContext().deleteObject( partnerSubmission );
+        applyLocalChanges();
         return null;
     }
 

@@ -39,7 +39,8 @@ import org.jdom.output.XMLOutputter;
  * of the source code.
  *
  * @author Stephen Edwards, Hussein Vastani
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class EditFileCommentsPage
     extends GraderComponent
@@ -94,6 +95,7 @@ public class EditFileCommentsPage
         {
             updateTAScore( storeComments() );
             prefs().submissionFileStats().setStatus( Status.CHECK );
+            applyLocalChanges();
         }
         catch ( Exception e )
         {
@@ -115,6 +117,7 @@ public class EditFileCommentsPage
         {
             updateTAScore( storeComments() );
             prefs().submissionFileStats().setStatus( Status.UNFINISHED );
+            applyLocalChanges();
         }
         catch ( Exception e )
         {
@@ -136,6 +139,7 @@ public class EditFileCommentsPage
         {
             updateTAScore( storeComments() );
             prefs().submissionFileStats().setStatus( Status.UNFINISHED );
+            applyLocalChanges();
         }
         catch ( Exception e )
         {
