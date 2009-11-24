@@ -36,6 +36,7 @@ import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSTimestamp;
+import com.webobjects.foundation.NSValidation;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
 
@@ -234,6 +235,9 @@ public class NewAssignmentPage
         localContext().insertObject(newAssignment);
         newAssignment.setShortDescription(title);
         newAssignment.setAuthorRelationship(user());
+        // Make sure the name is set first, so that date guessing works
+        // correctly.
+        newAssignment.setName(aName);
 
         NSArray<AssignmentOffering> similar = AssignmentOffering
             .offeringsWithSimilarNames(
@@ -266,6 +270,19 @@ public class NewAssignmentPage
             configureNewAssignmentOffering(newOffering, common);
         }
 
+        // Now clear the name so that the validation check will be performed
+        newAssignment.setName(null);
+        try
+        {
+            newAssignment.validateName(aName);
+        }
+        catch (NSValidation.ValidationException e)
+        {
+            error(e);
+            cancelLocalChanges();
+            return null;
+        }
+        // Finally, put the name back
         newAssignment.setName(aName);
         applyLocalChanges();
         prefs().setAssignmentRelationship(newAssignment);
@@ -286,20 +303,17 @@ public class NewAssignmentPage
         // as a default
         {
             AssignmentOffering other = null;
-            if (prefs().assignmentOffering() != null)
+            System.out.println("ao = " + newOffering);
+            System.out.println("assignment = " + newOffering.assignment());
+            System.out.println("offerings = " + newOffering.assignment().offerings());
+            NSArray<AssignmentOffering> others =
+                newOffering.assignment().offerings();
+            for (AssignmentOffering ao : others)
             {
-                System.out.println("ao = " + prefs().assignmentOffering());
-                System.out.println("assignment = " + prefs().assignmentOffering().assignment());
-                System.out.println("offerings = " + prefs().assignmentOffering().assignment().offerings());
-                NSArray<AssignmentOffering> others =
-                    prefs().assignmentOffering().assignment().offerings();
-                for (AssignmentOffering ao : others)
+                if (ao != newOffering)
                 {
-                    if (ao != prefs().assignmentOffering())
-                    {
-                        other = ao;
-                        break;
-                    }
+                    other = ao;
+                    break;
                 }
             }
             if (other == null)
@@ -336,7 +350,7 @@ public class NewAssignmentPage
             NSMutableArray<AssignmentOffering> others =
                 AssignmentOffering.offeringsWithSimilarNames(
                     localContext(), name1,
-                    coreSelections().courseOffering(), 2);
+                    newOffering.courseOffering(), 2);
             if (others.count() > 1)
             {
                 AssignmentOffering ao1 = others.objectAtIndex(0);

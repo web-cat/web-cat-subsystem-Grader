@@ -93,8 +93,17 @@ public class Assignment
         String result = name();
         if ( offerings().count() > 0 )
         {
-            result += " (" + offerings().objectAtIndex( 0 ).courseOffering()
-                .course().deptNumber() + ")";
+            try
+            {
+                result += " (" + offerings().objectAtIndex( 0 )
+                    .courseOffering().course().deptNumber() + ")";
+            }
+            catch (Exception e)
+            {
+                // In case there is an NPE because this object is in the
+                // process of being deleted
+                result += "(unknown)";
+            }
         }
         return result;
     }
@@ -108,7 +117,11 @@ public class Assignment
             dirNeedingRenaming = subdirName();
         }
         cachedSubdirName = null;
-        super.setName( value.trim() );
+        if (value != null)
+        {
+            value = value.trim();
+        }
+        super.setName(value);
     }
 
 
@@ -121,6 +134,7 @@ public class Assignment
             throw new ValidationException(
                 "Please provide an assignment name." );
         }
+        log.debug("my snapshot" + snapshot());
         String result = value.toString().trim();
         String newSubdirName = AuthenticationDomain.subdirNameOf( result );
         log.debug( "validateName(" + result + ")" );
@@ -434,7 +448,7 @@ public class Assignment
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
-    private boolean conflictingSubdirNameExists( String subdir )
+    /* package */ boolean conflictingSubdirNameExists( String subdir )
     {
         NSArray<Assignment> neighbors =
             objectsForNeighborAssignments(editingContext());

@@ -113,7 +113,7 @@ public class AssignmentOffering
         }
         if (result.equals(""))
         {
-            result = super.toString();
+            result = super.userPresentableDescription();
         }
         return result;
     }
@@ -485,9 +485,13 @@ public class AssignmentOffering
             throw new ValidationException("You may not delete an assignment "
                 + "offering that has already received student submissions.");
         }
-        StringBuffer buf = new StringBuffer("/");
-        addSubdirTo(buf);
-        subdirToDelete = buf.toString();
+        if (assignment() != null && !assignment()
+            .conflictingSubdirNameExists(assignment().subdirName()))
+        {
+            StringBuffer buf = new StringBuffer("/");
+            addSubdirTo(buf);
+            subdirToDelete = buf.toString();
+        }
         super.mightDelete();
     }
 
@@ -514,22 +518,27 @@ public class AssignmentOffering
         EOObjectStore parent = context.parentObjectStore();
         if (parent == null || !(parent instanceof EOEditingContext))
         {
+            log.debug("didDelete() on " + this);
             if (subdirToDelete != null)
             {
-                NSArray domains = AuthenticationDomain.authDomains();
-                for ( int i = 0; i < domains.count(); i++ )
+                log.debug("deleting subdir suffix " + subdirToDelete);
+                for (AuthenticationDomain domain :
+                    AuthenticationDomain.authDomains())
                 {
-                    AuthenticationDomain domain =
-                        (AuthenticationDomain)domains.objectAtIndex( i );
                     StringBuffer dir = domain.submissionBaseDirBuffer();
                     dir.append(subdirToDelete);
                     File assignmentDir = new File(dir.toString());
                     if (assignmentDir.exists())
                     {
+                        log.debug("deleting " + assignmentDir);
                         net.sf.webcat.archives.FileUtilities.deleteDirectory(
                             assignmentDir);
                     }
                 }
+            }
+            else
+            {
+                log.debug("not deleting any subdirs");
             }
         }
     }
