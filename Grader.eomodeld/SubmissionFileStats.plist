@@ -176,7 +176,6 @@
         className, 
         conditionals, 
         conditionalsCovered, 
-        deductions, 
         elements, 
         elementsCovered, 
         loc, 

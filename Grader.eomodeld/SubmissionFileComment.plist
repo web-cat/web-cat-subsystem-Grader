@@ -68,7 +68,6 @@
     attributesUsedForLocking = (
         authorId, 
         categoryNo, 
-        deduction, 
         fileName, 
         groupName, 
         limitExceeded, 

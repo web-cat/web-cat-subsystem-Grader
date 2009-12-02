@@ -142,13 +142,9 @@
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
     ); 
     attributesUsedForLocking = (
-        blankLinePt, 
         deadTimeDelta, 
         diffLineSyncing, 
-        extraLinePt, 
         floatComparisonStyle, 
-        floatNegativeDelta, 
-        floatPositiveDelta, 
         ignoreBlankLines, 
         ignoreCase, 
         ignoreNonprinting, 

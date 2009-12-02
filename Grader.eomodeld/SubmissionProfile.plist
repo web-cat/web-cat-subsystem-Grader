@@ -202,18 +202,13 @@
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
     ); 
     attributesUsedForLocking = (
-        availablePoints, 
         availableTimeDelta, 
         awardEarlyBonus, 
         deadTimeDelta, 
         deductLatePenalty, 
-        earlyBonusMaxPts, 
-        earlyBonusUnitPts, 
         earlyBonusUnitTime, 
         excludedFilePatterns, 
         includedFilePatterns, 
-        latePenaltyMaxPts, 
-        latePenaltyUnitPts, 
         latePenaltyUnitTime, 
         maxFileUploadSize, 
         maxSubmissions, 
@@ -221,8 +216,6 @@
         requiredFilePatterns, 
         scoreFormat, 
         submissionMethod, 
-        taPoints, 
-        toolPoints, 
         userId
     ); 
     className = "net.sf.webcat.grader.SubmissionProfile"; 
