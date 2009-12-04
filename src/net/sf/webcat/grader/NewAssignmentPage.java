@@ -515,7 +515,9 @@ public class NewAssignmentPage
                         toCourseOffering));
         }
 
-        if (assignmentToReoffer == null && assignments.count() > 0)
+        if (assignmentToReoffer == null
+            && assignments != null
+            && assignments.count() > 0)
         {
             assignmentToReoffer = assignments.objectAtIndex(0);
         }
