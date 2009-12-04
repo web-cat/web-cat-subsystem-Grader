@@ -25,7 +25,7 @@ InstitutionInfo: PopUpInfo {
     message = "Use the Institution drop-down list to change the department/institution to which your course offering belongs.";
 }
 
-InstitutionList: WOPopUpButton{
+InstitutionList: WOPopUpButton {
 	list              = institutions;
 	item              = anInstitution;
 	selection         = institution;
