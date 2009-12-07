@@ -26,6 +26,7 @@ ClearGraph: WCButton {
     action = clearGraph;
     label  = "Refresh Cached Graph Data";
     remote.refreshPanes = "~'scoreHistogram' + thisOffering.id";
+    style  = "margin-top:0;";
 }
 
 CourseOfferingSection: WCPageModule {
@@ -124,10 +125,6 @@ NumSuspended: WOString {
     value = numSuspendedSubs;
 }
 
-Order: WOString {
-    value = thisStep.order;
-}
-
 Page: net.sf.webcat.core.WCPageWithNavigation {
     title = "Edit Assignment Properties";
 //    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
@@ -196,17 +193,9 @@ SubmissionProfileList: WCFilteringSelect {
     selection     = assignment.submissionProfile;
 }
 
-//SubmissionProfileName: WOString {
-//	value = thisAssignment.assignment.submissionProfile.name;
-//}
-
-Suspend: WCCheckBox {
-    checked = isSuspended;
-}
-
 SuspendInfo: net.sf.webcat.core.PopUpInfo {
-    title   = "Suspend Grading";
-    message = "Disables processing of any further submissions for an assignment. Any submissions made will be accepted and queued up, but will not be processed. If this box is already checked, when you uncheck it and then click &quot;Apply All&quot; or &quot;Finish&quot;, all submissions that have been queued up will be processed.";
+    title   = "Suspend All Grading";
+    message = "When grading for an assignment is suspended, processing of any further submissions for an assignment is disabled. Any submissions made will be accepted and queued up, but will not be processed. If grading is suspended, when you click &quot;Resume Grading&quot;, all submissions that have been queued up will be processed.";
 }
 
 Timeout: WCTextBox {

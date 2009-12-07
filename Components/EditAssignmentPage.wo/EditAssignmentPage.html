@@ -21,6 +21,9 @@
     Instructions:</td>
     <td valign="top"><webobject name="UploadInstructions"/>
     <webobject name="UploadInstructionsInfo"/></td></tr>
+<tr><td class="R"><wo:label for="useSurvey">Survey:</wo:label></td>
+    <td><wo:checkbox id="useSurvey" checked="$assignment.trackOpinions"/>
+      Give student engagement/frustration survey</td></tr>
 </table>
 <h3>Grading Scheme for All Instances</h3>
 <p>Submission Rules:
@@ -67,11 +70,18 @@
     <td><webobject name="OverrideMoodleId"/> (overrides shared value if set)</td></TR>
 <tr><td class="R">Publish it:</td>
     <td><webobject name="PublishIt"/>
-    <webobject name="PublishItInfo"/>
-    <!--
-    &nbsp;&nbsp;&nbsp;&nbsp;Suspend&nbsp;all&nbsp;grading:&nbsp;
-    <webobject name="Suspend"/> <webobject name="SuspendInfo"/>
-     --></td></tr>
+    <webobject name="PublishItInfo"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <wo:if condition="$thisOffering.gradingSuspended">
+      <span class="warn">All grading is suspended</span>
+      <wo:WCButton action="$resumeGrading" style="margin-top:0;">Resume Grading</wo:WCButton>
+      <webobject name="SuspendInfo"/>
+    </wo:if>
+    <wo:else>
+      <span class="check">Grading is enabled</span>
+      <wo:WCButton action="$suspendGrading" style="margin-top:0;">Suspend All Grading</wo:WCButton>
+      <webobject name="SuspendInfo"/>
+    </wo:else>
+    </td></tr>
 <webobject name="HasSuspendedSubs">
 <tr><td></td><td>
 <table class="layout">
@@ -83,6 +93,9 @@ suspended&nbsp;</td></tr>
 <td align="right"><webobject name="CancelSubs"/></td></tr></table>
 </td></tr>
 </webobject>
+<tr><td>&nbsp;</td><td><wo:WCButton action="$regradeSubs"
+  alt="Regrade everyone's most recent submission">Regrade Everyone</wo:WCButton>
+</td></tr>
 </table>
 </wo>
 </wo:loop>

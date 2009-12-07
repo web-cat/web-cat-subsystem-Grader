@@ -23,7 +23,6 @@ package net.sf.webcat.grader;
 
 import net.sf.webcat.dbupdate.UpdateSet;
 import java.sql.SQLException;
-import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -245,6 +244,22 @@ public class GraderDatabaseUpdates
         database().executeSQL(
             "alter table TSUBMISSIONFILESTATS add "
             + "CTAGS TEXT" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds fields for closing assignments and tracking opinions.
+     * @throws SQLException on error
+     */
+    public void updateIncrement11() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING add "
+            + "closedOnDate DATETIME" );
+        database().executeSQL(
+            "alter table TASSIGNMENT add "
+            + "trackOpinions BIT NOT NULL" );
     }
 
 

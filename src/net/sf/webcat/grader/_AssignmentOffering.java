@@ -63,7 +63,6 @@ public abstract class _AssignmentOffering
      * @param editingContext The context in which the new object will be
      * inserted
      * @param gradingSuspended
-     * @param isClosed
      * @param publish
      * @param updateMutableFields
      * @return The newly created object
@@ -71,7 +70,6 @@ public abstract class _AssignmentOffering
     public static AssignmentOffering create(
         EOEditingContext editingContext,
         boolean gradingSuspended,
-        boolean isClosed,
         boolean publish,
         boolean updateMutableFields
         )
@@ -81,7 +79,6 @@ public abstract class _AssignmentOffering
                 editingContext,
                 _AssignmentOffering.ENTITY_NAME);
         eoObject.setGradingSuspended(gradingSuspended);
-        eoObject.setIsClosed(isClosed);
         eoObject.setPublish(publish);
         eoObject.setUpdateMutableFields(updateMutableFields);
         return eoObject;
@@ -148,10 +145,10 @@ public abstract class _AssignmentOffering
     //~ Constants (for key names) .............................................
 
     // Attributes ---
+    public static final String CLOSED_ON_DATE_KEY = "closedOnDate";
     public static final String DUE_DATE_KEY = "dueDate";
     public static final String GRADING_SUSPENDED_KEY = "gradingSuspended";
     public static final String GRAPH_SUMMARY_KEY = "graphSummary";
-    public static final String IS_CLOSED_KEY = "isClosed";
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final String PUBLISH_KEY = "publish";
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
@@ -217,6 +214,35 @@ public abstract class _AssignmentOffering
             return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>closedOnDate</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp closedOnDate()
+    {
+        return (NSTimestamp)storedValueForKey( "closedOnDate" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>closedOnDate</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setClosedOnDate( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setClosedOnDate("
+                + value + "): was " + closedOnDate() );
+        }
+        takeStoredValueForKey( value, "closedOnDate" );
+    }
+
 
     // ----------------------------------------------------------
     /**
@@ -411,70 +437,6 @@ public abstract class _AssignmentOffering
         takeStoredValueForKey( null, "graphSummary" );
         graphSummaryRawCache = null;
         graphSummaryCache = null;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>isClosed</code> value.
-     * @return the value of the attribute
-     */
-    public boolean isClosed()
-    {
-        Integer result =
-            (Integer)storedValueForKey( "isClosed" );
-        return ( result == null )
-            ? false
-            : ( result.intValue() > 0 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>isClosed</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setIsClosed( boolean value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setIsClosed("
-                + value + "): was " + isClosed() );
-        }
-        Integer actual =
-            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
-            setIsClosedRaw( actual );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>isClosed</code> value.
-     * @return the value of the attribute
-     */
-    public Integer isClosedRaw()
-    {
-        return (Integer)storedValueForKey( "isClosed" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>isClosed</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setIsClosedRaw( Integer value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setIsClosedRaw("
-                + value + "): was " + isClosedRaw() );
-        }
-        takeStoredValueForKey( value, "isClosed" );
     }
 
 
