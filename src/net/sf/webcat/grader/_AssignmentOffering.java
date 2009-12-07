@@ -58,11 +58,12 @@ public abstract class _AssignmentOffering
     // ----------------------------------------------------------
     /**
      * A static factory method for creating a new
-     * _AssignmentOffering object given required
+     * AssignmentOffering object given required
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
      * @param gradingSuspended
+     * @param isClosed
      * @param publish
      * @param updateMutableFields
      * @return The newly created object
@@ -70,6 +71,7 @@ public abstract class _AssignmentOffering
     public static AssignmentOffering create(
         EOEditingContext editingContext,
         boolean gradingSuspended,
+        boolean isClosed,
         boolean publish,
         boolean updateMutableFields
         )
@@ -79,6 +81,7 @@ public abstract class _AssignmentOffering
                 editingContext,
                 _AssignmentOffering.ENTITY_NAME);
         eoObject.setGradingSuspended(gradingSuspended);
+        eoObject.setIsClosed(isClosed);
         eoObject.setPublish(publish);
         eoObject.setUpdateMutableFields(updateMutableFields);
         return eoObject;
@@ -116,11 +119,11 @@ public abstract class _AssignmentOffering
         AssignmentOffering obj = null;
         if (id > 0)
         {
-            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-                ENTITY_NAME, "id", new Integer( id ) );
-            if ( results != null && results.count() > 0 )
+            NSArray<AssignmentOffering> results =
+                objectsMatchingValues(ec, "id", new Integer(id));
+            if (results != null && results.count() > 0)
             {
-                obj = (AssignmentOffering)results.objectAtIndex( 0 );
+                obj = results.objectAtIndex(0);
             }
         }
         return obj;
@@ -148,6 +151,7 @@ public abstract class _AssignmentOffering
     public static final String DUE_DATE_KEY = "dueDate";
     public static final String GRADING_SUSPENDED_KEY = "gradingSuspended";
     public static final String GRAPH_SUMMARY_KEY = "graphSummary";
+    public static final String IS_CLOSED_KEY = "isClosed";
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final String PUBLISH_KEY = "publish";
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
@@ -188,7 +192,8 @@ public abstract class _AssignmentOffering
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
      */
-    public NSDictionary changedProperties()
+    @SuppressWarnings("unchecked")
+    public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
             editingContext().committedSnapshotForObject(this) );
@@ -406,6 +411,70 @@ public abstract class _AssignmentOffering
         takeStoredValueForKey( null, "graphSummary" );
         graphSummaryRawCache = null;
         graphSummaryCache = null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>isClosed</code> value.
+     * @return the value of the attribute
+     */
+    public boolean isClosed()
+    {
+        Integer result =
+            (Integer)storedValueForKey( "isClosed" );
+        return ( result == null )
+            ? false
+            : ( result.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>isClosed</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setIsClosed( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsClosed("
+                + value + "): was " + isClosed() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setIsClosedRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>isClosed</code> value.
+     * @return the value of the attribute
+     */
+    public Integer isClosedRaw()
+    {
+        return (Integer)storedValueForKey( "isClosed" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>isClosed</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setIsClosedRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setIsClosedRaw("
+                + value + "): was " + isClosedRaw() );
+        }
+        takeStoredValueForKey( value, "isClosed" );
     }
 
 
@@ -925,7 +994,7 @@ public abstract class _AssignmentOffering
             log.debug( "deleteAllGraderPrefsRelationships(): was "
                 + graderPrefs() );
         }
-        Enumeration objects = graderPrefs().objectEnumerator();
+        Enumeration<?> objects = graderPrefs().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteGraderPrefsRelationship(
                 (net.sf.webcat.grader.GraderPrefs)objects.nextElement() );
@@ -1103,7 +1172,7 @@ public abstract class _AssignmentOffering
             log.debug( "deleteAllSubmissionsRelationships(): was "
                 + submissions() );
         }
-        Enumeration objects = submissions().objectEnumerator();
+        Enumeration<?> objects = submissions().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteSubmissionsRelationship(
                 (net.sf.webcat.grader.Submission)objects.nextElement() );
@@ -1136,7 +1205,6 @@ public abstract class _AssignmentOffering
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> allObjects(
         EOEditingContext context)
     {
@@ -1153,7 +1221,6 @@ public abstract class _AssignmentOffering
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier)
@@ -1172,7 +1239,6 @@ public abstract class _AssignmentOffering
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier,
@@ -1180,7 +1246,7 @@ public abstract class _AssignmentOffering
     {
         EOFetchSpecification fspec = new EOFetchSpecification(
             ENTITY_NAME, qualifier, sortOrderings);
-
+        fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1195,7 +1261,6 @@ public abstract class _AssignmentOffering
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<AssignmentOffering> objectsMatchingValues(
         EOEditingContext context,
         Object... keysAndValues)
@@ -1260,7 +1325,6 @@ public abstract class _AssignmentOffering
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static AssignmentOffering objectMatchingValues(
         EOEditingContext context,
         Object... keysAndValues) throws EOObjectNotAvailableException,
@@ -1306,14 +1370,13 @@ public abstract class _AssignmentOffering
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static AssignmentOffering objectMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
         throws EOObjectNotAvailableException,
                EOUtilities.MoreThanOneException
     {
-        return (AssignmentOffering) EOUtilities.objectMatchingValues(
+        return (AssignmentOffering)EOUtilities.objectMatchingValues(
             context, ENTITY_NAME, keysAndValues);
     }
 

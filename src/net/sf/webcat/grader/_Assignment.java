@@ -57,20 +57,23 @@ public abstract class _Assignment
     // ----------------------------------------------------------
     /**
      * A static factory method for creating a new
-     * _Assignment object given required
+     * Assignment object given required
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
+     * @param trackOpinions
      * @return The newly created object
      */
     public static Assignment create(
-        EOEditingContext editingContext
+        EOEditingContext editingContext,
+        boolean trackOpinions
         )
     {
         Assignment eoObject = (Assignment)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _Assignment.ENTITY_NAME);
+        eoObject.setTrackOpinions(trackOpinions);
         return eoObject;
     }
 
@@ -106,11 +109,11 @@ public abstract class _Assignment
         Assignment obj = null;
         if (id > 0)
         {
-            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-                ENTITY_NAME, "id", new Integer( id ) );
-            if ( results != null && results.count() > 0 )
+            NSArray<Assignment> results =
+                objectsMatchingValues(ec, "id", new Integer(id));
+            if (results != null && results.count() > 0)
             {
-                obj = (Assignment)results.objectAtIndex( 0 );
+                obj = results.objectAtIndex(0);
             }
         }
         return obj;
@@ -139,6 +142,7 @@ public abstract class _Assignment
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final String NAME_KEY = "name";
     public static final String SHORT_DESCRIPTION_KEY = "shortDescription";
+    public static final String TRACK_OPINIONS_KEY = "trackOpinions";
     public static final String URL_KEY = "url";
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
@@ -174,7 +178,8 @@ public abstract class _Assignment
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
      */
-    public NSDictionary changedProperties()
+    @SuppressWarnings("unchecked")
+    public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
             editingContext().committedSnapshotForObject(this) );
@@ -312,6 +317,70 @@ public abstract class _Assignment
                 + value + "): was " + shortDescription() );
         }
         takeStoredValueForKey( value, "shortDescription" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>trackOpinions</code> value.
+     * @return the value of the attribute
+     */
+    public boolean trackOpinions()
+    {
+        Integer result =
+            (Integer)storedValueForKey( "trackOpinions" );
+        return ( result == null )
+            ? false
+            : ( result.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>trackOpinions</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTrackOpinions( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTrackOpinions("
+                + value + "): was " + trackOpinions() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setTrackOpinionsRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>trackOpinions</code> value.
+     * @return the value of the attribute
+     */
+    public Integer trackOpinionsRaw()
+    {
+        return (Integer)storedValueForKey( "trackOpinions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>trackOpinions</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTrackOpinionsRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTrackOpinionsRaw("
+                + value + "): was " + trackOpinionsRaw() );
+        }
+        takeStoredValueForKey( value, "trackOpinions" );
     }
 
 
@@ -698,7 +767,7 @@ public abstract class _Assignment
             log.debug( "deleteAllOfferingsRelationships(): was "
                 + offerings() );
         }
-        Enumeration objects = offerings().objectEnumerator();
+        Enumeration<?> objects = offerings().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteOfferingsRelationship(
                 (net.sf.webcat.grader.AssignmentOffering)objects.nextElement() );
@@ -876,7 +945,7 @@ public abstract class _Assignment
             log.debug( "deleteAllStepsRelationships(): was "
                 + steps() );
         }
-        Enumeration objects = steps().objectEnumerator();
+        Enumeration<?> objects = steps().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteStepsRelationship(
                 (net.sf.webcat.grader.Step)objects.nextElement() );
@@ -909,7 +978,6 @@ public abstract class _Assignment
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Assignment> allObjects(
         EOEditingContext context)
     {
@@ -926,7 +994,6 @@ public abstract class _Assignment
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Assignment> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier)
@@ -945,7 +1012,6 @@ public abstract class _Assignment
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Assignment> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier,
@@ -953,7 +1019,7 @@ public abstract class _Assignment
     {
         EOFetchSpecification fspec = new EOFetchSpecification(
             ENTITY_NAME, qualifier, sortOrderings);
-
+        fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -968,7 +1034,6 @@ public abstract class _Assignment
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<Assignment> objectsMatchingValues(
         EOEditingContext context,
         Object... keysAndValues)
@@ -1033,7 +1098,6 @@ public abstract class _Assignment
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static Assignment objectMatchingValues(
         EOEditingContext context,
         Object... keysAndValues) throws EOObjectNotAvailableException,
@@ -1079,14 +1143,13 @@ public abstract class _Assignment
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static Assignment objectMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
         throws EOObjectNotAvailableException,
                EOUtilities.MoreThanOneException
     {
-        return (Assignment) EOUtilities.objectMatchingValues(
+        return (Assignment)EOUtilities.objectMatchingValues(
             context, ENTITY_NAME, keysAndValues);
     }
 

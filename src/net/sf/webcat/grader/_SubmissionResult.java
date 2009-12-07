@@ -58,7 +58,7 @@ public abstract class _SubmissionResult
     // ----------------------------------------------------------
     /**
      * A static factory method for creating a new
-     * _SubmissionResult object given required
+     * SubmissionResult object given required
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
@@ -107,11 +107,11 @@ public abstract class _SubmissionResult
         SubmissionResult obj = null;
         if (id > 0)
         {
-            NSArray results = EOUtilities.objectsMatchingKeyAndValue( ec,
-                ENTITY_NAME, "id", new Integer( id ) );
-            if ( results != null && results.count() > 0 )
+            NSArray<SubmissionResult> results =
+                objectsMatchingValues(ec, "id", new Integer(id));
+            if (results != null && results.count() > 0)
             {
-                obj = (SubmissionResult)results.objectAtIndex( 0 );
+                obj = results.objectAtIndex(0);
             }
         }
         return obj;
@@ -180,7 +180,8 @@ public abstract class _SubmissionResult
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
      */
-    public NSDictionary changedProperties()
+    @SuppressWarnings("unchecked")
+    public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
             editingContext().committedSnapshotForObject(this) );
@@ -860,7 +861,7 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllResultFilesRelationships(): was "
                 + resultFiles() );
         }
-        Enumeration objects = resultFiles().objectEnumerator();
+        Enumeration<?> objects = resultFiles().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteResultFilesRelationship(
                 (net.sf.webcat.grader.ResultFile)objects.nextElement() );
@@ -1037,7 +1038,7 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllResultOutcomesRelationships(): was "
                 + resultOutcomes() );
         }
-        Enumeration objects = resultOutcomes().objectEnumerator();
+        Enumeration<?> objects = resultOutcomes().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteResultOutcomesRelationship(
                 (net.sf.webcat.grader.ResultOutcome)objects.nextElement() );
@@ -1214,7 +1215,7 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllSubmissionFileStatsRelationships(): was "
                 + submissionFileStats() );
         }
-        Enumeration objects = submissionFileStats().objectEnumerator();
+        Enumeration<?> objects = submissionFileStats().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteSubmissionFileStatsRelationship(
                 (net.sf.webcat.grader.SubmissionFileStats)objects.nextElement() );
@@ -1392,7 +1393,7 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllSubmissionsRelationships(): was "
                 + submissions() );
         }
-        Enumeration objects = submissions().objectEnumerator();
+        Enumeration<?> objects = submissions().objectEnumerator();
         while ( objects.hasMoreElements() )
             deleteSubmissionsRelationship(
                 (net.sf.webcat.grader.Submission)objects.nextElement() );
@@ -1425,7 +1426,6 @@ public abstract class _SubmissionResult
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> allObjects(
         EOEditingContext context)
     {
@@ -1442,7 +1442,6 @@ public abstract class _SubmissionResult
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier)
@@ -1461,7 +1460,6 @@ public abstract class _SubmissionResult
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsMatchingQualifier(
         EOEditingContext context,
         EOQualifier qualifier,
@@ -1469,7 +1467,7 @@ public abstract class _SubmissionResult
     {
         EOFetchSpecification fspec = new EOFetchSpecification(
             ENTITY_NAME, qualifier, sortOrderings);
-
+        fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1484,7 +1482,6 @@ public abstract class _SubmissionResult
      *
      * @return an NSArray of the entities retrieved
      */
-    @SuppressWarnings("unchecked")
     public static NSArray<SubmissionResult> objectsMatchingValues(
         EOEditingContext context,
         Object... keysAndValues)
@@ -1549,7 +1546,6 @@ public abstract class _SubmissionResult
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static SubmissionResult objectMatchingValues(
         EOEditingContext context,
         Object... keysAndValues) throws EOObjectNotAvailableException,
@@ -1595,14 +1591,13 @@ public abstract class _SubmissionResult
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    @SuppressWarnings("unchecked")
     public static SubmissionResult objectMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
         throws EOObjectNotAvailableException,
                EOUtilities.MoreThanOneException
     {
-        return (SubmissionResult) EOUtilities.objectMatchingValues(
+        return (SubmissionResult)EOUtilities.objectMatchingValues(
             context, ENTITY_NAME, keysAndValues);
     }
 
