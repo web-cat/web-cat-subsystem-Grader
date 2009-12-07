@@ -20,7 +20,7 @@
             userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
         }
     ); 
-    attributesUsedForLocking = (authorId, id, name, updateMutableFields); 
+    attributesUsedForLocking = (authorId, name, updateMutableFields); 
     className = "net.sf.webcat.grader.StepConfig"; 
     classProperties = (author, configSettings, name, steps, updateMutableFields); 
     externalName = TSTEPCONFIG; 
