@@ -59,6 +59,32 @@ public class AssignmentOffering
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * A static factory method for creating a new
+     * AssignmentOffering object given required
+     * attributes and relationships.
+     * @param editingContext The context in which the new object will be
+     * inserted
+     * @param assignment The assignment to be offered
+     * @param courseOffering The course offering for this assignment offering
+     * @return The newly created object
+     */
+    public static AssignmentOffering create(
+        EOEditingContext editingContext,
+        Assignment assignment,
+        CourseOffering courseOffering)
+    {
+        AssignmentOffering result = create(editingContext,
+            false,
+            false,
+            false);
+        result.setAssignmentRelationship(assignment);
+        result.setCourseOfferingRelationship(courseOffering);
+        return result;
+    }
+
+
     //~ Constants (for key names) .............................................
 
     // Derived Attributes ---
