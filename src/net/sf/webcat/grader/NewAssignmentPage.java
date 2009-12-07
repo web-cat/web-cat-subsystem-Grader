@@ -164,12 +164,13 @@ public class NewAssignmentPage
     // ----------------------------------------------------------
     public WOComponent reoffer()
     {
-        AssignmentOffering newOffering = new AssignmentOffering();
+        AssignmentOffering newOffering = AssignmentOffering.create(
+            localContext(),
+            assignmentToReoffer,
+            toCourseOffering);
         localContext().insertObject(newOffering);
-        newOffering.setAssignmentRelationship(assignmentToReoffer);
         prefs().setAssignmentOfferingRelationship(newOffering);
         prefs().setAssignmentRelationship(assignmentToReoffer);
-        newOffering.setCourseOfferingRelationship(toCourseOffering);
         configureNewAssignmentOffering(newOffering, null);
         applyLocalChanges();
         return super.next();
@@ -231,8 +232,7 @@ public class NewAssignmentPage
         }
 
         log.debug("creating new assignment");
-        Assignment newAssignment = new Assignment();
-        localContext().insertObject(newAssignment);
+        Assignment newAssignment = Assignment.create(localContext(), false);
         newAssignment.setShortDescription(title);
         newAssignment.setAuthorRelationship(user());
         // Make sure the name is set first, so that date guessing works
@@ -247,8 +247,19 @@ public class NewAssignmentPage
                 1);
         if (similar.count() > 0)
         {
+            AssignmentOffering model = similar.objectAtIndex(0);
             newAssignment.setSubmissionProfile(
-                similar.objectAtIndex(0).assignment().submissionProfile());
+                model.assignment().submissionProfile());
+            newAssignment.setTrackOpinions(
+                model.assignment().trackOpinions());
+            for (Step oldStep : model.assignment().steps())
+            {
+                Step newStep = Step.create(localContext(), false);
+                newStep.setAssignmentRelationship(newAssignment);
+                newStep.setOrder(oldStep.order());
+                newStep.setTimeout(oldStep.timeout());
+                newStep.setConfigRelationship(oldStep.config());
+            }
         }
 
 
@@ -258,15 +269,15 @@ public class NewAssignmentPage
         for (CourseOffering offering: offerings)
         {
             log.debug("creating new assignment offering for " + offering);
-            AssignmentOffering newOffering = new AssignmentOffering();
+            AssignmentOffering newOffering = AssignmentOffering.create(
+                localContext(),
+                newAssignment,
+                offering);
             if (firstOffering == null)
             {
                 firstOffering = newOffering;
             }
-            localContext().insertObject(newOffering);
-            newOffering.setAssignmentRelationship(newAssignment);
             prefs().setAssignmentOfferingRelationship(newOffering);
-            newOffering.setCourseOfferingRelationship(offering);
             configureNewAssignmentOffering(newOffering, common);
         }
 
