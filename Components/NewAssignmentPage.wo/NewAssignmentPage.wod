@@ -12,11 +12,6 @@ CourseInfo: PopUpInfo {
     message = "Select the course or course offering in which you wish to use this assignment.  If you are teaching multiple offerings of one course in a given semester, you can create separate offerings of this assignment in all of them at the same time.";
 }
 
-Name: WOTextField {
-    value = aName;
-    size  = 40;
-}
-
 NameInfo: PopUpInfo {
     title   = "Name";
     message = "Use a short 1-3 word assignment name, like &quot;Program 1&quot; or &quot;Lab 04&quot;.  The name cannot be blank.  This name is used to construct human-readable directory names for the assignment, and is also used as a shorthand for referring to the assignment in student feedback.";
@@ -24,11 +19,6 @@ NameInfo: PopUpInfo {
 
 Page : WCPageWithNavigation {
     title = "Create a New Assignment";
-}
-
-Title: WOTextField {
-    size = 40;
-    value = title;
 }
 
 TitleInfo: PopUpInfo {

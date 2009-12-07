@@ -15,10 +15,11 @@ course (one offering or all offerings).</p></div>
 </tbody></table>
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <table class="layout"><tbody>
-<tr><td class="R">Name:</td>
-    <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
-<tr><td class="R">Title:</td>
-    <td><webobject name="Title"/>
+<tr><td class="R"><label for="name">Name:</label></td>
+    <td><wo:textfield value="$aName" size="40" id="name"/>
+      <webobject name="NameInfo"/></td></tr>
+<tr><td class="R"><label for="title">Title:</label></td>
+    <td><wo:textfield value="$title" size="40" id="title"/>
     <webobject name="TitleInfo"/></td></tr>
 <wo:not condition="$coreSelections.course"><wo:if condition="$hasMultipleSections">
 <tr><td></td>
@@ -39,18 +40,18 @@ assignment:</p>
 <legend>Select Where to Re-offer an Existing Assignment</legend>
 <ol>
 <li>
-<wo:WOGenericContainer elementName="label" for="$idFor.toSemesterSelector">Re-offer in semester:</wo:WOGenericContainer>
+<wo:label for="$idFor.toSemesterSelector">Re-offer in semester:</wo:label>
 <wo name="ToSemesterFilter">
   <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
 </wo></li>
 <wo:if condition="$toSemester">
-  <li><wo:WOGenericContainer elementName="label" for="$idFor.toCourseSelector">Re-offer in course:</wo:WOGenericContainer>
+  <li><wo:label for="$idFor.toCourseSelector">Re-offer in course:</wo:label>
   <wo name="ToCourseFilter">
     <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
   </wo></li>
   <wo:if condition="$toCourseOffering">
     <wo:if condition="$assignments.count">
-      <li><wo:WOGenericContainer elementName="label" for="$idFor.assignmentSelector">Assignment to reoffer:</wo:WOGenericContainer>
+      <li><wo:label for="$idFor.assignmentSelector">Assignment to reoffer:</wo:label>
       <wo name="AssignmentFilter"/></li>
       <li><label></label><wo:WCButton label="Re-offer This Assignment" action="$reoffer"/></li>
     </wo:if><wo:else>
