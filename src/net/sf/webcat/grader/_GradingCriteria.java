@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -166,27 +167,67 @@ public abstract class _GradingCriteria
 
     // Attributes ---
     public static final String BLANK_LINE_PT_KEY = "blankLinePt";
+    public static final ERXKey<Double> blankLinePt =
+        new ERXKey<Double>(BLANK_LINE_PT_KEY);
     public static final String DEAD_TIME_DELTA_KEY = "deadTimeDelta";
+    public static final ERXKey<Long> deadTimeDelta =
+        new ERXKey<Long>(DEAD_TIME_DELTA_KEY);
     public static final String DIFF_LINE_SYNCING_KEY = "diffLineSyncing";
+    public static final ERXKey<Integer> diffLineSyncing =
+        new ERXKey<Integer>(DIFF_LINE_SYNCING_KEY);
     public static final String EXTRA_LINE_PT_KEY = "extraLinePt";
+    public static final ERXKey<Double> extraLinePt =
+        new ERXKey<Double>(EXTRA_LINE_PT_KEY);
     public static final String FLOAT_COMPARISON_STYLE_KEY = "floatComparisonStyle";
+    public static final ERXKey<Integer> floatComparisonStyle =
+        new ERXKey<Integer>(FLOAT_COMPARISON_STYLE_KEY);
     public static final String FLOAT_NEGATIVE_DELTA_KEY = "floatNegativeDelta";
+    public static final ERXKey<Double> floatNegativeDelta =
+        new ERXKey<Double>(FLOAT_NEGATIVE_DELTA_KEY);
     public static final String FLOAT_POSITIVE_DELTA_KEY = "floatPositiveDelta";
+    public static final ERXKey<Double> floatPositiveDelta =
+        new ERXKey<Double>(FLOAT_POSITIVE_DELTA_KEY);
     public static final String IGNORE_BLANK_LINES_KEY = "ignoreBlankLines";
+    public static final ERXKey<Integer> ignoreBlankLines =
+        new ERXKey<Integer>(IGNORE_BLANK_LINES_KEY);
     public static final String IGNORE_CASE_KEY = "ignoreCase";
+    public static final ERXKey<Integer> ignoreCase =
+        new ERXKey<Integer>(IGNORE_CASE_KEY);
     public static final String IGNORE_NONPRINTING_KEY = "ignoreNonprinting";
+    public static final ERXKey<Integer> ignoreNonprinting =
+        new ERXKey<Integer>(IGNORE_NONPRINTING_KEY);
     public static final String IGNORE_PUNCTUATION_KEY = "ignorePunctuation";
+    public static final ERXKey<Integer> ignorePunctuation =
+        new ERXKey<Integer>(IGNORE_PUNCTUATION_KEY);
     public static final String IGNORE_WHITESPACE_KEY = "ignoreWhitespace";
+    public static final ERXKey<Integer> ignoreWhitespace =
+        new ERXKey<Integer>(IGNORE_WHITESPACE_KEY);
     public static final String NAME_KEY = "name";
+    public static final ERXKey<String> name =
+        new ERXKey<String>(NAME_KEY);
     public static final String NORMALIZE_WHITESPACE_KEY = "normalizeWhitespace";
+    public static final ERXKey<Integer> normalizeWhitespace =
+        new ERXKey<Integer>(NORMALIZE_WHITESPACE_KEY);
     public static final String PUNCTUATION_TO_IGNORE_KEY = "punctuationToIgnore";
+    public static final ERXKey<String> punctuationToIgnore =
+        new ERXKey<String>(PUNCTUATION_TO_IGNORE_KEY);
     public static final String STRING_COMPARSION_STYLE_KEY = "stringComparsionStyle";
+    public static final ERXKey<Integer> stringComparsionStyle =
+        new ERXKey<Integer>(STRING_COMPARSION_STYLE_KEY);
     public static final String TOKENIZING_STYLE_KEY = "tokenizingStyle";
+    public static final ERXKey<Integer> tokenizingStyle =
+        new ERXKey<Integer>(TOKENIZING_STYLE_KEY);
     public static final String TRIM_WHITESPACE_KEY = "trimWhitespace";
+    public static final ERXKey<Integer> trimWhitespace =
+        new ERXKey<Integer>(TRIM_WHITESPACE_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
+    public static final ERXKey<net.sf.webcat.core.User> author =
+        new ERXKey<net.sf.webcat.core.User>(AUTHOR_KEY);
     // To-many relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    public static final ERXKey<net.sf.webcat.grader.Assignment> assignment =
+        new ERXKey<net.sf.webcat.grader.Assignment>(ASSIGNMENT_KEY);
     // Fetch specifications ---
     public static final String ENTITY_NAME = "GradingCriteria";
 

@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -140,12 +141,22 @@ public abstract class _StepConfig
 
     // Attributes ---
     public static final String CONFIG_SETTINGS_KEY = "configSettings";
+    public static final ERXKey<NSData> configSettings =
+        new ERXKey<NSData>(CONFIG_SETTINGS_KEY);
     public static final String NAME_KEY = "name";
+    public static final ERXKey<String> name =
+        new ERXKey<String>(NAME_KEY);
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
+    public static final ERXKey<net.sf.webcat.core.User> author =
+        new ERXKey<net.sf.webcat.core.User>(AUTHOR_KEY);
     // To-many relationships ---
     public static final String STEPS_KEY = "steps";
+    public static final ERXKey<net.sf.webcat.grader.Step> steps =
+        new ERXKey<net.sf.webcat.grader.Step>(STEPS_KEY);
     // Fetch specifications ---
     public static final String COURSE_AND_SCRIPT_FSPEC = "courseAndScript";
     public static final String USER_FSPEC = "user";

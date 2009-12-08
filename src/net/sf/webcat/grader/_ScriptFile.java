@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -146,22 +147,52 @@ public abstract class _ScriptFile
 
     // Attributes ---
     public static final String CONFIG_DESCRIPTION_KEY = "configDescription";
+    public static final ERXKey<NSData> configDescription =
+        new ERXKey<NSData>(CONFIG_DESCRIPTION_KEY);
     public static final String DEFAULT_CONFIG_SETTINGS_KEY = "defaultConfigSettings";
+    public static final ERXKey<NSData> defaultConfigSettings =
+        new ERXKey<NSData>(DEFAULT_CONFIG_SETTINGS_KEY);
     public static final String GLOBAL_CONFIG_SETTINGS_KEY = "globalConfigSettings";
+    public static final ERXKey<NSData> globalConfigSettings =
+        new ERXKey<NSData>(GLOBAL_CONFIG_SETTINGS_KEY);
     public static final String IS_CONFIG_FILE_KEY = "isConfigFile";
+    public static final ERXKey<Integer> isConfigFile =
+        new ERXKey<Integer>(IS_CONFIG_FILE_KEY);
     public static final String IS_PUBLISHED_KEY = "isPublished";
+    public static final ERXKey<Integer> isPublished =
+        new ERXKey<Integer>(IS_PUBLISHED_KEY);
     public static final String LAST_MODIFIED_KEY = "lastModified";
+    public static final ERXKey<NSTimestamp> lastModified =
+        new ERXKey<NSTimestamp>(LAST_MODIFIED_KEY);
     public static final String MAIN_FILE_NAME_KEY = "mainFileName";
+    public static final ERXKey<String> mainFileName =
+        new ERXKey<String>(MAIN_FILE_NAME_KEY);
     public static final String NAME_KEY = "name";
+    public static final ERXKey<String> name =
+        new ERXKey<String>(NAME_KEY);
     public static final String SUBDIR_NAME_KEY = "subdirName";
+    public static final ERXKey<String> subdirName =
+        new ERXKey<String>(SUBDIR_NAME_KEY);
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     public static final String UPLOADED_FILE_NAME_KEY = "uploadedFileName";
+    public static final ERXKey<String> uploadedFileName =
+        new ERXKey<String>(UPLOADED_FILE_NAME_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
+    public static final ERXKey<net.sf.webcat.core.User> author =
+        new ERXKey<net.sf.webcat.core.User>(AUTHOR_KEY);
     public static final String LANGUAGE_KEY = "language";
+    public static final ERXKey<net.sf.webcat.core.Language> language =
+        new ERXKey<net.sf.webcat.core.Language>(LANGUAGE_KEY);
     // To-many relationships ---
     public static final String COURSE_OFFERINGS_KEY = "courseOfferings";
+    public static final ERXKey<net.sf.webcat.core.CourseOffering> courseOfferings =
+        new ERXKey<net.sf.webcat.core.CourseOffering>(COURSE_OFFERINGS_KEY);
     public static final String STEPS_KEY = "steps";
+    public static final ERXKey<net.sf.webcat.grader.Step> steps =
+        new ERXKey<net.sf.webcat.grader.Step>(STEPS_KEY);
     // Fetch specifications ---
     public static final String AVAILABLE_TO_USER_FSPEC = "availableToUser";
     public static final String ENTITY_NAME = "ScriptFile";

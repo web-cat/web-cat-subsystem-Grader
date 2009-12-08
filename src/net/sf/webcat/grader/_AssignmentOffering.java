@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -146,18 +147,40 @@ public abstract class _AssignmentOffering
 
     // Attributes ---
     public static final String CLOSED_ON_DATE_KEY = "closedOnDate";
+    public static final ERXKey<NSTimestamp> closedOnDate =
+        new ERXKey<NSTimestamp>(CLOSED_ON_DATE_KEY);
     public static final String DUE_DATE_KEY = "dueDate";
+    public static final ERXKey<NSTimestamp> dueDate =
+        new ERXKey<NSTimestamp>(DUE_DATE_KEY);
     public static final String GRADING_SUSPENDED_KEY = "gradingSuspended";
+    public static final ERXKey<Integer> gradingSuspended =
+        new ERXKey<Integer>(GRADING_SUSPENDED_KEY);
     public static final String GRAPH_SUMMARY_KEY = "graphSummary";
+    public static final ERXKey<NSData> graphSummary =
+        new ERXKey<NSData>(GRAPH_SUMMARY_KEY);
     public static final String MOODLE_ID_KEY = "moodleId";
+    public static final ERXKey<Long> moodleId =
+        new ERXKey<Long>(MOODLE_ID_KEY);
     public static final String PUBLISH_KEY = "publish";
+    public static final ERXKey<Integer> publish =
+        new ERXKey<Integer>(PUBLISH_KEY);
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     // To-one relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    public static final ERXKey<net.sf.webcat.grader.Assignment> assignment =
+        new ERXKey<net.sf.webcat.grader.Assignment>(ASSIGNMENT_KEY);
     public static final String COURSE_OFFERING_KEY = "courseOffering";
+    public static final ERXKey<net.sf.webcat.core.CourseOffering> courseOffering =
+        new ERXKey<net.sf.webcat.core.CourseOffering>(COURSE_OFFERING_KEY);
     // To-many relationships ---
     public static final String GRADER_PREFS_KEY = "graderPrefs";
+    public static final ERXKey<net.sf.webcat.grader.GraderPrefs> graderPrefs =
+        new ERXKey<net.sf.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
     public static final String SUBMISSIONS_KEY = "submissions";
+    public static final ERXKey<net.sf.webcat.grader.Submission> submissions =
+        new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSIONS_KEY);
     // Fetch specifications ---
     public static final String ALL_OFFERINGS_FSPEC = "allOfferings";
     public static final String COURSE_FSPEC = "course";

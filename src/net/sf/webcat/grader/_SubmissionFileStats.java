@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -136,28 +137,70 @@ public abstract class _SubmissionFileStats
 
     // Attributes ---
     public static final String CLASS_NAME_KEY = "className";
+    public static final ERXKey<String> className =
+        new ERXKey<String>(CLASS_NAME_KEY);
     public static final String CONDITIONALS_KEY = "conditionals";
+    public static final ERXKey<Integer> conditionals =
+        new ERXKey<Integer>(CONDITIONALS_KEY);
     public static final String CONDITIONALS_COVERED_KEY = "conditionalsCovered";
+    public static final ERXKey<Integer> conditionalsCovered =
+        new ERXKey<Integer>(CONDITIONALS_COVERED_KEY);
     public static final String DEDUCTIONS_KEY = "deductions";
+    public static final ERXKey<Double> deductions =
+        new ERXKey<Double>(DEDUCTIONS_KEY);
     public static final String ELEMENTS_KEY = "elements";
+    public static final ERXKey<Integer> elements =
+        new ERXKey<Integer>(ELEMENTS_KEY);
     public static final String ELEMENTS_COVERED_KEY = "elementsCovered";
+    public static final ERXKey<Integer> elementsCovered =
+        new ERXKey<Integer>(ELEMENTS_COVERED_KEY);
     public static final String LOC_KEY = "loc";
+    public static final ERXKey<Integer> loc =
+        new ERXKey<Integer>(LOC_KEY);
     public static final String MARKUP_FILE_NAME_RAW_KEY = "markupFileNameRaw";
+    public static final ERXKey<String> markupFileNameRaw =
+        new ERXKey<String>(MARKUP_FILE_NAME_RAW_KEY);
     public static final String METHODS_KEY = "methods";
+    public static final ERXKey<Integer> methods =
+        new ERXKey<Integer>(METHODS_KEY);
     public static final String METHODS_COVERED_KEY = "methodsCovered";
+    public static final ERXKey<Integer> methodsCovered =
+        new ERXKey<Integer>(METHODS_COVERED_KEY);
     public static final String NCLOC_KEY = "ncloc";
+    public static final ERXKey<Integer> ncloc =
+        new ERXKey<Integer>(NCLOC_KEY);
     public static final String PKG_NAME_KEY = "pkgName";
+    public static final ERXKey<String> pkgName =
+        new ERXKey<String>(PKG_NAME_KEY);
     public static final String REMARKS_KEY = "remarks";
+    public static final ERXKey<Integer> remarks =
+        new ERXKey<Integer>(REMARKS_KEY);
     public static final String SOURCE_FILE_NAME_RAW_KEY = "sourceFileNameRaw";
+    public static final ERXKey<String> sourceFileNameRaw =
+        new ERXKey<String>(SOURCE_FILE_NAME_RAW_KEY);
     public static final String STATEMENTS_KEY = "statements";
+    public static final ERXKey<Integer> statements =
+        new ERXKey<Integer>(STATEMENTS_KEY);
     public static final String STATEMENTS_COVERED_KEY = "statementsCovered";
+    public static final ERXKey<Integer> statementsCovered =
+        new ERXKey<Integer>(STATEMENTS_COVERED_KEY);
     public static final String STATUS_KEY = "status";
+    public static final ERXKey<Integer> status =
+        new ERXKey<Integer>(STATUS_KEY);
     public static final String TAGS_KEY = "tags";
+    public static final ERXKey<String> tags =
+        new ERXKey<String>(TAGS_KEY);
     // To-one relationships ---
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionResult> submissionResult =
+        new ERXKey<net.sf.webcat.grader.SubmissionResult>(SUBMISSION_RESULT_KEY);
     // To-many relationships ---
     public static final String COMMENTS_KEY = "comments";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionFileComment> comments =
+        new ERXKey<net.sf.webcat.grader.SubmissionFileComment>(COMMENTS_KEY);
     public static final String GRADER_PREFS_KEY = "graderPrefs";
+    public static final ERXKey<net.sf.webcat.grader.GraderPrefs> graderPrefs =
+        new ERXKey<net.sf.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
     // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileStats";
 

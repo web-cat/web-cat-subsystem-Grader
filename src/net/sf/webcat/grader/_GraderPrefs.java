@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -136,13 +137,27 @@ public abstract class _GraderPrefs
 
     // Attributes ---
     public static final String COMMENT_HISTORY_KEY = "commentHistory";
+    public static final ERXKey<String> commentHistory =
+        new ERXKey<String>(COMMENT_HISTORY_KEY);
     // To-one relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    public static final ERXKey<net.sf.webcat.grader.Assignment> assignment =
+        new ERXKey<net.sf.webcat.grader.Assignment>(ASSIGNMENT_KEY);
     public static final String ASSIGNMENT_OFFERING_KEY = "assignmentOffering";
+    public static final ERXKey<net.sf.webcat.grader.AssignmentOffering> assignmentOffering =
+        new ERXKey<net.sf.webcat.grader.AssignmentOffering>(ASSIGNMENT_OFFERING_KEY);
     public static final String STEP_KEY = "step";
+    public static final ERXKey<net.sf.webcat.grader.Step> step =
+        new ERXKey<net.sf.webcat.grader.Step>(STEP_KEY);
     public static final String SUBMISSION_KEY = "submission";
+    public static final ERXKey<net.sf.webcat.grader.Submission> submission =
+        new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSION_KEY);
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionFileStats> submissionFileStats =
+        new ERXKey<net.sf.webcat.grader.SubmissionFileStats>(SUBMISSION_FILE_STATS_KEY);
     public static final String USER_KEY = "user";
+    public static final ERXKey<net.sf.webcat.core.User> user =
+        new ERXKey<net.sf.webcat.core.User>(USER_KEY);
     // To-many relationships ---
     // Fetch specifications ---
     public static final String USER_FSPEC = "user";

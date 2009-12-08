@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -145,11 +146,21 @@ public abstract class _EnqueuedJob
 
     // Attributes ---
     public static final String DISCARDED_KEY = "discarded";
+    public static final ERXKey<Integer> discarded =
+        new ERXKey<Integer>(DISCARDED_KEY);
     public static final String PAUSED_KEY = "paused";
+    public static final ERXKey<Integer> paused =
+        new ERXKey<Integer>(PAUSED_KEY);
     public static final String QUEUE_TIME_KEY = "queueTime";
+    public static final ERXKey<NSTimestamp> queueTime =
+        new ERXKey<NSTimestamp>(QUEUE_TIME_KEY);
     public static final String REGRADING_KEY = "regrading";
+    public static final ERXKey<Integer> regrading =
+        new ERXKey<Integer>(REGRADING_KEY);
     // To-one relationships ---
     public static final String SUBMISSION_KEY = "submission";
+    public static final ERXKey<net.sf.webcat.grader.Submission> submission =
+        new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSION_KEY);
     // To-many relationships ---
     // Fetch specifications ---
     public static final String ENTITY_NAME = "EnqueuedJob";

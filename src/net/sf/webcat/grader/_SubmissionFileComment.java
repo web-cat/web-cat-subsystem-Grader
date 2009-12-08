@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -139,16 +140,36 @@ public abstract class _SubmissionFileComment
 
     // Attributes ---
     public static final String CATEGORY_NO_KEY = "categoryNo";
+    public static final ERXKey<Integer> categoryNo =
+        new ERXKey<Integer>(CATEGORY_NO_KEY);
     public static final String DEDUCTION_KEY = "deduction";
+    public static final ERXKey<Double> deduction =
+        new ERXKey<Double>(DEDUCTION_KEY);
     public static final String FILE_NAME_KEY = "fileName";
+    public static final ERXKey<String> fileName =
+        new ERXKey<String>(FILE_NAME_KEY);
     public static final String GROUP_NAME_KEY = "groupName";
+    public static final ERXKey<String> groupName =
+        new ERXKey<String>(GROUP_NAME_KEY);
     public static final String LIMIT_EXCEEDED_KEY = "limitExceeded";
+    public static final ERXKey<Integer> limitExceeded =
+        new ERXKey<Integer>(LIMIT_EXCEEDED_KEY);
     public static final String LINE_NO_KEY = "lineNo";
+    public static final ERXKey<Integer> lineNo =
+        new ERXKey<Integer>(LINE_NO_KEY);
     public static final String MESSAGE_KEY = "message";
+    public static final ERXKey<String> message =
+        new ERXKey<String>(MESSAGE_KEY);
     public static final String TO_NO_KEY = "toNo";
+    public static final ERXKey<Integer> toNo =
+        new ERXKey<Integer>(TO_NO_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
+    public static final ERXKey<net.sf.webcat.core.User> author =
+        new ERXKey<net.sf.webcat.core.User>(AUTHOR_KEY);
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionFileStats> submissionFileStats =
+        new ERXKey<net.sf.webcat.grader.SubmissionFileStats>(SUBMISSION_FILE_STATS_KEY);
     // To-many relationships ---
     // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileComment";

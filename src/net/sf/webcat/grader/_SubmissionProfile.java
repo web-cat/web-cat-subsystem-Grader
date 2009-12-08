@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -145,31 +146,79 @@ public abstract class _SubmissionProfile
 
     // Attributes ---
     public static final String AVAILABLE_POINTS_KEY = "availablePoints";
+    public static final ERXKey<Double> availablePoints =
+        new ERXKey<Double>(AVAILABLE_POINTS_KEY);
     public static final String AVAILABLE_TIME_DELTA_KEY = "availableTimeDelta";
+    public static final ERXKey<Long> availableTimeDelta =
+        new ERXKey<Long>(AVAILABLE_TIME_DELTA_KEY);
     public static final String AWARD_EARLY_BONUS_KEY = "awardEarlyBonus";
+    public static final ERXKey<Integer> awardEarlyBonus =
+        new ERXKey<Integer>(AWARD_EARLY_BONUS_KEY);
     public static final String DEAD_TIME_DELTA_KEY = "deadTimeDelta";
+    public static final ERXKey<Long> deadTimeDelta =
+        new ERXKey<Long>(DEAD_TIME_DELTA_KEY);
     public static final String DEDUCT_LATE_PENALTY_KEY = "deductLatePenalty";
+    public static final ERXKey<Integer> deductLatePenalty =
+        new ERXKey<Integer>(DEDUCT_LATE_PENALTY_KEY);
     public static final String EARLY_BONUS_MAX_PTS_KEY = "earlyBonusMaxPts";
+    public static final ERXKey<Double> earlyBonusMaxPts =
+        new ERXKey<Double>(EARLY_BONUS_MAX_PTS_KEY);
     public static final String EARLY_BONUS_UNIT_PTS_KEY = "earlyBonusUnitPts";
+    public static final ERXKey<Double> earlyBonusUnitPts =
+        new ERXKey<Double>(EARLY_BONUS_UNIT_PTS_KEY);
     public static final String EARLY_BONUS_UNIT_TIME_KEY = "earlyBonusUnitTime";
+    public static final ERXKey<Long> earlyBonusUnitTime =
+        new ERXKey<Long>(EARLY_BONUS_UNIT_TIME_KEY);
     public static final String EXCLUDED_FILE_PATTERNS_KEY = "excludedFilePatterns";
+    public static final ERXKey<String> excludedFilePatterns =
+        new ERXKey<String>(EXCLUDED_FILE_PATTERNS_KEY);
     public static final String INCLUDED_FILE_PATTERNS_KEY = "includedFilePatterns";
+    public static final ERXKey<String> includedFilePatterns =
+        new ERXKey<String>(INCLUDED_FILE_PATTERNS_KEY);
     public static final String LATE_PENALTY_MAX_PTS_KEY = "latePenaltyMaxPts";
+    public static final ERXKey<Double> latePenaltyMaxPts =
+        new ERXKey<Double>(LATE_PENALTY_MAX_PTS_KEY);
     public static final String LATE_PENALTY_UNIT_PTS_KEY = "latePenaltyUnitPts";
+    public static final ERXKey<Double> latePenaltyUnitPts =
+        new ERXKey<Double>(LATE_PENALTY_UNIT_PTS_KEY);
     public static final String LATE_PENALTY_UNIT_TIME_KEY = "latePenaltyUnitTime";
+    public static final ERXKey<Long> latePenaltyUnitTime =
+        new ERXKey<Long>(LATE_PENALTY_UNIT_TIME_KEY);
     public static final String MAX_FILE_UPLOAD_SIZE_KEY = "maxFileUploadSize";
+    public static final ERXKey<Long> maxFileUploadSize =
+        new ERXKey<Long>(MAX_FILE_UPLOAD_SIZE_KEY);
     public static final String MAX_SUBMISSIONS_KEY = "maxSubmissions";
+    public static final ERXKey<Integer> maxSubmissions =
+        new ERXKey<Integer>(MAX_SUBMISSIONS_KEY);
     public static final String NAME_KEY = "name";
+    public static final ERXKey<String> name =
+        new ERXKey<String>(NAME_KEY);
     public static final String REQUIRED_FILE_PATTERNS_KEY = "requiredFilePatterns";
+    public static final ERXKey<String> requiredFilePatterns =
+        new ERXKey<String>(REQUIRED_FILE_PATTERNS_KEY);
     public static final String SCORE_FORMAT_KEY = "scoreFormat";
+    public static final ERXKey<String> scoreFormat =
+        new ERXKey<String>(SCORE_FORMAT_KEY);
     public static final String SUBMISSION_METHOD_KEY = "submissionMethod";
+    public static final ERXKey<Integer> submissionMethod =
+        new ERXKey<Integer>(SUBMISSION_METHOD_KEY);
     public static final String TA_POINTS_KEY = "taPoints";
+    public static final ERXKey<Double> taPoints =
+        new ERXKey<Double>(TA_POINTS_KEY);
     public static final String TOOL_POINTS_KEY = "toolPoints";
+    public static final ERXKey<Double> toolPoints =
+        new ERXKey<Double>(TOOL_POINTS_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
+    public static final ERXKey<net.sf.webcat.core.User> author =
+        new ERXKey<net.sf.webcat.core.User>(AUTHOR_KEY);
     // To-many relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    public static final ERXKey<net.sf.webcat.grader.Assignment> assignment =
+        new ERXKey<net.sf.webcat.grader.Assignment>(ASSIGNMENT_KEY);
     public static final String COURSE_OFFERINGS_KEY = "courseOfferings";
+    public static final ERXKey<net.sf.webcat.core.CourseOffering> courseOfferings =
+        new ERXKey<net.sf.webcat.core.CourseOffering>(COURSE_OFFERINGS_KEY);
     // Fetch specifications ---
     public static final String COURSE_FSPEC = "course";
     public static final String USER_FSPEC = "user";

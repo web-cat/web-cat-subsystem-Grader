@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -140,17 +141,37 @@ public abstract class _Submission
 
     // Attributes ---
     public static final String FILE_NAME_KEY = "fileName";
+    public static final ERXKey<String> fileName =
+        new ERXKey<String>(FILE_NAME_KEY);
     public static final String IS_SUBMISSION_FOR_GRADING_KEY = "isSubmissionForGrading";
+    public static final ERXKey<Integer> isSubmissionForGrading =
+        new ERXKey<Integer>(IS_SUBMISSION_FOR_GRADING_KEY);
     public static final String PARTNER_LINK_KEY = "partnerLink";
+    public static final ERXKey<Integer> partnerLink =
+        new ERXKey<Integer>(PARTNER_LINK_KEY);
     public static final String SUBMIT_NUMBER_KEY = "submitNumber";
+    public static final ERXKey<Integer> submitNumber =
+        new ERXKey<Integer>(SUBMIT_NUMBER_KEY);
     public static final String SUBMIT_TIME_KEY = "submitTime";
+    public static final ERXKey<NSTimestamp> submitTime =
+        new ERXKey<NSTimestamp>(SUBMIT_TIME_KEY);
     // To-one relationships ---
     public static final String ASSIGNMENT_OFFERING_KEY = "assignmentOffering";
+    public static final ERXKey<net.sf.webcat.grader.AssignmentOffering> assignmentOffering =
+        new ERXKey<net.sf.webcat.grader.AssignmentOffering>(ASSIGNMENT_OFFERING_KEY);
     public static final String RESULT_KEY = "result";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionResult> result =
+        new ERXKey<net.sf.webcat.grader.SubmissionResult>(RESULT_KEY);
     public static final String USER_KEY = "user";
+    public static final ERXKey<net.sf.webcat.core.User> user =
+        new ERXKey<net.sf.webcat.core.User>(USER_KEY);
     // To-many relationships ---
     public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
+    public static final ERXKey<net.sf.webcat.grader.EnqueuedJob> enqueuedJobs =
+        new ERXKey<net.sf.webcat.grader.EnqueuedJob>(ENQUEUED_JOBS_KEY);
     public static final String GRADER_PREFS_KEY = "graderPrefs";
+    public static final ERXKey<net.sf.webcat.grader.GraderPrefs> graderPrefs =
+        new ERXKey<net.sf.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
     // Fetch specifications ---
     public static final String ALL_FOR_ASSIGNMENT_AND_USER_IN_REVERSE_FSPEC = "allForAssignmentAndUserInReverse";
     public static final String ALL_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "allForAssignmentOfferingAndUser";

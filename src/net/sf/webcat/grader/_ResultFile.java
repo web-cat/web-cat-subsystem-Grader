@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -136,10 +137,18 @@ public abstract class _ResultFile
 
     // Attributes ---
     public static final String FILE_NAME_KEY = "fileName";
+    public static final ERXKey<String> fileName =
+        new ERXKey<String>(FILE_NAME_KEY);
     public static final String LABEL_KEY = "label";
+    public static final ERXKey<String> label =
+        new ERXKey<String>(LABEL_KEY);
     public static final String MIME_TYPE_KEY = "mimeType";
+    public static final ERXKey<String> mimeType =
+        new ERXKey<String>(MIME_TYPE_KEY);
     // To-one relationships ---
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionResult> submissionResult =
+        new ERXKey<net.sf.webcat.grader.SubmissionResult>(SUBMISSION_RESULT_KEY);
     // To-many relationships ---
     // Fetch specifications ---
     public static final String ENTITY_NAME = "ResultFile";

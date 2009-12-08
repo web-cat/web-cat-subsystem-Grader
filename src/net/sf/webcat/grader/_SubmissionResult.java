@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -137,19 +138,43 @@ public abstract class _SubmissionResult
 
     // Attributes ---
     public static final String COMMENT_FORMAT_KEY = "commentFormat";
+    public static final ERXKey<Integer> commentFormat =
+        new ERXKey<Integer>(COMMENT_FORMAT_KEY);
     public static final String COMMENTS_KEY = "comments";
+    public static final ERXKey<String> comments =
+        new ERXKey<String>(COMMENTS_KEY);
     public static final String CORRECTNESS_SCORE_KEY = "correctnessScore";
+    public static final ERXKey<Double> correctnessScore =
+        new ERXKey<Double>(CORRECTNESS_SCORE_KEY);
     public static final String IS_MOST_RECENT_KEY = "isMostRecent";
+    public static final ERXKey<Integer> isMostRecent =
+        new ERXKey<Integer>(IS_MOST_RECENT_KEY);
     public static final String STAT_ELEMENTS_LABEL_KEY = "statElementsLabel";
+    public static final ERXKey<String> statElementsLabel =
+        new ERXKey<String>(STAT_ELEMENTS_LABEL_KEY);
     public static final String STATUS_KEY = "status";
+    public static final ERXKey<Integer> status =
+        new ERXKey<Integer>(STATUS_KEY);
     public static final String TA_SCORE_KEY = "taScore";
+    public static final ERXKey<Double> taScore =
+        new ERXKey<Double>(TA_SCORE_KEY);
     public static final String TOOL_SCORE_KEY = "toolScore";
+    public static final ERXKey<Double> toolScore =
+        new ERXKey<Double>(TOOL_SCORE_KEY);
     // To-one relationships ---
     // To-many relationships ---
     public static final String RESULT_FILES_KEY = "resultFiles";
+    public static final ERXKey<net.sf.webcat.grader.ResultFile> resultFiles =
+        new ERXKey<net.sf.webcat.grader.ResultFile>(RESULT_FILES_KEY);
     public static final String RESULT_OUTCOMES_KEY = "resultOutcomes";
+    public static final ERXKey<net.sf.webcat.grader.ResultOutcome> resultOutcomes =
+        new ERXKey<net.sf.webcat.grader.ResultOutcome>(RESULT_OUTCOMES_KEY);
     public static final String SUBMISSION_FILE_STATS_KEY = "submissionFileStats";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionFileStats> submissionFileStats =
+        new ERXKey<net.sf.webcat.grader.SubmissionFileStats>(SUBMISSION_FILE_STATS_KEY);
     public static final String SUBMISSIONS_KEY = "submissions";
+    public static final ERXKey<net.sf.webcat.grader.Submission> submissions =
+        new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSIONS_KEY);
     // Fetch specifications ---
     public static final String MOST_RECENT_BY_DATE_FSPEC = "mostRecentByDate";
     public static final String MOST_RECENT_SUBMISSION_FSPEC = "mostRecentSubmission";

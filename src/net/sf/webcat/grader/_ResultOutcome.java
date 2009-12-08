@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -143,12 +144,24 @@ public abstract class _ResultOutcome
 
     // Attributes ---
     public static final String CONTENTS_KEY = "contents";
+    public static final ERXKey<NSData> contents =
+        new ERXKey<NSData>(CONTENTS_KEY);
     public static final String INDEX_KEY = "index";
+    public static final ERXKey<Integer> index =
+        new ERXKey<Integer>(INDEX_KEY);
     public static final String TAG_KEY = "tag";
+    public static final ERXKey<String> tag =
+        new ERXKey<String>(TAG_KEY);
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     // To-one relationships ---
     public static final String SUBMISSION_KEY = "submission";
+    public static final ERXKey<net.sf.webcat.grader.Submission> submission =
+        new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSION_KEY);
     public static final String SUBMISSION_RESULT_KEY = "submissionResult";
+    public static final ERXKey<net.sf.webcat.grader.SubmissionResult> submissionResult =
+        new ERXKey<net.sf.webcat.grader.SubmissionResult>(SUBMISSION_RESULT_KEY);
     // To-many relationships ---
     // Fetch specifications ---
     public static final String ENTITY_NAME = "ResultOutcome";

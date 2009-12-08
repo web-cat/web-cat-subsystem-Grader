@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXKey;
 import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
@@ -140,15 +141,31 @@ public abstract class _Step
 
     // Attributes ---
     public static final String CONFIG_SETTINGS_KEY = "configSettings";
+    public static final ERXKey<NSData> configSettings =
+        new ERXKey<NSData>(CONFIG_SETTINGS_KEY);
     public static final String ORDER_KEY = "order";
+    public static final ERXKey<Integer> order =
+        new ERXKey<Integer>(ORDER_KEY);
     public static final String TIMEOUT_KEY = "timeout";
+    public static final ERXKey<Integer> timeout =
+        new ERXKey<Integer>(TIMEOUT_KEY);
     public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     // To-one relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
+    public static final ERXKey<net.sf.webcat.grader.Assignment> assignment =
+        new ERXKey<net.sf.webcat.grader.Assignment>(ASSIGNMENT_KEY);
     public static final String CONFIG_KEY = "config";
+    public static final ERXKey<net.sf.webcat.grader.StepConfig> config =
+        new ERXKey<net.sf.webcat.grader.StepConfig>(CONFIG_KEY);
     public static final String SCRIPT_KEY = "script";
+    public static final ERXKey<net.sf.webcat.grader.ScriptFile> script =
+        new ERXKey<net.sf.webcat.grader.ScriptFile>(SCRIPT_KEY);
     // To-many relationships ---
     public static final String GRADER_PREFS_KEY = "graderPrefs";
+    public static final ERXKey<net.sf.webcat.grader.GraderPrefs> graderPrefs =
+        new ERXKey<net.sf.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
     // Fetch specifications ---
     public static final String ENTITY_NAME = "Step";
 
