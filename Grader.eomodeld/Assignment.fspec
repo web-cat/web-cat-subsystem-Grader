@@ -1,66 +1,49 @@
-
 {
-    reuseInCourse =
-    {
-        class = EOFetchSpecification;
-        entityName = Assignment;
-        fetchLimit = 0;
-        isDeep = YES;
-        usesDistinct = YES;
-        qualifier =
-        {
-            class = EOAndQualifier;
+    assignmentsForReuseInCourse = {
+        class = EOFetchSpecification; 
+        entityName = Assignment; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = offerings.courseOffering.course;
-                    selectorName = doesContain:;
-                    value =
-                    {
-                        _key = course;
-                        class = EOQualifierVariable;
-                    };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = "offerings.courseOffering.course"; 
+                    selectorName = "doesContain:"; 
+                    value = {"_key" = course; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EONotQualifier;
+                    class = EONotQualifier; 
                     qualifier = {
-                        class = EOKeyValueQualifier;
-                        key = offerings.courseOffering;
-                        selectorName = doesContain:;
-                        value =
-                        {
-                            _key = courseOffering;
-                            class = EOQualifierVariable;
-                        };
-                    };
+                        class = EOKeyValueQualifier; 
+                        key = "offerings.courseOffering"; 
+                        selectorName = "doesContain:"; 
+                        value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+                    }; 
                 }
-            );
-        };
+            ); 
+        }; 
         sortOrderings = (
-           {
-               class = EOSortOrdering;
-               key = name;
-               selectorName = "compareCaseInsensitiveAscending:";
-           }
-        );
-    };
-    neighborAssignments =
-    {
-        class = EOFetchSpecification;
-        entityName = Assignment;
-        fetchLimit = 0;
-        isDeep = YES;
-        usesDistinct = YES;
-        qualifier =
-        {
-            class = EOKeyValueQualifier;
-            key = offerings.courseOffering;
-            selectorName = doesContain:;
-            value =
             {
-                _key = courseOffering;
-                class = EOQualifierVariable;
-            };
-        };
-    };
+                class = EOSortOrdering; 
+                key = name; 
+                selectorName = "compareCaseInsensitiveAscending:"; 
+            }
+        ); 
+        usesDistinct = YES; 
+    }; 
+    neighborAssignments = {
+        class = EOFetchSpecification; 
+        entityName = Assignment; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = "offerings.courseOffering"; 
+            selectorName = "doesContain:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
+        usesDistinct = YES; 
+    }; 
 }

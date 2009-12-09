@@ -125,11 +125,11 @@ public class StepConfig
     {
         // Have to use two separate queries here, since the join required
         // in the second query will overly restrict the results of the first!
-        NSMutableArray results = objectsForUser( context, userBinding )
+        NSMutableArray results = stepConfigsForUser( context, userBinding )
             .mutableClone();
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
-            objectsForCourseAndScript(
+            stepConfigsForCourseAndScript(
                 context, courseBinding, scriptFileBinding )
             );
         if ( mine != null && !results.containsObject( mine ) )

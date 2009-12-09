@@ -175,8 +175,8 @@ public abstract class _Assignment
     public static final ERXKey<net.sf.webcat.grader.Step> steps =
         new ERXKey<net.sf.webcat.grader.Step>(STEPS_KEY);
     // Fetch specifications ---
+    public static final String ASSIGNMENTS_FOR_REUSE_IN_COURSE_FSPEC = "assignmentsForReuseInCourse";
     public static final String NEIGHBOR_ASSIGNMENTS_FSPEC = "neighborAssignments";
-    public static final String REUSE_IN_COURSE_FSPEC = "reuseInCourse";
     public static final String ENTITY_NAME = "Assignment";
 
 
@@ -1108,23 +1108,20 @@ public abstract class _Assignment
 
     // ----------------------------------------------------------
     /**
-     * Retrieve a single object using a list of keys and values to match.
+     * Retrieve the first object that matches a set of keys and values, when
+     * sorted with the specified sort orderings.
      *
      * @param context The editing context to use
+     * @param sortOrderings the sort orderings
      * @param keysAndValues a list of keys and values to match, alternating
      *     "key", "value", "key", "value"...
      *
-     * @return the single entity that was retrieved
-     *
-     * @throws EOObjectNotAvailableException
-     *     if there is no matching object
-     * @throws EOUtilities.MoreThanOneException
-     *     if there is more than one matching object
+     * @return the first entity that was retrieved, or null if there was none
      */
-    public static Assignment objectMatchingValues(
+    public static Assignment firstObjectMatchingValues(
         EOEditingContext context,
-        Object... keysAndValues) throws EOObjectNotAvailableException,
-                                        EOUtilities.MoreThanOneException
+        NSArray<EOSortOrdering> sortOrderings,
+        Object... keysAndValues)
     {
         if (keysAndValues.length % 2 != 0)
         {
@@ -1148,7 +1145,87 @@ public abstract class _Assignment
             valueDictionary.setObjectForKey(value, key);
         }
 
-        return objectMatchingValues(context, valueDictionary);
+        return firstObjectMatchingValues(
+            context, sortOrderings, valueDictionary);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieves the first object that matches a set of keys and values, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param sortOrderings the sort orderings
+     * @param keysAndValues a dictionary of keys and values to match
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static Assignment firstObjectMatchingValues(
+        EOEditingContext context,
+        NSArray<EOSortOrdering> sortOrderings,
+        NSDictionary<String, Object> keysAndValues)
+    {
+        EOFetchSpecification fspec = new EOFetchSpecification(
+            ENTITY_NAME,
+            EOQualifier.qualifierToMatchAllValues(keysAndValues),
+            sortOrderings);
+        fspec.setFetchLimit(1);
+
+        NSArray<Assignment> result =
+            objectsWithFetchSpecification( context, fspec );
+
+        if ( result.count() == 0 )
+        {
+            return null;
+        }
+        else
+        {
+            return result.objectAtIndex(0);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a list of keys and values to match, alternating
+     *     "key", "value", "key", "value"...
+     *
+     * @return the single entity that was retrieved, or null if there was none
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static Assignment uniqueObjectMatchingValues(
+        EOEditingContext context,
+        Object... keysAndValues) throws EOUtilities.MoreThanOneException
+    {
+        if (keysAndValues.length % 2 != 0)
+        {
+            throw new IllegalArgumentException("There should a value " +
+                "corresponding to every key that was passed.");
+        }
+
+        NSMutableDictionary<String, Object> valueDictionary =
+            new NSMutableDictionary<String, Object>();
+
+        for (int i = 0; i < keysAndValues.length; i += 2)
+        {
+            Object key = keysAndValues[i];
+            Object value = keysAndValues[i + 1];
+
+            if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException("Keys should be strings.");
+            }
+
+            valueDictionary.setObjectForKey(value, key);
+        }
+
+        return uniqueObjectMatchingValues(context, valueDictionary);
     }
 
 
@@ -1159,34 +1236,85 @@ public abstract class _Assignment
      * @param context The editing context to use
      * @param keysAndValues a dictionary of keys and values to match
      *
-     * @return the single entity that was retrieved
+     * @return the single entity that was retrieved, or null if there was none
      *
-     * @throws EOObjectNotAvailableException
-     *     if there is no matching object
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    public static Assignment objectMatchingValues(
+    public static Assignment uniqueObjectMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
-        throws EOObjectNotAvailableException,
-               EOUtilities.MoreThanOneException
+        throws EOUtilities.MoreThanOneException
     {
-        return (Assignment)EOUtilities.objectMatchingValues(
-            context, ENTITY_NAME, keysAndValues);
+        try
+        {
+            return (Assignment)EOUtilities.objectMatchingValues(
+                context, ENTITY_NAME, keysAndValues);
+        }
+        catch (EOObjectNotAvailableException e)
+        {
+            return null;
+        }
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>NeighborAssignments</code>
+     * Retrieve objects according to the <code>assignmentsForReuseInCourse</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseBinding fetch spec parameter
+     * @param courseOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Assignment> assignmentsForReuseInCourse(
+            EOEditingContext context,
+            net.sf.webcat.core.Course courseBinding,
+            net.sf.webcat.core.CourseOffering courseOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "assignmentsForReuseInCourse", "Assignment" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( courseBinding != null )
+        {
+            bindings.setObjectForKey( courseBinding,
+                                      "course" );
+        }
+        if ( courseOfferingBinding != null )
+        {
+            bindings.setObjectForKey( courseOfferingBinding,
+                                      "courseOffering" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Assignment> result =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "assignmentsForReuseInCourse(ec"
+                + ", " + courseBinding
+                + ", " + courseOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>neighborAssignments</code>
      * fetch specification.
      *
      * @param context The editing context to use
      * @param courseOfferingBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray<Assignment> objectsForNeighborAssignments(
+    public static NSArray<Assignment> neighborAssignments(
             EOEditingContext context,
             net.sf.webcat.core.CourseOffering courseOfferingBinding
         )
@@ -1204,56 +1332,11 @@ public abstract class _Assignment
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Assignment> result = objectsWithFetchSpecification( context, spec );
+        NSArray<Assignment> result =
+            objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForNeighborAssignments(ec"
-                + ", " + courseOfferingBinding
-                + "): " + result );
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>ReuseInCourse</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param courseBinding fetch spec parameter
-     * @param courseOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray<Assignment> objectsForReuseInCourse(
-            EOEditingContext context,
-            net.sf.webcat.core.Course courseBinding,
-            net.sf.webcat.core.CourseOffering courseOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "reuseInCourse", "Assignment" );
-
-        NSMutableDictionary<String, Object> bindings =
-            new NSMutableDictionary<String, Object>();
-
-        if ( courseBinding != null )
-        {
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
-        }
-        if ( courseOfferingBinding != null )
-        {
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
-        }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        NSArray<Assignment> result = objectsWithFetchSpecification( context, spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "objectsForReuseInCourse(ec"
-                + ", " + courseBinding
+            log.debug( "neighborAssignments(ec"
                 + ", " + courseOfferingBinding
                 + "): " + result );
         }

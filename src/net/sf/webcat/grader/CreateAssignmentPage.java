@@ -86,7 +86,7 @@ public class CreateAssignmentPage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( localContext() );
+                Semester.allObjectsOrderedByStartDate( localContext() );
             Object semesterPref = user.preferences()
                 .valueForKey( SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)
@@ -111,7 +111,7 @@ public class CreateAssignmentPage
         {
             reusableAssignments =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                    Assignment.objectsForReuseInCourse(
+                    Assignment.assignmentsForReuseInCourse(
                         localContext(),
                         coreSelections().courseOffering().course(),
                         coreSelections().courseOffering()

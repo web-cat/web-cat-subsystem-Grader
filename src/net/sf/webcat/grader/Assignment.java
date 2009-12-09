@@ -274,7 +274,7 @@ public class Assignment
         NSArray<?> results = ERXArrayUtilities
             .filteredArrayWithEntityFetchSpecification( offerings(),
                 AssignmentOffering.ENTITY_NAME,
-                AssignmentOffering.STUDENT_FSPEC,
+                AssignmentOffering.OFFERINGS_WITH_USER_AS_STUDENT_FSPEC,
                 userBinding );
         if ( results == null || results.count() == 0 )
         {
@@ -282,7 +282,7 @@ public class Assignment
             results = ERXArrayUtilities
                 .filteredArrayWithEntityFetchSpecification( offerings(),
                     AssignmentOffering.ENTITY_NAME,
-                    AssignmentOffering.STAFF_FSPEC,
+                    AssignmentOffering.OFFERINGS_WITH_USER_AS_STAFF_FSPEC,
                     userBinding );
         }
         if ( results != null && results.count() > 0 )
@@ -309,7 +309,7 @@ public class Assignment
         for (AssignmentOffering offering : offerings())
         {
             ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(results,
-                objectsForNeighborAssignments(
+                neighborAssignments(
                     context, offering.courseOffering()));
         }
         results.remove(this);
@@ -360,7 +360,7 @@ public class Assignment
             {
                 lcNames = new HashSet<String>();
                 NSArray<AssignmentOffering> assignments =
-                    AssignmentOffering.objectsForCourseOffering(
+                    AssignmentOffering.offeringsForCourseOffering(
                         courseOffering.editingContext(), courseOffering );
                 for (AssignmentOffering ao : assignments)
                 {

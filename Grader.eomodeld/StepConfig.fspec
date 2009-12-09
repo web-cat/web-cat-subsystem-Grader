@@ -1,17 +1,5 @@
 {
-    user = {
-        class = EOFetchSpecification; 
-        entityName = StepConfig; 
-        fetchLimit = 0; 
-        isDeep = YES; 
-        qualifier = {
-            class = EOKeyValueQualifier; 
-            key = author; 
-            selectorName = "isEqualTo:"; 
-            value = {_key = user; class = EOQualifierVariable; }; 
-        }; 
-    }; 
-    courseAndScript = {
+    stepConfigsForCourseAndScript = {
         class = EOFetchSpecification; 
         entityName = StepConfig; 
         fetchLimit = 0; 
@@ -21,17 +9,29 @@
             qualifiers = (
                 {
                     class = EOKeyValueQualifier; 
-                    key = steps.script; 
+                    key = "steps.script"; 
                     selectorName = "isEqualTo:"; 
-                    value = {_key = scriptFile; class = EOQualifierVariable; }; 
+                    value = {"_key" = scriptFile; class = EOQualifierVariable; }; 
                 }, 
                 {
                     class = EOKeyValueQualifier; 
-                    key = steps.assignment.offerings.courseOffering.course; 
+                    key = "steps.assignment.offerings.courseOffering.course"; 
                     selectorName = "doesContain:"; 
-                    value = {_key = course; class = EOQualifierVariable; }; 
+                    value = {"_key" = course; class = EOQualifierVariable; }; 
                 }
-            );
+            ); 
+        }; 
+    }; 
+    stepConfigsForUser = {
+        class = EOFetchSpecification; 
+        entityName = StepConfig; 
+        fetchLimit = 0; 
+        isDeep = YES; 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = author; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = user; class = EOQualifierVariable; }; 
         }; 
     }; 
 }

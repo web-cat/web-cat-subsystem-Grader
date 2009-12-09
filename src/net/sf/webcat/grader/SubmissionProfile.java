@@ -157,11 +157,11 @@ public class SubmissionProfile
     // ----------------------------------------------------------
     public static long defaultMaxFileUploadSize()
     {
-    	long result = net.sf.webcat.core.Application
+        long result = net.sf.webcat.core.Application
             .configurationProperties()
             .longForKeyWithDefault("grader.defaultMaxFileUploadSize", 204800L);
-    	long max = maxMaxFileUploadSize();
-    	return result <= max ? result : max;
+        long max = maxMaxFileUploadSize();
+        return result <= max ? result : max;
     }
 
 
@@ -175,11 +175,11 @@ public class SubmissionProfile
     // ----------------------------------------------------------
     public void setMaxFileUploadSize( int value )
     {
-    	if (value <= 0 )
-    	{
-    		setMaxFileUploadSizeRaw(null);
-    	}
-    	else if ( value < maxMaxFileUploadSize() )
+        if (value <= 0 )
+        {
+            setMaxFileUploadSizeRaw(null);
+        }
+        else if ( value < maxMaxFileUploadSize() )
         {
             super.setMaxFileUploadSize(value);
         }
@@ -263,10 +263,10 @@ public class SubmissionProfile
         )
     {
         NSMutableArray results =
-            objectsForCourse( context, course ).mutableClone();
+            profilesForCourse( context, course ).mutableClone();
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
-            objectsForUser( context, user ) );
+            profilesForUser( context, user ) );
         if ( mine != null && !results.containsObject( mine ) )
         {
             results.addObject( mine );

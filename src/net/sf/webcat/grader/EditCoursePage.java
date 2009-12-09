@@ -73,7 +73,7 @@ public class EditCoursePage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll(localContext());
+                Semester.allObjectsOrderedByStartDate(localContext());
         }
         instructorDisplayGroup.setMasterObject(courseOffering());
         TADisplayGroup.setMasterObject(courseOffering());
@@ -215,14 +215,14 @@ public class EditCoursePage
     public WOComponent computeSubmissionDateRange()
     {
         log.debug("computeSubmissionDateRange()");
-        NSArray<Submission> subs = Submission.objectsForEarliestForCourseOffering(
+        Submission earliestSub = Submission.earliestSubmissionForCourseOffering(
             localContext(), courseOffering());
-        if (subs.count() > 0)
+        if (earliestSub != null)
         {
-            earliest = subs.objectAtIndex(0).submitTime();
-            subs = Submission.objectsForLatestForCourseOffering(
-                localContext(), courseOffering());
-            latest = subs.objectAtIndex(0).submitTime();
+            earliest = earliestSub.submitTime();
+            Submission latestSub = Submission.latestSubmissionForCourseOffering(
+                    localContext(), courseOffering());
+            latest = latestSub.submitTime();
         }
         earliestAndLatestComputed = true;
         return null;

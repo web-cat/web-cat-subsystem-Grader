@@ -67,7 +67,7 @@ public class AssignmentGraphPage
         mostRecentScore = ( subResult == null )
             ? null
             : new Double( subResult.automatedScore() );
-        pastSubResults = SubmissionResult.objectsForUser(
+        pastSubResults = SubmissionResult.resultsForAssignmentAndUser(
             localContext(),
             prefs().assignmentOffering(),
             user() );
@@ -100,7 +100,7 @@ public class AssignmentGraphPage
         if ( subResultsByNumber == null )
         {
             subResultsByNumber =
-                SubmissionResult.objectsForMostRecentSubmissionsByNumber(
+                SubmissionResult.mostRecentResultsForAssignmentOrderedByNumber(
                     localContext(), prefs().assignmentOffering() );
         }
         return subResultsByNumber;

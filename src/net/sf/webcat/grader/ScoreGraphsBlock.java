@@ -92,7 +92,7 @@ public class ScoreGraphsBlock
         if ( correctnessToolsDataset == null )
         {
             correctnessToolsDataset = new SubmissionResultDataset(
-                SubmissionResult.objectsForUser(
+                SubmissionResult.resultsForAssignmentAndUser(
                     localContext(),
                     submission.assignmentOffering(),
                     result.submission().user() ),

@@ -300,7 +300,7 @@ public class AssignmentOffering
             // have to initialize the summary by fetching all the most
             // recent assignments
             summary.setMaxScore( maxScore );
-            NSArray subs = SubmissionResult.objectsForMostRecentSubmissions(
+            NSArray subs = SubmissionResult.mostRecentResultsForAssignment(
                 editingContext(), this );
             for ( int i = 0; i < subs.count(); i++ )
             {
@@ -417,7 +417,7 @@ public class AssignmentOffering
     public SubmissionResult mostRecentSubmissionResultFor( User user )
     {
         SubmissionResult newest = null;
-        NSArray subs = SubmissionResult.objectsForMostRecentSubmission(
+        NSArray subs = SubmissionResult.resultsForAssignmentAndUser(
             editingContext(), this, user );
         if ( subs.count() > 0 )
         {
@@ -662,7 +662,7 @@ public class AssignmentOffering
         NSMutableArray<AssignmentOffering> others =
             new NSMutableArray<AssignmentOffering>();
         NSArray<AssignmentOffering> sameSection = AssignmentOffering
-            .objectsForCourseOffering(context, courseOffering);
+            .offeringsForCourseOffering(context, courseOffering);
         for (int i = 0; i < sameSection.count()
                         && ( limit < 1 || others.count() < limit ); i++)
         {
@@ -706,7 +706,7 @@ public class AssignmentOffering
         NSMutableArray<AssignmentOffering> others =
             new NSMutableArray<AssignmentOffering>();
         NSArray<AssignmentOffering> sameSection = AssignmentOffering
-            .objectsForCourse(context, course);
+            .offeringsForCourse(context, course);
         for (int i = 0; i < sameSection.count()
                         && ( limit < 1 || others.count() < limit ); i++)
         {

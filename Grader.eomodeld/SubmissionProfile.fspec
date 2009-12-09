@@ -1,18 +1,18 @@
 {
-    course = {
+    profilesForCourse = {
         class = EOFetchSpecification; 
         entityName = SubmissionProfile; 
         fetchLimit = 0; 
         isDeep = YES; 
-        usesDistinct = YES; 
         qualifier = {
             class = EOKeyValueQualifier; 
-            key = courseOfferings.course; 
+            key = "courseOfferings.course"; 
             selectorName = "doesContain:"; 
-            value = {_key = course; class = EOQualifierVariable; }; 
+            value = {"_key" = course; class = EOQualifierVariable; }; 
         }; 
+        usesDistinct = YES; 
     }; 
-    user = {
+    profilesForUser = {
         class = EOFetchSpecification; 
         entityName = SubmissionProfile; 
         fetchLimit = 0; 
@@ -21,7 +21,7 @@
             class = EOKeyValueQualifier; 
             key = author; 
             selectorName = "doesContain:"; 
-            value = {_key = user; class = EOQualifierVariable; }; 
+            value = {"_key" = user; class = EOQualifierVariable; }; 
         }; 
     }; 
 }

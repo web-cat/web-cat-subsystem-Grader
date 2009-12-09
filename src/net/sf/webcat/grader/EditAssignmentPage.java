@@ -21,6 +21,7 @@
 
 package net.sf.webcat.grader;
 
+import com.ibm.icu.text.MessageFormat;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
@@ -106,7 +107,7 @@ public class EditAssignmentPage
         currentTime = new NSTimestamp();
 
         // Get all the available grading plugins.
-        gradingPluginsToAdd = ScriptFile.objectsForAvailableToUser(
+        gradingPluginsToAdd = ScriptFile.pluginsAvailableToUser(
                 localContext(), user());
 
         if (selectedOffering == null)
@@ -332,16 +333,27 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
+    public String searchStringForGradingPluginToAdd()
+    {
+        String name = gradingPluginToAdd.name();
+        return name;
+    }
+
+
+    // ----------------------------------------------------------
     public String displayStringForGradingPluginToAdd()
     {
         String name = gradingPluginToAdd.name();
+        String version = gradingPluginToAdd.descriptor().currentVersion();
+        NSTimestamp lastModified = gradingPluginToAdd.lastModified();
 
-        if (!gradingPluginToAdd.isPublished())
-        {
-            name += " (private)";
-        }
+        NSTimestampFormatter formatter = wcSession().timeFormatter();
+        String formattedTime = formatter.format(lastModified);
 
-        return name;
+        return MessageFormat.format(
+                "<p class=\"pluginListTitle\">{0}</p>" +
+                "<p class=\"pluginListSubtitle\">version {1} ({2})</p>",
+                new Object[] { name, version, formattedTime });
     }
 
 
@@ -558,48 +570,6 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent moveStepUp()
-    {
-        int oldOrder = thisStep.order();
-        if ( oldOrder > 1 )
-        {
-            int switchWithIndex = oldOrder - 2;
-            Step switchWith = (Step)scriptDisplayGroup.displayedObjects()
-                .objectAtIndex( switchWithIndex );
-            int newOrder = switchWith.order();
-            thisStep.setOrder( newOrder );
-            switchWith.setOrder( oldOrder );
-
-            scriptDisplayGroup.fetch();
-        }
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent moveStepDown()
-    {
-        int oldOrder = thisStep.order();
-        // order value is index + 1, and we need to make
-        // sure there is at least one more element, so make sure that
-        // order value is less that number of scripts
-        if ( oldOrder < scriptDisplayGroup.displayedObjects().count() )
-        {
-            // switch with one more than this index, which is same as order
-            int switchWithIndex = oldOrder;
-            Step switchWith = (Step)scriptDisplayGroup.displayedObjects()
-                .objectAtIndex( switchWithIndex );
-            int newOrder = switchWith.order();
-            thisStep.setOrder( newOrder );
-            switchWith.setOrder( oldOrder );
-
-            scriptDisplayGroup.fetch();
-        }
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
     public void gradingStepsWereDropped(
             String sourceId, int[] dragIndices,
             String targetId, int[] dropIndices,
@@ -806,7 +776,7 @@ public class EditAssignmentPage
     {
         if (upcomingOfferings == null)
         {
-            upcomingOfferings = AssignmentOffering.objectsForAllOfferings(
+            upcomingOfferings = AssignmentOffering.allOfferingsOrderedByDueDate(
                 localContext()).mutableClone();
             upcomingOfferings.removeObject(selectedOffering);
         }

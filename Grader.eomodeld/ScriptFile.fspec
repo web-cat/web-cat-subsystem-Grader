@@ -1,31 +1,31 @@
 {
-    availableToUser = {
-        class = EOFetchSpecification;
-        entityName = ScriptFile;
-        prefetchingRelationshipKeyPaths = ();
+    pluginsAvailableToUser = {
+        class = EOFetchSpecification; 
+        entityName = ScriptFile; 
+        prefetchingRelationshipKeyPaths = (); 
         qualifier = {
-            class = EOOrQualifier;
+            class = EOOrQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = author;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = author; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = author; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = author; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = isPublished;
-                    selectorName = "isEqualTo:";
-                    value = {class = NSNumber; value = 1; };
+                    class = EOKeyValueQualifier; 
+                    key = isPublished; 
+                    selectorName = "isEqualTo:"; 
+                    value = {class = NSNumber; value = 1; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = name;
-                selectorName = compareCaseInsensitiveAscending;
+                class = EOSortOrdering; 
+                key = name; 
+                selectorName = compareCaseInsensitiveAscending; 
             }
-        );
-    };
+        ); 
+    }; 
 }

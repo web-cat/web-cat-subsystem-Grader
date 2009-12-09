@@ -9,6 +9,8 @@ GradingPluginsToAdd: WCFilteringSelect {
     list          = gradingPluginsToAdd;
     item          = gradingPluginToAdd;
     selection     = selectedGradingPluginToAdd;
+    useDividers   = true;
+    searchString  = searchStringForGradingPluginToAdd;
     displayString = displayStringForGradingPluginToAdd;
     noSelectionString = "(no selection)";
 }

@@ -79,7 +79,7 @@ public class NewCourseOfferingPage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll(localContext());
+                Semester.allObjectsOrderedByStartDate(localContext());
         }
         if (institutions == null)
         {

@@ -553,7 +553,7 @@ public class Submission
         {
             if (user() != null && assignmentOffering() != null)
             {
-                allSubmissionsCache = objectsForAllForAssignmentOfferingAndUser(
+                allSubmissionsCache = submissionsForAssignmentOfferingAndUser(
                         editingContext(), assignmentOffering(), user());
             }
         }

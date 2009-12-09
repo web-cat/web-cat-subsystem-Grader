@@ -85,7 +85,7 @@ public class PickCourseTaughtPage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( localContext() );
+                Semester.allObjectsOrderedByStartDate( localContext() );
             Object semesterPref = user.preferences()
                 .valueForKey( PickCourseEnrolledPage.SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)

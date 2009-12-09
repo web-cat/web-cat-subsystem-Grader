@@ -1,0 +1,11 @@
+.pluginListTitle {
+    line-height: 120%;
+    margin-bottom: 0px;
+}
+
+.pluginListSubtitle {
+    line-height: 120%;
+    margin-bottom: 0px;
+    font-size: smaller;
+    color: gray;
+}

@@ -1,17 +1,17 @@
 
 {
-    user = 
+    objectsForUser =
     {
         class = EOFetchSpecification;
         entityName = GraderPrefs;
         fetchLimit = 0;
         isDeep = YES;
-        qualifier = 
+        qualifier =
         {
             class = EOKeyValueQualifier;
             key = user;
             selectorName = isEqualTo:;
-            value = 
+            value =
             {
                 _key = user;
                 class = EOQualifierVariable;

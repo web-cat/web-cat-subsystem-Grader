@@ -90,7 +90,7 @@ public class PickSubmissionPage
         if (prefs().assignmentOffering() != null)
         {
             submissions =
-                Submission.objectsForAllForAssignmentOfferingAndUserInReverse(
+                Submission.submissionsForAssignmentOfferingAndUserDescending(
                     localContext(), prefs().assignmentOffering(), user);
             submissionDisplayGroup.setObjectArray(submissions);
             previousSubmissions = (submissions.count() > 0);
@@ -100,7 +100,7 @@ public class PickSubmissionPage
             && coreSelections().semester() != null)
         {
             submissions =
-                Submission.objectsForAllForAssignmentAndUserInReverse(
+                Submission.submissionsForAssignmentAndUserDescending(
                     localContext(),
                     prefs().assignment(),
                     coreSelections().semester(),

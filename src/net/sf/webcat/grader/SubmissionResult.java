@@ -478,7 +478,7 @@ public class SubmissionResult
         EOEditingContext ec = editingContext();
         if ( log.isDebugEnabled() )
         {
-            NSArray subs = objectsForUser(
+            NSArray subs = resultsForAssignmentAndUser(
                 ec, submission().assignmentOffering(), submission().user() );
             for ( int i = 0; i < subs.count(); i++ )
             {
@@ -489,7 +489,7 @@ public class SubmissionResult
             }
         }
         SubmissionResult newest = null;
-        NSArray subs = objectsForMostRecentByDate(
+        NSArray subs = mostRecentResultsForAssignmentAndUser(
             ec, submission().assignmentOffering(), submission().user() );
         if ( subs.count() > 0 )
         {
@@ -502,7 +502,7 @@ public class SubmissionResult
                     + " #" + newest.submission().submitNumber() );
             }
         }
-        subs = objectsForMostRecentSubmission(
+        subs = mostRecentResultsForAssignmentAndUser(
             ec, submission().assignmentOffering(), submission().user() );
         for ( int i = 1; i < subs.count(); i++ )
         {

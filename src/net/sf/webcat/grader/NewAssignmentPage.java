@@ -439,7 +439,7 @@ public class NewAssignmentPage
         Course course = coreSelections().courseOffering().course();
         Semester semester = coreSelections().courseOffering().semester();
         NSArray<CourseOffering> offerings =
-            CourseOffering.objectsForForSemesterAndCourse(
+            CourseOffering.offeringsForSemesterAndCourse(
                 localContext(), course, semester);
         return offerings != null && offerings.count() > 1;
     }
@@ -451,7 +451,7 @@ public class NewAssignmentPage
         if ( semesters == null )
         {
             semesters =
-                Semester.objectsForFetchAll( localContext() );
+                Semester.allObjectsOrderedByStartDate( localContext() );
             toSemester = coreSelections().semester();
 
             updateReofferPane();
@@ -518,7 +518,7 @@ public class NewAssignmentPage
             assignmentToReoffer = null;
             assignments =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                    Assignment.objectsForReuseInCourse(
+                    Assignment.assignmentsForReuseInCourse(
                         localContext(),
                         toCourseOffering.course(),
                         toCourseOffering),

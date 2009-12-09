@@ -176,11 +176,10 @@ public abstract class _SubmissionResult
     public static final ERXKey<net.sf.webcat.grader.Submission> submissions =
         new ERXKey<net.sf.webcat.grader.Submission>(SUBMISSIONS_KEY);
     // Fetch specifications ---
-    public static final String MOST_RECENT_BY_DATE_FSPEC = "mostRecentByDate";
-    public static final String MOST_RECENT_SUBMISSION_FSPEC = "mostRecentSubmission";
-    public static final String MOST_RECENT_SUBMISSIONS_FSPEC = "mostRecentSubmissions";
-    public static final String MOST_RECENT_SUBMISSIONS_BY_NUMBER_FSPEC = "mostRecentSubmissionsByNumber";
-    public static final String USER_FSPEC = "user";
+    public static final String MOST_RECENT_RESULTS_FOR_ASSIGNMENT_FSPEC = "mostRecentResultsForAssignment";
+    public static final String MOST_RECENT_RESULTS_FOR_ASSIGNMENT_AND_USER_FSPEC = "mostRecentResultsForAssignmentAndUser";
+    public static final String MOST_RECENT_RESULTS_FOR_ASSIGNMENT_ORDERED_BY_NUMBER_FSPEC = "mostRecentResultsForAssignmentOrderedByNumber";
+    public static final String RESULTS_FOR_ASSIGNMENT_AND_USER_FSPEC = "resultsForAssignmentAndUser";
     public static final String ENTITY_NAME = "SubmissionResult";
 
 
@@ -1558,23 +1557,20 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Retrieve a single object using a list of keys and values to match.
+     * Retrieve the first object that matches a set of keys and values, when
+     * sorted with the specified sort orderings.
      *
      * @param context The editing context to use
+     * @param sortOrderings the sort orderings
      * @param keysAndValues a list of keys and values to match, alternating
      *     "key", "value", "key", "value"...
      *
-     * @return the single entity that was retrieved
-     *
-     * @throws EOObjectNotAvailableException
-     *     if there is no matching object
-     * @throws EOUtilities.MoreThanOneException
-     *     if there is more than one matching object
+     * @return the first entity that was retrieved, or null if there was none
      */
-    public static SubmissionResult objectMatchingValues(
+    public static SubmissionResult firstObjectMatchingValues(
         EOEditingContext context,
-        Object... keysAndValues) throws EOObjectNotAvailableException,
-                                        EOUtilities.MoreThanOneException
+        NSArray<EOSortOrdering> sortOrderings,
+        Object... keysAndValues)
     {
         if (keysAndValues.length % 2 != 0)
         {
@@ -1598,7 +1594,87 @@ public abstract class _SubmissionResult
             valueDictionary.setObjectForKey(value, key);
         }
 
-        return objectMatchingValues(context, valueDictionary);
+        return firstObjectMatchingValues(
+            context, sortOrderings, valueDictionary);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieves the first object that matches a set of keys and values, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param sortOrderings the sort orderings
+     * @param keysAndValues a dictionary of keys and values to match
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static SubmissionResult firstObjectMatchingValues(
+        EOEditingContext context,
+        NSArray<EOSortOrdering> sortOrderings,
+        NSDictionary<String, Object> keysAndValues)
+    {
+        EOFetchSpecification fspec = new EOFetchSpecification(
+            ENTITY_NAME,
+            EOQualifier.qualifierToMatchAllValues(keysAndValues),
+            sortOrderings);
+        fspec.setFetchLimit(1);
+
+        NSArray<SubmissionResult> result =
+            objectsWithFetchSpecification( context, fspec );
+
+        if ( result.count() == 0 )
+        {
+            return null;
+        }
+        else
+        {
+            return result.objectAtIndex(0);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a list of keys and values to match, alternating
+     *     "key", "value", "key", "value"...
+     *
+     * @return the single entity that was retrieved, or null if there was none
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static SubmissionResult uniqueObjectMatchingValues(
+        EOEditingContext context,
+        Object... keysAndValues) throws EOUtilities.MoreThanOneException
+    {
+        if (keysAndValues.length % 2 != 0)
+        {
+            throw new IllegalArgumentException("There should a value " +
+                "corresponding to every key that was passed.");
+        }
+
+        NSMutableDictionary<String, Object> valueDictionary =
+            new NSMutableDictionary<String, Object>();
+
+        for (int i = 0; i < keysAndValues.length; i += 2)
+        {
+            Object key = keysAndValues[i];
+            Object value = keysAndValues[i + 1];
+
+            if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException("Keys should be strings.");
+            }
+
+            valueDictionary.setObjectForKey(value, key);
+        }
+
+        return uniqueObjectMatchingValues(context, valueDictionary);
     }
 
 
@@ -1609,27 +1685,70 @@ public abstract class _SubmissionResult
      * @param context The editing context to use
      * @param keysAndValues a dictionary of keys and values to match
      *
-     * @return the single entity that was retrieved
+     * @return the single entity that was retrieved, or null if there was none
      *
-     * @throws EOObjectNotAvailableException
-     *     if there is no matching object
      * @throws EOUtilities.MoreThanOneException
      *     if there is more than one matching object
      */
-    public static SubmissionResult objectMatchingValues(
+    public static SubmissionResult uniqueObjectMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
-        throws EOObjectNotAvailableException,
-               EOUtilities.MoreThanOneException
+        throws EOUtilities.MoreThanOneException
     {
-        return (SubmissionResult)EOUtilities.objectMatchingValues(
-            context, ENTITY_NAME, keysAndValues);
+        try
+        {
+            return (SubmissionResult)EOUtilities.objectMatchingValues(
+                context, ENTITY_NAME, keysAndValues);
+        }
+        catch (EOObjectNotAvailableException e)
+        {
+            return null;
+        }
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>MostRecentByDate</code>
+     * Retrieve objects according to the <code>mostRecentResultsForAssignment</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<SubmissionResult> mostRecentResultsForAssignment(
+            EOEditingContext context,
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "mostRecentResultsForAssignment", "SubmissionResult" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<SubmissionResult> result =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "mostRecentResultsForAssignment(ec"
+                + ", " + assignmentOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>mostRecentResultsForAssignmentAndUser</code>
      * fetch specification.
      *
      * @param context The editing context to use
@@ -1637,14 +1756,14 @@ public abstract class _SubmissionResult
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray<SubmissionResult> objectsForMostRecentByDate(
+    public static NSArray<SubmissionResult> mostRecentResultsForAssignmentAndUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             net.sf.webcat.core.User userBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "mostRecentByDate", "SubmissionResult" );
+            .fetchSpecificationNamed( "mostRecentResultsForAssignmentAndUser", "SubmissionResult" );
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
@@ -1661,10 +1780,11 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
+        NSArray<SubmissionResult> result =
+            objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForMostRecentByDate(ec"
+            log.debug( "mostRecentResultsForAssignmentAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );
@@ -1675,7 +1795,46 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Retrieve object according to the <code>MostRecentSubmission</code>
+     * Retrieve objects according to the <code>mostRecentResultsForAssignmentOrderedByNumber</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<SubmissionResult> mostRecentResultsForAssignmentOrderedByNumber(
+            EOEditingContext context,
+            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "mostRecentResultsForAssignmentOrderedByNumber", "SubmissionResult" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<SubmissionResult> result =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "mostRecentResultsForAssignmentOrderedByNumber(ec"
+                + ", " + assignmentOfferingBinding
+                + "): " + result );
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>resultsForAssignmentAndUser</code>
      * fetch specification.
      *
      * @param context The editing context to use
@@ -1683,14 +1842,14 @@ public abstract class _SubmissionResult
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray<SubmissionResult> objectsForMostRecentSubmission(
+    public static NSArray<SubmissionResult> resultsForAssignmentAndUser(
             EOEditingContext context,
             net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             net.sf.webcat.core.User userBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "mostRecentSubmission", "SubmissionResult" );
+            .fetchSpecificationNamed( "resultsForAssignmentAndUser", "SubmissionResult" );
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
@@ -1707,132 +1866,11 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
+        NSArray<SubmissionResult> result =
+            objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
-            log.debug( "objectsForMostRecentSubmission(ec"
-                + ", " + assignmentOfferingBinding
-                + ", " + userBinding
-                + "): " + result );
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>MostRecentSubmissions</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param assignmentOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray<SubmissionResult> objectsForMostRecentSubmissions(
-            EOEditingContext context,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "mostRecentSubmissions", "SubmissionResult" );
-
-        NSMutableDictionary<String, Object> bindings =
-            new NSMutableDictionary<String, Object>();
-
-        if ( assignmentOfferingBinding != null )
-        {
-            bindings.setObjectForKey( assignmentOfferingBinding,
-                                      "assignmentOffering" );
-        }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "objectsForMostRecentSubmissions(ec"
-                + ", " + assignmentOfferingBinding
-                + "): " + result );
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>MostRecentSubmissionsByNumber</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param assignmentOfferingBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray<SubmissionResult> objectsForMostRecentSubmissionsByNumber(
-            EOEditingContext context,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "mostRecentSubmissionsByNumber", "SubmissionResult" );
-
-        NSMutableDictionary<String, Object> bindings =
-            new NSMutableDictionary<String, Object>();
-
-        if ( assignmentOfferingBinding != null )
-        {
-            bindings.setObjectForKey( assignmentOfferingBinding,
-                                      "assignmentOffering" );
-        }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "objectsForMostRecentSubmissionsByNumber(ec"
-                + ", " + assignmentOfferingBinding
-                + "): " + result );
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve object according to the <code>User</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @param assignmentOfferingBinding fetch spec parameter
-     * @param userBinding fetch spec parameter
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray<SubmissionResult> objectsForUser(
-            EOEditingContext context,
-            net.sf.webcat.grader.AssignmentOffering assignmentOfferingBinding,
-            net.sf.webcat.core.User userBinding
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "user", "SubmissionResult" );
-
-        NSMutableDictionary<String, Object> bindings =
-            new NSMutableDictionary<String, Object>();
-
-        if ( assignmentOfferingBinding != null )
-        {
-            bindings.setObjectForKey( assignmentOfferingBinding,
-                                      "assignmentOffering" );
-        }
-        if ( userBinding != null )
-        {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
-        }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
-
-        NSArray<SubmissionResult> result = objectsWithFetchSpecification( context, spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "objectsForUser(ec"
+            log.debug( "resultsForAssignmentAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
                 + "): " + result );
