@@ -1,14 +1,50 @@
 <webobject name="Page">
-<wo:net.sf.webcat.core.WCPageModule title="Define Your Course Offering">
-<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
+<wo:net.sf.webcat.core.WCPageModule title="Define Your Course Offering" id="courseblock">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <table class="layout"><tbody>
-<tr><td class="R">Semester:</td><td><wo name="SemesterList"/> <wo name="SemesterInfo"/></td></tr>
-<wo:if condition="$user.hasAdminPrivileges">
-<tr><td class="R">Institution:</td><td><wo name="InstitutionList"/> <wo name="InstitutionInfo"/></td></tr>
+<tr><td class="R"><label for="semester">Semester:</label></td><td><wo name="SemesterList"/>
+  <wo:WCButton label="Add"
+    onclick="~'dijit.byId(\'new-semester\').show();'"/>
+   <wo name="SemesterInfo"/>
+</td></tr>
+<wo:if condition="~user.hasAdminPrivileges and institutions.count gt 1">
+<tr><td class="R"><label for="institution">Institution:</label></td><td><wo name="InstitutionList">
+      <wo:WCConnectAction event="onChange" action="$update" remote.refreshPanes="courseblock"/>
+</wo> <wo name="InstitutionInfo"/></td></tr>
 </wo:if>
-<tr><td class="R">Course:</td><td><wo name="CourseList"/> <wo name="CourseInfo"/></td></tr>
-<tr><td class="R">CRN:</td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
+<tr><td class="R"><label for="course">Course:</label></td><td><wo name="CourseList"/>
+  <wo:WCButton label="Add"
+    onclick="~'dijit.byId(\'new-course\').show();'"/>
+  <wo name="CourseInfo"/>
+</td></tr>
+<tr><td class="R"><label for="crn">CRN:</label></td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
 <tr><td></td><td><wo:WCButton action="$next">Create</wo:WCButton></td></tr>
 </tbody></table>
-</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
+</wo:WCForm></wo:net.sf.webcat.core.WCPageModule>
+
+<wo:WCDialog title="Create a New Semester" id="new-semester" okAction="createSemester" refreshPanesOnOk="~('courseblock', 'error-panel')">
+  <table class="layout"><tbody>
+    <tr><td class="R"><label for="semester-season">Season:</label></td>
+      <td><wo name="SeasonList"/></td></tr>
+    <tr><td class="R"><label for="semester-year">Year:</label></td>
+      <td><wo:WCNumberSpinner value="$year" id="semester-year" constraints="{pattern:'#0'}" style="width:6em;"/></td></tr>
+    <tr><td class="R"><label for="semester-start">Start Date:</label></td>
+      <td><wo:WCDateTextBox value="$startDate" id="semester-start" timeZone="$timeZone"/></td></tr>
+    <tr><td class="R"><label for="semester-end">End Date:</label></td>
+      <td><wo:WCDateTextBox value="$endDate" id="semester-end" timeZone="$timeZone"/></td></tr>
+  </tbody></table>
+</wo:WCDialog>
+
+<wo:WCDialog title="Create a New Course" id="new-course" okAction="createCourse" refreshPanesOnOk="~('courseblock', 'error-panel')">
+  <table class="layout"><tbody>
+    <tr><td class="R"><label for="course-dept">Department:</label></td>
+      <td><wo:if condition="$hasMultipleDepartments"><wo name="DepartmentList"/>
+        </wo:if><wo:else><wo:str value="~ department.name + ' (' + department.abbreviation + ')'"/></wo:else></td></tr>
+    <tr><td class="R"><label for="course-number">Course Number:</label></td>
+      <td><wo name="CourseNumber"/></td></tr>
+    <tr><td class="R"><label for="course-name">Course Name:</label></td>
+      <td><wo name="CourseName"/></td></tr>
+  </tbody></table>
+</wo:WCDialog>
+
 </webobject>

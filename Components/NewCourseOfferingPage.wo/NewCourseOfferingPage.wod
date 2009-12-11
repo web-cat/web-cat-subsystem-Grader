@@ -1,18 +1,44 @@
 CourseInfo: PopUpInfo {
     title   = "Course";
-    message = "Use the Course drop-down list to change the course for your new course offering.";
+    message = "Use the Course drop-down list to change the course for your new course offering.  Use the \"Add\" button if the course you are looking for needs to be added to the list of available courses.";
 }
 
-CourseList: WOPopUpButton {
-	list              = courseDisplayGroup.displayedObjects;
-	selection         = coreSelections.course;
-	item              = course;
-	displayString     = course.deptNumberAndName;
+CourseList: WCFilteringSelect {
+	list          = courseDisplayGroup.displayedObjects;
+	selection     = coreSelections.course;
+	item          = course;
+	displayString = course.deptNumberAndName;
+	id            = "course";
+    autoComplete   = true;
+    invalidMessage = "Invalid course selection";
 }
 
-CRN: WOTextField {
-    value = crn;
-    size = 40;
+CourseName: WCValidationTextBox {
+    value          = newCourseName;
+    size           = "60";
+    id             = "course-name";
+    trim           = "true";
+    required       = "true";
+    invalidMessage = "A course name must be provided";
+}
+
+CourseNumber: WCValidationTextBox {
+    value          = newCourseNumber;
+    size           = "8";
+    id             = "course-number";
+    trim           = "true";
+    required       = "true";
+    invalidMessage = "A course number must be provided";
+    constraints    = "{pattern:'#0'}";
+}
+
+CRN: WCValidationTextBox {
+    value    = crn;
+    size     = "40";
+    id       = "crn";
+    trim     = "true";
+    required = "true";
+    invalidMessage = "A unique identification number or string must be provided";
 }
 
 CRNInfo: PopUpInfo {
@@ -20,30 +46,55 @@ CRNInfo: PopUpInfo {
     message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
 }
 
+DepartmentList: WCFilteringSelect {
+    list          = departments;
+    selection     = department;
+    item          = aDepartment;
+    displayString = "~ aDepartment.name + ' (' + aDepartment.abbreviation + ')'";
+    id            = "course-dept";
+    autoComplete   = true;
+    invalidMessage = "Invalid department selection";
+}
+
 InstitutionInfo: PopUpInfo {
     title   = "Institution";
     message = "Use the Institution drop-down list to change the department/institution to which your course offering belongs.";
 }
 
-InstitutionList: WOPopUpButton {
-	list              = institutions;
-	item              = anInstitution;
-	selection         = institution;
-    onchange          = "submitForm()";
-    displayString     = anInstitution.displayableName;
+InstitutionList: WCFilteringSelect {
+	list           = institutions;
+	item           = anInstitution;
+	selection      = institution;
+    displayString  = anInstitution.displayableName;
+    id             = "institution";
+    autoComplete   = true;
+    invalidMessage = "Invalid institution selection";
 }
 
 Page : WCPageWithNavigation {
     title = "Create a New Course Offering";
 }
 
-SemesterInfo: PopUpInfo {
-    title   = "Semester";
-    message = "Use the Semester drop-down list to change the semester with which this offering will be associated.";
+SeasonList: WCFilteringSelect {
+    list           = seasons;
+    item           = aSeason;
+    selection      = season;
+    displayString  = seasonName;
+    id             = "semester-season";
+    autoComplete   = true;
+    invalidMessage = "Invalid season selection";
 }
 
-SemesterList: WOPopUpButton {
-    list      = semesters;
-    item      = aSemester;
-    selection = semester;
+SemesterInfo: PopUpInfo {
+    title   = "Semester";
+    message = "Use the Semester drop-down list to change the semester with which this offering will be associated.  Use the \"Add\" button to create a new semester if needed.";
+}
+
+SemesterList: WCFilteringSelect {
+    list         = semesters;
+    item         = aSemester;
+    selection    = semester;
+    id           = "semester";
+    autoComplete = true;
+    invalidMessage = "Invalid semester selection";
 }

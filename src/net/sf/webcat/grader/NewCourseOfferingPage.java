@@ -21,6 +21,8 @@
 
 package net.sf.webcat.grader;
 
+import java.util.Calendar;
+import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
@@ -63,6 +65,11 @@ public class NewCourseOfferingPage
     public NSArray<Semester>   semesters;
     public Semester            aSemester;
     public String              crn;
+    public Integer             aSeason;
+    public Department          aDepartment;
+    public String              newCourseName = "Intro to Programming";
+    public NSTimestamp         startDate;
+    public NSTimestamp         endDate;
 
 
     //~ Methods ...............................................................
@@ -80,6 +87,10 @@ public class NewCourseOfferingPage
         {
             semesters =
                 Semester.allObjectsOrderedByStartDate(localContext());
+            if (semesters.size() > 0)
+            {
+                semester = semesters.get(0);
+            }
         }
         if (institutions == null)
         {
@@ -146,7 +157,270 @@ public class NewCourseOfferingPage
     }
 
 
+    // ----------------------------------------------------------
+    public WOActionResults update()
+    {
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public Integer season()
+    {
+        if (season == null)
+        {
+            guessNextSeason();
+        }
+        return season;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSArray<Integer> seasons()
+    {
+        return Semester.integersInNS;
+    }
+
+
+    // ----------------------------------------------------------
+    public String seasonName()
+    {
+        return Semester.names.get(aSeason);
+    }
+
+
+    // ----------------------------------------------------------
+    public void setSeason(Integer value)
+    {
+        season = value;
+    }
+
+
+    // ----------------------------------------------------------
+    public int year()
+    {
+        if (year == 0)
+        {
+            guessNextSeason();
+        }
+        return year;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setYear(Object value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+        else if (value instanceof Number)
+        {
+            year = ((Number)value).intValue();
+        }
+        else
+        {
+            try
+            {
+                year = Integer.parseInt(value.toString());
+            }
+            catch (NumberFormatException e)
+            {
+                error(e.getMessage());
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public NSArray<Department> departments()
+    {
+        if (departments == null || departments.size() == 0 ||
+            departments.get(0).institution() != institution)
+        {
+            departments = Department.objectsMatchingQualifier(localContext(),
+                Department.institution.is(institution),
+                Department.name.ascInsensitives());
+        }
+        return departments;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasMultipleDepartments()
+    {
+        return departments().size() > 1;
+    }
+
+
+    // ----------------------------------------------------------
+    public Department department()
+    {
+        if (department == null || department.institution() != institution)
+        {
+            if (departments().size() > 0)
+            {
+                department = departments().get(0);
+            }
+            else
+            {
+                department = null;
+            }
+        }
+        return department;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setDepartment(Department value)
+    {
+        department = value;
+    }
+
+
+    // ----------------------------------------------------------
+    public int newCourseNumber()
+    {
+        return newCourseNumber;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setNewCourseNumber(Object value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+        else if (value instanceof Number)
+        {
+            newCourseNumber = ((Number)value).intValue();
+        }
+        else
+        {
+            try
+            {
+                newCourseNumber = Integer.parseInt(value.toString());
+            }
+            catch (NumberFormatException e)
+            {
+                error(e.getMessage());
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults createSemester()
+    {
+        Semester newSemester = Semester.create(
+            localContext(), season(), startDate, endDate, year());
+        if (applyLocalChanges())
+        {
+            semester = newSemester;
+            semesters = Semester.allObjectsOrderedByStartDate(localContext());
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults createCourse()
+    {
+        if (newCourseNumber == 0)
+        {
+            error("Please provide a course number.");
+            return null;
+        }
+        if (newCourseName == null || newCourseName.equals(""))
+        {
+            error("Please provide a course name.");
+            return null;
+        }
+
+        // Check for duplicate number
+        NSArray<Course> old = Course.objectsMatchingQualifier(localContext(),
+            Course.number.is(newCourseNumber).and(
+                Course.department.is(department)));
+        if (old.size() > 0)
+        {
+            error("Course " + department.abbreviation() + " " + newCourseNumber
+                + " already exists.");
+            return null;
+        }
+
+        Course newCourse =
+            Course.create(localContext(), newCourseName, newCourseNumber);
+        newCourse.setDepartmentRelationship(department);
+        if (applyLocalChanges())
+        {
+            coreSelections().setCourseRelationship(newCourse);
+            coreSelections().setCourseOfferingRelationship(null);
+            courseDisplayGroup.fetch();
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public TimeZone timeZone()
+    {
+        if (timeZone == null)
+        {
+            String tz = user().timeZoneName();
+            if (tz != null)
+            {
+                timeZone = TimeZone.getTimeZone(tz);
+            }
+        }
+        return timeZone;
+    }
+
+
+    // ----------------------------------------------------------
+    private void guessNextSeason()
+    {
+        if (semesters == null || semesters.size() == 0)
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new java.util.Date());
+            if (timeZone() != null)
+            {
+                cal.setTimeZone(timeZone());
+            }
+            year = cal.get(Calendar.YEAR);
+            season = Semester.integers[Semester.defaultSemesterFor(cal)];
+        }
+        else
+        {
+            Semester old = semesters.get(0);
+            int nextSeason = old.season().intValue() + 1;
+            year = old.year();
+            if (nextSeason == Semester.integers.length)
+            {
+                nextSeason = Semester.integers[0];
+                year++;
+            }
+            season = Semester.integers[nextSeason];
+        }
+        if (startDate == null)
+        {
+            startDate = Semester.defaultStartingDate(season, year, timeZone());
+        }
+        if (endDate == null)
+        {
+            endDate = Semester.defaultEndingDate(season, year, timeZone());
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
+    private int year;
+    private Integer season;
+    private Department department;
+    private NSArray<Department> departments;
+    private int newCourseNumber = 101;
+    private TimeZone timeZone;
     static Logger log = Logger.getLogger(NewCourseOfferingPage.class);
 }
