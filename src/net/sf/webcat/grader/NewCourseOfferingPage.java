@@ -28,6 +28,7 @@ import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.core.*;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 
 //-------------------------------------------------------------------------
 /**
@@ -320,22 +321,28 @@ public class NewCourseOfferingPage
             semester = newSemester;
             semesters = Semester.allObjectsOrderedByStartDate(localContext());
         }
-        return null;
+
+        JavascriptGenerator page = new JavascriptGenerator();
+        page.refresh("courseblock", "error-panel");
+        return page;
     }
 
 
     // ----------------------------------------------------------
     public WOActionResults createCourse()
     {
+        JavascriptGenerator page = new JavascriptGenerator();
+        page.refresh("courseblock", "error-panel");
+
         if (newCourseNumber == 0)
         {
             error("Please provide a course number.");
-            return null;
+            return page;
         }
         if (newCourseName == null || newCourseName.equals(""))
         {
             error("Please provide a course name.");
-            return null;
+            return page;
         }
 
         // Check for duplicate number
@@ -346,7 +353,7 @@ public class NewCourseOfferingPage
         {
             error("Course " + department.abbreviation() + " " + newCourseNumber
                 + " already exists.");
-            return null;
+            return page;
         }
 
         Course newCourse =
@@ -358,7 +365,8 @@ public class NewCourseOfferingPage
             coreSelections().setCourseOfferingRelationship(null);
             courseDisplayGroup.fetch();
         }
-        return null;
+
+        return page;
     }
 
 
