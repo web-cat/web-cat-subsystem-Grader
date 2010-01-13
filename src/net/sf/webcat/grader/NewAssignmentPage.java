@@ -49,7 +49,7 @@ import er.extensions.foundation.ERXValueUtilities;
  * @version $Revision$, $Date$
  */
 public class NewAssignmentPage
-    extends GraderAssignmentComponent
+    extends GraderCourseComponent
 {
     //~ Constructors ..........................................................
 
