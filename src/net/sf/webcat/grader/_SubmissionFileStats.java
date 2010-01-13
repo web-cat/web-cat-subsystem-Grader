@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -1460,10 +1459,10 @@ public abstract class _SubmissionFileStats
             log.debug( "deleteAllCommentsRelationships(): was "
                 + comments() );
         }
-        Enumeration<?> objects = comments().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteCommentsRelationship(
-                (net.sf.webcat.grader.SubmissionFileComment)objects.nextElement() );
+        for (net.sf.webcat.grader.SubmissionFileComment object : comments())
+        {
+            deleteCommentsRelationship(object);
+        }
     }
 
 
@@ -1638,10 +1637,10 @@ public abstract class _SubmissionFileStats
             log.debug( "deleteAllGraderPrefsRelationships(): was "
                 + graderPrefs() );
         }
-        Enumeration<?> objects = graderPrefs().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteGraderPrefsRelationship(
-                (net.sf.webcat.grader.GraderPrefs)objects.nextElement() );
+        for (net.sf.webcat.grader.GraderPrefs object : graderPrefs())
+        {
+            deleteGraderPrefsRelationship(object);
+        }
     }
 
 
@@ -1714,6 +1713,58 @@ public abstract class _SubmissionFileStats
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static SubmissionFileStats firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<SubmissionFileStats> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static SubmissionFileStats uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<SubmissionFileStats> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

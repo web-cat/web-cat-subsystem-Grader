@@ -80,6 +80,7 @@ public class EditAssignmentPage
 
     //~ Methods ...............................................................
 
+    // ----------------------------------------------------------
     public void awake()
     {
         long timeStart = System.currentTimeMillis();
@@ -89,6 +90,7 @@ public class EditAssignmentPage
     }
 
 
+    // ----------------------------------------------------------
     public void sleep()
     {
         long timeStart = System.currentTimeMillis();

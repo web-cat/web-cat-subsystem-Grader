@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -67,14 +66,14 @@ public abstract class _Assignment
      */
     public static Assignment create(
         EOEditingContext editingContext,
-        boolean trackOpinions
+        boolean trackOpinionsValue
         )
     {
         Assignment eoObject = (Assignment)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _Assignment.ENTITY_NAME);
-        eoObject.setTrackOpinions(trackOpinions);
+        eoObject.setTrackOpinions(trackOpinionsValue);
         return eoObject;
     }
 
@@ -790,10 +789,10 @@ public abstract class _Assignment
             log.debug( "deleteAllOfferingsRelationships(): was "
                 + offerings() );
         }
-        Enumeration<?> objects = offerings().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteOfferingsRelationship(
-                (net.sf.webcat.grader.AssignmentOffering)objects.nextElement() );
+        for (net.sf.webcat.grader.AssignmentOffering object : offerings())
+        {
+            deleteOfferingsRelationship(object);
+        }
     }
 
 
@@ -968,10 +967,10 @@ public abstract class _Assignment
             log.debug( "deleteAllStepsRelationships(): was "
                 + steps() );
         }
-        Enumeration<?> objects = steps().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteStepsRelationship(
-                (net.sf.webcat.grader.Step)objects.nextElement() );
+        for (net.sf.webcat.grader.Step object : steps())
+        {
+            deleteStepsRelationship(object);
+        }
     }
 
 
@@ -1044,6 +1043,58 @@ public abstract class _Assignment
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static Assignment firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<Assignment> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static Assignment uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<Assignment> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -69,18 +68,18 @@ public abstract class _SubmissionProfile
      */
     public static SubmissionProfile create(
         EOEditingContext editingContext,
-        boolean awardEarlyBonus,
-        boolean deductLatePenalty,
-        byte submissionMethod
+        boolean awardEarlyBonusValue,
+        boolean deductLatePenaltyValue,
+        byte submissionMethodValue
         )
     {
         SubmissionProfile eoObject = (SubmissionProfile)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _SubmissionProfile.ENTITY_NAME);
-        eoObject.setAwardEarlyBonus(awardEarlyBonus);
-        eoObject.setDeductLatePenalty(deductLatePenalty);
-        eoObject.setSubmissionMethod(submissionMethod);
+        eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
+        eoObject.setDeductLatePenalty(deductLatePenaltyValue);
+        eoObject.setSubmissionMethod(submissionMethodValue);
         return eoObject;
     }
 
@@ -1673,10 +1672,10 @@ public abstract class _SubmissionProfile
             log.debug( "deleteAllAssignmentRelationships(): was "
                 + assignment() );
         }
-        Enumeration<?> objects = assignment().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteAssignmentRelationship(
-                (net.sf.webcat.grader.Assignment)objects.nextElement() );
+        for (net.sf.webcat.grader.Assignment object : assignment())
+        {
+            deleteAssignmentRelationship(object);
+        }
     }
 
 
@@ -1851,10 +1850,10 @@ public abstract class _SubmissionProfile
             log.debug( "deleteAllCourseOfferingsRelationships(): was "
                 + courseOfferings() );
         }
-        Enumeration<?> objects = courseOfferings().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteCourseOfferingsRelationship(
-                (net.sf.webcat.core.CourseOffering)objects.nextElement() );
+        for (net.sf.webcat.core.CourseOffering object : courseOfferings())
+        {
+            deleteCourseOfferingsRelationship(object);
+        }
     }
 
 
@@ -1927,6 +1926,58 @@ public abstract class _SubmissionProfile
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static SubmissionProfile firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<SubmissionProfile> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static SubmissionProfile uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<SubmissionProfile> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

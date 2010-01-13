@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -76,32 +75,32 @@ public abstract class _GradingCriteria
      */
     public static GradingCriteria create(
         EOEditingContext editingContext,
-        boolean diffLineSyncing,
-        boolean floatComparisonStyle,
-        boolean ignoreBlankLines,
-        boolean ignoreCase,
-        boolean ignoreNonprinting,
-        boolean ignorePunctuation,
-        boolean ignoreWhitespace,
-        boolean normalizeWhitespace,
-        boolean tokenizingStyle,
-        boolean trimWhitespace
+        boolean diffLineSyncingValue,
+        boolean floatComparisonStyleValue,
+        boolean ignoreBlankLinesValue,
+        boolean ignoreCaseValue,
+        boolean ignoreNonprintingValue,
+        boolean ignorePunctuationValue,
+        boolean ignoreWhitespaceValue,
+        boolean normalizeWhitespaceValue,
+        boolean tokenizingStyleValue,
+        boolean trimWhitespaceValue
         )
     {
         GradingCriteria eoObject = (GradingCriteria)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _GradingCriteria.ENTITY_NAME);
-        eoObject.setDiffLineSyncing(diffLineSyncing);
-        eoObject.setFloatComparisonStyle(floatComparisonStyle);
-        eoObject.setIgnoreBlankLines(ignoreBlankLines);
-        eoObject.setIgnoreCase(ignoreCase);
-        eoObject.setIgnoreNonprinting(ignoreNonprinting);
-        eoObject.setIgnorePunctuation(ignorePunctuation);
-        eoObject.setIgnoreWhitespace(ignoreWhitespace);
-        eoObject.setNormalizeWhitespace(normalizeWhitespace);
-        eoObject.setTokenizingStyle(tokenizingStyle);
-        eoObject.setTrimWhitespace(trimWhitespace);
+        eoObject.setDiffLineSyncing(diffLineSyncingValue);
+        eoObject.setFloatComparisonStyle(floatComparisonStyleValue);
+        eoObject.setIgnoreBlankLines(ignoreBlankLinesValue);
+        eoObject.setIgnoreCase(ignoreCaseValue);
+        eoObject.setIgnoreNonprinting(ignoreNonprintingValue);
+        eoObject.setIgnorePunctuation(ignorePunctuationValue);
+        eoObject.setIgnoreWhitespace(ignoreWhitespaceValue);
+        eoObject.setNormalizeWhitespace(normalizeWhitespaceValue);
+        eoObject.setTokenizingStyle(tokenizingStyleValue);
+        eoObject.setTrimWhitespace(trimWhitespaceValue);
         return eoObject;
     }
 
@@ -1593,10 +1592,10 @@ public abstract class _GradingCriteria
             log.debug( "deleteAllAssignmentRelationships(): was "
                 + assignment() );
         }
-        Enumeration<?> objects = assignment().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteAssignmentRelationship(
-                (net.sf.webcat.grader.Assignment)objects.nextElement() );
+        for (net.sf.webcat.grader.Assignment object : assignment())
+        {
+            deleteAssignmentRelationship(object);
+        }
     }
 
 
@@ -1669,6 +1668,58 @@ public abstract class _GradingCriteria
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static GradingCriteria firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<GradingCriteria> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static GradingCriteria uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<GradingCriteria> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

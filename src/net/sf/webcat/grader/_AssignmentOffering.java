@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -70,18 +69,18 @@ public abstract class _AssignmentOffering
      */
     public static AssignmentOffering create(
         EOEditingContext editingContext,
-        boolean gradingSuspended,
-        boolean publish,
-        boolean updateMutableFields
+        boolean gradingSuspendedValue,
+        boolean publishValue,
+        boolean updateMutableFieldsValue
         )
     {
         AssignmentOffering eoObject = (AssignmentOffering)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _AssignmentOffering.ENTITY_NAME);
-        eoObject.setGradingSuspended(gradingSuspended);
-        eoObject.setPublish(publish);
-        eoObject.setUpdateMutableFields(updateMutableFields);
+        eoObject.setGradingSuspended(gradingSuspendedValue);
+        eoObject.setPublish(publishValue);
+        eoObject.setUpdateMutableFields(updateMutableFieldsValue);
         return eoObject;
     }
 
@@ -979,10 +978,10 @@ public abstract class _AssignmentOffering
             log.debug( "deleteAllGraderPrefsRelationships(): was "
                 + graderPrefs() );
         }
-        Enumeration<?> objects = graderPrefs().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteGraderPrefsRelationship(
-                (net.sf.webcat.grader.GraderPrefs)objects.nextElement() );
+        for (net.sf.webcat.grader.GraderPrefs object : graderPrefs())
+        {
+            deleteGraderPrefsRelationship(object);
+        }
     }
 
 
@@ -1157,10 +1156,10 @@ public abstract class _AssignmentOffering
             log.debug( "deleteAllSubmissionsRelationships(): was "
                 + submissions() );
         }
-        Enumeration<?> objects = submissions().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteSubmissionsRelationship(
-                (net.sf.webcat.grader.Submission)objects.nextElement() );
+        for (net.sf.webcat.grader.Submission object : submissions())
+        {
+            deleteSubmissionsRelationship(object);
+        }
     }
 
 
@@ -1233,6 +1232,58 @@ public abstract class _AssignmentOffering
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static AssignmentOffering firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<AssignmentOffering> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static AssignmentOffering uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<AssignmentOffering> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

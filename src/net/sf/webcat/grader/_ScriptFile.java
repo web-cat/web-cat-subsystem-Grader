@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -70,18 +69,18 @@ public abstract class _ScriptFile
      */
     public static ScriptFile create(
         EOEditingContext editingContext,
-        boolean isConfigFile,
-        boolean isPublished,
-        boolean updateMutableFields
+        boolean isConfigFileValue,
+        boolean isPublishedValue,
+        boolean updateMutableFieldsValue
         )
     {
         ScriptFile eoObject = (ScriptFile)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _ScriptFile.ENTITY_NAME);
-        eoObject.setIsConfigFile(isConfigFile);
-        eoObject.setIsPublished(isPublished);
-        eoObject.setUpdateMutableFields(updateMutableFields);
+        eoObject.setIsConfigFile(isConfigFileValue);
+        eoObject.setIsPublished(isPublishedValue);
+        eoObject.setUpdateMutableFields(updateMutableFieldsValue);
         return eoObject;
     }
 
@@ -1268,10 +1267,10 @@ public abstract class _ScriptFile
             log.debug( "deleteAllCourseOfferingsRelationships(): was "
                 + courseOfferings() );
         }
-        Enumeration<?> objects = courseOfferings().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteCourseOfferingsRelationship(
-                (net.sf.webcat.core.CourseOffering)objects.nextElement() );
+        for (net.sf.webcat.core.CourseOffering object : courseOfferings())
+        {
+            deleteCourseOfferingsRelationship(object);
+        }
     }
 
 
@@ -1446,10 +1445,10 @@ public abstract class _ScriptFile
             log.debug( "deleteAllStepsRelationships(): was "
                 + steps() );
         }
-        Enumeration<?> objects = steps().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteStepsRelationship(
-                (net.sf.webcat.grader.Step)objects.nextElement() );
+        for (net.sf.webcat.grader.Step object : steps())
+        {
+            deleteStepsRelationship(object);
+        }
     }
 
 
@@ -1522,6 +1521,58 @@ public abstract class _ScriptFile
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static ScriptFile firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<ScriptFile> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static ScriptFile uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<ScriptFile> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 

@@ -28,7 +28,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXKey;
-import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -885,10 +884,10 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllResultFilesRelationships(): was "
                 + resultFiles() );
         }
-        Enumeration<?> objects = resultFiles().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteResultFilesRelationship(
-                (net.sf.webcat.grader.ResultFile)objects.nextElement() );
+        for (net.sf.webcat.grader.ResultFile object : resultFiles())
+        {
+            deleteResultFilesRelationship(object);
+        }
     }
 
 
@@ -1062,10 +1061,10 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllResultOutcomesRelationships(): was "
                 + resultOutcomes() );
         }
-        Enumeration<?> objects = resultOutcomes().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteResultOutcomesRelationship(
-                (net.sf.webcat.grader.ResultOutcome)objects.nextElement() );
+        for (net.sf.webcat.grader.ResultOutcome object : resultOutcomes())
+        {
+            deleteResultOutcomesRelationship(object);
+        }
     }
 
 
@@ -1239,10 +1238,10 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllSubmissionFileStatsRelationships(): was "
                 + submissionFileStats() );
         }
-        Enumeration<?> objects = submissionFileStats().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteSubmissionFileStatsRelationship(
-                (net.sf.webcat.grader.SubmissionFileStats)objects.nextElement() );
+        for (net.sf.webcat.grader.SubmissionFileStats object : submissionFileStats())
+        {
+            deleteSubmissionFileStatsRelationship(object);
+        }
     }
 
 
@@ -1417,10 +1416,10 @@ public abstract class _SubmissionResult
             log.debug( "deleteAllSubmissionsRelationships(): was "
                 + submissions() );
         }
-        Enumeration<?> objects = submissions().objectEnumerator();
-        while ( objects.hasMoreElements() )
-            deleteSubmissionsRelationship(
-                (net.sf.webcat.grader.Submission)objects.nextElement() );
+        for (net.sf.webcat.grader.Submission object : submissions())
+        {
+            deleteSubmissionsRelationship(object);
+        }
     }
 
 
@@ -1493,6 +1492,58 @@ public abstract class _SubmissionResult
             ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the first object that matches a qualifier, when
+     * sorted with the specified sort orderings.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     * @param sortOrderings the sort orderings
+     *
+     * @return the first entity that was retrieved, or null if there was none
+     */
+    public static SubmissionResult firstObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        NSArray<SubmissionResult> results =
+            objectsMatchingQualifier(context, qualifier, sortOrderings);
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve a single object using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the single entity that was retrieved
+     *
+     * @throws EOUtilities.MoreThanOneException
+     *     if there is more than one matching object
+     */
+    public static SubmissionResult uniqueObjectMatchingQualifier(
+        EOEditingContext context,
+        EOQualifier qualifier) throws EOUtilities.MoreThanOneException
+    {
+        NSArray<SubmissionResult> results =
+            objectsMatchingQualifier(context, qualifier);
+        if (results.size() > 1)
+        {
+            throw new EOUtilities.MoreThanOneException(null);
+        }
+        return (results.size() > 0)
+            ? results.get(0)
+            : null;
     }
 
 
