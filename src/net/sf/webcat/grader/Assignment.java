@@ -180,12 +180,12 @@ public class Assignment
 
 
     // ----------------------------------------------------------
-    public Step addNewStep( ScriptFile script )
+    public Step addNewStep( GradingPlugin script )
     {
         int position = steps().count() + 1;
         Step step = createStepsRelationship();
         step.setOrder( position );
-        step.setScriptRelationship( script );
+        step.setGradingPluginRelationship( script );
         return step;
     }
 
@@ -193,7 +193,7 @@ public class Assignment
     // ----------------------------------------------------------
     public Step copyStep( Step step, boolean keepOrdering )
     {
-        Step newStep = addNewStep( step.script() );
+        Step newStep = addNewStep( step.gradingPlugin() );
         newStep.setTimeout( step.timeout() );
         newStep.setConfigRelationship( step.config() );
         MutableDictionary dict = step.configSettings();

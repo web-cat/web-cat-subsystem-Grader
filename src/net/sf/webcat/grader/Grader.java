@@ -84,7 +84,7 @@ public class Grader
         super.init();
 
         // Install or update any plug-ins that need it
-        ScriptFile.autoUpdateAndInstall();
+        GradingPlugin.autoUpdateAndInstall();
 
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();

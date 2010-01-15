@@ -115,17 +115,20 @@ public class UploadSubmissionPage
             startSubmission(currentSubNo, user());
         }
 
-        log.debug( "due = "
-                   + prefs().assignmentOffering().dueDate().getTime() );
-        log.debug( "grace = " +
-                   prefs().assignmentOffering().assignment()
-                       .submissionProfile().deadTimeDelta() );
+        if (prefs().assignmentOffering().dueDate() != null)
+        {
+            log.debug( "due = "
+                       + prefs().assignmentOffering().dueDate().getTime() );
+            log.debug( "grace = " +
+                       prefs().assignmentOffering().assignment()
+                           .submissionProfile().deadTimeDelta() );
 
-        NSTimestamp deadline = new NSTimestamp(
-                prefs().assignmentOffering().dueDate().getTime()
-                + prefs().assignmentOffering().assignment()
-                   .submissionProfile().deadTimeDelta() );
-        log.debug( "time = " + deadline );
+            NSTimestamp deadline = new NSTimestamp(
+                    prefs().assignmentOffering().dueDate().getTime()
+                    + prefs().assignmentOffering().assignment()
+                       .submissionProfile().deadTimeDelta() );
+            log.debug( "time = " + deadline );
+        }
 
         super._appendToResponse( response, context );
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();

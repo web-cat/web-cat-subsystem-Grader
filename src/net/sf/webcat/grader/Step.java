@@ -59,7 +59,7 @@ public class Step
      */
     public String userPresentableDescription()
     {
-        return "(" + order() + "): " + script();
+        return "(" + order() + "): " + gradingPlugin();
     }
 
 
@@ -125,8 +125,22 @@ public class Step
     public int effectiveEndToEndTimeout()
     {
         int timeoutOneRun = effectiveTimeoutForOneRun();
-        return timeoutOneRun * script().timeoutMultiplier()
-            + script().timeoutInternalPadding();
+        return timeoutOneRun * gradingPlugin().timeoutMultiplier()
+            + gradingPlugin().timeoutInternalPadding();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Deprecated; may be removed in the future once all bindings in WOD files
+     * have been renamed. Use {@link #gradingPlugin()} instead.
+     *
+     * @return the grading plugin associated with this step
+     */
+    @Deprecated
+    public GradingPlugin script()
+    {
+        return gradingPlugin();
     }
 
 
@@ -205,13 +219,13 @@ public class Step
         {
             try
             {
-                script().execute( args, cwd );
+                gradingPlugin().execute( args, cwd );
             }
             catch ( IOException e )
             {
                 // Error creating process, so record it
                 log.error( "Exception executing "
-                           + script().mainFilePath(),
+                           + gradingPlugin().mainFilePath(),
                            e );
                 exception = e;
             }

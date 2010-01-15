@@ -57,7 +57,7 @@ extends WCComponent
     //~ KVC Attributes (must be public) .......................................
 
     public int               index;
-    public ScriptFile        plugin;
+    public GradingPlugin        plugin;
     public WODisplayGroup    publishedPluginGroup;
     public WODisplayGroup    unpublishedPluginGroup;
     public WODisplayGroup    personalPluginGroup;
@@ -160,7 +160,7 @@ extends WCComponent
     public WOComponent downloadNew()
     {
         String msg =
-            ScriptFile.installOrUpdate( user(), feature, false );
+            GradingPlugin.installOrUpdate( user(), feature, false );
         possibleErrorMessage( msg );
         if ( msg == null )
         {
@@ -245,7 +245,7 @@ extends WCComponent
     {
         EditScriptFilesPage newPage = pageWithName(EditScriptFilesPage.class);
         newPage.nextPage = this;
-        newPage.scriptFile = plugin;
+        newPage.gradingPlugin = plugin;
         newPage.hideNextAndBack( true );
         newPage.isEditable = user().hasAdminPrivileges() ||
             user().equals( plugin.author() );
@@ -263,9 +263,9 @@ extends WCComponent
     public WOComponent toggleAutoUpdates()
     {
         boolean option = Application.configurationProperties()
-            .booleanForKey( ScriptFile.NO_AUTO_UPDATE_KEY );
+            .booleanForKey( GradingPlugin.NO_AUTO_UPDATE_KEY );
         Application.configurationProperties().put(
-            ScriptFile.NO_AUTO_UPDATE_KEY, option ? "false" : "true" );
+            GradingPlugin.NO_AUTO_UPDATE_KEY, option ? "false" : "true" );
         Application.configurationProperties().attemptToSave();
         return null;
     }
@@ -281,9 +281,9 @@ extends WCComponent
     public WOComponent toggleAutoInstalls()
     {
         boolean option = Application.configurationProperties()
-            .booleanForKey( ScriptFile.NO_AUTO_INSTALL_KEY );
+            .booleanForKey( GradingPlugin.NO_AUTO_INSTALL_KEY );
         Application.configurationProperties().put(
-            ScriptFile.NO_AUTO_INSTALL_KEY, option ? "false" : "true" );
+            GradingPlugin.NO_AUTO_INSTALL_KEY, option ? "false" : "true" );
         Application.configurationProperties().attemptToSave();
         return null;
     }
@@ -301,7 +301,7 @@ extends WCComponent
             error( "Please select a file to upload." );
             return null;
         }
-        ScriptFile.createNewScriptFile(
+        GradingPlugin.createNewGradingPlugin(
             localContext(),
             user(),
             uploadedName,
@@ -481,7 +481,7 @@ extends WCComponent
         {
             for ( int i = 0; i < exclude.count(); i++ )
             {
-                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
                 if ( fd != null )
                 {
@@ -494,7 +494,7 @@ extends WCComponent
         {
             for ( int i = 0; i < exclude.count(); i++ )
             {
-                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
                 if ( fd != null )
                 {
@@ -507,7 +507,7 @@ extends WCComponent
         {
             for ( int i = 0; i < exclude.count(); i++ )
             {
-                ScriptFile s = (ScriptFile)exclude.objectAtIndex( i );
+                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
                 if ( fd != null )
                 {

@@ -158,9 +158,9 @@ public abstract class _Step
     public static final String CONFIG_KEY = "config";
     public static final ERXKey<net.sf.webcat.grader.StepConfig> config =
         new ERXKey<net.sf.webcat.grader.StepConfig>(CONFIG_KEY);
-    public static final String SCRIPT_KEY = "script";
-    public static final ERXKey<net.sf.webcat.grader.ScriptFile> script =
-        new ERXKey<net.sf.webcat.grader.ScriptFile>(SCRIPT_KEY);
+    public static final String GRADING_PLUGIN_KEY = "gradingPlugin";
+    public static final ERXKey<net.sf.webcat.grader.GradingPlugin> gradingPlugin =
+        new ERXKey<net.sf.webcat.grader.GradingPlugin>(GRADING_PLUGIN_KEY);
     // To-many relationships ---
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     public static final ERXKey<net.sf.webcat.grader.GraderPrefs> graderPrefs =
@@ -701,61 +701,61 @@ public abstract class _Step
 
     // ----------------------------------------------------------
     /**
-     * Retrieve the entity pointed to by the <code>script</code>
+     * Retrieve the entity pointed to by the <code>gradingPlugin</code>
      * relationship.
      * @return the entity in the relationship
      */
-    public net.sf.webcat.grader.ScriptFile script()
+    public net.sf.webcat.grader.GradingPlugin gradingPlugin()
     {
-        return (net.sf.webcat.grader.ScriptFile)storedValueForKey( "script" );
+        return (net.sf.webcat.grader.GradingPlugin)storedValueForKey( "gradingPlugin" );
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>script</code>
+     * Set the entity pointed to by the <code>gradingPlugin</code>
      * relationship (DO NOT USE--instead, use
-     * <code>setScriptRelationship()</code>.
+     * <code>setGradingPluginRelationship()</code>.
      * This method is provided for WebObjects use.
      *
      * @param value The new entity to relate to
      */
-    public void setScript( net.sf.webcat.grader.ScriptFile value )
+    public void setGradingPlugin( net.sf.webcat.grader.GradingPlugin value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setScript("
-                + value + "): was " + script() );
+            log.debug( "setGradingPlugin("
+                + value + "): was " + gradingPlugin() );
         }
-        takeStoredValueForKey( value, "script" );
+        takeStoredValueForKey( value, "gradingPlugin" );
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Set the entity pointed to by the <code>script</code>
+     * Set the entity pointed to by the <code>gradingPlugin</code>
      * relationship.  This method is a type-safe version of
      * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
      *
      * @param value The new entity to relate to
      */
-    public void setScriptRelationship(
-        net.sf.webcat.grader.ScriptFile value )
+    public void setGradingPluginRelationship(
+        net.sf.webcat.grader.GradingPlugin value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setScriptRelationship("
-                + value + "): was " + script() );
+            log.debug( "setGradingPluginRelationship("
+                + value + "): was " + gradingPlugin() );
         }
         if ( value == null )
         {
-            net.sf.webcat.grader.ScriptFile object = script();
+            net.sf.webcat.grader.GradingPlugin object = gradingPlugin();
             if ( object != null )
-                removeObjectFromBothSidesOfRelationshipWithKey( object, "script" );
+                removeObjectFromBothSidesOfRelationshipWithKey( object, "gradingPlugin" );
         }
         else
         {
-            addObjectToBothSidesOfRelationshipWithKey( value, "script" );
+            addObjectToBothSidesOfRelationshipWithKey( value, "gradingPlugin" );
         }
     }
 

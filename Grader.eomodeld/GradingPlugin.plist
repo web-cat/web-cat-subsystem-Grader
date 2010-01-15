@@ -78,7 +78,7 @@
         updateMutableFields, 
         uploadedFileName
     ); 
-    className = "net.sf.webcat.grader.ScriptFile"; 
+    className = "net.sf.webcat.grader.GradingPlugin"; 
     classProperties = (
         author, 
         configDescription, 
@@ -97,7 +97,7 @@
         uploadedFileName
     ); 
     externalName = TUPLOADEDSCRIPTFILES; 
-    name = ScriptFile; 
+    name = GradingPlugin; 
     primaryKeyAttributes = (id); 
     relationships = (
         {

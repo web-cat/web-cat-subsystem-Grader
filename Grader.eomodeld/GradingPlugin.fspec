@@ -1,0 +1,31 @@
+{
+    pluginsAvailableToUser = {
+        class = EOFetchSpecification;
+        entityName = GradingPlugin;
+        prefetchingRelationshipKeyPaths = ();
+        qualifier = {
+            class = EOOrQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = author;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = author; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = isPublished;
+                    selectorName = "isEqualTo:";
+                    value = {class = NSNumber; value = 1; };
+                }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = name;
+                selectorName = compareCaseInsensitiveAscending;
+            }
+        );
+    };
+}

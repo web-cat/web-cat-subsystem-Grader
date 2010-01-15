@@ -42,11 +42,11 @@ public class PluginDescriptor
     // ----------------------------------------------------------
     /**
      * Creates a new plug-in descriptor.  This constructor is protected,
-     * since clients should use the {@link ScriptFile#descriptor()}
+     * since clients should use the {@link GradingPlugin#descriptor()}
      * method instead.
      * @param plugin the plug-in this descriptor is for
      */
-    protected PluginDescriptor( ScriptFile plugin )
+    protected PluginDescriptor( GradingPlugin plugin )
     {
         this.plugin = plugin;
         this.name = plugin.name();
@@ -139,7 +139,7 @@ public class PluginDescriptor
 
     //~ Instance/static variables .............................................
 
-    protected ScriptFile plugin;
+    protected GradingPlugin plugin;
 
     static Logger log = Logger.getLogger( PluginDescriptor.class );
 }

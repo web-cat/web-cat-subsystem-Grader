@@ -73,7 +73,7 @@ public class EditReusableScriptParametersPage
         step = prefs().step();
         if ( baseDir == null )
         {
-            baseDir = new java.io.File ( ScriptFile.userScriptDirName(
+            baseDir = new java.io.File ( GradingPlugin.userScriptDirName(
                 user(), true ).toString() );
         }
         if ( step.config() == null )
@@ -128,9 +128,9 @@ public class EditReusableScriptParametersPage
     public String title()
     {
         String plugin = "Plug-in";
-        if (step != null && step.script() != null)
+        if (step != null && step.gradingPlugin() != null)
         {
-            plugin = step.script().displayableName();
+            plugin = step.gradingPlugin().displayableName();
         }
         return "Edit Reusable Options for " + plugin;
     }

@@ -70,12 +70,12 @@ public class EditStepPage
         stepConfigList = StepConfig.configsForUserAndCourseScriptIncludingMine(
             localContext(),
             user(),
-            step.script(),
+            step.gradingPlugin(),
             prefs().assignmentOffering().courseOffering().course(),
             step.config() );
         if ( baseDir == null )
         {
-            baseDir = new java.io.File ( ScriptFile.userScriptDirName(
+            baseDir = new java.io.File ( GradingPlugin.userScriptDirName(
                 user(), true ).toString() );
         }
         if ( log.isDebugEnabled() )
@@ -160,9 +160,9 @@ public class EditStepPage
     public String title()
     {
         String plugin = "Plug-in";
-        if (step != null && step.script() != null)
+        if (step != null && step.gradingPlugin() != null)
         {
-            plugin = step.script().displayableName();
+            plugin = step.gradingPlugin().displayableName();
         }
         return "Configure " + plugin;
     }

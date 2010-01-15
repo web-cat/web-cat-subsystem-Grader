@@ -54,7 +54,7 @@ public class EditPluginGlobalsPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public ScriptFile   plugin;
+    public GradingPlugin   plugin;
     public java.io.File baseDir;
 
 
@@ -66,7 +66,7 @@ public class EditPluginGlobalsPage
         log.debug( "appendToResponse()" );
         if ( baseDir == null )
         {
-            baseDir = new java.io.File ( ScriptFile.userScriptDirName(
+            baseDir = new java.io.File ( GradingPlugin.userScriptDirName(
                 user(), true ).toString() );
         }
         if ( log.isDebugEnabled() )

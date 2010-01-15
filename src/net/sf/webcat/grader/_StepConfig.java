@@ -1058,7 +1058,7 @@ public abstract class _StepConfig
     public static NSArray<StepConfig> stepConfigsForCourseAndScript(
             EOEditingContext context,
             net.sf.webcat.core.Course courseBinding,
-            net.sf.webcat.grader.ScriptFile scriptFileBinding
+            net.sf.webcat.grader.GradingPlugin scriptFileBinding
         )
     {
         EOFetchSpecification spec = EOFetchSpecification

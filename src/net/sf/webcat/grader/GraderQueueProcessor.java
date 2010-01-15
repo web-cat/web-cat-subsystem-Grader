@@ -576,11 +576,11 @@ public class GraderQueueProcessor
         faultOccurredInStep = false;
         timeoutOccurredInStep = false;
         log.debug( "step " + step.order() + ": "
-                   + step.script().mainFilePath() );
+                   + step.gradingPlugin().mainFilePath() );
 
         try
         {
-            step.script().reinitializeConfigAttributesIfNecessary();
+            step.gradingPlugin().reinitializeConfigAttributesIfNecessary();
             log.debug( "creating properties file" );
             // Re-write the properties file
             properties.addPropertiesFromDictionaryIfNotDefined(
@@ -588,9 +588,9 @@ public class GraderQueueProcessor
                     .subsystemManager().pluginProperties()
                 );
             properties.addPropertiesFromDictionaryIfNotDefined(
-                step.script().globalConfigSettings() );
+                step.gradingPlugin().globalConfigSettings() );
             properties.addPropertiesFromDictionaryIfNotDefined(
-                step.script().defaultConfigSettings() );
+                step.gradingPlugin().defaultConfigSettings() );
             if ( step.config() != null )
             {
                 properties.addPropertiesFromDictionary(
@@ -605,9 +605,9 @@ public class GraderQueueProcessor
             properties.setProperty( "resultDir",
                                     job.submission().resultDirName() );
             properties.setProperty( "scriptHome",
-                                    step.script().dirName() );
+                                    step.gradingPlugin().dirName() );
             properties.setProperty( "scriptData",
-                            ScriptFile.scriptDataRoot() );
+                            GradingPlugin.scriptDataRoot() );
             properties.setProperty( "timeout",
                                     Integer.toString(
                                         step.effectiveEndToEndTimeout() ) );

@@ -118,7 +118,7 @@ public class StepConfig
     public static NSArray configsForUserAndCourseScriptIncludingMine(
             EOEditingContext context,
             net.sf.webcat.core.User userBinding,
-            net.sf.webcat.grader.ScriptFile scriptFileBinding,
+            net.sf.webcat.grader.GradingPlugin scriptFileBinding,
             net.sf.webcat.core.Course courseBinding,
             StepConfig mine
         )

@@ -40,8 +40,8 @@ import org.apache.log4j.Logger;
  *  @author Last changed by $Author$
  *  @version $Revision$, $Date$
  */
-public class ScriptFile
-    extends _ScriptFile
+public class GradingPlugin
+    extends _GradingPlugin
 {
     //~ Constructors ..........................................................
 
@@ -49,7 +49,7 @@ public class ScriptFile
     /**
      * Creates a new ScriptFile object.
      */
-    public ScriptFile()
+    public GradingPlugin()
     {
         super();
     }
@@ -460,7 +460,7 @@ public class ScriptFile
      *                     for display to the user
      * @return the new script file, if successful, or null if unsuccessful
      */
-    public static ScriptFile createNewScriptFile(
+    public static GradingPlugin createNewGradingPlugin(
             EOEditingContext    ec,
             User                author,
             String              uploadedName,
@@ -478,7 +478,7 @@ public class ScriptFile
         if ( expand && ( uploadedNameLC.endsWith( ".zip" ) ||
                          uploadedNameLC.endsWith( ".jar" ) ) )
         {
-            subdirName = ScriptFile.convertToSubdirName( uploadedName );
+            subdirName = GradingPlugin.convertToSubdirName( uploadedName );
             toLookFor = new File( userScriptDir + "/" + subdirName );
         }
         else
@@ -496,20 +496,20 @@ public class ScriptFile
             return null;
         }
 
-        ScriptFile script = new ScriptFile();
-        ec.insertObject( script );
-        script.setUploadedFileName( uploadedName );
-        script.setMainFileName( uploadedName );
-        script.setLastModified( new NSTimestamp() );
-        script.setAuthorRelationship( author );
+        GradingPlugin gradingPlugin = new GradingPlugin();
+        ec.insertObject( gradingPlugin );
+        gradingPlugin.setUploadedFileName( uploadedName );
+        gradingPlugin.setMainFileName( uploadedName );
+        gradingPlugin.setLastModified( new NSTimestamp() );
+        gradingPlugin.setAuthorRelationship( author );
 
         // Save the file to disk
-        log.debug( "saving to file " + script.mainFilePath() );
-        File scriptPath = new File( script.mainFilePath() );
+        log.debug( "saving to file " + gradingPlugin.mainFilePath() );
+        File pluginPath = new File( gradingPlugin.mainFilePath() );
         try
         {
-            scriptPath.getParentFile().mkdirs();
-            FileOutputStream out = new FileOutputStream( scriptPath );
+            pluginPath.getParentFile().mkdirs();
+            FileOutputStream out = new FileOutputStream( pluginPath );
             uploadedData.writeToStream( out );
             out.close();
         }
@@ -517,8 +517,8 @@ public class ScriptFile
         {
             String msg = e.getMessage();
             errors.setObjectForKey( msg, msg );
-            ec.deleteObject( script );
-            scriptPath.delete();
+            ec.deleteObject( gradingPlugin );
+            pluginPath.delete();
             return null;
         }
 
@@ -528,35 +528,35 @@ public class ScriptFile
             try
             {
                 //ZipFile zip = new ZipFile( script.mainFilePath() );
-                script.setSubdirName( subdirName );
-                log.debug( "unzipping to " + script.dirName() );
+                gradingPlugin.setSubdirName( subdirName );
+                log.debug( "unzipping to " + gradingPlugin.dirName() );
                 net.sf.webcat.archives.ArchiveManager.getInstance()
-                    .unpack( new File( script.dirName() ), scriptPath );
+                    .unpack( new File( gradingPlugin.dirName() ), pluginPath );
                 //Grader.unZip( zip, new File( script.dirName() ) );
                 //zip.close();
-                scriptPath.delete();
+                pluginPath.delete();
             }
             catch ( java.io.IOException e )
             {
                 String msg = e.getMessage();
                 errors.setObjectForKey( msg, msg );
-                script.setSubdirName( subdirName );
+                gradingPlugin.setSubdirName( subdirName );
                 net.sf.webcat.archives.FileUtilities
-                    .deleteDirectory( script.dirName() );
-                scriptPath.delete();
+                    .deleteDirectory( gradingPlugin.dirName() );
+                pluginPath.delete();
                 log.warn( "error unzipping:", e );
                 // throw new NSForwardException( e );
-                ec.deleteObject( script );
+                ec.deleteObject( gradingPlugin );
                 return null;
             }
-            script.setMainFileName( null );
-            String msg = script.initializeConfigAttributes();
+            gradingPlugin.setMainFileName( null );
+            String msg = gradingPlugin.initializeConfigAttributes();
             if ( msg != null )
             {
                 errors.setObjectForKey( msg, msg );
             }
         }
-        return script;
+        return gradingPlugin;
     }
 
 
@@ -628,19 +628,19 @@ public class ScriptFile
         User                            installedBy,
         net.sf.webcat.FeatureDescriptor plugin,
         boolean                         overwrite,
-        ScriptFile                      scriptFile )
+        GradingPlugin                      scriptFile )
     {
         if ( scriptFile != null && !scriptFile.hasSubdir() )
         {
             return "Installed plug-in does not support downloads!";
         }
 
-        ScriptFile newScriptFile = null;
+        GradingPlugin newScriptFile = null;
         String subdirName = convertToSubdirName( plugin.name() );
         File newScriptPath = null;
         if ( scriptFile == null )
         {
-            newScriptFile = new ScriptFile();
+            newScriptFile = new GradingPlugin();
             installedBy.editingContext().insertObject( newScriptFile );
             newScriptFile.setLastModified( new NSTimestamp() );
             newScriptFile.setAuthorRelationship( installedBy );
@@ -738,7 +738,7 @@ public class ScriptFile
         {
             for ( int i = 0; i < pluginList.count(); i++ )
             {
-                ScriptFile plugin = (ScriptFile)pluginList.objectAtIndex( i );
+                GradingPlugin plugin = (GradingPlugin)pluginList.objectAtIndex( i );
                 if ( plugin.descriptor().updateIsAvailable() )
                 {
                     log.info( "Updating plug-in: \"" + plugin.name() + "\"" );
@@ -821,7 +821,7 @@ public class ScriptFile
         {
             for ( int i = 0; i < pluginList.count(); i++ )
             {
-                ScriptFile s = (ScriptFile)pluginList.objectAtIndex( i );
+                GradingPlugin s = (GradingPlugin)pluginList.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
                 if ( fd != null )
                 {
@@ -879,5 +879,5 @@ public class ScriptFile
 
     static private String scriptRoot = null;
     static private String scriptDataRoot = null;
-    static Logger log = Logger.getLogger( ScriptFile.class );
+    static Logger log = Logger.getLogger( GradingPlugin.class );
 }

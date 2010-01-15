@@ -46,7 +46,7 @@ Replace: WOSubmitButton {
 }
 
 Section: WCPageModule {
-    title = "~ \"File(s) for \" + scriptFile.name";
+    title = "~ \"File(s) for \" + gradingPlugin.name";
 }
 
 Unzip: WOCheckBox {
@@ -59,13 +59,13 @@ Upload: WOSubmitButton {
 }
 
 UploadFile2: WOFileUpload {
-	data = uploadedFile2;
-	filePath = uploadedFileName2;
-	size = 60;
+    data = uploadedFile2;
+    filePath = uploadedFileName2;
+    size = 60;
 }
 
 UploadFile3: WOFileUpload {
-	data = uploadedFile3;
-	filePath = uploadedFileName3;
-	size = 60;
+    data = uploadedFile3;
+    filePath = uploadedFileName3;
+    size = 60;
 }

@@ -73,9 +73,9 @@ public class EditAssignmentPage
 
     public AssignmentOffering offeringToDelete;
 
-    public NSArray<ScriptFile> gradingPluginsToAdd;
-    public ScriptFile gradingPluginToAdd;
-    public ScriptFile selectedGradingPluginToAdd;
+    public NSArray<GradingPlugin> gradingPluginsToAdd;
+    public GradingPlugin gradingPluginToAdd;
+    public GradingPlugin selectedGradingPluginToAdd;
 
 
     //~ Methods ...............................................................
@@ -109,7 +109,7 @@ public class EditAssignmentPage
         currentTime = new NSTimestamp();
 
         // Get all the available grading plugins.
-        gradingPluginsToAdd = ScriptFile.pluginsAvailableToUser(
+        gradingPluginsToAdd = GradingPlugin.pluginsAvailableToUser(
                 localContext(), user());
 
         if (selectedOffering == null)
@@ -550,7 +550,7 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public boolean stepAllowsTimeout()
     {
-        return thisStep.script().timeoutMultiplier() != 0;
+        return thisStep.gradingPlugin().timeoutMultiplier() != 0;
     }
 
 

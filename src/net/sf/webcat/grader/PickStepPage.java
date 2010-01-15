@@ -59,7 +59,7 @@ public class PickStepPage
 
     public WODisplayGroup scriptGroup;
     public WODisplayGroup publishedScriptGroup;
-    public ScriptFile     script;
+    public GradingPlugin  script;
     public WODisplayGroup assignmentGroup;
     public Assignment     assignment;
     public int            selectedAssignmentIndex = -1;
@@ -292,7 +292,7 @@ public class PickStepPage
                 error( "Please select a file to upload." );
                 return null;
             }
-            ScriptFile newScript = ScriptFile.createNewScriptFile(
+            GradingPlugin newScript = GradingPlugin.createNewGradingPlugin(
                 localContext(),
                 user(),
                 uploadedName,
@@ -323,7 +323,7 @@ public class PickStepPage
 //            publishedScriptIndex -= assignmentGroup.displayedObjects().count();
             log.debug(" selected published  = " + publishedScriptIndex );
             targetAssignment.addNewStep(
-                (ScriptFile)publishedScriptGroup.displayedObjects()
+                (GradingPlugin)publishedScriptGroup.displayedObjects()
                     .objectAtIndex( publishedScriptIndex ) );
             applyLocalChanges();
         }
@@ -334,7 +334,7 @@ public class PickStepPage
                 publishedScriptGroup.displayedObjects().count();
             log.debug(" selected script     = " + selectedScriptIndex );
             targetAssignment.addNewStep(
-                (ScriptFile)scriptGroup.displayedObjects()
+                (GradingPlugin)scriptGroup.displayedObjects()
                     .objectAtIndex( selectedScriptIndex ) );
             applyLocalChanges();
         }

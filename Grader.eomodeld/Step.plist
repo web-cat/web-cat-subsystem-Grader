@@ -52,8 +52,8 @@
         config, 
         configSettings, 
         graderPrefs, 
+        gradingPlugin, 
         order, 
-        script, 
         timeout, 
         updateMutableFields
     ); 
@@ -84,11 +84,11 @@
             name = config; 
         }, 
         {
-            destination = ScriptFile; 
+            destination = GradingPlugin; 
             isToMany = N; 
             joinSemantic = EOInnerJoin; 
             joins = ({destinationAttribute = id; sourceAttribute = scriptId; }); 
-            name = script; 
+            name = gradingPlugin; 
         }
     ); 
 }

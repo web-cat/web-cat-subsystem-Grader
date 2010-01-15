@@ -9,7 +9,7 @@
             qualifiers = (
                 {
                     class = EOKeyValueQualifier; 
-                    key = "steps.script"; 
+                    key = "steps.gradingPlugin"; 
                     selectorName = "isEqualTo:"; 
                     value = {"_key" = scriptFile; class = EOQualifierVariable; }; 
                 }, 
