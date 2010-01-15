@@ -18,7 +18,7 @@
 </wo>
 </wo:WCContentPane>
 </li>
-<wo:if condition="$user.hasTAPrivileges">
+<wo:if condition="false"> <!-- was $user.hasTAPrivileges -->
 <li><wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeWhatImTeaching">
     <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
