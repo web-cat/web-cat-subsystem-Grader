@@ -62,13 +62,11 @@ public abstract class _ResultOutcome
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param index
      * @param updateMutableFields
      * @return The newly created object
      */
     public static ResultOutcome create(
         EOEditingContext editingContext,
-        Integer indexValue,
         boolean updateMutableFieldsValue
         )
     {
@@ -76,7 +74,6 @@ public abstract class _ResultOutcome
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _ResultOutcome.ENTITY_NAME);
-        eoObject.setIndex(indexValue);
         eoObject.setUpdateMutableFields(updateMutableFieldsValue);
         return eoObject;
     }

@@ -41,7 +41,8 @@ import org.apache.log4j.Logger;
  */
 public abstract class _SubmissionResult
     extends er.extensions.eof.ERXGenericRecord
-    implements net.sf.webcat.core.MigratoryAttributeOwner
+    implements net.sf.webcat.core.MutableContainer.MutableContainerOwner
+    , net.sf.webcat.core.MigratoryAttributeOwner
 {
     //~ Constructors ..........................................................
 
@@ -62,16 +63,19 @@ public abstract class _SubmissionResult
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
+     * @param updateMutableFields
      * @return The newly created object
      */
     public static SubmissionResult create(
-        EOEditingContext editingContext
+        EOEditingContext editingContext,
+        boolean updateMutableFieldsValue
         )
     {
         SubmissionResult eoObject = (SubmissionResult)
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _SubmissionResult.ENTITY_NAME);
+        eoObject.setUpdateMutableFields(updateMutableFieldsValue);
         return eoObject;
     }
 
@@ -136,6 +140,9 @@ public abstract class _SubmissionResult
     //~ Constants (for key names) .............................................
 
     // Attributes ---
+    public static final String ACCUMULATED_SAVED_PROPERTIES_KEY = "accumulatedSavedProperties";
+    public static final ERXKey<NSData> accumulatedSavedProperties =
+        new ERXKey<NSData>(ACCUMULATED_SAVED_PROPERTIES_KEY);
     public static final String COMMENT_FORMAT_KEY = "commentFormat";
     public static final ERXKey<Integer> commentFormat =
         new ERXKey<Integer>(COMMENT_FORMAT_KEY);
@@ -160,6 +167,9 @@ public abstract class _SubmissionResult
     public static final String TOOL_SCORE_KEY = "toolScore";
     public static final ERXKey<Double> toolScore =
         new ERXKey<Double>(TOOL_SCORE_KEY);
+    public static final String UPDATE_MUTABLE_FIELDS_KEY = "updateMutableFields";
+    public static final ERXKey<Integer> updateMutableFields =
+        new ERXKey<Integer>(UPDATE_MUTABLE_FIELDS_KEY);
     // To-one relationships ---
     // To-many relationships ---
     public static final String RESULT_FILES_KEY = "resultFiles";
@@ -228,6 +238,109 @@ public abstract class _SubmissionResult
             return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
+
+    //-- Local mutable cache --
+    private net.sf.webcat.core.MutableDictionary accumulatedSavedPropertiesCache;
+    private NSData accumulatedSavedPropertiesRawCache;
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>accumulatedSavedProperties</code> value.
+     * @return the value of the attribute
+     */
+    public net.sf.webcat.core.MutableDictionary accumulatedSavedProperties()
+    {
+        NSData dbValue =
+            (NSData)storedValueForKey( "accumulatedSavedProperties" );
+        if ( accumulatedSavedPropertiesRawCache != dbValue )
+        {
+            if ( dbValue != null && dbValue.equals( accumulatedSavedPropertiesRawCache ) )
+            {
+                // They are still equal, so just update the raw cache
+                accumulatedSavedPropertiesRawCache = dbValue;
+            }
+            else
+            {
+                // Underlying attribute may have changed because
+                // of a concurrent update through another editing
+                // context, so throw away current values.
+                accumulatedSavedPropertiesRawCache = dbValue;
+                net.sf.webcat.core.MutableDictionary newValue =
+                    net.sf.webcat.core.MutableDictionary
+                    .objectWithArchiveData( dbValue );
+                if ( accumulatedSavedPropertiesCache != null )
+                {
+                    accumulatedSavedPropertiesCache.copyFrom( newValue );
+                }
+                else
+                {
+                    accumulatedSavedPropertiesCache = newValue;
+                }
+                accumulatedSavedPropertiesCache.setOwner( this );
+                setUpdateMutableFields( true );
+            }
+        }
+        else if ( dbValue == null && accumulatedSavedPropertiesCache == null )
+        {
+            accumulatedSavedPropertiesCache =
+                net.sf.webcat.core.MutableDictionary
+                .objectWithArchiveData( dbValue );
+             accumulatedSavedPropertiesCache.setOwner( this );
+             setUpdateMutableFields( true );
+        }
+        return accumulatedSavedPropertiesCache;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>accumulatedSavedProperties</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setAccumulatedSavedProperties( net.sf.webcat.core.MutableDictionary value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAccumulatedSavedProperties("
+                + value + ")" );
+        }
+        if ( accumulatedSavedPropertiesCache == null )
+        {
+            accumulatedSavedPropertiesCache = value;
+            value.setHasChanged( false );
+            accumulatedSavedPropertiesRawCache = value.archiveData();
+            takeStoredValueForKey( accumulatedSavedPropertiesRawCache, "accumulatedSavedProperties" );
+        }
+        else if ( accumulatedSavedPropertiesCache != value )  // ( accumulatedSavedPropertiesCache != null )
+        {
+            accumulatedSavedPropertiesCache.copyFrom( value );
+            setUpdateMutableFields( true );
+        }
+        else  // ( accumulatedSavedPropertiesCache == non-null value )
+        {
+            // no nothing
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Clear the value of this object's <code>accumulatedSavedProperties</code>
+     * property.
+     */
+    public void clearAccumulatedSavedProperties()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearAccumulatedSavedProperties()" );
+        }
+        takeStoredValueForKey( null, "accumulatedSavedProperties" );
+        accumulatedSavedPropertiesRawCache = null;
+        accumulatedSavedPropertiesCache = null;
+    }
+
 
     // ----------------------------------------------------------
     /**
@@ -668,6 +781,136 @@ public abstract class _SubmissionResult
                 + value + "): was " + toolScoreRaw() );
         }
         takeStoredValueForKey( value, "toolScore" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>updateMutableFields</code> value.
+     * @return the value of the attribute
+     */
+    public boolean updateMutableFields()
+    {
+        Integer result =
+            (Integer)storedValueForKey( "updateMutableFields" );
+        return ( result == null )
+            ? false
+            : ( result.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>updateMutableFields</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setUpdateMutableFields( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFields("
+                + value + "): was " + updateMutableFields() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setUpdateMutableFieldsRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>updateMutableFields</code> value.
+     * @return the value of the attribute
+     */
+    public Integer updateMutableFieldsRaw()
+    {
+        return (Integer)storedValueForKey( "updateMutableFields" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>updateMutableFields</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setUpdateMutableFieldsRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUpdateMutableFieldsRaw("
+                + value + "): was " + updateMutableFieldsRaw() );
+        }
+        takeStoredValueForKey( value, "updateMutableFields" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called just before this object is saved to the database.
+     */
+    public void saveMutables()
+    {
+        log.debug("saveMutables()");
+        if ( accumulatedSavedPropertiesCache != null
+            && accumulatedSavedPropertiesCache.hasChanged() )
+        {
+            accumulatedSavedPropertiesRawCache = accumulatedSavedPropertiesCache.archiveData();
+            takeStoredValueForKey( accumulatedSavedPropertiesRawCache, "accumulatedSavedProperties" );
+            accumulatedSavedPropertiesCache.setHasChanged( false );
+        }
+
+        setUpdateMutableFields( false );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called just before this object is saved to the database.
+     */
+    public void willUpdate()
+    {
+        log.debug("willUpdate()");
+        saveMutables();
+        super.willUpdate();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called just before this object is inserted into the database.
+     */
+    public void willInsert()
+    {
+        log.debug("willInsert()");
+        saveMutables();
+        super.willInsert();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called when the object is invalidated.
+     */
+    public void flushCaches()
+    {
+        log.debug("flushCaches()");
+        accumulatedSavedPropertiesCache = null;
+        accumulatedSavedPropertiesRawCache  = null;
+        super.flushCaches();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called when an owned mutable container object is changed.
+     */
+    public void mutableContainerHasChanged()
+    {
+        setUpdateMutableFields( true );
     }
 
 

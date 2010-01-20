@@ -1,6 +1,17 @@
 {
     attributes = (
         {
+            columnName = accumulatedSavedProperties; 
+            name = accumulatedSavedProperties; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "net.sf.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {
             columnName = CCOMMENTFORMAT; 
             name = commentFormat; 
             prototypeName = tinyInteger; 
@@ -78,11 +89,18 @@
                 type = double; 
                 valueClassName = Double; 
             }; 
+        }, 
+        {
+            allowsNull = N; 
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
         }
     ); 
-    attributesUsedForLocking = (commentFormat, isMostRecent, statElementsLabel, status); 
+    attributesUsedForLocking = (commentFormat, isMostRecent, statElementsLabel, status, updateMutableFields); 
     className = "net.sf.webcat.grader.SubmissionResult"; 
     classProperties = (
+        accumulatedSavedProperties, 
         commentFormat, 
         comments, 
         correctnessScore, 
@@ -94,7 +112,8 @@
         submissionFileStats, 
         submissions, 
         taScore, 
-        toolScore
+        toolScore, 
+        updateMutableFields
     ); 
     externalName = TSUBMISSIONRESULT; 
     name = SubmissionResult; 

@@ -1,47 +1,47 @@
 {
     attributes = (
         {
-            columnName = CCONTENTS; 
-            name = contents; 
-            prototypeName = mutableDictionary; 
+            columnName = CCONTENTS;
+            name = contents;
+            prototypeName = mutableDictionary;
             userInfo = {
-                adaptorValueConversionMethodName = archiveData; 
-                isMutable = true; 
-                valueClassName = "net.sf.webcat.core.MutableDictionary"; 
-                valueFactoryMethodName = objectWithArchiveData; 
-            }; 
-        }, 
-        {name = id; prototypeName = id; }, 
-        {allowsNull = N; columnName = CINDEX; name = index; prototypeName = integer; }, 
-        {columnName = CRESULTID; name = resultId; prototypeName = foreignId; }, 
-        {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }, 
-        {columnName = CTAG; name = tag; prototypeName = tinyText; }, 
+                adaptorValueConversionMethodName = archiveData;
+                isMutable = true;
+                valueClassName = "net.sf.webcat.core.MutableDictionary";
+                valueFactoryMethodName = objectWithArchiveData;
+            };
+        },
+        {name = id; prototypeName = id; },
+        {columnName = CINDEX; name = index; prototypeName = integer; },
+        {columnName = CRESULTID; name = resultId; prototypeName = foreignId; },
+        {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; },
+        {columnName = CTAG; name = tag; prototypeName = tinyText; },
         {
-            name = updateMutableFields; 
-            prototypeName = updateMutableFields; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+            name = updateMutableFields;
+            prototypeName = updateMutableFields;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
         }
-    ); 
-    attributesUsedForLocking = (contents, index, resultId, submissionId, tag, updateMutableFields); 
-    className = "net.sf.webcat.grader.ResultOutcome"; 
-    classProperties = (contents, index, submission, submissionResult, tag, updateMutableFields); 
-    externalName = TRESULTOUTCOME; 
-    fetchSpecificationDictionary = {}; 
-    name = ResultOutcome; 
-    primaryKeyAttributes = (id); 
+    );
+    attributesUsedForLocking = (index, resultId, submissionId, tag, updateMutableFields);
+    className = "net.sf.webcat.grader.ResultOutcome";
+    classProperties = (contents, index, submission, submissionResult, tag, updateMutableFields);
+    externalName = TRESULTOUTCOME;
+    fetchSpecificationDictionary = {};
+    name = ResultOutcome;
+    primaryKeyAttributes = (id);
     relationships = (
         {
-            destination = Submission; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = submissionId; }); 
-            name = submission; 
-        }, 
+            destination = Submission;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = submissionId; });
+            name = submission;
+        },
         {
-            destination = SubmissionResult; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = resultId; }); 
-            name = submissionResult; 
+            destination = SubmissionResult;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = resultId; });
+            name = submissionResult;
         }
-    ); 
+    );
 }

@@ -263,6 +263,23 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds fields for keeping track of the accumulated values for result
+     * outcomes in a submission result.
+     * @throws SQLException on error
+     */
+    public void updateIncrement12() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONRESULT add "
+            + "CUPDATEMUTABLEFIELDS BIT NOT NULL" );
+        database().executeSQL(
+            "alter table TSUBMISSIONRESULT add "
+            + "accumulatedSavedProperties BLOB" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

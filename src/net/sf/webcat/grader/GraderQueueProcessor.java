@@ -21,16 +21,33 @@
 
 package net.sf.webcat.grader;
 
-import com.webobjects.eoaccess.*;
-import com.webobjects.eocontrol.*;
-import com.webobjects.foundation.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import net.sf.webcat.archives.FileUtilities;
+import net.sf.webcat.core.Application;
+import net.sf.webcat.core.MutableDictionary;
+import net.sf.webcat.core.WCProperties;
+import org.apache.log4j.Logger;
+import com.webobjects.eocontrol.EOAndQualifier;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOFetchSpecification;
+import com.webobjects.eocontrol.EOKeyValueQualifier;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.eocontrol.EOSortOrdering;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSDictionary;
+import com.webobjects.foundation.NSKeyValueCoding;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSMutableDictionary;
+import com.webobjects.foundation.NSTimestamp;
 import er.extensions.appserver.ERXApplication;
 import er.extensions.eof.ERXConstant;
-import java.io.*;
-import java.util.*;
-import net.sf.webcat.archives.FileUtilities;
-import net.sf.webcat.core.*;
-import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
@@ -145,8 +162,7 @@ public class GraderQueueProcessor
                     // delete all the discarded jobs
                     for ( int i = 0; i < jobList.count(); i++ )
                     {
-                        EnqueuedJob job =
-                            (EnqueuedJob)jobList.objectAtIndex( i );
+                        EnqueuedJob job = jobList.objectAtIndex( i );
                         editingContext.deleteObject( job );
                     }
                     editingContext.saveChanges();
@@ -419,9 +435,11 @@ public class GraderQueueProcessor
         gradingProperties.setProperty( "max.score.correctness",
             Double.toString( maxCorrectnessScore ) );
 
+        writeOutSavedGradingProperties(job, gradingProperties);
+
         for ( int stepNo = 0; stepNo < steps.count(); stepNo++ )
         {
-            Step thisStep = (Step)steps.objectAtIndex( stepNo );
+            Step thisStep = steps.objectAtIndex( stepNo );
 
             executeStep( job,
                          thisStep,
@@ -447,12 +465,12 @@ public class GraderQueueProcessor
             {
                 correctnessScore =
                     gradingProperties.doubleForKey( "score.correctness" );
-                gradingProperties.remove( "score.correctness" );
+//                gradingProperties.remove( "score.correctness" );
             }
             if ( gradingProperties.getProperty( "score.tools" ) != null )
             {
                 toolScore = gradingProperties.doubleForKey( "score.tools" );
-                gradingProperties.remove( "score.tools" );
+//                gradingProperties.remove( "score.tools" );
             }
             if ( gradingProperties.getProperty( "halt" ) != null )
             {
@@ -994,7 +1012,7 @@ public class GraderQueueProcessor
             inlineStaffReports );
 
         // 2009-02-04 (AJA): create result blobs
-        extractResultOutcomes( job, submissionResult, properties );
+        processSavedProperties( job, submissionResult, properties );
 
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
@@ -1052,6 +1070,149 @@ public class GraderQueueProcessor
 
 
     // ----------------------------------------------------------
+    private void writeOutSavedGradingProperties(EnqueuedJob job,
+                                                WCProperties gradingProperties)
+    {
+        MutableDictionary accumulatedValues = mostRecentAccumulatedValues(job);
+        NSDictionary<String, Object> previousValues =
+            previousSubmissionSavedProperties(job);
+
+        for (String key : (NSArray<String>) accumulatedValues.allKeys())
+        {
+            Object value = accumulatedValues.objectForKey(key);
+            gradingProperties.setObjectForKey(value, "mostRecent." + key);
+        }
+
+        for (String key : previousValues.allKeys())
+        {
+            Object value = previousValues.objectForKey(key);
+            gradingProperties.setObjectForKey(value, "previous." + key);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Build a saved property dictionary from the result outcomes for the
+     * specified submission result.
+     *
+     * @param submissionResult the submission result
+     */
+    private NSDictionary<String, Object> previousSubmissionSavedProperties(
+            EnqueuedJob job)
+    {
+        NSMutableDictionary<String, Object> props =
+            new NSMutableDictionary<String, Object>();
+
+        Submission submission = job.submission().previousSubmission();
+        SubmissionResult submissionResult = null;
+        if (submission != null)
+        {
+            submissionResult = submission.result();
+        }
+
+        if (submissionResult != null)
+        {
+            for (ResultOutcome outcome : submissionResult.resultOutcomes())
+            {
+                String key = outcome.tag();
+                MutableDictionary contents = outcome.contents();
+                Integer index = outcome.index();
+
+                Object value;
+                if (contents != null && contents.count() == 1
+                        && contents.objectForKey("value") != null)
+                {
+                    value = contents.objectForKey("value");
+                }
+                else
+                {
+                    value = contents;
+                }
+
+                if (index == null)
+                {
+                    props.setObjectForKey(value, key);
+                }
+                else
+                {
+                    NSMutableArray<Object> array =
+                        (NSMutableArray<Object>) props.objectForKey(key);
+
+                    if (array == null)
+                    {
+                        array = new NSMutableArray<Object>();
+                        props.setObjectForKey(array, key);
+                    }
+
+                    growArrayUpToIndex(array, index);
+                    array.replaceObjectAtIndex(value, index);
+                }
+            }
+        }
+
+        return props;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Grows the specified array until an item at the specified index can be
+     * set, inserting null values in the gaps.
+     *
+     * @param array the array
+     * @param index the index to grow up to
+     */
+    private void growArrayUpToIndex(NSMutableArray<?> array, int index)
+    {
+        while (array.count() <= index)
+        {
+            array.addObject(NSKeyValueCoding.NullValue);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the most recent accumulated values for the submission chain
+     * associated with this job.
+     *
+     * @param job the grading job
+     * @return the most recent accumulated values
+     */
+    private MutableDictionary mostRecentAccumulatedValues(EnqueuedJob job)
+    {
+        MutableDictionary accumulatedValues = null;
+
+        // Get the previous submission that has a result object so that we can
+        // get the accumulated values dictionary from it.
+        Submission prevSub = job.submission().previousSubmission();
+        while (prevSub != null && prevSub.result() == null)
+        {
+            prevSub = prevSub.previousSubmission();
+        }
+
+        if (prevSub != null)
+        {
+            SubmissionResult prevResult = prevSub.result();
+
+            if (prevResult != null)
+            {
+                accumulatedValues = new MutableDictionary(
+                    prevResult.accumulatedSavedProperties());
+            }
+        }
+
+        if (accumulatedValues == null)
+        {
+            accumulatedValues = new MutableDictionary();
+        }
+
+        return accumulatedValues;
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Create result outcome objects from properties in the grading properties
      * file.
@@ -1060,27 +1221,34 @@ public class GraderQueueProcessor
      * @param submissionResult
      * @param properties
      */
-    private void extractResultOutcomes( EnqueuedJob job,
-                                        SubmissionResult submissionResult,
-                                        WCProperties properties )
+    private void processSavedProperties( EnqueuedJob job,
+                                         SubmissionResult submissionResult,
+                                         WCProperties properties )
     {
-        NSArray<String> outcomeProps = properties.arrayForKey(
-                "outcomeProperties");
+        // Get the previous result with any data so that we can merge in these
+        // values with the accumulated values.
 
-        // TODO remove this when we're sure the plug-ins have been migrated
-        if (outcomeProps == null)
-        {
-            outcomeProps = properties.arrayForKey("blobProperties");
-        }
+        MutableDictionary accumulatedValues = mostRecentAccumulatedValues(job);
 
-        if (outcomeProps != null)
+        // Pull any properties that are prefixed with "saved." into
+        // ResultOutcome objects
+        final String SAVED_PROPERTY_PREFIX = "saved.";
+
+        for (Object propertyAsObj : properties.keySet())
         {
-            for (String outcomeProp : outcomeProps)
+            String property = (String) propertyAsObj;
+
+            if (property.startsWith(SAVED_PROPERTY_PREFIX))
             {
-                Object value = properties.valueForKey(outcomeProp);
+                String actualName = property.substring(
+                        SAVED_PROPERTY_PREFIX.length());
+                Object value = properties.valueForKey(property);
 
                 if (value != null)
                 {
+                    // Update the accumulated value dictionary.
+                    accumulatedValues.setObjectForKey(value, actualName);
+
                     if (value instanceof NSArray)
                     {
                         NSArray<?> array = (NSArray<?>) value;
@@ -1089,18 +1257,22 @@ public class GraderQueueProcessor
                         for (Object elem : array)
                         {
                             createResultOutcome( job, submissionResult, index,
-                                    outcomeProp, elem );
+                                    actualName, elem );
                             index++;
                         }
                     }
                     else
                     {
-                        createResultOutcome( job, submissionResult, 0,
-                                outcomeProp, value );
+                        createResultOutcome( job, submissionResult, null,
+                                actualName, value );
                     }
                 }
             }
         }
+
+        // Save the new accumulated saved properties into this submission
+        // result.
+        submissionResult.setAccumulatedSavedProperties(accumulatedValues);
     }
 
 
@@ -1120,7 +1292,7 @@ public class GraderQueueProcessor
      */
     private void createResultOutcome( EnqueuedJob job,
                                       SubmissionResult submissionResult,
-                                      int index,
+                                      Integer index,
                                       String tag,
                                       Object value )
     {
@@ -1136,9 +1308,15 @@ public class GraderQueueProcessor
         }
 
         ResultOutcome outcome = new ResultOutcome();
-        outcome.setIndex(index);
+
         outcome.setTag(tag);
         outcome.setContents(new MutableDictionary(contents));
+
+        if (index != null)
+        {
+            outcome.setIndex(index);
+        }
+
         editingContext.insertObject(outcome);
 
         // TODO remove this when we fix the SubmissionResult.submission
