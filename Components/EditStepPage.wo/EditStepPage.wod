@@ -24,7 +24,7 @@ NewReusableConfig: WCButton {
     label  = "New";
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: SaveCancelPage {
 //    title = "Configure Plug-in";
 //    title = "~ \"Configure \" + step.script.displayableName";
 }

@@ -8,46 +8,24 @@
           "Enter Remarks" = {
             accessLevel = 40;
             priority = 2;
-//            children = {
-//              "Pick the Course" = {
-//                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
-//                accessLevel = 40;
-//                priority = 1;
-//                wantsStart = YES;
-//              };
-//              "Pick the Assignment" = {
-//                pageName = net.sf.webcat.grader.PickAssignmentToEditPage;
-//                accessLevel = 40;
-//                priority = 2;
-//              };
-//              "Pick the Student" = {
-                pageName = net.sf.webcat.grader.PickStudentToGradePage; // StudentsForAssignmentPage;
-//                accessLevel = 40;
-//                priority = 3;
+            children = {
+              "Pick the Student" = {
+                pageName = net.sf.webcat.grader.StudentsForAssignmentPage;
+                accessLevel = 40;
+                priority = 3;
                 id = EnterGrades;
-//              };
-//              "Grade Student's Submission" = {
-//                pageName = net.sf.webcat.grader.GradeStudentSubmissionPage;
-//                accessLevel = 40;
-//                priority = 4;
-//              };
-//            };
+              };
+              "Grade Student's Submission" = {
+                pageName = net.sf.webcat.grader.GradeStudentSubmissionPage;
+                accessLevel = 40;
+                priority = 4;
+              };
+            };
           };
           "Download Scores" = {
             accessLevel = 40;
             priority = 3;
             children = {
-              "Pick the Course" = {
-                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
-                accessLevel = 40;
-                priority = 1;
-                wantsStart = YES;
-              };
-              "Pick the Assignment" = {
-                pageName = net.sf.webcat.grader.PickAssignmentToEditPage;
-                accessLevel = 40;
-                priority = 2;
-              };
               "Pick the Format" = {
                 pageName = net.sf.webcat.grader.DownloadScoresPage;
                 accessLevel = 40;
@@ -59,25 +37,6 @@
             accessLevel = 40;
             priority = 4;
             children = {
-//              "Pick the Course" = {
-//                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
-//                accessLevel = 40;
-//                priority = 1;
-//                wantsStart = YES;
-//                config    = { resetPrimeUser = true; };
-//              };
-//              "Pick the Assignment" = {
-//                pageName  = net.sf.webcat.grader.PickAssignmentToEditPage;
-//                accessLevel = 40;
-//                priority  = 2;
-//                config    = { resetPrimeUser = true; };
-//              };
-//             "Pick the Student" = {
-//                pageName  = net.sf.webcat.grader.PickEnrolledStudentPage;
-//                accessLevel = 40;
-//                priority  = 3;
-//                config    = { resetPrimeUser = true; };
-//              };
               "Upload Student's File(s)" = {
                 pageName  = net.sf.webcat.grader.UploadSubmissionPage;
                 accessLevel = 40;
@@ -252,7 +211,7 @@
               "Pick the Submission" = {
                 pageName = net.sf.webcat.grader.PickSubmissionPage;
                 priority = 3;
-                id       = PickSubmission;
+                id       = PastResults;
               };
               "View Your Results" = {
                 config = { jumpTo = MostRecent; };

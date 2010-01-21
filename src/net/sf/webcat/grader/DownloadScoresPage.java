@@ -23,7 +23,6 @@ package net.sf.webcat.grader;
 
 import com.Ostermiller.util.ExcelCSVPrinter;
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXArrayUtilities;
 import java.io.ByteArrayOutputStream;
@@ -37,7 +36,8 @@ import org.apache.log4j.Logger;
  * as a CSV file.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class DownloadScoresPage
     extends GraderAssignmentComponent
@@ -49,27 +49,48 @@ public class DownloadScoresPage
      * Default constructor.
      * @param context The page's context
      */
-    public DownloadScoresPage( WOContext context )
+    public DownloadScoresPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
     //~ KVC Attributes (must be public) .......................................
 
     /** Value of the corresponding checkbox on the page. */
-    public boolean omitStaff           = true;
+    public boolean omitStaff = true;
     public boolean useBlackboardFormat;
     public boolean useMoodleFormat;
     public boolean useFullFormat;
+
+    public AssignmentOffering assignmentOffering;
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void appendToResponse(WOResponse response, WOContext context)
     {
-        if ( prefs().assignmentOffering().moodleId() != null )
+        if (assignmentOffering == null)
+        {
+            assignmentOffering = prefs().assignmentOffering();
+            if (assignmentOffering == null)
+            {
+                Assignment assignment = prefs().assignment();
+                CourseOffering courseOffering =
+                    coreSelections().courseOffering();
+                assignmentOffering = AssignmentOffering
+                    .firstObjectMatchingValues(
+                        localContext(),
+                        null,
+                        AssignmentOffering.COURSE_OFFERING_KEY,
+                        courseOffering,
+                        AssignmentOffering.ASSIGNMENT_KEY,
+                        assignment);
+            }
+        }
+
+        if (assignmentOffering.moodleId() != null)
         {
             useBlackboardFormat = false;
             useMoodleFormat     = true;
@@ -81,34 +102,34 @@ public class DownloadScoresPage
             useMoodleFormat     = false;
             useFullFormat       = false;
         }
-        super.appendToResponse( response, context );
+        super.appendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    private void print( ExcelCSVPrinter out, String field )
+    private void print(ExcelCSVPrinter out, String field)
     {
-        if ( field == null )
+        if (field == null)
         {
-            out.print( "" );
+            out.print("");
         }
         else
         {
-            out.print( field );
+            out.print(field);
         }
     }
 
 
     // ----------------------------------------------------------
-    private void print( ExcelCSVPrinter out, Number field )
+    private void print(ExcelCSVPrinter out, Number field)
     {
-        if ( field == null )
+        if (field == null)
         {
-            out.print( "" );
+            out.print("");
         }
         else
         {
-            out.print( field.toString() );
+            out.print(field.toString());
         }
     }
 
@@ -116,63 +137,60 @@ public class DownloadScoresPage
     // ----------------------------------------------------------
     public byte[] exportAsWebCATCSV()
     {
-        ByteArrayOutputStream outBytes = new ByteArrayOutputStream( 4096 );
-        ExcelCSVPrinter out = new ExcelCSVPrinter( outBytes );
+        ByteArrayOutputStream outBytes = new ByteArrayOutputStream(4096);
+        ExcelCSVPrinter out = new ExcelCSVPrinter(outBytes);
 
         // Basic header information
-        out.print( "Course" );
-        out.print( "" );
+        out.print("Course");
+        out.print("");
         out.println(
-            coreSelections().courseOffering().course().deptNumber() );
-        out.print( "Semester" );
-        out.print( "" );
-        out.println( coreSelections().courseOffering().semester().name() );
-        out.print( "Assignment" );
-        out.print( "" );
-        out.println( prefs().assignmentOffering().assignment().name() );
-        out.print( "Generated on" );
-        out.print( "" );
-        out.println( new NSTimestamp().toString() );
-        out.println( "" );
+            assignmentOffering.courseOffering().course().deptNumber());
+        out.print("Semester");
+        out.print("");
+        out.println(assignmentOffering.courseOffering().semester().name());
+        out.print("Assignment");
+        out.print("");
+        out.println(assignmentOffering.assignment().name());
+        out.print("Generated on");
+        out.print("");
+        out.println(wcSession().timeFormatter().format(new NSTimestamp()));
+        out.println("");
 
         // Column titles
-        out.print( "ID No." );
-        out.print( "User" );
-        out.print( "Last Name" );
-        out.print( "First Name" );
-        out.print( "Sub No." );
-        out.print( "Time" );
-        out.print( "Correctness" );
-        out.print( "Style" );
-        out.print( "Design" );
-        out.print( "Penalty/Bonus" );
-        out.println( "Total" );
+        out.print("ID No.");
+        out.print("User");
+        out.print("Last Name");
+        out.print("First Name");
+        out.print("Sub No.");
+        out.print("Time");
+        out.print("Correctness");
+        out.print("Style");
+        out.print("Design");
+        out.print("Penalty/Bonus");
+        out.println("Total");
 
-        NSArray submissions = submissionsToExport;
-        if ( submissions != null )
+        NSArray<Submission> submissions = submissionsToExport;
+        if (submissions != null)
         {
-            for ( int i = 0; i < submissions.count(); i++ )
+            for (Submission thisSubmission : submissions)
             {
-                Submission thisSubmission =
-                    (Submission)submissions.objectAtIndex( i );
                 User student = thisSubmission.user();
-                print( out, student.universityIDNo() );
-                print( out, student.userName() );
-                print( out, student.lastName() );
-                print( out, student.firstName() );
+                print(out, student.universityIDNo());
+                print(out, student.userName());
+                print(out, student.lastName());
+                print(out, student.firstName());
 
-                log.debug( "submission found = "
-                    + thisSubmission.submitNumber() );
-                print( out, thisSubmission.submitNumberRaw() );
-                print( out, thisSubmission.submitTime().toString() );
+                log.debug("submission found = "
+                    + thisSubmission.submitNumber());
+                print(out, thisSubmission.submitNumberRaw());
+                print(out, thisSubmission.submitTime().toString());
                 SubmissionResult result = thisSubmission.result();
-                print( out, result.correctnessScoreRaw() );
-                print( out, result.toolScoreRaw() );
-                print( out, result.taScoreRaw() );
-                print( out, Double.toString(
-                    result.earlyBonus() - result.latePenalty()
-                ) );
-                out.println( Double.toString( result.finalScore() ) );
+                print(out, result.correctnessScoreRaw());
+                print(out, result.toolScoreRaw());
+                print(out, result.taScoreRaw());
+                print(out, Double.toString(
+                    result.earlyBonus() - result.latePenalty()));
+                out.println(Double.toString(result.finalScore()));
             }
         }
 
@@ -181,47 +199,44 @@ public class DownloadScoresPage
 
 
     // ----------------------------------------------------------
-    public byte[] exportAsBlackboardCSV( boolean targetMoodle )
+    public byte[] exportAsBlackboardCSV(boolean targetMoodle)
     {
-        ByteArrayOutputStream outBytes = new ByteArrayOutputStream( 4096 );
-        ExcelCSVPrinter out = new ExcelCSVPrinter( outBytes );
+        ByteArrayOutputStream outBytes = new ByteArrayOutputStream(4096);
+        ExcelCSVPrinter out = new ExcelCSVPrinter(outBytes);
 
         // Basic header information
-        if ( targetMoodle )
+        if (targetMoodle)
         {
-            out.print( "username" );
-            Number moodleAssignmentNo =
-                prefs().assignmentOffering().moodleId();
-            out.println( moodleAssignmentNo == null
-                            ? "" : moodleAssignmentNo.toString() );
+            out.print("username");
+            Number moodleAssignmentNo = assignmentOffering.moodleId();
+            out.println(moodleAssignmentNo == null
+                ? "" : moodleAssignmentNo.toString());
         }
         else
         {
-            out.print( "PID" );
-            String name = prefs().assignmentOffering().assignment().name();
-            if ( name.startsWith( "Lab" ) )
+            out.print("PID");
+            String name = assignmentOffering.assignment().name();
+            if (name.startsWith("Lab"))
             {
                 name += " (Lab)";
             }
-            out.println( name );
+            out.println(name);
         }
-        NSArray submissions = submissionsToExport;
-        if ( submissions != null )
+        NSArray<Submission> submissions = submissionsToExport;
+        if (submissions != null)
         {
-            for ( int i = 0; i < submissions.count(); i++ )
+            for (Submission thisSubmission : submissions)
             {
-                Submission thisSubmission =
-                    (Submission)submissions.objectAtIndex( i );
-                print( out, thisSubmission.user().userName() );
-                out.println( Double.toString(
-                    thisSubmission.result().finalScore() ) );
+                print(out, thisSubmission.user().userName());
+                out.println(Double.toString(
+                    thisSubmission.result().finalScore()));
             }
         }
-        if ( !targetMoodle )
+        if (!targetMoodle)
         {
-            out.print( "Points Possible" );
-            out.println( prefs().assignmentOffering().assignment()
-                .submissionProfile().availablePointsRaw().toString() );
+            out.print("Points Possible");
+            out.println(assignmentOffering.assignment()
+                .submissionProfile().availablePointsRaw().toString());
         }
         return outBytes.toByteArray();
     }
@@ -230,79 +245,70 @@ public class DownloadScoresPage
     // ----------------------------------------------------------
     private void collectSubmissionsToExport()
     {
-        NSMutableArray students =
-            coreSelections().courseOffering().students().mutableClone();
-        if ( omitStaff )
+        NSMutableArray<User> students =
+            assignmentOffering.courseOffering().students().mutableClone();
+        if (omitStaff)
         {
             students.removeObjectsInArray(
-                coreSelections().courseOffering().instructors() );
+                assignmentOffering.courseOffering().instructors());
             students.removeObjectsInArray(
-                coreSelections().courseOffering().graders() );
+                assignmentOffering.courseOffering().graders());
         }
         else
         {
             ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
                 students,
-                coreSelections().courseOffering().instructors() );
+                assignmentOffering.courseOffering().instructors());
             ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
                 students,
-                coreSelections().courseOffering().graders() );
+                assignmentOffering.courseOffering().graders());
         }
-        submissionsToExport = new NSMutableArray();
-        if ( students != null )
+        submissionsToExport = new NSMutableArray<Submission>();
+        if (students != null)
         {
-            for ( int i = 0; i < students.count(); i++ )
+            for (User student : students)
             {
-                User student = (User)students.objectAtIndex( i );
-                log.debug( "checking " + student.userName() );
+                log.debug("checking " + student.userName());
 
                 Submission thisSubmission = null;
                 Submission gradedSubmission = null;
                 // Find the submission
-                NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
+                NSArray<Submission> thisSubmissionSet =
+                    Submission.objectsMatchingValues(
                         localContext(),
-                        Submission.ENTITY_NAME,
-                        new NSDictionary(
-                            new Object[] {
-                                student,
-                                prefs().assignmentOffering()
-                            },
-                            new Object[] {
-                                Submission.USER_KEY,
-                                Submission.ASSIGNMENT_OFFERING_KEY
-                            }
-                        )
+                        Submission.USER_KEY,
+                        student,
+                        Submission.ASSIGNMENT_OFFERING_KEY,
+                        assignmentOffering
                     );
-                log.debug( "searching for submissions" );
-                for ( int j = 0; j < thisSubmissionSet.count(); j++ )
+                log.debug("searching for submissions");
+                for (Submission sub : thisSubmissionSet)
                 {
-                    Submission sub =
-                        (Submission)thisSubmissionSet.objectAtIndex( j );
-                    log.debug( "\tsub #" + sub.submitNumber() );
-                    if ( sub.result() != null )
+                    log.debug("\tsub #" + sub.submitNumber());
+                    if (sub.result() != null)
                     {
-                        if ( thisSubmission == null )
+                        if (thisSubmission == null)
                         {
                             thisSubmission = sub;
                         }
-                        else if ( sub.submitNumberRaw() != null )
+                        else if (sub.submitNumberRaw() != null)
                         {
                             int num = sub.submitNumber();
-                            if ( num > thisSubmission.submitNumber() )
+                            if (num > thisSubmission.submitNumber())
                             {
                                 thisSubmission = sub;
                             }
                         }
-                        if ( sub.result().status() != Status.TO_DO )
+                        if (sub.result().status() != Status.TO_DO)
                         {
-                            if ( gradedSubmission == null )
+                            if (gradedSubmission == null)
                             {
                                 gradedSubmission = sub;
                             }
-                            else if ( sub.submitNumberRaw() != null )
+                            else if (sub.submitNumberRaw() != null)
                             {
                                 int num = sub.submitNumber();
-                                if ( num > gradedSubmission.submitNumber() )
+                                if (num > gradedSubmission.submitNumber())
                                 {
                                     gradedSubmission = sub;
                                 }
@@ -310,19 +316,19 @@ public class DownloadScoresPage
                         }
                     }
                 }
-                if ( gradedSubmission != null )
+                if (gradedSubmission != null)
                 {
                     thisSubmission = gradedSubmission;
                 }
-                if ( thisSubmission != null )
+                if (thisSubmission != null)
                 {
-                    log.debug( "\t saving for export = "
-                               + thisSubmission.submitNumber() );
-                    submissionsToExport.addObject( thisSubmission );
+                    log.debug("\t saving for export = "
+                              + thisSubmission.submitNumber());
+                    submissionsToExport.addObject(thisSubmission);
                 }
                 else
                 {
-                    log.debug( "no submission found" );
+                    log.debug("no submission found");
                 }
             }
         }
@@ -334,32 +340,39 @@ public class DownloadScoresPage
     {
         collectSubmissionsToExport();
         byte[] rawData;
-        if ( useFullFormat )
+        if (useFullFormat)
         {
             rawData = exportAsWebCATCSV();
         }
         else
         {
-            rawData = exportAsBlackboardCSV( useMoodleFormat );
+            rawData = exportAsBlackboardCSV(useMoodleFormat);
         }
 
-        DeliverFile csvFile =
-            (DeliverFile)pageWithName( DeliverFile.class.getName() );
-        csvFile.setFileData( new NSData( rawData ) );
-        csvFile.setFileName( new File( ""
-           + coreSelections().courseOffering().crnSubdirName()
+        DeliverFile csvFile = pageWithName(DeliverFile.class);
+        csvFile.setFileData(new NSData(rawData));
+        csvFile.setFileName(new File( ""
+           + assignmentOffering.courseOffering().crnSubdirName()
            + "-"
-           + prefs().assignmentOffering().assignment().subdirName()
-           + ".csv" ) );
-        csvFile.setContentType( "application/octet-stream" );
-        csvFile.setStartDownload( true );
+           + assignmentOffering.assignment().subdirName()
+           + ".csv"));
+        csvFile.setContentType("application/octet-stream");
+        csvFile.setStartDownload(true);
         return csvFile;
+    }
+
+
+    // ----------------------------------------------------------
+    public void flushNavigatorDerivedData()
+    {
+        assignmentOffering = null;
+        super.flushNavigatorDerivedData();
     }
 
 
     //~ Instance/static variables .............................................
 
-    private NSMutableArray submissionsToExport;
+    private NSMutableArray<Submission> submissionsToExport;
 
-    static Logger log = Logger.getLogger( DownloadScoresPage.class );
+    static Logger log = Logger.getLogger(DownloadScoresPage.class);
 }

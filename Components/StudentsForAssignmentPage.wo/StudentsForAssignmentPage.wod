@@ -1,7 +1,7 @@
 AssignmentName: WOHyperlink {
-	href   = prefs.assignmentOffering.assignment.url;
+	href   = assignmentOffering.assignment.url;
 	target = "_new";
-    string = prefs.assignmentOffering.titleString;
+    string = assignmentOffering.titleString;
     alt    = "View assignment writeup in new window";
     title  = "View assignment writeup in new window";
 }
@@ -77,9 +77,7 @@ Name: WOString {
 	value = aSubmission.user.name;
 }
 
-Nobody: WOConditional {
-	condition = submissionDisplayGroup.allObjects.count;
-	negate    = true;
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }
 
 NoTAScore: WOConditional {
@@ -90,10 +88,6 @@ NoTAScore: WOConditional {
 NotMostRecent: WOConditional {
 	condition = isMostRecentSubmission;
 	negate    = true;
-}
-
-Page: net.sf.webcat.core.WizardPage {
-    nextEnabled = false;
 }
 
 PartnerName: WOString {
@@ -114,10 +108,6 @@ Repetition1: WORepetition {
 ScoreAdjustment: WOString {
 	value = aSubmission.result.scoreAdjustment;
 	numberformat = "0.0";
-}
-
-Somebody: WOConditional {
-	condition = submissionDisplayGroup.allObjects.count;
 }
 
 StatusToDo: WOImage {
@@ -181,11 +171,11 @@ TR: net.sf.webcat.core.TableRow {
 }
 
 UsesBonusesOrPenalties: WOConditional {
-	condition = prefs.assignmentOffering.assignment.usesBonusesOrPenalties;
+	condition = assignmentOffering.assignment.usesBonusesOrPenalties;
 }
 
 UsesToolCheckScore: WOConditional {
-	condition = prefs.assignmentOffering.assignment.usesToolCheckScore;
+	condition = assignmentOffering.assignment.usesToolCheckScore;
 }
 
 WCSortOrder1: net.sf.webcat.core.WCSortOrder {

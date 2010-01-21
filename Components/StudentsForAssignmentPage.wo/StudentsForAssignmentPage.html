@@ -1,53 +1,70 @@
-<webobject name="Page"><webobject name="Somebody">For: <span class="hl"><wo:if condition="$prefs.assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$prefs.assignmentOffering.titleString"/></wo:else></span>
-    <p><b>Score Summary:</b>
-    High: <span class="hl"><webobject name="HighScore"/></span>
-    Mean: <span class="hl"><webobject name="AvgScore"/></span>
-    Low:  <span class="hl"><webobject name="LowScore"/></span></p>
-    <p>Student submissions for you to grade
-      (only students with submissions are shown):<br/>
-    <div class="shadow"><table><thead>
-    <tr class="batchnav"><td colspan="7"><webobject name="BatchNavigator"/></td>
-        <webobject name="UsesToolCheckScore"><td></td></webobject>
-        <webobject name="UsesBonusesOrPenalties"><td></td></webobject>
-    </tr>
-    <tr><th class="sm">Done?<webobject name="WCSortOrder3"/></th>
-        <th>Name<webobject name="WCSortOrder1"/></th>
-        <th class="sm">Sub No.</th>
-        <th>Time<webobject name="WCSortOrder4"/></th>
-        <th class="sm">Testing</th>
-        <webobject name="UsesToolCheckScore"><th class="sm">Tool Checks</th></webobject>
-        <th>TA</th>
-        <webobject name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></webobject>
-        <th class="sm">Score<webobject name="WCSortOrder5"/></th>
-    </tr></thead><tbody>
-    <webobject name="Repetition1"><webobject name="TR">
-	    <td><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-        <td><webobject name="Name"/><webobject name="HasPartners"><webobject name="PartnerRepetition"><webobject name="IsAPartner"><webobject name="MorePartners">,<br/></webobject><webobject name="LastPartner"><webobject name="HasMultiplePartners">,</webobject><br/>and</webobject>
-<webobject name="PartnerName"/></webobject></webobject></webobject></td>
-        <td class="n"><webobject name="SubmitNumber"/><webobject name="NotMostRecent">
-        (of <webobject name="MostRecentSubmitNumber"/>)</webobject></td>
-        <td class="sm"><webobject name="SubmitTime"/></td>
-        <td class="n"><webobject name="TestingScore"/></td>
-        <webobject name="UsesToolCheckScore"><td class="n"><webobject name="ToolScore"/></td></webobject>
-        <td class="n"><webobject name="EditScore"><webobject name="HasTAScore"><webobject name="TAScore"/></webobject><webobject name="NoTAScore">&lt;edit&gt;</webobject></webobject></td>
-        <webobject name="UsesBonusesOrPenalties"><td class="n"><webobject name="ScoreAdjustment"/></td></webobject>
-        <td class="n"><webobject name="FinalScore"/></td>
-    </webobject></webobject>
-    </tbody></table></div>
-    <wo name="MarkAsComplete"/></p>
+<wo:WCPageWithNavigation><wo:if condition="$forceNavigatorSelection">
+<wo:net.sf.webcat.core.WCPageModule title="Pick the Course and Assignment">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
 
-    <wo:if condition="$user.hasAdminPrivileges">
-    <div class="spacer"></div>
-    <div class="shadow"><table><thead>
+<wo:net.sf.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.assignment.name">
+<div class="floatRight"><wo name="Navigator"/></div>
+<p>For: <span class="hl"><wo:if condition="$prefs.assignmentOffering"><wo:str value="$prefs.assignmentOffering.titleString"/></wo:if><wo:else><wo:str value="$prefs.assignment.titleString"/></wo:else></span></p>
+
+<wo:if condition="$submissionDisplayGroup.allObjects.count">
+    <p><b>Score Summary:</b>
+    High: <span class="hl"><wo name="HighScore"/></span>
+    Mean: <span class="hl"><wo name="AvgScore"/></span>
+    Low:  <span class="hl"><wo name="LowScore"/></span></p>
+    <p>Student submissions for you to grade
+      (only students with submissions are shown):</p>
+    <table><thead>
+    <tr class="batchnav"><td colspan="7"><wo name="BatchNavigator"/></td>
+        <wo name="UsesToolCheckScore"><td></td></wo>
+        <wo name="UsesBonusesOrPenalties"><td></td></wo>
+    </tr>
+    <tr><th class="sm">Done?<wo name="WCSortOrder3"/></th>
+        <th>Name<wo name="WCSortOrder1"/></th>
+        <th class="sm">Sub No.</th>
+        <th>Time<wo name="WCSortOrder4"/></th>
+        <th class="sm">Testing</th>
+        <wo name="UsesToolCheckScore"><th class="sm">Tool Checks</th></wo>
+        <th>TA</th>
+        <wo name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></wo>
+        <th class="sm">Score<wo name="WCSortOrder5"/></th>
+    </tr></thead><tbody>
+    <wo name="Repetition1"><wo name="TR">
+        <td><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
+        <td><wo name="Name"/><wo name="HasPartners"><wo name="PartnerRepetition"><wo name="IsAPartner"><wo name="MorePartners">,<br/></wo><wo name="LastPartner"><wo name="HasMultiplePartners">,</wo><br/>and</wo>
+<wo name="PartnerName"/></wo></wo></wo></td>
+        <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
+        (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
+        <td class="sm"><wo name="SubmitTime"/></td>
+        <td class="n"><wo name="TestingScore"/></td>
+        <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
+        <td class="n"><wo name="EditScore"><wo name="HasTAScore"><wo name="TAScore"/></wo><wo name="NoTAScore">&lt;edit&gt;</wo></wo></td>
+        <wo name="UsesBonusesOrPenalties"><td class="n"><wo name="ScoreAdjustment"/></td></wo>
+        <td class="n"><wo name="FinalScore"/></td>
+    </wo></wo>
+    </tbody></table>
+    <wo name="MarkAsComplete"/>
+</wo:if><wo:else>
+    <p>No submissions matching your criteria have been found.</p>
+</wo:else>
+
+</wo:net.sf.webcat.core.WCPageModule>
+
+<wo:if condition="$user.hasAdminPrivileges">
+<wo:net.sf.webcat.core.WCPageModule title="Text/HTML Comments" open="false">
+
+  <table><thead>
     <tr><th>Have Text Comments</th></tr>
-    </thead><tbody>
-    </tbody></table></div>
-    <div class="spacer"></div>
-    <div class="shadow"><table><thead>
+  </thead><tbody>
+  </tbody></table>
+
+  <table><thead>
     <tr><th>Have HTML Comments</th></tr>
-    </thead><tbody>
-    </tbody></table></div>
-    </wo:if>
-</webobject><webobject name="Nobody">
-<p>No submissions matching your criteria have been found.</p>
-</webobject></webobject>
+  </thead><tbody>
+  </tbody></table>
+
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:if>
+
+</wo:else></wo:WCPageWithNavigation>

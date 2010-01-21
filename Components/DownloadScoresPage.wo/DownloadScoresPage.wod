@@ -1,12 +1,12 @@
 AssignmentName: WOHyperlink {
-	href   = prefs.assignmentOffering.assignment.url;
+	href   = assignmentOffering.assignment.url;
 	target = "_new";
-    string = prefs.assignmentOffering.titleString;
+    string = assignmentOffering.titleString;
 }
 
-DownloadScores: WOSubmitButton {
+DownloadScores: WCButton {
 	action = downloadScoreFile;
-	value  = "Download";
+	label  = "Download";
 }
 
 OmitStaff: WOCheckBox {
@@ -26,7 +26,7 @@ Moodle: WORadioButton {
 AssignNo: WOTextField {
 	numberformat = "0";
 	size = 5;
-	value = prefs.assignmentOffering.moodleId;
+	value = assignmentOffering.moodleId;
 }
 
 
@@ -35,5 +35,5 @@ Full: WORadioButton {
     checked = useFullFormat;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Navigator: net.sf.webcat.grader.GraderNavigator {
 }

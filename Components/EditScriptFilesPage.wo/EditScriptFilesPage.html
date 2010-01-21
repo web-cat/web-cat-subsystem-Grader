@@ -1,12 +1,10 @@
 <webobject name="Page">
-<wo name="Section">
 <wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 
+<wo name="Section">
 <wo:if condition="$isEditable"><p>
 Any file modifications made on this page will cause all pending changes
 to be applied.  All file actions will take effect immediately.</p></wo:if>
-
-<wo:WCButton action="$next" label="&lt; Back"/>
 
 <wo name="FileBrowser"/>
 
@@ -28,6 +26,10 @@ upload: <wo name="UploadFile2"/>
 <wo name="Replace"/></p>
 </wo:if>
 
-<wo:WCButton action="$next" label="&lt; Back"/>
+</wo>
 
-</wo:WCForm></wo></webobject>
+<div class="module right">
+<wo:WCButton action="$next" label="Done"/>
+</div>
+
+</wo:WCForm></webobject>

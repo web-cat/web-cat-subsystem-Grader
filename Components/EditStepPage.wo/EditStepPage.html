@@ -1,12 +1,8 @@
 <wo name="Page">
-<wo:WCForm multipleSubmit="true" name="WizardForm">
 
 <wo:WCPageModule title="Assignment-Specific Options">
-<p>For: <span class="hl"><wo:str value="$step.assignment.titleString"/></span><br/>
-<wo:WCButton label="Return to Assignment Properties" action="$next"/>
-</p>
+<p>For: <span class="hl"><wo:str value="$step.assignment.titleString"/></span></p>
 <wo name="AssignmentOptionEditor"/>
-<wo:WCButton label="Return to Assignment Properties" action="$next"/>
 </wo:WCPageModule>
 
 <wo:WCPageModule title="Reusable Configuration Options">
@@ -22,4 +18,4 @@ named configuration profile that is shared among several assignments.</p>
 <p>This plug-in has no reusable configuration options.</p>
 </wo:else>
 </wo:WCPageModule>
-</wo:WCForm></wo>
+</wo>

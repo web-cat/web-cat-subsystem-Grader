@@ -26,8 +26,7 @@ OptionEditor: net.sf.webcat.core.OptionSetEditor {
     base              = baseDir;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
-//    title = "Edit Reusable Options";
+Page: SaveCancelPage {
 }
 
 Repetition3: WORepetition {

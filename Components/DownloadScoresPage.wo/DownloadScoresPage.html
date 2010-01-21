@@ -1,11 +1,22 @@
-<webobject name="Page">For: <span class="hl"><wo:if condition="$prefs.assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$prefs.assignmentOffering.titleString"/></wo:else></span><p>
-<div class="shadow"><table><thead>
+<wo:WCPageWithNavigation>
+<wo:if condition="$forceNavigatorSelection">
+<wo:net.sf.webcat.core.WCPageModule title="Pick the Course and Assignment">
+<div class="floatRight"><wo name="Navigator"/></div>
+<div style="width:50%;"><p>Please select the course and assignment.</p></div>
+</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:net.sf.webcat.core.WCPageModule title="~'Download Scores for ' + assignmentOffering.assignment.name">
+<div class="floatRight"><wo name="Navigator"/></div>
+<p>For: <span class="hl"><wo:if condition="$assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$assignmentOffering.titleString"/></wo:else></span></p>
+<wo:WCForm multipleSubmit="true">
+<table><thead>
 <tr><th>&nbsp;</th><th>Available Formats</th></tr></thead><tbody>
 <tr class="o"><td><webobject name="Blackboard"/></td><td>Blackboard-compatible CSV</td></tr>
 <tr class="e"><td><webobject name="Moodle"/></td><td>Moodle-compatible CSV
   (enter Moodle assignment no.:<webobject name="AssignNo"/>)</td></tr>
 <tr class="o"><td><webobject name="Full"/></td><td>Fully-detailed Web-CAT CSV</td></tr>
-</tbody></table></div><div class="spacer">&nbsp;</div></p>
+</tbody></table>
 <p><webobject name="OmitStaff"/> Omit course staff</p>
 <webobject name="DownloadScores"/>
-</webobject>
+</wo:WCForm>
+</wo:net.sf.webcat.core.WCPageModule>
+</wo:else></wo:WCPageWithNavigation>

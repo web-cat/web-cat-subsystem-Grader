@@ -22,8 +22,8 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import er.extensions.foundation.ERXArrayUtilities;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,20 +49,23 @@ public class StudentsForAssignmentPage
      * Default constructor.
      * @param context The page's context
      */
-    public StudentsForAssignmentPage( WOContext context )
+    public StudentsForAssignmentPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup submissionDisplayGroup;
+    public ERXDisplayGroup<Submission> submissionDisplayGroup;
     /** Submission in the worepetition */
     public Submission  aSubmission;
     public Submission  partnerSubmission;
     /** index in the worepetition */
     public int         index;
+
+    public AssignmentOffering assignmentOffering;
+
 
     /** Value of the corresponding checkbox on the page. */
     public boolean omitStaff           = true;
@@ -75,89 +78,100 @@ public class StudentsForAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void appendToResponse(WOResponse response, WOContext context)
     {
-        if ( maxSubmission == null )
+        if (maxSubmission == null)
         {
-            maxSubmission = new HashMap();
+            maxSubmission = new HashMap<User, Submission>();
         }
         else
         {
             maxSubmission.clear();
         }
-        NSMutableArray students =
-            coreSelections().courseOffering().students().mutableClone();
+
+        if (assignmentOffering == null)
+        {
+            assignmentOffering = prefs().assignmentOffering();
+            if (assignmentOffering == null)
+            {
+                Assignment assignment = prefs().assignment();
+                CourseOffering courseOffering =
+                    coreSelections().courseOffering();
+                assignmentOffering = AssignmentOffering
+                    .firstObjectMatchingValues(
+                        localContext(),
+                        null,
+                        AssignmentOffering.COURSE_OFFERING_KEY,
+                        courseOffering,
+                        AssignmentOffering.ASSIGNMENT_KEY,
+                        assignment);
+            }
+        }
+
+        NSMutableArray<User> students =
+            assignmentOffering.courseOffering().students().mutableClone();
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
-            coreSelections().courseOffering().instructors() );
+            assignmentOffering.courseOffering().instructors());
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             students,
-            coreSelections().courseOffering().graders() );
-        NSMutableArray submissions = new NSMutableArray();
+            assignmentOffering.courseOffering().graders());
+        NSMutableArray<Submission> submissions =
+            new NSMutableArray<Submission>();
         highScore = 0.0;
         lowScore  = 0.0;
         avgScore  = 0.0;
-        if ( students != null )
+        if (students != null)
         {
-            for ( int i = 0; i < students.count(); i++ )
+            for (User student : students)
             {
-                User student = (User)students.objectAtIndex( i );
-                log.debug( "checking " + student.userName() );
+                log.debug("checking " + student.userName());
 
                 Submission thisSubmission = null;
                 Submission mostRecentSubmission = null;
                 Submission gradedSubmission = null;
                 // Find the submission
-                NSArray thisSubmissionSet = EOUtilities.objectsMatchingValues(
+                NSArray<Submission> thisSubmissionSet =
+                    Submission.objectsMatchingValues(
                         localContext(),
-                        Submission.ENTITY_NAME,
-                        new NSDictionary(
-                            new Object[] {
-                                student,
-                                prefs().assignmentOffering()
-                            },
-                            new Object[] {
-                                Submission.USER_KEY,
-                                Submission.ASSIGNMENT_OFFERING_KEY
-                            }
-                        )
-                    );
-                log.debug( "searching for submissions" );
-                for ( int j = 0; j < thisSubmissionSet.count(); j++ )
+                        Submission.USER_KEY,
+                        student,
+                        Submission.ASSIGNMENT_OFFERING_KEY,
+                        assignmentOffering);
+                log.debug("searching for submissions");
+                for (Submission sub : thisSubmissionSet)
                 {
-                    Submission sub =
-                        (Submission)thisSubmissionSet.objectAtIndex( j );
-                    if ( mostRecentSubmission == null
-                         || sub.submitNumber() >
-                             mostRecentSubmission.submitNumber() )
+                    if (mostRecentSubmission == null
+                        || sub.submitNumber() >
+                           mostRecentSubmission.submitNumber())
                     {
                         mostRecentSubmission = sub;
                     }
-                    log.debug( "\tsub #" + sub.submitNumber() );
-                    if ( sub.result() != null && !sub.partnerLink() )
+                    log.debug("\tsub #" + sub.submitNumber());
+                    if (sub.result() != null && !sub.partnerLink())
                     {
-                        if ( thisSubmission == null )
+                        if (thisSubmission == null)
                         {
                             thisSubmission = sub;
                         }
-                        else if ( sub.submitNumberRaw() != null )
+                        else if (sub.submitNumberRaw() != null)
                         {
                             int num = sub.submitNumber();
-                            if ( num > thisSubmission.submitNumber() )
+                            if (num > thisSubmission.submitNumber())
                             {
                                 thisSubmission = sub;
                             }
                         }
-                        if ( sub.result().status() != Status.TO_DO )
+                        if (sub.result().status() != Status.TO_DO)
                         {
-                            if ( gradedSubmission == null )
+                            if (gradedSubmission == null)
                             {
                                 gradedSubmission = sub;
                             }
-                            else if ( sub.submitNumberRaw() != null )
+                            else if (sub.submitNumberRaw() != null)
                             {
                                 int num = sub.submitNumber();
-                                if ( num > gradedSubmission.submitNumber() )
+                                if (num > gradedSubmission.submitNumber())
                                 {
                                     gradedSubmission = sub;
                                 }
@@ -165,51 +179,51 @@ public class StudentsForAssignmentPage
                         }
                     }
                 }
-                if ( mostRecentSubmission != null )
+                if (mostRecentSubmission != null)
                 {
-                    maxSubmission.put( mostRecentSubmission.user(),
-                                       mostRecentSubmission );
+                    maxSubmission.put(mostRecentSubmission.user(),
+                                      mostRecentSubmission);
                 }
-                if ( gradedSubmission != null )
+                if (gradedSubmission != null)
                 {
                     thisSubmission = gradedSubmission;
                 }
-                if ( thisSubmission != null )
+                if (thisSubmission != null)
                 {
-                    log.debug( "submission found = "
-                                    + thisSubmission.submitNumber() );
+                    log.debug("submission found = "
+                        + thisSubmission.submitNumber());
                     double score = thisSubmission.result().finalScore();
-                    if ( submissions.count() == 0 )
+                    if (submissions.count() == 0)
                     {
                         highScore = score;
                         lowScore  = score;
                     }
                     else
                     {
-                        if ( score > highScore )
+                        if (score > highScore)
                         {
                             highScore = score;
                         }
-                        if ( score < lowScore )
+                        if (score < lowScore)
                         {
                             lowScore = score;
                         }
                     }
                     avgScore += score;
-                    submissions.addObject( thisSubmission );
+                    submissions.addObject(thisSubmission);
                 }
                 else
                 {
-                    log.debug( "no submission found" );
+                    log.debug("no submission found");
                 }
             }
         }
-        if ( submissions.count() > 0 )
+        if (submissions.count() > 0)
         {
             avgScore /= submissions.count();
         }
-        submissionDisplayGroup.setObjectArray( submissions );
-        super.appendToResponse( response, context );
+        submissionDisplayGroup.setObjectArray(submissions);
+        super.appendToResponse(response, context);
     }
 
 
@@ -217,20 +231,19 @@ public class StudentsForAssignmentPage
     public WOComponent editSubmissionScore()
     {
         WCComponent destination = null;
-        if ( !hasMessages() )
+        if (!hasMessages())
         {
-            if ( aSubmission == null )
+            if (aSubmission == null)
             {
-                log.error( "editSubmissionScore(): null submission!" );
+                log.error("editSubmissionScore(): null submission!");
             }
-            else if ( aSubmission.result() == null )
+            else if (aSubmission.result() == null)
             {
-                log.error( "editSubmissionScore(): null submission result!" );
-                log.error( "student = " + aSubmission.user().userName() );
+                log.error("editSubmissionScore(): null submission result!");
+                log.error("student = " + aSubmission.user().userName());
             }
-            prefs().setSubmissionRelationship( aSubmission );
-//          destination = (WCComponent)pageWithName(
-//          GradeStudentSubmissionPage.class.getName() );
+            prefs().setSubmissionRelationship(aSubmission);
+//          destination = pageWithName(GradeStudentSubmissionPage.class);
             destination = (WCComponent)super.next();
             if (destination instanceof GradeStudentSubmissionPage)
             {
@@ -255,17 +268,15 @@ public class StudentsForAssignmentPage
      */
     public WOComponent markAsCompleteActionOk()
     {
-        NSArray submissions = submissionDisplayGroup.allObjects();
-        for ( int i = 0; i < submissions.count(); i++ )
+        for (Submission sub : submissionDisplayGroup.allObjects())
         {
-            Submission sub = (Submission)submissions.objectAtIndex( i );
-            if ( sub.result().status() == Status.UNFINISHED )
+            if (sub.result().status() == Status.UNFINISHED)
             {
-                sub.result().setStatus( Status.CHECK );
+                sub.result().setStatus(Status.CHECK);
                 if (applyLocalChanges())
                 {
                     sub.emailNotificationToStudent(
-                        "has been updated by the course staff" );
+                        "has been updated by the course staff");
                 }
             }
         }
@@ -281,8 +292,7 @@ public class StudentsForAssignmentPage
      */
     public WOComponent markAsComplete()
     {
-        ConfirmPage confirmPage =
-            (ConfirmPage)pageWithName( ConfirmPage.class.getName() );
+        ConfirmPage confirmPage = pageWithName(ConfirmPage.class);
         confirmPage.nextPage       = this;
         confirmPage.message        =
             "You are about to mark all <b>partially graded</b> submissions "
@@ -291,7 +301,7 @@ public class StudentsForAssignmentPage
             + "are affected will receive an e-mail notification.";
         confirmPage.actionReceiver = this;
         confirmPage.actionOk       = "markAsCompleteActionOk";
-        confirmPage.setTitle( "Confirm Grading Is Complete" );
+        confirmPage.setTitle("Confirm Grading Is Complete");
         return confirmPage;
     }
 
@@ -327,13 +337,12 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public boolean morePartners()
     {
-        NSArray submissions = aSubmission.result().submissions();
-        Submission lastSubmission = (Submission)submissions
-            .objectAtIndex( submissions.count() - 1 );
-        if ( lastSubmission == aSubmission )
+        NSArray<Submission> submissions = aSubmission.result().submissions();
+        Submission lastSubmission = submissions.objectAtIndex(
+            submissions.count() - 1);
+        if (lastSubmission == aSubmission)
         {
-            lastSubmission = (Submission)submissions
-            .objectAtIndex( submissions.count() - 2 );
+            lastSubmission = submissions.objectAtIndex(submissions.count() - 2);
         }
         return partnerSubmission != lastSubmission;
     }
@@ -342,21 +351,27 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public boolean isMostRecentSubmission()
     {
-        return aSubmission ==
-            (Submission)maxSubmission.get( aSubmission.user() );
+        return aSubmission == maxSubmission.get(aSubmission.user());
     }
 
 
     // ----------------------------------------------------------
     public int mostRecentSubmissionNo()
     {
-        return ( (Submission)maxSubmission.get( aSubmission.user() ) )
-            .submitNumber();
+        return maxSubmission.get(aSubmission.user()).submitNumber();
+    }
+
+
+    // ----------------------------------------------------------
+    public void flushNavigatorDerivedData()
+    {
+        assignmentOffering = null;
+        super.flushNavigatorDerivedData();
     }
 
 
     //~ Instance/static variables .............................................
 
-    private Map maxSubmission;
-    static Logger log = Logger.getLogger( StudentsForAssignmentPage.class );
+    private Map<User, Submission> maxSubmission;
+    static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }
