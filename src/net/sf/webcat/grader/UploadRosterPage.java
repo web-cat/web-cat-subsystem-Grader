@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -27,7 +27,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.regex.Pattern;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
@@ -37,7 +36,8 @@ import org.apache.log4j.Logger;
  * This class allows a CSV file of new users to be added to a course.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class UploadRosterPage
     extends GraderCourseEditComponent
@@ -95,7 +95,7 @@ public class UploadRosterPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         if ( domain == null )
         {
@@ -105,7 +105,7 @@ public class UploadRosterPage
         {
             refresh(true, false);
         }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 

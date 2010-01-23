@@ -15,7 +15,7 @@
       <wo:WCConnectAction event="onChange" action="$update" remote="true"/>
 </wo> <wo name="InstitutionInfo"/></td></tr>
 </wo:if>
-<tr><td class="R"><label for="course">Course:</label></td><td><wo name="CourseList"/>
+<tr><td class="R"><label for="course">Course:</label></td><td><wo:str value="$refilterCourseList"/><wo name="CourseList"/>
   <wo:WCButton label="Add">
     <script type="dojo/connect" event="onClick">
     dijit.byId('new-course').show();

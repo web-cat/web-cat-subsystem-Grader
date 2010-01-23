@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -78,7 +78,7 @@ public class StudentsForAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void _appendToResponse(WOResponse response, WOContext context)
     {
         if (maxSubmission == null)
         {
@@ -223,7 +223,7 @@ public class StudentsForAssignmentPage
             avgScore /= submissions.count();
         }
         submissionDisplayGroup.setObjectArray(submissions);
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
     }
 
 

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,8 +25,6 @@ import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 import net.sf.webcat.archives.ArchiveManager;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
@@ -37,7 +35,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class EditScriptFilesPage
     extends GraderComponent
@@ -81,7 +80,7 @@ public class EditScriptFilesPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "listener = " + fileSelectionListener );
         folderName = null;
@@ -107,7 +106,7 @@ public class EditScriptFilesPage
             }
             addFolders( folderList, base, stripLength );
         }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 

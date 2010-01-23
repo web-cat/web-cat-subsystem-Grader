@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -53,17 +53,17 @@ public class EditStepPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public NSArray           stepConfigList;
-    public StepConfig        stepConfig;
-    public Step              step;
-    public int               index;
-    public java.io.File      baseDir;
+    public NSArray<StepConfig> stepConfigList;
+    public StepConfig          stepConfig;
+    public Step                step;
+    public int                 index;
+    public java.io.File        baseDir;
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "appendToResponse()" );
         step = prefs().step();
@@ -98,7 +98,7 @@ public class EditStepPage
                     + ") =\n" + step.config().configSettings() );
             }
         }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 

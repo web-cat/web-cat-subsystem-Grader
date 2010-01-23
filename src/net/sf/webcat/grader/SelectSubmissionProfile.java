@@ -1,7 +1,22 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
-import com.webobjects.foundation.*;
+ |  Copyright (C) 2006-2010 Virginia Tech
+ |
+ |  This file is part of Web-CAT.
+ |
+ |  Web-CAT is free software; you can redistribute it and/or modify
+ |  it under the terms of the GNU Affero General Public License as published
+ |  by the Free Software Foundation; either version 3 of the License, or
+ |  (at your option) any later version.
+ |
+ |  Web-CAT is distributed in the hope that it will be useful,
+ |  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ |  GNU General Public License for more details.
+ |
+ |  You should have received a copy of the GNU Affero General Public License
+ |  along with Web-CAT; if not, see <http://www.gnu.org/licenses/>.
 \*==========================================================================*/
 
 package net.sf.webcat.grader;
@@ -19,7 +34,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class SelectSubmissionProfile
     extends GraderComponent
@@ -50,9 +66,10 @@ public class SelectSubmissionProfile
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
-        NSMutableArray qualifiers = new NSMutableArray();
+        NSMutableArray<EOQualifier> qualifiers =
+            new NSMutableArray<EOQualifier>();
 
         // Look for submission profiles authored by this individual
         qualifiers.addObject( new EOKeyValueQualifier(
@@ -97,7 +114,7 @@ public class SelectSubmissionProfile
                 // OK, just kill the second part of the qualifier to
                 // get only this user's stuff
                 gradingProfileDisplayGroup.setQualifier(
-                    (EOQualifier)qualifiers.objectAtIndex( 0 ) );
+                    qualifiers.objectAtIndex( 0 ) );
                 gradingProfileDisplayGroup.fetch();
             }
         }
@@ -132,7 +149,7 @@ public class SelectSubmissionProfile
             createNew = true;
         }
 
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 

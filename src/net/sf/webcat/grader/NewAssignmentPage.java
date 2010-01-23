@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -39,7 +39,6 @@ import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSTimestamp;
 import com.webobjects.foundation.NSValidation;
 import er.extensions.foundation.ERXArrayUtilities;
-import er.extensions.foundation.ERXValueUtilities;
 
 //-------------------------------------------------------------------------
 /**
@@ -94,7 +93,7 @@ public class NewAssignmentPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void _appendToResponse(WOResponse response, WOContext context)
     {
         idFor = new ComponentIDGenerator(this);
         if (coreSelections().course() == null
@@ -135,15 +134,14 @@ public class NewAssignmentPage
                 forAllSections = Boolean.TRUE;
             }
         }
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    public boolean forceNavigatorSelection()
+    public boolean allowsAllSemesters()
     {
-        return super.forceNavigatorSelection() ||
-            coreSelections().semester() == null;
+        return false;
     }
 
 
@@ -260,6 +258,7 @@ public class NewAssignmentPage
                 newStep.setOrder(oldStep.order());
                 newStep.setTimeout(oldStep.timeout());
                 newStep.setConfigRelationship(oldStep.config());
+                newStep.setGradingPluginRelationship(oldStep.gradingPlugin());
             }
         }
 
@@ -574,9 +573,9 @@ public class NewAssignmentPage
     //~ Instance/static variables .............................................
 
     private NSArray<Semester>       semesters;
-    private Boolean forAllSections = null;
-    private Semester          savedToSemester;
-    private CourseOffering    savedToCourseOffering;
+    private Boolean                 forAllSections = null;
+    private Semester                savedToSemester;
+    private CourseOffering          savedToCourseOffering;
     private NSArray<CourseOffering> myCourses;
     static Logger log = Logger.getLogger(NewAssignmentPage.class);
 }

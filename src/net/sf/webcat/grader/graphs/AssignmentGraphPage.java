@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,7 +31,8 @@ import net.sf.webcat.grader.*;
  * Presents graphs of this assignment's data.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class AssignmentGraphPage
     extends GraderAssignmentComponent
@@ -60,7 +61,7 @@ public class AssignmentGraphPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         SubmissionResult subResult = prefs().assignmentOffering()
             .mostRecentSubmissionResultFor( user() );
@@ -79,7 +80,7 @@ public class AssignmentGraphPage
         opportunitiesDataset = new SubmissionResultDataset(
             pastSubResults,
             SubmissionResultDataset.TESTING_AND_STATIC_TOOLS_LOSS_SERIES );
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 
@@ -95,7 +96,7 @@ public class AssignmentGraphPage
 
 
     // ----------------------------------------------------------
-    public NSArray submissionResultsByNumber()
+    public NSArray<SubmissionResult> submissionResultsByNumber()
     {
         if ( subResultsByNumber == null )
         {
@@ -109,6 +110,6 @@ public class AssignmentGraphPage
 
     //~ Instance/static variables .............................................
 
-    private NSArray pastSubResults;
-    private NSArray subResultsByNumber;
+    private NSArray<SubmissionResult> pastSubResults;
+    private NSArray<SubmissionResult> subResultsByNumber;
 }

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,7 +25,6 @@ import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.zip.ZipFile;
 import net.sf.webcat.archives.FileUtilities;
 import org.apache.log4j.Logger;
 
@@ -35,7 +34,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class OldEditScriptPage
     extends GraderComponent
@@ -70,9 +70,9 @@ public class OldEditScriptPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
-        NSMutableArray files = new NSMutableArray();
+        NSMutableArray<File> files = new NSMutableArray<File>();
         Step selectedStep = prefs().step();
         GradingPlugin script = selectedStep.gradingPlugin();
         log.debug( "attempting to build file list for display" );
@@ -133,7 +133,7 @@ public class OldEditScriptPage
                 script.setMainFileName( fileName() );
             }
         }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 
@@ -365,7 +365,7 @@ public class OldEditScriptPage
 
 
     // ----------------------------------------------------------
-    protected void collectAllFiles( File dir, NSMutableArray list )
+    protected void collectAllFiles( File dir, NSMutableArray<File> list )
     {
         if ( dir.isDirectory() )
         {

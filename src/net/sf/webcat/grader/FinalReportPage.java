@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -80,7 +80,7 @@ public class FinalReportPage
     /** The report object */
     public ResultFile report;
     /** Array of all the downloadable report files */
-    public NSArray reportArray;
+    public NSArray<ResultFile> reportArray;
 
     public boolean showReturnToGrading = false;
 
@@ -94,7 +94,7 @@ public class FinalReportPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "beginning appendToResponse()" );
         jobData = null;
@@ -111,7 +111,8 @@ public class FinalReportPage
             {
                 statsDisplayGroup.setObjectArray( result.submissionFileStats() );
 
-                NSMutableArray fileList = result.resultFiles().mutableClone();
+                NSMutableArray<ResultFile> fileList =
+                    result.resultFiles().mutableClone();
                 ResultFile userSubmission = new ResultFile();
                 userSubmission.setFileName(
                     "../" + submission.fileName() );
@@ -122,7 +123,7 @@ public class FinalReportPage
             }
         }
         showCoverageData = null;
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         log.debug( "ending appendToResponse()" );
     }
 
@@ -387,7 +388,7 @@ public class FinalReportPage
      */
     public boolean justCollecting()
     {
-        NSArray steps =
+        NSArray<Step> steps =
             result.submission().assignmentOffering().assignment().steps();
         return !result.summaryFile().exists()
             && !result.resultFile().exists()
@@ -533,7 +534,8 @@ public class FinalReportPage
         if ( jobData == null )
         {
             jobData = new JobData();
-            NSMutableArray qualifiers = new NSMutableArray();
+            NSMutableArray<EOQualifier> qualifiers =
+                new NSMutableArray<EOQualifier>();
             qualifiers.addObject( new EOKeyValueQualifier(
                             EnqueuedJob.DISCARDED_KEY,
                             EOQualifier.QualifierOperatorEqual,
@@ -553,7 +555,7 @@ public class FinalReportPage
                 new EOFetchSpecification(
                         EnqueuedJob.ENTITY_NAME,
                         new EOAndQualifier( qualifiers ),
-                        new NSArray( new Object[]{
+                        new NSArray<EOSortOrdering>( new EOSortOrdering[]{
                                 new EOSortOrdering(
                                         EnqueuedJob.SUBMIT_TIME_KEY,
                                         EOSortOrdering.CompareAscending

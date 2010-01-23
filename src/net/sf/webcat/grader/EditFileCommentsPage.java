@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -68,7 +68,7 @@ public class EditFileCommentsPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         if (log.isDebugEnabled())
         {
@@ -82,7 +82,7 @@ public class EditFileCommentsPage
             }
         }
         initializeCodeWithComments();
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
     }
@@ -371,11 +371,10 @@ public class EditFileCommentsPage
 
             // Delete existing comments by the current user from the
             // database
-            NSArray comments = prefs().submissionFileStats().comments();
-            for ( int i = 0; i < comments.count(); i++ )
+            NSArray<SubmissionFileComment> comments =
+                prefs().submissionFileStats().comments();
+            for (SubmissionFileComment thisComment : comments)
             {
-                 SubmissionFileComment thisComment =
-                     (SubmissionFileComment)comments.objectAtIndex( i );
                  // if its the current users comments
                  if ( user() == thisComment.author() )
                  {

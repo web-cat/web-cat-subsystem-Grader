@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -77,7 +77,7 @@ public class PickSubmissionPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "entering appendToResponse()" );
         selectedIndex = -1;
@@ -143,7 +143,7 @@ public class PickSubmissionPage
                 + prefs().submission().submitNumber());
         }
         log.debug("calling super.appendToResponse()");
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
         log.debug("leaving appendToResponse()");

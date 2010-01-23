@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,8 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
-import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
@@ -67,7 +65,7 @@ public class EditStaffPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         sideStepTitle = "Edit Course "
             + ( editInstructors
@@ -100,7 +98,7 @@ public class EditStaffPage
         potentialDisplayGroup.fetch();
         potentialDisplayGroup.setNumberOfObjectsPerBatch( oldBatchSize );
         potentialDisplayGroup.setCurrentBatchIndex( oldBatchIndex );
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         log.debug( "old size = " + oldBatchSize
                    + " old index = " + oldBatchIndex );
     }

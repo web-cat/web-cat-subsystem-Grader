@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -776,7 +776,7 @@ public class AssignmentOffering
     {
         EOFetchSpecification spec =
             EOFetchSpecification.fetchSpecificationNamed(
-                "submitterEngineBase",
+                OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC,
                 ENTITY_NAME );
         // Set up the qualifier
         NSMutableDictionary restrictions = new NSMutableDictionary();

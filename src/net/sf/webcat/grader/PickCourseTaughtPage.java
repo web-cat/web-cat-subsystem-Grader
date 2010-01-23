@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,7 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.foundation.ERXValueUtilities;
@@ -36,7 +35,8 @@ import org.apache.log4j.Logger;
  *  courses taught or TA'ed for.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author  latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class PickCourseTaughtPage
     extends GraderComponent
@@ -57,15 +57,15 @@ public class PickCourseTaughtPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public NSArray             staffCourses;
-    public NSArray             adminCourses;
-    public CourseOffering      courseOffering;
-    public int                 index;
-    public int                 selectedStaffIndex;
-    public int                 selectedAdminIndex;
-    public NSArray             semesters;
-    public Semester            semester;
-    public Semester            aSemester;
+    public NSArray<CourseOffering> staffCourses;
+    public NSArray<CourseOffering> adminCourses;
+    public CourseOffering          courseOffering;
+    public int                     index;
+    public int                     selectedStaffIndex;
+    public int                     selectedAdminIndex;
+    public NSArray<Semester>       semesters;
+    public Semester                semester;
+    public Semester                aSemester;
 
     //~ Methods ...............................................................
 
@@ -79,7 +79,7 @@ public class PickCourseTaughtPage
 
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         User user = user();
         if ( semesters == null )
@@ -91,7 +91,7 @@ public class PickCourseTaughtPage
             if (semesterPref == null && semesters.count() > 0)
             {
                 // Default to most recent semester, if no preference is set
-                semester = (Semester)semesters.objectAtIndex(0);
+                semester = semesters.objectAtIndex(0);
             }
             else
             {
@@ -142,20 +142,18 @@ public class PickCourseTaughtPage
             {
                 selectedStaffIndex = 0;
                 coreSelections().setCourseOfferingRelationship(
-                    (CourseOffering)staffCourses.objectAtIndex(
-                        selectedStaffIndex ) );
+                    staffCourses.objectAtIndex( selectedStaffIndex ) );
             }
             else if ( adminCourses.count() > 0 )
             {
                 selectedAdminIndex = 0;
                 coreSelections().setCourseOfferingRelationship(
-                    (CourseOffering)adminCourses.objectAtIndex(
-                        selectedAdminIndex ) );
+                    adminCourses.objectAtIndex( selectedAdminIndex ) );
                 selectedAdminIndex += staffCourses.count();
             }
         }
 
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 
@@ -165,16 +163,14 @@ public class PickCourseTaughtPage
         if ( selectedStaffIndex >= 0 )
         {
             coreSelections().setCourseOfferingRelationship(
-                (CourseOffering)staffCourses.objectAtIndex(
-                    selectedStaffIndex ) );
+                staffCourses.objectAtIndex( selectedStaffIndex ) );
             return super.next();
         }
         else if ( selectedAdminIndex >= 0 )
         {
             selectedAdminIndex -= staffCourses.count();
             coreSelections().setCourseOfferingRelationship(
-                (CourseOffering)adminCourses.objectAtIndex(
-                    selectedAdminIndex ) );
+                adminCourses.objectAtIndex( selectedAdminIndex ) );
             return super.next();
         }
         else

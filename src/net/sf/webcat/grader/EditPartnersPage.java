@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -68,7 +68,7 @@ public class EditPartnersPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "selected submission = "
                    + prefs().submission().submitNumber()
@@ -84,7 +84,7 @@ public class EditPartnersPage
         partnerDisplayGroup.setMasterObject( result );
         studentDisplayGroup.setMasterObject(
             coreSelections().courseOffering() );
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,8 +22,6 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.foundation.*;
-import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -33,7 +31,8 @@ import org.apache.log4j.Logger;
  * of the source code.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class SubmissionFileDetailsPage
     extends GraderComponent
@@ -69,7 +68,7 @@ public class SubmissionFileDetailsPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         log.debug( "beginning appendToResponse()" );
         if ( thisFile == null )
@@ -79,7 +78,7 @@ public class SubmissionFileDetailsPage
         codeWithComments = initializeCodeWithComments();
         filesDisplayGroup.setObjectArray(
             thisFile.submissionResult().submissionFileStats() );
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
     }

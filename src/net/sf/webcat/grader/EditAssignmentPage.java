@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -102,7 +102,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public void appendToResponse(WOResponse response, WOContext context )
+    public void _appendToResponse(WOResponse response, WOContext context )
     {
         long timeStart = System.currentTimeMillis();
 
@@ -152,7 +152,7 @@ public class EditAssignmentPage
                  );
         }
         log.debug( "starting super.appendToResponse()" );
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         log.debug( "finishing super.appendToResponse()" );
         log.debug( "finishing appendToResponse()" );
 
@@ -349,9 +349,8 @@ public class EditAssignmentPage
         String name = gradingPluginToAdd.name();
         String version = gradingPluginToAdd.descriptor().currentVersion();
         NSTimestamp lastModified = gradingPluginToAdd.lastModified();
-
-        NSTimestampFormatter formatter = wcSession().timeFormatter();
-        String formattedTime = formatter.format(lastModified);
+        String formattedTime =
+            wcSession().timeFormatter().format(lastModified);
 
         return MessageFormat.format(
                 "<p class=\"pluginListTitle\">{0}</p>" +

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,12 +22,8 @@
 package net.sf.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import com.Ostermiller.util.ExcelCSVParser;
-import er.extensions.eof.ERXConstant;
-import java.io.*;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
@@ -80,7 +76,7 @@ public class CourseRosterPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         // Set up student list filters
         studentDisplayGroup.setObjectArray( courseOffering().students() );
@@ -101,7 +97,7 @@ public class CourseRosterPage
 //        {
             notStudentDisplayGroup.fetch();
 //        }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
         oldBatchSize1  = studentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex1 = studentDisplayGroup.currentBatchIndex();
         oldBatchSize2  = notStudentDisplayGroup.numberOfObjectsPerBatch();

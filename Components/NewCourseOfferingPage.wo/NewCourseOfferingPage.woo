@@ -3,23 +3,13 @@
     encoding = NSUTF8StringEncoding;
     variables = {
         courseDisplayGroup = {
-            class = WODisplayGroup;
-            dataSource = {
-                class = EODatabaseDataSource;
-                editingContext = localContext;
-                fetchSpecification = {
-                    class = EOFetchSpecification;
-                    entityName = Course;
-                    fetchLimit = 0;
-                    isDeep = NO;
-                };
-            };
-            fetchesOnLoad = YES;
+            class = ERXDisplayGroup;
+            fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
             numberOfObjectsPerBatch = 0;
             selectsFirstObjectAfterFetch = YES;
-            sortOrdering = ({class = EOSortOrdering; key = number; selectorName = "compareAscending:"; });
+            sortOrdering = ({class = EOSortOrdering; key = deptNumber; selectorName = "compareAscending:"; });
         };
     };
 }

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -69,7 +69,7 @@ public class DownloadScoresPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void _appendToResponse(WOResponse response, WOContext context)
     {
         if (assignmentOffering == null)
         {
@@ -102,7 +102,7 @@ public class DownloadScoresPage
             useMoodleFormat     = false;
             useFullFormat       = false;
         }
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
     }
 
 

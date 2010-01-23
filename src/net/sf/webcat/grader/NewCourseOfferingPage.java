@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,8 +25,9 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import com.webobjects.appserver.*;
-import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.eof.ERXQ;
 import net.sf.webcat.core.*;
 import net.sf.webcat.ui.generators.JavascriptGenerator;
 
@@ -58,7 +59,7 @@ public class NewCourseOfferingPage
     //~ KVC Attributes (must be public) .......................................
 
     public Course               course;
-    public WODisplayGroup       courseDisplayGroup;
+    public ERXDisplayGroup<Course> courseDisplayGroup;
     public NSArray<AuthenticationDomain> institutions;
     public AuthenticationDomain institution;
     public AuthenticationDomain anInstitution;
@@ -82,8 +83,9 @@ public class NewCourseOfferingPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void _appendToResponse(WOResponse response, WOContext context)
     {
+        log.debug("appendToResponse()");
         if ( semesters == null )
         {
             semesters =
@@ -98,25 +100,36 @@ public class NewCourseOfferingPage
             institutions = AuthenticationDomain.authDomains();
             institution = user().authenticationDomain();
         }
-        if (institution == null)
-        {
-            courseDisplayGroup.setQualifier(null);
-        }
-        else
-        {
-            courseDisplayGroup.setQualifier(new EOKeyValueQualifier(
-                Course.iNSTITUTION_KEY,
-                EOQualifier.QualifierOperatorEqual,
-                institution
-                ));
-        }
-        courseDisplayGroup.updateDisplayedObjects();
+
         if (coreSelections().courseOffering() != null)
         {
             coreSelections().setCourseRelationship(
                 coreSelections().courseOffering().course());
         }
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
+    }
+
+
+    // ----------------------------------------------------------
+    public String refilterCourseList()
+    {
+        if (allCourses == null)
+        {
+            allCourses = Course.allObjects(localContext());
+        }
+        if (institution == null)
+        {
+            courseDisplayGroup.setObjectArray(allCourses);
+        }
+        else
+        {
+            courseDisplayGroup.setObjectArray(
+                ERXQ.filtered(
+                    allCourses,
+                    Course.department.dot(Department.institution)
+                        .is(institution)));
+        }
+        return null;
     }
 
 
@@ -143,17 +156,17 @@ public class NewCourseOfferingPage
         }
         if (crn == null || crn.length() == 0)
         {
-            error("Please enter a CRN (unique identifier) for your course offering.");
+            error("Please enter a CRN (unique identifier) for your "
+                + "course offering.");
             return null;
         }
-        CourseOffering newOffering = new CourseOffering();
-        localContext().insertObject(newOffering);
+        CourseOffering newOffering = CourseOffering.create(localContext());
         newOffering.setCourseRelationship(coreSelections().course());
         newOffering.setSemesterRelationship(semester);
         newOffering.addToInstructorsRelationship(user());
         newOffering.setCrn(crn);
         setCourseOffering(newOffering);
-        apply();
+        coreSelections().setCourseOfferingRelationship(newOffering);
         return super.next();
     }
 
@@ -332,7 +345,7 @@ public class NewCourseOfferingPage
     public WOActionResults createCourse()
     {
         JavascriptGenerator page = new JavascriptGenerator();
-        page.refresh("courseblock", "error-panel");
+        page.refresh("courseblock,error-panel");
 
         if (newCourseNumber == 0)
         {
@@ -363,9 +376,12 @@ public class NewCourseOfferingPage
         {
             coreSelections().setCourseRelationship(newCourse);
             coreSelections().setCourseOfferingRelationship(null);
-            courseDisplayGroup.fetch();
+            allCourses = null;  // force a new fetch
         }
 
+        // This will force the main section of the page to be reloaded,
+        // which will in turn force filterCourseList() to be invoked,
+        // which will reload the course list
         return page;
     }
 
@@ -430,5 +446,6 @@ public class NewCourseOfferingPage
     private NSArray<Department> departments;
     private int newCourseNumber = 101;
     private TimeZone timeZone;
+    private NSArray<Course> allCourses;
     static Logger log = Logger.getLogger(NewCourseOfferingPage.class);
 }

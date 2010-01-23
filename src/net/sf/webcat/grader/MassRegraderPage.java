@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,25 +22,18 @@
 package net.sf.webcat.grader;
 
 import net.sf.webcat.core.Application;
-import net.sf.webcat.core.Course;
-import net.sf.webcat.core.CourseOffering;
 import net.sf.webcat.core.User;
 import net.sf.webcat.ui.generators.JavascriptGenerator;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
-import com.webobjects.eoaccess.EOUtilities;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOQualifier;
-import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSMutableDictionary;
-import er.extensions.eof.ERXEOControlUtilities;
-import er.extensions.eof.ERXQ;
 import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
-import er.extensions.foundation.ERXArrayUtilities;
 
 //--------------------------------------------------------------------------
 /**
@@ -49,7 +42,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  * plug-in).
  *
  * @author Tony Allevato
- * @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class MassRegraderPage extends GraderAssignmentComponent
 {
@@ -79,11 +73,11 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
     // ----------------------------------------------------------
     @Override
-    public void appendToResponse(WOResponse response, WOContext context)
+    public void _appendToResponse(WOResponse response, WOContext context)
     {
         updateSubmissionCount();
 
-        super.appendToResponse(response, context);
+        super._appendToResponse(response, context);
     }
 
 

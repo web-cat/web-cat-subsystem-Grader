@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -34,7 +34,8 @@ import org.apache.log4j.Logger;
  *  This page presents a list of courses for a student to choose from.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ * @author  latest changes by: $Author$
+ * @version $Revision$, $Date$
  */
 public class PickCourseEnrolledPage
     extends GraderComponent
@@ -55,19 +56,19 @@ public class PickCourseEnrolledPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup      courseDisplayGroup;
-    public NSArray             coursesTAed;
-    public NSArray             coursesTaught;
-    public NSArray             coursesAdmined;
-    public CourseOffering      courseOffering;
-    public int                 index;
-    public int                 selectedCourseIndex;
-    public int                 selectedTAIndex;
-    public int                 selectedInstructorIndex;
-    public int                 selectedAdminIndex;
-    public NSArray             semesters;
-    public Semester            semester;
-    public Semester            aSemester;
+    public WODisplayGroup          courseDisplayGroup;
+    public NSArray<CourseOffering> coursesTAed;
+    public NSArray<CourseOffering> coursesAdmined;
+    public NSArray<CourseOffering> coursesTaught;
+    public CourseOffering          courseOffering;
+    public int                     index;
+    public int                     selectedCourseIndex;
+    public int                     selectedTAIndex;
+    public int                     selectedInstructorIndex;
+    public int                     selectedAdminIndex;
+    public NSArray<Semester>       semesters;
+    public Semester                semester;
+    public Semester                aSemester;
 
     public static final String SEMESTER_PREF_KEY = "semester";
 
@@ -87,7 +88,7 @@ public class PickCourseEnrolledPage
 
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void _appendToResponse( WOResponse response, WOContext context )
     {
         User user = user();
         if ( semesters == null )
@@ -99,7 +100,7 @@ public class PickCourseEnrolledPage
             if (semesterPref == null && semesters.count() > 0)
             {
                 // Default to most recent semester, if no preference is set
-                semester = (Semester)semesters.objectAtIndex(0);
+                semester = semesters.objectAtIndex(0);
             }
             else
             {
@@ -210,8 +211,7 @@ public class PickCourseEnrolledPage
             {
                 selectedTAIndex = courseDisplayGroup.displayedObjects().count();
                 coreSelections().setCourseOfferingRelationship(
-                     (CourseOffering)coursesTAed.
-                         objectAtIndex( 0 ) );
+                     coursesTAed.objectAtIndex( 0 ) );
             }
             else if ( coursesTaught.count() > 0 )
             {
@@ -219,7 +219,7 @@ public class PickCourseEnrolledPage
                     courseDisplayGroup.displayedObjects().count()
                     + coursesTAed.count();
                 coreSelections().setCourseOfferingRelationship(
-                     (CourseOffering)coursesTaught.objectAtIndex( 0 ) );
+                     coursesTaught.objectAtIndex( 0 ) );
             }
             else if ( coursesAdmined.count() > 0 )
             {
@@ -228,7 +228,7 @@ public class PickCourseEnrolledPage
                     + coursesTAed.count()
                     + coursesTaught.count();
                 coreSelections().setCourseOfferingRelationship(
-                     (CourseOffering)coursesAdmined.objectAtIndex( 0 ) );
+                     coursesAdmined.objectAtIndex( 0 ) );
             }
         }
 
@@ -240,7 +240,7 @@ public class PickCourseEnrolledPage
             log.debug(" selected 3 = " + selectedInstructorIndex );
             log.debug(" selected 4 = " + selectedAdminIndex );
         }
-        super.appendToResponse( response, context );
+        super._appendToResponse( response, context );
     }
 
 
@@ -268,8 +268,7 @@ public class PickCourseEnrolledPage
             selectedTAIndex -= courseDisplayGroup.displayedObjects().count();
             log.debug( "choosing TAed course " + selectedTAIndex );
             coreSelections().setCourseOfferingRelationship(
-                (CourseOffering)coursesTAed
-                    .objectAtIndex( selectedTAIndex ) );
+                coursesTAed.objectAtIndex( selectedTAIndex ) );
             return super.next();
         }
         else if ( selectedInstructorIndex >= 0 )
@@ -279,8 +278,7 @@ public class PickCourseEnrolledPage
             selectedInstructorIndex -= coursesTAed.count();
             log.debug( "choosing taught course " + selectedInstructorIndex );
             coreSelections().setCourseOfferingRelationship(
-                (CourseOffering)coursesTaught
-                    .objectAtIndex( selectedInstructorIndex ) );
+                coursesTaught.objectAtIndex( selectedInstructorIndex ) );
             return super.next();
         }
         else if ( selectedAdminIndex >= 0 )
@@ -291,8 +289,7 @@ public class PickCourseEnrolledPage
             selectedAdminIndex -= coursesTaught.count();
             log.debug( "choosing admin'ed course " + selectedInstructorIndex );
             coreSelections().setCourseOfferingRelationship(
-                (CourseOffering)coursesAdmined
-                    .objectAtIndex( selectedAdminIndex ) );
+                coursesAdmined.objectAtIndex( selectedAdminIndex ) );
             return super.next();
         }
         else
