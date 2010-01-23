@@ -24,6 +24,8 @@ package net.sf.webcat.grader;
 import net.sf.webcat.core.Application;
 import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
+import net.sf.webcat.core.User;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
@@ -37,6 +39,7 @@ import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSMutableDictionary;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXQ;
+import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
 import er.extensions.foundation.ERXArrayUtilities;
 
 //--------------------------------------------------------------------------
@@ -103,13 +106,9 @@ public class MassRegraderPage extends GraderAssignmentComponent
             return null;
         }
 
-        NSArray<EOSortOrdering> sortOrderings = new NSArray<EOSortOrdering>(
-                new EOSortOrdering[] {
-                        new EOSortOrdering("user.userName",
-                                EOSortOrdering.CompareCaseInsensitiveAscending),
-                        new EOSortOrdering("submitNumber",
-                                EOSortOrdering.CompareAscending)
-                });
+        ERXSortOrderings sortOrderings =
+            Submission.user.dot(User.userName).ascInsensitive().then(
+            Submission.submitNumber.asc());
 
         if (hasQualString)
         {
@@ -130,12 +129,13 @@ public class MassRegraderPage extends GraderAssignmentComponent
         {
             if (prefs().assignmentOffering() != null)
             {
-                q = ERXQ.is("assignmentOffering", prefs().assignmentOffering());
+                q = Submission.assignmentOffering.is(
+                        prefs().assignmentOffering());
             }
             else
             {
-                q = ERXQ.is("assignmentOffering.assignment",
-                        prefs().assignment());
+                q = Submission.assignmentOffering.dot(
+                        AssignmentOffering.assignment).is(prefs().assignment());
             }
         }
 
@@ -145,11 +145,8 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
             try
             {
-                EOFetchSpecification fspec = new EOFetchSpecification(
-                        Submission.ENTITY_NAME, q, sortOrderings);
-
-                submissions = Submission
-                    .objectsWithFetchSpecification(localContext(), fspec);
+                submissions = Submission.objectsMatchingQualifier(
+                        localContext(), q, sortOrderings);
             }
             catch (Exception e)
             {
@@ -246,8 +243,11 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
 
     // ----------------------------------------------------------
-    public WOActionResults updateSubmissionCount()
+    public JavascriptGenerator updateSubmissionCount()
     {
+        JavascriptGenerator response = new JavascriptGenerator();
+        response.refresh("submissionCount", "qualifierErrors");
+
         EOQualifier q;
         qualifierErrors = null;
 
@@ -262,7 +262,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
                         prefs().assignmentOffering() == null))
         {
             numberOfSubmissions = 0;
-            return null;
+            return response;
         }
 
         if (hasQualString)
@@ -284,12 +284,13 @@ public class MassRegraderPage extends GraderAssignmentComponent
         {
             if (prefs().assignmentOffering() != null)
             {
-                q = ERXQ.is("assignmentOffering", prefs().assignmentOffering());
+                q = Submission.assignmentOffering.is(
+                        prefs().assignmentOffering());
             }
             else
             {
-                q = ERXQ.is("assignmentOffering.assignment",
-                        prefs().assignment());
+                q = Submission.assignmentOffering.dot(
+                        AssignmentOffering.assignment).is(prefs().assignment());
             }
         }
 
@@ -298,8 +299,8 @@ public class MassRegraderPage extends GraderAssignmentComponent
             try
             {
                 numberOfSubmissions =
-                    ERXEOControlUtilities.objectCountWithQualifier(
-                        localContext(), Submission.ENTITY_NAME, q);
+                    Submission.countOfObjectsMatchingQualifier(
+                            localContext(), q);
             }
             catch (Exception e)
             {
@@ -314,7 +315,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
             numberOfSubmissions = 0;
         }
 
-        return null;
+        return response;
     }
 
 
@@ -322,12 +323,9 @@ public class MassRegraderPage extends GraderAssignmentComponent
     public int updateCountOfRegradingJobsInQueue()
     {
         cachedCountOfRegradingJobsInQueue =
-            ERXEOControlUtilities.objectCountWithQualifier(
-                localContext(),
-                EnqueuedJob.ENTITY_NAME,
-                ERXQ.and(
-                        ERXQ.isTrue(EnqueuedJob.REGRADING_KEY),
-                        ERXQ.isFalse(EnqueuedJob.PAUSED_KEY)));
+            EnqueuedJob.countOfObjectsMatchingQualifier(localContext(),
+                    EnqueuedJob.regrading.isTrue().and(
+                    EnqueuedJob.paused.isFalse()));
 
         return cachedCountOfRegradingJobsInQueue;
     }
@@ -337,12 +335,9 @@ public class MassRegraderPage extends GraderAssignmentComponent
     public int updateCountOfSuspendedJobsInQueue()
     {
         cachedCountOfSuspendedJobsInQueue =
-            ERXEOControlUtilities.objectCountWithQualifier(
-                localContext(),
-                EnqueuedJob.ENTITY_NAME,
-                ERXQ.and(
-                        ERXQ.isTrue(EnqueuedJob.REGRADING_KEY),
-                        ERXQ.isTrue(EnqueuedJob.PAUSED_KEY)));
+            EnqueuedJob.countOfObjectsMatchingQualifier(localContext(),
+                    EnqueuedJob.regrading.isTrue().and(
+                    EnqueuedJob.paused.isTrue()));
 
         return cachedCountOfSuspendedJobsInQueue;
     }
@@ -351,12 +346,14 @@ public class MassRegraderPage extends GraderAssignmentComponent
     // ----------------------------------------------------------
     public NSArray<EnqueuedJob> nextSetOfJobsInQueue()
     {
+        EOQualifier qualifier =
+            EnqueuedJob.regrading.isTrue().and(
+            EnqueuedJob.paused.isFalse());
+
+        ERXSortOrderings sortOrderings = EnqueuedJob.queueTime.ascs();
+
         EOFetchSpecification fspec = new EOFetchSpecification(
-                EnqueuedJob.ENTITY_NAME,
-                ERXQ.and(
-                        ERXQ.isTrue(EnqueuedJob.REGRADING_KEY),
-                        ERXQ.isFalse(EnqueuedJob.PAUSED_KEY)),
-                null);
+                EnqueuedJob.ENTITY_NAME, qualifier, sortOrderings);
         fspec.setFetchLimit(10);
 
         return EnqueuedJob.objectsWithFetchSpecification(localContext(), fspec);

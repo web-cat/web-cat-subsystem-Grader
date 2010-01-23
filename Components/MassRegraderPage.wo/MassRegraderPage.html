@@ -27,7 +27,7 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
 use this option it will <b>override</b> your current course and assignment
 selection above.</p>
 <p>
-<wo name="SubmissionQualifier"><wo:WCConnectAction event="onBlur" action="$updateSubmissionCount" remote.refreshPanes="['submissionCount', 'qualifierErrors']"/></wo>
+<wo name="SubmissionQualifier"><wo:WCConnectAction event="onBlur" action="$updateSubmissionCount" remote="true"/></wo>
 </p>
 <wo:WCContentPane id="qualifierErrors">
 <wo:if condition="$qualifierErrors">

@@ -42,12 +42,12 @@ assignment:</p>
 <li>
 <wo:label for="$idFor.toSemesterSelector">Re-offer in semester:</wo:label>
 <wo name="ToSemesterFilter">
-  <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
+  <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote="true"/>
 </wo></li>
 <wo:if condition="$toSemester">
   <li><wo:label for="$idFor.toCourseSelector">Re-offer in course:</wo:label>
   <wo name="ToCourseFilter">
-    <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote.refreshPanes="$idFor.reofferPane"/>
+    <wo:WCConnectAction event="onChange" action="$updateReofferPane" remote="true"/>
   </wo></li>
   <wo:if condition="$toCourseOffering">
     <wo:if condition="$assignments.count">

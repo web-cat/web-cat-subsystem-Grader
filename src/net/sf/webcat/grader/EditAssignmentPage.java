@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import net.sf.webcat.core.*;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -503,7 +504,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent addStep()
+    public JavascriptGenerator addStep()
     {
         if (selectedGradingPluginToAdd != null)
         {
@@ -516,12 +517,14 @@ public class EditAssignmentPage
             }
         }
 
-        return null;
+        return new JavascriptGenerator()
+            .refresh("gradingSteps")
+            .block("gradingStepsTable");
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent removeStep()
+    public JavascriptGenerator removeStep()
     {
         int pos = thisStep.order();
         for (int i = pos;
@@ -543,7 +546,9 @@ public class EditAssignmentPage
 
         scriptDisplayGroup.fetch();
 
-        return null;
+        return new JavascriptGenerator()
+            .refresh("gradingSteps")
+            .block("gradingStepsTable");
     }
 
 
@@ -638,11 +643,13 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent clearGraph()
+    public JavascriptGenerator clearGraph()
     {
         thisOffering.clearGraphSummary();
         applyLocalChanges();
-        return null;
+
+        return new JavascriptGenerator()
+            .refresh("scoreHistogram" + thisOffering.id());
     }
 
 

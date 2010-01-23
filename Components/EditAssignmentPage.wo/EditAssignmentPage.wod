@@ -1,8 +1,7 @@
 AddStep: WCButton {
-    action              = addStep;
-    label               = "Add";
-    remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingStepsTable";
+    action = addStep;
+    label  = "Add";
+    remote = true;
 }
 
 GradingPluginsToAdd: WCFilteringSelect {
@@ -27,7 +26,7 @@ CancelSubs: WCButton {
 ClearGraph: WCButton {
     action = clearGraph;
     label  = "Refresh Cached Graph Data";
-    remote.refreshPanes = "~'scoreHistogram' + thisOffering.id";
+    remote = true;
     style  = "margin-top:0;";
 }
 
@@ -153,10 +152,9 @@ RemoveStep: WOGenericContainer {
 }
 
 RemoveStepFunction: WCActionFunction {
-    jsId                = "~'removeStepAction_' + index";
-    action              = removeStep;
-    remote.refreshPanes = "gradingSteps";
-    remote.block        = "gradingStepsTable";
+    jsId   = "~'removeStepAction_' + index";
+    action = removeStep;
+    remote = true;
 }
 
 RemoveStepImage: WOImage {

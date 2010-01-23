@@ -159,9 +159,9 @@ public class NewCourseOfferingPage
 
 
     // ----------------------------------------------------------
-    public WOActionResults update()
+    public JavascriptGenerator update()
     {
-        return null;
+        return new JavascriptGenerator().refresh("courseblock");
     }
 
 

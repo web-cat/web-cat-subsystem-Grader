@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
 import net.sf.webcat.core.Semester;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 import net.sf.webcat.ui.util.ComponentIDGenerator;
 import org.apache.log4j.Logger;
 import com.webobjects.appserver.WOActionResults;
@@ -462,7 +463,7 @@ public class NewAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOActionResults updateReofferPane()
+    public JavascriptGenerator updateReofferPane()
     {
         if (myCourses == null)
         {
@@ -534,7 +535,8 @@ public class NewAssignmentPage
         }
 
         reuseOpen = true;
-        return null;
+        return new JavascriptGenerator()
+            .refresh((String) idFor.valueForKey("reofferPane"));
     }
 
 

@@ -3,18 +3,24 @@
 <wo:WCForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <table class="layout"><tbody>
 <tr><td class="R"><label for="semester">Semester:</label></td><td><wo name="SemesterList"/>
-  <wo:WCButton label="Add"
-    onclick="~'dijit.byId(\'new-semester\').show();'"/>
-   <wo name="SemesterInfo"/>
+  <wo:WCButton label="Add">
+   <script type="dojo/connect" event="onClick">
+   dijit.byId('new-semester').show();
+   </script>
+  </wo:WCButton>
+  <wo name="SemesterInfo"/>
 </td></tr>
 <wo:if condition="~user.hasAdminPrivileges and institutions.count gt 1">
 <tr><td class="R"><label for="institution">Institution:</label></td><td><wo name="InstitutionList">
-      <wo:WCConnectAction event="onChange" action="$update" remote.refreshPanes="courseblock"/>
+      <wo:WCConnectAction event="onChange" action="$update" remote="true"/>
 </wo> <wo name="InstitutionInfo"/></td></tr>
 </wo:if>
 <tr><td class="R"><label for="course">Course:</label></td><td><wo name="CourseList"/>
-  <wo:WCButton label="Add"
-    onclick="~'dijit.byId(\'new-course\').show();'"/>
+  <wo:WCButton label="Add">
+    <script type="dojo/connect" event="onClick">
+    dijit.byId('new-course').show();
+    </script>
+  </wo:WCButton>
   <wo name="CourseInfo"/>
 </td></tr>
 <tr><td class="R"><label for="crn">CRN:</label></td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
