@@ -1,7 +1,7 @@
 <wo:WCDiv dojoType="dijit.form.DropDownButton" id="$idFor.navigatorButton">
 <span>Change Assignment</span>
 <wo:WCDiv dojoType="dijit.TooltipDialog" title="Choose Assignment">
-<wo:WCForm>
+<wo:WCForm id="$idFor.form">
 <fieldset class="course">
 <legend>Selected Course</legend>
 <ol>
@@ -38,7 +38,7 @@
 <fieldset class="assignment">
 <legend>Selected Assignment</legend><ol>
 <li>
-<wo:WCContentPane style="padding: 4px" id="$idFor.assignmentPane">
+<wo:WCContentPane id="$idFor.assignmentPane">
 <wo:WOGenericContainer elementName="label" for="$idFor.assignmentSelector">Assignment:</wo:WOGenericContainer>
 <wo name="AssignmentFilter">
 </wo>
@@ -62,12 +62,19 @@
 </wo:if>
 </ol></fieldset>
 <div class="center">
-<wo name="OK">OK</wo>
-<wo:if negate="true" condition="$startOpen"><wo name="Cancel">Cancel</wo></wo:if>
+<wo name="OK"/>
+<wo:if negate="true" condition="$startOpen">
+<wo name="Cancel">
+<script type="dojo/connect" event="onClick" args="evt">
+dijit.byId('<wo:str value="$idFor.form"/>').reset();
+dijit.byId('<wo:str value="$idFor.navigatorButton"/>').closeDropDown();
+</script>
+</wo>
+</wo:if>
 </div>
 </wo:WCForm>
 </wo:WCDiv>
 </wo:WCDiv><wo:if condition="$startOpen">
 <script type="text/javascript">
-dojo.addOnLoad(function() { dijit.byId("<wo:str value="$idFor.navigatorButton"/>")._openDropDown(); });
+dojo.addOnLoad(function() { dijit.byId("<wo:str value="$idFor.navigatorButton"/>").openDropDown(); });
 </script></wo:if>

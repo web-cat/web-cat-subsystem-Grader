@@ -48,8 +48,10 @@ ShowClosedAssignments: WCCheckBox {
 OK: WCButton {
     action = okPressed;
     class = "pos";
+    label = "OK";
 }
 
 Cancel: WCButton {
     class = "neg";
+    label = "Cancel";
 }
