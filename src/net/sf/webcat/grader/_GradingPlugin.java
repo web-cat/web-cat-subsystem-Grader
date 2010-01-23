@@ -27,6 +27,7 @@ package net.sf.webcat.grader;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
 
@@ -1784,6 +1785,97 @@ public abstract class _GradingPlugin
         {
             return null;
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the count of all objects of this type.
+     *
+     * @param context The editing context to use
+     *
+     * @return the count of all objects
+     */
+    public static int countOfAllObjects(EOEditingContext context)
+    {
+        return countOfObjectsMatchingQualifier(context, null);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the count of objects that match a qualifier.
+     *
+     * @param context The editing context to use
+     * @param qualifier The qualifier to use
+     *
+     * @return the count of objects matching the qualifier
+     */
+    public static int countOfObjectsMatchingQualifier(
+        EOEditingContext context, EOQualifier qualifier)
+    {
+        return ERXEOControlUtilities.objectCountWithQualifier(
+                context, ENTITY_NAME, qualifier);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the count of objects using a list of keys and values to match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a list of keys and values to match, alternating
+     *     "key", "value", "key", "value"...
+     *
+     * @return the count of objects that match the specified values
+     */
+    public static int countOfObjectsMatchingValues(
+        EOEditingContext context,
+        Object... keysAndValues)
+    {
+        if (keysAndValues.length % 2 != 0)
+        {
+            throw new IllegalArgumentException("There should a value " +
+                "corresponding to every key that was passed.");
+        }
+
+        NSMutableDictionary<String, Object> valueDictionary =
+            new NSMutableDictionary<String, Object>();
+
+        for (int i = 0; i < keysAndValues.length; i += 2)
+        {
+            Object key = keysAndValues[i];
+            Object value = keysAndValues[i + 1];
+
+            if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException("Keys should be strings.");
+            }
+
+            valueDictionary.setObjectForKey(value, key);
+        }
+
+        return countOfObjectsMatchingValues(context, valueDictionary);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the count of objects using a dictionary of keys and values to
+     * match.
+     *
+     * @param context The editing context to use
+     * @param keysAndValues a dictionary of keys and values to match
+     *
+     * @return the count of objects that matched the specified values
+     */
+    @SuppressWarnings("unchecked")
+    public static int countOfObjectsMatchingValues(
+        EOEditingContext context,
+        NSDictionary<String, Object> keysAndValues)
+    {
+        return countOfObjectsMatchingQualifier(context,
+                EOQualifier.qualifierToMatchAllValues(keysAndValues));
     }
 
 
