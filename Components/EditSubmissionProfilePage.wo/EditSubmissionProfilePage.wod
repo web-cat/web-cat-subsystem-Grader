@@ -61,7 +61,7 @@ TextField1: WOTextField {
 }
 
 TextField2: WOTextField {
-	numberformat = "0";
+    formatter    = doubleFormatter;
 	size         = 7;
 	value        = submissionProfile.availablePointsRaw;
 	disabled     = true;
@@ -70,7 +70,7 @@ TextField2: WOTextField {
 }
 
 TextField14: WOTextField {
-	numberformat = "0";
+    formatter    = doubleFormatter;
 	size         = 7;
 	value        = submissionProfile.taPointsRaw;
 	name         = "taPoints";
@@ -79,7 +79,7 @@ TextField14: WOTextField {
 }
 
 TextField15: WOTextField {
-	numberformat = "0";
+    formatter    = doubleFormatter;
 	size         = 7;
 	value        = submissionProfile.toolPointsRaw;
 	name         = "toolPoints";
@@ -88,7 +88,7 @@ TextField15: WOTextField {
 }
 
 TextField16: WOTextField {
-	numberformat = "0";
+    formatter    = doubleFormatter;
 	size         = 7;
 	value        = correctnessPoints;
 	name         = "correctnessPoints";
@@ -109,15 +109,15 @@ TextField4: WOTextField {
 }
 
 TextField5: WOTextField {
-	numberformat = "0.##";
-	size = 3;
-	value = submissionProfile.earlyBonusMaxPtsRaw;
+    formatter = doubleFormatter;
+	size      = 3;
+	value     = submissionProfile.earlyBonusMaxPtsRaw;
 }
 
 TextField6: WOTextField {
-	numberformat = "0.##";
-	size = 3;
-	value = submissionProfile.earlyBonusUnitPtsRaw;
+    formatter = doubleFormatter;
+	size      = 3;
+	value     = submissionProfile.earlyBonusUnitPtsRaw;
 }
 
 TextField7: WOTextField {
@@ -127,15 +127,15 @@ TextField7: WOTextField {
 }
 
 TextField8: WOTextField {
-	numberformat = "0.##";
-	size = 3;
-	value = submissionProfile.latePenaltyMaxPtsRaw;
+    formatter = doubleFormatter;
+	size      = 3;
+	value     = submissionProfile.latePenaltyMaxPtsRaw;
 }
 
 TextField9: WOTextField {
-	numberformat = "0.##";
-	size = 3;
-	value = submissionProfile.latePenaltyUnitPtsRaw;
+    formatter = doubleFormatter;
+	size      = 3;
+	value     = submissionProfile.latePenaltyUnitPtsRaw;
 }
 
 TextField10: WOTextField {

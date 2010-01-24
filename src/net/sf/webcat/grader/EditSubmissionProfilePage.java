@@ -21,6 +21,8 @@
 
 package net.sf.webcat.grader;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import com.webobjects.appserver.*;
 import org.apache.log4j.Logger;
 
@@ -307,6 +309,13 @@ public class EditSubmissionProfilePage
     }
 
 
+    // ----------------------------------------------------------
+    public Format doubleFormatter()
+    {
+        return doubleFormatter;
+    }
+
+
     //~ Instance/static variables .............................................
 
     private static final String INLINE_JAVASCRIPT =
@@ -327,5 +336,6 @@ public class EditSubmissionProfilePage
         + "// End -->\n"
         + "</script>";
 
+    private static final Format doubleFormatter = new DecimalFormat("0.######");
     static Logger log = Logger.getLogger( EditSubmissionProfilePage.class );
 }
