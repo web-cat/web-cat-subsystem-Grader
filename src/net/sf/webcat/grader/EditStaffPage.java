@@ -82,11 +82,6 @@ public class EditStaffPage
             + " current index = " + potentialDisplayGroup.currentBatchIndex() );
         oldBatchSize  = potentialDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = potentialDisplayGroup.currentBatchIndex();
-        potentialDisplayGroup.queryBindings().setObjectForKey(
-                        ERXConstant.integerForInt( editInstructors
-                                        ? User.INSTRUCTOR_PRIVILEGES
-                                        : User.STUDENT_PRIVILEGES ),
-                        "accessLevel" );
         if ( firstLoad )
         {
             potentialDisplayGroup.queryMatch().takeValueForKey(
@@ -123,6 +118,10 @@ public class EditStaffPage
     {
         if( editInstructors)
         {
+            if (aUser.accessLevel() < User.INSTRUCTOR_PRIVILEGES)
+            {
+                aUser.setAccessLevel(User.INSTRUCTOR_PRIVILEGES);
+            }
             courseOffering().addToInstructorsRelationship(aUser);
         }
         else
@@ -133,7 +132,6 @@ public class EditStaffPage
             }
             courseOffering().addToGradersRelationship(aUser);
         }
-        applyLocalChanges();
         return null;
     }
 
@@ -149,7 +147,6 @@ public class EditStaffPage
         {
             courseOffering().removeFromGradersRelationship(aUser);
         }
-        applyLocalChanges();
         return null;
     }
 
