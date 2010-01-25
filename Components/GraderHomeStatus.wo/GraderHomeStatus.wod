@@ -7,9 +7,13 @@ AssignmentIsUnpublished: WOConditional {
     negate = true;
 }
 
-AssignmentName: WOHyperlink {
+AssignmentLink: WOHyperlink {
     string = "~assignment.titleString(coreSelections.semester)";
     href   = assignment.assignment.url;
+}
+
+AssignmentName: WOString {
+    value = "~assignment.titleString(coreSelections.semester)";
 }
 
 AssignmentRepetition: WORepetition {
@@ -95,7 +99,7 @@ IsAdminUser: WOConditional {
 }
 
 JobAssignmentName: WOHyperlink {
-    string = job.submission.assignmentOffering.titleString;
+    string = "~job.submission.assignmentOffering.titleString(coreSelections.semester)";
     href   = job.submission.assignmentOffering.assignment.url;
 	target = "_new";
 }
