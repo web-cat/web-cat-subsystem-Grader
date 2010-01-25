@@ -1,8 +1,6 @@
 <webobject name="Page">
 <wo:net.sf.webcat.core.WCPageModule title="Students Enrolled in This Course">
 For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
-<wo:WCForm multipleSubmit="true">
-  <wo:WCButton action="$next" style="margin-bottom: 0.5em">Return to Course Properties</wo:WCButton>
 <table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder2"/></th>
@@ -15,20 +13,16 @@ For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
   <webobject name="TR"><td colspan="4">No students are enrolled.</td></webobject>
   </wo:not>
 </tbody></table>
-  <wo:WCButton action="$next">Return to Course Properties</wo:WCButton>
-</wo:WCForm>
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Upload a CSV Roster">
-<wo:WCForm enctype="multipart/form-data" multipleSubmit="true" action="$upload">
 <p>Add more students to your roster using a comma-delimited text file:</p>
 <p>CSV File: <wo:upload data="$data" filePath="$filePath" size="60" dojoType="dojox.form.FileInput"/></p>
 <wo:WCButton action="$upload" label="Upload"/><wo name="UploadInfo"/>
-</wo:WCForm>
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Manually Add Existing Student Accounts" open="$manuallyAdding">
-<wo:str value="$forceManuallyAdding"/><wo:WCForm multipleSubmit="true">
+<wo:str value="$forceManuallyAdding"/>
 <table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator2"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder4"/></th>
@@ -41,6 +35,5 @@ For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
   <webobject name="TR"><td colspan="4">No unenrolled users to list.</td></webobject>
   </wo:not>
 </tbody></table>
-</wo:WCForm>
 </wo:net.sf.webcat.core.WCPageModule>
 </webobject>

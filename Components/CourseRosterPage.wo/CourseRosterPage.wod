@@ -24,11 +24,6 @@ Email: WOHyperlink {
     string = student.email;
 }
 
-ManualInfo: net.sf.webcat.core.PopUpInfo {
-    title   = "Manually Add Students";
-    message = "Use this link to see a list of all existing student accounts.  You can select individual accounts one-by-one to add to your course roster.";
-}
-
 Name: WOHyperlink {
     href = student.url;
     string = student.name_LF;
@@ -40,7 +35,7 @@ NotStudentRepetition: WORepetition {
 	index = index;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: SaveCancelPage {
     title = "Edit Your Course Roster";
 }
 
