@@ -170,8 +170,9 @@ public class CourseRosterPage
     public WOComponent cancel()
     {
         clearMessages();
-        cancelLocalChanges();
-        return super.next();
+        return super.cancel();
+//        cancelLocalChanges();
+//        return super.next();
     }
 
 
@@ -183,7 +184,6 @@ public class CourseRosterPage
     public WOComponent removeStudent()
     {
         courseOffering().removeFromStudentsRelationship(student);
-        applyLocalChanges();
         return null;
     }
 
@@ -196,7 +196,6 @@ public class CourseRosterPage
     public WOComponent addStudent()
     {
         courseOffering().addToStudentsRelationship( student );
-        applyLocalChanges();
         manuallyAdding = true;
         return null;
     }
