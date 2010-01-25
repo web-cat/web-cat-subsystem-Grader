@@ -87,6 +87,7 @@ Page : net.sf.webcat.core.BarePage {
 
 PartialInlineReport: PartialInlineReport {
     file = result.resultFile;
+    substituteOldCollapsingRegions = false;
 }
 
 ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
@@ -123,6 +124,7 @@ StudentName: WOString {
 
 SummaryReport: PartialInlineReport {
     file = result.summaryFile;
+    substituteOldCollapsingRegions = false;
 }
 
 TAComments: net.sf.webcat.core.FormattedString {

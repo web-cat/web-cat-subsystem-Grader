@@ -1,11 +1,17 @@
-<webobject name="Page"><div id="page"><div id="contents" class="nomenu">
+<webobject name="Page"><div id="page" style="border:none;"><div id="contents" class="nomenu" style="width:100%; margin: 0; float: none;">
 <h1><webobject name="DeptNumber"/>: <webobject name="AssignmentName"/>, by
 <webobject name="StudentName"/>
 </h1>
 <webobject name="Form"><webobject name="Return"/></webobject>
 <webobject name="LongResponse">
-  <webobject name="ResultInfo"/>
-  <webobject name="HasNonZeroScore"><webobject name="ScoreSummary"/></webobject>
+  <div class="shadow">
+    <webobject name="ResultInfo"/>
+  </div><div class="spacer">&nbsp;</div>
+  <webobject name="HasNonZeroScore">
+    <div class="shadow">
+      <webobject name="ScoreSummary"/>
+    </div><div class="spacer">&nbsp;</div>
+  </webobject>
   <webobject name="SummaryReport"/>
   <webobject name="HasTAComments">
     <div class="shadow"><table><thead>
