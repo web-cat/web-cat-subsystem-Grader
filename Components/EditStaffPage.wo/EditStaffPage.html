@@ -1,7 +1,5 @@
 <webobject name="Page">
 <wo name="StaffSection">
-<wo:WCForm multipleSubmit="true">
-  <wo:WCButton action="$next" style="margin-bottom: 0.5em">Return to Course Properties</wo:WCButton>
 <table><thead>
   <tr><th>User ID<webobject name="WCSortOrder4"/></th>
     <th><wo:str value="$userRole"/><webobject name="WCSortOrder3"/></th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
@@ -13,12 +11,9 @@
 	<tr><td colspan="4">No <wo:str value="$userRole"/>(s) listed for this course</td></tr>
   </wo:not>
 </tbody></table>
-  <wo:WCButton action="$next">Return to Course Properties</wo:WCButton>
-</wo:WCForm>
 </wo>
 
 <wo:WCPageModule title="Potential Staff to Add">
-<wo:WCForm multipleSubmit="true">
 <table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator1"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder2"/></th>
@@ -32,6 +27,5 @@
 	<tr><td colspan="4">No potential <wo:str value="$userRole"/>(s)</td></tr>
   </wo:not>
 </tbody></table>
-</wo:WCForm>
 </wo:WCPageModule>
 </webobject>

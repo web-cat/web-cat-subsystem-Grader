@@ -26,12 +26,6 @@
                     entityName = User;
                     fetchLimit = 0;
                     isDeep = YES;
-                    qualifier = {
-                        class = EOKeyValueQualifier;
-                        key = accessLevel;
-                        selectorName = "isGreaterThanOrEqualTo:";
-                        value = {_key = accessLevel; class = EOQualifierVariable; };
-                    };
                 };
             };
             fetchesOnLoad = NO;

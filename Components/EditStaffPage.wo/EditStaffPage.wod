@@ -19,7 +19,7 @@ Name: WOHyperlink {
     string = aUser.name_LF;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: SaveCancelPage {
     title = sideStepTitle;
 //    applyEnabled = true;
 }
