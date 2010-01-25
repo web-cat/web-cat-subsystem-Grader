@@ -518,7 +518,7 @@ public class EditAssignmentPage
 
         return new JavascriptGenerator()
             .refresh("gradingSteps")
-            .block("gradingStepsTable");
+            .unblock("gradingStepsTable");
     }
 
 
@@ -547,7 +547,7 @@ public class EditAssignmentPage
 
         return new JavascriptGenerator()
             .refresh("gradingSteps")
-            .block("gradingStepsTable");
+            .unblock("gradingStepsTable");
     }
 
 

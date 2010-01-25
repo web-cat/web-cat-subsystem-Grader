@@ -45,7 +45,12 @@
     </wo></wo>
     <wo name="LastTR">
         <td colspan="4">
-            Add a step: <wo name="GradingPluginsToAdd"/> <webobject name="AddStep"/>
+            Add a step: <wo name="GradingPluginsToAdd"/>
+            <webobject name="AddStep">
+                <script type="dojo/connect" event="onClick" args="evt">
+                    webcat.block('gradingStepsTable');
+                </script>
+            </webobject>
         </td>
     </wo></tbody>
 </wo>
