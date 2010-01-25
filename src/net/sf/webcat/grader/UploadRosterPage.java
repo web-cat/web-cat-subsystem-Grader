@@ -29,6 +29,7 @@ import com.webobjects.foundation.*;
 import java.io.*;
 import java.util.regex.Pattern;
 import net.sf.webcat.core.*;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 import org.apache.log4j.Logger;
 
 //-------------------------------------------------------------------------
@@ -134,10 +135,10 @@ public class UploadRosterPage
     {
         log.debug("refresh()");
         refresh(false, true);
-//        JavascriptGenerator page = new JavascriptGenerator();
-//        page.refresh("preview", "error-panel");
-//        return page;
-        return null;
+        JavascriptGenerator page = new JavascriptGenerator();
+        page.refresh("preview", "error-panel");
+        return page;
+//        return null;
     }
 
 

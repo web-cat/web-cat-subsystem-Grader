@@ -39,7 +39,7 @@ addresses instead.
 
 <wo:net.sf.webcat.core.WCPageModule title="CSV File Settings">
 <p><label for="delim" style="width:auto;">Delimiter:</label><wo name="Delimiter">
-  <wo:WCConnectAction event="onChange" action="$refresh"/>
+  <wo:WCConnectAction event="onChange" remote="true" action="$refresh"/>
 </wo> <wo name="DelimiterInfo"/></p>
 <p><wo:WOCheckBox checked="$firstLineColumnHeadings" id="firstLineCols">
   <wo:WCConnectAction event="onChange" action="$refresh"/>
