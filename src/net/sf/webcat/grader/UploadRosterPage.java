@@ -70,20 +70,20 @@ public class UploadRosterPage
     public Delimiter            selectedDelimiter;
     public Delimiter            previousDelimiter;
 
-    public NSMutableArray       previewLines;
-    public NSArray              aPreviewLine;
-    public String               cell;
-    public int                  numberOfRecords;
-    public int                  maxRecordLength;
-    public boolean              gapBeforeLongLine;
-    public NSMutableArray       longPreviewLine;
-    public boolean              gapAfterLongLine;
-    public int                  index;
-    public boolean              firstLineColumnHeadings;
+    public NSMutableArray<NSMutableArray<String>> previewLines;
+    public NSArray<String>        aPreviewLine;
+    public String                 cell;
+    public int                    numberOfRecords;
+    public int                    maxRecordLength;
+    public boolean                gapBeforeLongLine;
+    public NSMutableArray<String> longPreviewLine;
+    public boolean                gapAfterLongLine;
+    public int                    index;
+    public boolean                firstLineColumnHeadings;
 
-    public NSMutableArray       columns;
-    public String               aColumn;
-    public int                  colIndex;
+    public NSMutableArray<String> columns;
+    public String                 aColumn;
+    public int                    colIndex;
 
 
     //~ Public Methods ........................................................
@@ -130,24 +130,29 @@ public class UploadRosterPage
 
 
     // ----------------------------------------------------------
-    public WOComponent refresh()
+    public WOActionResults refresh()
     {
-        return refresh(false, true);
+        log.debug("refresh()");
+        refresh(false, true);
+//        JavascriptGenerator page = new JavascriptGenerator();
+//        page.refresh("preview", "error-panel");
+//        return page;
+        return null;
     }
 
 
-    // ----------------------------------------------------------
-    public WOComponent next()
-    {
-        if ( applyLocalChanges() )
-        {
-            return super.next();
-        }
-        else
-        {
-            return null;
-        }
-    }
+//    // ----------------------------------------------------------
+//    public WOComponent next()
+//    {
+//        if ( applyLocalChanges() )
+//        {
+//            return super.next();
+//        }
+//        else
+//        {
+//            return null;
+//        }
+//    }
 
 
     // ----------------------------------------------------------
@@ -188,14 +193,15 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
-        return refresh(false, false);
+        refresh(false, false);
+        return null;
     }
 
 
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
-    private WOComponent refresh(boolean guessColumns, boolean showConfirmation)
+    private void refresh(boolean guessColumns, boolean showConfirmation)
     {
         if (selectedDelimiter == null)
         {
@@ -221,7 +227,6 @@ public class UploadRosterPage
             }
             readStudentList(false);
         }
-        return null;
     }
 
 
@@ -238,7 +243,7 @@ public class UploadRosterPage
     {
         log.debug( "guessDelimiter()" );
         // Default is a comma
-        selectedDelimiter = (Delimiter)DELIMITERS.objectAtIndex( 0 );
+        selectedDelimiter = DELIMITERS.objectAtIndex( 0 );
         try
         {
             BufferedReader in = new BufferedReader(
@@ -269,9 +274,8 @@ public class UploadRosterPage
                 // other delimiter has any hits)
                 int bestDelimCount1 = 0;
                 int bestDelimCount2 = 0;
-                for ( int i = 0; i < DELIMITERS.count(); i++ )
+                for (Delimiter d : DELIMITERS)
                 {
-                    Delimiter d = (Delimiter)DELIMITERS.objectAtIndex( i );
                     int count1 = countOccurrences( line, d.character );
                     int count2 = countOccurrences( line2, d.character );
                     if ( count1 == count2
@@ -337,7 +341,7 @@ public class UploadRosterPage
             CSVParser in = new CSVParser( stream );
             in.changeDelimiter( selectedDelimiter.character );
 
-            previewLines = new NSMutableArray();
+            previewLines = new NSMutableArray<NSMutableArray<String>>();
             longPreviewLine = null;
             numberOfRecords = 0;
             maxRecordLength = 0;
@@ -350,13 +354,13 @@ public class UploadRosterPage
                 numberOfRecords++;
                 if ( numberOfRecords <= NUM_PREVIEW_LINES )
                 {
-                    previewLines.add( new NSMutableArray( (Object[])line ) );
+                    previewLines.add( new NSMutableArray<String>(line) );
                 }
                 else
                 {
                     if ( line.length > maxRecordLength )
                     {
-                        longPreviewLine = new NSMutableArray( (Object[])line );
+                        longPreviewLine = new NSMutableArray<String>(line);
                         gapBeforeLongLine =
                             numberOfRecords > NUM_PREVIEW_LINES + 1;
                     }
@@ -378,10 +382,8 @@ public class UploadRosterPage
 
             stream.close();
 
-            for ( int i = 0; i < previewLines.count(); i++ )
+            for (NSMutableArray<String> thisLine : previewLines)
             {
-                NSMutableArray thisLine =
-                    (NSMutableArray)previewLines.objectAtIndex( i );
                 while ( thisLine.count() < maxRecordLength )
                 {
                     thisLine.add( "" );
@@ -412,7 +414,7 @@ public class UploadRosterPage
     private void guessColumns()
     {
         log.debug( "guessColumns()" );
-        columns = new NSMutableArray();
+        columns = new NSMutableArray<String>();
 
         // Default for all columns is "Unused"
         for ( int i = 0; i < maxRecordLength; i++ )
@@ -430,11 +432,11 @@ public class UploadRosterPage
         // Check for potential column labels in first row
         if ( previewLines.count() > 0 )
         {
-            NSArray firstLine = (NSArray)previewLines.objectAtIndex( 0 );
+            NSArray<String> firstLine = previewLines.objectAtIndex( 0 );
             // boolean atSignFound = false;
             for ( int i = 0; i < firstLine.count(); i++ )
             {
-                String heading = (String)firstLine.objectAtIndex( i );
+                String heading = firstLine.objectAtIndex( i );
                 if ( heading == null ) continue;
                 heading = heading.trim();
                 // if ( cell.indexOf( '@' ) >= 0 ) { atSignFound = true; }
@@ -456,21 +458,21 @@ public class UploadRosterPage
         // guess columns from that
         if ( columnLocation[COL_EMAIL] < 0 )
         {
-            NSArray model = longPreviewLine;
+            NSArray<String> model = longPreviewLine;
             if ( model == null && previewLines.count() > 0 )
             {
                 int modelLineNo =
                     ( firstLineColumnHeadings && previewLines.count() > 1 )
                     ? 1
                     : 0;
-                model = (NSArray)previewLines.objectAtIndex( modelLineNo );
+                model = previewLines.objectAtIndex( modelLineNo );
             }
 
             if ( model != null )
             {
                 for ( int i = 0; i < model.count(); i++ )
                 {
-                    String thisCell = (String)model.objectAtIndex( i );
+                    String thisCell = model.objectAtIndex( i );
                     if ( thisCell.indexOf( '@' ) >= 0 )
                     {
                         columnLocation[COL_EMAIL] = i;
@@ -660,13 +662,10 @@ public class UploadRosterPage
                     boolean isExistingUser = false;
                     try
                     {
-                        user = (User)EOUtilities.objectMatchingValues(
-                            ec, User.ENTITY_NAME,
-                            new NSDictionary(
-                                new Object[]{ pid  , domain                 },
-                                new Object[]{ User.USER_NAME_KEY,
-                                              User.AUTHENTICATION_DOMAIN_KEY }
-                            ) );
+                        user = User.firstObjectMatchingValues(
+                            ec, null,
+                            User.USER_NAME_KEY, pid,
+                            User.AUTHENTICATION_DOMAIN_KEY, domain);
                         log.debug(
                             "User " + pid + " already exists in database" );
                         numExistingAdded++;
@@ -731,7 +730,7 @@ public class UploadRosterPage
 
                     if ( user != null )
                     {
-                        NSArray enrolledIn = user.enrolledIn();
+                        NSArray<CourseOffering> enrolledIn = user.enrolledIn();
                         if ( enrolledIn != null
                              && enrolledIn.containsObject( courseOffering() ) )
                         {
@@ -739,11 +738,14 @@ public class UploadRosterPage
                             numAlreadyEnrolled++;
                             numExistingAdded--;
                         }
-                        else if (execute)
+                        else
                         {
                             log.debug( "relationship does not exist" );
-                            user.addToEnrolledInRelationship(
-                                courseOffering() );
+                            if (execute)
+                            {
+                                user.addToEnrolledInRelationship(
+                                    courseOffering() );
+                            }
                             if (isExistingUser)
                             {
                                 if (existingUserNames == null)
@@ -827,14 +829,14 @@ public class UploadRosterPage
         }
         for ( int i = 0; i < columns.count(); i++ )
         {
-            String col = (String)columns.objectAtIndex( i );
+            String col = columns.objectAtIndex( i );
             if ( col.equals( COLUMNS.objectAtIndex( 0 ) ) )
             {
                 continue;
             }
             for ( int j = 1; j < COLUMNS.count(); j++ )
             {
-                String possible = (String)COLUMNS.objectAtIndex( j );
+                String possible = COLUMNS.objectAtIndex( j );
                 if ( possible.equals( col ) )
                 {
                     if ( colLocation[j] >= 0 )
@@ -874,7 +876,8 @@ public class UploadRosterPage
     private static final int COL_ID_NUMBER  = 7;
     private static final int COL_URL        = 8;
 
-    public static final NSArray COLUMNS = new NSArray( new String[]{
+    public static final NSArray<String> COLUMNS = new NSArray<String>(
+        new String[]{
         "Unused",
         "First Name",
         "Last Name",
@@ -922,12 +925,13 @@ public class UploadRosterPage
         -1      // URL
     };
 
-    public static final NSArray DELIMITERS = new NSArray( new Delimiter[]{
-        new Delimiter( ',', ",  Comma"     ),
-        new Delimiter( '\t', "   Tab"      ),
-        new Delimiter( ':', ":  Colon"     ),
-        new Delimiter( ';', ";  Semicolon" ),
-        new Delimiter( ' ', "    Space"    )
+    public static final NSArray<Delimiter> DELIMITERS =
+        new NSArray<Delimiter>( new Delimiter[] {
+            new Delimiter( ',', ",  Comma"     ),
+            new Delimiter( '\t', "   Tab"      ),
+            new Delimiter( ':', ":  Colon"     ),
+            new Delimiter( ';', ";  Semicolon" ),
+            new Delimiter( ' ', "    Space"    )
     } );
 
     private static final int NUM_PREVIEW_LINES = 5;
