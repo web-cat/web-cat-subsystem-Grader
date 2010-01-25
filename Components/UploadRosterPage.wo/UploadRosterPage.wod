@@ -1,4 +1,4 @@
-AuthList: WOPopUpButton {
+AuthList: WCFilteringSelect {
 	list              = domainDisplayGroup.allObjects;
 	selection         = domain;
 	item              = domainItem;
@@ -11,9 +11,10 @@ ColHeaderRepetition: WORepetition {
     index = colIndex;
 }
 
-ColHeading: WOPopUpButton {
+ColHeading: WCFilteringSelect {
     list = "~@net.sf.webcat.grader.UploadRosterPage@COLUMNS";
     selection = "~columns[colIndex]";
+    style = "width: 10.5em;";
 }
 
 ColRepetition: WORepetition {
@@ -21,17 +22,14 @@ ColRepetition: WORepetition {
     item  = cell;
 }
 
-DataPreviewInfo: net.sf.webcat.core.PopUpInfo {
-    title   = "Data Preview";
-    message = "Use the drop-down lists above each column to select the interpretation of the data in your CSV file.  Either a user name column or an e-mail column must be identified in order for the CSV file to be processed.  If no user name column is given, user names will be extracted from e-mail addresses instead.";
-}
-
-Delimiter: WOPopUpButton {
+Delimiter: WCFilteringSelect {
 	list          = "~@net.sf.webcat.grader.UploadRosterPage@DELIMITERS";
 	item          = aDelimiter;
 	displayString = aDelimiter.label;
 	selection     = selectedDelimiter;
-    onchange      = "submitForm()";
+	style         = "width: 9em;";
+	id            = "delim";
+//    onchange      = "submitForm()";
 }
 
 DelimiterInfo: net.sf.webcat.core.PopUpInfo {
@@ -59,12 +57,13 @@ MultipleInstitutions: WOConditional {
     condition = "~domainDisplayGroup.allObjects.count() > 1";
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: SaveCancelPage {
+    title = "Upload a Roster CSV File";
 }
 
 ReplaceInfo: net.sf.webcat.core.PopUpInfo {
     title   = "Replace CSV File";
-    message = "If you edit or revise your CSV file and need to upload the changed version, select the new file you want to upload and click \'Replace\'.  The data preview will be updated to reflect the new file\'s contents.";
+    message = "If you edit or revise your CSV file and need to upload the changed version, select the new file you want to upload and click 'Replace'.  The data preview will be updated to reflect the new file's contents.";
 }
 
 TR: net.sf.webcat.core.TableRow {
