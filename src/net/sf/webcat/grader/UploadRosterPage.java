@@ -111,7 +111,7 @@ public class UploadRosterPage
 
 
     // ----------------------------------------------------------
-    public WOComponent replace()
+    public WOActionResults replace()
     {
         if (  newFilePath != null
            && !newFilePath.equals( "" )
@@ -120,13 +120,14 @@ public class UploadRosterPage
         {
             filePath = newFilePath;
             data = newData;
+            previewLines = null;
             guessFileParameters();
         }
         else
         {
             error( "Please select a (non-empty) CSV file to upload." );
         }
-        return null;
+        return refresh();
     }
 
 
@@ -664,10 +665,13 @@ public class UploadRosterPage
                     boolean isExistingUser = false;
                     try
                     {
-                        user = User.uniqueObjectMatchingValues(
-                            ec,
-                            User.USER_NAME_KEY, pid,
-                            User.AUTHENTICATION_DOMAIN_KEY, domain);
+                        user = (User)EOUtilities.objectMatchingValues(
+                            ec, User.ENTITY_NAME,
+                            new NSDictionary(
+                                new Object[]{ pid  , domain                 },
+                                new Object[]{ User.USER_NAME_KEY,
+                                              User.AUTHENTICATION_DOMAIN_KEY }
+                            ) );
                         log.debug(
                             "User " + pid + " already exists in database" );
                         numExistingAdded++;
