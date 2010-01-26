@@ -1,32 +1,28 @@
 <wo name="Page">
 
 <wo:net.sf.webcat.core.WCPageModule title="CSV File Preview">
- <table class="layout"><tbody><tr><td colspan="3">
+ <table class="layout"><tbody><tr><td>
 For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
-&nbsp;&nbsp;&nbsp;
+</td><td>
 <wo:WCContentPane id="fileInfo">
 Uploaded file: <span class="hl"><wo:str value="$filePath"/>
 (<wo:str value="$numberOfRecords"/> records, <wo:str value="~@net.sf.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span>
 </wo:WCContentPane></td></tr><tr><td>
-Replace file:
- </td><td><div style="width:24em;margin-top:-10px;">
- <wo:upload data="$newData" filePath="$newFilePath" dojoType="dojox.form.FileInput"/>
- </div></td><td>
-<wo:WCButton action="$replace" label="Replace" remote="true"/> <wo name="ReplaceInfo"/>
- </td></tr><tr><td colspan="3">
 <label for="delim" style="width:auto;">Delimiter:</label> <wo name="Delimiter">
   <wo:WCConnectAction event="onChange" remote="true" action="$refresh"/>
 </wo> <wo name="DelimiterInfo"/>
-&nbsp;&nbsp;&nbsp;
+</td><td>
 <wo:WOCheckBox checked="$firstLineColumnHeadings" id="firstLineCols">
   <wo:WCConnectAction event="onChange" action="$refresh" remote="true"/>
 </wo:WOCheckBox>
 <label for="firstLineCols" style="width:auto;text-align:left;padding:0;">First line
-contains column names</label> <wo name="FirstLineInfo"/>
-<wo name="MultipleInstitutions">Institution: <wo name="AuthList">
+contains column names</label> <wo name="FirstLineInfo"/></td></tr>
+<wo name="MultipleInstitutions">
+<tr><td colspan="2">
+  Institution: <wo name="AuthList">
   <wo:WCConnectAction event="onChange" action="$refresh" remote="true"/>
-</wo>  (for new accounts)</wo name="MultipleInstitutions">
- </td></tr></tbody></table>
+</wo>  (for new accounts)</td></tr></wo name="MultipleInstitutions">
+ </tbody></table>
 
 <wo:WCContentPane id="preview">
 <wo:if condition="$previewLines.count">
