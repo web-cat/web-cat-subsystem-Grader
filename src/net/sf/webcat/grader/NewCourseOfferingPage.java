@@ -53,6 +53,7 @@ public class NewCourseOfferingPage
     public NewCourseOfferingPage( WOContext context )
     {
         super( context );
+        nextPerformsSave = true;
     }
 
 
