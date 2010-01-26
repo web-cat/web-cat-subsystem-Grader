@@ -134,11 +134,11 @@ public class UploadRosterPage
     public WOActionResults refresh()
     {
         log.debug("refresh()");
+        clearAllMessages();
         refresh(false, true);
         JavascriptGenerator page = new JavascriptGenerator();
-        page.refresh("preview", "error-panel");
+        page.refresh("preview", "fileInfo", "error-panel");
         return page;
-//        return null;
     }
 
 
@@ -194,6 +194,7 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
+        clearAllMessages();
         refresh(false, false);
         return null;
     }
@@ -663,8 +664,8 @@ public class UploadRosterPage
                     boolean isExistingUser = false;
                     try
                     {
-                        user = User.firstObjectMatchingValues(
-                            ec, null,
+                        user = User.uniqueObjectMatchingValues(
+                            ec,
                             User.USER_NAME_KEY, pid,
                             User.AUTHENTICATION_DOMAIN_KEY, domain);
                         log.debug(
