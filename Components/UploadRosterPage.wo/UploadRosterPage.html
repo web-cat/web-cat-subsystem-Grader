@@ -12,7 +12,7 @@ Replace file:
  </td><td><div style="width:24em;margin-top:-10px;">
  <wo:upload data="$newData" filePath="$newFilePath" dojoType="dojox.form.FileInput"/>
  </div></td><td>
-<wo:WCButton action="$replace" label="Replace"/> <wo name="ReplaceInfo"/>
+<wo:WCButton action="$replace" label="Replace" remote="true"/> <wo name="ReplaceInfo"/>
  </td></tr><tr><td colspan="3">
 <label for="delim" style="width:auto;">Delimiter:</label> <wo name="Delimiter">
   <wo:WCConnectAction event="onChange" remote="true" action="$refresh"/>
