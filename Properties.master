@@ -4,12 +4,12 @@
 subsystem.Grader=net.sf.webcat.grader.Grader
 
 Grader.version.major=2
-Grader.version.minor=3
-Grader.version.revision=1
+Grader.version.minor=4
+Grader.version.revision=0
 Grader.requires=Core, EOJDBCPrototypes, DBUpdateEngine
 Grader.depends=env, pluginProperties
 
-Grader.copyright=(c) 2006-2009 Virginia Tech Department of Computer Science
+Grader.copyright=(c) 2006-2010 Virginia Tech Department of Computer Science
 Grader.provider=Virginia Tech Computer Science
 Grader.provider.url=http\://web-cat.cs.vt.edu/updates
 Grader.info.url=http\://web-cat.cs.vt.edu/WCWiki/GraderSubsystem
