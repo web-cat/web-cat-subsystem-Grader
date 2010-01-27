@@ -62,7 +62,8 @@ public class EditReusableScriptParametersPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "appendToResponse()" );
         step = prefs().step();
@@ -85,7 +86,7 @@ public class EditReusableScriptParametersPage
             log.debug( "assignment option values =\n" + step.configSettings() );
             log.debug( "shared option values =\n" + step.config().configSettings() );
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

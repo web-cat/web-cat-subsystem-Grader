@@ -65,14 +65,15 @@ public class SubmissionResultInfo
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         rowNumber = 0;
         if ( submission != null )
         {
             partnerDisplayGroup.setMasterObject( submission.result() );
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

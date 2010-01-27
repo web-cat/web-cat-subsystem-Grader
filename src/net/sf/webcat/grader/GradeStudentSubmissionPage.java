@@ -79,7 +79,8 @@ public class GradeStudentSubmissionPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if (result == null)
         {
@@ -111,7 +112,7 @@ public class GradeStudentSubmissionPage
         statsDisplayGroup.setObjectArray( result.submissionFileStats() );
         showCoverageData = null;
         priorComments = result.comments();
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

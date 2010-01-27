@@ -94,7 +94,8 @@ public class FinalReportPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "beginning appendToResponse()" );
         jobData = null;
@@ -123,8 +124,7 @@ public class FinalReportPage
             }
         }
         showCoverageData = null;
-        super._appendToResponse( response, context );
-        log.debug( "ending appendToResponse()" );
+        super.beforeAppendToResponse( response, context );
     }
 
 

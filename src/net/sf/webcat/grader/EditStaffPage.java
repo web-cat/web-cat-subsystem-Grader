@@ -65,7 +65,8 @@ public class EditStaffPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         sideStepTitle = "Edit Course "
             + ( editInstructors
@@ -93,7 +94,14 @@ public class EditStaffPage
         potentialDisplayGroup.fetch();
         potentialDisplayGroup.setNumberOfObjectsPerBatch( oldBatchSize );
         potentialDisplayGroup.setCurrentBatchIndex( oldBatchIndex );
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    {
+        super.afterAppendToResponse(response, context);
         log.debug( "old size = " + oldBatchSize
                    + " old index = " + oldBatchIndex );
     }

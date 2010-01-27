@@ -53,11 +53,11 @@ public class NavTestPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug("entering appendToResponse()");
-        super._appendToResponse(response, context);
-        log.debug("leaving appendToResponse()");
+        super.beforeAppendToResponse(response, context);
     }
 
 

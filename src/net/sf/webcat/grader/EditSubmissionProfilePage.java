@@ -71,7 +71,8 @@ public class EditSubmissionProfilePage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "starting appendToResponse()" );
         submissionProfile =
@@ -80,7 +81,7 @@ public class EditSubmissionProfilePage
             - submissionProfile.taPoints()
             - submissionProfile.toolPoints();
         initializeTimeFields();
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

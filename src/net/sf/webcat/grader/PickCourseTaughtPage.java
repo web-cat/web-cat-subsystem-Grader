@@ -79,7 +79,8 @@ public class PickCourseTaughtPage
 
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         User user = user();
         if ( semesters == null )
@@ -153,7 +154,7 @@ public class PickCourseTaughtPage
             }
         }
 
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

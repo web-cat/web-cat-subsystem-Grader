@@ -68,7 +68,8 @@ public class EditCoursePage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse(WOResponse arg0, WOContext arg1)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if ( semesters == null )
         {
@@ -77,7 +78,7 @@ public class EditCoursePage
         }
         instructorDisplayGroup.setMasterObject(courseOffering());
         TADisplayGroup.setMasterObject(courseOffering());
-        super._appendToResponse(arg0, arg1);
+        super.beforeAppendToResponse(response, context);
     }
 
 

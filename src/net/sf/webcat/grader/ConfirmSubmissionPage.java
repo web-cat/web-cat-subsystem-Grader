@@ -72,7 +72,8 @@ public class ConfirmSubmissionPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "The submission number is "
                    + submissionInProcess().submission().submitNumber() );
@@ -123,7 +124,7 @@ public class ConfirmSubmissionPage
             log.debug( "file list has already been initialized" );
         }
         // preProcessSubmission();
-        super._appendToResponse(response, context);
+        super.beforeAppendToResponse(response, context);
     }
 
 

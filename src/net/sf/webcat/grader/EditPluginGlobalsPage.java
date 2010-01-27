@@ -59,7 +59,8 @@ public class EditPluginGlobalsPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "appendToResponse()" );
         if ( baseDir == null )
@@ -72,7 +73,7 @@ public class EditPluginGlobalsPage
             log.debug( "plug-in global settings =\n"
                 + plugin.globalConfigSettings() );
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

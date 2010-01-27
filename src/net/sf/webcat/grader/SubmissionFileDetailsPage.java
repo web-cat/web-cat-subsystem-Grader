@@ -68,7 +68,8 @@ public class SubmissionFileDetailsPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "beginning appendToResponse()" );
         if ( thisFile == null )
@@ -78,7 +79,14 @@ public class SubmissionFileDetailsPage
         codeWithComments = initializeCodeWithComments();
         filesDisplayGroup.setObjectArray(
             thisFile.submissionResult().submissionFileStats() );
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    {
+        super.afterAppendToResponse(response, context);
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
     }

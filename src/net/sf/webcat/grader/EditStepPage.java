@@ -63,7 +63,8 @@ public class EditStepPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "appendToResponse()" );
         step = prefs().step();
@@ -98,7 +99,7 @@ public class EditStepPage
                     + ") =\n" + step.config().configSettings() );
             }
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

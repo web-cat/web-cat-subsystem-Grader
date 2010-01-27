@@ -80,7 +80,8 @@ public class EditScriptFilesPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "listener = " + fileSelectionListener );
         folderName = null;
@@ -106,7 +107,7 @@ public class EditScriptFilesPage
             }
             addFolders( folderList, base, stripLength );
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

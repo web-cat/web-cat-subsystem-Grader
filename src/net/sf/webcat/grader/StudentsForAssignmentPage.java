@@ -78,7 +78,8 @@ public class StudentsForAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if (maxSubmission == null)
         {
@@ -223,7 +224,7 @@ public class StudentsForAssignmentPage
             avgScore /= submissions.count();
         }
         submissionDisplayGroup.setObjectArray(submissions);
-        super._appendToResponse(response, context);
+        super.beforeAppendToResponse(response, context);
     }
 
 

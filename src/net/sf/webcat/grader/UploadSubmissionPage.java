@@ -78,7 +78,8 @@ public class UploadSubmissionPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    protected void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "primeUser = " + wcSession().primeUser()
                    + ", localUser = " + user() );
@@ -130,7 +131,14 @@ public class UploadSubmissionPage
             log.debug( "time = " + deadline );
         }
 
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    {
+        super.afterAppendToResponse(response, context);
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = submissionDisplayGroup.currentBatchIndex();
         cachedUploadedFile     = submissionInProcess().uploadedFile();

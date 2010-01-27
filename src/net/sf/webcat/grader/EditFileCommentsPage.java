@@ -68,7 +68,8 @@ public class EditFileCommentsPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if (log.isDebugEnabled())
         {
@@ -82,7 +83,14 @@ public class EditFileCommentsPage
             }
         }
         initializeCodeWithComments();
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    {
+        super.afterAppendToResponse(response, context);
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
     }

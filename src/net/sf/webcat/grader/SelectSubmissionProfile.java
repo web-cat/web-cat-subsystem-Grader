@@ -66,7 +66,8 @@ public class SelectSubmissionProfile
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         NSMutableArray<EOQualifier> qualifiers =
             new NSMutableArray<EOQualifier>();
@@ -149,7 +150,7 @@ public class SelectSubmissionProfile
             createNew = true;
         }
 
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

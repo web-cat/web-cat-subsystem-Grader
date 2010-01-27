@@ -75,7 +75,8 @@ public class CreateAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "starting appendToResponse()" );
         index = -1;
@@ -139,7 +140,7 @@ public class CreateAssignmentPage
                 ) );
             assignmentDisplayGroup.updateDisplayedObjects();
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

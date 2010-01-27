@@ -68,7 +68,8 @@ public class EditPartnersPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "selected submission = "
                    + prefs().submission().submitNumber()
@@ -84,7 +85,7 @@ public class EditPartnersPage
         partnerDisplayGroup.setMasterObject( result );
         studentDisplayGroup.setMasterObject(
             coreSelections().courseOffering() );
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

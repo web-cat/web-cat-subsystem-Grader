@@ -76,7 +76,8 @@ public class CourseRosterPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         // Set up student list filters
         studentDisplayGroup.setObjectArray( courseOffering().students() );
@@ -97,7 +98,14 @@ public class CourseRosterPage
 //        {
             notStudentDisplayGroup.fetch();
 //        }
-        super._appendToResponse( response, context );
+            super.beforeAppendToResponse( response, context );
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    {
+        super.afterAppendToResponse(response, context);
         oldBatchSize1  = studentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex1 = studentDisplayGroup.currentBatchIndex();
         oldBatchSize2  = notStudentDisplayGroup.numberOfObjectsPerBatch();

@@ -66,7 +66,8 @@ public class PickAssignmentToEditPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "starting appendToResponse()" );
         createNew = false;
@@ -105,8 +106,7 @@ public class PickAssignmentToEditPage
         }
         createNew = selectedIndex == -1 && canCreate();
 
-        super._appendToResponse( response, context );
-        log.debug( "ending appendToResponse()" );
+        super.beforeAppendToResponse( response, context );
     }
 
 

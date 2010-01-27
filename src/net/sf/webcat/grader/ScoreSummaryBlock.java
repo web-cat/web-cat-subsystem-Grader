@@ -62,11 +62,12 @@ public class ScoreSummaryBlock
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         rowNumber = 0;
         result = submission.result();
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

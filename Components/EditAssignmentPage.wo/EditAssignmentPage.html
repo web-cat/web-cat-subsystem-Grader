@@ -21,10 +21,11 @@
     Instructions:</td>
     <td valign="top"><webobject name="UploadInstructions"/>
     <webobject name="UploadInstructionsInfo"/></td></tr>
+<wo:if condition="$surveysSupported">
 <tr><td class="R"><wo:label for="useSurvey">Survey:</wo:label></td>
     <td><wo:checkbox id="useSurvey" checked="$assignment.trackOpinions"/>
       <label for="useSurvey">Give student engagement/frustration
-      survey</label></td></tr>
+      survey</label></td></tr></wo:if>
 </table>
 <h3>Grading Scheme for All Instances</h3>
 <p>Submission Rules:

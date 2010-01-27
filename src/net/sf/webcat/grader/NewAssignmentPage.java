@@ -93,7 +93,8 @@ public class NewAssignmentPage
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         idFor = new ComponentIDGenerator(this);
         if (coreSelections().course() == null
@@ -134,7 +135,7 @@ public class NewAssignmentPage
                 forAllSections = Boolean.TRUE;
             }
         }
-        super._appendToResponse(response, context);
+        super.beforeAppendToResponse(response, context);
     }
 
 

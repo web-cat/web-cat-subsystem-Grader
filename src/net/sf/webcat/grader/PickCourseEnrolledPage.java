@@ -88,7 +88,8 @@ public class PickCourseEnrolledPage
 
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         User user = user();
         if ( semesters == null )
@@ -240,7 +241,7 @@ public class PickCourseEnrolledPage
             log.debug(" selected 3 = " + selectedInstructorIndex );
             log.debug(" selected 4 = " + selectedAdminIndex );
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

@@ -69,7 +69,8 @@ public class DownloadScoresPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if (assignmentOffering == null)
         {
@@ -102,7 +103,7 @@ public class DownloadScoresPage
             useMoodleFormat     = false;
             useFullFormat       = false;
         }
-        super._appendToResponse(response, context);
+        super.beforeAppendToResponse(response, context);
     }
 
 

@@ -84,7 +84,8 @@ public class PickStepPage
 
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         if (targetAssignment == null)
         {
@@ -200,7 +201,7 @@ public class PickStepPage
             createNew = true;
         }
 
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

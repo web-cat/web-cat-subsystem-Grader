@@ -71,7 +71,8 @@ public class GraderHomeStatus
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "starting appendToResponse()" );
 
@@ -149,7 +150,7 @@ public class GraderHomeStatus
         upcomingAssignmentsGroup.setQualifier(
             new EOAndQualifier( qualifiers ) );
         upcomingAssignmentsGroup.fetch();
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

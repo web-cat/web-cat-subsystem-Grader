@@ -61,7 +61,8 @@ public class AssignmentGraphPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         SubmissionResult subResult = prefs().assignmentOffering()
             .mostRecentSubmissionResultFor( user() );
@@ -80,7 +81,7 @@ public class AssignmentGraphPage
         opportunitiesDataset = new SubmissionResultDataset(
             pastSubResults,
             SubmissionResultDataset.TESTING_AND_STATIC_TOOLS_LOSS_SERIES );
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

@@ -70,7 +70,8 @@ public class OldEditScriptPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         NSMutableArray<File> files = new NSMutableArray<File>();
         Step selectedStep = prefs().step();
@@ -133,7 +134,7 @@ public class OldEditScriptPage
                 script.setMainFileName( fileName() );
             }
         }
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

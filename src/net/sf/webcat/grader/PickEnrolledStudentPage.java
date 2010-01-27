@@ -59,11 +59,12 @@ public class PickEnrolledStudentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         studentDisplayGroup.setMasterObject(
             coreSelections().courseOffering() );
-        super._appendToResponse( response, context );
+        super.beforeAppendToResponse( response, context );
     }
 
 

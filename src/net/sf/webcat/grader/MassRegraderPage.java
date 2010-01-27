@@ -72,12 +72,12 @@ public class MassRegraderPage extends GraderAssignmentComponent
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    @Override
-    public void _appendToResponse(WOResponse response, WOContext context)
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         updateSubmissionCount();
 
-        super._appendToResponse(response, context);
+        super.beforeAppendToResponse(response, context);
     }
 
 

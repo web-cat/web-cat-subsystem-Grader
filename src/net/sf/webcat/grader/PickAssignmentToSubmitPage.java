@@ -67,7 +67,8 @@ public class PickAssignmentToSubmitPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void _appendToResponse( WOResponse response, WOContext context )
+    protected void beforeAppendToResponse(
+        WOResponse response, WOContext context)
     {
         log.debug( "starting appendToResponse()" );
         showHaltedMessage = false;
@@ -163,8 +164,7 @@ public class PickAssignmentToSubmitPage
                 );
         }
 
-        super._appendToResponse( response, context );
-        log.debug( "ending appendToResponse()" );
+        super.beforeAppendToResponse( response, context );
     }
 
 
