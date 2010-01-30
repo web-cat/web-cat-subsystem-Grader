@@ -1,11 +1,3 @@
-AssignmentName: WOHyperlink {
-	href   = assignmentOffering.assignment.url;
-	target = "_new";
-    string = assignmentOffering.titleString;
-    alt    = "View assignment writeup in new window";
-    title  = "View assignment writeup in new window";
-}
-
 AvgScore: WOString {
 	value = avgScore;
 	numberformat = "0.0";
