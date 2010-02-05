@@ -50,8 +50,8 @@ LowScore: WOString {
 	numberformat = "0.0";
 }
 
-MarkAsComplete: WOSubmitButton {
-    value  = "Show All Scores to Students";
+MarkAsComplete: WCButton {
+    label  = "Show All Scores to Students";
     action = markAsComplete;
     alt    = "Make all entered scores visible to students and send e-mail";
     title  = "Make all entered scores visible to students and send e-mail";
