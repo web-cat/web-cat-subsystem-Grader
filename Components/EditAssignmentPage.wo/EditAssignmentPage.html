@@ -29,7 +29,11 @@
 </table>
 <h3>Grading Scheme for All Instances</h3>
 <p>Submission Rules:
+<wo:if condition="$submissionProfileDisplayGroup.displayedObjects.count">
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
+</wo:if><wo:else>
+&lt;none available&gt; Please create a policy: <webobject name="NewSubmissionProfile"/>
+</wo:else>
 <webobject name="SubmissionProfileInfo"/></p>
 <p>Automatically grade using <b>these steps</b> in sequence:</p>
 <wo:WCContentPane id="gradingSteps">
