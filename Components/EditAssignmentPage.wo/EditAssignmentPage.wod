@@ -11,7 +11,7 @@ GradingPluginsToAdd: WCFilteringSelect {
     useDividers   = true;
     searchString  = searchStringForGradingPluginToAdd;
     displayString = displayStringForGradingPluginToAdd;
-    noSelectionString = "(no selection)";
+    noSelectionString = "(select a plug-in to add)";
 }
 
 CanDelete: WOConditional {
@@ -35,7 +35,7 @@ CourseOfferingSection: WCPageModule {
 }
 
 Description: WCTextBox {
-    size = 40;
+    style = "width: 40em;";
     value = assignment.shortDescription;
 }
 
@@ -48,8 +48,6 @@ DueDate2: WCDateTimePicker {
      value      = thisOffering.dueDate;
      dateformat = user.dateFormat;
      timeformat = user.timeFormat;
-     dateWidth  = "8em";
-     timeWidth  = "6em";
      timeZone   = timeZone;
 }
 
@@ -228,10 +226,10 @@ TR2: net.sf.webcat.core.TableRow {
 }
 
 UploadInstructions: WCSimpleTextArea {
-    rows     = 8;
-    cols     = 60;
-     value    = assignment.fileUploadMessage;
-//    dojoType = "dijit.form.Textarea";
+    rows  = 8;
+    cols  = 60;
+    value = assignment.fileUploadMessage;
+    style = "width: 40em;";
 }
 
 UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
@@ -261,7 +259,7 @@ UpcomingIsUnpublished: WOConditional {
 }
 
 URL: WCTextBox {
-    size = 40;
+    style = "width: 40em;";
     value = assignment.url;
 }
 
