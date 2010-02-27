@@ -175,6 +175,7 @@ public abstract class _Submission
     // Fetch specifications ---
     public static final String EARLIEST_SUBMISSION_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "earliestSubmissionForAssignmentOfferingAndUser";
     public static final String EARLIEST_SUBMISSION_FOR_COURSE_OFFERING_FSPEC = "earliestSubmissionForCourseOffering";
+    public static final String LATEST_SUBMISSION_FOR_ASSIGNMENT_AND_USER_FSPEC = "latestSubmissionForAssignmentAndUser";
     public static final String LATEST_SUBMISSION_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "latestSubmissionForAssignmentOfferingAndUser";
     public static final String LATEST_SUBMISSION_FOR_COURSE_OFFERING_FSPEC = "latestSubmissionForCourseOffering";
     public static final String SPECIFIC_SUBMISSION_FSPEC = "specificSubmission";
@@ -1577,6 +1578,61 @@ public abstract class _Submission
         {
             log.debug( "earliestSubmissionForCourseOffering(ec"
                 + ", " + courseOfferingBinding
+                + "): " + result );
+        }
+
+        if ( result.count() == 0 )
+        {
+            return null;
+        }
+        else
+        {
+            return result.objectAtIndex(0);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve an object according to the <code>latestSubmissionForAssignmentAndUser</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return the object retrieved, or null if one was not found
+     */
+    public static Submission latestSubmissionForAssignmentAndUser(
+            EOEditingContext context,
+            net.sf.webcat.grader.Assignment assignmentBinding,
+            net.sf.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "latestSubmissionForAssignmentAndUser", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentBinding != null )
+        {
+            bindings.setObjectForKey( assignmentBinding,
+                                      "assignment" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Submission> result =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "latestSubmissionForAssignmentAndUser(ec"
+                + ", " + assignmentBinding
+                + ", " + userBinding
                 + "): " + result );
         }
 

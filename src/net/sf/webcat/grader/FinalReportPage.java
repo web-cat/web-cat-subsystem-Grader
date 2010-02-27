@@ -102,6 +102,25 @@ public class FinalReportPage
         if ( submission == null && prefs() != null )
         {
             submission = prefs().submission();
+            if (submission != null
+                && (submission.user() != user())
+                    || submission.assignmentOffering().assignment()
+                        != prefs().assignment())
+            {
+                submission = null;
+            }
+
+            if (submission == null && prefs().assignment() != null)
+            {
+                submission = Submission.latestSubmissionForAssignmentAndUser(
+                    localContext(),
+                    prefs().assignment(),
+                    user());
+                if (submission != null)
+                {
+                    prefs().setSubmissionRelationship(submission);
+                }
+            }
         }
         if ( submission != null )
         {
