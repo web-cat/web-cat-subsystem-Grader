@@ -317,8 +317,7 @@ public class EditAssignmentPage
         {
 //            result = (WCComponent)pageWithName(
 //                SelectSubmissionProfile.class.getName());
-            result = (WCComponent)pageWithName(
-                EditSubmissionProfilePage.class.getName());
+            result = pageWithName(EditSubmissionProfilePage.class);
             result.nextPage = this;
         }
         return result;
@@ -335,8 +334,7 @@ public class EditAssignmentPage
             localContext().insertObject(newProfile);
             assignment.setSubmissionProfileRelationship(newProfile);
             newProfile.setAuthor(user());
-            result = (WCComponent)pageWithName(
-                EditSubmissionProfilePage.class.getName());
+            result = pageWithName(EditSubmissionProfilePage.class);
             result.nextPage = this;
         }
         return result;
@@ -461,8 +459,7 @@ public class EditAssignmentPage
         ConfirmPage confirmPage = null;
         if (saveAndCanProceed())
         {
-            confirmPage =
-                (ConfirmPage)pageWithName(ConfirmPage.class.getName());
+            confirmPage = pageWithName(ConfirmPage.class);
             confirmPage.nextPage       = this;
             confirmPage.message        =
                 "This action will <b>regrade the most recent submission "
@@ -575,8 +572,7 @@ public class EditAssignmentPage
             log.debug( "step = " + thisStep );
             prefs().setAssignmentOfferingRelationship(selectedOffering);
             prefs().setStepRelationship( thisStep );
-            result = (WCComponent)pageWithName(
-                EditStepPage.class.getName() );
+            result = pageWithName(EditStepPage.class);
             result.nextPage = this;
         }
         return result;
@@ -738,8 +734,7 @@ public class EditAssignmentPage
         ConfirmPage confirmPage = null;
         if (applyLocalChanges())
         {
-            confirmPage =
-                (ConfirmPage)pageWithName(ConfirmPage.class.getName());
+            confirmPage = pageWithName(ConfirmPage.class);
             confirmPage.nextPage       = this;
             confirmPage.message        =
                 "This action will <b>delete the assignment offering \""
