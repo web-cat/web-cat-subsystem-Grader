@@ -51,12 +51,15 @@
     </wo></wo>
     <wo name="LastTR">
         <td colspan="4">
-            Add a step: <wo name="GradingPluginsToAdd"/>
+            Add a step:
+            <wo:if condition="$gradingPluginsToAdd.count">
+            <wo name="GradingPluginsToAdd"/>
             <webobject name="AddStep">
                 <script type="dojo/connect" event="onClick" args="evt">
                     webcat.block('gradingStepsTable');
                 </script>
             </webobject>
+            </wo:if><wo:else>&lt;no plug-ins available&gt;</wo:else>
         </td>
     </wo></tbody>
 </wo>
