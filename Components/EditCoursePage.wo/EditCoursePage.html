@@ -62,7 +62,7 @@
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Submission Date Range" open="false">
-<wo:if condition="$hasEarliest">
+<wo:if condition="$earliest">
 <p>Submission date range:
 <wo:str value="$earliest" formatter="$session.timeFormatter"/>
 
