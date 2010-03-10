@@ -2,13 +2,16 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Web-CAT//NONSGML v1.0//EN
 X-WR-CALNAME:<wo:str value="$application.name"/>
-<wo:if condition="$assignmentsToDisplay.count"><wo name="AssignmentRepetition">BEGIN:VTODO
+<wo:if condition="$assignmentsToDisplay.count"><wo name="AssignmentRepetition">BEGIN:VEVENT
 UID:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
-DUE:<wo:str value="$anAssignmentOffering.dueDate" formatter="$formatter"/>
-SUMMARY:<wo:str value="$anAssignmentOffering.courseOffering.course.deptNumber" escapeHTML="false"/>: <wo:str value="$assignmentName" escapeHTML="false"/>
-<wo:if condition="$anAssignmentOffering.assignment.url">URL:<wo:str value="$anAssignmentOffering.assignment.url" escapeHTML="false"/>
-DESCRIPTION: Submit to Web-CAT at: <wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
-</wo:if><wo:else>URL:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
-</wo:else>ORGANIZER:MAILTO:<wo name="InstructorEmail"/>
-END:VTODO
+DTSTART:<wo:str value="$startTime" formatter="$formatter"/>
+DTEND:<wo:str value="$anAssignmentOffering.dueDate" formatter="$formatter"/>
+DTSTAMP:<wo:str value="$anAssignmentOffering.lastModified" formatter="$formatter"/>
+CREATED:<wo:str value="$anAssignmentOffering.lastModified" formatter="$formatter"/>
+LAST-MODIFIED:<wo:str value="$anAssignmentOffering.lastModified" formatter="$formatter"/>
+SUMMARY:<wo:if condition="$useCRN"><wo:str value="$anAssignmentOffering.courseOffering.compactName" escapeHTML="false"/></wo:if><wo:else><wo:str value="$anAssignmentOffering.courseOffering.course.deptNumber" escapeHTML="false"/></wo:else> <wo:str value="$assignmentName" escapeHTML="false"/> deadline
+URL:<wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
+DESCRIPTION:<wo:str value="$anAssignmentOffering.assignment.titleString" escapeHTML="false"/> is due.<wo:if condition="$anAssignmentOffering.assignment.url"> Read the assignment description at: <wo:str value="$anAssignmentOffering.assignment.url" escapeHTML="false"/></wo:if> Submission page: <wo:str value="$application.properties.base.url" escapeHTML="false"/><wo:str value="$submitURLParams" escapeHTML="false"/>
+ORGANIZER:MAILTO:<wo name="InstructorEmail"/>
+END:VEVENT
 </wo></wo:if>END:VCALENDAR

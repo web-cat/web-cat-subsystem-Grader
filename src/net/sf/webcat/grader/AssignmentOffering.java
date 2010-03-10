@@ -104,6 +104,9 @@ public class AssignmentOffering
         COURSE_OFFERING_KEY + "."
         + CourseOffering.COURSE_KEY + "."
         + Course.NUMBER_KEY;
+    public static final String COURSE_OFFERING_SEMESTER_KEY =
+        COURSE_OFFERING_KEY + "."
+        + CourseOffering.SEMESTER_KEY;
 
     public static final String SUBMISSION_METHOD_KEY =
         ASSIGNMENT_KEY + "."
@@ -300,12 +303,11 @@ public class AssignmentOffering
             // have to initialize the summary by fetching all the most
             // recent assignments
             summary.setMaxScore( maxScore );
-            NSArray subs = SubmissionResult.mostRecentResultsForAssignment(
+            NSArray<SubmissionResult> subs =
+                SubmissionResult.mostRecentResultsForAssignment(
                 editingContext(), this );
-            for ( int i = 0; i < subs.count(); i++ )
+            for (SubmissionResult sr : subs)
             {
-                SubmissionResult sr =
-                    (SubmissionResult)subs.objectAtIndex( i );
                 summary.addSubmission( sr.automatedScore() );
             }
         }
@@ -350,23 +352,16 @@ public class AssignmentOffering
     public Submission mostRecentSubFor( User user )
     {
         Submission mostRecent = null;
-        NSArray subs = EOUtilities.objectsMatchingValues(
-                editingContext(),
-                Submission.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] {  this,
-                                    user
-                    },
-                    new Object[] { Submission.ASSIGNMENT_OFFERING_KEY,
-                                   Submission.USER_KEY }
-                )
+        NSArray<Submission> subs = Submission.objectsMatchingQualifier(
+            editingContext(),
+            Submission.assignmentOffering.is(this).and(Submission.user.is(user))
             );
         if ( subs != null && subs.count() > 0 )
         {
-            mostRecent = (Submission)subs.objectAtIndex( 0 );
+            mostRecent = subs.objectAtIndex( 0 );
             for ( int j = 1; j < subs.count(); j++ )
             {
-                Submission s = (Submission)subs.objectAtIndex( j );
+                Submission s = subs.objectAtIndex( j );
                 if ( s.submitNumber() > mostRecent.submitNumber() )
                 {
                     mostRecent = s;
@@ -383,20 +378,21 @@ public class AssignmentOffering
      * students who have submitted to this assignment offering.
      * @return an NSArray of Submission objects
      */
-    public NSArray mostRecentSubsForAll()
+    public NSArray<Submission> mostRecentSubsForAll()
     {
-        NSMutableArray recentSubs = new NSMutableArray();
-        NSMutableArray students = courseOffering().students().mutableClone();
-        NSArray staff = courseOffering().instructors();
+        NSMutableArray<Submission> recentSubs =
+            new NSMutableArray<Submission>();
+        NSMutableArray<User> students =
+            courseOffering().students().mutableClone();
+        NSArray<User> staff = courseOffering().instructors();
         students.removeObjectsInArray( staff );
         students.addObjectsFromArray( staff );
         staff = courseOffering().graders();
         students.removeObjectsInArray( staff );
         students.addObjectsFromArray( staff );
-        for ( int i = 0; i < students.count(); i++ )
+        for (User user : students)
         {
-            Submission s =
-                mostRecentSubFor( (User)students.objectAtIndex( i ));
+            Submission s = mostRecentSubFor(user);
             if ( s != null )
             {
                 recentSubs.addObject( s );
@@ -414,14 +410,15 @@ public class AssignmentOffering
      * @return the most recent SubmissionResult object for the given user, or
      *         null if there is none
      */
-    public SubmissionResult mostRecentSubmissionResultFor( User user )
+    public SubmissionResult mostRecentSubmissionResultFor(User user)
     {
         SubmissionResult newest = null;
-        NSArray subs = SubmissionResult.resultsForAssignmentAndUser(
-            editingContext(), this, user );
-        if ( subs.count() > 0 )
+        NSArray<SubmissionResult> subs =
+            SubmissionResult.resultsForAssignmentAndUser(
+            editingContext(), this, user);
+        if (subs.count() > 0)
         {
-            newest = (SubmissionResult)subs.objectAtIndex( 0 );
+            newest = subs.objectAtIndex(0);
         }
         return newest;
     }
@@ -436,16 +433,14 @@ public class AssignmentOffering
      * use <code>saveChanges()</code>).
      * @param ec the editing context to use for updating the grading queue
      */
-    public void regradeMostRecentSubsForAll( EOEditingContext ec )
+    public void regradeMostRecentSubsForAll(EOEditingContext ec)
     {
-        NSArray subs = mostRecentSubsForAll();
-        for ( int i = 0; i < subs.count(); i++ )
+        for (Submission sub : mostRecentSubsForAll())
         {
-            Submission s = (Submission)subs.objectAtIndex( i );
-            s.requeueForGrading( ec );
+            sub.requeueForGrading(ec);
         }
         ec.saveChanges();
-        Grader.getInstance().graderQueue().enqueue( null );
+        Grader.getInstance().graderQueue().enqueue(null);
     }
 
 
@@ -496,6 +491,62 @@ public class AssignmentOffering
         return ( dueDate() == null )
             ? false
             : dueDate().before( new NSTimestamp() );
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void awakeFromFetch(EOEditingContext ec)
+    {
+        super.awakeFromFetch(ec);
+
+        // Only try to migrate if the EC isn't a migrating context. If it is,
+        // we're already trying to migrate and this "awake" is coming from the
+        // child migration context.
+
+        if (!(ec instanceof net.sf.webcat.core.MigratingEditingContext))
+        {
+            migrateAttributeValuesIfNeeded();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #awake} to migrate attribute values if needed when the
+     * object is retrieved.
+     */
+    public void migrateAttributeValuesIfNeeded()
+    {
+        log.debug("migrateAttributeValuesIfNeeded()");
+
+        if ( lastModified() == null )
+        {
+            if (isNewObject())
+            {
+                setLastModified(new NSTimestamp());
+            }
+            else
+            {
+                MigratingEditingContext mec =
+                    Application.newMigratingEditingContext();
+                try
+                {
+                    mec.lock();
+                    AssignmentOffering migratingObject = localInstance(mec);
+
+                    migratingObject.setLastModified(new NSTimestamp());
+
+                    mec.saveChanges();
+                }
+                finally
+                {
+                    mec.unlock();
+                    net.sf.webcat.core.Application
+                        .releaseMigratingEditingContext(mec);
+                }
+            }
+        }
     }
 
 
@@ -581,7 +632,8 @@ public class AssignmentOffering
     public boolean hasStudentSubmissions()
     {
         if (isNewObject()) return false;
-        NSMutableArray qualifiers = new NSMutableArray();
+        NSMutableArray<EOQualifier> qualifiers =
+            new NSMutableArray<EOQualifier>();
         // Must be a submission to this assignment
         qualifiers.add(new EOKeyValueQualifier(
             Submission.ASSIGNMENT_OFFERING_KEY,
@@ -589,7 +641,7 @@ public class AssignmentOffering
             this));
         if (this.courseOffering() != null)
         {
-            NSArray people = this.courseOffering().instructors();
+            NSArray<User> people = this.courseOffering().instructors();
             // Not an instructor
             if (people.count() > 0)
             {
@@ -764,14 +816,24 @@ public class AssignmentOffering
      *                   the assignment offering with the latest due date will
      *                   be shown when one assignment is shared among many
      *                   course offerings.
+     * @param showAll    request that all assignments (including those that
+     *                   are already closed or that have not yet become
+     *                   available) be included.  If true, this also limits
+     *                   the request to include only assignments available
+     *                   in the current semester.
+     * @param preserveDateDifferences if true, offerings of the same assignment
+     *                   with different due dates should be preserved (only
+     *                   relevant if groupByCRN is false).
      * @return an array of the given assignment offerings
      */
-    public static NSArray objectsForSubmitterEngine(
-        EOEditingContext context,
-        NSDictionary     formValues,
-        NSTimestamp      currentTime,
-        int              submitterEngine,
-        boolean          groupByCRN
+    public static NSArray<AssignmentOffering> objectsForSubmitterEngine(
+        EOEditingContext        context,
+        NSDictionary<String, ?> formValues,
+        NSTimestamp             currentTime,
+        int                     submitterEngine,
+        boolean                 groupByCRN,
+        boolean                 showAll,
+        boolean                 preserveDateDifferences
         )
     {
         EOFetchSpecification spec =
@@ -779,7 +841,8 @@ public class AssignmentOffering
                 OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC,
                 ENTITY_NAME );
         // Set up the qualifier
-        NSMutableDictionary restrictions = new NSMutableDictionary();
+        NSMutableDictionary<String, Object> restrictions =
+            new NSMutableDictionary<String, Object>();
         if ( submitterEngine > 0 )
         {
             restrictions.setObjectForKey(
@@ -821,14 +884,27 @@ public class AssignmentOffering
         }
         boolean forStaff = ERXValueUtilities.booleanValue(
             formValueForKey( formValues, "staff" ) );
+        showAll = ERXValueUtilities.booleanValueWithDefault(
+            formValueForKey( formValues, "showAll" ), showAll || forStaff );
         if ( !forStaff )
         {
             restrictions.setObjectForKey(
                 ERXConstant.integerForInt( 1 ),
                 PUBLISH_KEY );
         }
-        spec.setQualifier(
-            EOQualifier.qualifierToMatchAllValues( restrictions ) );
+
+//        if (forStaff || showAll)
+//        {
+//            spec.setQualifier(
+//                courseOffering.dot(CourseOffering.semester).is(
+//                    Semester.forDate(context, new NSTimestamp())).and(
+//                        EOQualifier.qualifierToMatchAllValues(restrictions)));
+//        }
+//        else
+//        {
+            spec.setQualifier(
+                EOQualifier.qualifierToMatchAllValues(restrictions));
+//        }
         if ( log.isDebugEnabled() )
         {
             log.debug(
@@ -837,7 +913,8 @@ public class AssignmentOffering
         }
         if ( groupByCRN )
         {
-            NSMutableArray orderings = spec.sortOrderings().mutableClone();
+            NSMutableArray<EOSortOrdering> orderings =
+                spec.sortOrderings().mutableClone();
             orderings.insertObjectAtIndex(
                 EOSortOrdering.sortOrderingWithKey(
                     COURSE_OFFERING_CRN_KEY,
@@ -853,7 +930,8 @@ public class AssignmentOffering
         {
             // filter down to the given list of courses
             log.debug( "before courses filter: " + results );
-            NSArray courses = new NSArray( valueObj.toString().split( "\\s*,\\s*" ) );
+            NSArray<String> courses = new NSArray<String>(
+                valueObj.toString().split( "\\s*,\\s*" ) );
             log.debug( "courses filter = " + courses );
             results = EOQualifier.filteredArrayWithQualifier( results,
                 new InQualifier( COURSE_NUMBER_KEY + ".toString",
@@ -869,14 +947,26 @@ public class AssignmentOffering
             log.debug( "before crns filter: " + results );
             results = EOQualifier.filteredArrayWithQualifier( results,
                 new InQualifier( COURSE_OFFERING_CRN_KEY + ".toString",
-                    new NSArray( valueObj.toString().split( "\\s*,\\s*" ) )
+                    new NSArray<String>(
+                        valueObj.toString().split( "\\s*,\\s*" ) )
                 )
             );
             log.debug( "after crns filter: " + results );
         }
-        if ( !forStaff )
+        NSMutableArray<EOQualifier> qualifiers =
+            new NSMutableArray<EOQualifier>();
+        if (showAll)
         {
-            NSMutableArray qualifiers = new NSMutableArray(
+            qualifiers.add(
+                new EOKeyValueQualifier(
+                    LATE_DEADLINE_KEY,
+                    EOQualifier.QualifierOperatorGreaterThan,
+                    Semester.forDate(context, currentTime).semesterStartDate()
+                ) );
+        }
+        else
+        {
+            qualifiers.add(
                 new EOKeyValueQualifier(
                     AVAILABLE_FROM_KEY,
                     EOQualifier.QualifierOperatorLessThan,
@@ -887,19 +977,23 @@ public class AssignmentOffering
                 EOQualifier.QualifierOperatorGreaterThan,
                 currentTime
                 ) );
-            results = ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                results,
-                new EOAndQualifier( qualifiers ) );
         }
+        results = ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+            results,
+            new EOAndQualifier( qualifiers ) );
         if ( !groupByCRN )
         {
-            NSMutableArray filteredResults = results.mutableClone();
-            Map courseAssignmentMap = new HashMap();
+            NSMutableArray<AssignmentOffering> filteredResults =
+                results.mutableClone();
+            Map<Course, Map<Assignment, NSMutableArray<AssignmentOffering>>>
+                courseAssignmentMap = new HashMap<Course,
+                    Map<Assignment, NSMutableArray<AssignmentOffering>>>();
             for ( int i = 0; i < filteredResults.count(); i++ )
             {
                 AssignmentOffering ao =
-                    (AssignmentOffering)filteredResults.objectAtIndex( i );
-                if ( !addAssignmentIfNecessary( ao, courseAssignmentMap ) )
+                    filteredResults.objectAtIndex( i );
+                if ( !addAssignmentIfNecessary(
+                    ao, courseAssignmentMap, preserveDateDifferences ) )
                 {
                     filteredResults.removeObjectAtIndex( i );
                     i--;
@@ -907,7 +1001,33 @@ public class AssignmentOffering
             }
             results = filteredResults;
         }
+        if (log.isDebugEnabled())
+        {
+            log.debug("results = " + results);
+            for (AssignmentOffering ao : results)
+            {
+                log.debug("offering = " + ao + ", semester = " + ao.courseOffering().semester());
+            }
+        }
         return results;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willInsert()
+    {
+        setLastModified(new NSTimestamp());
+        super.willInsert();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willUpdate()
+    {
+        setLastModified(new NSTimestamp());
+        super.willInsert();
     }
 
 
@@ -924,12 +1044,13 @@ public class AssignmentOffering
      * @param key  The key to look up.
      * @return the value for the given form key, or null if there is none
      */
-    static private Object formValueForKey( NSDictionary dict, String key )
+    static private Object formValueForKey(
+        NSDictionary<String, ?> dict, String key)
     {
         Object values = dict.valueForKey( key );
         if ( values != null && values instanceof NSArray )
         {
-            NSArray array = (NSArray)values;
+            NSArray<?> array = (NSArray<?>)values;
             if ( array.count() > 0 )
             {
                 return array.objectAtIndex( 0 );
@@ -957,17 +1078,40 @@ public class AssignmentOffering
      * combination registered in the map that matches.
      */
     static private boolean addAssignmentIfNecessary(
-        AssignmentOffering ao, Map map )
+        AssignmentOffering ao,
+        Map<Course, Map<Assignment,
+                        NSMutableArray<AssignmentOffering>>> map,
+        boolean preserveDateDifferences)
     {
-        Map courseMap = (Map)map.get( ao.courseOffering().course() );
-        if ( courseMap == null )
+        Map<Assignment, NSMutableArray<AssignmentOffering>> courseMap =
+            map.get(ao.courseOffering().course());
+        if (courseMap == null)
         {
-            courseMap = new HashMap();
-            map.put( ao.courseOffering().course(), courseMap );
+            courseMap =
+                new HashMap<Assignment,
+                            NSMutableArray<AssignmentOffering>>();
+            map.put(ao.courseOffering().course(), courseMap);
         }
-        if ( courseMap.get( ao.assignment() ) == null )
+        if (courseMap.get(ao.assignment()) == null)
         {
-            courseMap.put( ao.assignment(), ao.assignment() );
+            courseMap.put(
+                ao.assignment(), new NSMutableArray<AssignmentOffering>(ao));
+            return true;
+        }
+        else if (preserveDateDifferences)
+        {
+            NSMutableArray<AssignmentOffering> currentOfferings =
+                courseMap.get(ao.assignment());
+            long due = ao.dueDate().getTime();
+            for (AssignmentOffering other : currentOfferings)
+            {
+                // Is there an existing offering within 5 minutes of this one
+                if (Math.abs(due - other.dueDate().getTime()) < 5 * 60 * 1000)
+                {
+                    return false;
+                }
+            }
+            currentOfferings.add(ao);
             return true;
         }
         else
@@ -981,7 +1125,7 @@ public class AssignmentOffering
     private static class InQualifier
         extends ERXInQualifier
     {
-        public InQualifier( String key, NSArray values )
+        public InQualifier( String key, NSArray<?> values )
         {
             super( key, values, 1 );
         }

@@ -158,6 +158,9 @@ public abstract class _AssignmentOffering
     public static final String GRAPH_SUMMARY_KEY = "graphSummary";
     public static final ERXKey<NSData> graphSummary =
         new ERXKey<NSData>(GRAPH_SUMMARY_KEY);
+    public static final String LAST_MODIFIED_KEY = "lastModified";
+    public static final ERXKey<NSTimestamp> lastModified =
+        new ERXKey<NSTimestamp>(LAST_MODIFIED_KEY);
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final ERXKey<Long> moodleId =
         new ERXKey<Long>(MOODLE_ID_KEY);
@@ -460,6 +463,35 @@ public abstract class _AssignmentOffering
         takeStoredValueForKey( null, "graphSummary" );
         graphSummaryRawCache = null;
         graphSummaryCache = null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>lastModified</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp lastModified()
+    {
+        return (NSTimestamp)storedValueForKey( "lastModified" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lastModified</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setLastModified( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLastModified("
+                + value + "): was " + lastModified() );
+        }
+        takeStoredValueForKey( value, "lastModified" );
     }
 
 

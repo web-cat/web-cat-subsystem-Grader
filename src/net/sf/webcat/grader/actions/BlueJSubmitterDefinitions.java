@@ -56,11 +56,11 @@ public class BlueJSubmitterDefinitions
 
     //~ KVC Attributes (must be public) .......................................
 
-    public AssignmentOffering anAssignmentOffering;
-    public NSArray            assignmentsToDisplay;
-    public boolean            groupByInstitution = false;
-    public boolean            groupByCRN         = false;
-    public int                index;
+    public AssignmentOffering          anAssignmentOffering;
+    public NSArray<AssignmentOffering> assignmentsToDisplay;
+    public boolean                     groupByInstitution = false;
+    public boolean                     groupByCRN         = false;
+    public int                         index;
 
 
     //~ Methods ...............................................................
@@ -88,15 +88,17 @@ public class BlueJSubmitterDefinitions
                     context().request().formValues(),
                     currentTime,
                     submitterEngine(),
-                    groupByCRN
+                    groupByCRN,
+                    showAll(),
+                    preserveDateDifferences()
                     );
             if ( assignmentsToDisplay != null &&
                  assignmentsToDisplay.count() > 1 )
             {
                 AssignmentOffering first =
-                    (AssignmentOffering)assignmentsToDisplay.objectAtIndex( 0 );
+                    assignmentsToDisplay.objectAtIndex( 0 );
                 AssignmentOffering last =
-                    (AssignmentOffering)assignmentsToDisplay.objectAtIndex(
+                    assignmentsToDisplay.objectAtIndex(
                         assignmentsToDisplay.count() - 1 );
                 groupByInstitution =
                     first.courseOffering().course().department().institution()
@@ -123,14 +125,27 @@ public class BlueJSubmitterDefinitions
 
 
     // ----------------------------------------------------------
+    public boolean showAll()
+    {
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean preserveDateDifferences()
+    {
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
     public boolean startNewInstitution()
     {
         boolean result = index == 0;
         if ( !result )
         {
             AssignmentOffering prev =
-                (AssignmentOffering)assignmentsToDisplay.objectAtIndex(
-                    index - 1 );
+                assignmentsToDisplay.objectAtIndex(index - 1);
             result = prev.courseOffering().course().department().institution()
                 != anAssignmentOffering.courseOffering().course().department()
                     .institution();
@@ -146,8 +161,7 @@ public class BlueJSubmitterDefinitions
         if ( !result )
         {
             AssignmentOffering prev =
-                (AssignmentOffering)assignmentsToDisplay.objectAtIndex(
-                    index - 1 );
+                assignmentsToDisplay.objectAtIndex(index - 1);
             result = groupByCRN
                 ? ( prev.courseOffering()
                     != anAssignmentOffering.courseOffering() )
@@ -286,7 +300,7 @@ public class BlueJSubmitterDefinitions
     {
         if ( index == 0 ) return false;
         AssignmentOffering prev =
-            (AssignmentOffering)assignmentsToDisplay.objectAtIndex( index - 1 );
+            assignmentsToDisplay.objectAtIndex( index - 1 );
         return prev.courseOffering().course()
             == anAssignmentOffering.courseOffering().course();
     }
@@ -297,7 +311,7 @@ public class BlueJSubmitterDefinitions
     {
         if ( index == 0 ) return false;
         AssignmentOffering prev =
-            (AssignmentOffering)assignmentsToDisplay.objectAtIndex( index - 1 );
+            assignmentsToDisplay.objectAtIndex( index - 1 );
         return prev.courseOffering().course().department().institution()
             == anAssignmentOffering.courseOffering().course().department()
                 .institution();

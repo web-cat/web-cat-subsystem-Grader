@@ -280,6 +280,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds field for tracking assignment modification times.
+     * @throws SQLException on error
+     */
+    public void updateIncrement13() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING add "
+            + "lastModified DATETIME" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
