@@ -103,9 +103,9 @@ public class FinalReportPage
         {
             submission = prefs().submission();
             if (submission != null
-                && (submission.user() != user())
+                && (submission.user() != user()
                     || submission.assignmentOffering().assignment()
-                        != prefs().assignment())
+                        != prefs().assignment()))
             {
                 submission = null;
             }
