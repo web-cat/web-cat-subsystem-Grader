@@ -24,11 +24,13 @@ CanDelete: WOConditional {
     condition = "~!courseOffering.isNewObject && courseOffering.canDelete";
 }
 
-CourseList: WOPopUpButton {
-	list              = courseDisplayGroup.allObjects;
-	selection         = courseOffering.course;
-	item              = course;
-	displayString     = course.deptNumberAndName;
+CourseList: WCFilteringSelect {
+	list          = courseDisplayGroup.allObjects;
+	selection     = courseOffering.course;
+	item          = course;
+	displayString = course.deptNumberAndName;
+	style         = "width:25em;";
+	id            = "course";
 }
 
 CourseInfo: net.sf.webcat.core.PopUpInfo {
@@ -36,19 +38,14 @@ CourseInfo: net.sf.webcat.core.PopUpInfo {
     message = "Use the Course drop-down list to change the course with which this offering is associated.";
 }
 
-CRN: WOTextField {
+CRN: WCTextBox {
     value = courseOffering.crn;
-    size = 40;
+    id    = "CRN";
 }
 
 CRNInfo: net.sf.webcat.core.PopUpInfo {
     title   = "CRN";
     message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
-}
-
-DateRangeInfo: net.sf.webcat.core.PopUpInfo {
-    title   = "Show Submission Date Range";
-    message = "Click this button to calculate the range of dates for all submissions in this course offering, across all assignment offerings associated with it.";
 }
 
 Email: WOHyperlink {
@@ -66,9 +63,9 @@ IsThisUser: WOConditional {
     condition = matchesUser;
 }
 
-Label: WOTextField {
+Label: WCTextBox {
     value = courseOffering.label;
-    size = 40;
+    id    = "Label";
 }
 
 LabelInfo: net.sf.webcat.core.PopUpInfo {
@@ -95,10 +92,11 @@ MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
     message = "Offers experimental support for instructors testing out the Moodle-to-Web-CAT gateway.  Otherwise, leave it blank.";
 }
 
-MoodleId: WOTextField {
-	size = 8;
+MoodleId: WCTextBox {
 	numberformat = "0";
-	value = courseOffering.moodleId;
+	value        = courseOffering.moodleId;
+	id           = "moodleid";
+	style        = "width: 6em;";
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -152,10 +150,12 @@ SemesterInfo: net.sf.webcat.core.PopUpInfo {
     message = "Use the Semester drop-down list to change the semester with which this offering is associated.";
 }
 
-SemesterList: WOPopUpButton {
+SemesterList: WCFilteringSelect {
 	list      = semesters;
 	item      = aSemester;
 	selection = courseOffering.semester;
+    style     = "width:25em;";
+    id        = "semester";
 }
 
 TARepetition: WORepetition {
@@ -168,9 +168,10 @@ TR: net.sf.webcat.core.TableRow {
     index = index;
 }
 
-URL: WOTextField {
+URL: WCTextBox {
     value = courseOffering.url;
-    size = 40;
+    style = "width: 40em;";
+    id    = "URL";
 }
 
 URLInfo: net.sf.webcat.core.PopUpInfo {

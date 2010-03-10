@@ -4,16 +4,6 @@ AddStep: WCButton {
     remote = true;
 }
 
-GradingPluginsToAdd: WCFilteringSelect {
-    list          = gradingPluginsToAdd;
-    item          = gradingPluginToAdd;
-    selection     = selectedGradingPluginToAdd;
-    useDividers   = true;
-    searchString  = searchStringForGradingPluginToAdd;
-    displayString = displayStringForGradingPluginToAdd;
-    noSelectionString = "(select a plug-in to add)";
-}
-
 CanDelete: WOConditional {
     condition = "~!thisOffering.isNewObject && !thisOffering.hasStudentSubmissions";
 }
@@ -37,11 +27,16 @@ CourseOfferingSection: WCPageModule {
 Description: WCTextBox {
     style = "width: 40em;";
     value = assignment.shortDescription;
+    id    = "title";
 }
 
 DescriptionInfo: net.sf.webcat.core.PopUpInfo {
     title   = "Title";
     message = "Place the title of your assignment here, like &quot;Word Ladder Finder&quot;.  This value is used as a supplementary description when there is space to display more than just the name.";
+}
+
+DragHandle: WCDragHandle {
+    id = "dragHandle";
 }
 
 DueDate2: WCDateTimePicker {
@@ -73,6 +68,24 @@ EditSubmissionProfile: WOImageButton {
     class     = "icon";
 }
 
+GradingPluginsToAdd: WCFilteringSelect {
+    list          = gradingPluginsToAdd;
+    item          = gradingPluginToAdd;
+    selection     = selectedGradingPluginToAdd;
+    useDividers   = true;
+    searchString  = searchStringForGradingPluginToAdd;
+    displayString = displayStringForGradingPluginToAdd;
+    noSelectionString = "(select a plug-in to add)";
+    id            = "plugins";
+}
+
+GradingStepsTable: WCStyledTable {
+    id           = "gradingStepsTable";
+    onDropMethod = "gradingStepsWereDropped";
+    moveOnly     = true;
+    accept       = "gradingStep";
+}
+
 Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
     graphSummary = thisOffering.graphSummary;
 }
@@ -86,9 +99,10 @@ LastTR: net.sf.webcat.core.TableRow {
 }
 
 MoodleId: WCTextBox {
-    size = 8;
     numberformat = "0";
-    value = assignment.moodleId;
+    value        = assignment.moodleId;
+    id           = "moodleid";
+    style        = "width: 6em;";
 }
 
 MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
@@ -104,7 +118,7 @@ OverrideMoodleId: WCTextBox {
 
 Name: WCTextBox {
     value = assignment.name;
-    size  = 40;
+    id    = "name";
 }
 
 NameInfo: net.sf.webcat.core.PopUpInfo {
@@ -189,6 +203,7 @@ SubmissionProfileList: WCFilteringSelect {
     item          = submissionProfile;
     displayString = submissionProfile.name;
     selection     = assignment.submissionProfile;
+    id            = "policy";
 }
 
 SuspendInfo: net.sf.webcat.core.PopUpInfo {
@@ -202,39 +217,16 @@ Timeout: WCTextBox {
     value        = stepTimeout;
 }
 
-GradingStepsTable: WCStyledTable {
-    id           = "gradingStepsTable";
-    onDropMethod = "gradingStepsWereDropped";
-    moveOnly     = true;
-    accept       = "gradingStep";
-}
-
 TR: net.sf.webcat.core.TableRow {
     index = index;
     dragHandle = "dragHandle";
     dndType = "gradingStep";
 }
 
-DragHandle: WCDragHandle {
-    id = "dragHandle";
-}
-
 TR2: net.sf.webcat.core.TableRow {
     index = index;
     showCaution = upcomingOfferingIsLate;
     showError   = upcomingOffering.gradingSuspended;
-}
-
-UploadInstructions: WCSimpleTextArea {
-    rows  = 8;
-    cols  = 60;
-    value = assignment.fileUploadMessage;
-    style = "width: 40em;";
-}
-
-UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
-    title   = "Upload Instructions";
-    message = "Optionally, enter any assignment-specific instructions that you want students to see when they upload submissions through Web-CAT\'s web interface. Any content you insert here will be included in the HTML page where users select files to upload and submit. You can use full HTML markup in your instructions, which will be inserted unfiltered in the page students see. Note that these instructions will only be available to students who submit using their web browser--they will not be seen by students who submit from an IDE, such as BlueJ or Eclipse.";
 }
 
 UpcomingAssignmentName: WOHyperlink {
@@ -258,9 +250,23 @@ UpcomingIsUnpublished: WOConditional {
     negate = true;
 }
 
+UploadInstructions: WCSimpleTextArea {
+    rows  = 8;
+    cols  = 60;
+    value = assignment.fileUploadMessage;
+    style = "width: 40em;";
+    id    = "instructions";
+}
+
+UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Upload Instructions";
+    message = "Optionally, enter any assignment-specific instructions that you want students to see when they upload submissions through Web-CAT\'s web interface. Any content you insert here will be included in the HTML page where users select files to upload and submit. You can use full HTML markup in your instructions, which will be inserted unfiltered in the page students see. Note that these instructions will only be available to students who submit using their web browser--they will not be seen by students who submit from an IDE, such as BlueJ or Eclipse.";
+}
+
 URL: WCTextBox {
     style = "width: 40em;";
     value = assignment.url;
+    id    = "URL";
 }
 
 URLInfo: net.sf.webcat.core.PopUpInfo {

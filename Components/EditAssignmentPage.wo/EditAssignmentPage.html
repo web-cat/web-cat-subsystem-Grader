@@ -8,17 +8,17 @@
 <wo:WCForm multipleSubmit="true">
 <wo:WCPageModule title="Properties for All Instances of This Assignment">
 <table class="layout">
-<tr><td class="R">Name:</td>
+<tr><td class="R"><label for="name">Name:</label></td>
     <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
-<tr><td class="R">Title:</td>
+<tr><td class="R"><label for="title">Title:</label></td>
     <td><webobject name="Description"/>
     <webobject name="DescriptionInfo"/></td></tr>
-<tr><td class="R">URL:</td>
+<tr><td class="R"><label for="URL">URL:</label></td>
     <td><webobject name="URL"/> <webobject name="URLInfo"/></td></TR>
-<tr><td class="R">Moodle Id:</td>
+<tr><td class="R"><label for="moodleid">Moodle Id:</label></td>
     <td><webobject name="MoodleId"/> <webobject name="MoodleIdInfo"/></td></TR>
-<tr><td class="R" valign="top" style="padding-left: 0">Upload&nbsp;<br/>
-    Instructions:</td>
+<tr><td class="R" valign="top" style="padding-left: 0"><label for="instructions">Upload&nbsp;<br/>
+    Instructions:</label></td>
     <td valign="top"><webobject name="UploadInstructions"/>
     <webobject name="UploadInstructionsInfo"/></td></tr>
 <wo:if condition="$surveysSupported">
@@ -28,7 +28,7 @@
       survey</label></td></tr></wo:if>
 </table>
 <h3>Grading Scheme for All Instances</h3>
-<p>Submission Rules:
+<p><label for="policy">Submission Rules:</label>
 <wo:if condition="$submissionProfileDisplayGroup.displayedObjects.count">
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
 </wo:if><wo:else>
@@ -51,7 +51,7 @@
     </wo></wo>
     <wo name="LastTR">
         <td colspan="4">
-            Add a step:
+            <label for="plugins">Add a step:</label>
             <wo:if condition="$gradingPluginsToAdd.count">
             <wo name="GradingPluginsToAdd"/>
             <webobject name="AddStep">

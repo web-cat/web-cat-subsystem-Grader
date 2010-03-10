@@ -8,17 +8,17 @@
 <div class="floatRight"><wo name="Navigator"/></div>
 <wo:WCForm multipleSubmit="true"><table class="layout">
 <wo name="CanDelete">
-<tr><td align="right"><wo:submit action="$delete" value="Delete" class="neg"/></td>
+<tr><td align="right"><wo:WCButton action="$delete" label="Delete" class="neg"/></td>
     <td>You may delete this course offering.   It cannot be deleted if
     it has any assignments (remove them first, but only if no students have
     made submissions yet).</td></tr>
 </wo>
-<tr><td class="R">Semester:</td><td><wo name="SemesterList"/> <wo name="SemesterInfo"/></td></tr>
-<tr><td class="R">Course:</td><td><wo name="CourseList"/> <wo name="CourseInfo"/></td></tr>
-<tr><td class="R">CRN:</td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
-<tr><td class="R">Label:</td><td><webobject name="Label"/> <wo name="LabelInfo"/></td></tr>
-<tr><td class="R">URL:</td><td><wo name="URL"/> <wo name="URLInfo"/></td></tr>
-<wo:if condition="false"><tr><td class="R">Moodle Id:</td><td><wo name="MoodleId"/>
+<tr><td class="R"><label for="semester">Semester:</label></td><td><wo name="SemesterList"/> <wo name="SemesterInfo"/></td></tr>
+<tr><td class="R"><label for="course">Course:</label></td><td><wo name="CourseList"/> <wo name="CourseInfo"/></td></tr>
+<tr><td class="R"><label for="CRN">CRN:</label></td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
+<tr><td class="R"><label for="Label">Label:</label></td><td><wo name="Label"/> <wo name="LabelInfo"/></td></tr>
+<tr><td class="R"><label for="URL">URL:</label></td><td><wo name="URL"/> <wo name="URLInfo"/></td></tr>
+<wo:if condition="false"><tr><td class="R"><label for="moodleid">Moodle Id:</label></td><td><wo name="MoodleId"/>
 <wo name="MoodleIdInfo"/>&nbsp; Group Id:&nbsp;<wo name="MoodleId"/>
 <wo name="MoodleGroupIdInfo"/></td></tr></wo:if>
 <tr><td></td><td><wo:WCButton action="$apply" class="pos" label="Save"/>
@@ -27,11 +27,6 @@
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Instructors" open="true">
-
-<!-- wo:WCContentPane id="hhh" -->
-<!-- p --><!-- wo:str value="$accum"/ --><!-- /p -->
-<!-- /wo:WCContentPane -->
-<!-- wo:WCForm --><!-- wo:WCLink action="$accumulate" remote.refreshPanes="hhh" label="add" --><!-- wo:image filename="images/add-sm-btn.gif"/ --><!-- /wo:WCLink --><!-- /wo:WCForm -->
 
 <wo:form><table><thead>
   <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
@@ -67,7 +62,7 @@
 </wo:net.sf.webcat.core.WCPageModule>
 
 <wo:net.sf.webcat.core.WCPageModule title="Submission Date Range" open="false">
-<wo:if condition="$earliest">
+<wo:if condition="$hasEarliest">
 <p>Submission date range:
 <wo:str value="$earliest" formatter="$session.timeFormatter"/>
 
