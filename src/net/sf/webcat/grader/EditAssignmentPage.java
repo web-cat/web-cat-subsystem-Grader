@@ -84,9 +84,9 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public void awake()
     {
-        long timeStart = System.currentTimeMillis();
+        long timeStartedHere = System.currentTimeMillis();
         super.awake();
-        long timeTaken = System.currentTimeMillis() - timeStart;
+        long timeTaken = System.currentTimeMillis() - timeStartedHere;
         log.debug("Time in awake(): " + timeTaken + " ms");
     }
 
@@ -94,9 +94,9 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public void sleep()
     {
-        long timeStart = System.currentTimeMillis();
+        long timeStartedHere = System.currentTimeMillis();
         super.sleep();
-        long timeTaken = System.currentTimeMillis() - timeStart;
+        long timeTaken = System.currentTimeMillis() - timeStartedHere;
         log.debug("Time in sleep(): " + timeTaken + " ms");
     }
 
@@ -660,7 +660,7 @@ public class EditAssignmentPage
     public void takeValuesFromRequest(WORequest arg0, WOContext arg1)
     {
         log.debug("takeValuesFromRequest()");
-        long timeStart = System.currentTimeMillis();
+        long timeStartedHere = System.currentTimeMillis();
 
         super.takeValuesFromRequest(arg0, arg1);
 
@@ -686,7 +686,7 @@ public class EditAssignmentPage
             }
         }
 
-        long timeTaken = System.currentTimeMillis() - timeStart;
+        long timeTaken = System.currentTimeMillis() - timeStartedHere;
         log.debug("Time in takeValuesFromRequest(): " + timeTaken + " ms");
     }
 
