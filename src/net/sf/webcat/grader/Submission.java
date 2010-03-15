@@ -29,8 +29,6 @@ import er.extensions.eof.ERXQ;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
 import net.sf.webcat.core.*;
 import org.apache.log4j.Logger;
 
@@ -220,41 +218,6 @@ public class Submission
             result.append( " min" );
             if ( minutes > 1 )
                 result.append( 's' );
-        }
-        return result.toString();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Returns a string version of the given file size.
-     *
-     * @param  size the file size to convert
-     * @return the file size as a string
-     */
-    public static String fileSizeAsString( long size )
-    {
-        StringBuffer result = new StringBuffer( 10 );
-        if ( size < 1024L )
-        {
-            result.append( size );
-            result.append( " bytes" );
-        }
-        else if ( size < 1048576L )
-        {
-            double sz = size / 1024.0;
-            DecimalFormat fmt = new DecimalFormat( "0.0" );
-            fmt.format( sz, result,
-                        new FieldPosition( DecimalFormat.FRACTION_FIELD ) );
-            result.append( "kb" );
-        }
-        else
-        {
-            double sz = size / 1048576.0;
-            DecimalFormat fmt = new DecimalFormat( "0.0" );
-            fmt.format( sz, result,
-                        new FieldPosition( DecimalFormat.FRACTION_FIELD ) );
-            result.append( "mb" );
         }
         return result.toString();
     }
@@ -1228,7 +1191,7 @@ public class Submission
                 File dir = new File(subdirToDelete);
                 if (dir.exists())
                 {
-                    net.sf.webcat.archives.FileUtilities.deleteDirectory(dir);
+                    net.sf.webcat.core.FileUtilities.deleteDirectory(dir);
                 }
             }
         }

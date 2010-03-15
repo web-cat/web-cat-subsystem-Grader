@@ -25,7 +25,7 @@ import com.webobjects.foundation.*;
 import com.webobjects.appserver.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import net.sf.webcat.archives.FileUtilities;
+import net.sf.webcat.core.FileUtilities;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -361,7 +361,7 @@ public class OldEditScriptPage
     // ----------------------------------------------------------
     public String fileSize()
     {
-        return Submission.fileSizeAsString( file.length() );
+        return FileUtilities.fileSizeAsString( file.length() );
     }
 
 

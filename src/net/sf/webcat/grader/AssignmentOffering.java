@@ -608,7 +608,7 @@ public class AssignmentOffering
                     if (assignmentDir.exists())
                     {
                         log.debug("deleting " + assignmentDir);
-                        net.sf.webcat.archives.FileUtilities.deleteDirectory(
+                        net.sf.webcat.core.FileUtilities.deleteDirectory(
                             assignmentDir);
                     }
                 }

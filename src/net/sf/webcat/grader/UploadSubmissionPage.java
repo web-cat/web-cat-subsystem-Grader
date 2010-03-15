@@ -324,7 +324,7 @@ public class UploadSubmissionPage
         {
             size = file.length();
         }
-        return Submission.fileSizeAsString( size );
+        return FileUtilities.fileSizeAsString( size );
     }
 
 

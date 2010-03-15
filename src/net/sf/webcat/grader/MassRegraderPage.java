@@ -82,8 +82,11 @@ public class MassRegraderPage extends GraderAssignmentComponent
 
 
     // ----------------------------------------------------------
-    public WOActionResults massRegrade()
+    public JavascriptGenerator massRegrade()
     {
+        JavascriptGenerator result = new JavascriptGenerator()
+            .append("regraderWatcher.startEnqueueMonitor();");
+
         EOQualifier q;
         qualifierErrors = null;
 
@@ -97,7 +100,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
                 (prefs().assignment() == null &&
                         prefs().assignmentOffering() == null))
         {
-            return null;
+            return result;
         }
 
         ERXSortOrderings sortOrderings =
@@ -166,7 +169,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
             }
         }
 
-        return null;
+        return result;
     }
 
 

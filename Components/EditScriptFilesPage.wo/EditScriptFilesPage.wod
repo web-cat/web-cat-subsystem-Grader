@@ -1,25 +1,26 @@
-CreateFolder: WOSubmitButton {
-    value  = "Create Folder";
+CreateFolder: WCButton {
+    label  = "Create Folder";
     action = createFolder;
+    remote = true;
 }
 
-FolderList1: WOPopUpButton {
+FolderList1: WCFilteringSelect {
     list          = folderList;
     item          = aFolder;
     displayString = aFolder;
     selection     = selectedParentFolderForSubFolder;
 }
 
-FolderList2: WOPopUpButton {
+FolderList2: WCFilteringSelect {
     list          = folderList;
     item          = aFolder;
     displayString = aFolder;
     selection     = selectedParentFolderForUpload;
 }
 
-FolderName: WOTextField {
+FolderName: WCTextBox {
     value = folderName;
-    width = 25;
+    style = "width: 15em;";
 }
 
 FileBrowser: net.sf.webcat.core.FileBrowser {
@@ -40,32 +41,24 @@ Page: net.sf.webcat.core.WCPageWithNavigation {
     title = sideStepTitle;
 }
 
-Replace: WOSubmitButton {
-    value  = "Replace Entire Folder";
-    action = replaceEntireFolder;
-}
-
 Section: WCPageModule {
     title = "~ \"File(s) for \" + gradingPlugin.name";
 }
 
-Unzip: WOCheckBox {
+Unzip: WCCheckBox {
     checked = unzip;
 }
 
-Upload: WOSubmitButton {
-    value  = "Upload File";
-    action = uploadFile;
-}
-
-UploadFile2: WOFileUpload {
+UploadFile2: WCFileUpload {
     data = uploadedFile2;
     filePath = uploadedFileName2;
-    size = 60;
+    clearAfterUpload = true;
+    action = fileWasUploaded;
 }
 
-UploadFile3: WOFileUpload {
+UploadFile3: WCFileUpload {
     data = uploadedFile3;
     filePath = uploadedFileName3;
-    size = 60;
+    clearAfterUpload = true;
+    action = folderReplacementWasUploaded;
 }

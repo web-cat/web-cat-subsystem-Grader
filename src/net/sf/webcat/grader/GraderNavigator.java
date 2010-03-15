@@ -29,6 +29,7 @@ import net.sf.webcat.core.Course;
 import net.sf.webcat.core.CourseOffering;
 import net.sf.webcat.core.EntityUtils;
 import net.sf.webcat.core.INavigatorObject;
+import net.sf.webcat.ui.generators.JavascriptGenerator;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
@@ -138,8 +139,7 @@ public class GraderNavigator
     public NSArray<String> idsForCourseAndAssignmentPanes()
     {
         return new NSArray<String>(new String[] {
-                idFor.valueForKey("coursePane").toString(),
-                idFor.valueForKey("assignmentPane").toString()
+                idFor.get("coursePane"), idFor.get("assignmentPane")
         });
     }
 
@@ -150,10 +150,10 @@ public class GraderNavigator
      *
      * @return the result is ignored
      */
-    public WOActionResults updateCourseOfferings()
+    public JavascriptGenerator updateCourseOfferings()
     {
         super.updateCourseOfferings();
-        return updateAssignments();
+        return updateAssignments().refresh(idFor.get("coursePane"));
     }
 
 
@@ -163,14 +163,14 @@ public class GraderNavigator
      *
      * @return the result is ignored
      */
-    public WOActionResults updateAssignments()
+    public JavascriptGenerator updateAssignments()
     {
         log.debug("updateAssignments()");
         assignments = new NSMutableArray<INavigatorObject>();
 
         if (selectedCourseOffering == null)
         {
-            return null;
+            return JavascriptGenerator.NO_OP;
         }
 
         NSArray<CourseOffering> offerings = (NSArray<CourseOffering>)
@@ -287,7 +287,8 @@ public class GraderNavigator
             log.debug("assignments = " + assignments);
             log.debug("selected assignment = " + selectedAssignment);
         }
-        return null;
+
+        return new JavascriptGenerator().refresh(idFor.get("assignmentPane"));
     }
 
 

@@ -541,7 +541,7 @@ public class GradingPlugin
                 String msg = e.getMessage();
                 errors.setObjectForKey( msg, msg );
                 gradingPlugin.setSubdirName( subdirName );
-                net.sf.webcat.archives.FileUtilities
+                net.sf.webcat.core.FileUtilities
                     .deleteDirectory( gradingPlugin.dirName() );
                 pluginPath.delete();
                 log.warn( "error unzipping:", e );
@@ -668,7 +668,7 @@ public class GradingPlugin
                 "directory " + pluginSubdir.getAbsolutePath() + " exists" );
             if ( overwrite )
             {
-                net.sf.webcat.archives.FileUtilities
+                net.sf.webcat.core.FileUtilities
                     .deleteDirectory( pluginSubdir );
             }
             else

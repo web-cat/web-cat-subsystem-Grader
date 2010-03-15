@@ -38,9 +38,6 @@ selection above.</p>
 <p>
 <wo name="Regrade">
     <wo:WCConnectAction event="onClick" action="massRegrade" remote="true" />
-    <script type="dojo/connect" event="onRemoteEnd">
-        regraderWatcher.startEnqueueMonitor();
-    </script>
 </wo>
 <wo:WCContentSpan id="submissionCount">
 (<wo:str value="$numberOfSubmissions" /> submission(s) match the current selection.)

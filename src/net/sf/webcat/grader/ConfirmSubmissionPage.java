@@ -136,7 +136,7 @@ public class ConfirmSubmissionPage
      */
     public String fileSize()
     {
-        return Submission.fileSizeAsString( file.length() );
+        return FileUtilities.fileSizeAsString( file.length() );
     }
 
 

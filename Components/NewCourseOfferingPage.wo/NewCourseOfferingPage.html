@@ -28,7 +28,7 @@
 </tbody></table>
 </wo:WCForm></wo:net.sf.webcat.core.WCPageModule>
 
-<wo:WCDialog title="Create a New Semester" id="new-semester" okAction="createSemester">
+<wo:WCDialog title="Create a New Semester" id="new-semester" okAction="$createSemester">
   <table class="layout"><tbody>
     <tr><td class="R"><label for="semester-season">Season:</label></td>
       <td><wo name="SeasonList"/></td></tr>
@@ -41,7 +41,7 @@
   </tbody></table>
 </wo:WCDialog>
 
-<wo:WCDialog title="Create a New Course" id="new-course" okAction="createCourse">
+<wo:WCDialog title="Create a New Course" id="new-course" okAction="$createCourse">
   <table class="layout"><tbody>
     <tr><td class="R"><label for="course-dept">Department:</label></td>
       <td><wo:if condition="$hasMultipleDepartments"><wo name="DepartmentList"/>

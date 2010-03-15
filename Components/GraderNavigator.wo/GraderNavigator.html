@@ -1,27 +1,34 @@
-<wo:WCDiv dojoType="dijit.form.DropDownButton" id="$idFor.navigatorButton">
+<wo:WCButton id="$idFor.navigatorButton">
 <span>Change Assignment</span>
-<wo:WCDiv dojoType="dijit.TooltipDialog" title="Choose Assignment">
+<script type="dojo/connect" event="onClick" args="e">
+dijit.byId('<wo:str value="$idFor.dialog"/>').show();
+</script>
+</wo:WCButton>
+<wo:WCDiv id="$idFor.dialog" dojoType="dijit.Dialog" title="Choose Assignment">
+<script type="dojo/connect" event="onCancel">
+dijit.byId('<wo:str value="$idFor.form"/>').reset();
+</script>
 <wo:WCForm id="$idFor.form">
 <fieldset class="course">
 <legend>Selected Course</legend>
 <ol>
 <li><wo:WOGenericContainer elementName="label" for="$idFor.semesterSelector">Show semester:</wo:WOGenericContainer>
 <wo name="SemesterFilter">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
 </wo>
 </li>
 <li>
 <wo:WCContentPane id="$idFor.coursePane">
 <wo:WOGenericContainer elementName="label" for="$idFor.courseSelector">Course offering:</wo:WOGenericContainer>
 <wo name="CourseFilter">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
+    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
 </wo>
 </wo:WCContentPane>
 </li>
 <wo:if condition="false"> <!-- was $user.hasTAPrivileges -->
 <li><wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeWhatImTeaching">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox" class="trailing">what I'm teaching</wo:WOGenericContainer>
 </li>
@@ -29,7 +36,7 @@
 <wo:if condition="$user.hasAdminPrivileges">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox">Include:</wo:WOGenericContainer>
 <wo name="IncludeAdminAccess">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote.refreshPanes="$idsForCourseAndAssignmentPanes"/>
+    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox" class="trailing">admin access</wo:WOGenericContainer>
 </li>
@@ -47,7 +54,7 @@
 <wo:if condition="$userIsStaffForSelectedCourse">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowUnpublishedAssignments">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
+    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox" class="trailing">unpublished</wo:WOGenericContainer>
 </li>
@@ -55,7 +62,7 @@
 <wo:if negate="true" condition="$hideClosedAssignmentsFromStudents">
 <li><wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
 <wo name="ShowClosedAssignments">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote.refreshPanes="$idFor.assignmentPane"/>
+    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
 </wo>
 <wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox" class="trailing">closed</wo:WOGenericContainer>
 </li>
@@ -67,14 +74,14 @@
 <wo name="Cancel">
 <script type="dojo/connect" event="onClick" args="evt">
 dijit.byId('<wo:str value="$idFor.form"/>').reset();
-dijit.byId('<wo:str value="$idFor.navigatorButton"/>').closeDropDown();
+dijit.byId('<wo:str value="$idFor.dialog"/>').hide();
 </script>
 </wo>
 </wo:if>
 </div>
 </wo:WCForm>
 </wo:WCDiv>
-</wo:WCDiv><wo:if condition="$startOpen">
+<wo:if condition="$startOpen">
 <script type="text/javascript">
-dojo.addOnLoad(function() { dijit.byId("<wo:str value="$idFor.navigatorButton"/>").openDropDown(); });
+dojo.addOnLoad(function() { dijit.byId('<wo:str value="$idFor.dialog"/>').show(); });
 </script></wo:if>
