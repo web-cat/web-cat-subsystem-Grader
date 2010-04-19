@@ -1,0 +1,47 @@
+/*
+ * Each entry in the top-level dictionary represents a query assistant. The
+ * key is a unique identifier for the query assistant (used to store which
+ * assistant was used to construct a query). The value is a dictionary with
+ * the following keys/values:
+ *
+ * entities: Optional. Value is an array of Strings that specify the entity
+ *     types that this query assistant is valid for. If this key is not
+ *     specified, then it is valid for all entities.
+ *
+ * modelName: Value is a String that specifies the fully-qualified name of the
+ *     the class that represents the model that stores the state of this query
+ *     assistant. This class must implement the
+ *     net.sf.webcat.reporter.queryassistants.IQueryAssistantModel interface
+ *     and have a parameterless constructor.
+ *
+ * editorComponentName: Value is a String that specifies the full-qualified
+ *     name of the WebObjects component that will be rendered to present this
+ *     query assistant to the user for editing. This component must have the
+ *     following bindings:
+ *       - dataSet: the ReportDataSet object for which the query is being made
+ *       - model: an instance of the class specified in modelName that
+ *             represents the query internally for the model
+ *
+ * description: Value is a String that provides a description of the query
+ *     assistant to the user. If this string contains a pipe '|' character,
+ *     then the portion of the description before the pipe will be rendered as
+ *     a hyperlink that the user can click to open that query assistant. If the
+ *     string does not contain a pipe, then the entire string will be made into
+ *     a link.
+ */
+
+{
+    "net.sf.webcat.grader.objectquery.courseAndAssignmentSubmissions" = {
+        entities = ( Submission );
+        modelName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentSubmissionsModel";
+        editorComponentName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentSubmissionsAssistant";
+        description = "Get submissions for an assignment| by selecting a set of courses and an assignment offered in those courses.";
+    };
+
+    "net.sf.webcat.grader.objectquery.courseAndAssignmentResultOutcomes" = {
+        entities = ( ResultOutcome );
+        modelName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesModel";
+        editorComponentName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesAssistant";
+        description = "Get result outcomes for an assignment| by selecting a set of courses and an assignment offered in those courses.";
+    };
+}

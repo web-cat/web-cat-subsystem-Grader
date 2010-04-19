@@ -1,0 +1,55 @@
+RPC: WCJSONRPC {
+    name = idFor.JSONRPC;
+    proxyName = "page";
+}
+
+CourseTree: WCCheckTree {
+    id = idFor.courseTree;
+    model = courseModel;
+    checkedItems = model.selectedCourseModelItems;
+    showRoot = false;
+}
+
+AssignmentPane: WCContentPane {
+    id = idFor.assignmentPane;
+    style = "border: 1px solid gray; overflow: auto; max-height: 250px; height: 250px";
+}
+
+AssignmentTree: WCCheckTree {
+    id = idFor.assignmentTree;
+    model = assignmentModel;
+    checkedItems = model.selectedAssignmentModelItems;
+    showRoot = false;
+}
+
+AssignmentInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Assignments";
+    message = "The assignments listed here are those that belong to <b>all</b> of the courses chosen to the left.";
+}
+
+SubmissionForGradingInfo: net.sf.webcat.core.PopUpInfo {
+    title   = "Submission For Grading";
+    message = "The <b>submission for grading</b> for a student is the one that has been manually graded by the instructor or TA, if any. If none have yet been manually graded, the most recent submission by that student is used.";
+}
+
+TagNames: WOTextField {
+    value = model.tags;
+    size = 60;
+}
+
+IncludeAllSubmissions: WCRadioButton {
+    name = "includeWhichSubmissions";
+    value = false;
+    selection = model.includeOnlySubmissionsForGrading;
+}
+
+IncludeGradedSubmissions: WCRadioButton {
+    name = "includeWhichSubmissions";
+    value = true;
+    selection = model.includeOnlySubmissionsForGrading;
+}
+
+IncludeCourseStaff: WCCheckBox {
+    name = "includeCourseStaff";
+    checked = model.includeCourseStaff;
+}

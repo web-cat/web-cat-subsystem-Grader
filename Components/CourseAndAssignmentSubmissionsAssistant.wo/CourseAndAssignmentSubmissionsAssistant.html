@@ -1,0 +1,37 @@
+<wo name="RPC"/>
+
+<div class="floatLeft width50">
+<p>1. Choose one or more <b>course offerings.</b></p>
+<div style="border: 1px solid gray; overflow: auto; max-height: 250px; height: 250px">
+<wo name="CourseTree">
+    <script type="dojo/connect" event="onCheckChanged" args="item,checked,node">
+        if (!checked)
+        {
+            <wo:str value="$idFor.JSONRPC"/>.page.pruneAssignmentsFromUnselectedCourses(
+                function() {
+                    webcat.refresh('<wo:str value="$idFor.assignmentPane"/>');
+                });
+        }
+        else
+        {
+            webcat.refresh('<wo:str value="$idFor.assignmentPane"/>');
+        }
+    </script>
+</wo>
+</div>
+</div>
+
+<div class="floatRight width50">
+<p>2. Choose an <b>assignment.</b> <wo name="AssignmentInfo"/></p>
+<wo name="AssignmentPane">
+<wo name="AssignmentTree"/>
+</wo>
+</div>
+
+<div class="clear">&nbsp;</div>
+
+<p>3. Specify <b>other options.</b></p>
+<wo name="IncludeAllSubmissions"/> Include <b>all</b> submissions from each student.<br/>
+<wo name="IncludeGradedSubmissions"/> Include only the <b>submission for grading</b> <wo name="SubmissionForGradingInfo"/> from each student.<br/>
+<hr />
+<wo name="IncludeCourseStaff"/> Include submissions made by <b>course staff</b> (instructors and TAs).<br/>

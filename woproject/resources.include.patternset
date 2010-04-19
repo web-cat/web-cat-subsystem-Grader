@@ -6,3 +6,5 @@ Properties
 **/*.strings
 Tabs.plist
 config.plist
+QueryAssistants.plist
+BatchHandlers.plist
