@@ -26,6 +26,7 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXValueUtilities;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import net.sf.webcat.grader.*;
 import org.apache.log4j.Logger;
 
@@ -285,11 +286,8 @@ public class BlueJSubmitterDefinitions
         }
         catch ( java.io.UnsupportedEncodingException e )
         {
-            Application.emailExceptionToAdmins(
-                e,
-                context(),
-                "For url parameter: '" + name + "'"
-                );
+            new UnexpectedExceptionMessage(e, context(), null,
+                "For url parameter: '" + name + "'").send();
             return name;
         }
     }

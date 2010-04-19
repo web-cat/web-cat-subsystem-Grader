@@ -27,9 +27,13 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXQ;
 import er.extensions.foundation.ERXFileUtilities;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
+import net.sf.webcat.grader.messaging.GradingResultsAvailableMessage;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -148,9 +152,11 @@ public class Submission
             {
                 subInfo = ee.toString();
             }
-            Application.emailExceptionToAdmins(
-                e, null, "An exception was generated trying to retrieve the "
-                + "id for a submission.\n\nSubmission = " + subInfo );
+
+            new UnexpectedExceptionMessage(e, null, null,
+                    "An exception was generated trying to retrieve the "
+                    + "id for a submission.\n\nSubmission = " + subInfo).send();
+
             return ERXConstant.ZeroInteger;
         }
     }
@@ -373,7 +379,9 @@ public class Submission
         }
         properties.setProperty(  "submission.result.link", permalink() );
 
-        net.sf.webcat.core.Application.sendSimpleEmail(
+        new GradingResultsAvailableMessage(user(), properties).send();
+
+/*        net.sf.webcat.core.Application.sendSimpleEmail(
             user().email(),
             properties.stringForKeyWithDefault(
                 "submission.email.title",
@@ -385,7 +393,7 @@ public class Submission
                 + "submission number ${submission.number} ${message}.\n\n"
                 + "Log in to Web-CAT to view the report:\n\n"
                 + "${submission.result.link}\n" )
-            );
+            );*/
     }
 
 
@@ -1132,6 +1140,107 @@ public class Submission
         }
 
         return maxSubmission;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the path to the grading.properties file associated with this
+     * submission, or where it would be if it did exist.
+     *
+     * @return the path to the grading.properties file for this submission
+     */
+    public File gradingPropertiesFile()
+    {
+        return new File(resultDirName(), SubmissionResult.propertiesFileName());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Creates the initial grading.properties file for this submission and
+     * returns a WCProperties object representing its contents.
+     *
+     * If the file already exists, this method does not overwrite it, and it
+     * returns the properties that are already in the file.
+     *
+     * @return a WCProperties object representing the content of the initial
+     *     grading.properties file
+     * @throws IOException if an I/O error occurs
+     */
+    public WCProperties createInitialGradingPropertiesFile() throws IOException
+    {
+        WCProperties properties = new WCProperties();
+
+        File propertiesFile = gradingPropertiesFile();
+        if (propertiesFile.exists())
+        {
+            properties.load(propertiesFile.getAbsolutePath());
+            return properties;
+        }
+
+        // Create the results directory if it does not already exist.
+
+        propertiesFile.getParentFile().mkdirs();
+
+        // Set the initial properties that only depend on the submission or
+        // the application configuration.
+
+        properties.addPropertiesFromDictionaryIfNotDefined(
+                ((Application) Application.application())
+                    .subsystemManager().pluginProperties());
+        properties.setProperty("frameworksBaseURL",
+                Application.application().frameworksBaseURL());
+
+        properties.setProperty("userName", user().userName());
+        properties.setProperty("resultDir", resultDirName());
+        properties.setProperty("scriptData", GradingPlugin.scriptDataRoot());
+
+        String crn = assignmentOffering().courseOffering().crn();
+        properties.setProperty("course",
+                assignmentOffering().courseOffering().course().deptNumber());
+        properties.setProperty("CRN", (crn == null) ? "null" : crn);
+        properties.setProperty("assignment",
+            assignmentOffering().assignment().name());
+        properties.setProperty("dueDateTimestamp",
+            Long.toString(assignmentOffering().dueDate().getTime()));
+        properties.setProperty("submissionTimestamp",
+            Long.toString(submitTime().getTime()));
+        properties.setProperty("submissionNo",
+                Integer.toString(submitNumber()));
+
+        properties.setProperty("numReports", "0");
+
+        Number toolPts = assignmentOffering().assignment()
+            .submissionProfile().toolPointsRaw();
+        properties.setProperty("max.score.tools",
+            (toolPts == null) ? "0" : toolPts.toString());
+
+        double maxCorrectnessScore = assignmentOffering().assignment()
+            .submissionProfile().availablePoints();
+        if (toolPts != null)
+        {
+            maxCorrectnessScore -= toolPts.doubleValue();
+        }
+
+        Number TAPts = assignmentOffering().assignment()
+            .submissionProfile().taPointsRaw();
+        if (TAPts != null)
+        {
+            maxCorrectnessScore -= TAPts.doubleValue();
+        }
+        properties.setProperty("max.score.correctness",
+            Double.toString(maxCorrectnessScore));
+
+        // Write the properties file to disk.
+
+        BufferedOutputStream out = new BufferedOutputStream(
+                new FileOutputStream(propertiesFile));
+        properties.store(
+                out, "Web-CAT grader script configuration properties");
+        out.close();
+
+        return properties;
     }
 
 

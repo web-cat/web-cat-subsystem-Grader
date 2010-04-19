@@ -26,6 +26,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -33,6 +34,9 @@ import net.sf.webcat.core.Application;
 import net.sf.webcat.core.FileUtilities;
 import net.sf.webcat.core.MutableDictionary;
 import net.sf.webcat.core.WCProperties;
+import net.sf.webcat.grader.messaging.AdminReportsForSubmissionMessage;
+import net.sf.webcat.grader.messaging.GraderKilledMessage;
+import net.sf.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.apache.log4j.Logger;
 import com.webobjects.eocontrol.EOAndQualifier;
 import com.webobjects.eocontrol.EOEditingContext;
@@ -325,11 +329,15 @@ public class GraderQueueProcessor
             log.fatal( "Job queue processing halted.\n"
                        + "Exception processing student submission",
                        e );
-            Application.emailExceptionToAdmins(
+
+            new GraderKilledMessage(e).send();
+
+/*            Application.emailExceptionToAdmins(
                     e,
                     null,
                     "Job queue processing halted."
-                );
+                );*/
+
             log.fatal( "Aborting: job queue processing halted." );
             ERXApplication.erxApplication().killInstance();
         }
@@ -411,29 +419,24 @@ public class GraderQueueProcessor
             ));
 
         // Set up the properties to pass to execution scripts
-        WCProperties gradingProperties = new WCProperties();
-        File gradingPropertiesFile = new File(job.submission().resultDirName(),
-            SubmissionResult.propertiesFileName() );
-        // Initial default values
-        gradingProperties.setProperty( "numReports", "0" );
-        Number toolPts = job.submission().assignmentOffering().assignment()
-            .submissionProfile().toolPointsRaw();
-        gradingProperties.setProperty( "max.score.tools",
-            ( toolPts == null ) ? "0" : toolPts.toString() );
-        double maxCorrectnessScore =  job.submission().assignmentOffering()
-            .assignment().submissionProfile().availablePoints();
-        if ( toolPts != null )
+        WCProperties gradingProperties;
+        File gradingPropertiesFile = job.submission().gradingPropertiesFile();
+
+        try
         {
-            maxCorrectnessScore -= toolPts.doubleValue();
+            gradingProperties =
+                job.submission().createInitialGradingPropertiesFile();
         }
-        Number TAPts =  job.submission().assignmentOffering().assignment()
-            .submissionProfile().taPointsRaw();
-        if ( TAPts != null )
+        catch (IOException e)
         {
-            maxCorrectnessScore -= TAPts.doubleValue();
+            technicalFault( job,
+                    "could not create the initial grading.properties file: "
+                    + gradingPropertiesFile.getAbsolutePath() + ": "
+                    + e.getMessage(),
+                    null,
+                    gradingPropertiesFile.getParentFile());
+            return;
         }
-        gradingProperties.setProperty( "max.score.correctness",
-            Double.toString( maxCorrectnessScore ) );
 
         writeOutSavedGradingProperties(job, gradingProperties);
 
@@ -1051,7 +1054,11 @@ public class GraderQueueProcessor
         if ( adminReports.size() > 0 )
         {
             Submission submission = submissionResult.submission();
-            AssignmentOffering assignment = submission.assignmentOffering();
+
+            new AdminReportsForSubmissionMessage(submission, adminReports)
+                .send();
+
+/*            AssignmentOffering assignment = submission.assignmentOffering();
             Application.sendAdminEmail(
                 null,
                 submission.assignmentOffering().courseOffering()
@@ -1064,7 +1071,7 @@ public class GraderQueueProcessor
                     ? ""
                     : ( ", " + assignment.titleString() ) ),
                 "Reports addressed to the adminstrator are attached.\n",
-                adminReports );
+                adminReports );*/
         }
     }
 
@@ -1422,7 +1429,15 @@ public class GraderQueueProcessor
         job.setPaused( true );
         faultOccurredInStep = true;
 
-        Vector<String> attachments = null;
+        SubmissionSuspendedMessage msg = new SubmissionSuspendedMessage(
+                job.submission(), e, stage, attachmentsDir);
+
+        log.info("technicalFault(): " + msg.title());
+        log.info(msg.shortBody(), e);
+
+        msg.send();
+
+/*        Vector<String> attachments = null;
         if ( attachmentsDir != null  &&  attachmentsDir.exists() )
         {
             attachments = new Vector<String>();
@@ -1456,7 +1471,7 @@ public class GraderQueueProcessor
                                     true,
                                     subject,
                                     errorMsg,
-                                    attachments );
+                                    attachments );*/
     }
 
 

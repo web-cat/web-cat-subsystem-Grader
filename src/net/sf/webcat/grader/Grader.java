@@ -26,11 +26,17 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.dbupdate.UpdateEngine;
+import net.sf.webcat.grader.messaging.AdminReportsForSubmissionMessage;
+import net.sf.webcat.grader.messaging.GraderKilledMessage;
+import net.sf.webcat.grader.messaging.GraderMarkupParseError;
+import net.sf.webcat.grader.messaging.GradingResultsAvailableMessage;
+import net.sf.webcat.grader.messaging.SubmissionSuspendedMessage;
 import er.extensions.eof.ERXConstant;
 import java.util.Enumeration;
 import java.io.*;
 import java.util.zip.*;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 //-------------------------------------------------------------------------
@@ -83,7 +89,16 @@ public class Grader
     {
         super.init();
 
+        // Register notification messages.
+
+        GradingResultsAvailableMessage.register();
+        AdminReportsForSubmissionMessage.register();
+        SubmissionSuspendedMessage.register();
+        GraderKilledMessage.register();
+        GraderMarkupParseError.register();
+
         // Install or update any plug-ins that need it
+
         GradingPlugin.autoUpdateAndInstall();
     }
 
@@ -697,7 +712,7 @@ public class Grader
         }
         catch ( Exception e )
         {
-            Application.emailExceptionToAdmins( e, context, null );
+            new UnexpectedExceptionMessage(e, context, null, null).send();
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             result.cancelLocalChanges();

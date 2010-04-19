@@ -27,6 +27,7 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXArrayUtilities;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -212,9 +213,9 @@ public class FullPrintableReport
             }
             catch ( Exception e )
             {
-                Application.emailExceptionToAdmins( e, context,
+                new UnexpectedExceptionMessage(e, context, null,
                     "Exception in setUpTask() preparing full printable report."
-                    );
+                    ).send();
             }
             finally
             {

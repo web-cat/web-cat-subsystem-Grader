@@ -26,6 +26,7 @@ import com.webobjects.foundation.*;
 import net.sf.webcat.archives.ArchiveManager;
 import net.sf.webcat.archives.IArchiveEntry;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -112,11 +113,8 @@ public class ConfirmSubmissionPage
                     + "reported to the administrator.  If you "
                     + "have uploaded the wrong file by accident, "
                     + "use the Back button to try again." );
-                Application.emailExceptionToAdmins(
-                    e,
-                    context(),
-                    "Exception unzipping submission file"
-                );
+                new UnexpectedExceptionMessage(e, context(), null,
+                    "Exception unzipping submission file").send();
             }
         }
         else

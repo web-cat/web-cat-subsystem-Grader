@@ -26,6 +26,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -94,8 +95,8 @@ public class SelectSubmissionProfile
         catch ( Exception e )
         {
             log.error( "exception searching for sub profiles", e );
-            Application.emailExceptionToAdmins(
-                e, context(), "Exception searching for sub profiles" );
+            new UnexpectedExceptionMessage(e, context(), null,
+                    "Exception searching for sub profiles").send();
             try
             {
                 // Try fetching all of the submission profiles, which should
@@ -110,8 +111,8 @@ public class SelectSubmissionProfile
             catch ( Exception e2 )
             {
                 log.error( "2nd exception searching for sub profiles", e2 );
-                Application.emailExceptionToAdmins(
-                    e2, context(), "2nd exception searching for sub profiles" );
+                new UnexpectedExceptionMessage(e2, context(), null,
+                        "2nd exception searching for sub profiles").send();
                 // OK, just kill the second part of the qualifier to
                 // get only this user's stuff
                 gradingProfileDisplayGroup.setQualifier(

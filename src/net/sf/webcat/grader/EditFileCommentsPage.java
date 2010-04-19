@@ -27,6 +27,7 @@ import com.webobjects.foundation.*;
 import java.io.*;
 import java.util.*;
 import net.sf.webcat.core.*;
+import net.sf.webcat.grader.messaging.GraderMarkupParseError;
 import org.apache.log4j.Logger;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
@@ -508,7 +509,15 @@ public class EditFileCommentsPage
             log.error( "exception reading comments for "
                        + prefs().submissionFileStats().markupFile().getPath(),
                        e );
-            Application.sendAdminEmail(
+
+            new GraderMarkupParseError(prefs().submission(),
+                    GraderMarkupParseError.LOCATION_EDIT_FILE_COMMENTS,
+                    e, context(),
+                    prefs().submissionFileStats().markupFile(),
+                    "Raw XML (value of codeWithComments):\n"
+                    + codeWithCommentsToStore).send();
+
+/*            Application.sendAdminEmail(
                 null,
                 prefs().submission().assignmentOffering().courseOffering()
                     .instructors(),
@@ -522,7 +531,8 @@ public class EditFileCommentsPage
                 + ( (Application)application() )
                       .informationForExceptionInContext( e, null, context() )
                 + "\n\nRaw XML (value of codeWithComments):\n"
-                + codeWithCommentsToStore, null );
+                + codeWithCommentsToStore, null );*/
+
             throw e;
         }
         // Let the raw string be garbage collected, now that we're

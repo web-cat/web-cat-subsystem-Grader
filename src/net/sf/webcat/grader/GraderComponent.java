@@ -29,6 +29,7 @@ import com.webobjects.foundation.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -207,8 +208,8 @@ public class GraderComponent
             }
             catch ( Exception e)
             {
-                Application.emailExceptionToAdmins(
-                    e, context(), "failure initializing prefs!" );
+                new UnexpectedExceptionMessage(e, context(), null,
+                        "failure initializing prefs!").send();
             }
             finally
             {

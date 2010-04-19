@@ -26,6 +26,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
 import java.io.*;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.apache.log4j.Logger;
 
 //-------------------------------------------------------------------------
@@ -128,11 +129,8 @@ public class GraderSubmissionUploadComponent
         catch ( Exception e )
         {
             // Security exception
-            Application.emailExceptionToAdmins(
-                    e,
-                    context,
-                    "Exception creating submission directory"
-                );
+            new UnexpectedExceptionMessage(e, context, null,
+                    "Exception creating submission directory").send();
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
             submissionInProcess().setSubmission( null );
@@ -156,11 +154,8 @@ public class GraderSubmissionUploadComponent
         catch ( Exception e )
         {
             // Do something with the exception
-            Application.emailExceptionToAdmins(
-                    e,
-                    context,
-                    "Exception uploading submission file"
-                );
+            new UnexpectedExceptionMessage(e, context, null,
+                    "Exception uploading submission file").send();
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
             submissionInProcess().setSubmission( null );

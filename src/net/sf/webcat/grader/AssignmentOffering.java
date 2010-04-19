@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 import net.sf.webcat.core.*;
+import net.sf.webcat.core.messaging.UnexpectedExceptionMessage;
 import net.sf.webcat.grader.graphs.*;
 import org.apache.log4j.Logger;
 
@@ -875,11 +876,8 @@ public class AssignmentOffering
             }
             catch ( NumberFormatException e )
             {
-                Application.emailExceptionToAdmins(
-                    e,
-                    null,
-                    "trying to parse course number = '" + valueObj + "'"
-                    );
+                new UnexpectedExceptionMessage(e, null, null,
+                    "trying to parse course number = '" + valueObj + "'").send();
             }
         }
         boolean forStaff = ERXValueUtilities.booleanValue(
