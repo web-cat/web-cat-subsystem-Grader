@@ -1,0 +1,5 @@
+{
+    systemStatusRows = net.sf.webcat.grader.GraderSystemStatusRows;
+
+    homeStatus = net.sf.webcat.grader.GraderHomeStatus;
+}

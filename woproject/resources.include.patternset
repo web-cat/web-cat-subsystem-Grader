@@ -8,3 +8,4 @@ Tabs.plist
 config.plist
 QueryAssistants.plist
 BatchHandlers.plist
+SubsystemFragments.plist

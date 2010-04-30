@@ -184,7 +184,7 @@ public class Grader
      * @param wodBuffer add the binding definitions (the .wod file contents)
      *        for the subsystem's fragment to this buffer
      */
-    public void collectSubsystemFragments(
+/*    public void collectSubsystemFragments(
         String fragmentKey, StringBuffer htmlBuffer, StringBuffer wodBuffer )
     {
         if ( fragmentKey.equals(
@@ -207,7 +207,7 @@ public class Grader
                 + "{}\n"
             );
         }
-    }
+    }*/
 
 
     // ----------------------------------------------------------

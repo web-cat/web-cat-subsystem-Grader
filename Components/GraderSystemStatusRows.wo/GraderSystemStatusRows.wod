@@ -1,32 +1,32 @@
 AverageTimePerJob: WOString {
-	dateformat = averageTimePerJobFormat;
-	value      = averageTimePerJob;
+    dateformat = averageTimePerJobFormat;
+    value      = averageTimePerJob;
 }
 
 EstimatedWait: WOString {
-	dateformat = estimatedWaitFormat;
-	value      = estimatedWait;
+    dateformat = estimatedWaitFormat;
+    value      = estimatedWait;
 }
 
 HaltedCount: WOString {
-	value = haltedCount;
+    value = haltedCount;
 }
 
 MostRecentJobWait: WOString {
-	dateformat = mostRecentJobWaitFormat;
-	value      = mostRecentJobWait;
+    dateformat = mostRecentJobWaitFormat;
+    value      = mostRecentJobWait;
 }
 
 ProcessedJobCount: WOString {
-	value = processedJobCount;
+    value = processedJobCount;
 }
 
 QueuedJobCount: WOString {
-	value = queuedJobCount;
+    value = queuedJobCount;
 }
 
 StalledJobCount: WOString {
-	value = stalledJobCount;
+    value = stalledJobCount;
 }
 
 TR : net.sf.webcat.core.TableRow {
