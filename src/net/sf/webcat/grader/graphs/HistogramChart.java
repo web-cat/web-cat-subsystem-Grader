@@ -26,9 +26,11 @@ import com.webobjects.foundation.*;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import net.sf.webcat.core.WCComponent;
 import org.apache.log4j.Logger;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -43,7 +45,7 @@ import org.jfree.chart.title.TextTitle;
  * @version $Id$
  */
 public class HistogramChart
-    extends WOComponent
+    extends WCComponent
 {
     //~ Constructors ..........................................................
 
@@ -112,15 +114,15 @@ public class HistogramChart
     // ----------------------------------------------------------
     protected JFreeChart generateChart()
     {
+        WCChartTheme chartTheme = new WCChartTheme(user().theme());
+        ChartFactory.setChartTheme(chartTheme);
         JFreeChart chart = org.jfree.chart.ChartFactory.createHistogram(
-            title, xAxisLabel, yAxisLabel, dataset(), orientation,
+            null, xAxisLabel, yAxisLabel, dataset(), orientation,
             false, false, false );
-        chart.setBackgroundPaint( Color.white );
-        TextTitle tt = chart.getTitle();
-        tt.setPaint( DARK_GREEN );
+
         XYPlot plot = chart.getXYPlot();
         XYItemRenderer renderer = plot.getRenderer();
-        renderer.setSeriesPaint( 0, DARK_GREEN );
+        renderer.setSeriesPaint( 0, chartTheme.seriesPaintAtIndex(0) );
         if ( markValue != null )
         {
             plot.setDomainCrosshairVisible( true );

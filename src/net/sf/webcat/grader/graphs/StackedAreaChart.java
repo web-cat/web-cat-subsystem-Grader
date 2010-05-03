@@ -29,9 +29,13 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import net.sf.webcat.core.WCComponent;
 import org.apache.log4j.Logger;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.PeriodAxis;
 import org.jfree.chart.axis.PeriodAxisLabelInfo;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -47,7 +51,7 @@ import org.jfree.data.xy.TableXYDataset;
  * @version $Id$
  */
 public class StackedAreaChart
-extends WOComponent
+extends WCComponent
 {
     //~ Constructors ..........................................................
 
@@ -81,55 +85,94 @@ extends WOComponent
     {
         if ( pngChart == null )
         {
+            WCChartTheme chartTheme = new WCChartTheme(user().theme());
+            ChartFactory.setChartTheme(chartTheme);
             JFreeChart chart = org.jfree.chart.ChartFactory
                 .createStackedXYAreaChart(
-                    title, xAxisLabel, yAxisLabel, dataset, orientation,
+                    null, xAxisLabel, yAxisLabel, dataset, orientation,
                     true, false, false );
-            chart.setBackgroundPaint( Color.white );
-            TextTitle tt = chart.getTitle();
-            tt.setPaint( darkGreen );
+
             XYPlot plot = chart.getXYPlot();
 
             long diff = (long)dataset.getXValue( 0, dataset.getItemCount() - 1 )
                 - (long)dataset.getXValue( 0, 0 );
             GregorianCalendar calDiff = new GregorianCalendar();
             calDiff.setTime( new NSTimestamp( diff ) );
+
             // Set the time axis
             PeriodAxis axis = new PeriodAxis( null );// ( "Date" );
             PeriodAxisLabelInfo labelinfo[] = new PeriodAxisLabelInfo[2];
-            if ( calDiff.get( Calendar.DAY_OF_YEAR ) > 1 )
+
+            if (calDiff.get(Calendar.DAY_OF_YEAR) > 1)
             {
                 // axis.setTimeZone(TimeZone.getTimeZone("Pacific/Auckland"));
-                axis.setAutoRangeTimePeriodClass(
-                    org.jfree.data.time.Day.class );
+                axis.setAutoRangeTimePeriodClass(org.jfree.data.time.Day.class);
+                axis.setMajorTickTimePeriodClass(org.jfree.data.time.Week.class);
                 labelinfo[0] = new PeriodAxisLabelInfo(
-                    org.jfree.data.time.Day.class, new SimpleDateFormat( "d" ));
+                    org.jfree.data.time.Day.class,
+                    new SimpleDateFormat("d"),
+                    PeriodAxisLabelInfo.DEFAULT_INSETS,
+                    chartTheme.smallFont(),
+                    chartTheme.textColor(),
+                    true,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_STROKE,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_PAINT);
                 labelinfo[1] = new PeriodAxisLabelInfo(
                     org.jfree.data.time.Month.class,
-                    new SimpleDateFormat( "MMM" ) );
+                    new SimpleDateFormat("MMM"),
+                    PeriodAxisLabelInfo.DEFAULT_INSETS,
+                    chartTheme.smallFont(),
+                    chartTheme.textColor(),
+                    true,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_STROKE,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_PAINT);
             }
             else
             {
                 axis.setAutoRangeTimePeriodClass(
-                    org.jfree.data.time.Hour.class );
+                        org.jfree.data.time.Hour.class);
                 labelinfo[0] = new PeriodAxisLabelInfo(
-                    org.jfree.data.time.Day.class, new SimpleDateFormat( "ha" ));
+                    org.jfree.data.time.Day.class,
+                    new SimpleDateFormat("ha"),
+                    PeriodAxisLabelInfo.DEFAULT_INSETS,
+                    chartTheme.smallFont(),
+                    chartTheme.textColor(),
+                    true,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_STROKE,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_PAINT);
                 labelinfo[1] = new PeriodAxisLabelInfo(
                     org.jfree.data.time.Month.class,
-                    new SimpleDateFormat( "MMM-d" ) );
+                    new SimpleDateFormat("MMM-d"),
+                    PeriodAxisLabelInfo.DEFAULT_INSETS,
+                    chartTheme.smallFont(),
+                    chartTheme.textColor(),
+                    true,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_STROKE,
+                    PeriodAxisLabelInfo.DEFAULT_DIVIDER_PAINT);
             }
             axis.setLabelInfo( labelinfo );
             plot.setDomainAxis( axis );
 
+            NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+            NumberTickUnit tickUnit = new NumberTickUnit(5);
+            rangeAxis.setTickUnit(tickUnit);
+
             XYItemRenderer renderer = plot.getRenderer();
-            renderer.setSeriesPaint( 0, darkGreen );
-            if ( markValue != null )
+            renderer.setSeriesPaint(0, chartTheme.seriesPaintAtIndex(0));
+            renderer.setSeriesPaint(1, chartTheme.seriesPaintAtIndex(1));
+
+            plot.setDomainMinorGridlinesVisible(false);
+            plot.setRangeMinorGridlinesVisible(false);
+
+            if (markValue != null)
             {
-                plot.setDomainCrosshairVisible( true );
-                plot.setDomainCrosshairValue( markValue.doubleValue() );
-                plot.setDomainCrosshairPaint( Color.red );
-                plot.setDomainCrosshairStroke( myStroke );
+                plot.setDomainCrosshairVisible(true);
+                plot.setDomainCrosshairValue(markValue.doubleValue());
+                plot.setDomainCrosshairPaint(Color.red);
+                plot.setDomainCrosshairStroke(myStroke);
             }
+
+            chart.getLegend().setBorder(0, 0, 0, 0);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
