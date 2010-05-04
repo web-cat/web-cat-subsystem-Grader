@@ -21,14 +21,15 @@
 
 package net.sf.webcat.grader.graphs;
 
-import com.webobjects.appserver.*;
-import com.webobjects.foundation.*;
-import er.extensions.eof.ERXConstant;
-import net.sf.webcat.grader.*;
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.data.xy.*;
+import net.sf.webcat.grader.SubmissionResult;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.data.xy.AbstractIntervalXYDataset;
 import org.jfree.data.xy.IntervalXYDataset;
+import org.jfree.data.xy.XYDataset;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.foundation.NSArray;
+import er.extensions.eof.ERXConstant;
 
 //-------------------------------------------------------------------------
 /**
@@ -37,8 +38,7 @@ import org.jfree.data.xy.IntervalXYDataset;
  * @author  Stephen Edwards
  * @version $Id$
  */
-public class SubmissionCountChart
-    extends HistogramChart
+public class SubmissionCountChart extends HistogramChart
 {
     //~ Constructors ..........................................................
 
@@ -55,38 +55,58 @@ public class SubmissionCountChart
 
     //~ KVC Attributes (must be public) .......................................
 
-    public NSArray submissionResults;
+    public NSArray<SubmissionResult> submissionResults;
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public IntervalXYDataset dataset()
+    @Override
+    public boolean sizesToFit()
     {
-        IntervalXYDataset dataset = super.dataset();
-        if ( dataset == null )
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean shouldDisplay()
+    {
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public XYDataset dataset()
+    {
+        IntervalXYDataset dataset = (IntervalXYDataset) super.dataset();
+
+        if (dataset == null)
         {
             dataset = new Dataset();
-            super.setDataset( dataset );
+            super.setDataset(dataset);
         }
+
         return dataset;
     }
 
 
     // ----------------------------------------------------------
-    protected JFreeChart generateChart()
+    @Override
+    protected JFreeChart generateChart(WCChartTheme chartTheme)
     {
-        JFreeChart chart = super.generateChart();
-        NumberAxis numberaxis = (NumberAxis)chart.getXYPlot().getDomainAxis();
-        numberaxis.setStandardTickUnits(
-            NumberAxis.createIntegerTickUnits() );
+        JFreeChart chart = super.generateChart(chartTheme);
+
+        NumberAxis domainAxis = (NumberAxis) chart.getXYPlot().getDomainAxis();
+        domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
         return chart;
     }
 
 
     // ----------------------------------------------------------
-    private class Dataset
-        extends AbstractIntervalXYDataset
+    private class Dataset extends AbstractIntervalXYDataset
     {
         public static final String SUBMISSION_COUNT_KEY = "No. of Submissions";
 
@@ -98,25 +118,25 @@ public class SubmissionCountChart
 
 
         // ----------------------------------------------------------
-        public Comparable getSeriesKey( int series )
+        public Comparable getSeriesKey(int series)
         {
-            return ( series == 0 )
+            return (series == 0)
                 ? SUBMISSION_COUNT_KEY
                 : null;
         }
 
 
         // ----------------------------------------------------------
-        public int indexOf( Comparable seriesKey )
+        public int indexOf(Comparable seriesKey)
         {
-            return SUBMISSION_COUNT_KEY.equals( seriesKey )
+            return SUBMISSION_COUNT_KEY.equals(seriesKey)
                 ? 0
                 : -1;
         }
 
 
         // ----------------------------------------------------------
-        public int getItemCount( int series )
+        public int getItemCount(int series)
         {
             return submissionResults.count();
         }
@@ -125,94 +145,92 @@ public class SubmissionCountChart
         // ----------------------------------------------------------
         public Number getX( int series, int item )
         {
-            return ERXConstant.integerForInt( item + 1 );
+            return ERXConstant.integerForInt(item + 1);
         }
 
 
         // ----------------------------------------------------------
-        public double getXValue( int series, int item )
+        public double getXValue(int series, int item)
         {
             return item + 1;
         }
 
 
         // ----------------------------------------------------------
-        public Number getY( int series, int item )
+        public Number getY(int series, int item)
         {
             return ERXConstant.integerForInt(
-                submissionResult( item ).submission().submitNumber() );
+                submissionResult(item).submission().submitNumber());
         }
 
 
         // ----------------------------------------------------------
-        public double getYValue( int series, int item )
+        public double getYValue(int series, int item)
         {
-            return submissionResult( item ).submission().submitNumber();
+            return submissionResult(item).submission().submitNumber();
         }
 
 
         // ----------------------------------------------------------
-        public Number getEndX( int series, int item )
+        public Number getEndX(int series, int item)
         {
-            return new Double( getEndXValue( series, item ) );
+            return Double.valueOf(getEndXValue(series, item));
         }
 
 
         // ----------------------------------------------------------
-        public double getEndXValue( int series, int item )
+        public double getEndXValue(int series, int item)
         {
-            return getXValue( series, item ) + 0.5;
+            return getXValue(series, item) + 0.5;
         }
 
 
         // ----------------------------------------------------------
-        public Number getEndY( int series, int item )
+        public Number getEndY(int series, int item)
         {
-            return getY( series, item );
+            return getY(series, item);
         }
 
 
         // ----------------------------------------------------------
-        public double getEndYValue( int series, int item )
+        public double getEndYValue(int series, int item)
         {
-            return getYValue( series, item );
+            return getYValue(series, item);
         }
 
 
         // ----------------------------------------------------------
-        public Number getStartX( int series, int item )
+        public Number getStartX(int series, int item)
         {
-            return new Double( getStartXValue( series, item ) );
+            return Double.valueOf(getStartXValue(series, item));
         }
 
 
         // ----------------------------------------------------------
-        public double getStartXValue( int series, int item )
+        public double getStartXValue(int series, int item)
         {
-            return getXValue( series, item ) - 0.5;
+            return getXValue(series, item) - 0.5;
         }
 
 
         // ----------------------------------------------------------
-        public Number getStartY( int series, int item )
+        public Number getStartY(int series, int item)
         {
-            return getY( series, item );
+            return getY(series, item);
         }
 
 
         // ----------------------------------------------------------
-        public double getStartYValue( int series, int item )
+        public double getStartYValue(int series, int item)
         {
-            return getYValue( series, item );
+            return getYValue(series, item);
         }
 
 
         // ----------------------------------------------------------
-        private SubmissionResult submissionResult( int item )
+        private SubmissionResult submissionResult(int item)
         {
-            return (SubmissionResult)submissionResults.objectAtIndex( item );
+            return submissionResults.objectAtIndex(item);
         }
     }
-
-
 }
