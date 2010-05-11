@@ -13,7 +13,7 @@ Deadline: WOString {
     value     = anAssignmentOffering.dueDate;
 }
 
-Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = anAssignmentOffering.graphSummary;
 }
 
@@ -23,7 +23,7 @@ Name: WOHyperlink {
     string = anAssignmentOffering.assignment.titleString;
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : org.webcat.core.WizardPage {
     finishEnabled = false;
 }
 
@@ -37,7 +37,7 @@ SuspendedCount: WOString {
     value = anAssignmentOffering.getSuspendedSubs.count;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
     showError = gradingIsHalted;
     // showError does not use the raw attribute, since we're using this

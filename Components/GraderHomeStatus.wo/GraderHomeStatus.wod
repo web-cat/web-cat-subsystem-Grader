@@ -57,7 +57,7 @@ GradeAssignment: WOActiveImage {
 	title     = "Grade student submissions";
 }
 
-Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = assignment.graphSummary;
     markScore    = mostRecentScore;
 }
@@ -143,13 +143,13 @@ SuspendedCount: WOString {
     value = assignment.getSuspendedSubs.count;
 }
 
-TR : net.sf.webcat.core.TableRow {
+TR : org.webcat.core.TableRow {
     index       = index;
     showCaution = job.paused;
     showError   = job.submission.assignmentOffering.gradingSuspended;
 }
 
-TR2 : net.sf.webcat.core.TableRow {
+TR2 : org.webcat.core.TableRow {
     index       = index;
     showCaution = assignment.isLate;
     showError   = assignment.gradingSuspended;

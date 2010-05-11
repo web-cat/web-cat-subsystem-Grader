@@ -1,4 +1,4 @@
-<webobject name="HasEnqueuedJobs"><wo:net.sf.webcat.core.WCPageModule title="Submissions in the Queue">
+<webobject name="HasEnqueuedJobs"><wo:org.webcat.core.WCPageModule title="Submissions in the Queue">
 <p>
 The following submissions are currently queued for processing:
 </p>
@@ -13,9 +13,9 @@ The following submissions are currently queued for processing:
 <p>(<b>Suspended</b> submissions must
 await action from the instructor or adminstrator for completion; red lines
 indicate assignments where the instructor has temporarily suspended all grading.)</p>
-</wo:net.sf.webcat.core.WCPageModule></webobject>
+</wo:org.webcat.core.WCPageModule></webobject>
 
-<wo:net.sf.webcat.core.WCPageModule title="Assignments Accepting Submissions">
+<wo:org.webcat.core.WCPageModule title="Assignments Accepting Submissions">
 <webobject name="HasAssignments">
 <table><thead>
 <tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr></thead><tbody>
@@ -31,10 +31,10 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <p>There are no assignments currently accepting submissions in your course(s).
 </p>
 </webobject>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
 <webobject name="IsFacultyUser"><webobject name="HasUpcomingAssignments">
-<wo:net.sf.webcat.core.WCPageModule title="Other Upcoming Assignment Deadlines" open="false">
+<wo:org.webcat.core.WCPageModule title="Other Upcoming Assignment Deadlines" open="false">
 <table><thead>
 <tr><th>Assignment</th><th>Due</th><webobject name="IsAdminUser"><th>Action</th></webobject></tr></thead><tbody>
 <webobject name="UpcomingAssignmentRepetition">
@@ -44,4 +44,4 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <td class="nowrap"><webobject name="DueDate"/></td>
 <webobject name="IsAdminUser"><td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="GradeAssignment"/><webobject name="EditAssignment"/></td></webobject></webobject>
 </webobject></tbody></table>
-</wo:net.sf.webcat.core.WCPageModule></webobject></webobject>
+</wo:org.webcat.core.WCPageModule></webobject></webobject>

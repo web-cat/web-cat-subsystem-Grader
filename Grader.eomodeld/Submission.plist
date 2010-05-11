@@ -46,7 +46,7 @@
         submitNumber, 
         userId
     ); 
-    className = "net.sf.webcat.grader.Submission"; 
+    className = "org.webcat.grader.Submission"; 
     classProperties = (
         assignmentOffering, 
         enqueuedJobs, 

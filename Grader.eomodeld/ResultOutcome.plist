@@ -7,7 +7,7 @@
             userInfo = {
                 adaptorValueConversionMethodName = archiveData;
                 isMutable = true;
-                valueClassName = "net.sf.webcat.core.MutableDictionary";
+                valueClassName = "org.webcat.core.MutableDictionary";
                 valueFactoryMethodName = objectWithArchiveData;
             };
         },
@@ -23,7 +23,7 @@
         }
     );
     attributesUsedForLocking = (index, resultId, submissionId, tag, updateMutableFields);
-    className = "net.sf.webcat.grader.ResultOutcome";
+    className = "org.webcat.grader.ResultOutcome";
     classProperties = (contents, index, submission, submissionResult, tag, updateMutableFields);
     externalName = TRESULTOUTCOME;
     fetchSpecificationDictionary = {};

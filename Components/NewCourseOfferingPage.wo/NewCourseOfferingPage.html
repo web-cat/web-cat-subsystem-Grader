@@ -1,5 +1,5 @@
 <webobject name="Page">
-<wo:net.sf.webcat.core.WCPageModule title="Define Your Course Offering" id="courseblock">
+<wo:org.webcat.core.WCPageModule title="Define Your Course Offering" id="courseblock">
 <wo:WCForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <table class="layout"><tbody>
 <tr><td class="R"><label for="semester">Semester:</label></td><td><wo name="SemesterList"/>
@@ -26,7 +26,7 @@
 <tr><td class="R"><label for="crn">CRN:</label></td><td><wo name="CRN"/> <wo name="CRNInfo"/></td></tr>
 <tr><td></td><td><wo:WCButton action="$next">Create</wo:WCButton></td></tr>
 </tbody></table>
-</wo:WCForm></wo:net.sf.webcat.core.WCPageModule>
+</wo:WCForm></wo:org.webcat.core.WCPageModule>
 
 <wo:WCDialog title="Create a New Semester" id="new-semester" okAction="$createSemester">
   <table class="layout"><tbody>

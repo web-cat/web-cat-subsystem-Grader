@@ -22,12 +22,12 @@ AssignmentTree: WCCheckTree {
     showRoot = false;
 }
 
-AssignmentInfo: net.sf.webcat.core.PopUpInfo {
+AssignmentInfo: org.webcat.core.PopUpInfo {
     title   = "Assignments";
     message = "The assignments listed here are those that belong to <b>any</b> of the courses chosen to the left.";
 }
 
-SubmissionForGradingInfo: net.sf.webcat.core.PopUpInfo {
+SubmissionForGradingInfo: org.webcat.core.PopUpInfo {
     title   = "Submission For Grading";
     message = "The <b>submission for grading</b> for a student is the one that has been manually graded by the instructor or TA, if any. If none have yet been manually graded, the most recent submission by that student is used.";
 }

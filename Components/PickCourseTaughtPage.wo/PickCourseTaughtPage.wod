@@ -21,7 +21,7 @@ NotTeachingCourses: WOConditional {
     negate    = true;
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : org.webcat.core.WizardPage {
     finishEnabled = false;
 }
 
@@ -55,6 +55,6 @@ TeachingRepetition: WORepetition {
 	index = index;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }

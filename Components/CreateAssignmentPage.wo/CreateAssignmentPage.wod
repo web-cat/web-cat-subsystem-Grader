@@ -26,7 +26,7 @@ Name: WOHyperlink {
     string = assignment.name;
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : org.webcat.core.WizardPage {
     finishEnabled = false;
     sideStepTitle = "Create or Reuse?";
 }
@@ -45,6 +45,6 @@ SemesterList: WOPopUpButton {
     onchange          = "submitForm()";
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }

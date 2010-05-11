@@ -11,7 +11,7 @@
  * modelName: Value is a String that specifies the fully-qualified name of the
  *     the class that represents the model that stores the state of this query
  *     assistant. This class must implement the
- *     net.sf.webcat.reporter.queryassistants.IQueryAssistantModel interface
+ *     org.webcat.reporter.queryassistants.IQueryAssistantModel interface
  *     and have a parameterless constructor.
  *
  * editorComponentName: Value is a String that specifies the full-qualified
@@ -31,17 +31,17 @@
  */
 
 {
-    "net.sf.webcat.grader.objectquery.courseAndAssignmentSubmissions" = {
+    "org.webcat.grader.objectquery.courseAndAssignmentSubmissions" = {
         entities = ( Submission );
-        modelName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentSubmissionsModel";
-        editorComponentName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentSubmissionsAssistant";
+        modelName = "org.webcat.grader.objectquery.CourseAndAssignmentSubmissionsModel";
+        editorComponentName = "org.webcat.grader.objectquery.CourseAndAssignmentSubmissionsAssistant";
         description = "Get submissions for an assignment| by selecting a set of courses and an assignment offered in those courses.";
     };
 
-    "net.sf.webcat.grader.objectquery.courseAndAssignmentResultOutcomes" = {
+    "org.webcat.grader.objectquery.courseAndAssignmentResultOutcomes" = {
         entities = ( ResultOutcome );
-        modelName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesModel";
-        editorComponentName = "net.sf.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesAssistant";
+        modelName = "org.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesModel";
+        editorComponentName = "org.webcat.grader.objectquery.CourseAndAssignmentResultOutcomesAssistant";
         description = "Get result outcomes for an assignment| by selecting a set of courses and an assignment offered in those courses.";
     };
 }

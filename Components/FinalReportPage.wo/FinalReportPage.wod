@@ -64,7 +64,7 @@ MostRecentJobWait: WOString {
 	dateformat = mostRecentJobWaitFormat;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     title     = "Your Assignment Submission Results";
     permalink = submission.permalink;
 }
@@ -79,7 +79,7 @@ ReturnToGrading: WCButton {
     action = next;
 }
 
-ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
+ScoreSummary: org.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = false;
     submission = submission;
 }
@@ -99,46 +99,46 @@ SubmitAgain: WCButton {
     action = submitAgain;
 }
 
-TAComments: net.sf.webcat.core.FormattedString {
+TAComments: org.webcat.core.FormattedString {
 	value  = result.comments;
 	format = result.commentFormat;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "File Name";
 	key = "sourceFileName";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "Automatically Graded Points Lost";
 	key = "deductions";
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = result.statElementsLabel;
 	key = "gradedElementsCoverage";
 }
 
-WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "Automatically Graded Feedback Comments";
 	key = "remarks";
 }
 
-WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+WCSortOrder5: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "Staff Feedback Comments";
 	key = "staffRemarks";
 }
 
-WCSortOrder6: net.sf.webcat.core.WCSortOrder {
+WCSortOrder6: org.webcat.core.WCSortOrder {
 	displayGroup = statsDisplayGroup;
 	displayKey = "Staff Points Lost";
 	key = "taDeductions";

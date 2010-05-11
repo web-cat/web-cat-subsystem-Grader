@@ -7,7 +7,7 @@
             userInfo = {
                 adaptorValueConversionMethodName = archiveData; 
                 isMutable = true; 
-                valueClassName = "net.sf.webcat.core.MutableDictionary"; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
                 valueFactoryMethodName = objectWithArchiveData; 
             }; 
         }, 
@@ -61,7 +61,7 @@
             userInfo = {
                 isScalar = true; 
                 scalarConversionMethodName = byteValue; 
-                scalarDefault = "net.sf.webcat.core.Status.TO_DO"; 
+                scalarDefault = "org.webcat.core.Status.TO_DO"; 
                 type = byte; 
                 valueClassName = Byte; 
             }; 
@@ -98,7 +98,7 @@
         }
     ); 
     attributesUsedForLocking = (commentFormat, isMostRecent, statElementsLabel, status, updateMutableFields); 
-    className = "net.sf.webcat.grader.SubmissionResult"; 
+    className = "org.webcat.grader.SubmissionResult"; 
     classProperties = (
         accumulatedSavedProperties, 
         commentFormat, 

@@ -23,7 +23,7 @@ FolderName: WCTextBox {
     style = "width: 15em;";
 }
 
-FileBrowser: net.sf.webcat.core.FileBrowser {
+FileBrowser: org.webcat.core.FileBrowser {
     title                 = browserTitle;
     file                  = base;
     isEditable            = isEditable;
@@ -37,7 +37,7 @@ FileBrowser: net.sf.webcat.core.FileBrowser {
     currentSelection      = currentSelection;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     title = sideStepTitle;
 }
 

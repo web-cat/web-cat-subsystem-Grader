@@ -45,7 +45,7 @@ Instructions: WOString {
 	escapeHTML = false;
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
     hideClosedAssignmentsFromStudents = true;
 }
 
@@ -75,37 +75,37 @@ StudentName: WOString {
 	value = user.nameAndUid;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Time";
 	key = "submitTime";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Score";
 	key = "result.finalScore";
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Submission No.";
 	key = "submitNumber";
 }
 
-//Page: net.sf.webcat.core.WizardPage {
+//Page: org.webcat.core.WizardPage {
 //    finishEnabled = false;
 //}
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     permalink = permalink;
 }
 
-BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator: org.webcat.core.WCBatchNavigator {
     displayGroup = submissionDisplayGroup;
     persistentKey = "UploadSubmissionPage.batchSize";
 }

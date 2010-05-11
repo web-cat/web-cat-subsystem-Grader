@@ -2,7 +2,7 @@ AssignmentName: WOString {
     value = prefs.assignmentOffering.titleString;
 }
 
-Chart1: net.sf.webcat.grader.graphs.HistogramChart {
+Chart1: org.webcat.grader.graphs.HistogramChart {
     dataset    = prefs.assignmentOffering.graphSummary.frequencyDataset;
     title      = "Score Distribution for the Class";
     xAxisLabel = "Score";
@@ -10,33 +10,33 @@ Chart1: net.sf.webcat.grader.graphs.HistogramChart {
     markValue  = mostRecentScore;
 }
 
-Chart2: net.sf.webcat.grader.graphs.StackedAreaChart {
+Chart2: org.webcat.grader.graphs.StackedAreaChart {
     dataset    = correctnessToolsDataset;
     title      = "Your Score Across Your Submissions";
     xAxisLabel = "Date";
     yAxisLabel = "Your Score";
 }
 
-Chart3: net.sf.webcat.grader.graphs.StackedAreaChart {
+Chart3: org.webcat.grader.graphs.StackedAreaChart {
     dataset    = opportunitiesDataset;
     title      = "Opportunities for Improvement";
     xAxisLabel = "Date of Your Submission";
     yAxisLabel = "Points Lost";
 }
 
-Chart4: net.sf.webcat.grader.graphs.SubmissionCountChart {
+Chart4: org.webcat.grader.graphs.SubmissionCountChart {
     submissionResults = submissionResultsByNumber;
     title             = "Number of Submissions by Student";
     xAxisLabel        = "Student";
     yAxisLabel        = "No. of Submissions";
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
-Page : net.sf.webcat.core.WCPageWithNavigation {
+Page : org.webcat.core.WCPageWithNavigation {
 }
 
-Panel1: net.sf.webcat.core.WCPageModule {
+Panel1: org.webcat.core.WCPageModule {
     title = session.tabs.selectedDescendant.label;
 }

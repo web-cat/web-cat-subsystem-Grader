@@ -2,7 +2,7 @@ Page : WCPageWithNavigation {
     title = "Mass Regrader";
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
 AssignmentName: WOString {
@@ -15,7 +15,7 @@ SubmissionQualifier : WCSimpleTextArea {
     value = qualifierString;
 }
 
-QualifierErrors: net.sf.webcat.core.ErrorDictionaryPanel {
+QualifierErrors: org.webcat.core.ErrorDictionaryPanel {
     errorMessages          = qualifierErrors;
     shouldShowNewlineAbove = true;
     shouldShowNewlineBelow = true;

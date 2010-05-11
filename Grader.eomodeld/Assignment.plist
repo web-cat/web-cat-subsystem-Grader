@@ -43,7 +43,7 @@
         trackOpinions,
         url
     );
-    className = "net.sf.webcat.grader.Assignment";
+    className = "org.webcat.grader.Assignment";
     classProperties = (
         author,
         fileUploadMessage,

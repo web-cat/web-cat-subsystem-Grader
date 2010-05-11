@@ -26,11 +26,11 @@ Deadline: WOString {
     value     = anAssignmentOffering.dueDate;
 }
 
-Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = anAssignmentOffering.graphSummary;
 }
 
-LastTR: net.sf.webcat.core.TableRow {
+LastTR: org.webcat.core.TableRow {
     index = assignmentDisplayGroup.displayedObjects.count;
 }
 
@@ -45,7 +45,7 @@ NoShowTable: WOConditional {
     negate    = true;
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : org.webcat.core.WizardPage {
     finishEnabled = false;
 }
 
@@ -68,7 +68,7 @@ SuspendedCount: WOString {
     value = anAssignmentOffering.getSuspendedSubs.count;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index       = index;
     showCaution = anAssignmentOffering.isLate;
     showError   = anAssignmentOffering.gradingSuspended;

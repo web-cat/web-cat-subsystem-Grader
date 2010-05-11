@@ -17,7 +17,7 @@ Name: WOTextField {
     size  = 60;
 }
 
-OptionEditor: net.sf.webcat.core.OptionSetEditor {
+OptionEditor: org.webcat.core.OptionSetEditor {
     options           = step.script.configDescription.options;
     optionValues      = step.config.configSettings;
     categories        = step.script.configDescription.optionCategories;
@@ -39,6 +39,6 @@ ScriptName: WOString {
     value = step.script.displayableName;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }

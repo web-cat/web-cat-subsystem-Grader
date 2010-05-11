@@ -19,13 +19,13 @@ ProfileRepetition: WORepetition {
 	index = index;
 }
 
-NameSort: net.sf.webcat.core.WCSortOrder {
+NameSort: org.webcat.core.WCSortOrder {
 	displayGroup = gradingProfileDisplayGroup;
 	displayKey = "Name";
 	key = "name";
 }
 
-AuthorSort: net.sf.webcat.core.WCSortOrder {
+AuthorSort: org.webcat.core.WCSortOrder {
 	displayGroup = gradingProfileDisplayGroup;
 	displayKey   = "Author";
 	key          = "author.lastName";
@@ -48,15 +48,15 @@ EditSubmissionProfile: WOImageButton {
 	height    = "17";
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
-LastTR: net.sf.webcat.core.TableRow {
+LastTR: org.webcat.core.TableRow {
 	index = gradingProfileDisplayGroup.displayedObjects.count;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: org.webcat.core.WizardPage {
     sideStepTitle = "Select Submission Profile";
     finishEnabled = true;
     applyEnabled  = true;

@@ -1,5 +1,5 @@
-Page : net.sf.webcat.core.WCTransitionalPageWithNavigation {
+Page : org.webcat.core.WCTransitionalPageWithNavigation {
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }

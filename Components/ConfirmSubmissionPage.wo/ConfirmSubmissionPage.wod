@@ -2,10 +2,10 @@ FileName: WOString {
     value = file.getName;       // VALID
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
 }
 
-// Page: net.sf.webcat.core.WizardPage {
+// Page: org.webcat.core.WizardPage {
 //     finishEnabled = false;
 // }
 
@@ -15,6 +15,6 @@ Repetition1: WORepetition {
 	index = index;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }

@@ -157,7 +157,7 @@
         trimWhitespace, 
         userId
     ); 
-    className = "net.sf.webcat.grader.GradingCriteria"; 
+    className = "org.webcat.grader.GradingCriteria"; 
     classProperties = (
         assignment, 
         author, 

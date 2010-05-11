@@ -3,7 +3,7 @@ AvgScore: WOString {
 	numberformat = "0.0";
 }
 
-BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator: org.webcat.core.WCBatchNavigator {
     displayGroup = submissionDisplayGroup;
     persistentKey = "StudentsForAssignmentPage.batchSize";
 }
@@ -69,7 +69,7 @@ Name: WOString {
 	value = aSubmission.user.name;
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
 NoTAScore: WOConditional {
@@ -158,7 +158,7 @@ ToolScore: WOString {
 	numberformat = "0.0";
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
@@ -170,25 +170,25 @@ UsesToolCheckScore: WOConditional {
 	condition = assignmentOffering.assignment.usesToolCheckScore;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Name";
 	key = "user.name_LF";
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Grading Status";
 	key = "result.status";
 }
 
-WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Submission Time";
 	key = "submitTime";
 }
 
-WCSortOrder5: net.sf.webcat.core.WCSortOrder {
+WCSortOrder5: org.webcat.core.WCSortOrder {
 	displayGroup = submissionDisplayGroup;
 	displayKey = "Final Score";
 	key = "result.finalScore";

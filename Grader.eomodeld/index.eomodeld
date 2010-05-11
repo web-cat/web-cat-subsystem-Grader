@@ -9,34 +9,34 @@
         username = ""; 
     }; 
     entities = (
-        {className = "net.sf.webcat.grader.Assignment"; name = Assignment; }, 
+        {className = "org.webcat.grader.Assignment"; name = Assignment; }, 
         {
-            className = "net.sf.webcat.grader.AssignmentOffering"; 
+            className = "org.webcat.grader.AssignmentOffering"; 
             name = AssignmentOffering; 
         }, 
-        {className = "net.sf.webcat.grader.EnqueuedJob"; name = EnqueuedJob; }, 
-        {className = "net.sf.webcat.grader.GraderPrefs"; name = GraderPrefs; }, 
-        {className = "net.sf.webcat.grader.GradingCriteria"; name = GradingCriteria; }, 
-        {className = "net.sf.webcat.grader.GradingPlugin"; name = GradingPlugin; }, 
-        {className = "net.sf.webcat.grader.ResultFile"; name = ResultFile; }, 
-        {className = "net.sf.webcat.grader.ResultOutcome"; name = ResultOutcome; }, 
-        {className = "net.sf.webcat.grader.Step"; name = Step; }, 
-        {className = "net.sf.webcat.grader.StepConfig"; name = StepConfig; }, 
-        {className = "net.sf.webcat.grader.Submission"; name = Submission; }, 
+        {className = "org.webcat.grader.EnqueuedJob"; name = EnqueuedJob; }, 
+        {className = "org.webcat.grader.GraderPrefs"; name = GraderPrefs; }, 
+        {className = "org.webcat.grader.GradingCriteria"; name = GradingCriteria; }, 
+        {className = "org.webcat.grader.GradingPlugin"; name = GradingPlugin; }, 
+        {className = "org.webcat.grader.ResultFile"; name = ResultFile; }, 
+        {className = "org.webcat.grader.ResultOutcome"; name = ResultOutcome; }, 
+        {className = "org.webcat.grader.Step"; name = Step; }, 
+        {className = "org.webcat.grader.StepConfig"; name = StepConfig; }, 
+        {className = "org.webcat.grader.Submission"; name = Submission; }, 
         {
-            className = "net.sf.webcat.grader.SubmissionFileComment"; 
+            className = "org.webcat.grader.SubmissionFileComment"; 
             name = SubmissionFileComment; 
         }, 
         {
-            className = "net.sf.webcat.grader.SubmissionFileStats"; 
+            className = "org.webcat.grader.SubmissionFileStats"; 
             name = SubmissionFileStats; 
         }, 
         {
-            className = "net.sf.webcat.grader.SubmissionProfile"; 
+            className = "org.webcat.grader.SubmissionProfile"; 
             name = SubmissionProfile; 
         }, 
         {
-            className = "net.sf.webcat.grader.SubmissionResult"; 
+            className = "org.webcat.grader.SubmissionResult"; 
             name = SubmissionResult; 
         }
     ); 

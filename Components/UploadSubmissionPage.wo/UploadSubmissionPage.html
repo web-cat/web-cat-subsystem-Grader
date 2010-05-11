@@ -1,10 +1,10 @@
 <wo name="Page">
 <wo:if condition="$forceNavigatorSelection">
-<wo:net.sf.webcat.core.WCPageModule title="Upload Your File(s)">
+<wo:org.webcat.core.WCPageModule title="Upload Your File(s)">
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
-</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
-<wo:net.sf.webcat.core.WCPageModule title="Upload Your File(s)">
+</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:org.webcat.core.WCPageModule title="Upload Your File(s)">
 <div class="floatRight"><wo name="Navigator"/></div>
 For: <span class="hl"><webobject name="AssignmentName"/></span>
 <webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
@@ -23,11 +23,11 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
     <p>Choose the file to upload:</p>
 <p><webobject name="FileUpload1"/></p>
 <!-- p --><!-- input size="60" type="file" name="0.0.0.2.3.4.1.10.1" dojoType="dojox.form.FileInput"/ --><!-- /p -->
-<p><wo:net.sf.webcat.ui.WCButton action="$next">Upload Submission</wo:net.sf.webcat.ui.WCButton></p>
-</wo:WOForm></webobject></wo:net.sf.webcat.core.WCPageModule>
+<p><wo:org.webcat.ui.WCButton action="$next">Upload Submission</wo:org.webcat.ui.WCButton></p>
+</wo:WOForm></webobject></wo:org.webcat.core.WCPageModule>
 
 <wo:not condition="$showStudentSelector">
-<wo:net.sf.webcat.core.WCPageModule title="Previous Submissions" open="false">
+<wo:org.webcat.core.WCPageModule title="Previous Submissions" open="false">
 <webobject name="HasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
   <div class="shadow"><table><thead>
   <tr><td colspan="3" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
@@ -40,6 +40,6 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
     <td align="right"><webobject name="String3"/></td>
   </webobject></webobject></tbody></table></div><div class="spacer">&nbsp;</div>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
-</webobject></wo:net.sf.webcat.core.WCPageModule>
+</webobject></wo:org.webcat.core.WCPageModule>
 </wo:not></wo:else>
 </wo>

@@ -1,5 +1,5 @@
 <wo name="Page"><wo:if negate="true" condition="$hasMessages">
-<wo:net.sf.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
+<wo:org.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
 For: <span class="hl"><wo:str value="$prefs.assignmentOffering.titleString"/></span>
 <wo:if condition="$session.impersonatingAnotherUser"><p>Submitting as: <span class="hl"><wo:str value="$user.nameAndUid"/></span></p></wo:if>
 <p>Please make sure that
@@ -15,7 +15,7 @@ an incorrect file.</p>
 </tbody></table>
 
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
-<p><wo:net.sf.webcat.ui.WCButton action="$back">Change File</wo:net.sf.webcat.ui.WCButton>
-<wo:net.sf.webcat.ui.WCButton action="$next">Confirm</wo:net.sf.webcat.ui.WCButton></p>
+<p><wo:org.webcat.ui.WCButton action="$back">Change File</wo:org.webcat.ui.WCButton>
+<wo:org.webcat.ui.WCButton action="$next">Confirm</wo:org.webcat.ui.WCButton></p>
 </wo:WOForm>
-</wo:net.sf.webcat.core.WCPageModule></wo:if></wo>
+</wo:org.webcat.core.WCPageModule></wo:if></wo>

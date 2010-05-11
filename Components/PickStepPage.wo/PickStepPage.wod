@@ -29,7 +29,7 @@ HasPersonalScripts: WOConditional {
     condition = scriptGroup.displayedObjects.count;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     title = "Add Grading Plug-in to Assignment";
 }
 
@@ -82,23 +82,23 @@ ScriptName: WOString {
 	value = script.displayableName;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Name";
 	key = "uploadedFileName";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Last Modified";
 	key = "lastModified";
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Author";
 	key = "author.lastName";

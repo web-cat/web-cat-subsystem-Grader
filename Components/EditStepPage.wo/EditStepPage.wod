@@ -1,4 +1,4 @@
-AssignmentOptionEditor: net.sf.webcat.core.OptionSetEditor {
+AssignmentOptionEditor: org.webcat.core.OptionSetEditor {
     options           = step.script.configDescription.assignmentOptions;
     optionValues      = step.configSettings;
     categories        = step.script.configDescription.assignmentOptionCategories;

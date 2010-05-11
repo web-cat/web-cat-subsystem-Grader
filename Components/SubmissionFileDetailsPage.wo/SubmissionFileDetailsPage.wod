@@ -47,7 +47,7 @@ Go2: WOActiveImage {
 	style     = "vertical-align:middle;";
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     title      = thisFile.sourceFileName;
 /*    stylesheet = "Grader.framework/WebServerResources/wc-code.css"; */
 }

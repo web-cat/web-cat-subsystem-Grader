@@ -218,7 +218,7 @@
         submissionMethod, 
         userId
     ); 
-    className = "net.sf.webcat.grader.SubmissionProfile"; 
+    className = "org.webcat.grader.SubmissionProfile"; 
     classProperties = (
         assignment, 
         author, 

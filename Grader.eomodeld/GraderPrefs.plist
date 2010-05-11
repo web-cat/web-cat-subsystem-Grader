@@ -30,7 +30,7 @@
         submissionId, 
         userId
     ); 
-    className = "net.sf.webcat.grader.GraderPrefs"; 
+    className = "org.webcat.grader.GraderPrefs"; 
     classProperties = (
         assignment, 
         assignmentOffering, 

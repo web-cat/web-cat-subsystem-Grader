@@ -29,7 +29,7 @@ StalledJobCount: WOString {
     value = stalledJobCount;
 }
 
-TR : net.sf.webcat.core.TableRow {
+TR : org.webcat.core.TableRow {
     index     = ^index;
     increment = true;
 }

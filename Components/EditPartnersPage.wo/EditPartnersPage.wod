@@ -33,17 +33,17 @@ String3: WOString {
 	value = partnerSubmission.user.email;
 }
 
-TR2: net.sf.webcat.core.TableRow {
+TR2: org.webcat.core.TableRow {
 	index = partnerIndex;
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = partnerDisplayGroup;
 	displayKey = "Name";
 	key = "user.name_LF";
 }
 
-WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.core.WCSortOrder {
 	displayGroup = partnerDisplayGroup;
 	displayKey = "User Name";
 	key = "user.userName";
@@ -55,7 +55,7 @@ Repetition1: WORepetition {
 	index = studentIndex;
 }
 
-BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator1: org.webcat.core.WCBatchNavigator {
     displayGroup = studentDisplayGroup;
     persistentKey = "EditPartnersPage.batchSize";
 }
@@ -80,17 +80,17 @@ String6: WOString {
 	value = student.email;
 }
 
-TR1: net.sf.webcat.core.TableRow {
+TR1: org.webcat.core.TableRow {
 	index = studentIndex;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "Name";
 	key = "name_LF";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "User Name";
 	key = "userName";
@@ -105,7 +105,7 @@ NotPartner: WOConditional {
 	negate    = true;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: org.webcat.core.WizardPage {
     sideStepTitle = "Assign Partners";
     hideSteps     = true;
     cancelEnabled = false;

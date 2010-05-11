@@ -19,13 +19,13 @@ Repetition1: WORepetition {
 	index = index;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = fileDisplayGroup;
 	displayKey = "Name";
 	key = "getPath";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = fileDisplayGroup;
 	displayKey = "Last Modified";
 	key = "lastModified";
@@ -44,7 +44,7 @@ String3: WOString {
 	value = fileSize;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 
@@ -54,7 +54,7 @@ UploadScript: WOFileUpload {
 	size     = 60;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: org.webcat.core.WizardPage {
     sideStepTitle = "View or Replace Script";
     backEnabled   = false;
 }

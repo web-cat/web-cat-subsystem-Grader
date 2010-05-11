@@ -23,7 +23,7 @@
         {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }
     ); 
     attributesUsedForLocking = (discarded, paused, regrading, submissionId); 
-    className = "net.sf.webcat.grader.EnqueuedJob"; 
+    className = "org.webcat.grader.EnqueuedJob"; 
     classProperties = (discarded, paused, queueTime, regrading, submission); 
     externalName = TENQUEUEDJOB; 
     fetchSpecificationDictionary = {}; 

@@ -8,7 +8,7 @@ Repetition1: WORepetition {
 	index = studentIndex;
 }
 
-BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator1: org.webcat.core.WCBatchNavigator {
     displayGroup = studentDisplayGroup;
     persistentKey = "PickEnrolledStudentPage.batchSize";
 }
@@ -31,21 +31,21 @@ StudentRadioButton: WORadioButton {
     value = student;
 }
 
-TR1: net.sf.webcat.core.TableRow {
+TR1: org.webcat.core.TableRow {
 	index = studentIndex;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "Name";
 	key = "name_LF";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "User Name";
 	key = "userName";
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: org.webcat.core.WizardPage {
 }

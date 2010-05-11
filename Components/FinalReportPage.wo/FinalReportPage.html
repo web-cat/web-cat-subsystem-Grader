@@ -1,11 +1,11 @@
 <wo name="Page"><wo:not condition="$submissionChosen">
-  <wo:net.sf.webcat.core.WCPageModule title="Please Choose a Submission">
+  <wo:org.webcat.core.WCPageModule title="Please Choose a Submission">
     <p>Please choose
     a submission under <webobject name="PastResults"/> to see your feedback.</p>
-  </wo:net.sf.webcat.core.WCPageModule>
+  </wo:org.webcat.core.WCPageModule>
 </wo:not><wo:else><wo:not condition="$reportIsReady">
   <webobject name="GradingHalted">
-  <wo:net.sf.webcat.core.WCPageModule title="Assignment Grading Disabled">
+  <wo:org.webcat.core.WCPageModule title="Assignment Grading Disabled">
     <p>Processing of submissions for this assignment has been
 	temporarily halted.  Your submission has been received and
 	the time has been properly recorded.  It will be processed
@@ -13,18 +13,18 @@
 	If the delay is long, an e-mail message will be sent to you at
 	<wo:str value="$user.email"/>
 	once the results for this submission are available.</p>
-  </wo:net.sf.webcat.core.WCPageModule>
+  </wo:org.webcat.core.WCPageModule>
   </webobject><webobject name="GradingNotHalted">
     <wo:if condition="$gradingPaused">
-    <wo:net.sf.webcat.core.WCPageModule title="Assignment Submission Suspended">
+    <wo:org.webcat.core.WCPageModule title="Assignment Submission Suspended">
       <p>An internal error occured while the Grader was processing
       your submission.  The administrator and your instructor have been
       notifed of the error.  An e-mail message will be sent to you at
       <wo:str value="$user.email"/>
       once the results for this submission are available.</p>
-    </wo:net.sf.webcat.core.WCPageModule>
+    </wo:org.webcat.core.WCPageModule>
     </wo:if><wo:else>
-    <wo:net.sf.webcat.core.WCPageModule title="Assignment Queued for Grading">
+    <wo:org.webcat.core.WCPageModule title="Assignment Queued for Grading">
       <webobject name="MetaRefresh1"/>
       <div style="float:left;margin:2em;"><webobject name="Image"/></div>
       <table><thead>
@@ -41,11 +41,11 @@
       <wo:str value="$refreshTimeout"/> seconds, or you can
       <wo:link action="$refreshAction">request an immediate page
       refresh</wo:link>.</p>
-    </wo:net.sf.webcat.core.WCPageModule>
+    </wo:org.webcat.core.WCPageModule>
     </wo:else>
   </webobject>
 </wo:not><wo:else>
-  <wo:net.sf.webcat.core.WCPageModule title="Result Summary">
+  <wo:org.webcat.core.WCPageModule title="Result Summary">
   <wo:WCForm multipleSubmit="true" style="margin-bottom: 0.5em;">
     <wo:if condition="$showReturnToGrading"><wo name="ReturnToGrading"/></wo:if>
     <wo:if condition="$canSubmitAgain"><wo name="SubmitAgain"/></wo:if>
@@ -53,15 +53,15 @@
   </wo:WCForm>
   <wo:SubmissionResultInfo submission="$submission"/>
   <wo:if condition="$hasNonZeroScore"><wo name="ScoreSummary"/></wo:if>
-  </wo:net.sf.webcat.core.WCPageModule>
+  </wo:org.webcat.core.WCPageModule>
   <wo:if condition="$hasNonZeroScore">
     <wo:ScoreGraphsBlock submission="$submission"/>
   </wo:if>
   <wo:if condition="$result.submissionFileStats.count">
-  <wo:net.sf.webcat.core.WCPageModule title="File Details">
+  <wo:org.webcat.core.WCPageModule title="File Details">
     <table><thead>
       <tr><th>File<webobject name="WCSortOrder1"/></th>
-        <wo:if condition="~(result.status == @net.sf.webcat.core.Status@CHECK)">
+        <wo:if condition="~(result.status == @org.webcat.core.Status@CHECK)">
         <th class="sm">Staff<br/>Cmts<webobject name="WCSortOrder5"/></th>
         <th class="sm">Staff<br/>Pts<webobject name="WCSortOrder6"/></th>
         </wo:if>
@@ -74,7 +74,7 @@
         </wo:if></tr></thead><tbody>
       <webobject name="StatRepetition"><webobject name="TR">
         <td><wo:link action="$fileStatsDetails"><wo:str value="$stats.sourceFileName"/></wo:link></td>
-        <wo:if condition="~(result.status == @net.sf.webcat.core.Status@CHECK)">
+        <wo:if condition="~(result.status == @org.webcat.core.Status@CHECK)">
         <td class="n"><wo name="FileStaffRemarks"/></td>
         <td class="n"><wo name="FileStaffDeduction"/></td>
         </wo:if>
@@ -89,28 +89,28 @@
         </wo:if>
       </webobject></webobject>
     </tbody></table>
-    </wo:net.sf.webcat.core.WCPageModule>
+    </wo:org.webcat.core.WCPageModule>
   </wo:if>
   <wo:if condition="$hasTAComments">
-  <wo:net.sf.webcat.core.WCPageModule title="TA/Instructor Comments">
+  <wo:org.webcat.core.WCPageModule title="TA/Instructor Comments">
     <wo name="TAComments"/>
-  </wo:net.sf.webcat.core.WCPageModule>
+  </wo:org.webcat.core.WCPageModule>
   </wo>
   <wo:if condition="$justCollecting">
-    <wo:net.sf.webcat.core.WCPageModule title="Submission Received">
+    <wo:org.webcat.core.WCPageModule title="Submission Received">
       <p>Your submission has been received for grading by the course staff.</p>
-    </wo:net.sf.webcat.core.WCPageModule>
+    </wo:org.webcat.core.WCPageModule>
   </wo:if>
   <wo:PartialInlineReport file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
   <wo:PartialInlineReport file="$result.resultFile" title="Automated Feedback" open="$true"/>
   <wo:if condition="$reportArray.count">
-    <wo:net.sf.webcat.core.WCPageModule title="Downloadables" open="false">
+    <wo:org.webcat.core.WCPageModule title="Downloadables" open="false">
     <table><thead>
     <tr><th>File</th><th>Description</th></tr></thead><tbody>
     <wo:loop list="$reportArray" item="$report" index="$index">
     <wo:TableRow index="$index"><td><wo:link action="$fileDeliveryAction"><wo:str value="$reportFileName"/></wo:link></td><td><wo:str value="$report.label"/></td></wo:TableRow>
     </wo:loop>
     </tbody></table>
-	</wo:net.sf.webcat.core.WCPageModule>
+	</wo:org.webcat.core.WCPageModule>
   </wo:if>
 </wo:else></wo:else></wo>

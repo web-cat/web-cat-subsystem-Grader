@@ -165,7 +165,7 @@
             userInfo = {
                 isScalar = true; 
                 scalarConversionMethodName = byteValue; 
-                scalarDefault = "net.sf.webcat.core.Status.TO_DO"; 
+                scalarDefault = "org.webcat.core.Status.TO_DO"; 
                 type = byte; 
                 valueClassName = Byte; 
             }; 
@@ -192,7 +192,7 @@
         status, 
         tags
     ); 
-    className = "net.sf.webcat.grader.SubmissionFileStats"; 
+    className = "org.webcat.grader.SubmissionFileStats"; 
     classProperties = (
         className, 
         comments, 

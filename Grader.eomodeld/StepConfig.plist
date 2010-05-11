@@ -8,7 +8,7 @@
             userInfo = {
                 adaptorValueConversionMethodName = archiveData; 
                 isMutable = true; 
-                valueClassName = "net.sf.webcat.core.MutableDictionary"; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
                 valueFactoryMethodName = objectWithArchiveData; 
             }; 
         }, 
@@ -21,7 +21,7 @@
         }
     ); 
     attributesUsedForLocking = (authorId, name, updateMutableFields); 
-    className = "net.sf.webcat.grader.StepConfig"; 
+    className = "org.webcat.grader.StepConfig"; 
     classProperties = (author, configSettings, name, steps, updateMutableFields); 
     externalName = TSTEPCONFIG; 
     name = StepConfig; 

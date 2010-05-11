@@ -1,10 +1,10 @@
 <webobject name="Page">
 <wo:if condition="$forceNavigatorSelection">
-<wo:net.sf.webcat.core.WCPageModule title="Select Your Course Offering">
+<wo:org.webcat.core.WCPageModule title="Select Your Course Offering">
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course offering.</p></div>
-</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
-<wo:net.sf.webcat.core.WCPageModule title="Selected Course Offering">
+</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:org.webcat.core.WCPageModule title="Selected Course Offering">
 <div class="floatRight"><wo name="Navigator"/></div>
 <wo:WCForm multipleSubmit="true"><table class="layout">
 <wo name="CanDelete">
@@ -24,9 +24,9 @@
 <tr><td></td><td><wo:WCButton action="$apply" class="pos" label="Save"/>
   <wo:WCButton action="$cancel" class="neg" label="Cancel"/></td></tr>
 </table></wo:WCForm>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Instructors" open="true">
+<wo:org.webcat.core.WCPageModule title="Instructors" open="true">
 
 <wo:form><table><thead>
   <tr><th>User ID</th><th>Instructor(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
@@ -40,9 +40,9 @@
 	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
   </webobject>
 </tbody></table></wo:form>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="true">
+<wo:org.webcat.core.WCPageModule title="Graders/Teaching Assistant(s)" open="true">
 <wo:form><table><thead>
   <tr><th>User ID</th><th>Graders/Teaching Assistant(s)</th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="TARepetition"><webobject name="TR">
@@ -55,13 +55,13 @@
 	<td colspan="4"><webobject name="AddTA"/> Add another grader/TA</td>
   </webobject>
 </tbody></table></wo:form>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Student Roster" open="true">
+<wo:org.webcat.core.WCPageModule title="Student Roster" open="true">
   <wo:link action="$editRoster">Edit student roster</wo:link>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Submission Date Range" open="false">
+<wo:org.webcat.core.WCPageModule title="Submission Date Range" open="false">
 <wo:if condition="$earliest">
 <p>Submission date range:
 <wo:str value="$earliest" formatter="$session.timeFormatter"/>
@@ -70,10 +70,10 @@
 </wo:if><wo:else>
 <p>No submissions found for any assignment in this course offering.</p>
 </wo:else>
-</wo:net.sf.webcat.core.WCPageModule></wo:else>
+</wo:org.webcat.core.WCPageModule></wo:else>
 
-<!-- wo:net.sf.webcat.core.WCPageModule title="Test User List Browser" open="false" -->
+<!-- wo:org.webcat.core.WCPageModule title="Test User List Browser" open="false" -->
 <!-- wo:UserListBrowser master="$courseOffering" keyPath="students"/ -->
-<!-- /wo:net.sf.webcat.core.WCPageModule -->
+<!-- /wo:org.webcat.core.WCPageModule -->
 
 </webobject>

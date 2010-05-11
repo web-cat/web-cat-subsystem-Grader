@@ -1,12 +1,12 @@
 <wo name="Page">
 
-<wo:net.sf.webcat.core.WCPageModule title="CSV File Preview">
+<wo:org.webcat.core.WCPageModule title="CSV File Preview">
  <table class="layout"><tbody><tr><td>
 For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
 </td><td>
 <wo:WCContentPane id="fileInfo">
 Uploaded file: <span class="hl"><wo:str value="$filePath"/>
-(<wo:str value="$numberOfRecords"/> records, <wo:str value="~@net.sf.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span>
+(<wo:str value="$numberOfRecords"/> records, <wo:str value="~@org.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span>
 </wo:WCContentPane></td></tr><tr><td>
 <label for="delim" style="width:auto;">Delimiter:</label> <wo name="Delimiter">
   <wo:WCConnectAction event="onChange" remote="true" action="$refresh"/>
@@ -53,5 +53,5 @@ addresses instead.
 </wo:else>
 </wo:WCContentPane>
 
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 </wo>

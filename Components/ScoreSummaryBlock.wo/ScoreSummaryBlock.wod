@@ -28,7 +28,7 @@ FinalScore: WOString {
 	value        = result.finalScore;
 }
 
-Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = submission.assignmentOffering.graphSummary;
     markScore    = submission.result.automatedScore;
 }
@@ -89,12 +89,12 @@ TotalTAPoints: WOString {
 	value = submission.assignmentOffering.assignment.submissionProfile.taPoints;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index     = rowNumber;
     increment = true;
 }
 
-TR2: net.sf.webcat.core.TableRow {
+TR2: org.webcat.core.TableRow {
     index     = rowNumber;
     increment = true;
     id        = "divider";

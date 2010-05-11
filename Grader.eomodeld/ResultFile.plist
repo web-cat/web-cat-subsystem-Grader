@@ -7,7 +7,7 @@
         {columnName = CRESULTID; name = resultId; prototypeName = foreignId; }
     ); 
     attributesUsedForLocking = (fileName, label, mimeType, resultId); 
-    className = "net.sf.webcat.grader.ResultFile"; 
+    className = "org.webcat.grader.ResultFile"; 
     classProperties = (fileName, label, mimeType, submissionResult); 
     externalName = TRESULTFILE; 
     fetchSpecificationDictionary = {}; 

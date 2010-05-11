@@ -75,7 +75,7 @@
         submissionFileStatsId, 
         toNo
     ); 
-    className = "net.sf.webcat.grader.SubmissionFileComment"; 
+    className = "org.webcat.grader.SubmissionFileComment"; 
     classProperties = (
         author, 
         categoryNo, 

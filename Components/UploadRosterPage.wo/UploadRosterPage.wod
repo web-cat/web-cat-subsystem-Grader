@@ -12,7 +12,7 @@ ColHeaderRepetition: WORepetition {
 }
 
 ColHeading: WCFilteringSelect {
-    list = "~@net.sf.webcat.grader.UploadRosterPage@COLUMNS";
+    list = "~@org.webcat.grader.UploadRosterPage@COLUMNS";
     selection = "~columns[colIndex]";
     style = "width: 10.5em;";
 }
@@ -23,7 +23,7 @@ ColRepetition: WORepetition {
 }
 
 Delimiter: WCFilteringSelect {
-	list          = "~@net.sf.webcat.grader.UploadRosterPage@DELIMITERS";
+	list          = "~@org.webcat.grader.UploadRosterPage@DELIMITERS";
 	item          = aDelimiter;
 	displayString = aDelimiter.label;
 	selection     = selectedDelimiter;
@@ -32,12 +32,12 @@ Delimiter: WCFilteringSelect {
 //    onchange      = "submitForm()";
 }
 
-DelimiterInfo: net.sf.webcat.core.PopUpInfo {
+DelimiterInfo: org.webcat.core.PopUpInfo {
     title   = "Delimiter";
     message = "Choose the character used as a delimiter between fields in your data file.  Web-CAT will try to guess the delimiter based on your file\'s contents, but you can specify your own choice here.";
 }
 
-FirstLineInfo: net.sf.webcat.core.PopUpInfo {
+FirstLineInfo: org.webcat.core.PopUpInfo {
     title   = "First Line Column Names";
     message = "Check this box if the first row in your data file contains column headings and should not be treated as student data.  When checked, Web-CAT will skip the first row of data when extracting information from the file.";
 }
@@ -61,17 +61,17 @@ Page: SaveCancelPage {
     title = "Upload a Roster CSV File";
 }
 
-ReplaceInfo: net.sf.webcat.core.PopUpInfo {
+ReplaceInfo: org.webcat.core.PopUpInfo {
     title   = "Replace CSV File";
     message = "If you edit or revise your CSV file and need to upload the changed version, select the new file you want to upload and click 'Replace'.  The data preview will be updated to reflect the new file's contents.";
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
     showCaution = "~(index == 0) && firstLineColumnHeadings";
 }
 
-TRInc: net.sf.webcat.core.TableRow {
+TRInc: org.webcat.core.TableRow {
     index     = index;
     increment = true;
 }

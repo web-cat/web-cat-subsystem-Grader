@@ -35,5 +35,5 @@ Full: WORadioButton {
     checked = useFullFormat;
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }

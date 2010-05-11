@@ -1,4 +1,4 @@
-OptionEditor: net.sf.webcat.core.OptionSetEditor {
+OptionEditor: org.webcat.core.OptionSetEditor {
     options           = plugin.configDescription.globalOptions;
     optionValues      = plugin.globalConfigSettings;
     categories        = plugin.configDescription.GlobalOptionCategories;
@@ -7,7 +7,7 @@ OptionEditor: net.sf.webcat.core.OptionSetEditor {
     base              = baseDir;
 }
 
-Page: net.sf.webcat.core.WizardPage {
+Page: org.webcat.core.WizardPage {
     sideStepTitle = "Edit Plug-in Global Options";
     applyEnabled  = true;
     backEnabled   = false;

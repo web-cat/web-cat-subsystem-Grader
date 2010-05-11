@@ -1,10 +1,10 @@
 <wo:WCPageWithNavigation><wo:if condition="$forceNavigatorSelection">
-<wo:net.sf.webcat.core.WCPageModule title="Pick the Course and Assignment">
+<wo:org.webcat.core.WCPageModule title="Pick the Course and Assignment">
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
-</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
+</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
 
-<wo:net.sf.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.assignment.name">
+<wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.assignment.name">
 <div class="floatRight"><wo name="Navigator"/></div>
 <p>For: <span class="hl"><wo:if condition="$prefs.assignmentOffering"><wo:str value="$prefs.assignmentOffering.titleString"/></wo:if><wo:else><wo:str value="$prefs.assignment.titleString"/></wo:else></span></p>
 
@@ -31,7 +31,7 @@
         <th class="sm">Score<wo name="WCSortOrder5"/></th>
     </tr></thead><tbody>
     <wo name="Repetition1"><wo name="TR">
-        <td><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @net.sf.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
+        <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
         <td><wo name="Name"/><wo name="HasPartners"><wo name="PartnerRepetition"><wo name="IsAPartner"><wo name="MorePartners">,<br/></wo><wo name="LastPartner"><wo name="HasMultiplePartners">,</wo><br/>and</wo>
 <wo name="PartnerName"/></wo></wo></wo></td>
         <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
@@ -49,10 +49,10 @@
     <p>No submissions matching your criteria have been found.</p>
 </wo:else>
 
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 
 <wo:if condition="$user.hasAdminPrivileges">
-<wo:net.sf.webcat.core.WCPageModule title="Text/HTML Comments" open="false">
+<wo:org.webcat.core.WCPageModule title="Text/HTML Comments" open="false">
 
   <table><thead>
     <tr><th>Have Text Comments</th></tr>
@@ -64,7 +64,7 @@
   </thead><tbody>
   </tbody></table>
 
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 </wo:if>
 
 </wo:else></wo:WCPageWithNavigation>

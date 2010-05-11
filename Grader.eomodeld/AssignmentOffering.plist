@@ -22,7 +22,7 @@
             userInfo = {
                 adaptorValueConversionMethodName = archiveData; 
                 isMutable = true; 
-                valueClassName = "net.sf.webcat.grader.graphs.AssignmentSummary"; 
+                valueClassName = "org.webcat.grader.graphs.AssignmentSummary"; 
                 valueFactoryMethodName = objectWithArchiveData; 
             }; 
             valueClassName = NSData; 
@@ -50,7 +50,7 @@
         publish, 
         updateMutableFields
     ); 
-    className = "net.sf.webcat.grader.AssignmentOffering"; 
+    className = "org.webcat.grader.AssignmentOffering"; 
     classProperties = (
         assignment, 
         closedOnDate, 

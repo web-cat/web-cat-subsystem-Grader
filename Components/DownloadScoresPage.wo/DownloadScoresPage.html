@@ -1,10 +1,10 @@
 <wo:WCPageWithNavigation>
 <wo:if condition="$forceNavigatorSelection">
-<wo:net.sf.webcat.core.WCPageModule title="Pick the Course and Assignment">
+<wo:org.webcat.core.WCPageModule title="Pick the Course and Assignment">
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
-</wo:net.sf.webcat.core.WCPageModule></wo:if><wo:else>
-<wo:net.sf.webcat.core.WCPageModule title="~'Download Scores for ' + assignmentOffering.assignment.name">
+</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
+<wo:org.webcat.core.WCPageModule title="~'Download Scores for ' + assignmentOffering.assignment.name">
 <div class="floatRight"><wo name="Navigator"/></div>
 <p>For: <span class="hl"><wo:if condition="$assignmentOffering.assignment.url"><webobject name="AssignmentName"/></wo:if><wo:else><wo:str value="$assignmentOffering.titleString"/></wo:else></span></p>
 <wo:WCForm multipleSubmit="true">
@@ -18,5 +18,5 @@
 <p><webobject name="OmitStaff"/> Omit course staff</p>
 <webobject name="DownloadScores"/>
 </wo:WCForm>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 </wo:else></wo:WCPageWithNavigation>

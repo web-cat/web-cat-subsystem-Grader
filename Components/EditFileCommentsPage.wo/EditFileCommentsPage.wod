@@ -113,7 +113,7 @@ SaveFinishLater: WOSubmitButton {
 	value  = "Save & Finish Later";
 }
 
-Page: net.sf.webcat.core.PageWithNavigation {
+Page: org.webcat.core.PageWithNavigation {
 	// /wc-code.css is added to the text box in the java class
     stylesheet           = "Grader.framework/WebServerResources/htmlarea/htmlarea.css";
     externalJavascript   = "Grader.framework/WebServerResources/htmlarea/codearea.js,Grader.framework/WebServerResources/htmlarea/htmlarea-lang-en.js,Grader.framework/WebServerResources/htmlarea/dialog.js";
@@ -123,7 +123,7 @@ Page: net.sf.webcat.core.PageWithNavigation {
     hideSteps            = true;
 }
 
-ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+ResultInfo: org.webcat.grader.SubmissionResultInfo {
     showFileInfo = true;
     submission = prefs.submission;
     submissionFileStats = prefs.submissionFileStats;

@@ -33,7 +33,7 @@ CourseList: WCFilteringSelect {
 	id            = "course";
 }
 
-CourseInfo: net.sf.webcat.core.PopUpInfo {
+CourseInfo: org.webcat.core.PopUpInfo {
     title   = "Course";
     message = "Use the Course drop-down list to change the course with which this offering is associated.";
 }
@@ -43,7 +43,7 @@ CRN: WCTextBox {
     id    = "CRN";
 }
 
-CRNInfo: net.sf.webcat.core.PopUpInfo {
+CRNInfo: org.webcat.core.PopUpInfo {
     title   = "CRN";
     message = "The CRN is a unique identifier for your course offering, distinguishing it from all others. CRN stands for <b>course request number</b>, and many universities have such numbers, although they may use a different name for them. If your university timetable has a unique ID number for course sections, we suggest you use that as the CRN value. Some universities use alphanumeric codes instead of numbers: the CRN can be alphanumeric, but it <b>must not be blank</b> and it <b>must be unique</b>.";
 }
@@ -68,16 +68,16 @@ Label: WCTextBox {
     id    = "Label";
 }
 
-LabelInfo: net.sf.webcat.core.PopUpInfo {
+LabelInfo: org.webcat.core.PopUpInfo {
     title   = "Label";
     message = "Use this optional field to provide a brief (3-10 character) alternative label to use instead of the CRN when identifying this course offering to users.  Example labels: &quot;MWF&quot;, &quot;Thu lab&quot;, or &quot;M11:00&quot;.";
 }
 
-LastInstrTR: net.sf.webcat.core.TableRow {
+LastInstrTR: org.webcat.core.TableRow {
     index = instructorDisplayGroup.displayedObjects.count;
 }
 
-LastTATR: net.sf.webcat.core.TableRow {
+LastTATR: org.webcat.core.TableRow {
     index = TADisplayGroup.displayedObjects.count;
 }
 
@@ -87,7 +87,7 @@ LastTATR: net.sf.webcat.core.TableRow {
 //	value = courseOffering.moodleGroupId;
 //}
 
-MoodleGroupIdInfo: net.sf.webcat.core.PopUpInfo {
+MoodleGroupIdInfo: org.webcat.core.PopUpInfo {
     title   = "Moodle Group Id";
     message = "Offers experimental support for instructors testing out the Moodle-to-Web-CAT gateway.  Otherwise, leave it blank.";
 }
@@ -99,7 +99,7 @@ MoodleId: WCTextBox {
 	style        = "width: 6em;";
 }
 
-MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
+MoodleIdInfo: org.webcat.core.PopUpInfo {
     title   = "Moodle Id";
     message = "Offers experimental support for instructors testing out the Moodle-to-Web-CAT gateway.  Otherwise, leave it blank.";
 }
@@ -109,7 +109,7 @@ Name: WOHyperlink {
     string = aUser.name;
 }
 
-Navigator: net.sf.webcat.core.CoreNavigator {
+Navigator: org.webcat.core.CoreNavigator {
 }
 
 NotThisUser: WOConditional {
@@ -117,7 +117,7 @@ NotThisUser: WOConditional {
     negate    = true;
 }
 
-Page : net.sf.webcat.core.WCPageWithNavigation {
+Page : org.webcat.core.WCPageWithNavigation {
     title = "Edit Course Properties";
 }
 
@@ -145,7 +145,7 @@ RemoveTA: WOImageButton {
     class     = "icon";
 }
 
-SemesterInfo: net.sf.webcat.core.PopUpInfo {
+SemesterInfo: org.webcat.core.PopUpInfo {
     title   = "Semester";
     message = "Use the Semester drop-down list to change the semester with which this offering is associated.";
 }
@@ -164,7 +164,7 @@ TARepetition: WORepetition {
 	index = index;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }
 
@@ -174,7 +174,7 @@ URL: WCTextBox {
     id    = "URL";
 }
 
-URLInfo: net.sf.webcat.core.PopUpInfo {
+URLInfo: org.webcat.core.PopUpInfo {
     title   = "URL";
     message = "Optionally, fill in the URL field with your course offering\'s home site on the web. If you enter a value in this field, then references to the course offering on other pages will be hyperlinks to this destination. If you leave it blank, those references will just be plain text, not hyperlinks.";
 }

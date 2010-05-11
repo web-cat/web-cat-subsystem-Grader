@@ -36,10 +36,10 @@ InstructorCourseRepetition: WORepetition {
     index = index;
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
-Page : net.sf.webcat.core.WizardPage {
+Page : org.webcat.core.WizardPage {
     finishEnabled = false;
 }
 

@@ -1,12 +1,12 @@
-BatchNavigator: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator: org.webcat.core.WCBatchNavigator {
     displayGroup = submissionDisplayGroup;
     persistentKey = "PickSubmissionPage.batchSize";
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
 }
 
 Repetition1: WORepetition {
@@ -25,6 +25,6 @@ String3: WOString {
 	value        = aSubmission.result.finalScore;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }

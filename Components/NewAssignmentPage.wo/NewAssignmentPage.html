@@ -1,14 +1,14 @@
 <webobject name="Page">
 <wo:if condition="$forceNavigatorSelection">
-<wo:net.sf.webcat.core.WCPageModule title="Pick a Semester and Course">
+<wo:org.webcat.core.WCPageModule title="Pick a Semester and Course">
 <div class="floatRight"><wo:CoreNavigator/></div>
 <div style="width:50%;"><p>Please choose a single semester and a
 course (one offering or all offerings).</p></div>
-</wo:net.sf.webcat.core.WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 </wo:if>
 
 <wo:else>
-<wo:net.sf.webcat.core.WCPageModule title="For Which Course?">
+<wo:org.webcat.core.WCPageModule title="For Which Course?">
 <table class="layout"><tbody>
 <tr><td class="R">In course(s):</td>
     <td><wo:str value="$targetCourse"/> <wo:CoreNavigator/> <wo name="CourseInfo"/></td></tr>
@@ -29,9 +29,9 @@ course (one offering or all offerings).</p></div>
 </wo:if></wo:not>
 <tr><td></td><td><wo:WCButton action="$next">Create</wo:WCButton></td></tr>
 </tbody></table>
-</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
+</wo:WOForm></wo:org.webcat.core.WCPageModule>
 
-<wo:net.sf.webcat.core.WCPageModule title="Re-offer an Existing Assignment" open="$reuseOpen" id="$idFor.reofferPane">
+<wo:org.webcat.core.WCPageModule title="Re-offer an Existing Assignment" open="$reuseOpen" id="$idFor.reofferPane">
 <p>You can reuse (or re-offer) an existing assignment in a different course
 offering by picking where you want to add the re-offered
 assignment:</p>
@@ -64,6 +64,6 @@ assignment:</p>
   </wo:if>
 </wo:if>
 </ol></fieldset>
-</wo:WOForm></wo:net.sf.webcat.core.WCPageModule>
+</wo:WOForm></wo:org.webcat.core.WCPageModule>
 </wo:else>
 </webobject>

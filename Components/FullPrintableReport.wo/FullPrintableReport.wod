@@ -72,13 +72,13 @@ HasTAComments: WOConditional {
 	condition = hasTAComments;
 }
 
-LongResponse : net.sf.webcat.core.LongResponse {
+LongResponse : org.webcat.core.LongResponse {
 	task = longResponse;
 	refreshInterval = 3;
 	message = "Formatting the file(s) submitted for this assignment";
 }
 
-Page : net.sf.webcat.core.BarePage {
+Page : org.webcat.core.BarePage {
 //    title      = title;
     stylesheet = "Grader.framework/WebServerResources/wc-code.css";
     bodyClass  = currentTab.cssClass;
@@ -90,7 +90,7 @@ PartialInlineReport: PartialInlineReport {
     substituteOldCollapsingRegions = false;
 }
 
-ResultInfo: net.sf.webcat.grader.SubmissionResultInfo {
+ResultInfo: org.webcat.grader.SubmissionResultInfo {
     submission = result.submission;
 }
 
@@ -99,7 +99,7 @@ Return : WOSubmitButton {
     action = next;
 }
 
-ScoreSummary: net.sf.webcat.grader.ScoreSummaryBlock {
+ScoreSummary: org.webcat.grader.ScoreSummaryBlock {
     allowScoreEdit = false;
     submission = result.submission;
 }
@@ -127,12 +127,12 @@ SummaryReport: PartialInlineReport {
     substituteOldCollapsingRegions = false;
 }
 
-TAComments: net.sf.webcat.core.FormattedString {
+TAComments: org.webcat.core.FormattedString {
 	value  = result.comments;
 	format = result.commentFormat;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
 	index = index;
 }
 

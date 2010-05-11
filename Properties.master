@@ -1,7 +1,7 @@
 # ===================================================================
 # Grader subsystem characteristics
 # ===================================================================
-subsystem.Grader=net.sf.webcat.grader.Grader
+subsystem.Grader=org.webcat.grader.Grader
 
 Grader.version.major=2
 Grader.version.minor=4
@@ -40,4 +40,4 @@ grader.resumeSuspendedJobs=true
 # -------------------------------------------------------------------
 # Grader logging defaults
 # -------------------------------------------------------------------
-log4j.logger.net.sf.webcat.grader = INFO
+log4j.logger.org.webcat.grader = INFO

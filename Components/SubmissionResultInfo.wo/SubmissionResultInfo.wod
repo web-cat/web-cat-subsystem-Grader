@@ -75,7 +75,7 @@ SubmitNumber: WOString {
     value = submission.submitNumber;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = rowNumber;
     increment = true;
 }

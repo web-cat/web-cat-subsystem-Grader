@@ -196,7 +196,7 @@ OutOfDate: WOConditional {
     condition = plugin.descriptor.updateIsAvailable;
 }
 
-Page : net.sf.webcat.core.WCPageWithNavigation {
+Page : org.webcat.core.WCPageWithNavigation {
     title = "Manage Plug-ins";
 }
 
@@ -263,7 +263,7 @@ Title: WOString {
 	value = plugin.displayableName;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }
 

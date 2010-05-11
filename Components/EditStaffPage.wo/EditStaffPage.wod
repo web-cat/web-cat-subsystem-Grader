@@ -9,7 +9,7 @@ Add: WOImageButton {
     class    = "icon";
 }
 
-BatchNavigator1: net.sf.webcat.core.WCBatchNavigator {
+BatchNavigator1: org.webcat.core.WCBatchNavigator {
     displayGroup = potentialDisplayGroup;
     persistentKey = "EditStaffPage.batchSize";
 }
@@ -52,7 +52,7 @@ StaffSection: WCPageModule {
     title = "~userRole + \"(s) for \" + courseOffering.compactName + \" \" + courseOffering.course.name";
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
 }
 
@@ -60,25 +60,25 @@ UserID: WOString {
 	value = aUser.userName;
 }
 
-WCSortOrder1: net.sf.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.core.WCSortOrder {
     displayGroup = potentialDisplayGroup;
     displayKey = "Name";
     key = "name_LF";
 }
 
-WCSortOrder2: net.sf.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.core.WCSortOrder {
     displayGroup = potentialDisplayGroup;
     displayKey = "User Name";
     key = "userName";
 }
 
-WCSortOrder3: net.sf.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.core.WCSortOrder {
 	displayGroup = staffDisplayGroup;
 	displayKey = "Name";
 	key = "name_LF";
 }
 
-WCSortOrder4: net.sf.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.core.WCSortOrder {
 	displayGroup = staffDisplayGroup;
 	displayKey = "User Name";
 	key = "userName";

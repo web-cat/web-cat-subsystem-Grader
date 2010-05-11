@@ -10,13 +10,13 @@
             priority = 2;
             children = {
               "Pick the Student" = {
-                pageName = net.sf.webcat.grader.StudentsForAssignmentPage;
+                pageName = org.webcat.grader.StudentsForAssignmentPage;
                 accessLevel = 40;
                 priority = 3;
                 id = EnterGrades;
               };
               "Grade Student's Submission" = {
-                pageName = net.sf.webcat.grader.GradeStudentSubmissionPage;
+                pageName = org.webcat.grader.GradeStudentSubmissionPage;
                 accessLevel = 40;
                 priority = 4;
               };
@@ -27,7 +27,7 @@
             priority = 3;
             children = {
               "Pick the Format" = {
-                pageName = net.sf.webcat.grader.DownloadScoresPage;
+                pageName = org.webcat.grader.DownloadScoresPage;
                 accessLevel = 40;
                 priority = 3;
               };
@@ -38,19 +38,19 @@
             priority = 4;
             children = {
               "Upload Student's File(s)" = {
-                pageName  = net.sf.webcat.grader.UploadSubmissionPage;
+                pageName  = org.webcat.grader.UploadSubmissionPage;
                 accessLevel = 40;
                 priority  = 4;
                 config    = { showStudentSelector = true; };
               };
               "Confirm Student's Submission" = {
-                pageName  = net.sf.webcat.grader.ConfirmSubmissionPage;
+                pageName  = org.webcat.grader.ConfirmSubmissionPage;
                 accessLevel = 40;
                 priority  = 5;
                 config    = { resetPrimeUser = true; };
               };
               "View Student's Results" = {
-                pageName  = net.sf.webcat.grader.FinalReportPage;
+                pageName  = org.webcat.grader.FinalReportPage;
                 accessLevel = 40;
                 priority  = 6;
               };
@@ -59,7 +59,7 @@
           "Mass Regrade" = {
             accessLevel = 90;
             priority = 5;
-            pageName = net.sf.webcat.grader.MassRegraderPage;
+            pageName = org.webcat.grader.MassRegraderPage;
           };
         };
       };
@@ -72,19 +72,19 @@
             priority = 2;
 //            children = {
 //              "Pick the Course" = {
-//                pageName = net.sf.webcat.grader.PickCourseTaughtPage;
+//                pageName = org.webcat.grader.PickCourseTaughtPage;
 //                accessLevel = 50;
 //                priority = 1;
 //                wantsStart = YES;
 //              };
 //              "Pick the Assignment" = {
-//                pageName = net.sf.webcat.grader.PickAssignmentToEditPage;
+//                pageName = org.webcat.grader.PickAssignmentToEditPage;
 //                accessLevel = 50;
 //                priority = 2;
 //                config = { allowCreate = true; };
 //              };
 //              "Edit Assignment Properties" = {
-                pageName = net.sf.webcat.grader.EditAssignmentPage;
+                pageName = org.webcat.grader.EditAssignmentPage;
 //                accessLevel = 50;
 //                priority = 3;
                 id = AssignmentProperties;
@@ -96,7 +96,7 @@
             priority = 100;
             children = {
                 "Create an Assignment" = {
-                    pageName = net.sf.webcat.grader.NewAssignmentPage;
+                    pageName = org.webcat.grader.NewAssignmentPage;
                     accessLevel = 50;
                     priority = 1;
                 };
@@ -108,7 +108,7 @@
             };
           };
           "Plug-ins" = {
-            pageName = net.sf.webcat.grader.PluginManagerPage;
+            pageName = org.webcat.grader.PluginManagerPage;
             accessLevel = 50;
             priority = 150;
           };
@@ -121,23 +121,23 @@
           Properties = {
             accessLevel = 50;
             priority = 2;
-//            pageName = net.sf.webcat.grader.EditCoursePage;
+//            pageName = org.webcat.grader.EditCoursePage;
 //            id       = EditCourseProperties;
                 children = {
 //                  "Pick the Course" = {
-//                    pageName = net.sf.webcat.grader.PickCourseTaughtPage;
+//                    pageName = org.webcat.grader.PickCourseTaughtPage;
 //                    accessLevel = 50;
 //                    priority = 1;
 //                    wantsStart = YES;
 //                  };
                   "Edit Course Properties" = {
-                    pageName  = net.sf.webcat.grader.EditCoursePage;
+                    pageName  = org.webcat.grader.EditCoursePage;
                     accessLevel = 50;
                     priority  = 2;
                     id      = EditCourseProperties;
                   };
                   "Edit Student Roster" = {
-                    pageName = net.sf.webcat.grader.CourseRosterPage;
+                    pageName = org.webcat.grader.CourseRosterPage;
                     accessLevel = 50;
                     priority = 3;
                   };
@@ -146,10 +146,10 @@
           New = {
             accessLevel = 50;
             priority = 3;
-//            pageName = net.sf.webcat.grader.NewCourseOfferingPage;
+//            pageName = org.webcat.grader.NewCourseOfferingPage;
                 children = {
                   "Pick the Course" = {
-                    pageName = net.sf.webcat.grader.NewCourseOfferingPage;
+                    pageName = org.webcat.grader.NewCourseOfferingPage;
                     accessLevel = 50;
                     priority = 1;
                     wantsStart = YES;
@@ -160,7 +160,7 @@
                     config = { jumpTo = EditCourseProperties; };
                   };
 //                  "Edit Student Roster" = {
-//                    pageName = net.sf.webcat.grader.CourseRosterPage;
+//                    pageName = org.webcat.grader.CourseRosterPage;
 //                    accessLevel = 50;
 //                    priority = 3;
 //                  };
@@ -180,12 +180,12 @@
             wantsStart = YES;
             children = {
               "Upload Your File(s)" = {
-                pageName = net.sf.webcat.grader.UploadSubmissionPage;
+                pageName = org.webcat.grader.UploadSubmissionPage;
                 priority = 3;
                 id     = UploadSubmission;
               };
               "Confirm Your Submission" = {
-                pageName = net.sf.webcat.grader.ConfirmSubmissionPage;
+                pageName = org.webcat.grader.ConfirmSubmissionPage;
                 priority = 4;
               };
               "View Your Results" = {
@@ -200,7 +200,7 @@
         priority = 110;
         children = {
           "Most Recent" = {
-            pageName   = net.sf.webcat.grader.FinalReportPage;
+            pageName   = org.webcat.grader.FinalReportPage;
             priority   = 1;
             id         = MostRecent;
             wantsStart = YES;
@@ -209,7 +209,7 @@
             priority = 2;
             children = {
               "Pick the Submission" = {
-                pageName = net.sf.webcat.grader.PickSubmissionPage;
+                pageName = org.webcat.grader.PickSubmissionPage;
                 priority = 3;
                 id       = PastResults;
               };
@@ -223,7 +223,7 @@
             priority = 3;
             children = {
               "Graphical Performance Summary" = {
-                pageName = net.sf.webcat.grader.graphs.AssignmentGraphPage;
+                pageName = org.webcat.grader.graphs.AssignmentGraphPage;
                 id     = GraphResults;
                 priority = 3;
               };

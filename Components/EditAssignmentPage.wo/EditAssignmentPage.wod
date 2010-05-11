@@ -30,7 +30,7 @@ Description: WCTextBox {
     id    = "title";
 }
 
-DescriptionInfo: net.sf.webcat.core.PopUpInfo {
+DescriptionInfo: org.webcat.core.PopUpInfo {
     title   = "Title";
     message = "Place the title of your assignment here, like &quot;Word Ladder Finder&quot;.  This value is used as a supplementary description when there is space to display more than just the name.";
 }
@@ -86,7 +86,7 @@ GradingStepsTable: WCStyledTable {
     accept       = "gradingStep";
 }
 
-Graph: net.sf.webcat.grader.graphs.MiniBarGraph {
+Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = thisOffering.graphSummary;
 }
 
@@ -94,7 +94,7 @@ HasSuspendedSubs: WOConditional {
     condition = hasSuspendedSubs;
 }
 
-LastTR: net.sf.webcat.core.TableRow {
+LastTR: org.webcat.core.TableRow {
     index = index;
 }
 
@@ -105,7 +105,7 @@ MoodleId: WCTextBox {
     style        = "width: 6em;";
 }
 
-MoodleIdInfo: net.sf.webcat.core.PopUpInfo {
+MoodleIdInfo: org.webcat.core.PopUpInfo {
     title   = "Moodle Id";
     message = "If you are using our Moodle for your course web site and it has extensions to support uploading CSV gradebook information, place your Moodle course\'s ID in this slot.  Otherwise, leave it blank.";
 }
@@ -121,12 +121,12 @@ Name: WCTextBox {
     id    = "name";
 }
 
-NameInfo: net.sf.webcat.core.PopUpInfo {
+NameInfo: org.webcat.core.PopUpInfo {
     title   = "Name";
     message = "Use a short 1-3 word assignment name, like &quot;Program 1&quot; or &quot;Lab 04&quot;.  The name cannot be blank.  This name is used to construct human-readable directory names for the assignment, and is also used as a shorthand for referring to the assignment in student feedback.";
 }
 
-Navigator: net.sf.webcat.grader.GraderNavigator {
+Navigator: org.webcat.grader.GraderNavigator {
 }
 
 NewSubmissionProfile: WCButton {
@@ -138,7 +138,7 @@ NumSuspended: WOString {
     value = numSuspendedSubs;
 }
 
-Page: net.sf.webcat.core.WCPageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     title = "Edit Assignment Properties";
 //    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
 //    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js";
@@ -148,7 +148,7 @@ PublishIt: WCCheckBox {
     checked = thisOffering.publish;
 }
 
-PublishItInfo: net.sf.webcat.core.PopUpInfo {
+PublishItInfo: org.webcat.core.PopUpInfo {
     title   = "Publish It";
     message = "Determines whether or not the assignment is visible and available to students. When this box is unchecked, only course staff can access the assignment.";
 }
@@ -193,7 +193,7 @@ StepRepetition: WORepetition {
     index = index;
 }
 
-SubmissionProfileInfo: net.sf.webcat.core.PopUpInfo {
+SubmissionProfileInfo: org.webcat.core.PopUpInfo {
     title   = "Submission Rules";
     message = "The <b>submission rules</b> define the policy that governs acceptance of student submissions, including the points available, limits on the number or size of submissions, the applicable late policy, and any penalties for late submissions, etc.  Click the edit icon to edit the selected rules, or click the New button to create a new rule set.";
 }
@@ -206,7 +206,7 @@ SubmissionProfileList: WCFilteringSelect {
     id            = "policy";
 }
 
-SuspendInfo: net.sf.webcat.core.PopUpInfo {
+SuspendInfo: org.webcat.core.PopUpInfo {
     title   = "Suspend All Grading";
     message = "When grading for an assignment is suspended, processing of any further submissions for an assignment is disabled. Any submissions made will be accepted and queued up, but will not be processed. If grading is suspended, when you click &quot;Resume Grading&quot;, all submissions that have been queued up will be processed.";
 }
@@ -217,13 +217,13 @@ Timeout: WCTextBox {
     value        = stepTimeout;
 }
 
-TR: net.sf.webcat.core.TableRow {
+TR: org.webcat.core.TableRow {
     index = index;
     dragHandle = "dragHandle";
     dndType = "gradingStep";
 }
 
-TR2: net.sf.webcat.core.TableRow {
+TR2: org.webcat.core.TableRow {
     index = index;
     showCaution = upcomingOfferingIsLate;
     showError   = upcomingOffering.gradingSuspended;
@@ -258,7 +258,7 @@ UploadInstructions: WCSimpleTextArea {
     id    = "instructions";
 }
 
-UploadInstructionsInfo: net.sf.webcat.core.PopUpInfo {
+UploadInstructionsInfo: org.webcat.core.PopUpInfo {
     title   = "Upload Instructions";
     message = "Optionally, enter any assignment-specific instructions that you want students to see when they upload submissions through Web-CAT\'s web interface. Any content you insert here will be included in the HTML page where users select files to upload and submit. You can use full HTML markup in your instructions, which will be inserted unfiltered in the page students see. Note that these instructions will only be available to students who submit using their web browser--they will not be seen by students who submit from an IDE, such as BlueJ or Eclipse.";
 }
@@ -269,7 +269,7 @@ URL: WCTextBox {
     id    = "URL";
 }
 
-URLInfo: net.sf.webcat.core.PopUpInfo {
+URLInfo: org.webcat.core.PopUpInfo {
     title   = "URL";
     message = "Place a URL to use for the assignment writeup.  If this optional value is set, the assignment name will be shown to students as an active hyperlink that targets this URL.";
 }
