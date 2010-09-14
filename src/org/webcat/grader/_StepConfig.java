@@ -63,7 +63,7 @@ public abstract class _StepConfig
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param updateMutableFields
+     * @param updateMutableFieldsValue
      * @return The newly created object
      */
     public static StepConfig create(

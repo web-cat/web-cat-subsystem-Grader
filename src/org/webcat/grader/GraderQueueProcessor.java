@@ -1020,6 +1020,13 @@ public class GraderQueueProcessor
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
+
+        for (Submission partneredSubmission :
+            job.submission().partneredSubmissions())
+        {
+            partneredSubmission.setResultRelationship(submissionResult);
+        }
+
         job.setSubmissionRelationship( null );
         editingContext.deleteObject( job );
         editingContext.saveChanges();

@@ -1,20 +1,57 @@
+<wo:if condition="$allowPartnerEdit">
+    <wo:WCDiv id="$idFor.editPartnersDialog" dojoType="webcat.Dialog" title="Edit Partners">
+        <p>Please choose the students below who also worked on this submission.</p>
+        <wo name="PartnerSelector"/>
+        <hr/>
+        <div style="text-align: center">
+            <wo name="EditPartnersOK"/>
+            <wo name="EditPartnersCancel">
+                <script type="dojo/connect" event="onClick" args="evt">
+                dijit.byId('<wo:str value="$idFor.editPartnersDialog"/>').hide();
+                </script>
+            </wo>
+        </div>
+    </wo:WCDiv>
+</wo:if>
+
 <table><tbody>
-<webobject name="TR"><th class="R" valign="top">Assignment</th>
-  <td><webobject name="DeptNumber"/>: <webobject name="AssignmentName"/> try #<webobject name="SubmitNumber"/></td></webobject>
-<webobject name="TR"><th class="R" valign="top">Name</th>
-  <td><webobject name="StudentName"/><webobject name="AllowPartnerEdit"> <webobject name="EditPartners"/></webobject></td></webobject>
-<webobject name="PartnerRepetition"><webobject name="IsAPartner">
-  <webobject name="TR"><th class="R">Partner</th>
-    <td><webobject name="PartnerName"/></td></webobject>
-</webobject></webobject>
-<webobject name="TR"><th class="R" valign="top">Submitted</th>
-  <td><webobject name="String12"/>, <webobject name="String18"/></td></webobject>
-<webobject name="TR"><th class="R" valign="top">Total Score</th>
-  <td><webobject name="String19"/><b><webobject name="String7"/></b>/<webobject name="String3"/></td></webobject>
-<webobject name="ShowFileInfo">
-  <webobject name="TR"><th class="R" valign="top">File Name</th>
-    <td><webobject name="FileName"/></td></webobject>
-  <webobject name="TR"><th class="R" valign="top">File Score</th>
-    <td><webobject name="String1"/> points lost</td></webobject>
-</webobject>
+<wo name="TR">
+  <th class="R" valign="top">Assignment</th>
+  <td><wo name="DeptNumber"/>: <wo name="AssignmentName"/> try #<wo name="SubmitNumber"/></td>
+</wo>
+<wo name="TR">
+  <th class="R" valign="top">Name</th>
+  <td><wo name="StudentName"/></td>
+</wo>
+<wo name="TR">
+  <th class="R">Partners</th>
+  <td>
+    <wo:WCContentPane id="$idFor.partnersPane">
+      <wo name="PartnerRepetition">
+        <wo name="PartnerName"/><br/>
+      </wo>
+    </wo>
+    <wo:if condition="$allowPartnerEdit"> <wo name="EditPartners"/></wo:if>
+  </td>
+</wo>
+<wo name="TR">
+  <th class="R" valign="top">Submitted</th>
+  <td><wo name="SubmitTime"/>, <wo name="SubmitEarlyLateStatus"/></td>
+</wo>
+<wo name="TR">
+  <th class="R" valign="top">Total Score</th>
+  <td><wo name="ScoreModifiers"/><b><wo name="FinalScore"/></b>/<wo name="AvailablePoints"/></td>
+</wo>
+
+<wo name="ShowFileInfo">
+  <wo name="TR">
+    <th class="R" valign="top">File Name</th>
+    <td><wo name="FileName"/></td>
+  </wo>
+  <wo name="TR">
+    <th class="R" valign="top">File Score</th>
+    <td><wo name="FileDeductions"/> points lost</td>
+  </wo>
+</wo>
+
 </tbody></table>

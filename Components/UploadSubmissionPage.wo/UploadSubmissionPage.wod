@@ -3,46 +3,86 @@ AssignmentName: WOString {
 }
 
 DifferentStudent: WOConditional {
-	condition = session.impersonatingAnotherUser;
+    condition = session.impersonatingAnotherUser;
+}
+
+EditPartners: WCButton {
+    onClick = showEditPartnersDialogScript;
+    label  = "Choose Partners...";
+}
+
+EditPartnersDialog: WCDialog {
+    id = editPartnersDialog;
+    title = "Choose Partners";
+    okAction = partnersChanged;
+}
+
+EditPartnersOK: WCButton {
+    action = partnersChanged;
+    remote = true;
+    class = "pos";
+    label = "OK";
+}
+
+EditPartnersCancel: WCButton {
+    class = "neg";
+    label = "Cancel";
+}
+
+PartnerSelector: FilteringUserSelector {
+    selectedListTitle = "Current Partners on This Submission";
+    availableListTitle = "Students Enrolled in Your Course";
+    selectedUsers = partnersForEditing;
+    qualifier = qualifierForStudentsInCourse;
+}
+
+PartnerName: WOString {
+    value = aPartner.nameAndUid;
+}
+
+PartnerRepetition: WORepetition {
+    list = partnersForEditing;
+    item = aPartner;
+    index = partnerIndex;
 }
 
 HasPreviousSubmissions: WOConditional {
-	condition = hasPreviousSubmissions;
+    condition = hasPreviousSubmissions;
 }
 
 HasNoPreviousSubmissions: WOConditional {
-	condition = hasPreviousSubmissions;
-	negate    = true;
+    condition = hasPreviousSubmissions;
+    negate    = true;
 }
 
 HasInstructions: WOConditional {
-	condition = hasInstructions;
+    condition = hasInstructions;
 }
 
 OkayToSubmit: WOConditional {
-	condition = okayToSubmit;
+    condition = okayToSubmit;
 }
 
 HasValidFileUpload: WOConditional {
-	condition = submissionInProcess.hasValidFileUpload;
+    condition = submissionInProcess.hasValidFileUpload;
 }
 
 FileUpload1: WOFileUpload {
-	data     = submissionInProcess.uploadedFile;
-	filePath = submissionInProcess.uploadedFileName;
-	size     = 60;
-	dojoType = "dojox.form.FileInput";
+    data     = submissionInProcess.uploadedFile;
+    filePath = submissionInProcess.uploadedFileName;
+    size     = 60;
+    dojoType = "dojox.form.FileInput";
 }
 
 Repetition1: WORepetition {
-	item = aSubmission;
-	list = submissionDisplayGroup.displayedObjects;
-	index = index;
+    item = aSubmission;
+    list = submissionDisplayGroup.displayedObjects;
+    index = index;
 }
 
 Instructions: WOString {
-	value      = prefs.assignmentOffering.assignment.fileUploadMessage;
-	escapeHTML = false;
+    value      = prefs.assignmentOffering.assignment.fileUploadMessage;
+    escapeHTML = false;
 }
 
 Navigator: org.webcat.grader.GraderNavigator {
@@ -50,17 +90,17 @@ Navigator: org.webcat.grader.GraderNavigator {
 }
 
 String1: WOString {
-	value = aSubmission.submitNumber;
+    value = aSubmission.submitNumber;
 }
 
 String2: WOString {
-	value     = aSubmission.submitTime;
+    value     = aSubmission.submitTime;
     formatter = session.timeFormatter;
 }
 
 String3: WOString {
-	numberformat = "0.0";
-	value        = aSubmission.result.finalScore;
+    numberformat = "0.0";
+    value        = aSubmission.result.finalScore;
 }
 
 StudentList: WCFilteringSelect {
@@ -72,29 +112,29 @@ StudentList: WCFilteringSelect {
 }
 
 StudentName: WOString {
-	value = user.nameAndUid;
+    value = user.nameAndUid;
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Time";
-	key = "submitTime";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Time";
+    key = "submitTime";
 }
 
 WCSortOrder2: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Score";
-	key = "result.finalScore";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Score";
+    key = "result.finalScore";
 }
 
 WCSortOrder3: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Submission No.";
-	key = "submitNumber";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Submission No.";
+    key = "submitNumber";
 }
 
 //Page: org.webcat.core.WizardPage {

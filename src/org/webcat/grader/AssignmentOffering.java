@@ -438,7 +438,15 @@ public class AssignmentOffering
     {
         for (Submission sub : mostRecentSubsForAll())
         {
-            sub.requeueForGrading(ec);
+            // A fake partnered submission will have a non-null
+            // primarySubmission attribute. We only want to regrade the actual
+            // submissions, so only enqueue the ones with null
+            // primarySubmission.
+
+            if (sub.primarySubmission() == null)
+            {
+                sub.requeueForGrading(ec);
+            }
         }
         ec.saveChanges();
         Grader.getInstance().graderQueue().enqueue(null);

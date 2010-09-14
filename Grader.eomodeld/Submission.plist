@@ -12,7 +12,12 @@
             columnName = CISSUBMISSIONFORGRADING; 
             name = isSubmissionForGrading; 
             prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; needsMigration = true; }; 
+            userInfo = {
+                isScalar = true; 
+                needsMigration = true; 
+                scalarDefault = false; 
+                type = boolean; 
+            }; 
         }, 
         {
             columnName = CPARTNERLINK; 
@@ -20,6 +25,12 @@
             name = partnerLink; 
             prototypeName = boolean; 
             userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = primarySubmissionId; 
+            name = primarySubmissionId; 
+            prototypeName = id; 
         }, 
         {columnName = CRESULTID; name = resultId; prototypeName = foreignId; }, 
         {
@@ -53,7 +64,9 @@
         fileName, 
         graderPrefs, 
         isSubmissionForGrading, 
+        partneredSubmissions, 
         partnerLink, 
+        primarySubmission, 
         result, 
         submitNumber, 
         submitTime, 
@@ -84,6 +97,20 @@
             joinSemantic = EOInnerJoin; 
             joins = ({destinationAttribute = submissionId; sourceAttribute = id; }); 
             name = graderPrefs; 
+        }, 
+        {
+            destination = Submission; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = primarySubmissionId; sourceAttribute = id; }); 
+            name = partneredSubmissions; 
+        }, 
+        {
+            destination = Submission; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = primarySubmissionId; }); 
+            name = primarySubmission; 
         }, 
         {
             deleteRule = EODeleteRuleCascade; 

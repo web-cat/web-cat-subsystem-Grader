@@ -23,9 +23,13 @@ package org.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
+import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXQ;
+import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.ui.generators.JavascriptGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -67,6 +71,10 @@ public class UploadSubmissionPage
     public WODisplayGroup      studentDisplayGroup;
     public User                student;
     public User                submitAsStudent;
+    public NSMutableArray<User> previousPartners;
+    public NSMutableArray<User> partnersForEditing;
+    public User                aPartner;
+    public int                 partnerIndex;
 
 
     //~ Methods ...............................................................
@@ -105,6 +113,33 @@ public class UploadSubmissionPage
         int currentSubNo = fillDisplayGroup(user());
         hasPreviousSubmissions = submissionDisplayGroup.displayedObjects()
             .count() > 0;
+
+        Submission latestSub =
+            Submission.latestSubmissionForAssignmentOfferingAndUser(
+                    localContext(), prefs().assignmentOffering(), user());
+
+        if (previousPartners == null)
+        {
+            if (submissionInProcess().partners() != null)
+            {
+                previousPartners =
+                    submissionInProcess().partners().mutableClone();
+            }
+            else
+            {
+                previousPartners = new NSMutableArray<User>();
+
+                if (latestSub != null)
+                {
+                    for (Submission partneredSub : latestSub.partneredSubmissions())
+                    {
+                        previousPartners.addObject(partneredSub.user());
+                    }
+                }
+            }
+        }
+
+        partnersForEditing = previousPartners.mutableClone();
 
         Number maxSubmissions = prefs().assignmentOffering()
             .assignment().submissionProfile().maxSubmissionsRaw();
@@ -283,6 +318,9 @@ public class UploadSubmissionPage
                     currentSubNo);
                 submissionInProcess().submission().setUserRelationship(user());
             }
+
+            submissionInProcess().setPartners(partnersForEditing);
+
             return super.next();
         }
         else
@@ -428,6 +466,45 @@ public class UploadSubmissionPage
             }
         }
         return currentSubNo;
+    }
+
+
+    // ----------------------------------------------------------
+    public String showEditPartnersDialogScript()
+    {
+        return "dijit.byId('editPartnersDialog').show();";
+    }
+
+
+    // ----------------------------------------------------------
+    public JavascriptGenerator partnersChanged()
+    {
+        previousPartners = partnersForEditing.mutableClone();
+
+        JavascriptGenerator script = new JavascriptGenerator();
+        script.refresh("partnersPane").
+               dijit("editPartnersDialog").call("hide");
+
+        return script;
+    }
+
+
+    // ----------------------------------------------------------
+    public EOQualifier qualifierForStudentsInCourse()
+    {
+        CourseOffering courseOffering =
+            prefs().assignmentOffering().courseOffering();
+        Course course = courseOffering.course();
+        NSArray<CourseOffering> offerings = course.offerings();
+
+        EOQualifier[] enrollmentQuals = new EOQualifier[offerings.count()];
+        int i = 0;
+        for (CourseOffering offering : offerings)
+        {
+            enrollmentQuals[i++] = User.enrolledIn.is(offering);
+        }
+
+        return ERXQ.or(enrollmentQuals);
     }
 
 

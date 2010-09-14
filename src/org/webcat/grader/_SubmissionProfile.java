@@ -62,13 +62,15 @@ public abstract class _SubmissionProfile
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param awardEarlyBonus
-     * @param deductLatePenalty
-     * @param submissionMethod
+     * @param allowPartnersValue
+     * @param awardEarlyBonusValue
+     * @param deductLatePenaltyValue
+     * @param submissionMethodValue
      * @return The newly created object
      */
     public static SubmissionProfile create(
         EOEditingContext editingContext,
+        boolean allowPartnersValue,
         boolean awardEarlyBonusValue,
         boolean deductLatePenaltyValue,
         byte submissionMethodValue
@@ -78,6 +80,7 @@ public abstract class _SubmissionProfile
             EOUtilities.createAndInsertInstance(
                 editingContext,
                 _SubmissionProfile.ENTITY_NAME);
+        eoObject.setAllowPartners(allowPartnersValue);
         eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
         eoObject.setDeductLatePenalty(deductLatePenaltyValue);
         eoObject.setSubmissionMethod(submissionMethodValue);
@@ -145,6 +148,9 @@ public abstract class _SubmissionProfile
     //~ Constants (for key names) .............................................
 
     // Attributes ---
+    public static final String ALLOW_PARTNERS_KEY = "allowPartners";
+    public static final ERXKey<Integer> allowPartners =
+        new ERXKey<Integer>(ALLOW_PARTNERS_KEY);
     public static final String AVAILABLE_POINTS_KEY = "availablePoints";
     public static final ERXKey<Double> availablePoints =
         new ERXKey<Double>(AVAILABLE_POINTS_KEY);
@@ -271,6 +277,70 @@ public abstract class _SubmissionProfile
             return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>allowPartners</code> value.
+     * @return the value of the attribute
+     */
+    public boolean allowPartners()
+    {
+        Integer result =
+            (Integer)storedValueForKey( "allowPartners" );
+        return ( result == null )
+            ? false
+            : ( result.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>allowPartners</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setAllowPartners( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAllowPartners("
+                + value + "): was " + allowPartners() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setAllowPartnersRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>allowPartners</code> value.
+     * @return the value of the attribute
+     */
+    public Integer allowPartnersRaw()
+    {
+        return (Integer)storedValueForKey( "allowPartners" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>allowPartners</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setAllowPartnersRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAllowPartnersRaw("
+                + value + "): was " + allowPartnersRaw() );
+        }
+        takeStoredValueForKey( value, "allowPartners" );
+    }
+
 
     // ----------------------------------------------------------
     /**

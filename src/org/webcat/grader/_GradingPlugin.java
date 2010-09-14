@@ -63,9 +63,9 @@ public abstract class _GradingPlugin
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param isConfigFile
-     * @param isPublished
-     * @param updateMutableFields
+     * @param isConfigFileValue
+     * @param isPublishedValue
+     * @param updateMutableFieldsValue
      * @return The newly created object
      */
     public static GradingPlugin create(

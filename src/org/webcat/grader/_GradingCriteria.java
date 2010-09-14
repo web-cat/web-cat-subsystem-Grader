@@ -62,16 +62,16 @@ public abstract class _GradingCriteria
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param diffLineSyncing
-     * @param floatComparisonStyle
-     * @param ignoreBlankLines
-     * @param ignoreCase
-     * @param ignoreNonprinting
-     * @param ignorePunctuation
-     * @param ignoreWhitespace
-     * @param normalizeWhitespace
-     * @param tokenizingStyle
-     * @param trimWhitespace
+     * @param diffLineSyncingValue
+     * @param floatComparisonStyleValue
+     * @param ignoreBlankLinesValue
+     * @param ignoreCaseValue
+     * @param ignoreNonprintingValue
+     * @param ignorePunctuationValue
+     * @param ignoreWhitespaceValue
+     * @param normalizeWhitespaceValue
+     * @param tokenizingStyleValue
+     * @param trimWhitespaceValue
      * @return The newly created object
      */
     public static GradingCriteria create(

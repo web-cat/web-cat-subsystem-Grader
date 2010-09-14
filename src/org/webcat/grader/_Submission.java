@@ -63,12 +63,14 @@ public abstract class _Submission
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param partnerLink
+     * @param partnerLinkValue
+     * @param primarySubmissionValue
      * @return The newly created object
      */
     public static Submission create(
         EOEditingContext editingContext,
-        boolean partnerLinkValue
+        boolean partnerLinkValue,
+        org.webcat.grader.Submission primarySubmissionValue
         )
     {
         Submission eoObject = (Submission)
@@ -76,6 +78,7 @@ public abstract class _Submission
                 editingContext,
                 _Submission.ENTITY_NAME);
         eoObject.setPartnerLink(partnerLinkValue);
+        eoObject.setPrimarySubmissionRelationship(primarySubmissionValue);
         return eoObject;
     }
 
@@ -159,6 +162,9 @@ public abstract class _Submission
     public static final String ASSIGNMENT_OFFERING_KEY = "assignmentOffering";
     public static final ERXKey<org.webcat.grader.AssignmentOffering> assignmentOffering =
         new ERXKey<org.webcat.grader.AssignmentOffering>(ASSIGNMENT_OFFERING_KEY);
+    public static final String PRIMARY_SUBMISSION_KEY = "primarySubmission";
+    public static final ERXKey<org.webcat.grader.Submission> primarySubmission =
+        new ERXKey<org.webcat.grader.Submission>(PRIMARY_SUBMISSION_KEY);
     public static final String RESULT_KEY = "result";
     public static final ERXKey<org.webcat.grader.SubmissionResult> result =
         new ERXKey<org.webcat.grader.SubmissionResult>(RESULT_KEY);
@@ -172,6 +178,9 @@ public abstract class _Submission
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     public static final ERXKey<org.webcat.grader.GraderPrefs> graderPrefs =
         new ERXKey<org.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
+    public static final String PARTNERED_SUBMISSIONS_KEY = "partneredSubmissions";
+    public static final ERXKey<org.webcat.grader.Submission> partneredSubmissions =
+        new ERXKey<org.webcat.grader.Submission>(PARTNERED_SUBMISSIONS_KEY);
     // Fetch specifications ---
     public static final String EARLIEST_SUBMISSION_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "earliestSubmissionForAssignmentOfferingAndUser";
     public static final String EARLIEST_SUBMISSION_FOR_COURSE_OFFERING_FSPEC = "earliestSubmissionForCourseOffering";
@@ -582,6 +591,67 @@ public abstract class _Submission
         else
         {
             addObjectToBothSidesOfRelationshipWithKey( value, "assignmentOffering" );
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>primarySubmission</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public org.webcat.grader.Submission primarySubmission()
+    {
+        return (org.webcat.grader.Submission)storedValueForKey( "primarySubmission" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>primarySubmission</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>setPrimarySubmissionRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setPrimarySubmission( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPrimarySubmission("
+                + value + "): was " + primarySubmission() );
+        }
+        takeStoredValueForKey( value, "primarySubmission" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>primarySubmission</code>
+     * relationship.  This method is a type-safe version of
+     * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setPrimarySubmissionRelationship(
+        org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPrimarySubmissionRelationship("
+                + value + "): was " + primarySubmission() );
+        }
+        if ( value == null )
+        {
+            org.webcat.grader.Submission object = primarySubmission();
+            if ( object != null )
+                removeObjectFromBothSidesOfRelationshipWithKey( object, "primarySubmission" );
+        }
+        else
+        {
+            addObjectToBothSidesOfRelationshipWithKey( value, "primarySubmission" );
         }
     }
 
@@ -1060,6 +1130,184 @@ public abstract class _Submission
         for (org.webcat.grader.GraderPrefs object : graderPrefs())
         {
             deleteGraderPrefsRelationship(object);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>partneredSubmissions</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    @SuppressWarnings("unchecked")
+    public NSArray<org.webcat.grader.Submission> partneredSubmissions()
+    {
+        return (NSArray)storedValueForKey( "partneredSubmissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>partneredSubmissions</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setPartneredSubmissions( NSMutableArray<org.webcat.grader.Submission>  value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPartneredSubmissions("
+                + value + "): was " + partneredSubmissions() );
+        }
+        takeStoredValueForKey( value, "partneredSubmissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>partneredSubmissions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToPartneredSubmissionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToPartneredSubmissions( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToPartneredSubmissions("
+                + value + "): was " + partneredSubmissions() );
+        }
+        NSMutableArray<org.webcat.grader.Submission> array =
+            (NSMutableArray<org.webcat.grader.Submission>)partneredSubmissions();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>partneredSubmissions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromPartneredSubmissionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromPartneredSubmissions( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromPartneredSubmissions("
+                + value + "): was " + partneredSubmissions() );
+        }
+        NSMutableArray<org.webcat.grader.Submission> array =
+            (NSMutableArray<org.webcat.grader.Submission>)partneredSubmissions();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>partneredSubmissions</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToPartneredSubmissionsRelationship( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToPartneredSubmissionsRelationship("
+                + value + "): was " + partneredSubmissions() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "partneredSubmissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>partneredSubmissions</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromPartneredSubmissionsRelationship( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromPartneredSubmissionsRelationship("
+                + value + "): was " + partneredSubmissions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "partneredSubmissions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>partneredSubmissions</code> relationship.
+     *
+     * @return The new entity
+     */
+    public org.webcat.grader.Submission createPartneredSubmissionsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createPartneredSubmissionsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "Submission" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "partneredSubmissions" );
+        return (org.webcat.grader.Submission)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>partneredSubmissions</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deletePartneredSubmissionsRelationship( org.webcat.grader.Submission value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deletePartneredSubmissionsRelationship("
+                + value + "): was " + partneredSubmissions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "partneredSubmissions" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>partneredSubmissions</code> relationship.
+     */
+    public void deleteAllPartneredSubmissionsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllPartneredSubmissionsRelationships(): was "
+                + partneredSubmissions() );
+        }
+        for (org.webcat.grader.Submission object : partneredSubmissions())
+        {
+            deletePartneredSubmissionsRelationship(object);
         }
     }
 

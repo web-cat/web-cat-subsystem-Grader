@@ -1,55 +1,67 @@
-<webobject name="Page"><wo name="WizardForm">
+<wo name="Page"><wo name="WizardForm">
+
+<wo:org.webcat.core.WCPageModule title="Result Summary">
   <div class="shadow">
-    <webobject name="ResultInfo"/>
+    <wo name="ResultInfo"/>
   </div>
-<div style="clear:both"><p><webobject name="Done"/>Show grade to student? <webobject name="Regrade"/> <webobject name="SelectSubmission"/></p></div>
+  <div style="clear:both"><p><wo name="Done"/>Show grade to student? <wo name="Regrade"/> <wo name="SelectSubmission"/></p></div>
   <div class="shadow">
-    <webobject name="ScoreSummary"/>
-  </div><div class="spacer">&nbsp;</div>
-<webobject name="HasFileStats">
-<div class="shadow"><table><thead>
-  <tr><th class="sm">Done?<webobject name="WCSortOrder7"/></th>
-    <th>File<webobject name="WCSortOrder1"/></th>
-        <th class="sm">Staff<br/>Cmts<webobject name="WCSortOrder5"/></th>
-        <th class="sm">Staff<br/>Pts<webobject name="WCSortOrder6"/></th>
+    <wo name="ScoreSummary"/>
+  </div>
+  <div><wo name="FullPrintableReport"/></div>
+</wo:org.webcat.core.WCPageModule>
+<wo:org.webcat.core.WCPageModule title="File Details">
+  <wo name="HasFileStats">
+    <wo:WCStyledTable><thead>
+      <tr>
+        <th class="sm">Done?<wo name="WCSortOrder7"/></th>
+        <th>File<wo name="WCSortOrder1"/></th>
+        <th class="sm">Staff<br/>Cmts<wo name="WCSortOrder5"/></th>
+        <th class="sm">Staff<br/>Pts<wo name="WCSortOrder6"/></th>
         <wo:if condition="$showAutoGradedComments">
-        <th class="sm">Other<br/>Cmts<webobject name="WCSortOrder4"/></th>
+          <th class="sm">Other<br/>Cmts<wo name="WCSortOrder4"/></th>
         </wo:if>
-        <th class="sm">Other<br/>Pts<webobject name="WCSortOrder2"/></th>
-    <webobject name="ShowCoverageData">
-      <th class="sm" colspan="2" align="left"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
-    </webobject></tr></thead><tbody>
-  <webobject name="StatRepetition"><webobject name="TR">
-    <td><webobject name="FileStatus"/></td>
-    <td><webobject name="ShowDetails"/>&nbsp;<webobject name="FileName"/></td>
-    <td class="n"><webobject name="FileStaffRemarks"/></td>
-    <td class="n"><webobject name="FileStaffDeduction"/></td>
-    <wo:if condition="$showAutoGradedComments">
-    <td class="n"><webobject name="FileRemarks"/></td>
-    </wo:if>
-    <td class="n"><webobject name="FileDeduction"/></td>
-    <webobject name="ShowCoverageData"><webobject name="HasCoverageData">
-      <td class="n"><webobject name="Coverage"/>%</td>
-      <td><webobject name="CoverageMeter"/></td>
-    </webobject><webobject name="HasNoCoverageData"><td>&nbsp;</td><td>&nbsp;</td>
-    </webobject></webobject>
-  </webobject></webobject>
-</tbody></table></div><div class="spacer">&nbsp;</div>
-</webobject>
-<webobject name="FullPrintableReport"/><br/>
-<div class="shadow"><table><thead><tr><th>TA/Instructor Comments</th></tr></thead><tbody>
-<tr><td><webobject name="Comments"/></td></tr>
-<tr><td>Format: <webobject name="CommentFormat"/></td></tr>
-</tbody></table></div><div class="spacer">&nbsp;</div>
-<webobject name="SummaryReport"/>
-<webobject name="StudentInlineReport"/>
-<webobject name="StaffInlineReport"/>
-<div class="spacer">&nbsp;</div><webobject name="FileBrowser"/>
-<div class="spacer">&nbsp;</div>
-<div style="float: right;">
-<!-- wo:WOSubmitButton action="$apply" value="Apply"/ -->
-<wo name="NextButton"/>
-<wo name="HasNextStudent"><wo name="NextStudentButton"/></wo>
-<wo:WOSubmitButton value="Cancel" action="$cancel"/>
+        <th class="sm">Other<br/>Pts<wo name="WCSortOrder2"/></th>
+        <wo name="ShowCoverageData">
+          <th class="sm" colspan="2" align="left"><wo name="StatsLabel"/><wo name="WCSortOrder3"/></th>
+        </wo>
+      </tr></thead><tbody>
+      <wo name="StatRepetition"><wo name="TR">
+        <td><wo name="FileStatus"/></td>
+        <td><wo name="ShowDetails"/>&nbsp;<wo name="FileName"/></td>
+        <td class="n"><wo name="FileStaffRemarks"/></td>
+        <td class="n"><wo name="FileStaffDeduction"/></td>
+        <wo:if condition="$showAutoGradedComments">
+          <td class="n"><wo name="FileRemarks"/></td>
+        </wo:if>
+        <td class="n"><wo name="FileDeduction"/></td>
+        <wo name="ShowCoverageData"><wo name="HasCoverageData">
+          <td class="n"><wo name="Coverage"/>%</td>
+          <td><wo name="CoverageMeter"/></td>
+        </wo><wo name="HasNoCoverageData"><td>&nbsp;</td><td>&nbsp;</td>
+      </wo></wo>
+    </wo></wo>
+    </tbody></wo:WCStyledTable>
+  </wo>
+</wo:org.webcat.core.WCPageModule>
+
+<wo:org.webcat.core.WCPageModule title="TA/Instructor Comments">
+  <div><wo name="Comments"/></div>
+  <div>Format: <wo name="CommentFormat"/></div>
+</wo:org.webcat.core.WCPageModule>
+
+<wo:PartialInlineReport file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
+<wo:PartialInlineReport file="$result.resultFile" title="Student Inline Report" open="$true"/>
+<wo:PartialInlineReport file="$result.staffResultFile" title="Staff Inline Report" open="$true"/>
+
+<wo:org.webcat.core.WCPageModule title="Downloadables">
+  <wo name="FileBrowser"/>
+</wo:org.webcat.core.WCPageModule>
+
+<div class="module right">
+  <wo name="NextButton"/>
+  <wo name="HasNextStudent"><wo name="NextStudentButton"/></wo>
+  <wo:WCButton label="Cancel" action="$cancel"/>
 </div>
-</wo></webobject>
+
+</wo></wo>

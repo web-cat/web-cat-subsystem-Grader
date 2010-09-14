@@ -10,11 +10,17 @@ Page: org.webcat.core.WCPageWithNavigation {
 // }
 
 Repetition1: WORepetition {
-	item = file;
-	list = submissionInProcess.uploadedFileList;
-	index = index;
+    item = file;
+    list = submissionInProcess.uploadedFileList;
+    index = index;
+}
+
+PartnerRepetition: WORepetition {
+    item = partnerInRepetition;
+    list = submissionInProcess.partners;
+    index = index;
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }

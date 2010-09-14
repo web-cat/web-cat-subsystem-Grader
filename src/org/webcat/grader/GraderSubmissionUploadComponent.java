@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
+import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.*;
 import java.io.*;
 import org.apache.log4j.Logger;
@@ -82,6 +83,8 @@ public class GraderSubmissionUploadComponent
      * object and binds it to the submission key.
      * @param submitNumber the number of the new submission
      * @param user the person making the submission
+     * @param partners an array of partners to be associated with the
+     *     submission
      */
     public void startSubmission( int submitNumber, User user )
     {
@@ -89,6 +92,7 @@ public class GraderSubmissionUploadComponent
         localContext().insertObject( submission );
         submission.setSubmitNumber( submitNumber );
         submission.setUserRelationship( user );
+
         log.debug( "startSubmission( " + submitNumber + ", " + user + " )" );
         submissionInProcess().setSubmission( submission );
     }
@@ -120,7 +124,14 @@ public class GraderSubmissionUploadComponent
         prefs().assignmentOffering().addToSubmissionsRelationship( submission );
         log.debug( "Uploaded file name: " + uploadedFileName );
 
-        // First, make the necessary directory
+        // Do the actual partnering of the users (this will create the dummy
+        // Submission objects for the other partners).
+
+        submissionInProcess().submission().partnerWithUsers(
+                submissionInProcess().partners(), localContext());
+
+        // Then, make the necessary directory.
+
         try
         {
             File dirFile = new File( submission.dirName() );

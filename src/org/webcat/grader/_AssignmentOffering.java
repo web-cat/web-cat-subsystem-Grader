@@ -63,9 +63,9 @@ public abstract class _AssignmentOffering
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param gradingSuspended
-     * @param publish
-     * @param updateMutableFields
+     * @param gradingSuspendedValue
+     * @param publishValue
+     * @param updateMutableFieldsValue
      * @return The newly created object
      */
     public static AssignmentOffering create(

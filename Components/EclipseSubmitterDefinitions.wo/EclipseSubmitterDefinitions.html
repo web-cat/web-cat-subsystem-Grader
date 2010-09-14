@@ -38,7 +38,8 @@
       <webobject name="Transport">
         <param name="u" value="${user}"/>
         <param name="p" value="${pw}"/>
-        <wo:if condition="$groupByCRN"><wo name="CRN"/></wo:if><wo:else><wo name="CourseNumber"/></wo:else>
+        <wo:if condition="$anAssignmentOffering.assignment.submissionProfile.allowPartners"><param name="partners" value="${partners}"/>
+        </wo:if><wo:if condition="$groupByCRN"><wo name="CRN"/></wo:if><wo:else><wo name="CourseNumber"/></wo:else>
         <webobject name="Name"/>
         <webobject name="Authenticator"/>
         <file-param name="file1" value="${user}.jar"/>

@@ -21,8 +21,19 @@
 
 package org.webcat.grader;
 
-import org.webcat.core.*;
-import com.webobjects.appserver.*;
+import org.webcat.core.Course;
+import org.webcat.core.CourseOffering;
+import org.webcat.core.User;
+import org.webcat.ui.generators.JavascriptGenerator;
+import org.webcat.ui.util.ComponentIDGenerator;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WODisplayGroup;
+import com.webobjects.appserver.WOResponse;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
+import er.extensions.eof.ERXQ;
+import er.extensions.foundation.ERXArrayUtilities;
 
 // -------------------------------------------------------------------------
 /**
@@ -57,9 +68,12 @@ public class SubmissionResultInfo
     public boolean             showFileInfo     = false;
     public boolean             allowPartnerEdit = false;
     public boolean             includeSeparator = true;
-    public WODisplayGroup      partnerDisplayGroup;
-    public Submission          partnerSubmission;
+    public User                aPartner;
     public int                 rowNumber;
+    public NSArray<User>       originalPartners;
+    public NSArray<User>       partnersForEditing;
+
+    public ComponentIDGenerator idFor;
 
 
     //~ Methods ...............................................................
@@ -68,33 +82,72 @@ public class SubmissionResultInfo
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
+        idFor = new ComponentIDGenerator(this);
+
         rowNumber = 0;
-        if ( submission != null )
+
+        if (submission != null)
         {
-            partnerDisplayGroup.setMasterObject( submission.result() );
+            NSMutableArray<User> partners = new NSMutableArray<User>();
+
+            for (Submission partneredSubmission :
+                submission.partneredSubmissions())
+            {
+                partners.addObject(partneredSubmission.user());
+            }
+
+            originalPartners = partners;
+            partnersForEditing = partners.mutableClone();
         }
+
         super.beforeAppendToResponse( response, context );
     }
 
 
     // ----------------------------------------------------------
-    public boolean isAPartner()
+    public String showEditPartnersDialogScript()
     {
-        return partnerSubmission.user() != submission.user();
+        return "dijit.byId('" + idFor.get("editPartnersDialog") + "').show();";
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent editPartners()
+    public JavascriptGenerator partnersChanged()
     {
-        WOComponent parent = parent();
-        if ( parent instanceof GradeStudentSubmissionPage )
+        NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
+                originalPartners, partnersForEditing);
+        submission.unpartnerFromUsers(partnersToRemove, localContext());
+
+        NSArray<User> partnersToAdd = ERXArrayUtilities.arrayMinusArray(
+                partnersForEditing, originalPartners);
+        submission.partnerWithUsers(partnersToAdd, localContext());
+
+        applyLocalChanges();
+
+        originalPartners = partnersForEditing.mutableClone();
+
+        JavascriptGenerator script = new JavascriptGenerator();
+        script.refresh(idFor.get("partnersPane")).
+               dijit(idFor.get("editPartnersDialog")).call("hide");
+
+        return script;
+    }
+
+
+    // ----------------------------------------------------------
+    public EOQualifier qualifierForStudentsInCourse()
+    {
+        Course course =
+            submission.assignmentOffering().courseOffering().course();
+        NSArray<CourseOffering> offerings = course.offerings();
+
+        EOQualifier[] enrollmentQuals = new EOQualifier[offerings.count()];
+        int i = 0;
+        for (CourseOffering offering : offerings)
         {
-            ( (GradeStudentSubmissionPage)parent ).saveGrading();
+            enrollmentQuals[i++] = User.enrolledIn.is(offering);
         }
-        EditPartnersPage reportPage = pageWithName(EditPartnersPage.class);
-        reportPage.nextPage = (WCComponent)context().page();
-        reportPage.result = submission.result();
-        return reportPage;
+
+        return ERXQ.or(enrollmentQuals);
     }
 }

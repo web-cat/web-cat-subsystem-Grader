@@ -62,7 +62,7 @@ public abstract class _SubmissionFileComment
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param limitExceeded
+     * @param limitExceededValue
      * @return The newly created object
      */
     public static SubmissionFileComment create(

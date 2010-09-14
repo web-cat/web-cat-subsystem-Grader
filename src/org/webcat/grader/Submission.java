@@ -26,6 +26,7 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXQ;
+import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -263,12 +264,57 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    public Submission partnerSubmission( User             partner,
-                                         int              submitNumber,
-                                         EOEditingContext ec )
+    public void partnerWithUsers(NSArray<User> users, EOEditingContext ec)
     {
+        // Collect all of the students enrolled in any offering of the course
+        // to which the submission is being made.
+
+        NSMutableSet<User> studentsEnrolled = new NSMutableSet<User>();
+
+        Course course = assignmentOffering().courseOffering().course();
+        for (CourseOffering offering : course.offerings())
+        {
+            studentsEnrolled.addObjectsFromArray(offering.students());
+        }
+
+        for (User user : users)
+        {
+            // Only partner a user on a submission if they are enrolled in the
+            // same course as the user making the primary submission (but not
+            // necessarily in the same offering -- this is a little more
+            // flexible).
+
+            if (studentsEnrolled.containsObject(user))
+            {
+                partnerSubmission(user, ec);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public Submission partnerSubmission(User partner, EOEditingContext ec)
+    {
+        int submitNumber = 1;
+
+        EOQualifier qualifier =
+            Submission.assignmentOffering.dot(AssignmentOffering.assignment).
+            eq(assignmentOffering().assignment()).and(
+                    Submission.user.eq(partner));
+
+        NSArray<EOSortOrdering> sortOrderings = Submission.submitNumber.descs();
+
+        Submission highestSubmission = Submission.firstObjectMatchingQualifier(
+                ec, qualifier, sortOrderings);
+
+        if (highestSubmission != null)
+        {
+            submitNumber = highestSubmission.submitNumber() + 1;
+        }
+
         Submission newSubmission = new Submission();
         ec.insertObject( newSubmission );
+
         newSubmission.setFileName( fileName() );
         newSubmission.setPartnerLink( true );
         newSubmission.setSubmitNumber( submitNumber );
@@ -277,8 +323,39 @@ public class Submission
             assignmentOffering() );
         newSubmission.setResultRelationship( result() );
         newSubmission.setUserRelationship( partner );
-        // ec.saveChanges();
+        newSubmission.setPrimarySubmissionRelationship(this);
+
+        addToPartneredSubmissionsRelationship(newSubmission);
+
         return newSubmission;
+    }
+
+
+    // ----------------------------------------------------------
+    public void unpartnerFromUsers(NSArray<User> users, EOEditingContext ec)
+    {
+        for (User user : users)
+        {
+            unpartnerSubmission(user, ec);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public void unpartnerSubmission(User partner, EOEditingContext ec)
+    {
+        EOQualifier qualifier =
+            Submission.result.is(result()).and(
+                    Submission.user.eq(partner));
+
+        Submission partneredSubmission =
+            Submission.firstObjectMatchingQualifier(ec, qualifier, null);
+
+        if (partneredSubmission != null)
+        {
+            partneredSubmission.setResultRelationship(null);
+            ec.deleteObject(partneredSubmission);
+        }
     }
 
 

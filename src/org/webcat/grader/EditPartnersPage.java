@@ -116,26 +116,9 @@ public class EditPartnersPage
     // ----------------------------------------------------------
     public WOComponent addPartner()
     {
-        int submitNumber = 1;
-        NSArray<Submission> studentSubmissions =
-            Submission.objectsMatchingValues(
-                localContext(),
-                Submission.ASSIGNMENT_OFFERING_KEY,
-                prefs().assignmentOffering(),
-                Submission.USER_KEY,
-                student);
-        for (Submission thisSubmission : studentSubmissions)
-        {
-            int thisSubNo = thisSubmission.submitNumber();
-            if ( thisSubNo  >= submitNumber )
-            {
-                submitNumber = thisSubNo + 1;
-            }
-        }
         // Don't need the return value: we just want it to be created, and
         // partnerSubmission() will save the changes to the DB
-        result.submission().partnerSubmission(
-                student, submitNumber, localContext());
+        result.submission().partnerSubmission(student, localContext());
         applyLocalChanges();
         return null;
     }

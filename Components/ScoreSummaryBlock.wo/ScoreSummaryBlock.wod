@@ -8,24 +8,24 @@ CannotEditDeduction: WOConditional {
 }
 
 Deduction: WOString {
-	numberformat = "0.0";
-	value        = taScore;
+    numberformat = "0.0";
+    value        = taScore;
 }
 
-EditDeduction: WOTextField {
-	numberformat = "0.0";
-	size         = 7;
-	value        = result.taScoreRaw;
+EditDeduction: WCTextBox {
+    numberformat = "0.0";
+    style        = "width: 4em; text-align: right; vertical-align: baseline";
+    value        = result.taScoreRaw;
 }
 
 FinalMeter: WOString {
-	value      = finalMeter;
-	escapeHTML = false;
+    value      = finalMeter;
+    escapeHTML = false;
 }
 
 FinalScore: WOString {
-	numberformat = "0.0";
-	value        = result.finalScore;
+    numberformat = "0.0";
+    value        = result.finalScore;
 }
 
 Graph: org.webcat.grader.graphs.MiniBarGraph {
@@ -34,59 +34,59 @@ Graph: org.webcat.grader.graphs.MiniBarGraph {
 }
 
 HasTAGrade: WOConditional {
-	condition = hasTAGrade;
+    condition = hasTAGrade;
 }
 
 HasTestingGrade: WOConditional {
-	condition = submission.assignmentOffering.assignment.usesTestingScore;
+    condition = submission.assignmentOffering.assignment.usesTestingScore;
 }
 
 HasToolGrade: WOConditional {
-	condition = submission.assignmentOffering.assignment.usesToolCheckScore;
+    condition = submission.assignmentOffering.assignment.usesToolCheckScore;
 }
 
 PossibleScore: WOString {
-	value = submission.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
+    value = submission.assignmentOffering.assignment.submissionProfile.availablePointsRaw;
 }
 
 TAMeter: WOString {
-	value      = taMeter;
-	escapeHTML = false;
+    value      = taMeter;
+    escapeHTML = false;
 }
 
 TestingMeter: WOString {
-	value = correctnessMeter;
-	escapeHTML = false;
+    value = correctnessMeter;
+    escapeHTML = false;
 }
 
 TestingPossible: WOString {
-	numberformat = "0.0";
-	value        = submission.assignmentOffering.assignment.submissionProfile.correctnessPoints;
+    numberformat = "0.0";
+    value        = submission.assignmentOffering.assignment.submissionProfile.correctnessPoints;
 }
 
 TestingScore: WOString {
-	numberformat = "0.0";
-	value        = result.correctnessScoreRaw;
+    numberformat = "0.0";
+    value        = result.correctnessScoreRaw;
 }
 
 ToolMeter: WOString {
-	value      = toolMeter;
-	escapeHTML = false;
+    value      = toolMeter;
+    escapeHTML = false;
 }
 
 ToolPossible: WOString {
-	numberformat = "0.0";
-	value        = submission.assignmentOffering.assignment.submissionProfile.toolPointsRaw;
+    numberformat = "0.0";
+    value        = submission.assignmentOffering.assignment.submissionProfile.toolPointsRaw;
 }
 
 ToolScore: WOString {
-	numberformat = "0.0";
-	value        = result.toolScoreRaw;
+    numberformat = "0.0";
+    value        = result.toolScoreRaw;
 }
 
 TotalTAPoints: WOString {
-	numberformat = "0.0";
-	value = submission.assignmentOffering.assignment.submissionProfile.taPoints;
+    numberformat = "0.0";
+    value = submission.assignmentOffering.assignment.submissionProfile.taPoints;
 }
 
 TR: org.webcat.core.TableRow {

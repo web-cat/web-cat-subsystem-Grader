@@ -59,6 +59,8 @@ public class ConfirmSubmissionPage
 
     /** File object for the uploaded file */
     public IArchiveEntry file;
+    /** User object for a partner in the submission */
+    public User partnerInRepetition;
     /** index of the file in the repetition table */
     public int index;
 

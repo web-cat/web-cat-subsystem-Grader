@@ -10,12 +10,27 @@ an incorrect file.</p>
 <table><thead><tr><th>File</th><th>Size</th></tr></thead><tbody>
   <wo name="Repetition1"><wo name="TR">
     <td><wo name="FileName"/></td>
-	<td align="right"><wo:str value="$fileSize"/></td>
+    <td align="right"><wo:str value="$fileSize"/></td>
   </wo></wo>
 </tbody></table>
 
+<wo:if condition="$prefs.assignmentOffering.assignment.submissionProfile.allowPartners">
+<wo:if condition="$submissionInProcess.partners.count">
+<p>Please make sure that the following users are the correct ones that you wish
+to be listed as partners on this submission.</p>
+<table><thead><tr><th>Username</th><th>Full Name</th></tr></thead><tbody>
+  <wo name="PartnerRepetition"><wo name="TR">
+    <td><wo:str value="$partnerInRepetition.userName"/></td>
+    <td><wo:str value="$partnerInRepetition.name_LF"/></td>
+  </wo></wo>
+</tbody></table>
+</wo:if><wo:else>
+<p>You have selected <b>no partners</b> for this submission.</p>
+</wo:else>
+</wo:if>
+
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
-<p><wo:org.webcat.ui.WCButton action="$back">Change File</wo:org.webcat.ui.WCButton>
+<p><wo:org.webcat.ui.WCButton action="$back">Change File or Partners</wo:org.webcat.ui.WCButton>
 <wo:org.webcat.ui.WCButton action="$next">Confirm</wo:org.webcat.ui.WCButton></p>
 </wo:WOForm>
 </wo:org.webcat.core.WCPageModule></wo:if></wo>

@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.foundation.*;
 import java.io.*;
+import org.webcat.core.User;
 
 //-------------------------------------------------------------------------
 /**
@@ -177,6 +178,28 @@ public class SubmissionInProcess
 
     // ----------------------------------------------------------
     /**
+     * Returns the current partners for this submission.
+     * @return The partners
+     */
+    public NSArray<User> partners()
+    {
+        return partners;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the current partners for this submission.
+     * @param somePartners The partners
+     */
+    public void setPartners( NSArray<User> somePartners )
+    {
+        partners = somePartners;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Checks whether the state contains a valid file upload
      * (non-null, non-zero-length data, plus non-null, non-empty
      * file name).
@@ -213,4 +236,5 @@ public class SubmissionInProcess
     private String  uploadedFileName;
     private NSArray uploadedFileList;
     private Submission submission;
+    private NSArray<User> partners;
 }

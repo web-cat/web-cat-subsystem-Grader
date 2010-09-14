@@ -293,6 +293,23 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds field for associating partnered submissions with a primary
+     * submission.
+     * @throws SQLException on error
+     */
+    public void updateIncrement14() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSION add "
+            + "primarySubmissionId INTEGER" );
+        database().executeSQL(
+                "alter table TSUBMISSIONPROFILE add "
+                + "allowPartners BIT NOT NULL" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

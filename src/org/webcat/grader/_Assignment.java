@@ -62,7 +62,7 @@ public abstract class _Assignment
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param trackOpinions
+     * @param trackOpinionsValue
      * @return The newly created object
      */
     public static Assignment create(

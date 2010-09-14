@@ -62,9 +62,9 @@ public abstract class _EnqueuedJob
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param discarded
-     * @param paused
-     * @param regrading
+     * @param discardedValue
+     * @param pausedValue
+     * @param regradingValue
      * @return The newly created object
      */
     public static EnqueuedJob create(

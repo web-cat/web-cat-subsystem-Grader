@@ -1,158 +1,162 @@
+AllowPartnersCheckbox: WOCheckBox {
+    checked = submissionProfile.allowPartners;
+}
+
 CheckBox1: WOCheckBox {
-	checked = submissionProfile.awardEarlyBonus;
+    checked = submissionProfile.awardEarlyBonus;
 }
 
 CheckBox2: WOCheckBox {
-	checked = submissionProfile.deductLatePenalty;
+    checked = submissionProfile.deductLatePenalty;
 }
 
 ExcludedFilePatterns: WOTextField {
-	size = 40;
-	value = submissionProfile.excludedFilePatterns;
+    size = 40;
+    value = submissionProfile.excludedFilePatterns;
 }
 
 IncludedFilePatterns: WOTextField {
-	size = 40;
-	value = submissionProfile.includedFilePatterns;
+    size = 40;
+    value = submissionProfile.includedFilePatterns;
 }
 
 PopUpButton1: WOPopUpButton {
-	list = submissionProfile.timeUnits;
-	selection = availableTimeDeltaUnit;
-	displayString = unit.name;
-	item = unit;
+    list = submissionProfile.timeUnits;
+    selection = availableTimeDeltaUnit;
+    displayString = unit.name;
+    item = unit;
 }
 
 PopUpButton2: WOPopUpButton {
-	list = submissionProfile.timeUnits;
-	selection = deadTimeDeltaUnit;
-	displayString = unit.name;
-	item = unit;
+    list = submissionProfile.timeUnits;
+    selection = deadTimeDeltaUnit;
+    displayString = unit.name;
+    item = unit;
 }
 
 PopUpButton3: WOPopUpButton {
-	list = submissionProfile.timeUnits;
-	selection = earlyUnitTimeUnit;
-	displayString = unit.name;
-	item = unit;
+    list = submissionProfile.timeUnits;
+    selection = earlyUnitTimeUnit;
+    displayString = unit.name;
+    item = unit;
 }
 
 PopUpButton4: WOPopUpButton {
-	list = submissionProfile.timeUnits;
-	selection = lateUnitTimeUnit;
-	displayString = unit.name;
-	item = unit;
+    list = submissionProfile.timeUnits;
+    selection = lateUnitTimeUnit;
+    displayString = unit.name;
+    item = unit;
 }
 
 RequiredFilePatterns: WOTextField {
-	size = 40;
-	value = submissionProfile.requiredFilePatterns;
+    size = 40;
+    value = submissionProfile.requiredFilePatterns;
 }
 
 Submitter: WOPopUpButton {
-	list = submissionProfile.submitters;
-	selection = submissionProfile.submissionMethodAsString;
-	item = submissionMethod;
+    list = submissionProfile.submitters;
+    selection = submissionProfile.submissionMethodAsString;
+    item = submissionMethod;
 }
 
 TextField1: WOTextField {
-	size = 40;
-	value = submissionProfile.name;
+    size = 40;
+    value = submissionProfile.name;
 }
 
 TextField2: WOTextField {
     formatter    = doubleFormatter;
-	size         = 7;
-	value        = submissionProfile.availablePointsRaw;
-	disabled     = true;
-	style        = "color:black";
-	name         = "total";
+    size         = 7;
+    value        = submissionProfile.availablePointsRaw;
+    disabled     = true;
+    style        = "color:black";
+    name         = "total";
 }
 
 TextField14: WOTextField {
     formatter    = doubleFormatter;
-	size         = 7;
-	value        = submissionProfile.taPointsRaw;
-	name         = "taPoints";
+    size         = 7;
+    value        = submissionProfile.taPointsRaw;
+    name         = "taPoints";
     onFocus      = "startCalc();";
     onBlur       = "stopCalc();";
 }
 
 TextField15: WOTextField {
     formatter    = doubleFormatter;
-	size         = 7;
-	value        = submissionProfile.toolPointsRaw;
-	name         = "toolPoints";
+    size         = 7;
+    value        = submissionProfile.toolPointsRaw;
+    name         = "toolPoints";
     onFocus      = "startCalc();";
     onBlur       = "stopCalc();";
 }
 
 TextField16: WOTextField {
     formatter    = doubleFormatter;
-	size         = 7;
-	value        = correctnessPoints;
-	name         = "correctnessPoints";
+    size         = 7;
+    value        = correctnessPoints;
+    name         = "correctnessPoints";
     onFocus      = "startCalc();";
     onBlur       = "stopCalc();";
 }
 
 TextField3: WOTextField {
-	numberformat = "0";
-	size = 7;
-	value = availableTimeDelta;
+    numberformat = "0";
+    size = 7;
+    value = availableTimeDelta;
 }
 
 TextField4: WOTextField {
-	numberformat = "0";
-	size = 7;
-	value = deadTimeDelta;
+    numberformat = "0";
+    size = 7;
+    value = deadTimeDelta;
 }
 
 TextField5: WOTextField {
     formatter = doubleFormatter;
-	size      = 3;
-	value     = submissionProfile.earlyBonusMaxPtsRaw;
+    size      = 3;
+    value     = submissionProfile.earlyBonusMaxPtsRaw;
 }
 
 TextField6: WOTextField {
     formatter = doubleFormatter;
-	size      = 3;
-	value     = submissionProfile.earlyBonusUnitPtsRaw;
+    size      = 3;
+    value     = submissionProfile.earlyBonusUnitPtsRaw;
 }
 
 TextField7: WOTextField {
-	numberformat = "0";
-	size = 3;
-	value = earlyBonusUnitTime;
+    numberformat = "0";
+    size = 3;
+    value = earlyBonusUnitTime;
 }
 
 TextField8: WOTextField {
     formatter = doubleFormatter;
-	size      = 3;
-	value     = submissionProfile.latePenaltyMaxPtsRaw;
+    size      = 3;
+    value     = submissionProfile.latePenaltyMaxPtsRaw;
 }
 
 TextField9: WOTextField {
     formatter = doubleFormatter;
-	size      = 3;
-	value     = submissionProfile.latePenaltyUnitPtsRaw;
+    size      = 3;
+    value     = submissionProfile.latePenaltyUnitPtsRaw;
 }
 
 TextField10: WOTextField {
-	numberformat = "0";
-	size = 3;
-	value = latePenaltyUnitTime;
+    numberformat = "0";
+    size = 3;
+    value = latePenaltyUnitTime;
 }
 
 TextField12: WOTextField {
-	numberformat = "0";
-	size = 7;
-	value = submissionProfile.maxSubmissionsRaw;
+    numberformat = "0";
+    size = 7;
+    value = submissionProfile.maxSubmissionsRaw;
 }
 
 TextField13: WOTextField {
-	size = 7;
-	value = maxFileUploadSize;
+    size = 7;
+    value = maxFileUploadSize;
 }
 
 MaxFileUploadSizeInfo: org.webcat.core.PopUpInfo {

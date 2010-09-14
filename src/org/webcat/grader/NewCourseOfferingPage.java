@@ -176,7 +176,7 @@ public class NewCourseOfferingPage
     // ----------------------------------------------------------
     public JavascriptGenerator update()
     {
-        return new JavascriptGenerator().refresh("courseblock");
+        return new JavascriptGenerator().refresh("courseblock", "new-course");
     }
 
 
