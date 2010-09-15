@@ -30,6 +30,9 @@ EditPartnersCancel: WCButton {
 }
 
 PartnerSelector: FilteringUserSelector {
+    actionTitle = "Choose Partners";
+    dialogMessage = "Please choose the students below who also worked on this submission.";
+    hidesTableOnEmptySelection = true;
     selectedListTitle = "Current Partners on This Submission";
     availableListTitle = "Students Enrolled in Your Course";
     selectedUsers = partnersForEditing;

@@ -25,23 +25,9 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
 <!-- p --><!-- input size="60" type="file" name="0.0.0.2.3.4.1.10.1" dojoType="dojox.form.FileInput"/ --><!-- /p -->
 
 <wo:if condition="$prefs.assignmentOffering.assignment.submissionProfile.allowPartners">
-<wo:WCDiv id="editPartnersDialog" dojoType="webcat.Dialog" title="Choose Partners">
-    <p>Please choose the students below who also worked on this submission.</p>
-    <wo name="PartnerSelector"/>
-    <hr/>
-    <div style="text-align: center">
-        <wo name="EditPartnersOK"/>
-        <wo name="EditPartnersCancel">
-            <script type="dojo/connect" event="onClick" args="evt">
-            dijit.byId('editPartnersDialog').hide();
-            </script>
-        </wo>
-    </div>
-</wo:WCDiv>
-
 <p>
 <wo:if condition="$previousPartners.count">
-On your previous submission to this assignment, you said that you were working
+In your last activity on this assignment, you said that you were working
 with the following students. If this has changed, click
 <b>Choose Partners...</b> below to change them.
 </wo:if><wo:else>
@@ -50,15 +36,7 @@ assignment. If you are working with partners, click <b>Choose Partners...</b>
 to choose them.
 </wo:else>
 </p>
-<wo:WCContentPane id="partnersPane">
-<table><thead><tr><th>Username</th><th>Full Name</th></tr></thead><tbody>
-  <wo name="PartnerRepetition"><wo:tr index="$partnerIndex">
-    <td><wo:str value="$aPartner.userName"/></td>
-    <td><wo:str value="$aPartner.name_LF"/></td>
-  </wo></wo>
-</tbody></table>
-</wo:WCContentPane>
-<wo name="EditPartners"/>
+<wo name="PartnerSelector"/>
 <hr/>
 </wo:if>
 

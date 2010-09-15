@@ -105,15 +105,10 @@ public class SubmissionResultInfo
 
 
     // ----------------------------------------------------------
-    public String showEditPartnersDialogScript()
+    public void setPartnersForEditing(NSArray<User> users)
     {
-        return "dijit.byId('" + idFor.get("editPartnersDialog") + "').show();";
-    }
+        partnersForEditing = users;
 
-
-    // ----------------------------------------------------------
-    public JavascriptGenerator partnersChanged()
-    {
         NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
                 originalPartners, partnersForEditing);
         submission.unpartnerFromUsers(partnersToRemove, localContext());
@@ -125,12 +120,6 @@ public class SubmissionResultInfo
         applyLocalChanges();
 
         originalPartners = partnersForEditing.mutableClone();
-
-        JavascriptGenerator script = new JavascriptGenerator();
-        script.refresh(idFor.get("partnersPane")).
-               dijit(idFor.get("editPartnersDialog")).call("hide");
-
-        return script;
     }
 
 

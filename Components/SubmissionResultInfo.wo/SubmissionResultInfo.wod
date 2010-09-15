@@ -6,36 +6,6 @@ DeptNumber: WOString {
     value = submission.assignmentOffering.courseOffering.compactName;
 }
 
-EditPartners: WCButton {
-    onClick = showEditPartnersDialogScript;
-    label  = "Edit Partners...";
-}
-
-EditPartnersDialog: WCDialog {
-    id = idFor.editPartnersDialog;
-    title = "Edit Partners";
-    okAction = partnersChanged;
-}
-
-EditPartnersOK: WCButton {
-    action = partnersChanged;
-    remote = true;
-    class = "pos";
-    label = "OK";
-}
-
-EditPartnersCancel: WCButton {
-    class = "neg";
-    label = "Cancel";
-}
-
-PartnerSelector: FilteringUserSelector {
-    selectedListTitle = "Current Partners on This Submission";
-    availableListTitle = "Students Enrolled in Your Course";
-    selectedUsers = partnersForEditing;
-    qualifier = qualifierForStudentsInCourse;
-}
-
 FileName: WOString {
     value = submissionFileStats.sourceFileName;
 }
@@ -51,6 +21,17 @@ PartnerName: WOString {
 PartnerRepetition: WORepetition {
     list = originalPartners;
     item = aPartner;
+}
+
+PartnerSelector: FilteringUserSelector {
+    simpleLayout = true;
+    actionTitle = "Edit Partners";
+    dialogMessage = "Please choose the students below who also worked on this submission.";
+    hidesTableOnEmptySelection = true;
+    selectedListTitle = "Current Partners on This Submission";
+    availableListTitle = "Students Enrolled in Your Course";
+    selectedUsers = partnersForEditing;
+    qualifier = qualifierForStudentsInCourse;
 }
 
 ShowFileInfo: WOConditional {

@@ -139,7 +139,10 @@ public class UploadSubmissionPage
             }
         }
 
-        partnersForEditing = previousPartners.mutableClone();
+        if (partnersForEditing == null)
+        {
+            partnersForEditing = previousPartners.mutableClone();
+        }
 
         Number maxSubmissions = prefs().assignmentOffering()
             .assignment().submissionProfile().maxSubmissionsRaw();

@@ -293,8 +293,15 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    public Submission partnerSubmission(User partner, EOEditingContext ec)
+    public void partnerSubmission(User partner, EOEditingContext ec)
     {
+        // Make sure that a user isn't trying to partner with himself.
+
+        if (partner.equals(user()))
+        {
+            return;
+        }
+
         int submitNumber = 1;
 
         EOQualifier qualifier =
@@ -326,8 +333,6 @@ public class Submission
         newSubmission.setPrimarySubmissionRelationship(this);
 
         addToPartneredSubmissionsRelationship(newSubmission);
-
-        return newSubmission;
     }
 
 
