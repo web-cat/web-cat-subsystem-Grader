@@ -7,18 +7,22 @@
   <th class="R" valign="top">Name</th>
   <td><wo name="StudentName"/></td>
 </wo>
+<wo:if condition="~submission.assignmentOffering.assignment.submissionProfile.allowPartners || partnersForEditing.count">
 <wo name="TR">
   <th class="R">Partners</th>
   <td>
     <wo:if condition="$allowPartnerEdit">
       <wo name="PartnerSelector"/>
     </wo:if><wo:else>
-      <wo name="PartnerRepetition">
-        <wo name="PartnerName"/><br/>
-      </wo>
+      <wo:if condition="$partnersForEditing.count">
+        <wo name="PartnerRepetition">
+          <wo name="PartnerName"/><br/>
+        </wo>
+      </wo:if><wo:else>None</wo:else>
     </wo:else>
   </td>
 </wo>
+</wo:if>
 <wo name="TR">
   <th class="R" valign="top">Submitted</th>
   <td><wo name="SubmitTime"/>, <wo name="SubmitEarlyLateStatus"/></td>
