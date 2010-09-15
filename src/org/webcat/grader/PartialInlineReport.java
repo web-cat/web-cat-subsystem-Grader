@@ -244,13 +244,13 @@ public class PartialInlineReport
     static final Pattern MODULE = Pattern.compile(
         "<h2 class=\"collapsible\"><a[^>]*><img[^>]*(collapsed|expanded)[^>]*>"
         + "((.(?!</a>))*.)</a>\\s*</h2>\\s*"
-        + "<div[^>]*\\sclass=\"expboxcontent\"[^>]*>\\s*((.(?!</div>))*.)</div>"
+        + "<div[^>]*\\sclass=\"expboxcontent\"[^>]*>((.(?!</div>))*.)</div>"
         ,
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     static final Pattern NESTED_MODULE = Pattern.compile(
         "<h3 class=\"collapsible\"><a[^>]*><img[^>]*(collapsed|expanded)[^>]*>"
         + "((.(?!</a>))*.)</a>\\s*</h3>\\s*"
-        + "<div[^>]*\\sclass=\"expboxcontent\"[^>]*>\\s*((.(?!</div>))*.)</div>"
+        + "<div[^>]*\\sclass=\"expboxcontent\"[^>]*>((.(?!</div>))*.)</div>"
         ,
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     static Logger log = Logger.getLogger( PartialInlineReport.class );

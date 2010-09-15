@@ -1,6 +1,6 @@
 AvgScore: WOString {
-	value = avgScore;
-	numberformat = "0.0";
+    value = avgScore;
+    numberformat = "0.0";
 }
 
 BatchNavigator: org.webcat.core.WCBatchNavigator {
@@ -15,8 +15,8 @@ EditScore: WOHyperlink {
 }
 
 FinalScore: WOString {
-	value = aSubmission.result.finalScore;
-	numberformat = "0.0";
+    value = aSubmission.result.finalScore;
+    numberformat = "0.0";
 }
 
 HasMultiplePartners: WOConditional {
@@ -28,12 +28,12 @@ HasPartners: WOConditional {
 }
 
 HasTAScore: WOConditional {
-	condition = hasTAScore;
+    condition = hasTAScore;
 }
 
 HighScore: WOString {
-	value = highScore;
-	numberformat = "0.0";
+    value = highScore;
+    numberformat = "0.0";
 }
 
 IsAPartner: WOConditional {
@@ -46,8 +46,8 @@ LastPartner: WOConditional {
 }
 
 LowScore: WOString {
-	value = lowScore;
-	numberformat = "0.0";
+    value = lowScore;
+    numberformat = "0.0";
 }
 
 MarkAsComplete: WCButton {
@@ -62,24 +62,25 @@ MorePartners: WOConditional {
 }
 
 MostRecentSubmitNumber: WOString {
-	value = mostRecentSubmissionNo;
+    value = mostRecentSubmissionNo;
 }
 
 Name: WOString {
-	value = aSubmission.user.name;
+    value = aSubmission.user.name;
 }
 
 Navigator: org.webcat.grader.GraderNavigator {
+    allowsAllOfferingsForCourse = false;
 }
 
 NoTAScore: WOConditional {
-	condition = hasTAScore;
-	negate    = true;
+    condition = hasTAScore;
+    negate    = true;
 }
 
 NotMostRecent: WOConditional {
-	condition = isMostRecentSubmission;
-	negate    = true;
+    condition = isMostRecentSubmission;
+    negate    = true;
 }
 
 PartnerName: WOString {
@@ -92,14 +93,14 @@ PartnerRepetition: WORepetition {
 }
 
 Repetition1: WORepetition {
-	item  = aSubmission;
-	list  = submissionDisplayGroup.displayedObjects;
-	index = index;
+    item  = aSubmission;
+    list  = submissionDisplayGroup.displayedObjects;
+    index = index;
 }
 
 ScoreAdjustment: WOString {
-	value = aSubmission.result.scoreAdjustment;
-	numberformat = "0.0";
+    value = aSubmission.result.scoreAdjustment;
+    numberformat = "0.0";
 }
 
 StatusToDo: WOImage {
@@ -127,69 +128,69 @@ StatusDone: WOImage {
 }
 
 Status: WOImage {
-	border    = "0";
-	filename  = aSubmission.result.statusURL;
-	framework = "Core";
-	height    = "16";
-	width     = "16";
+    border    = "0";
+    filename  = aSubmission.result.statusURL;
+    framework = "Core";
+    height    = "16";
+    width     = "16";
 }
 
 SubmitNumber: WOString {
-	value = aSubmission.submitNumber;
+    value = aSubmission.submitNumber;
 }
 
 SubmitTime: WOString {
-	value     = aSubmission.submitTime;
+    value     = aSubmission.submitTime;
     formatter = session.timeFormatter;
 }
 
 TAScore: WOString {
-	value = aSubmission.result.taScoreRaw;
-	numberformat = "0.0";
+    value = aSubmission.result.taScoreRaw;
+    numberformat = "0.0";
 }
 
 TestingScore: WOString {
-	value = aSubmission.result.correctnessScoreRaw;
-	numberformat = "0.0";
+    value = aSubmission.result.correctnessScoreRaw;
+    numberformat = "0.0";
 }
 
 ToolScore: WOString {
-	value = aSubmission.result.toolScoreRaw;
-	numberformat = "0.0";
+    value = aSubmission.result.toolScoreRaw;
+    numberformat = "0.0";
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 
 UsesBonusesOrPenalties: WOConditional {
-	condition = assignmentOffering.assignment.usesBonusesOrPenalties;
+    condition = assignmentOffering.assignment.usesBonusesOrPenalties;
 }
 
 UsesToolCheckScore: WOConditional {
-	condition = assignmentOffering.assignment.usesToolCheckScore;
+    condition = assignmentOffering.assignment.usesToolCheckScore;
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Name";
-	key = "user.name_LF";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Name";
+    key = "user.name_LF";
 }
 
 WCSortOrder3: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Grading Status";
-	key = "result.status";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Grading Status";
+    key = "result.status";
 }
 
 WCSortOrder4: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Submission Time";
-	key = "submitTime";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Submission Time";
+    key = "submitTime";
 }
 
 WCSortOrder5: org.webcat.core.WCSortOrder {
-	displayGroup = submissionDisplayGroup;
-	displayKey = "Final Score";
-	key = "result.finalScore";
+    displayGroup = submissionDisplayGroup;
+    displayKey = "Final Score";
+    key = "result.finalScore";
 }

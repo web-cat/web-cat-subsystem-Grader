@@ -1,36 +1,36 @@
 Adjustments: WOString {
-	numberformat = "0.0";
-	value        = prefs.submission.result.scoreAdjustment;
+    numberformat = "0.0";
+    value        = prefs.submission.result.scoreAdjustment;
 }
 
 ClassName: WOString {
-	value = prefs.submissionFileStats.className;
+    value = prefs.submissionFileStats.className;
 }
 
 Code: WOText {
-	rows  = 25;
-	cols  = 80;
-	value = codeWithComments;
-	name  = "source";
-	id    = "source";
-	style = "width:100%;";
+    rows  = 25;
+    cols  = 80;
+    value = codeWithComments;
+    name  = "source";
+    id    = "source";
+    style = "width:100%;";
 }
 
 FileDeduction: WOString {
-	numberformat = "0.0";
-	value        = prefs.submissionFileStats.deductionsRaw;
+    numberformat = "0.0";
+    value        = prefs.submissionFileStats.deductionsRaw;
 }
 
 
 
 FileTaDeduction: WOString {
-	numberformat = "0.0";
-	value = prefs.submissionFileStats.staffDeductions;
+    numberformat = "0.0";
+    value = prefs.submissionFileStats.staffDeductions;
 }
 
 
 FileToolTestingDeduction: WOString {
-	numberformat = "0.0";
+    numberformat = "0.0";
     value        = prefs.submissionFileStats.toolDeductions;
 }
 
@@ -54,67 +54,67 @@ IsGrading: WOConditional {
 }
 
 OtherFilesDeduction: WOString {
-	numberformat = "0.0";
-	value        = otherFilesDeductions; //state.submissionFileStats.nDeductions;
+    numberformat = "0.0";
+    value        = otherFilesDeductions; //state.submissionFileStats.nDeductions;
 }
 
 OtherFilesTADeduction: WOString {
-	numberformat = "0.0";
-	value        = otherFilesTaDeductions; //state.submissionFileStats.nDeductions;
+    numberformat = "0.0";
+    value        = otherFilesTaDeductions; //state.submissionFileStats.nDeductions;
 }
 
 OtherFilesToolTestingDeduction: WOString {
-	numberformat = "0.0";
-	value        = toolTestingOtherFiles;
+    numberformat = "0.0";
+    value        = toolTestingOtherFiles;
 }
 
 ProjectDeduction: WOString {
-	numberformat = "0.0";
-	value        = projectDeductions; //state.submissionFileStats.nDeductions;
+    numberformat = "0.0";
+    value        = projectDeductions; //state.submissionFileStats.nDeductions;
 }
 
 ProjectPossible: WOString {
-	numberformat = "0.0";
-	value        = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
+    numberformat = "0.0";
+    value        = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
 }
 
 ProjectScore: WOString {
-	numberformat = "0.0";
-	value        = prefs.submission.result.finalScore;
+    numberformat = "0.0";
+    value        = prefs.submission.result.finalScore;
 }
 
 ProjectTADeduction: WOString {
-	numberformat = "0.0";
-	value        = projectTADeduction; //state.submissionFileStats.nDeductions;
+    numberformat = "0.0";
+    value        = projectTADeduction; //state.submissionFileStats.nDeductions;
 }
 
 ProjectToolTestingDeduction: WOString {
-	numberformat = "0.0";
-	value        = projectToolTestingDeduction;
+    numberformat = "0.0";
+    value        = projectToolTestingDeduction;
 }
 
 SaveContinue: WOSubmitButton {
-	action = saveContinue;
-	value = "Save & Continue";
+    action = saveContinue;
+    value = "Save & Continue";
 }
 
 SaveDone: WOSubmitButton {
-	action = saveDone;
-	value  = "Save & Mark Done";
+    action = saveDone;
+    value  = "Save & Mark Done";
 }
 
 Cancel: WOSubmitButton {
-	action = next;
-	value  = " Cancel ";
+    action = next;
+    value  = " Cancel ";
 }
 
 SaveFinishLater: WOSubmitButton {
-	action = saveFinishLater;
-	value  = "Save & Finish Later";
+    action = saveFinishLater;
+    value  = "Save & Finish Later";
 }
 
 Page: org.webcat.core.PageWithNavigation {
-	// /wc-code.css is added to the text box in the java class
+    // /wc-code.css is added to the text box in the java class
     stylesheet           = "Grader.framework/WebServerResources/htmlarea/htmlarea.css";
     externalJavascript   = "Grader.framework/WebServerResources/htmlarea/codearea.js,Grader.framework/WebServerResources/htmlarea/htmlarea-lang-en.js,Grader.framework/WebServerResources/htmlarea/dialog.js";
     inlineHeaderContents = javascriptText;
@@ -130,6 +130,6 @@ ResultInfo: org.webcat.grader.SubmissionResultInfo {
 }
 
 History: WOHiddenField {
-	name = "history";
-	value = prefs.commentHistory;
+    name = "history";
+    value = prefs.commentHistory;
 }
