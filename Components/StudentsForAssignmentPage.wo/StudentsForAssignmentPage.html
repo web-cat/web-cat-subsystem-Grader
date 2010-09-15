@@ -32,8 +32,7 @@
     </tr></thead><tbody>
     <wo name="Repetition1"><wo name="TR">
         <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-        <td><wo name="Name"/><wo name="HasPartners"><wo name="PartnerRepetition"><wo name="IsAPartner"><wo name="MorePartners">,<br/></wo><wo name="LastPartner"><wo name="HasMultiplePartners">,</wo><br/>and</wo>
-<wo name="PartnerName"/></wo></wo></wo></td>
+        <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
         <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
         (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
         <td class="sm"><wo name="SubmitTime"/></td>

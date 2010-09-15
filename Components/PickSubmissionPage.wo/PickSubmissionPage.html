@@ -11,8 +11,8 @@
 </wo:if>
   <p>Select the assignment submission to view:</p>
   <table><thead>
-    <tr><td colspan="3" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
-    <tr><th>No.</th><th>Time</th><th>Score</th></tr></thead><tbody>
+    <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
+    <tr><th>No.</th><th>Time</th><th>Score</th><th>Student and Partners</th></tr></thead><tbody>
     <wo name="Repetition1"><wo name="TR">
       <wo:if condition="$hasResult">
         <td align="right"><wo:link action="$selectSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
@@ -23,6 +23,7 @@
         <td><wo name="String2"/></td>
         <td style="color:red">&lt;<wo:str value="$submissionStatus"/>&gt;</td>
       </wo:else>
+      <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
     </wo></wo>
   </tbody></table>
 </wo:if><wo:else>
