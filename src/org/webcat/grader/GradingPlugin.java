@@ -27,10 +27,10 @@ import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXValueUtilities;
 import java.io.*;
 import java.util.*;
+import net.sf.webcat.FeatureDescriptor;
+import net.sf.webcat.FeatureProvider;
 import org.webcat.core.MutableDictionary;
 import org.apache.log4j.Logger;
-import org.webcat.FeatureDescriptor;
-import org.webcat.FeatureProvider;
 import org.webcat.core.*;
 
 // -------------------------------------------------------------------------
@@ -382,7 +382,7 @@ public class GradingPlugin
      */
     public static String installOrUpdate(
         User                            installedBy,
-        org.webcat.FeatureDescriptor plugin,
+        net.sf.webcat.FeatureDescriptor plugin,
         boolean                         overwrite )
     {
         return installOrUpdate( installedBy, plugin, overwrite, null );
@@ -627,7 +627,7 @@ public class GradingPlugin
      */
     private static String installOrUpdate(
         User                            installedBy,
-        org.webcat.FeatureDescriptor plugin,
+        net.sf.webcat.FeatureDescriptor plugin,
         boolean                         overwrite,
         GradingPlugin                      scriptFile )
     {

@@ -22,8 +22,8 @@
 package org.webcat.grader;
 
 import java.util.*;
+import net.sf.webcat.FeatureDescriptor;
 import org.apache.log4j.Logger;
-import org.webcat.FeatureDescriptor;
 
 // -------------------------------------------------------------------------
 /**

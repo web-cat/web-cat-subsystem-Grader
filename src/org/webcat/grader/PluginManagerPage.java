@@ -25,8 +25,8 @@ import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import java.util.*;
 import er.extensions.foundation.ERXValueUtilities;
+import net.sf.webcat.*;
 import org.apache.log4j.Logger;
-import org.webcat.*;
 import org.webcat.core.*;
 
 // -------------------------------------------------------------------------
@@ -108,9 +108,9 @@ extends WCComponent
      * Get the current servlet adaptor, if one is available.
      * @return the servlet adaptor, or null when none is available
      */
-    public org.webcat.WCServletAdaptor adaptor()
+    public net.sf.webcat.WCServletAdaptor adaptor()
     {
-        return org.webcat.WCServletAdaptor.getInstance();
+        return net.sf.webcat.WCServletAdaptor.getInstance();
     }
 
 
@@ -256,7 +256,7 @@ extends WCComponent
     // ----------------------------------------------------------
     /**
      * Toggle the
-     * {@link org.webcat.WCServletAdaptor#willUpdateAutomatically()}
+     * {@link net.sf.webcat.WCServletAdaptor#willUpdateAutomatically()}
      * attribute.
      * @return null to refresh the current page
      */
@@ -274,7 +274,7 @@ extends WCComponent
     // ----------------------------------------------------------
     /**
      * Toggle the
-     * {@link org.webcat.WCServletAdaptor#willUpdateAutomatically()}
+     * {@link net.sf.webcat.WCServletAdaptor#willUpdateAutomatically()}
      * attribute.
      * @return null to refresh the current page
      */
