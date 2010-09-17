@@ -12,7 +12,7 @@ EditPartners: WCButton {
 }
 
 EditPartnersDialog: WCDialog {
-    id = editPartnersDialog;
+    id = "editPartnersDialog";
     title = "Choose Partners";
     okAction = partnersChanged;
 }
