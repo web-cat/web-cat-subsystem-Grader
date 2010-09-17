@@ -85,7 +85,7 @@ Page : org.webcat.core.BarePage {
     onLoad     = "expandAll()";
 }
 
-PartialInlineReport: PartialInlineReport {
+PartialInlineReport: org.webcat.grader.PartialInlineReport {
     file = result.resultFile;
     substituteOldCollapsingRegions = false;
 }
@@ -122,7 +122,7 @@ StudentName: WOString {
     value = result.submission.user.name;
 }
 
-SummaryReport: PartialInlineReport {
+SummaryReport: org.webcat.grader.PartialInlineReport {
     file = result.summaryFile;
     substituteOldCollapsingRegions = false;
 }
