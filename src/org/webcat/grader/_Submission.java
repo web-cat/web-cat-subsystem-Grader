@@ -64,13 +64,11 @@ public abstract class _Submission
      * @param editingContext The context in which the new object will be
      * inserted
      * @param partnerLinkValue
-     * @param primarySubmissionValue
      * @return The newly created object
      */
     public static Submission create(
         EOEditingContext editingContext,
-        boolean partnerLinkValue,
-        org.webcat.grader.Submission primarySubmissionValue
+        boolean partnerLinkValue
         )
     {
         Submission eoObject = (Submission)
@@ -78,7 +76,6 @@ public abstract class _Submission
                 editingContext,
                 _Submission.ENTITY_NAME);
         eoObject.setPartnerLink(partnerLinkValue);
-        eoObject.setPrimarySubmissionRelationship(primarySubmissionValue);
         return eoObject;
     }
 
