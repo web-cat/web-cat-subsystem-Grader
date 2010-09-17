@@ -381,6 +381,11 @@ public class GraderNavigator
             return true;
         }
 
+        if (selectedCourseOffering == null)
+        {
+            return false;
+        }
+
         NSArray<CourseOffering> offerings = (NSArray<CourseOffering>)
             selectedCourseOffering.representedObjects();
 
