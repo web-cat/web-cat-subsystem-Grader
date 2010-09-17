@@ -10,6 +10,7 @@
   <p>Select from all submissions by <wo:str value="$prefs.submission.user.nameAndUid"/> for this assignment.</p>
 </wo:if>
   <p>Select the assignment submission to view:</p>
+  <wo:WCForm multipleSubmit="true">
   <table><thead>
     <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
     <tr><th>No.</th><th>Time</th><th>Score</th><th>Student and Partners</th></tr></thead><tbody>
@@ -26,6 +27,7 @@
       <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
     </wo></wo>
   </tbody></table>
+  </wo:WCForm>
 </wo:if><wo:else>
 <wo:if condition="$selectingForDifferentUser">
   <p><wo:str value="$prefs.submission.user.nameAndUid"/> has not made any
