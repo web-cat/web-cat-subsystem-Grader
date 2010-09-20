@@ -19,14 +19,6 @@ FinalScore: WOString {
     numberformat = "0.0";
 }
 
-HasMultiplePartners: WOConditional {
-    condition = hasMultiplePartners;
-}
-
-HasPartners: WOConditional {
-    condition = hasPartners;
-}
-
 HasTAScore: WOConditional {
     condition = hasTAScore;
 }
@@ -34,15 +26,6 @@ HasTAScore: WOConditional {
 HighScore: WOString {
     value = highScore;
     numberformat = "0.0";
-}
-
-IsAPartner: WOConditional {
-    condition = isAPartner;
-}
-
-LastPartner: WOConditional {
-    condition = morePartners;
-    negate    = true;
 }
 
 LowScore: WOString {
@@ -57,16 +40,8 @@ MarkAsComplete: WCButton {
     title  = "Make all entered scores visible to students and send e-mail";
 }
 
-MorePartners: WOConditional {
-    condition = morePartners;
-}
-
 MostRecentSubmitNumber: WOString {
     value = mostRecentSubmissionNo;
-}
-
-Name: WOString {
-    value = aSubmission.user.name;
 }
 
 Navigator: org.webcat.grader.GraderNavigator {
@@ -81,15 +56,6 @@ NoTAScore: WOConditional {
 NotMostRecent: WOConditional {
     condition = isMostRecentSubmission;
     negate    = true;
-}
-
-PartnerName: WOString {
-    value = partnerSubmission.user.name;
-}
-
-PartnerRepetition: WORepetition {
-    list = aSubmission.result.submissions;
-    item = partnerSubmission;
 }
 
 Repetition1: WORepetition {
