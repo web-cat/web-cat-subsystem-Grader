@@ -118,9 +118,24 @@ public class SubmissionSuspendedMessage extends Message
     @Override
     public String title()
     {
+        String username = "<no user>";
+        String submitNumber = "<no submit number>";
+
+        if (submission != null)
+        {
+            if (submission.user() != null)
+            {
+                username = submission.user().userName();
+            }
+
+            if (submission.submitNumberRaw() != null)
+            {
+                submitNumber = Integer.toString(submission.submitNumber());
+            }
+        }
+
         return "[Grader] Grading error: "
-            + submission.user().userName() + " #"
-            + submission.submitNumber();
+            + username + " #" + submitNumber;
     }
 
 
@@ -128,7 +143,15 @@ public class SubmissionSuspendedMessage extends Message
     @Override
     public NSArray<User> users()
     {
-        return submission.assignmentOffering().courseOffering().instructors();
+        if (submission != null && submission.assignmentOffering() != null &&
+                submission.assignmentOffering().courseOffering() != null)
+        {
+            return submission.assignmentOffering().courseOffering().instructors();
+        }
+        else
+        {
+            return new NSArray<User>();
+        }
     }
 
 
