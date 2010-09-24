@@ -56,7 +56,7 @@ public class SubmissionSuspendedMessage extends Message
 
         if (attachmentsDir != null && attachmentsDir.exists())
         {
-            this.attachments = new NSMutableDictionary<String, NSData>();
+            this.attachments = new NSMutableDictionary<String, String>();
 
             File[] fileList = attachmentsDir.listFiles();
 
@@ -64,7 +64,7 @@ public class SubmissionSuspendedMessage extends Message
             {
                 if (!file.isDirectory())
                 {
-                    addAttachment(file);
+                    attachments.setObjectForKey(file.getPath(), file.getName());
                 }
             }
         }
@@ -157,42 +157,9 @@ public class SubmissionSuspendedMessage extends Message
 
     // ----------------------------------------------------------
     @Override
-    public NSDictionary<String, NSData> attachments()
+    public NSDictionary<String, String> attachments()
     {
         return attachments;
-    }
-
-
-    // ----------------------------------------------------------
-    private void addAttachment(File file)
-    {
-        FileInputStream stream = null;
-
-        try
-        {
-            stream = new FileInputStream(file);
-            NSData data = new NSData(stream, 0);
-
-            attachments.setObjectForKey(data, file.getName());
-        }
-        catch (IOException e)
-        {
-            // Do nothing.
-        }
-        finally
-        {
-            try
-            {
-                if (stream != null)
-                {
-                    stream.close();
-                }
-            }
-            catch (IOException e)
-            {
-                // Do nothing.
-            }
-        }
     }
 
 
@@ -201,5 +168,5 @@ public class SubmissionSuspendedMessage extends Message
     private Submission submission;
     private Exception exception;
     private String stage;
-    private NSMutableDictionary<String, NSData> attachments;
+    private NSMutableDictionary<String, String> attachments;
 }
