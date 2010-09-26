@@ -356,7 +356,7 @@ public abstract class JFreeChartComponent extends WCComponent
         // only one user is modifying it at a time.
         synchronized (ChartFactory.class)
         {
-            WCChartTheme chartTheme = new WCChartTheme(user().theme());
+            WCChartTheme chartTheme = new WCChartTheme(wcSession().theme());
             ChartFactory.setChartTheme(chartTheme);
 
             JFreeChart chart = generateChart(chartTheme);
