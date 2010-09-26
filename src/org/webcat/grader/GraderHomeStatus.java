@@ -237,7 +237,7 @@ public class GraderHomeStatus
         else
         {
             destinationPageName =
-                wcSession().tabs.selectById("PickSubmission").pageName();
+                wcSession().tabs.selectById("MostRecent").pageName();
         }
         return pageWithName(destinationPageName);
     }
