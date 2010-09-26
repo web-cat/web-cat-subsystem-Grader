@@ -23,16 +23,11 @@ package org.webcat.grader.graphs;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.geom.RectangularShape;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
-import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.ui.RectangleEdge;
 import org.webcat.core.Theme;
 
 //-------------------------------------------------------------------------

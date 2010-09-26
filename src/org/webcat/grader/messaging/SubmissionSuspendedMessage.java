@@ -22,15 +22,10 @@
 package org.webcat.grader.messaging;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Vector;
-import org.apache.log4j.Logger;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
 import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSData;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableDictionary;
 
