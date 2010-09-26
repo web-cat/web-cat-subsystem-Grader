@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import org.apache.log4j.Logger;
 import org.webcat.archives.ArchiveManager;
 import org.webcat.core.*;
+import org.webcat.core.vfs.WCFile;
 import org.webcat.ui.generators.JavascriptGenerator;
 
 // -------------------------------------------------------------------------
@@ -54,9 +55,6 @@ public class EditScriptFilesPage
     public EditScriptFilesPage( WOContext context )
     {
         super( context );
-
-        refresher = new JavascriptGenerator()
-            .refresh("fileBrowser", "folderList1", "folderList2");
     }
 
 
@@ -100,17 +98,6 @@ public class EditScriptFilesPage
                 base = new File( gradingPlugin.mainFilePath() );
             }
         }
-
-        folderList = null;
-        refreshFolderList();
-
-        super.beforeAppendToResponse( response, context );
-    }
-
-
-    // ----------------------------------------------------------
-    private void refreshFolderList()
-    {
         if ( folderList == null )
         {
             folderList = new NSMutableArray();
@@ -122,6 +109,7 @@ public class EditScriptFilesPage
             }
             addFolders( folderList, base, stripLength );
         }
+        super.beforeAppendToResponse( response, context );
     }
 
 
@@ -184,13 +172,9 @@ public class EditScriptFilesPage
 
 
     // ----------------------------------------------------------
-    public JavascriptGenerator createFolder()
+    public WOComponent createFolder()
     {
-        if (!applyLocalChanges())
-        {
-            return new JavascriptGenerator();
-        }
-
+        if (!applyLocalChanges()) return null;
         if ( folderName == null || folderName.length() == 0 )
         {
             error( "Please enter a folder name." );
@@ -209,22 +193,15 @@ public class EditScriptFilesPage
                 error( e.getMessage() );
             }
         }
-
         folderList = null;
-        refreshFolderList();
-
-        return refresher;
+        return null;
     }
 
 
     // ----------------------------------------------------------
-    public JavascriptGenerator fileWasUploaded()
+    public WOComponent uploadFile()
     {
-        if (!applyLocalChanges())
-        {
-            return new JavascriptGenerator();
-        }
-
+        if (!applyLocalChanges()) return null;
         if ( unzip && FileUtilities.isArchiveFile( uploadedFileName2 ) )
         {
             File target =
@@ -240,9 +217,7 @@ public class EditScriptFilesPage
             {
                 error( e.getMessage() );
             }
-
             folderList = null;
-            refreshFolderList();
         }
         else
         {
@@ -261,28 +236,22 @@ public class EditScriptFilesPage
                 error( e.getMessage() );
             }
         }
-
         if ( gradingPlugin != null )
         {
             gradingPlugin.initializeConfigAttributes();
             applyLocalChanges();
         }
-
-        return refresher;
+        return null;
     }
 
 
     // ----------------------------------------------------------
-    public JavascriptGenerator folderReplacementWasUploaded()
+    public WOComponent replaceEntireFolder()
     {
-        if (!applyLocalChanges())
-        {
-            return new JavascriptGenerator();
-        }
-
+        if (!applyLocalChanges()) return null;
         if ( FileUtilities.isArchiveFile( uploadedFileName3 ) )
         {
-            org.webcat.core.FileUtilities.deleteDirectory( base );
+            FileUtilities.deleteDirectory( base );
             base.mkdirs();
             // ZipInputStream zipStream =
             //    new ZipInputStream( uploadedFile3.stream() );
@@ -300,17 +269,14 @@ public class EditScriptFilesPage
                 gradingPlugin.initializeConfigAttributes();
                 applyLocalChanges();
             }
-
             folderList = null;
-            refreshFolderList();
         }
         else
         {
             error( "To replace this entire folder, you must upload a "
                           + "zip or a jar file." );
         }
-
-        return refresher;
+        return null;
     }
 
 
@@ -356,11 +322,6 @@ public class EditScriptFilesPage
 
 
     //~ Instance/static variables .............................................
-
-    // Since the same panes are refreshed by most of the upload actions, we
-    // create a common JavascriptGenerator here to be returned by those
-    // methods.
-    private JavascriptGenerator refresher;
 
     private String title;
     private boolean hideNextBack = false;
