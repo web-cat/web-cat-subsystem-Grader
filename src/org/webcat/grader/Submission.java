@@ -247,14 +247,14 @@ public class Submission
     // ----------------------------------------------------------
     public EnqueuedJob enqueuedJob()
     {
-        NSArray jobs = enqueuedJobs();
+        NSArray<EnqueuedJob> jobs = enqueuedJobs();
         if ( jobs != null  &&  jobs.count() > 0 )
         {
             if ( jobs.count() > 1 )
             {
                 log.error( "too many jobs for submission " + this );
             }
-            return (EnqueuedJob)jobs.objectAtIndex( 0 );
+            return jobs.objectAtIndex( 0 );
         }
         else
         {
@@ -264,36 +264,55 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    public void partnerWithUsers(NSArray<User> users, EOEditingContext ec)
+    @Override
+    public void setPrimarySubmission(Submission value)
+    {
+        super.setPrimarySubmission(value);
+        setPartnerLink(value != null);
+    }
+
+
+    // ----------------------------------------------------------
+    public void partnerWith(NSArray<User> users)
     {
         // Collect all of the students enrolled in any offering of the course
         // to which the submission is being made.
 
         NSMutableSet<User> studentsEnrolled = new NSMutableSet<User>();
 
-        Course course = assignmentOffering().courseOffering().course();
-        for (CourseOffering offering : course.offerings())
+        EOEditingContext ec = editingContext();
+        if (ec == null && assignmentOffering( )!= null)
+        {
+            ec = assignmentOffering().editingContext();
+        }
+
+        // Find all offerings of the current course in this semester
+        NSArray<CourseOffering> offerings =
+            CourseOffering.offeringsForSemesterAndCourse(ec,
+                assignmentOffering().courseOffering().course(),
+                assignmentOffering().courseOffering().semester());
+        for (CourseOffering offering : offerings)
         {
             studentsEnrolled.addObjectsFromArray(offering.students());
         }
 
-        for (User user : users)
+        for (User partner : users)
         {
             // Only partner a user on a submission if they are enrolled in the
             // same course as the user making the primary submission (but not
             // necessarily in the same offering -- this is a little more
             // flexible).
 
-            if (studentsEnrolled.containsObject(user))
+            if (studentsEnrolled.containsObject(partner))
             {
-                partnerSubmission(user, ec);
+                partnerWith(partner);
             }
         }
     }
 
 
     // ----------------------------------------------------------
-    public void partnerSubmission(User partner, EOEditingContext ec)
+    public void partnerWith(User partner)
     {
         // Make sure that a user isn't trying to partner with himself.
 
@@ -301,22 +320,32 @@ public class Submission
         {
             return;
         }
+        if (primarySubmission() != null)
+        {
+            primarySubmission().partnerWith(partner);
+            return;
+        }
 
-        int submitNumber = 1;
+        EOEditingContext ec = editingContext();
+        if (ec == null)
+        {
+            ec = partner.editingContext();
+        }
+
+        int partnerSubmitNumber = 1;
 
         EOQualifier qualifier =
-            Submission.assignmentOffering.dot(AssignmentOffering.assignment).
-            eq(assignmentOffering().assignment()).and(
-                    Submission.user.eq(partner));
-
-        NSArray<EOSortOrdering> sortOrderings = Submission.submitNumber.descs();
+            Submission.assignmentOffering.eq(assignmentOffering())
+                .and(Submission.user.eq(partner));
 
         Submission highestSubmission = Submission.firstObjectMatchingQualifier(
-                ec, qualifier, sortOrderings);
+                ec,
+                qualifier,
+                Submission.submitNumber.descs());
 
         if (highestSubmission != null)
         {
-            submitNumber = highestSubmission.submitNumber() + 1;
+            partnerSubmitNumber = highestSubmission.submitNumber() + 1;
         }
 
         Submission newSubmission = new Submission();
@@ -324,7 +353,7 @@ public class Submission
 
         newSubmission.setFileName( fileName() );
         newSubmission.setPartnerLink( true );
-        newSubmission.setSubmitNumber( submitNumber );
+        newSubmission.setSubmitNumber( partnerSubmitNumber );
         newSubmission.setSubmitTime( submitTime() );
         newSubmission.setAssignmentOfferingRelationship(
             assignmentOffering() );
@@ -337,21 +366,26 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    public void unpartnerFromUsers(NSArray<User> users, EOEditingContext ec)
+    public void unpartnerFrom(NSArray<User> users)
     {
-        for (User user : users)
+        for (User partner : users)
         {
-            unpartnerSubmission(user, ec);
+            unpartnerFrom(partner);
         }
     }
 
 
     // ----------------------------------------------------------
-    public void unpartnerSubmission(User partner, EOEditingContext ec)
+    public void unpartnerFrom(User partner)
     {
         EOQualifier qualifier =
-            Submission.result.is(result()).and(
-                    Submission.user.eq(partner));
+            Submission.result.is(result()).and(Submission.user.eq(partner));
+
+        EOEditingContext ec = editingContext();
+        if (ec == null)
+        {
+            ec = partner.editingContext();
+        }
 
         Submission partneredSubmission =
             Submission.firstObjectMatchingQualifier(ec, qualifier, null);
@@ -416,23 +450,17 @@ public class Submission
      */
     public void deleteResultsAndRemovePartners()
     {
-        SubmissionResult result = result();
-        if ( result != null )
+        SubmissionResult myResult = result();
+        if ( myResult != null )
         {
-            log.debug( "removing SubmissionResult " + result );
-            result.setIsMostRecent( false );
-            NSArray subs = result.submissions();
-            for ( int i = 0; i < subs.count(); i++ )
+            log.debug( "removing SubmissionResult " + myResult );
+            myResult.setIsMostRecent(false);
+            setResultRelationship(null);
+            for (Submission s : myResult.submissions())
             {
-                Submission s = (Submission)subs.objectAtIndex( i );
-                s.setResultRelationship( null );
-                if ( s.partnerLink() )
-                {
-                    log.debug( "deleting partner Submission " + s );
-                    editingContext().deleteObject( s );
-                }
+                s.setResultRelationship(null);
             }
-            editingContext().deleteObject( result );
+            editingContext().deleteObject(myResult);
         }
     }
 
@@ -503,7 +531,14 @@ public class Submission
         }
         properties.setProperty(  "submission.result.link", permalink() );
 
-        new GradingResultsAvailableMessage(user(), properties).send();
+        try
+        {
+            new GradingResultsAvailableMessage(user(), properties).send();
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to notify student of grading results", e);
+        }
 
 /*        org.webcat.core.Application.sendSimpleEmail(
             user().email(),
