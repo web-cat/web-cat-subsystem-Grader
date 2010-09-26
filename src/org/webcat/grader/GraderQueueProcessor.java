@@ -27,9 +27,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.webcat.core.Application;
 import org.webcat.core.FileUtilities;
@@ -43,7 +42,6 @@ import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOKeyValueQualifier;
 import com.webobjects.eocontrol.EOQualifier;
-import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSKeyValueCoding;
@@ -89,52 +87,41 @@ public class GraderQueueProcessor
     public void run()
     {
         // Find all jobs that are not paused
-        NSMutableArray newJobQualifiers = new NSMutableArray();
-        newJobQualifiers.addObject( new EOKeyValueQualifier(
-                        EnqueuedJob.PAUSED_KEY,
-                        EOQualifier.QualifierOperatorEqual,
-                        ERXConstant.integerForInt( 0 ) ) );
-        newJobQualifiers.addObject( new EOKeyValueQualifier(
-                        EnqueuedJob.REGRADING_KEY,
-                        EOQualifier.QualifierOperatorEqual,
-                        ERXConstant.integerForInt( 0 ) ) );
-        NSMutableArray regradingJobQualifiers = new NSMutableArray();
+        NSMutableArray<EOQualifier> newJobQualifiers =
+            new NSMutableArray<EOQualifier>();
+        newJobQualifiers.addObject(
+            new EOKeyValueQualifier(
+                EnqueuedJob.PAUSED_KEY,
+                EOQualifier.QualifierOperatorEqual,
+                ERXConstant.integerForInt(0)));
+        newJobQualifiers.addObject(
+            new EOKeyValueQualifier(
+                EnqueuedJob.REGRADING_KEY,
+                EOQualifier.QualifierOperatorEqual,
+                ERXConstant.integerForInt(0)));
+        NSMutableArray<EOQualifier> regradingJobQualifiers =
+            new NSMutableArray<EOQualifier>();
         regradingJobQualifiers.addObject( newJobQualifiers.objectAtIndex( 0 ) );
-        regradingJobQualifiers.addObject( new EOKeyValueQualifier(
-                        EnqueuedJob.REGRADING_KEY,
-                        EOQualifier.QualifierOperatorEqual,
-                        ERXConstant.integerForInt( 1 ) ) );
+        regradingJobQualifiers.addObject(
+            new EOKeyValueQualifier(
+                EnqueuedJob.REGRADING_KEY,
+                EOQualifier.QualifierOperatorEqual,
+                ERXConstant.integerForInt(1)));
         EOFetchSpecification fetchNewJobs =
-                new EOFetchSpecification(
-                        EnqueuedJob.ENTITY_NAME,
-                        new EOAndQualifier( newJobQualifiers ),
-                        new NSArray( new Object[]{
-                                new EOSortOrdering(
-                                        EnqueuedJob.SUBMIT_TIME_KEY,
-                                        EOSortOrdering.CompareAscending
-                                    )
-                            } )
-                    );
+            new EOFetchSpecification(
+                EnqueuedJob.ENTITY_NAME,
+                new EOAndQualifier( newJobQualifiers ),
+                EnqueuedJob.submission.dot(Submission.submitTime).ascs());
         EOFetchSpecification fetchRegradingJobs =
             new EOFetchSpecification(
-                    EnqueuedJob.ENTITY_NAME,
-                    new EOAndQualifier( regradingJobQualifiers ),
-                    new NSArray( new Object[]{
-                            new EOSortOrdering(
-                                    EnqueuedJob.QUEUE_TIME_KEY,
-                                    EOSortOrdering.CompareAscending
-                                )
-                        } )
-                );
+                EnqueuedJob.ENTITY_NAME,
+                new EOAndQualifier( regradingJobQualifiers ),
+                EnqueuedJob.queueTime.ascs());
         EOFetchSpecification fetchDiscardedJobs =
             new EOFetchSpecification(
-                    EnqueuedJob.ENTITY_NAME,
-                    new EOKeyValueQualifier(
-                                    EnqueuedJob.DISCARDED_KEY,
-                                    EOQualifier.QualifierOperatorEqual,
-                                    ERXConstant.integerForInt( 1 ) ),
-                    null
-                );
+                EnqueuedJob.ENTITY_NAME,
+                EnqueuedJob.discarded.eq(ERXConstant.integerForInt(1)),
+                null);
         try
         {
             while ( true )
@@ -402,21 +389,11 @@ public class GraderQueueProcessor
         }
 
         // Fetch all the steps in grading this assignment
-        NSArray<Step> steps = Step.objectsWithFetchSpecification(
+        NSArray<Step> steps = Step.objectsMatchingQualifier(
             editingContext,
-            new EOFetchSpecification(
-                "Step",
-                new EOKeyValueQualifier(
-                    "assignment",
-                    EOQualifier.QualifierOperatorEqual,
-                    job.submission().assignmentOffering()
-                        .assignment()),
-                new NSArray( new Object[]{
-                    new EOSortOrdering(
-                        "order",
-                        EOSortOrdering.CompareAscending)
-                    })
-            ));
+            Step.assignment.eq(job.submission().assignmentOffering()
+                .assignment()),
+            Step.order.ascs());
 
         // Set up the properties to pass to execution scripts
         WCProperties gradingProperties;
@@ -736,12 +713,12 @@ public class GraderQueueProcessor
      * @param adminReports     the Vector where admin-targeted report files
      *                         are added (as string file names)
      */
-    void collectReports( EnqueuedJob      job,
-                         WCProperties     properties,
-                         SubmissionResult submissionResult,
-                         NSMutableArray   inlineStudentReports,
-                         NSMutableArray   inlineStaffReports,
-                         Vector           adminReports )
+    void collectReports( EnqueuedJob                job,
+                         WCProperties               properties,
+                         SubmissionResult           submissionResult,
+                         NSMutableArray<InlineFile> inlineStudentReports,
+                         NSMutableArray<InlineFile> inlineStaffReports,
+                         List<String>               adminReports )
     {
         File parentDir = new File( job.submission().resultDirName() );
 
@@ -995,9 +972,11 @@ public class GraderQueueProcessor
         submissionResult.setToolScore( toolScore );
         editingContext.insertObject( submissionResult );
 
-        NSMutableArray inlineStudentReports = new NSMutableArray();
-        NSMutableArray inlineStaffReports = new NSMutableArray();
-        Vector         adminReports  = new Vector();
+        NSMutableArray<InlineFile> inlineStudentReports =
+            new NSMutableArray<InlineFile>();
+        NSMutableArray<InlineFile> inlineStaffReports =
+            new NSMutableArray<InlineFile>();
+        List<String> adminReports  = new ArrayList<String>();
         collectReports( job,
                         properties,
                         submissionResult,
@@ -1021,10 +1000,23 @@ public class GraderQueueProcessor
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
 
-        for (Submission partneredSubmission :
-            job.submission().partneredSubmissions())
+        try
         {
-            partneredSubmission.setResultRelationship(submissionResult);
+            if (job.submission() != null)
+            {
+                for (Submission partneredSubmission :
+                    job.submission().partneredSubmissions())
+                {
+                    partneredSubmission.setResultRelationship(submissionResult);
+                    // Force it to be marked as a partner submission as
+                    // a stop-gap until we find the real problem.
+                    partneredSubmission.setPartnerLink(true);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to link partner submisisons", e);
         }
 
         job.setSubmissionRelationship( null );
@@ -1318,7 +1310,10 @@ public class GraderQueueProcessor
         }
         else
         {
-            contents = (NSDictionary<String, Object>) value;
+            @SuppressWarnings("unchecked")
+            NSDictionary<String, Object> castContents =
+                (NSDictionary<String, Object>) value;
+            contents = castContents;
         }
 
         ResultOutcome outcome = new ResultOutcome();
@@ -1349,8 +1344,8 @@ public class GraderQueueProcessor
      * @param destination The output file to create and fill
      * @param inlineFragments The array of InlineFiles to fill it with
      */
-    void generateCompositeResultFile( File    destination,
-                                      NSArray inlineFragments )
+    void generateCompositeResultFile( File                destination,
+                                      NSArray<InlineFile> inlineFragments )
     {
         if ( inlineFragments.count() > 0 )
         {
@@ -1362,11 +1357,8 @@ public class GraderQueueProcessor
                     "<hr size=\"1\" noshade />\n".getBytes();
 
                 boolean lastNeedsBorder = false;
-                for ( int i = 0; i < inlineFragments.count(); i++ )
+                for (InlineFile thisFile: inlineFragments)
                 {
-                    InlineFile thisFile =
-                        (InlineFile)inlineFragments.objectAtIndex( i );
-
                     boolean isHTML = thisFile.mimeType != null &&
                         ( thisFile.mimeType.equalsIgnoreCase( "text/html" ) ||
                           thisFile.mimeType.equalsIgnoreCase( "html" ) );
@@ -1436,13 +1428,20 @@ public class GraderQueueProcessor
         job.setPaused( true );
         faultOccurredInStep = true;
 
-        SubmissionSuspendedMessage msg = new SubmissionSuspendedMessage(
+        try
+        {
+            SubmissionSuspendedMessage msg = new SubmissionSuspendedMessage(
                 job.submission(), e, stage, attachmentsDir);
 
-        log.info("technicalFault(): " + msg.title());
-        log.info(msg.shortBody(), e);
+            log.info("technicalFault(): " + msg.title());
+            log.info(msg.shortBody(), e);
 
-        msg.send();
+            msg.send();
+        }
+        catch (Exception ee)
+        {
+            log.error("Exception sending message to student", ee);
+        }
 
 /*        Vector<String> attachments = null;
         if ( attachmentsDir != null  &&  attachmentsDir.exists() )
