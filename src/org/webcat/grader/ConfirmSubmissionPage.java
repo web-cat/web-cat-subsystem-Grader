@@ -99,12 +99,13 @@ public class ConfirmSubmissionPage
             // NSArray field.  This array is an array of ZipEntry objects.
             try
             {
-                submissionInProcess().setUploadedFileList( new NSArray(
-                    ArchiveManager.getInstance().getContents(
-                        submissionInProcess().uploadedFileName(),
-                        submissionInProcess().uploadedFile().stream(),
-                        submissionInProcess().uploadedFile().length()
-                    ) ) );
+                submissionInProcess().setUploadedFileList(
+                    new NSArray<IArchiveEntry>(
+                        ArchiveManager.getInstance().getContents(
+                            submissionInProcess().uploadedFileName(),
+                            submissionInProcess().uploadedFile().stream(),
+                            submissionInProcess().uploadedFile().length()
+                        )));
             }
             catch ( Exception e )
             {
@@ -143,7 +144,7 @@ public class ConfirmSubmissionPage
     // ----------------------------------------------------------
     public boolean singleFile()
     {
-        NSArray list = submissionInProcess().uploadedFileList();
+        NSArray<IArchiveEntry> list = submissionInProcess().uploadedFileList();
         return list == null || list.count() <= 1;
     }
 

@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.foundation.*;
 import java.io.*;
+import org.webcat.archives.IArchiveEntry;
 import org.webcat.core.User;
 
 //-------------------------------------------------------------------------
@@ -125,7 +126,7 @@ public class SubmissionInProcess
      * current uploaded file (if it is a zip or jar).
      * @return A list of its files
      */
-    public NSArray uploadedFileList()
+    public NSArray<IArchiveEntry> uploadedFileList()
     {
         return uploadedFileList;
     }
@@ -136,7 +137,7 @@ public class SubmissionInProcess
      * Set the current uploaded file's list of internal contents.
      * @param list An array of files contained within this zip or jar
      */
-    public void setUploadedFileList( NSArray list )
+    public void setUploadedFileList( NSArray<IArchiveEntry> list )
     {
         uploadedFileList = list;
     }
@@ -232,9 +233,9 @@ public class SubmissionInProcess
 
     //~ Instance/static variables .............................................
 
-    private NSData  uploadedFile;
-    private String  uploadedFileName;
-    private NSArray uploadedFileList;
-    private Submission submission;
-    private NSArray<User> partners;
+    private NSData                 uploadedFile;
+    private String                 uploadedFileName;
+    private NSArray<IArchiveEntry> uploadedFileList;
+    private Submission             submission;
+    private NSArray<User>          partners;
 }
