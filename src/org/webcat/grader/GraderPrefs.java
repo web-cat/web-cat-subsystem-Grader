@@ -97,6 +97,22 @@ public class GraderPrefs
 
 
     // ----------------------------------------------------------
+    @Override
+    public void setAssignmentOffering(AssignmentOffering value)
+    {
+        Assignment oldAssignment = super.assignment();
+        // Clear the "assignment" pref (which represents "all offerings" of
+        // some assignment) if a specific assignment offering is being
+        // set.
+        if (value != null && oldAssignment != null)
+        {
+            super.setAssignmentRelationship(null);
+        }
+        super.setAssignmentOffering(value);
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Retrieve the entity pointed to by the <code>step</code>
      * relationship.
