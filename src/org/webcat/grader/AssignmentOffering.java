@@ -419,7 +419,7 @@ public class AssignmentOffering
             editingContext(), this, user);
         if (subs.count() > 0)
         {
-            newest = subs.objectAtIndex(0);
+            newest = subs.objectAtIndex(subs.count() - 1);
         }
         return newest;
     }
