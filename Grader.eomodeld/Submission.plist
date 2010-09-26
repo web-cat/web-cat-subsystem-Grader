@@ -99,6 +99,7 @@
             name = graderPrefs; 
         }, 
         {
+            deleteRule = EODeleteRuleCascade; 
             destination = Submission; 
             isToMany = Y; 
             joinSemantic = EOInnerJoin; 
