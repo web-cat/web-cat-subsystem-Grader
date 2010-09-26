@@ -93,8 +93,8 @@ public class GradingResultsAvailableMessage extends Message
             new NSMutableDictionary<String, String>();
 
         links.setObjectForKey(
-                properties.stringForKey("${submission.result.link}"),
-                "Click here to log in to Web-CAT and view the report");
+                properties.stringForKey("submission.result.link"),
+                "View your feedback");
 
         return links;
     }
