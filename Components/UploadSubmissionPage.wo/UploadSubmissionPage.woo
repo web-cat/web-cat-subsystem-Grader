@@ -7,13 +7,11 @@
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 
             numberOfObjectsPerBatch = 5; 
-            sortOrdering = (
-                {
-		    class = EOSortOrdering;
-		    key = submitNumber;
-		    selectorName = "compareDescending:";
-		}
-	    ); 
+            sortOrdering = ({
+                    class = EOSortOrdering;
+                    key = submitNumber;
+                    selectorName = "compareDescending:";
+                }); 
         }; 
         studentDisplayGroup = {
             class = WODisplayGroup; 
@@ -25,7 +23,23 @@
             fetchesOnLoad = YES; 
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 
-            sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = lastName;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                },
+                {
+                    class = EOSortOrdering;
+                    key = firstName;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                },
+                {
+                    class = EOSortOrdering;
+                    key = userName;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                }
+            ); 
         }; 
     }; 
 }
