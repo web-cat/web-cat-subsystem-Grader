@@ -118,7 +118,7 @@ public class EditPartnersPage
     {
         // Don't need the return value: we just want it to be created, and
         // partnerSubmission() will save the changes to the DB
-        result.submission().partnerSubmission(student, localContext());
+        result.submission().partnerWith(student);
         applyLocalChanges();
         return null;
     }

@@ -111,11 +111,11 @@ public class SubmissionResultInfo
 
         NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
                 originalPartners, partnersForEditing);
-        submission.unpartnerFromUsers(partnersToRemove, localContext());
+        submission.unpartnerFrom(partnersToRemove);
 
         NSArray<User> partnersToAdd = ERXArrayUtilities.arrayMinusArray(
                 partnersForEditing, originalPartners);
-        submission.partnerWithUsers(partnersToAdd, localContext());
+        submission.partnerWith(partnersToAdd);
 
         applyLocalChanges();
 
