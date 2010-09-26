@@ -22,8 +22,6 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
-import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.*;
 import java.io.*;
 import org.apache.log4j.Logger;
@@ -36,7 +34,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  *  {@link SubmissionInProcess} state object.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderSubmissionUploadComponent
     extends GraderAssignmentComponent
@@ -183,19 +182,14 @@ public class GraderSubmissionUploadComponent
         // Clear out older jobs
         try
         {
-            NSArray oldJobs = EOUtilities.objectsMatchingValues(
-                    localContext(),
-                    EnqueuedJob.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  user(),
-                                        submission.assignmentOffering()    },
-                        new Object[] { EnqueuedJob.USER_KEY,
-                                       EnqueuedJob.ASSIGNMENT_OFFERING_KEY }
-                ) );
-            for ( int i = 0; i < oldJobs.count(); i++ )
+            NSArray<EnqueuedJob> oldJobs =
+                EnqueuedJob.objectsMatchingQualifier(localContext(),
+                    EnqueuedJob.submission.dot(Submission.user).eq(user()).and(
+                    EnqueuedJob.submission.dot(Submission.assignmentOffering)
+                        .eq(submission.assignmentOffering())));
+            for (EnqueuedJob job : oldJobs)
             {
-                EnqueuedJob job = (EnqueuedJob)oldJobs.objectAtIndex( i );
-                job.setDiscarded( true );
+                job.setDiscarded(true);
             }
         }
         catch ( Exception e )
