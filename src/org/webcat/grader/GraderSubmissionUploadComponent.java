@@ -86,15 +86,14 @@ public class GraderSubmissionUploadComponent
      * @param partners an array of partners to be associated with the
      *     submission
      */
-    public void startSubmission( int submitNumber, User user )
+    public void startSubmission(int submitNumber, User user)
     {
-        Submission submission = new Submission();
-        localContext().insertObject( submission );
-        submission.setSubmitNumber( submitNumber );
-        submission.setUserRelationship( user );
+        Submission submission = Submission.create(localContext(), false);
+        submission.setSubmitNumber(submitNumber);
+        submission.setUserRelationship(user);
 
-        log.debug( "startSubmission( " + submitNumber + ", " + user + " )" );
-        submissionInProcess().setSubmission( submission );
+        log.debug("startSubmission( " + submitNumber + ", " + user + " )");
+        submissionInProcess().setSubmission(submission);
     }
 
 
@@ -127,8 +126,11 @@ public class GraderSubmissionUploadComponent
         // Do the actual partnering of the users (this will create the dummy
         // Submission objects for the other partners).
 
-        submissionInProcess().submission().partnerWithUsers(
-                submissionInProcess().partners(), localContext());
+        if (submissionInProcess().partners() != null)
+        {
+            submissionInProcess().submission().partnerWith(
+                submissionInProcess().partners());
+        }
 
         // Then, make the necessary directory.
 
