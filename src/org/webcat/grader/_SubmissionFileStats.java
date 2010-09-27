@@ -4,7 +4,7 @@
  |  Created by eogenerator
  |  DO NOT EDIT.  Make changes to SubmissionFileStats.java instead.
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -2061,7 +2061,6 @@ public abstract class _SubmissionFileStats
      *
      * @return the count of objects that matched the specified values
      */
-    @SuppressWarnings("unchecked")
     public static int countOfObjectsMatchingValues(
         EOEditingContext context,
         NSDictionary<String, Object> keysAndValues)
