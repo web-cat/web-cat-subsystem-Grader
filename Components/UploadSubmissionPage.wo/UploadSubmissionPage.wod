@@ -6,29 +6,6 @@ DifferentStudent: WOConditional {
     condition = session.impersonatingAnotherUser;
 }
 
-EditPartners: WCButton {
-    onClick = showEditPartnersDialogScript;
-    label  = "Choose Partners...";
-}
-
-EditPartnersDialog: WCDialog {
-    id = "editPartnersDialog";
-    title = "Choose Partners";
-    okAction = partnersChanged;
-}
-
-EditPartnersOK: WCButton {
-    action = partnersChanged;
-    remote = true;
-    class = "pos";
-    label = "OK";
-}
-
-EditPartnersCancel: WCButton {
-    class = "neg";
-    label = "Cancel";
-}
-
 PartnerSelector: FilteringUserSelector {
     actionTitle = "Choose Partners";
     dialogMessage = "Please choose the students below who also worked on this submission.";
@@ -37,16 +14,6 @@ PartnerSelector: FilteringUserSelector {
     availableListTitle = "Students Enrolled in Your Course";
     selectedUsers = partnersForEditing;
     qualifier = qualifierForStudentsInCourse;
-}
-
-PartnerName: WOString {
-    value = aPartner.nameAndUid;
-}
-
-PartnerRepetition: WORepetition {
-    list = partnersForEditing;
-    item = aPartner;
-    index = partnerIndex;
 }
 
 HasPreviousSubmissions: WOConditional {
