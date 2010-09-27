@@ -25,8 +25,8 @@ package org.webcat.grader;
 /**
  * An EO representing settings for an output comparison grading engine.
  *
- * @author stedwar2
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class GradingCriteria

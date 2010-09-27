@@ -31,8 +31,8 @@ import org.webcat.core.*;
  * Represents a standard Web-CAT page that has not yet been implemented
  * (is "to be defined").
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class EditCoursePage

@@ -30,8 +30,8 @@ import org.apache.log4j.Logger;
  * including all markup comments and a color-highlighted version
  * of the source code.
  *
- * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class SubmissionFileDetailsPage

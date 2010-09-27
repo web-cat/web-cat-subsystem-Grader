@@ -26,6 +26,15 @@ import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.foundation.NSData;
 
+//-------------------------------------------------------------------------
+/**
+ * An component that simply in-lines its "data" binding right into the
+ * response.
+ *
+ * @author  Tony Allevato
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
+ */
 public class RawDataComponent
     extends WOComponent
 {

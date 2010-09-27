@@ -31,8 +31,9 @@ import org.webcat.core.User;
  * Used to hold the data related to a file upload as part of a submission
  * that has been started (but not yet completed).
  *
- * @author stedwar2
- * @version $Id$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class SubmissionInProcess
 {

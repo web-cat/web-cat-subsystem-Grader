@@ -22,9 +22,7 @@
 package org.webcat.grader;
 
 import com.Ostermiller.util.*;
-import com.ibm.icu.text.*;
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.*;
@@ -36,8 +34,9 @@ import org.webcat.core.*;
  * Generates a downloadable CSV file of assignment scheduling and grading
  * data.
  *
- *  @author edwards
- *  @version $Id$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class AssignmentDataPage
     extends WCComponent
@@ -103,6 +102,7 @@ public class AssignmentDataPage
     {
 
         // ----------------------------------------------------------
+        @SuppressWarnings("deprecation")
         public LongResponseTask( NSTimestampFormatter formatter )
         {
             // Create a local EC, transfer the result into it, and
@@ -111,8 +111,7 @@ public class AssignmentDataPage
             try
             {
                 ec.lock();
-                assignments = EOUtilities.objectsForEntityNamed(
-                    ec, AssignmentOffering.ENTITY_NAME );
+                assignments = AssignmentOffering.allObjects(ec);
             }
             finally
             {
@@ -180,8 +179,7 @@ public class AssignmentDataPage
             }
             if ( assignments != null && stepNumber < assignments.count() )
             {
-                AssignmentOffering ao = (AssignmentOffering)assignments
-                    .objectAtIndex( stepNumber );
+                AssignmentOffering ao = assignments.objectAtIndex(stepNumber);
                 if ( ao.courseOffering() != null )
                 {
                     out.print(
@@ -322,11 +320,12 @@ public class AssignmentDataPage
 
 
         //~ Instance/static variables .........................................
-        private EOEditingContext ec;
-        private NSArray          assignments;
-        ByteArrayOutputStream    outBytes;
-        ExcelCSVPrinter          out;
-        NSTimestampFormatter     formatter;
+        private EOEditingContext            ec;
+        private NSArray<AssignmentOffering> assignments;
+        ByteArrayOutputStream               outBytes;
+        ExcelCSVPrinter                     out;
+        @SuppressWarnings("deprecation")
+        NSTimestampFormatter                formatter;
     }
 
 

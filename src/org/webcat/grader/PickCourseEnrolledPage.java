@@ -34,8 +34,8 @@ import org.webcat.core.*;
  *  This page presents a list of courses for a student to choose from.
  *
  *  @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class PickCourseEnrolledPage
     extends GraderComponent

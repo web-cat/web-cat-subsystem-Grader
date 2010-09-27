@@ -24,7 +24,6 @@ package org.webcat.grader;
 import org.webcat.core.Application;
 import org.webcat.core.User;
 import org.webcat.ui.generators.JavascriptGenerator;
-import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOEditingContext;
@@ -41,7 +40,7 @@ import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
  * an assignment (typically for data collection with an updated grading
  * plug-in).
  *
- * @author Tony Allevato
+ * @author  Tony Allevato
  * @author  latest changes by: $Author$
  * @version $Revision$, $Date$
  */

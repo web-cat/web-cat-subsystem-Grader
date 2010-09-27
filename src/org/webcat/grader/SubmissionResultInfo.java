@@ -21,13 +21,10 @@
 
 package org.webcat.grader;
 
-import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.User;
-import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WODisplayGroup;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
@@ -42,7 +39,7 @@ import er.extensions.foundation.ERXArrayUtilities;
  *  if present, will be used to present file-specific data.
  *
  *  @author  Stephen Edwards
- *  @author  latest changes by: $Author$
+ *  @author  Latest changes by: $Author$
  *  @version $Revision$, $Date$
  */
 public class SubmissionResultInfo
@@ -109,10 +106,12 @@ public class SubmissionResultInfo
     {
         partnersForEditing = users;
 
+        @SuppressWarnings("unchecked")
         NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
                 originalPartners, partnersForEditing);
         submission.unpartnerFrom(partnersToRemove);
 
+        @SuppressWarnings("unchecked")
         NSArray<User> partnersToAdd = ERXArrayUtilities.arrayMinusArray(
                 partnersForEditing, originalPartners);
         submission.partnerWith(partnersToAdd);
@@ -126,9 +125,12 @@ public class SubmissionResultInfo
     // ----------------------------------------------------------
     public EOQualifier qualifierForStudentsInCourse()
     {
-        Course course =
-            submission.assignmentOffering().courseOffering().course();
-        NSArray<CourseOffering> offerings = course.offerings();
+        CourseOffering courseOffering =
+            submission.assignmentOffering().courseOffering();
+        NSArray<CourseOffering> offerings =
+            CourseOffering.offeringsForSemesterAndCourse(localContext(),
+                courseOffering.course(),
+                courseOffering.semester());
 
         EOQualifier[] enrollmentQuals = new EOQualifier[offerings.count()];
         int i = 0;

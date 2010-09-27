@@ -32,8 +32,8 @@ import org.webcat.core.*;
  * This class displays a list of users enrolled in a selected course and
  * allows new users to be added.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class CourseRosterPage

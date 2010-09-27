@@ -22,7 +22,6 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.foundation.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -32,8 +31,8 @@ import org.webcat.core.*;
  * this assignment (who will also be able to see the submission and its
  * results).
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class EditPartnersPage

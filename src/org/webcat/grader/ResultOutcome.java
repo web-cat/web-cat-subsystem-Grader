@@ -25,7 +25,8 @@ package org.webcat.grader;
 /**
  * TODO: place a real description here.
  *
- * @author Last changed by $Author$
+ * @author  Tony Allevato
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class ResultOutcome
@@ -41,8 +42,4 @@ public class ResultOutcome
     {
         super();
     }
-
-
-    //~ Methods ...............................................................
-
 }

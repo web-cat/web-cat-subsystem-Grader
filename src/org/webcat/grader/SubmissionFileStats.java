@@ -21,13 +21,11 @@
 
 package org.webcat.grader;
 
-import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.*;
-import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
@@ -39,8 +37,9 @@ import org.webcat.grader.messaging.GraderMarkupParseError;
 /**
  *  Represents test coverage metrics for one file/class in a submission.
  *
- *  @author Stephen H. Edwards
- *  @version $Id$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class SubmissionFileStats
     extends _SubmissionFileStats
@@ -187,10 +186,10 @@ public class SubmissionFileStats
      */
     public int staffRemarks()
     {
-        NSArray comments = comments();
-        return comments == null
+        NSArray<SubmissionFileComment> myComments = comments();
+        return myComments == null
             ? 0
-            : comments.count();
+            : myComments.count();
     }
 
 
@@ -216,11 +215,8 @@ public class SubmissionFileStats
         if (!staffDeductionsIsValid)
         {
             staffDeductions = 0.0;
-            NSArray comments = comments();
-            for ( int i = 0; i < comments.count(); i++ )
+            for (SubmissionFileComment thisComment : comments())
             {
-                SubmissionFileComment thisComment =
-                    (SubmissionFileComment)comments.objectAtIndex( i );
                 staffDeductions += thisComment.deduction();
             }
             staffDeductionsIsValid = true;
@@ -401,8 +397,9 @@ public class SubmissionFileStats
         contents.append( "\"/>\n" );
 
         //get the array of file comments from the database
-        NSArray comments = comments().sortedArrayUsingComparator(
-            SubmissionFileComment.STANDARD_ORDERING );
+        NSArray<SubmissionFileComment> myComments = comments()
+            .sortedArrayUsingComparator(
+                SubmissionFileComment.STANDARD_ORDERING);
 
         /*
         StringBuffer fileoutput = new StringBuffer( (int)file.length() );
@@ -437,8 +434,9 @@ public class SubmissionFileStats
             inStream = new FileInputStream( file );
             Document doc = parser.build( inStream );
             Element root = doc.getRootElement();
-            List children = root.getChild( "TBODY" ).getChildren();
-            ListIterator iterator = children.listIterator();
+            @SuppressWarnings("unchecked")
+            List<Element> children = root.getChild( "TBODY" ).getChildren();
+            ListIterator<Element> iterator = children.listIterator();
 
             int index          = 0;
             int box_number     = 1;
@@ -448,7 +446,7 @@ public class SubmissionFileStats
             boolean isEditable = false;
             while ( iterator.hasNext() )
             {
-                Element child = (Element)iterator.next();
+                Element child = iterator.next();
                 // get the id attribute from the row
                 String id = child.getAttributeValue( "id" );
                 if (    ( id.charAt( 0 ) == '\"' )
@@ -463,18 +461,15 @@ public class SubmissionFileStats
                     // check to see if this is the row where the comment
                     // needs to be inserted
                     int rownum = Integer.parseInt( idarr[1] );
-                    while (    ( index != comments.count() )
-                        && ( ( (SubmissionFileComment)comments
-                           .objectAtIndex( index ) ).lineNo()
-                         == rownum ) )
+                    while (index != myComments.count()
+                        && myComments.objectAtIndex(index).lineNo() == rownum)
                     {
                         log.debug( "index = " + index
-                           + " count = " + comments.count() );
+                           + " count = " + myComments.count() );
                         // make a new comment with the properties and
                         // insert it after the line
                         SubmissionFileComment thisComment =
-                            (SubmissionFileComment)comments.
-                        objectAtIndex( index );
+                            myComments.objectAtIndex( index );
                         if ( thisComment.readableByUser( user ) )
                         {
                             log.debug( "Inserting comment at line number "

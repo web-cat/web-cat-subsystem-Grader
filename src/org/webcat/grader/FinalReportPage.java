@@ -38,8 +38,8 @@ import org.webcat.core.*;
  * error happened during grading, then the student is informed.
  * Otherwise, the final grading report is presented.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class FinalReportPage

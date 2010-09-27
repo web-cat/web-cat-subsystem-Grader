@@ -25,13 +25,14 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.Logger;
+import org.webcat.core.User;
 
 // -------------------------------------------------------------------------
 /**
  * Contains all the submission options for an assignment.
  *
- * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$ $Date$
  */
 public class SubmissionProfile
@@ -68,10 +69,10 @@ public class SubmissionProfile
     public String userPresentableDescription()
     {
         String result = name();
-        org.webcat.core.User author = author();
-        if ( author != null )
+        User myAuthor = author();
+        if ( myAuthor != null )
         {
-            result += " (" + author.userName() + ")";
+            result += " (" + myAuthor.userName() + ")";
         }
         return result;
     }
@@ -255,35 +256,35 @@ public class SubmissionProfile
      * added to the result if it is not already in the results of the fetch.
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray profilesForCourseIncludingMine(
+    public static NSArray<SubmissionProfile> profilesForCourseIncludingMine(
             EOEditingContext context,
             org.webcat.core.User user,
             org.webcat.core.Course course,
             SubmissionProfile mine
         )
     {
-        NSMutableArray results =
-            profilesForCourse( context, course ).mutableClone();
+        NSMutableArray<SubmissionProfile> results =
+            profilesForCourse(context, course).mutableClone();
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
             results,
-            profilesForUser( context, user ) );
-        if ( mine != null && !results.containsObject( mine ) )
+            profilesForUser(context, user));
+        if (mine != null && !results.containsObject(mine))
         {
-            results.addObject( mine );
+            results.addObject(mine);
         }
         return results;
     }
 
 
     // ----------------------------------------------------------
-    public NSArray timeUnits()
+    public NSArray<TimeUnit> timeUnits()
     {
         return timeUnitsArray;
     }
 
 
     // ----------------------------------------------------------
-    public NSArray submitters()
+    public NSArray<String> submitters()
     {
         return submittersArray;
     }
@@ -387,9 +388,11 @@ public class SubmissionProfile
         "List for Eclipse submitter"
     };
 
-    public static final NSArray timeUnitsArray = new NSArray( timeUnits );
+    public static final NSArray<TimeUnit> timeUnitsArray =
+        new NSArray<TimeUnit>(timeUnits);
 
-    public static final NSArray submittersArray = new NSArray( submitters );
+    public static final NSArray<String> submittersArray =
+        new NSArray<String>(submitters);
 
     static Logger log = Logger.getLogger( SubmissionProfile.class );
 }

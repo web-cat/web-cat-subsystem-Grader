@@ -35,8 +35,8 @@ import er.extensions.eof.ERXQ;
 /**
  * Allows the user to create a new course offering.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class NewCourseOfferingPage

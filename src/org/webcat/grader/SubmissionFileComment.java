@@ -22,7 +22,6 @@
 package org.webcat.grader;
 
 import com.webobjects.foundation.*;
-import com.webobjects.foundation.NSComparator.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -30,8 +29,9 @@ import org.webcat.core.*;
 /**
  * Represents one TA comment on one source file in a submission.
  *
- * @author Stephen Edwards
- * @version $Id$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class SubmissionFileComment
     extends _SubmissionFileComment
@@ -174,23 +174,15 @@ public class SubmissionFileComment
         }
         CourseOffering course = submissionFileStats().submissionResult()
             .submission().assignmentOffering().courseOffering();
-        if ( target <= TO_FACULTY_AND_TAS )
+        if (target <= TO_FACULTY_AND_TAS
+            && course.graders().contains(user))
         {
-            NSArray tas = course.graders();
-            for ( int i = 0; i < tas.count(); i++ )
-            {
-                if ( user == tas.objectAtIndex( i ) )
-                    return true;
-            }
+            return true;
         }
-        if ( target <= TO_FACULTY_ONLY )
+        if (target <= TO_FACULTY_ONLY
+            && course.instructors().contains(user))
         {
-            NSArray instructors = course.instructors();
-            for ( int i = 0; i < instructors.count(); i++ )
-            {
-                if ( user == instructors.objectAtIndex( i ) )
-                    return true;
-            }
+            return true;
         }
         return false;
     }

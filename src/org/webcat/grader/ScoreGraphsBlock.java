@@ -33,8 +33,8 @@ import org.webcat.grader.graphs.*;
  *  if present, will be used to present file-specific data.
  *
  *  @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class ScoreGraphsBlock
     extends GraderComponent

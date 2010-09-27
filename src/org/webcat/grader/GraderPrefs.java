@@ -28,7 +28,7 @@ import org.apache.log4j.Level;
  * A simple EO to record persistent user choices for assignments and
  * so on used in navigation.
  *
- * @author stedwar2
+ * @author  Stephen Edwards
  * @author  latest changes by: $Author$
  * @version $Revision$ $Date$
  */

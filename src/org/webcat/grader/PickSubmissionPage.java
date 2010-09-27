@@ -31,8 +31,8 @@ import org.webcat.core.*;
  * This class presents the list of previous submissions for the selected
  * assignment so that one submission can be chosen.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class PickSubmissionPage

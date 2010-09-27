@@ -22,11 +22,9 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXArrayUtilities;
-import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
 
@@ -34,8 +32,9 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
 /**
  * Present a complete, printable view of all feedback about this submission.
  *
- * @author Stephen Edwards
- * @version $Id$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class FullPrintableReport
     extends GraderComponent
@@ -82,11 +81,11 @@ public class FullPrintableReport
      * Get the long response task that computes this page's work.
      * @return The task
      */
-    public NSMutableArray formattedFiles()
+    public NSMutableArray<Pair> formattedFiles()
     {
         if ( formattedFiles == null )
         {
-            formattedFiles = new NSMutableArray();
+            formattedFiles = new NSMutableArray<Pair>();
             Pair[] rawPairs = (Pair[])task.result();
             if ( rawPairs != null )
             {
@@ -189,9 +188,10 @@ public class FullPrintableReport
             try
             {
                 ec.lock();
-                NSArray files = ERXArrayUtilities.sortedArraySortedWithKey(
-                    submissionResult.submissionFileStats(),
-                    SubmissionFileStats.SOURCE_FILE_NAME_KEY );
+                NSArray<SubmissionFileStats> files =
+                    ERXArrayUtilities.sortedArraySortedWithKey(
+                        submissionResult.submissionFileStats(),
+                        SubmissionFileStats.SOURCE_FILE_NAME_KEY );
                 if ( files.count() > 0 )
                 {
                     int[] weights = new int[files.count()];
@@ -274,6 +274,6 @@ public class FullPrintableReport
     //~ Instance/static variables .............................................
 
     private LongResponseTaskWithProgress task;
-    private NSMutableArray formattedFiles   = null;
-    private Boolean        showCoverageData = null;
+    private NSMutableArray<Pair>         formattedFiles   = null;
+    private Boolean                      showCoverageData = null;
 }

@@ -29,8 +29,9 @@ import org.apache.log4j.Logger;
  * This is the synchronous queue class for grader jobs.  Why isn't a
  * java.util class being used here instead?
  *
- * @author Amit Kulkarni
- * @version $Id$
+ * @author  Amit Kulkarni
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class GraderQueue
 {
@@ -42,7 +43,7 @@ public class GraderQueue
      */
     public GraderQueue()
     {
-        queue = new Vector();
+        queue = new Vector<Object>();
     }
 
 
@@ -59,19 +60,19 @@ public class GraderQueue
     {
         try
         {
-            while ( queue.size() == 0 )
+            while (queue.size() == 0)
             {
                 wait();
             }
             // Here, after being woken up by notify(), we are guaranteed
-	    // that the queue size is not zero and the current thread
+            // that the queue size is not zero and the current thread
             // owns the monitor for this queue object
             return dequeue();
         }
-        catch ( InterruptedException e )
+        catch (InterruptedException e)
         {
-            log.error( "GraderQueue client was interrupted while " +
-		       "waiting for a job." );
+            log.error("GraderQueue client was interrupted while " +
+		       "waiting for a job.");
             return null;
         }
     }
@@ -83,9 +84,9 @@ public class GraderQueue
      *
      * @param o the job to enqueue
      */
-    public synchronized void enqueue( Object o )
+    public synchronized void enqueue(Object o)
     {
-        queue.add( o );
+        queue.add(o);
         notify();
     }
 
@@ -98,8 +99,8 @@ public class GraderQueue
      */
     private synchronized Object dequeue()
     {
-        Object o = queue.elementAt( 0 );
-        queue.removeElementAt( 0 );
+        Object o = queue.elementAt(0);
+        queue.removeElementAt(0);
         return o;
     }
 
@@ -107,7 +108,7 @@ public class GraderQueue
     //~ Instance/static variables .............................................
 
     /** The queue is maintained as a vector. */
-    Vector queue;
+    Vector<Object> queue;
 
-    static Logger log = Logger.getLogger( GraderQueue.class );
+    static Logger log = Logger.getLogger(GraderQueue.class);
 }

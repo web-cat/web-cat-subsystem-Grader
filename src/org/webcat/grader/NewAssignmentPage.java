@@ -28,12 +28,9 @@ import org.webcat.core.CourseOffering;
 import org.webcat.core.Semester;
 import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
-import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
-import com.webobjects.eocontrol.EOKeyValueQualifier;
-import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSTimestamp;
@@ -44,8 +41,8 @@ import er.extensions.foundation.ERXArrayUtilities;
 /**
  * Allows the user to create a new assignment + offering.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class NewAssignmentPage
@@ -483,13 +480,15 @@ public class NewAssignmentPage
         if (toCourseOfferings == null)
         {
             toCourseOffering = null;
-            toCourseOfferings =
+            // TODO: collapse the next two statements and eliminate the
+            // temporary, once it will compile without warnings against
+            // WONDER.
+            @SuppressWarnings("unchecked")
+            NSArray<CourseOffering> newList =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
                     myCourses,
-                    new EOKeyValueQualifier(
-                        "semester",
-                        EOQualifier.QualifierOperatorEqual,
-                        toSemester));
+                    CourseOffering.semester.eq(toSemester));
+            toCourseOfferings = newList;
         }
 
         if (toCourseOffering == null)
@@ -517,7 +516,11 @@ public class NewAssignmentPage
         if (assignments == null && toCourseOffering != null)
         {
             assignmentToReoffer = null;
-            assignments =
+            // TODO: collapse the next two statements and eliminate the
+            // temporary, once it will compile without warnings against
+            // WONDER.
+            @SuppressWarnings("unchecked")
+            NSArray<Assignment> newList =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
                     Assignment.assignmentsForReuseInCourse(
                         localContext(),
@@ -525,6 +528,7 @@ public class NewAssignmentPage
                         toCourseOffering),
                     new Assignment.NonDuplicateAssignmentNameQualifier(
                         toCourseOffering));
+            assignments = newList;
         }
 
         if (assignmentToReoffer == null

@@ -41,8 +41,9 @@ import org.webcat.core.WCProperties;
  * <dd>True if this submission was graded and has results.</dd>
  * </dl>
  *
- * @author Tony Allevato
- * @version $Id$
+ * @author  Tony Allevato
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class SubmissionBatchHandler
 {

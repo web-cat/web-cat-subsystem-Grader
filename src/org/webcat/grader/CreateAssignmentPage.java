@@ -24,6 +24,7 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import er.extensions.eof.ERXConstant;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
@@ -37,8 +38,8 @@ import org.webcat.core.*;
  *  to choose from.
  *
  *  @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class CreateAssignmentPage
     extends GraderComponent
@@ -59,14 +60,14 @@ public class CreateAssignmentPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup assignmentDisplayGroup;
-    public Assignment     assignment;
-    public int            selectedIndex = -1;
-    public int            index         = -1;
-    public NSArray        reusableAssignments;
-    public NSArray             semesters;
-    public Semester            semester;
-    public Semester            aSemester;
+    public ERXDisplayGroup<Assignment> assignmentDisplayGroup;
+    public Assignment                  assignment;
+    public int                         selectedIndex = -1;
+    public int                         index         = -1;
+    public NSArray<Assignment>         reusableAssignments;
+    public NSArray<Semester>           semesters;
+    public Semester                    semester;
+    public Semester                    aSemester;
 
     public static final String SEMESTER_PREF_KEY =
         "CreateAssignmentPage.semester";
@@ -93,7 +94,7 @@ public class CreateAssignmentPage
             if (semesterPref == null && semesters.count() > 0)
             {
                 // Default to most recent semester, if no preference is set
-                semester = (Semester)semesters.objectAtIndex(0);
+                semester = semesters.objectAtIndex(0);
             }
             else
             {
@@ -110,7 +111,8 @@ public class CreateAssignmentPage
         // Second, make sure list of reusable assignments is set
         if (reusableAssignments == null)
         {
-            reusableAssignments =
+            @SuppressWarnings("unchecked")
+            NSArray<Assignment> reusables =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
                     Assignment.assignmentsForReuseInCourse(
                         localContext(),
@@ -121,6 +123,7 @@ public class CreateAssignmentPage
                         coreSelections().courseOffering()
                     )
                 );
+            reusableAssignments = reusables;
             assignmentDisplayGroup.setObjectArray( reusableAssignments );
         }
 
@@ -176,8 +179,8 @@ public class CreateAssignmentPage
     public void reuseExistingAssignment()
     {
         log.debug( "reuseExistingAssignment()" );
-        Assignment selected = (Assignment)assignmentDisplayGroup
-            .displayedObjects().objectAtIndex( selectedIndex );
+        Assignment selected = assignmentDisplayGroup.displayedObjects()
+            .objectAtIndex( selectedIndex );
         NSTimestamp common = selected.commonOfferingsDueDate();
         AssignmentOffering newOffering = new AssignmentOffering();
         localContext().insertObject( newOffering );
@@ -219,12 +222,10 @@ public class CreateAssignmentPage
         // as a default
         {
             AssignmentOffering other = null;
-            NSArray others =
+            NSArray<AssignmentOffering> others =
                 prefs().assignmentOffering().assignment().offerings();
-            for ( int i = 0; i < others.count(); i++ )
+            for (AssignmentOffering ao : others)
             {
-                AssignmentOffering ao =
-                    (AssignmentOffering)others.objectAtIndex( i );
                 if ( ao != prefs().assignmentOffering() )
                 {
                     other = ao;
@@ -255,18 +256,16 @@ public class CreateAssignmentPage
         String name1 = newOffering.assignment().name();
         if ( name1 != null )
         {
-            NSMutableArray others =
+            NSMutableArray<AssignmentOffering> others =
                 AssignmentOffering.offeringsWithSimilarNames(
                     localContext(), name1,
                     coreSelections().courseOffering(), 2 );
             if ( others.count() > 1 )
             {
-                AssignmentOffering ao1 =
-                    (AssignmentOffering)others.objectAtIndex( 0 );
+                AssignmentOffering ao1 = others.objectAtIndex( 0 );
                 GregorianCalendar ao1DateTime = new GregorianCalendar();
                 ao1DateTime.setTime( ao1.dueDate() );
-                AssignmentOffering ao2 =
-                    (AssignmentOffering)others.objectAtIndex( 1 );
+                AssignmentOffering ao2 = others.objectAtIndex( 1 );
                 GregorianCalendar ao2DateTime = new GregorianCalendar();
                 ao2DateTime.setTime( ao2.dueDate() );
 
@@ -307,8 +306,7 @@ public class CreateAssignmentPage
             }
             else if ( others.count() > 0 )
             {
-                AssignmentOffering ao =
-                    (AssignmentOffering)others.objectAtIndex( 0 );
+                AssignmentOffering ao = others.objectAtIndex( 0 );
                 GregorianCalendar aoDateTime = new GregorianCalendar();
                 aoDateTime.setTime( ao.dueDate() );
                 ts = new NSTimestamp(

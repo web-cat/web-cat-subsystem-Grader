@@ -33,8 +33,9 @@ import com.webobjects.appserver.*;
  *  about creating/editing course offerings using a selection that may
  *  not yet be stored in the user's {@link CoreSelections}.
  *
- *  @author  stedwar2
- *  @version Feb 4, 2008
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderCourseEditComponent
     extends GraderComponent

@@ -35,8 +35,8 @@ import org.webcat.core.*;
  * Show an overview of class grades for an assignment, and allow the user
  * to download them in spreadsheet form or edit them one at a time.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class StudentsForAssignmentPage
@@ -106,6 +106,7 @@ public class StudentsForAssignmentPage
                         courseOffering,
                         AssignmentOffering.ASSIGNMENT_KEY,
                         assignment);
+                prefs().setAssignmentOfferingRelationship(assignmentOffering);
             }
         }
 
@@ -133,12 +134,8 @@ public class StudentsForAssignmentPage
                 Submission gradedSubmission = null;
                 // Find the submission
                 NSArray<Submission> thisSubmissionSet =
-                    Submission.objectsMatchingValues(
-                        localContext(),
-                        Submission.USER_KEY,
-                        student,
-                        Submission.ASSIGNMENT_OFFERING_KEY,
-                        assignmentOffering);
+                    Submission.submissionsForAssignmentOfferingAndUser(
+                        localContext(), assignmentOffering, student);
                 log.debug("searching for submissions");
                 for (Submission sub : thisSubmissionSet)
                 {
@@ -149,7 +146,10 @@ public class StudentsForAssignmentPage
                         mostRecentSubmission = sub;
                     }
                     log.debug("\tsub #" + sub.submitNumber());
-                    if (sub.result() != null && !sub.partnerLink())
+                    if (sub.result() != null
+                        // The next two are mutually
+                        && !sub.partnerLink()
+                        && sub.primarySubmission() == null)
                     {
                         if (thisSubmission == null)
                         {

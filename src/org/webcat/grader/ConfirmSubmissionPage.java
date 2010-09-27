@@ -34,8 +34,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * This class summarizes the student's submission and asks for
  * confirmation before making it "official".
  *
- * @author Amit Kulkarni
- * @author  latest changes by: $Author$
+ * @author  Amit Kulkarni
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class ConfirmSubmissionPage

@@ -31,8 +31,9 @@ import org.webcat.core.*;
  *  by {@link Grader#handleDirectAction(WORequest,Session,WOContext)}
  *  in response to a BlueJ submitter direct action transaction.
  *
- *  @author Stephen Edwards
- *  @version $Id$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class SubmitResponse
     extends GraderSubmissionUploadComponent

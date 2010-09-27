@@ -21,7 +21,6 @@
 
 package org.webcat.grader;
 
-import java.util.*;
 import net.sf.webcat.FeatureDescriptor;
 import org.apache.log4j.Logger;
 
@@ -31,8 +30,9 @@ import org.apache.log4j.Logger;
  *  The key properties include its version, its provider, and where updates
  *  can be obtained on the web.
  *
- *  @author  stedwar2
- *  @version $Id$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class PluginDescriptor
     extends FeatureDescriptor

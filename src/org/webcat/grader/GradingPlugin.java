@@ -21,7 +21,6 @@
 
 package org.webcat.grader;
 
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXValueUtilities;
@@ -35,10 +34,10 @@ import org.webcat.core.*;
 
 // -------------------------------------------------------------------------
 /**
- *  Represents an uploaded grading script.
+ *  Represents an uploaded grading plug-in.
  *
- *  @author Stephen Edwards
- *  @author Last changed by $Author$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
  *  @version $Revision$, $Date$
  */
 public class GradingPlugin
@@ -105,17 +104,18 @@ public class GradingPlugin
      */
     public String mainFilePath()
     {
-        String name = null;
-        NSDictionary config = configDescription();
-        if ( config != null )
+        String myName = null;
+        @SuppressWarnings("unchecked")
+        NSDictionary<String, String> config = configDescription();
+        if (config != null)
         {
-            name = (String)config.objectForKey( "executable" );
+            myName = config.objectForKey("executable");
         }
-        if ( name == null )
+        if (myName == null)
         {
-            name = mainFileName();
+            myName = mainFileName();
         }
-        return dirName() + "/" + name;
+        return dirName() + "/" + myName;
     }
 
 
@@ -185,15 +185,15 @@ public class GradingPlugin
     // ----------------------------------------------------------
     public String displayableName()
     {
-        Object nameObj = configDescription().valueForKey( "displayableName" );
-        String name = ( nameObj == null )
+        Object nameObj = configDescription().valueForKey("displayableName");
+        String myName = (nameObj == null)
             ? name()
             : nameObj.toString();
-        if ( name == null )
+        if (myName == null)
         {
-            name = uploadedFileName();
+            myName = uploadedFileName();
         }
-        return name;
+        return myName;
     }
 
 
@@ -262,17 +262,19 @@ public class GradingPlugin
                     MutableDictionary.fromPropertyList( configPlist );
                 setConfigDescription( dict );
 //              log.debug( "script config.plist = " + dict );
-                String name = (String)dict.objectForKey( "name" );
-                setName( name );
-                NSArray options = (NSArray)dict.objectForKey( "options" );
+                String dictName = (String)dict.objectForKey( "name" );
+                setName( dictName );
+                NSArray<?> options = (NSArray<?>)dict.objectForKey( "options" );
 //              log.debug( "options = " + options );
                 if ( options != null )
                 {
                     MutableDictionary defaults = new MutableDictionary();
                     for ( int i = 0; i < options.count(); i++ )
                     {
-                        NSDictionary thisOption = (NSDictionary)options
-                            .objectAtIndex( i );
+                        @SuppressWarnings("unchecked")
+                        NSDictionary<String, ?> thisOption =
+                            (NSDictionary<String, ?>)options
+                                .objectAtIndex( i );
 //                      log.debug( "this option = " + thisOption );
                         if ( thisOption.objectForKey( "disable" ) == null )
                         {
@@ -414,21 +416,21 @@ public class GradingPlugin
     // ----------------------------------------------------------
     /**
      * Retrieve the name of the directory where a user's scripts are stored.
-     * @param author the user
+     * @param pluginAuthor the user
      * @param isData true if this is the directory for a script data/config
      *               file, or false if this is the directory where scripts
      *               themselves are stored
      * @return the directory name
      */
-    public static StringBuffer userScriptDirName( User author, boolean isData )
+    public static StringBuffer userScriptDirName(
+        User pluginAuthor, boolean isData)
     {
-        StringBuffer dir = new StringBuffer( 50 );
-        dir.append( isData ? scriptDataRoot()
-                           : scriptRoot() );
-        dir.append( '/' );
-        dir.append( author.authenticationDomain().subdirName() );
-        dir.append( '/' );
-        dir.append( author.userName() );
+        StringBuffer dir = new StringBuffer(50);
+        dir.append(isData ? scriptDataRoot() : scriptRoot());
+        dir.append('/');
+        dir.append(pluginAuthor.authenticationDomain().subdirName());
+        dir.append('/');
+        dir.append(pluginAuthor.userName());
         return dir;
     }
 
@@ -450,7 +452,7 @@ public class GradingPlugin
     /**
      * Create a new script file object from uploaded file data.
      * @param ec           the editing context in which to add the new object
-     * @param author       the user uploading the script
+     * @param pluginAuthor       the user uploading the script
      * @param uploadedName the script's file name
      * @param uploadedData the file's data
      * @param isData       true if this is a script data/config file, or
@@ -463,24 +465,24 @@ public class GradingPlugin
      */
     public static GradingPlugin createNewGradingPlugin(
             EOEditingContext    ec,
-            User                author,
+            User                pluginAuthor,
             String              uploadedName,
             NSData              uploadedData,
             boolean             isData,
             boolean             expand,
-            NSMutableDictionary errors
+            NSMutableDictionary<String, Object> errors
         )
     {
-        String userScriptDir = userScriptDirName( author, isData ).toString();
-        String subdirName = null;
+        String userScriptDir = userScriptDirName( pluginAuthor, isData ).toString();
+        String newSubdirName = null;
         uploadedName = ( new File( uploadedName ) ).getName();
         String uploadedNameLC = uploadedName.toLowerCase();
         File toLookFor;
         if ( expand && ( uploadedNameLC.endsWith( ".zip" ) ||
                          uploadedNameLC.endsWith( ".jar" ) ) )
         {
-            subdirName = GradingPlugin.convertToSubdirName( uploadedName );
-            toLookFor = new File( userScriptDir + "/" + subdirName );
+            newSubdirName = GradingPlugin.convertToSubdirName( uploadedName );
+            toLookFor = new File( userScriptDir + "/" + newSubdirName );
         }
         else
         {
@@ -502,7 +504,7 @@ public class GradingPlugin
         gradingPlugin.setUploadedFileName( uploadedName );
         gradingPlugin.setMainFileName( uploadedName );
         gradingPlugin.setLastModified( new NSTimestamp() );
-        gradingPlugin.setAuthorRelationship( author );
+        gradingPlugin.setAuthorRelationship( pluginAuthor );
 
         // Save the file to disk
         log.debug( "saving to file " + gradingPlugin.mainFilePath() );
@@ -529,7 +531,7 @@ public class GradingPlugin
             try
             {
                 //ZipFile zip = new ZipFile( script.mainFilePath() );
-                gradingPlugin.setSubdirName( subdirName );
+                gradingPlugin.setSubdirName( newSubdirName );
                 log.debug( "unzipping to " + gradingPlugin.dirName() );
                 org.webcat.archives.ArchiveManager.getInstance()
                     .unpack( new File( gradingPlugin.dirName() ), pluginPath );
@@ -541,7 +543,7 @@ public class GradingPlugin
             {
                 String msg = e.getMessage();
                 errors.setObjectForKey( msg, msg );
-                gradingPlugin.setSubdirName( subdirName );
+                gradingPlugin.setSubdirName( newSubdirName );
                 org.webcat.core.FileUtilities
                     .deleteDirectory( gradingPlugin.dirName() );
                 pluginPath.delete();
@@ -637,7 +639,7 @@ public class GradingPlugin
         }
 
         GradingPlugin newScriptFile = null;
-        String subdirName = convertToSubdirName( plugin.name() );
+        String pluginSubdirName = convertToSubdirName( plugin.name() );
         File newScriptPath = null;
         if ( scriptFile == null )
         {
@@ -645,14 +647,14 @@ public class GradingPlugin
             installedBy.editingContext().insertObject( newScriptFile );
             newScriptFile.setLastModified( new NSTimestamp() );
             newScriptFile.setAuthorRelationship( installedBy );
-            newScriptFile.setSubdirName( subdirName );
+            newScriptFile.setSubdirName( pluginSubdirName );
             scriptFile = newScriptFile;
         }
-        else if ( !subdirName.equals( scriptFile.subdirName() ) )
+        else if ( !pluginSubdirName.equals( scriptFile.subdirName() ) )
         {
             newScriptPath = new File (
                 userScriptDirName( installedBy, false ).toString(),
-                subdirName );
+                pluginSubdirName );
             if ( newScriptPath.exists() )
             {
                 return "The plug-in you are updating has changed names, but "
@@ -693,7 +695,7 @@ public class GradingPlugin
         }
         else
         {
-            scriptFile.setSubdirName( subdirName );
+            scriptFile.setSubdirName( pluginSubdirName );
         }
         File downloadPath = newScriptPath.getParentFile();
         File archiveFile = new File( downloadPath.getAbsolutePath()
@@ -730,31 +732,30 @@ public class GradingPlugin
 
 
     // ----------------------------------------------------------
-    private static NSArray autoUpdatePlugins( EOEditingContext ec )
+    private static NSArray<GradingPlugin> autoUpdatePlugins(
+        EOEditingContext ec)
     {
-        NSArray pluginList = EOUtilities.objectsForEntityNamed(
-            ec, ENTITY_NAME );
-        if ( !Application.configurationProperties()
-                 .booleanForKey( NO_AUTO_UPDATE_KEY ) )
+        NSArray<GradingPlugin> pluginList = allObjects(ec);
+        if (!Application.configurationProperties()
+                .booleanForKey(NO_AUTO_UPDATE_KEY))
         {
-            for ( int i = 0; i < pluginList.count(); i++ )
+            for (GradingPlugin plugin : pluginList)
             {
-                GradingPlugin plugin = (GradingPlugin)pluginList.objectAtIndex( i );
-                if ( plugin.descriptor().updateIsAvailable() )
+                if (plugin.descriptor().updateIsAvailable())
                 {
-                    log.info( "Updating plug-in: \"" + plugin.name() + "\"" );
+                    log.info("Updating plug-in: \"" + plugin.name() + "\"");
                     String msg = plugin.installUpdate();
-                    if ( msg != null )
+                    if (msg != null)
                     {
-                        log.error( "Error updating plug-in \""
-                            + plugin.name() + "\": " + msg );
+                        log.error("Error updating plug-in \""
+                            + plugin.name() + "\": " + msg);
                     }
                     ec.saveChanges();
                 }
                 else
                 {
-                    log.debug( "Plug-in \"" + plugin.name()
-                        + "\" is up to date." );
+                    log.debug("Plug-in \"" + plugin.name()
+                        + "\" is up to date.");
                 }
             }
         }
@@ -764,114 +765,79 @@ public class GradingPlugin
 
     // ----------------------------------------------------------
     private static void autoInstallNewPlugins(
-        EOEditingContext ec, NSArray pluginList )
+        EOEditingContext ec, NSArray<GradingPlugin> pluginList)
     {
-        if ( Application.configurationProperties()
-                 .booleanForKey( NO_AUTO_INSTALL_KEY ) )
+        if (Application.configurationProperties()
+                 .booleanForKey(NO_AUTO_INSTALL_KEY))
         {
             return;
         }
         String adminUserName = Application.configurationProperties()
-            .getProperty( "AdminUsername" );
-        if ( adminUserName == null )
+            .getProperty("AdminUsername");
+        if (adminUserName == null)
         {
-            log.error( "No definition for 'AdminUsername' config property!\n"
-                + "Cannot install new plug-ins without admin user name." );
+            log.error("No definition for 'AdminUsername' config property!\n"
+                + "Cannot install new plug-ins without admin user name.");
             return;
         }
         User admin = null;
-        NSArray candidates = EOUtilities.objectsMatchingKeyAndValue(
-            ec,
-            User.ENTITY_NAME,
-            User.USER_NAME_KEY,
-            adminUserName );
-        for ( int i = 0; i < candidates.count(); i++ )
+        NSArray<User> candidates = User.objectsMatchingQualifier(ec,
+            User.userName.eq(adminUserName));
+        for (User user : candidates)
         {
-            User user = (User)candidates.objectAtIndex( i );
-            if ( user.hasAdminPrivileges() )
+            if (user.hasAdminPrivileges())
             {
-                if ( admin == null )
+                if (admin == null)
                 {
                     admin = user;
                 }
                 else
                 {
                     log.warn( "Duplicate admin accounts with user name \""
-                        + adminUserName + "\" found.  Using first one." );
+                        + adminUserName + "\" found.  Using " + admin
+                        + ", ignoring " + user);
                 }
             }
         }
-        if ( admin == null )
+        if (admin == null)
         {
-            log.error( "Cannot find admin account with user name \""
-                + adminUserName + "\"!" );
+            log.error("Cannot find admin account with user name \""
+                + adminUserName + "\"!");
             return;
         }
 
-        Collection availablePlugins = new HashSet();
-        for ( Iterator i = FeatureProvider.providers().iterator();
-              i.hasNext(); )
+        Collection<FeatureDescriptor> availablePlugins =
+            new HashSet<FeatureDescriptor>();
+        for (FeatureProvider provider : FeatureProvider.providers())
         {
-            FeatureProvider provider = (FeatureProvider)i.next();
-            if ( provider != null )
+            if (provider != null)
             {
-                availablePlugins.addAll( provider.plugins() );
+                availablePlugins.addAll(provider.plugins());
             }
         }
-        if ( pluginList != null )
+        if (pluginList != null)
         {
-            for ( int i = 0; i < pluginList.count(); i++ )
+            for (GradingPlugin s : pluginList)
             {
-                GradingPlugin s = (GradingPlugin)pluginList.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
-                if ( fd != null )
+                if (fd != null)
                 {
-                    availablePlugins.remove( fd );
+                    availablePlugins.remove(fd);
                 }
             }
         }
-        for ( Iterator i = availablePlugins.iterator(); i.hasNext(); )
+        for (FeatureDescriptor plugin : availablePlugins)
         {
-            FeatureDescriptor plugin = (FeatureDescriptor)i.next();
-            log.info( "Installing new plug-in: \"" + plugin.name() + "\"" );
-            String msg = installOrUpdate( admin, plugin, false, null );
-            if ( msg != null )
+            log.info("Installing new plug-in: \"" + plugin.name() + "\"");
+            String msg = installOrUpdate(admin, plugin, false, null);
+            if (msg != null)
             {
-                log.error( "Error installing new plug-in \""
-                    + plugin.name() + "\": " + msg );
+                log.error("Error installing new plug-in \""
+                    + plugin.name() + "\": " + msg);
             }
             ec.saveChanges();
         }
     }
-
-
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
-
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
 
 
     //~ Instance/static variables .............................................
@@ -880,5 +846,5 @@ public class GradingPlugin
 
     static private String scriptRoot = null;
     static private String scriptDataRoot = null;
-    static Logger log = Logger.getLogger( GradingPlugin.class );
+    static Logger log = Logger.getLogger(GradingPlugin.class);
 }

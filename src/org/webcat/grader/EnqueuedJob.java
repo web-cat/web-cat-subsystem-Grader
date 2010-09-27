@@ -26,8 +26,8 @@ package org.webcat.grader;
  * This class represents the database record of a student file submission
  * enqueued for compilation/processing but not yet handled.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class EnqueuedJob

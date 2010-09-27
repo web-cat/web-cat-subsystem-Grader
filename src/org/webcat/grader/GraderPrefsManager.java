@@ -22,7 +22,6 @@
 package org.webcat.grader;
 
 import org.webcat.core.*;
-import com.webobjects.eocontrol.*;
 import er.extensions.foundation.ERXValueUtilities;
 
 //-------------------------------------------------------------------------
@@ -31,7 +30,8 @@ import er.extensions.foundation.ERXValueUtilities;
  *  {@link GraderPrefs} object.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderPrefsManager
     extends CachingEOManager

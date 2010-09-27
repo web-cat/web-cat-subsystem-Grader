@@ -22,7 +22,6 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eoaccess.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import org.apache.log4j.*;
@@ -33,7 +32,8 @@ import org.webcat.core.*;
  *  Generates the grader subsystem's rows in the system status block.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderSystemStatusRows
     extends WOComponent
@@ -88,29 +88,21 @@ public class GraderSystemStatusRows
      */
     public int haltedCount()
     {
-        NSArray haltedAssignments = null;
+        NSArray<AssignmentOffering> haltedAssignments = null;
         try
         {
-            haltedAssignments = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).sessionContext(),
-                AssignmentOffering.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] { ERXConstant.integerForInt( 1 ) },
-                    new Object[] { AssignmentOffering.GRADING_SUSPENDED_KEY }
-                )
-            );
+            haltedAssignments = AssignmentOffering.objectsMatchingQualifier(
+                ((Session)session()).sessionContext(),
+                AssignmentOffering.gradingSuspended
+                    .eq(ERXConstant.integerForInt(1)));
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            log.debug( "Retrying halted fetch" );
-            haltedAssignments = EOUtilities.objectsMatchingValues(
-                            ( (Session)session() ).sessionContext(),
-                            AssignmentOffering.ENTITY_NAME,
-                            new NSDictionary(
-                                new Object[] { ERXConstant.integerForInt( 1 ) },
-                                new Object[] { AssignmentOffering.GRADING_SUSPENDED_KEY }
-                            )
-                        );
+            log.debug("Retrying halted fetch");
+            haltedAssignments = AssignmentOffering.objectsMatchingQualifier(
+                ((Session)session()).sessionContext(),
+                AssignmentOffering.gradingSuspended
+                    .eq(ERXConstant.integerForInt(1)));
         }
         return haltedAssignments == null
             ? 0 : haltedAssignments.count();
@@ -126,29 +118,19 @@ public class GraderSystemStatusRows
     {
         if ( queuedJobs < 0 )
         {
-            NSArray jobs = null;
+            NSArray<EnqueuedJob> jobs = null;
             try
             {
-                jobs = EOUtilities.objectsMatchingValues(
-                    ( (Session)session() ).sessionContext(),
-                    EnqueuedJob.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] { ERXConstant.integerForInt( 0 )  },
-                        new Object[] { EnqueuedJob.PAUSED_KEY }
-                    )
-                );
+                jobs = EnqueuedJob.objectsMatchingQualifier(
+                    ((Session)session()).sessionContext(),
+                    EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
             }
             catch ( Exception e )
             {
                 log.debug( "Retrying queued job fetch" );
-                jobs = EOUtilities.objectsMatchingValues(
-                    ( (Session)session() ).sessionContext(),
-                    EnqueuedJob.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] { ERXConstant.integerForInt( 0 )  },
-                        new Object[] { EnqueuedJob.PAUSED_KEY }
-                    )
-                );
+                jobs = EnqueuedJob.objectsMatchingQualifier(
+                    ((Session)session()).sessionContext(),
+                    EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
             }
             queuedJobs = ( jobs == null ) ? 0 : jobs.count();
         }
@@ -163,29 +145,19 @@ public class GraderSystemStatusRows
      */
     public int stalledJobCount()
     {
-        NSArray jobs = null;
+        NSArray<EnqueuedJob> jobs = null;
         try
         {
-            jobs = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).sessionContext(),
-                EnqueuedJob.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] { ERXConstant.integerForInt( 1 )  },
-                    new Object[] { EnqueuedJob.PAUSED_KEY }
-                )
-            );
+            jobs = EnqueuedJob.objectsMatchingQualifier(
+                ((Session)session()).sessionContext(),
+                EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
         }
         catch ( Exception e )
         {
             log.debug( "Retrying queued job fetch" );
-            jobs = EOUtilities.objectsMatchingValues(
-                ( (Session)session() ).sessionContext(),
-                EnqueuedJob.ENTITY_NAME,
-                new NSDictionary(
-                    new Object[] { ERXConstant.integerForInt( 1 )  },
-                    new Object[] { EnqueuedJob.PAUSED_KEY }
-                )
-            );
+            jobs = EnqueuedJob.objectsMatchingQualifier(
+                ((Session)session()).sessionContext(),
+                EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
         }
         return jobs == null ? 0 : jobs.count();
     }

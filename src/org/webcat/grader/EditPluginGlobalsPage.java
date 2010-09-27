@@ -29,9 +29,9 @@ import com.webobjects.appserver.*;
  *  The creator of this page must set the plugin attribute before
  *  rendering the page.
  *
- *  @author Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Stephen Edwards
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class EditPluginGlobalsPage
     extends GraderComponent

@@ -34,7 +34,7 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  *  {@link SubmissionInProcess} state object.
  *
  *  @author  Stephen Edwards
- *  @author Last changed by $Author$
+ *  @author  Last changed by $Author$
  *  @version $Revision$, $Date$
  */
 public class GraderSubmissionUploadComponent

@@ -34,8 +34,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * This class presents the list of current submission profiles that
  * are available for selection.
  *
- * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class SelectSubmissionProfile

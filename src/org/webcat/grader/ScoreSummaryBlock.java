@@ -32,8 +32,8 @@ import org.webcat.core.*;
  *  if present, will be used to present file-specific data.
  *
  *  @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class ScoreSummaryBlock
     extends GraderComponent

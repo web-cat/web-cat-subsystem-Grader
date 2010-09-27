@@ -38,9 +38,9 @@ import org.webcat.ui.generators.JavascriptGenerator;
 /**
  *  This class presents an assignment's properties so they can be edited.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
- * @version $Revision$, $Date$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class EditAssignmentPage
     extends GraderAssignmentComponent

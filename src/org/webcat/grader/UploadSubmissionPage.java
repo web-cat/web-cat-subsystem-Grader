@@ -36,8 +36,8 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * This wizard page summarizes past submissions and allows a student
  * to upload a program file for the current (new) submission.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class UploadSubmissionPage

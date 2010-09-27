@@ -30,7 +30,8 @@ import com.webobjects.foundation.*;
  *  the current submission selection from login parameters.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderSubmissionComponent
     extends GraderAssignmentComponent
@@ -58,6 +59,7 @@ public class GraderSubmissionComponent
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
+    @SuppressWarnings("unchecked")
     public boolean startWith( NSDictionary params )
     {
         boolean result = false;

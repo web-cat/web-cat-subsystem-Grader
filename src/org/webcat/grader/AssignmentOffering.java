@@ -67,21 +67,21 @@ public class AssignmentOffering
      * attributes and relationships.
      * @param editingContext The context in which the new object will be
      * inserted
-     * @param assignment The assignment to be offered
-     * @param courseOffering The course offering for this assignment offering
+     * @param forAssignment The assignment to be offered
+     * @param forCourseOffering The course offering for this assignment offering
      * @return The newly created object
      */
     public static AssignmentOffering create(
         EOEditingContext editingContext,
-        Assignment assignment,
-        CourseOffering courseOffering)
+        Assignment forAssignment,
+        CourseOffering forCourseOffering)
     {
         AssignmentOffering result = create(editingContext,
             false,
             false,
             false);
-        result.setAssignmentRelationship(assignment);
-        result.setCourseOfferingRelationship(courseOffering);
+        result.setAssignmentRelationship(forAssignment);
+        result.setCourseOfferingRelationship(forCourseOffering);
         return result;
     }
 
@@ -170,25 +170,25 @@ public class AssignmentOffering
      */
     public NSTimestamp lateDeadline()
     {
-        NSTimestamp dueDate = dueDate();
-        if ( dueDate != null )
+        NSTimestamp myDueDate = dueDate();
+        if ( myDueDate != null )
         {
-            Assignment assignment = assignment();
-            if ( assignment != null )
+            Assignment myAssignment = assignment();
+            if ( myAssignment != null )
             {
                 SubmissionProfile submissionProfile =
-                    assignment.submissionProfile();
+                    myAssignment.submissionProfile();
                 if ( submissionProfile != null )
                 {
-                    dueDate = new NSTimestamp(
+                    myDueDate = new NSTimestamp(
                         submissionProfile.deadTimeDelta(),
-                        dueDate
+                        myDueDate
                     );
                 }
             }
         }
-        log.debug( "lateDeadline() = " + dueDate );
-        return dueDate;
+        log.debug( "lateDeadline() = " + myDueDate );
+        return myDueDate;
     }
 
 
@@ -224,21 +224,21 @@ public class AssignmentOffering
      */
     public NSTimestamp availableFrom()
     {
-        NSTimestamp dueDate = dueDate();
+        NSTimestamp myDueDate = dueDate();
         NSTimestamp openingDate = null;
-        if ( dueDate != null )
+        if ( myDueDate != null )
         {
-            Assignment assignment = assignment();
-            if ( assignment != null )
+            Assignment myAssignment = assignment();
+            if ( myAssignment != null )
             {
                 SubmissionProfile submissionProfile =
-                    assignment.submissionProfile();
+                    myAssignment.submissionProfile();
                 if (  submissionProfile != null
                    && submissionProfile.availableTimeDeltaRaw() != null )
                 {
                     openingDate = new NSTimestamp(
                         - submissionProfile.availableTimeDelta(),
-                        dueDate
+                        myDueDate
                     );
                 }
             }
@@ -264,7 +264,7 @@ public class AssignmentOffering
     public String titleString(Semester semester)
     {
         CourseOffering course = courseOffering();
-        Assignment assignment = assignment();
+        Assignment myAssignment = assignment();
         String result = "";
         if ( course != null )
         {
@@ -275,9 +275,9 @@ public class AssignmentOffering
             }
             result += " ";
         }
-        if ( assignment != null )
+        if ( myAssignment != null )
         {
-            result += assignment.titleString();
+            result += myAssignment.titleString();
         }
         return result;
     }
@@ -707,7 +707,7 @@ public class AssignmentOffering
      *
      * @param context The editing context to use
      * @param targetName The name that results should be similar to
-     * @param courseOffering The course offering to search for
+     * @param forCourseOffering The course offering to search for
      * @param limit the maximum number of assignment offerings to return
      * (or zero, if all should be returned)
      * @return an NSArray of the entities retrieved, sorted in descending order
@@ -716,14 +716,14 @@ public class AssignmentOffering
     public static NSMutableArray<AssignmentOffering> offeringsWithSimilarNames(
             EOEditingContext context,
             String targetName,
-            org.webcat.core.CourseOffering courseOffering,
+            org.webcat.core.CourseOffering forCourseOffering,
             int limit
         )
     {
         NSMutableArray<AssignmentOffering> others =
             new NSMutableArray<AssignmentOffering>();
         NSArray<AssignmentOffering> sameSection = AssignmentOffering
-            .offeringsForCourseOffering(context, courseOffering);
+            .offeringsForCourseOffering(context, forCourseOffering);
         for (int i = 0; i < sameSection.count()
                         && ( limit < 1 || others.count() < limit ); i++)
         {
@@ -984,9 +984,14 @@ public class AssignmentOffering
                 currentTime
                 ) );
         }
-        results = ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-            results,
-            new EOAndQualifier( qualifiers ) );
+        {
+            @SuppressWarnings("unchecked")
+            NSArray<AssignmentOffering> newResults =
+                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                    results,
+                    new EOAndQualifier(qualifiers));
+            results = newResults;
+        }
         if ( !groupByCRN )
         {
             NSMutableArray<AssignmentOffering> filteredResults =

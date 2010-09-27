@@ -34,8 +34,8 @@ import org.webcat.core.*;
 /**
  * An assignment that can be given in one or more classes.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class Assignment
@@ -74,9 +74,9 @@ public class Assignment
     {
         if ( cachedSubdirName == null )
         {
-            String name = name();
-            cachedSubdirName = AuthenticationDomain.subdirNameOf( name );
-            log.debug( "trimmed name '" + name + "' to '"
+            String myName = name();
+            cachedSubdirName = AuthenticationDomain.subdirNameOf( myName );
+            log.debug( "trimmed name '" + myName + "' to '"
                        + cachedSubdirName + "'" );
         }
         return cachedSubdirName;
@@ -242,10 +242,10 @@ public class Assignment
     public NSTimestamp commonOfferingsDueDate()
     {
         NSTimestamp common = null;
-        NSArray<AssignmentOffering> offerings = offerings();
-        if ( offerings.count() > 1 )
+        NSArray<AssignmentOffering> myOfferings = offerings();
+        if ( myOfferings.count() > 1 )
         {
-            for (AssignmentOffering ao : offerings)
+            for (AssignmentOffering ao : myOfferings)
             {
                 if ( common == null )
                 {
@@ -485,11 +485,11 @@ public class Assignment
             AuthenticationDomain.authDomains();
         for (AuthenticationDomain domain : domains)
         {
-            NSArray<AssignmentOffering> offerings = offerings();
+            NSArray<AssignmentOffering> myOfferings = offerings();
             StringBuffer dir = domain.submissionBaseDirBuffer();
             int baseDirLen = dir.length();
             String msgs = null;
-            for (AssignmentOffering offering : offerings)
+            for (AssignmentOffering offering : myOfferings)
             {
                 // clear out old suffix
                 dir.delete( baseDirLen, dir.length() );

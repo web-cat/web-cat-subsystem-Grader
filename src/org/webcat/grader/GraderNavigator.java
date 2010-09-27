@@ -81,7 +81,7 @@ import er.extensions.foundation.ERXArrayUtilities;
  * of closed assignments in the navigator. Defaults to false.</dd>
  * </dl>
  *
- * @author Tony Allevato
+ * @author  Tony Allevato
  * @author  latest changes by: $Author$
  * @version $Revision$ $Date$
  */
@@ -173,6 +173,7 @@ public class GraderNavigator
             return JavascriptGenerator.NO_OP;
         }
 
+        @SuppressWarnings("unchecked")
         NSArray<CourseOffering> offerings = (NSArray<CourseOffering>)
             selectedCourseOffering.representedObjects();
 
@@ -229,6 +230,7 @@ public class GraderNavigator
             }
         }
 
+        @SuppressWarnings("unchecked")
         NSArray<Assignment> assigns =
             ERXArrayUtilities.arrayWithoutDuplicates(
                 (NSArray<Assignment>)assnOffs.valueForKey("assignment"));
@@ -386,6 +388,7 @@ public class GraderNavigator
             return false;
         }
 
+        @SuppressWarnings("unchecked")
         NSArray<CourseOffering> offerings = (NSArray<CourseOffering>)
             selectedCourseOffering.representedObjects();
 

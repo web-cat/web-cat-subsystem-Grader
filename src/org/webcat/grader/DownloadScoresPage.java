@@ -35,8 +35,8 @@ import org.webcat.core.*;
  * Allow the user to download grades for an assignment in spreadsheet form
  * as a CSV file.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class DownloadScoresPage

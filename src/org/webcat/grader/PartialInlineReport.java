@@ -22,11 +22,8 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.foundation.*;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.CharBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -37,8 +34,9 @@ import org.apache.log4j.Logger;
  * file property should be bound to a File object referring to the
  * fragment to include.
  *
- * @author Stephen Edwards
- * @version $Id$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class PartialInlineReport
     extends WOComponent

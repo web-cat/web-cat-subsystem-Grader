@@ -31,8 +31,8 @@ import org.webcat.core.*;
  * This class presents the list of scripts (grading steps) that
  * are available for selection.
  *
- * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class PickStepPage

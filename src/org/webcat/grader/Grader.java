@@ -25,14 +25,9 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.eof.ERXConstant;
-import java.util.Enumeration;
-import java.io.*;
-import java.util.zip.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
-import org.webcat.dbupdate.UpdateEngine;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.GraderMarkupParseError;
@@ -41,11 +36,12 @@ import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 
 //-------------------------------------------------------------------------
 /**
-*  The subsystem defining Web-CAT administrative tasks.
-*
-*  @author Stephen Edwards
-*  @version $Id$
-*/
+ *  The subsystem defining Web-CAT administrative tasks.
+ *
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
+ */
 public class Grader
    extends Subsystem
 {
@@ -124,16 +120,14 @@ public class Grader
             try
             {
                 ec.lock();
-                NSArray jobList = EOUtilities.objectsForEntityNamed(
-                                ec, EnqueuedJob.ENTITY_NAME );
 
-                for ( int i = 0; i < jobList.count(); i++ )
+                for (EnqueuedJob job : EnqueuedJob.allObjects(ec))
                 {
-                    if ( !( (EnqueuedJob)jobList.objectAtIndex( i ) ).paused() )
+                    if (!job.paused())
                     {
                         // Only need to trigger the queue processor once,
                         // and it will slurp up all the jobs that are ready.
-                        graderQueue.enqueue( null );
+                        graderQueue.enqueue(null);
                         break;
                     }
                 }
@@ -366,8 +360,19 @@ public class Grader
         log.debug( "scheme = " + scheme );
         String crn      = request.stringFormValueForKey( "crn" );
         log.debug( "crn = " + crn );
-        Number courseNo = request.numericFormValueForKey( "course",
-                        new NSNumberFormatter( "0" ) );
+        Integer courseNo = null;
+        try
+        {
+            Number num = request.numericFormValueForKey( "course",
+                new NSNumberFormatter("0"));
+            courseNo = (num instanceof Integer)
+                ? (Integer)num
+                : new Integer(num.intValue());
+        }
+        catch (Exception e)
+        {
+            // Ignore it, and treat it as an undefined course number
+        }
         log.debug( "courseNo = " + courseNo );
         String partnerList = request.stringFormValueForKey( "partners" );
         log.debug( "partners = " + partnerList );
@@ -400,57 +405,39 @@ public class Grader
 //                                      EOQualifier.QualifierOperatorGreaterThan,
 //                                      ERXConstant.integerForInt( 0 )
 //                                    ) );
-        NSArray assignments = null;
+        NSArray<AssignmentOffering> assignments = null;
         try
         {
             if ( crn != null )
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 ),
-                                        crn
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY,
-                                       AssignmentOffering.COURSE_OFFERING_CRN_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                        .dot(CourseOffering.students).eq(session.user()).and(
+                    AssignmentOffering.assignment.dot(Assignment.name)
+                        .eq(scheme).and(
+                    AssignmentOffering.publish.eq(1).and(
+                    AssignmentOffering.courseOffering.dot(CourseOffering.crn)
+                        .eq(crn)))));
             }
             else if ( courseNo != null )
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 ),
-                                        courseNo
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY,
-                                       AssignmentOffering.COURSE_NUMBER_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.students).eq(session.user()).and(
+                AssignmentOffering.assignment.dot(Assignment.name)
+                    .eq(scheme).and(
+                AssignmentOffering.publish.eq(1).and(
+                AssignmentOffering.courseOffering.dot(CourseOffering.course)
+                    .dot(Course.number).eq(courseNo)))));
             }
             else
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 )
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.students).eq(session.user()).and(
+                AssignmentOffering.assignment.dot(Assignment.name)
+                    .eq(scheme).and(
+                AssignmentOffering.publish.eq(1))));
             }
 //            ec.objectsWithFetchSpecification(
 //                new EOFetchSpecification(
@@ -462,61 +449,41 @@ public class Grader
         {
             if ( crn != null )
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 ),
-                                        crn
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY,
-                                       AssignmentOffering.COURSE_OFFERING_CRN_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                        .dot(CourseOffering.students).eq(session.user()).and(
+                    AssignmentOffering.assignment.dot(Assignment.name)
+                        .eq(scheme).and(
+                    AssignmentOffering.publish.eq(1).and(
+                    AssignmentOffering.courseOffering.dot(CourseOffering.crn)
+                        .eq(crn)))));
             }
             else if ( courseNo != null )
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 ),
-                                        courseNo
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY,
-                                       AssignmentOffering.COURSE_NUMBER_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.students).eq(session.user()).and(
+                AssignmentOffering.assignment.dot(Assignment.name)
+                    .eq(scheme).and(
+                AssignmentOffering.publish.eq(1).and(
+                AssignmentOffering.courseOffering.dot(CourseOffering.course)
+                    .dot(Course.number).eq(courseNo)))));
             }
             else
             {
-                assignments = EOUtilities.objectsMatchingValues(
-                    ec,
-                    AssignmentOffering.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {  session.user(),
-                                        scheme,
-                                        ERXConstant.integerForInt( 1 )
-                                     },
-                        new Object[] { AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                                       AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                                       AssignmentOffering.PUBLISH_KEY }
-                    ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.students).eq(session.user()).and(
+                AssignmentOffering.assignment.dot(Assignment.name)
+                    .eq(scheme).and(
+                AssignmentOffering.publish.eq(1))));
             }
         }
         AssignmentOffering assignment = null;
         if ( assignments != null && assignments.count() > 0 )
         {
-            for ( int i = 0; i < assignments.count(); i++ )
+            for (AssignmentOffering thisAssignment : assignments)
             {
-                AssignmentOffering thisAssignment = (AssignmentOffering)
-                    assignments.objectAtIndex( i );
                 log.debug( "assignment = "
                            + thisAssignment.assignment().name() );
                 CourseOffering co = thisAssignment.courseOffering();
@@ -538,7 +505,8 @@ public class Grader
         if ( assignment == null )
         {
             // Look for an assignment where this user is course staff
-            NSMutableArray qualifiers = new NSMutableArray();
+            NSMutableArray<EOQualifier> qualifiers =
+                new NSMutableArray<EOQualifier>();
 //            qualifiers.addObject( new EOKeyValueQualifier(
 //                                  AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
 //                                  EOQualifier.QualifierOperatorEqual,
@@ -550,26 +518,20 @@ public class Grader
 //                            session.user()
 //                           ) );
 //            qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.ASSIGNMENT_NAME_KEY,
-                            EOQualifier.QualifierOperatorEqual,
-                            scheme
-                           ) );
+            qualifiers.addObject(
+                AssignmentOffering.assignment.dot(Assignment.name).eq(scheme));
             if ( crn != null )
             {
-                qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.COURSE_OFFERING_CRN_KEY,
-                            EOQualifier.QualifierOperatorEqual,
-                            crn
-                           ) );
+                qualifiers.addObject(
+                    AssignmentOffering.courseOffering
+                        .dot(CourseOffering.crn).eq(crn));
             }
             else if ( courseNo != null )
             {
-                qualifiers.addObject( new EOKeyValueQualifier(
-                            AssignmentOffering.COURSE_NUMBER_KEY,
-                            EOQualifier.QualifierOperatorEqual,
-                            courseNo
-                           ) );
+                qualifiers.addObject(
+                    AssignmentOffering.courseOffering
+                        .dot(CourseOffering.course)
+                        .dot(Course.number).eq(courseNo));
             }
             if ( log.isDebugEnabled() )
             {
@@ -577,23 +539,19 @@ public class Grader
             }
             try
             {
-                assignments = AssignmentOffering.objectsWithFetchSpecification(
-                    ec,
-                    new EOFetchSpecification(
-                        AssignmentOffering.ENTITY_NAME,
-                        new EOAndQualifier( qualifiers ),
-                        null ) );
+                assignments = AssignmentOffering.objectsMatchingQualifier(
+                    ec, new EOAndQualifier(qualifiers));
                 // Remove any that the user doesn't have staff access to.
                 // Can't put this in an EOOrQualifier, since the generated
                 // SQL will be broken.
                 if (assignments.count() > 0 )
                 {
-                    NSMutableArray filtered = assignments.mutableClone();
+                    NSMutableArray<AssignmentOffering> filtered =
+                        assignments.mutableClone();
                     int i = 0;
-                    while (i < assignments.count())
+                    while (i < filtered.count())
                     {
-                        AssignmentOffering ao =
-                            (AssignmentOffering)filtered.objectAtIndex(i);
+                        AssignmentOffering ao = filtered.objectAtIndex(i);
                         CourseOffering co = ao.courseOffering();
                         if ( session.user().hasAdminPrivileges()
                              || co.isInstructor(session.user())
@@ -616,8 +574,7 @@ public class Grader
                         result.message =
                             "Warning: multiple matching assignments found.";
                     }
-                    assignment =
-                        (AssignmentOffering)assignments.objectAtIndex( 0 );
+                    assignment = assignments.objectAtIndex( 0 );
                 }
             }
             catch ( Exception e )
@@ -629,7 +586,6 @@ public class Grader
         if ( assignment == null )
         {
             log.debug( "no assignments are open." );
-            // genericGComp.prefs().setAssignmentOfferingRelationship( null );
             result.message = "The requested assignment is not accepting "
                 + "submissions at this time or it could not be found.  "
                 + "The deadline may have passed.";
@@ -640,28 +596,20 @@ public class Grader
         result.coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering() );
         result.prefs().setAssignmentOfferingRelationship( assignment );
-        NSArray submissions = EOUtilities.objectsMatchingValues(
-                ec,
-                Submission.ENTITY_NAME,
-                new NSDictionary(
-                        new Object[] {  result.user(),
-                                        assignment
-                                     },
-                        new Object[] { Submission.USER_KEY,
-                                       Submission.ASSIGNMENT_OFFERING_KEY }
-                )
-            );
+        NSArray<Submission> submissions =
+            Submission.submissionsForAssignmentOfferingAndUser(
+                ec, assignment, result.user());
         int currentSubNo = submissions.count() + 1;
-        for ( int i = 0; i < submissions.count(); i++ )
+        for (int i = 0; i < submissions.count(); i++)
         {
-            int sno = ( (Submission)submissions.objectAtIndex( i ) )
-                .submitNumber();
-            if ( sno >= currentSubNo )
+            int sno = submissions.objectAtIndex(i).submitNumber();
+            if (sno >= currentSubNo)
             {
                 currentSubNo = sno + 1;
             }
         }
 
+        // TODO: This max submission check doesn't take partners into account
         Number maxSubmissions = assignment.assignment().submissionProfile()
             .maxSubmissionsRaw();
         if ( maxSubmissions != null
@@ -674,7 +622,6 @@ public class Grader
 
         // Parse the partner list and get the User objects.
         // TODO change this to something a little more UI-friendly
-
         NSMutableArray<User> partners = new NSMutableArray<User>();
 
         if (partnerList != null)
@@ -687,8 +634,8 @@ public class Grader
 
                 if (username.length() > 0)
                 {
-                    User partner = User.userWithName(ec, username);
-
+                    User partner = User.userWithDomainAndName(
+                        ec, session.user().authenticationDomain(), username);
                     if (partner != null)
                     {
                         partners.addObject(partner);

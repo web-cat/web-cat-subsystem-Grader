@@ -26,7 +26,6 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXQ;
-import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -41,8 +40,8 @@ import org.webcat.grader.messaging.GradingResultsAvailableMessage;
 /**
  *  Represents a single student assignment submission.
  *
- *  @author Stephen Edwards
- *  @author Last changed by $Author$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
  *  @version $Revision$, $Date$
  */
 public class Submission
@@ -190,7 +189,7 @@ public class Submission
         long minutes;
         // long seconds;
         // long milliseconds;
-        StringBuffer result = new StringBuffer();
+        StringBuffer buffer = new StringBuffer();
 
         days = time / 86400000;
         time %= 86400000;
@@ -203,30 +202,30 @@ public class Submission
 
         if ( days > 0 )
         {
-            result.append( days );
-            result.append( " day" );
+            buffer.append( days );
+            buffer.append( " day" );
             if ( days > 1 )
-                result.append( 's' );
+                buffer.append( 's' );
         }
         if ( hours > 0 )
         {
-            if ( result.length() > 0 )
-                result.append( ", " );
-            result.append( hours );
-            result.append( " hr" );
+            if ( buffer.length() > 0 )
+                buffer.append( ", " );
+            buffer.append( hours );
+            buffer.append( " hr" );
             if ( hours > 1 )
-                result.append( 's' );
+                buffer.append( 's' );
         }
         if ( minutes > 0 )
         {
-            if ( result.length() > 0 )
-                result.append( ", " );
-            result.append( minutes );
-            result.append( " min" );
+            if ( buffer.length() > 0 )
+                buffer.append( ", " );
+            buffer.append( minutes );
+            buffer.append( " min" );
             if ( minutes > 1 )
-                result.append( 's' );
+                buffer.append( 's' );
         }
-        return result.toString();
+        return buffer.toString();
     }
 
 
@@ -448,7 +447,7 @@ public class Submission
      * changes to the database (the caller must use
      * <code>saveChanges()</code>).
      */
-    public void deleteResultsAndRemovePartners()
+    private void deleteResultsForAllPartners()
     {
         SubmissionResult myResult = result();
         if ( myResult != null )
@@ -484,7 +483,7 @@ public class Submission
             {
                 me = localInstance( ec );
             }
-            me.deleteResultsAndRemovePartners();
+            me.deleteResultsForAllPartners();
             log.debug( "creating new job for Submission " + this );
             EnqueuedJob job = new EnqueuedJob();
             job.setQueueTime( new NSTimestamp() );
@@ -582,24 +581,13 @@ public class Submission
                 return false;
             }
 
-            Submission primarySubmission = null;
+            Submission latestSubmission = null;
             Submission latestGradedSubmission = null;
 
             NSArray<Submission> thisSubmissionSet =
-                EOUtilities.objectsMatchingValues(
-                    editingContext(),
-                    Submission.ENTITY_NAME,
-                    new NSDictionary(
-                        new Object[] {
-                            user(),
-                            assignmentOffering()
-                        },
-                        new Object[] {
-                            Submission.USER_KEY,
-                            Submission.ASSIGNMENT_OFFERING_KEY
-                        }
-                    )
-                );
+                objectsMatchingQualifier(editingContext(),
+                    user.eq(user()).and(
+                    assignmentOffering.eq(assignmentOffering())));
 
             // Iterate over the whole submission set and find the submission
             // for grading (which is either the last submission is none are
@@ -607,18 +595,13 @@ public class Submission
 
             for ( Submission sub : thisSubmissionSet )
             {
-                if ( primarySubmission == null )
+                if ( latestSubmission == null )
                 {
-                    primarySubmission = sub;
+                    latestSubmission = sub;
                 }
-                else if ( sub.submitNumberRaw() != null )
+                else if (sub.submitNumber() > latestSubmission.submitNumber())
                 {
-                    int num = sub.submitNumber();
-
-                    if ( num > primarySubmission.submitNumber() )
-                    {
-                        primarySubmission = sub;
-                    }
+                    latestSubmission = sub;
                 }
 
                 if ( sub.result() != null )
@@ -629,13 +612,10 @@ public class Submission
                         {
                             latestGradedSubmission = sub;
                         }
-                        else if ( sub.submitNumberRaw() != null )
+                        else if (sub.submitNumber() >
+                                 latestGradedSubmission.submitNumber() )
                         {
-                            int num = sub.submitNumber();
-                            if ( num > latestGradedSubmission.submitNumber() )
-                            {
-                                latestGradedSubmission = sub;
-                            }
+                            latestGradedSubmission = sub;
                         }
                     }
                 }
@@ -643,7 +623,7 @@ public class Submission
 
             if ( latestGradedSubmission != null )
             {
-                primarySubmission = latestGradedSubmission;
+                latestSubmission = latestGradedSubmission;
             }
 
             // Now that the entire submission chain is fetched, update the
@@ -651,8 +631,7 @@ public class Submission
 
             for (Submission sub : thisSubmissionSet)
             {
-                boolean isSubForGrading = sub.equals(primarySubmission);
-                sub.setIsSubmissionForGrading(isSubForGrading);
+                sub.setIsSubmissionForGrading(sub == latestSubmission);
             }
         }
 
@@ -689,7 +668,7 @@ public class Submission
         }
 
         return (allSubmissionsCache != null) ?
-                allSubmissionsCache : NSArray.EmptyArray;
+                allSubmissionsCache : NO_SUBMISSIONS;
     }
 
 
@@ -1214,10 +1193,10 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult result = sub.result();
-            if (result != null)
+            SubmissionResult thisResult = sub.result();
+            if (thisResult != null)
             {
-                double score = result.correctnessScore();
+                double score = thisResult.correctnessScore();
                 if (score > maxCorrectnessScore)
                 {
                     maxSubmission = sub;
@@ -1250,10 +1229,10 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult result = sub.result();
-            if (result != null)
+            SubmissionResult thisResult = sub.result();
+            if (thisResult != null)
             {
-                double score = result.toolScore();
+                double score = thisResult.toolScore();
                 if (score > maxToolScore)
                 {
                     maxSubmission = sub;
@@ -1286,10 +1265,10 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult result = sub.result();
-            if (result != null)
+            SubmissionResult thisResult = sub.result();
+            if (thisResult != null)
             {
-                double score = result.automatedScore();
+                double score = thisResult.automatedScore();
                 if (score > maxAutomatedScore)
                 {
                     maxSubmission = sub;
@@ -1473,5 +1452,9 @@ public class Submission
 
     private String cachedPermalink;
     private String subdirToDelete;
+
+    private static final NSArray<Submission> NO_SUBMISSIONS =
+        new NSArray<Submission>();
+
     static Logger log = Logger.getLogger( Submission.class );
 }

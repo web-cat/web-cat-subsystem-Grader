@@ -24,6 +24,7 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import java.util.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import er.extensions.foundation.ERXValueUtilities;
 import net.sf.webcat.*;
 import org.apache.log4j.Logger;
@@ -34,8 +35,9 @@ import org.webcat.core.*;
  *  The main "control panel" page for plugins in the Plug-ins
  *  tab.
  *
- *  @author  stedwar2
- *  @version $Id$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class PluginManagerPage
 extends WCComponent
@@ -56,16 +58,16 @@ extends WCComponent
 
     //~ KVC Attributes (must be public) .......................................
 
-    public int               index;
-    public GradingPlugin        plugin;
-    public WODisplayGroup    publishedPluginGroup;
-    public WODisplayGroup    unpublishedPluginGroup;
-    public WODisplayGroup    personalPluginGroup;
-    public NSArray           newPlugins;
-    public NSData            uploadedData;
-    public String            uploadedName;
-    public FeatureDescriptor feature;
-    public String            providerURL;
+    public int                            index;
+    public GradingPlugin                  plugin;
+    public ERXDisplayGroup<GradingPlugin> publishedPluginGroup;
+    public ERXDisplayGroup<GradingPlugin> unpublishedPluginGroup;
+    public ERXDisplayGroup<GradingPlugin> personalPluginGroup;
+    public NSArray<FeatureDescriptor>     newPlugins;
+    public NSData                         uploadedData;
+    public String                         uploadedName;
+    public FeatureDescriptor              feature;
+    public String                         providerURL;
 
     public static final String TERSE_DESCRIPTIONS_KEY =
         "tersePluginDescriptions";
@@ -92,10 +94,9 @@ extends WCComponent
         }
         if ( newPlugins == null )
         {
-            for ( Iterator i = FeatureProvider.providers().iterator();
-                  i.hasNext(); )
+            for (FeatureProvider fp : FeatureProvider.providers())
             {
-                ( (FeatureProvider)i.next() ).refresh();
+                fp.refresh();
             }
             newPlugins = newPlugins();
         }
@@ -464,58 +465,56 @@ extends WCComponent
      * @return an array of feature descriptors for available uninstalled
      *         subsystems
      */
-    public NSArray newPlugins()
+    public NSArray<FeatureDescriptor> newPlugins()
     {
-        Collection availablePlugins = new HashSet();
-        for ( Iterator i = FeatureProvider.providers().iterator();
-              i.hasNext(); )
+        Collection<FeatureDescriptor> availablePlugins =
+            new HashSet<FeatureDescriptor>();
+        for (FeatureProvider provider : FeatureProvider.providers())
         {
-            FeatureProvider provider = (FeatureProvider)i.next();
             if ( provider != null )
             {
                 availablePlugins.addAll( provider.plugins() );
             }
         }
-        NSArray exclude = publishedPluginGroup.displayedObjects();
-        if ( exclude != null )
+        NSArray<GradingPlugin> exclude =
+            publishedPluginGroup.displayedObjects();
+        if (exclude != null)
         {
-            for ( int i = 0; i < exclude.count(); i++ )
+            for (GradingPlugin s : exclude)
             {
-                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
-                if ( fd != null )
+                if (fd != null)
                 {
-                    availablePlugins.remove( fd );
+                    availablePlugins.remove(fd);
                 }
             }
         }
         exclude = unpublishedPluginGroup.displayedObjects();
-        if ( exclude != null )
+        if (exclude != null)
         {
-            for ( int i = 0; i < exclude.count(); i++ )
+            for (GradingPlugin s : exclude)
             {
-                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
-                if ( fd != null )
+                if (fd != null)
                 {
-                    availablePlugins.remove( fd );
+                    availablePlugins.remove(fd);
                 }
             }
         }
         exclude = personalPluginGroup.displayedObjects();
-        if ( exclude != null )
+        if (exclude != null)
         {
-            for ( int i = 0; i < exclude.count(); i++ )
+            for (GradingPlugin s : exclude)
             {
-                GradingPlugin s = (GradingPlugin)exclude.objectAtIndex( i );
                 FeatureDescriptor fd = s.descriptor().providerVersion();
-                if ( fd != null )
+                if (fd != null)
                 {
-                    availablePlugins.remove( fd );
+                    availablePlugins.remove(fd);
                 }
             }
         }
-        return new NSArray( availablePlugins.toArray() );
+        return new NSArray<FeatureDescriptor>(
+            (FeatureDescriptor[])availablePlugins.toArray());
     }
 
 

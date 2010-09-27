@@ -30,8 +30,8 @@ import org.apache.log4j.Logger;
  * Represents a single step (plug-in entry) in the grading pipeline or
  * processing sequence for handling a given assignment.
  *
- * @author stedwar2
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class Step

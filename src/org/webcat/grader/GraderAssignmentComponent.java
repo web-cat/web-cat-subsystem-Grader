@@ -31,7 +31,8 @@ import com.webobjects.foundation.*;
  *  assignment selections from login parameters.
  *
  *  @author  Stephen Edwards
- *  @version $Id$
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class GraderAssignmentComponent
     extends GraderCourseComponent
@@ -116,7 +117,7 @@ public class GraderAssignmentComponent
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
-    public boolean startWith( NSDictionary params )
+    public boolean startWith( NSDictionary<String, Object> params )
     {
         boolean result = false;
         String aoid =

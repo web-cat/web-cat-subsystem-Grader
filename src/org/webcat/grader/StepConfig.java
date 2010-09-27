@@ -31,8 +31,8 @@ import org.webcat.core.MutableDictionary;
 /**
  * Custom settings for a single grading {@link Step}.
  *
- * @author stedwar2
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class StepConfig

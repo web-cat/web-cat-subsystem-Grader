@@ -35,7 +35,7 @@ import org.webcat.core.*;
  *  courses taught or TA'ed for.
  *
  *  @author  Stephen Edwards
- *  @author  latest changes by: $Author$
+ *  @author  Latest changes by: $Author$
  *  @version $Revision$, $Date$
  */
 public class PickCourseTaughtPage
@@ -217,7 +217,8 @@ public class PickCourseTaughtPage
     // ----------------------------------------------------------
     public void cancelLocalChanges()
     {
-        NSDictionary config = wcSession().tabs.selectedDescendant().config();
+        NSDictionary<?, ?> config =
+            wcSession().tabs.selectedDescendant().config();
         if ( config != null
              && config.objectForKey( "resetPrimeUser" ) != null )
         {

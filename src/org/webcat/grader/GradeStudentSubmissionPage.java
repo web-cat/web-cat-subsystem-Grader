@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -30,8 +31,8 @@ import org.webcat.core.*;
 /**
  * Allow the user to enter/edit "TA" comments for a submission.
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class GradeStudentSubmissionPage
@@ -54,7 +55,7 @@ public class GradeStudentSubmissionPage
 
     public SubmissionResult    result;
     public Submission          submission;
-    public WODisplayGroup      statsDisplayGroup;
+    public ERXDisplayGroup<SubmissionFileStats> statsDisplayGroup;
     // For iterating over display group
     public SubmissionFileStats stats;
     public int                 index;
@@ -70,11 +71,11 @@ public class GradeStudentSubmissionPage
         + "}\n"
         + "</script>\n";
 
-    public NSArray formats = SubmissionResult.formats;
+    public NSArray<Byte> formats = SubmissionResult.formats;
     public byte aFormat;
 
-    public NSArray availableSubmissions;
-    public int     thisSubmissionIndex;
+    public NSArray<Submission> availableSubmissions;
+    public int                 thisSubmissionIndex;
 
     //~ Methods ...............................................................
 
@@ -200,7 +201,7 @@ public class GradeStudentSubmissionPage
         if (applyLocalChanges())
         {
             thisSubmissionIndex++;
-            Submission target = (Submission)availableSubmissions
+            Submission target = availableSubmissions
                 .objectAtIndex(thisSubmissionIndex);
             prefs().setSubmissionRelationship(target);
             prefs().setSubmissionFileStatsRelationship(null);
@@ -412,7 +413,7 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public String formatLabel()
     {
-        return (String)SubmissionResult.formatStrings.objectAtIndex( aFormat );
+        return SubmissionResult.formatStrings.objectAtIndex( aFormat );
     }
 
 
@@ -424,11 +425,8 @@ public class GradeStudentSubmissionPage
             showCoverageData = Boolean.FALSE;
             if ( hasFileStats )
             {
-                for ( int i = 0; i < statsDisplayGroup.allObjects().count();
-                      i++ )
+                for (SubmissionFileStats sfs : statsDisplayGroup.allObjects())
                 {
-                    SubmissionFileStats sfs = (SubmissionFileStats)
-                        statsDisplayGroup.allObjects().objectAtIndex( i );
                     if ( sfs.elementsRaw() != null )
                     {
                         showCoverageData = Boolean.TRUE;

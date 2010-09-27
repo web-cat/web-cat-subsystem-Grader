@@ -39,8 +39,8 @@ import org.webcat.grader.messaging.GraderMarkupParseError;
  * including all markup comments and a color-highlighted version
  * of the source code.
  *
- * @author Stephen Edwards, Hussein Vastani
- * @author Last changed by $Author$
+ * @author  Stephen Edwards, Hussein Vastani
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class EditFileCommentsPage
@@ -370,13 +370,13 @@ public class EditFileCommentsPage
             }
             */
 
-            SAXBuilder parser     = new SAXBuilder();
+            SAXBuilder parser = new SAXBuilder();
             // Try parsing the file/string with the parser
-            Document   doc        =
+            Document doc =
                 parser.build( new StringReader( codeWithCommentsToStore ) );
-            Element    root       = doc.getRootElement();
-            List       children   = root.getChild( "tbody" ).getChildren();
-            Iterator   iterator   = children.iterator();
+            Element root = doc.getRootElement();
+            @SuppressWarnings("unchecked")
+            List<Element> children = root.getChild( "tbody" ).getChildren();
 
             // Delete existing comments by the current user from the
             // database
@@ -397,9 +397,8 @@ public class EditFileCommentsPage
 
             // check all children for comment box (id should have I) and
             // then extract values
-            while ( iterator.hasNext() )
+            for (Element child : children)
             {
-                Element child = (Element)iterator.next();
                 // get the id attribute from the row
                 String id = child.getAttributeValue( "id" );
                 if ( id == null )
@@ -660,10 +659,11 @@ public class EditFileCommentsPage
             }
             else
             {
-                Iterator iterator = current.getChildren().iterator();
-                while ( iterator.hasNext() )
+                @SuppressWarnings("unchecked")
+                List<Element> children = current.getChildren();
+                for (Element child : children)
                 {
-                    Element e = getElementById( (Element)iterator.next(), id );
+                    Element e = getElementById( child, id );
                     if ( e != null )
                     {
                         result = e;

@@ -29,8 +29,8 @@ import org.webcat.core.*;
 /**
  * Allow the user to select an enrolled student from the current course.
  *
- * @author Stephen Edwards
- * @author  latest changes by: $Author$
+ * @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
  */
 public class PickEnrolledStudentPage

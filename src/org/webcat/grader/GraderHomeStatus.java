@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  *  Generates the grader subsystem's rows in the system status block.
  *
  *  @author  Stephen Edwards
- *  @author Last changed by $Author$
+ *  @author  Last changed by $Author$
  *  @version $Revision$, $Date$
  */
 public class GraderHomeStatus

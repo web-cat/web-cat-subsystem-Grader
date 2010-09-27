@@ -25,11 +25,12 @@ import com.webobjects.appserver.*;
 
 //-------------------------------------------------------------------------
 /**
-*  The XML response page for CMS requests.
-*
-*  @author Stephen Edwards
-*  @version $Id$
-*/
+ *  The XML response page for CMS requests.
+ *
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
+ */
 public class CmsResponse
     extends WOComponent
 {

@@ -34,8 +34,8 @@ import org.webcat.core.*;
  *  to choose from.
  *
  *  @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author$
+ *  @version $Revision$, $Date$
  */
 public class PickAssignmentToEditPage
     extends GraderCourseComponent

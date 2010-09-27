@@ -26,8 +26,8 @@ package org.webcat.grader;
  * An EO representing a generated feedback file that is presented to
  * the user as part of grading results (often for download).
  *
- * @author stedwar2
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class ResultFile

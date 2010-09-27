@@ -29,8 +29,8 @@ import org.apache.log4j.Logger;
 * Represents a standard Web-CAT page that has not yet been implemented
 * (is "to be defined").
 *
-*  @author Stephen Edwards
- * @author  latest changes by: $Author$
+*  @author  Stephen Edwards
+ * @author  Latest changes by: $Author$
  * @version $Revision$, $Date$
 */
 public class NavTestPage
