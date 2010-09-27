@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding; 
     variables = {
         statsDisplayGroup = {
-            class = WODisplayGroup; 
+            class = ERXDisplayGroup; 
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 
             numberOfObjectsPerBatch = 0; 

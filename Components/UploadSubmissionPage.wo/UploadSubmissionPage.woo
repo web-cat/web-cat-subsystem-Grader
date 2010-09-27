@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding; 
     variables = {
         submissionDisplayGroup = {
-            class = WODisplayGroup; 
+            class = ERXDisplayGroup; 
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 
             numberOfObjectsPerBatch = 5; 
@@ -14,7 +14,7 @@
                 }); 
         }; 
         studentDisplayGroup = {
-            class = WODisplayGroup; 
+            class = ERXDisplayGroup; 
             dataSource = {
                 class = EODetailDataSource; 
                 detailKey = students; 

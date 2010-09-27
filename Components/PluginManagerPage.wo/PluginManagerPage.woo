@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding;
     variables = {
         publishedPluginGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
@@ -34,7 +34,7 @@
             );
         };
         unpublishedPluginGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
@@ -65,7 +65,7 @@
             );
         };
         personalPluginGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
