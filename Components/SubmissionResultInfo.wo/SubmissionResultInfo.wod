@@ -10,10 +10,6 @@ FileName: WOString {
     value = submissionFileStats.sourceFileName;
 }
 
-IncludeSeparator: WOConditional {
-    condition = includeSeparator;
-}
-
 PartnerName: WOString {
     value = aPartner.nameAndUid;
 }
