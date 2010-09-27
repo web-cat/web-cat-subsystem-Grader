@@ -193,6 +193,10 @@ public class StudentsForAssignmentPage
                 {
                     log.debug("submission found = "
                         + thisSubmission.submitNumber());
+
+                    // Force migration of partner relationships
+                    thisSubmission.result().submission();
+
                     double score = thisSubmission.result().finalScore();
                     if (submissions.count() == 0)
                     {
