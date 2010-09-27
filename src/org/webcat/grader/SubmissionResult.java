@@ -21,14 +21,9 @@
 
 package org.webcat.grader;
 
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import com.webobjects.foundation.NSValidation.*;
-import er.extensions.foundation.ERXFileUtilities;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -36,8 +31,9 @@ import org.webcat.core.*;
 /**
  *  Represents the results for a student submission.
  *
- *  @author Stephen Edwards
- *  @version $Id$
+ *  @author  Stephen Edwards
+ *  @author  Last changed by $Author$
+ *  @version $Revision$, $Date$
  */
 public class SubmissionResult
     extends _SubmissionResult
@@ -64,12 +60,10 @@ public class SubmissionResult
         SUBMISSIONS_KEY + "." + Submission.SUBMIT_TIME_KEY;
     public static final byte FORMAT_HTML = 0;
     public static final byte FORMAT_TEXT = 1;
-    public static final NSArray formats = new NSArray( new Byte[] {
-                    new Byte( FORMAT_HTML ), new Byte( FORMAT_TEXT )
-                    });
-    public static final NSArray formatStrings = new NSArray( new String[] {
-                    "HTML", "Plain Text"
-                    });
+    public static final NSArray<Byte> formats = new NSArray<Byte>(
+        new Byte[] { new Byte( FORMAT_HTML ), new Byte( FORMAT_TEXT ) });
+    public static final NSArray<String> formatStrings = new NSArray<String>(
+        new String[] { "HTML", "Plain Text" });
 
 
     //~ Methods ...............................................................
@@ -82,43 +76,49 @@ public class SubmissionResult
         if (mySubmissions != null && mySubmissions.count() > 0)
         {
             // First, try the link
-            result = mySubmissions.objectAtIndex(0).primarySubmission();
-            if (result.partnerLink())
+            result = mySubmissions.objectAtIndex(0);
+            if (result.primarySubmission() != null)
             {
-                if (result == mySubmissions.objectAtIndex(0))
-                {
-                    // Likely an old submission that has not been migrated
-                    // to use the newer relationships, so search
-
-                    // First, find the primary submission
-                    for (Submission thisSubmission : mySubmissions)
-                    {
-                        if ( !(thisSubmission.partnerLink()
-                               || thisSubmission.primarySubmission() != null))
-                        {
-                            result = thisSubmission;
-                            break;
-                        }
-                    }
-
-                    // Now, set up all the relationships for partners
-                    for (Submission thisSubmission : mySubmissions)
-                    {
-                        if (thisSubmission.partnerLink()
-                            && thisSubmission.primarySubmission() == null)
-                        {
-                            thisSubmission.setPrimarySubmission(result);
-                        }
-                    }
-
-                    // Now its migrated!
-                }
+                result = result.primarySubmission();
             }
-
-            if (result == null && mySubmissions.count() > 0)
+            else if (result.partnerLink())
             {
-                result = mySubmissions.objectAtIndex(0);
-                log.error("No primary submission found for result " + this);
+                // Likely an old submission that has not been migrated
+                // to use the newer relationships, so search
+
+                // First, find the primary submission
+                for (Submission thisSubmission : mySubmissions)
+                {
+                    // Don't check the relationship, since we're presuming
+                    // this batch of submissions only has the bits set,
+                    // but not the primarySubmission relationship filled.
+                    if (!thisSubmission.partnerLink())
+                    {
+                        result = thisSubmission;
+                        break;
+                    }
+                }
+
+                if (result.partnerLink())
+                {
+                    // Yikes!  We searched, and didn't find *any* submissions
+                    // for this result without the partnerLink bit set!  So
+                    // promote this submission to be the primary submission
+                    log.error("Cannot locate any primary submission for"
+                        + "result " + this);
+                    result.setPartnerLink(false);
+                }
+
+                // Now, set up all the relationships for partners
+                for (Submission thisSubmission : mySubmissions)
+                {
+                    if (thisSubmission.partnerLink())
+                    {
+                        thisSubmission.setPrimarySubmission(result);
+                    }
+                }
+
+                // Now its migrated!
             }
         }
         return result;
@@ -553,18 +553,12 @@ public class SubmissionResult
     public boolean hasCoverageData()
     {
         boolean result = false;
-        NSArray files = submissionFileStats();
-        if ( files.count() > 0 )
+        for (SubmissionFileStats sfs : submissionFileStats())
         {
-            for ( int i = 0; i < files.count(); i++ )
+            if (sfs.elementsRaw() != null)
             {
-                SubmissionFileStats sfs = (SubmissionFileStats)
-                    files.objectAtIndex( i );
-                if ( sfs.elementsRaw() != null )
-                {
-                    result = true;
-                    break;
-                }
+                result = true;
+                break;
             }
         }
         return result;
