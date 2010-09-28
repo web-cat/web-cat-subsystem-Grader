@@ -7,7 +7,7 @@
   <th class="R" valign="top">Name</th>
   <td><wo name="StudentName"/></td>
 </wo>
-<wo:if condition="~submission.assignmentOffering.assignment.submissionProfile.allowPartners || partnersForEditing.count">
+<wo:if condition="~submission.assignmentOffering.assignment.submissionProfile.allowPartners || partnersForEditing.count || submission.result.submissions.count">
 <wo name="TR">
   <th class="R">Partners</th>
   <td>
