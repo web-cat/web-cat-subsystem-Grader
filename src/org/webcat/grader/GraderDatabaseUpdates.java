@@ -32,7 +32,8 @@ import org.webcat.dbupdate.UpdateSet;
  * for this class uses its parent class' logger.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class GraderDatabaseUpdates
     extends UpdateSet
@@ -308,6 +309,24 @@ public class GraderDatabaseUpdates
                 "alter table TSUBMISSIONPROFILE add "
                 + "allowPartners BIT NOT NULL" );
     }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add indexes for better performance.
+     * @throws SQLException on error
+     */
+//    public void updateIncrement15() throws SQLException
+//    {
+//        database().executeSQL(
+//            "ALTER TABLE TASSIGNMENTOFFERING ADD INDEX (CASSIGNMENTID)");
+//        database().executeSQL(
+//            "ALTER TABLE TASSIGNMENTOFFERING ADD INDEX (CCOURSEOFFERINGID)");
+//        database().executeSQL(
+//            "ALTER TABLE TSUBMISSION ADD INDEX (CASSIGNMENTID)");
+//        database().executeSQL(
+//            "ALTER TABLE TSUBMISSION ADD INDEX (CUSERID)");
+//    }
 
 
     //~ Private Methods .......................................................
