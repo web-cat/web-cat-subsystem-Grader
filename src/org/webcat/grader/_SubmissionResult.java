@@ -112,11 +112,11 @@ public abstract class _SubmissionResult
         SubmissionResult obj = null;
         if (id > 0)
         {
-            NSArray<SubmissionResult> results =
+            NSArray<SubmissionResult> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -350,11 +350,11 @@ public abstract class _SubmissionResult
      */
     public byte commentFormat()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "commentFormat" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -443,11 +443,11 @@ public abstract class _SubmissionResult
      */
     public double correctnessScore()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "correctnessScore" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -507,11 +507,11 @@ public abstract class _SubmissionResult
      */
     public boolean isMostRecent()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "isMostRecent" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -600,11 +600,11 @@ public abstract class _SubmissionResult
      */
     public byte status()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "status" );
-        return ( result == null )
+        return ( returnValue == null )
             ? org.webcat.core.Status.TO_DO
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -664,11 +664,11 @@ public abstract class _SubmissionResult
      */
     public double taScore()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "taScore" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -728,11 +728,11 @@ public abstract class _SubmissionResult
      */
     public double toolScore()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "toolScore" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -792,11 +792,11 @@ public abstract class _SubmissionResult
      */
     public boolean updateMutableFields()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "updateMutableFields" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -937,25 +937,58 @@ public abstract class _SubmissionResult
      * Called by {@link #awake} to migrate attribute values if needed when the
      * object is retrieved.
      */
-    public void migrateAttributeValuesIfNeeded()
+    public final void migrateAttributeValuesIfNeeded()
     {
         log.debug("migrateAttributeValuesIfNeeded()");
 
-        if ( isMostRecentRaw() == null )
+        if ( shouldMigrateIsMostRecent() )
         {
             org.webcat.core.MigratingEditingContext mec =
                 org.webcat.core.Application.newMigratingEditingContext();
             SubmissionResult migratingObject = localInstance(mec);
 
-            if ( migratingObject.isMostRecentRaw() == null )
-            {
-                migratingObject.isMostRecent();
-            }
+            migrateAttributeValues(mec, migratingObject);
 
             mec.saveChanges();
             org.webcat.core.Application.releaseMigratingEditingContext(mec);
         }
     }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #awake} to migrate attribute values when the
+     * object is retrieved.
+     */
+    protected void migrateAttributeValues(
+        org.webcat.core.MigratingEditingContext mec,
+        SubmissionResult migratingObject
+    )
+    {
+        log.debug("migrateAttributeValues()");
+
+        if ( migratingObject.shouldMigrateIsMostRecent() )
+        {
+            migratingObject.migrateIsMostRecent(mec);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * isMostRecent attribute.
+     */
+    protected abstract boolean shouldMigrateIsMostRecent();
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * isMostRecent attribute.
+     */
+    protected abstract void migrateIsMostRecent(
+        org.webcat.core.MigratingEditingContext mec);
 
 
     // ----------------------------------------------------------
@@ -1755,10 +1788,10 @@ public abstract class _SubmissionResult
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<SubmissionResult> results =
+        NSArray<SubmissionResult> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1779,14 +1812,14 @@ public abstract class _SubmissionResult
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<SubmissionResult> results =
+        NSArray<SubmissionResult> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1916,16 +1949,16 @@ public abstract class _SubmissionResult
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<SubmissionResult> result =
+        NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -2119,15 +2152,15 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result =
+        NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "mostRecentResultsForAssignment(ec"
                 + ", " + assignmentOfferingBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2165,16 +2198,16 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result =
+        NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "mostRecentResultsForAssignmentAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2205,15 +2238,15 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result =
+        NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "mostRecentResultsForAssignmentOrderedByNumber(ec"
                 + ", " + assignmentOfferingBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2251,16 +2284,16 @@ public abstract class _SubmissionResult
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionResult> result =
+        NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "resultsForAssignmentAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 

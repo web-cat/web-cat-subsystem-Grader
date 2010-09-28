@@ -110,11 +110,11 @@ public abstract class _SubmissionFileComment
         SubmissionFileComment obj = null;
         if (id > 0)
         {
-            NSArray<SubmissionFileComment> results =
+            NSArray<SubmissionFileComment> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -229,11 +229,11 @@ public abstract class _SubmissionFileComment
      */
     public byte categoryNo()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "categoryNo" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -293,11 +293,11 @@ public abstract class _SubmissionFileComment
      */
     public double deduction()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "deduction" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -415,11 +415,11 @@ public abstract class _SubmissionFileComment
      */
     public boolean limitExceeded()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "limitExceeded" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -479,11 +479,11 @@ public abstract class _SubmissionFileComment
      */
     public int lineNo()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "lineNo" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -572,11 +572,11 @@ public abstract class _SubmissionFileComment
      */
     public byte toNo()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "toNo" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -839,10 +839,10 @@ public abstract class _SubmissionFileComment
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<SubmissionFileComment> results =
+        NSArray<SubmissionFileComment> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -863,14 +863,14 @@ public abstract class _SubmissionFileComment
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<SubmissionFileComment> results =
+        NSArray<SubmissionFileComment> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1000,16 +1000,16 @@ public abstract class _SubmissionFileComment
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<SubmissionFileComment> result =
+        NSArray<SubmissionFileComment> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 

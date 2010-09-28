@@ -111,11 +111,11 @@ public abstract class _Submission
         Submission obj = null;
         if (id > 0)
         {
-            NSArray<Submission> results =
+            NSArray<Submission> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -188,6 +188,8 @@ public abstract class _Submission
     public static final String SUBMISSIONS_FOR_ASSIGNMENT_AND_USER_DESCENDING_FSPEC = "submissionsForAssignmentAndUserDescending";
     public static final String SUBMISSIONS_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "submissionsForAssignmentOfferingAndUser";
     public static final String SUBMISSIONS_FOR_ASSIGNMENT_OFFERING_AND_USER_DESCENDING_FSPEC = "submissionsForAssignmentOfferingAndUserDescending";
+    public static final String SUBMISSIONS_FOR_GRADING_FSPEC = "submissionsForGrading";
+    public static final String SUBMISSIONS_WITH_FEEDBACK_FSPEC = "submissionsWithFeedback";
     public static final String ENTITY_NAME = "Submission";
 
 
@@ -274,11 +276,11 @@ public abstract class _Submission
      */
     public boolean isSubmissionForGrading()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "isSubmissionForGrading" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -338,11 +340,11 @@ public abstract class _Submission
      */
     public boolean partnerLink()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "partnerLink" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -402,11 +404,11 @@ public abstract class _Submission
      */
     public int submitNumber()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "submitNumber" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -510,25 +512,80 @@ public abstract class _Submission
      * Called by {@link #awake} to migrate attribute values if needed when the
      * object is retrieved.
      */
-    public void migrateAttributeValuesIfNeeded()
+    public final void migrateAttributeValuesIfNeeded()
     {
         log.debug("migrateAttributeValuesIfNeeded()");
 
-        if ( isSubmissionForGradingRaw() == null )
+        if ( shouldMigrateIsSubmissionForGrading()
+            || shouldMigratePartnerLink() )
         {
             org.webcat.core.MigratingEditingContext mec =
                 org.webcat.core.Application.newMigratingEditingContext();
             Submission migratingObject = localInstance(mec);
 
-            if ( migratingObject.isSubmissionForGradingRaw() == null )
-            {
-                migratingObject.isSubmissionForGrading();
-            }
+            migrateAttributeValues(mec, migratingObject);
 
             mec.saveChanges();
             org.webcat.core.Application.releaseMigratingEditingContext(mec);
         }
     }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #awake} to migrate attribute values when the
+     * object is retrieved.
+     */
+    protected void migrateAttributeValues(
+        org.webcat.core.MigratingEditingContext mec,
+        Submission migratingObject
+    )
+    {
+        log.debug("migrateAttributeValues()");
+
+        if ( migratingObject.shouldMigrateIsSubmissionForGrading() )
+        {
+            migratingObject.migrateIsSubmissionForGrading(mec);
+        }
+        if ( migratingObject.shouldMigratePartnerLink() )
+        {
+            migratingObject.migratePartnerLink(mec);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * isSubmissionForGrading attribute.
+     */
+    protected abstract boolean shouldMigrateIsSubmissionForGrading();
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * isSubmissionForGrading attribute.
+     */
+    protected abstract void migrateIsSubmissionForGrading(
+        org.webcat.core.MigratingEditingContext mec);
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * partnerLink attribute.
+     */
+    protected abstract boolean shouldMigratePartnerLink();
+
+
+    // ----------------------------------------------------------
+    /**
+     * Called by {@link #migrateAttributeValues} to migrate the
+     * partnerLink attribute.
+     */
+    protected abstract void migratePartnerLink(
+        org.webcat.core.MigratingEditingContext mec);
 
 
     // ----------------------------------------------------------
@@ -1397,10 +1454,10 @@ public abstract class _Submission
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<Submission> results =
+        NSArray<Submission> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1421,14 +1478,14 @@ public abstract class _Submission
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<Submission> results =
+        NSArray<Submission> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1558,16 +1615,16 @@ public abstract class _Submission
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1768,23 +1825,23 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "earliestSubmissionForAssignmentOfferingAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1816,22 +1873,22 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "earliestSubmissionForCourseOffering(ec"
                 + ", " + courseOfferingBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1870,23 +1927,23 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "latestSubmissionForAssignmentAndUser(ec"
                 + ", " + assignmentBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1925,23 +1982,23 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "latestSubmissionForAssignmentOfferingAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1973,22 +2030,22 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "latestSubmissionForCourseOffering(ec"
                 + ", " + courseOfferingBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -2036,7 +2093,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
@@ -2044,14 +2101,14 @@ public abstract class _Submission
                 + ", " + assignmentOfferingBinding
                 + ", " + submitNumberBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
-        else if ( result.count() > 1 )
+        else if ( objects.count() > 1 )
         {
             throw new EOUtilities.MoreThanOneException(
                 "Multiple objects were found when only one was expected."
@@ -2059,7 +2116,7 @@ public abstract class _Submission
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -2105,7 +2162,7 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
@@ -2113,9 +2170,9 @@ public abstract class _Submission
                 + ", " + assignmentBinding
                 + ", " + semesterBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2153,16 +2210,16 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "submissionsForAssignmentOfferingAndUser(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2200,16 +2257,110 @@ public abstract class _Submission
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<Submission> result =
+        NSArray<Submission> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "submissionsForAssignmentOfferingAndUserDescending(ec"
                 + ", " + assignmentOfferingBinding
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>submissionsForGrading</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Submission> submissionsForGrading(
+            EOEditingContext context,
+            org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            org.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "submissionsForGrading", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Submission> objects =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "submissionsForGrading(ec"
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + objects );
+        }
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>submissionsWithFeedback</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param assignmentOfferingBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Submission> submissionsWithFeedback(
+            EOEditingContext context,
+            org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
+            org.webcat.core.User userBinding
+        )
+    {
+        EOFetchSpecification spec = EOFetchSpecification
+            .fetchSpecificationNamed( "submissionsWithFeedback", "Submission" );
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if ( assignmentOfferingBinding != null )
+        {
+            bindings.setObjectForKey( assignmentOfferingBinding,
+                                      "assignmentOffering" );
+        }
+        if ( userBinding != null )
+        {
+            bindings.setObjectForKey( userBinding,
+                                      "user" );
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+
+        NSArray<Submission> objects =
+            objectsWithFetchSpecification( context, spec );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "submissionsWithFeedback(ec"
+                + ", " + assignmentOfferingBinding
+                + ", " + userBinding
+                + "): " + objects );
+        }
+        return objects;
     }
 
 

@@ -107,11 +107,11 @@ public abstract class _SubmissionFileStats
         SubmissionFileStats obj = null;
         if (id > 0)
         {
-            NSArray<SubmissionFileStats> results =
+            NSArray<SubmissionFileStats> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -288,11 +288,11 @@ public abstract class _SubmissionFileStats
      */
     public int conditionals()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "conditionals" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -352,11 +352,11 @@ public abstract class _SubmissionFileStats
      */
     public int conditionalsCovered()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "conditionalsCovered" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -416,11 +416,11 @@ public abstract class _SubmissionFileStats
      */
     public double deductions()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "deductions" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -480,11 +480,11 @@ public abstract class _SubmissionFileStats
      */
     public int elements()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "elements" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -544,11 +544,11 @@ public abstract class _SubmissionFileStats
      */
     public int elementsCovered()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "elementsCovered" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -608,11 +608,11 @@ public abstract class _SubmissionFileStats
      */
     public int loc()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "loc" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -701,11 +701,11 @@ public abstract class _SubmissionFileStats
      */
     public int methods()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "methods" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -765,11 +765,11 @@ public abstract class _SubmissionFileStats
      */
     public int methodsCovered()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "methodsCovered" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -829,11 +829,11 @@ public abstract class _SubmissionFileStats
      */
     public int ncloc()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ncloc" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -922,11 +922,11 @@ public abstract class _SubmissionFileStats
      */
     public int remarks()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "remarks" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -1015,11 +1015,11 @@ public abstract class _SubmissionFileStats
      */
     public int statements()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "statements" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -1079,11 +1079,11 @@ public abstract class _SubmissionFileStats
      */
     public int statementsCovered()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "statementsCovered" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -1143,11 +1143,11 @@ public abstract class _SubmissionFileStats
      */
     public byte status()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "status" );
-        return ( result == null )
+        return ( returnValue == null )
             ? org.webcat.core.Status.TO_DO
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -1733,10 +1733,10 @@ public abstract class _SubmissionFileStats
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<SubmissionFileStats> results =
+        NSArray<SubmissionFileStats> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1757,14 +1757,14 @@ public abstract class _SubmissionFileStats
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<SubmissionFileStats> results =
+        NSArray<SubmissionFileStats> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1894,16 +1894,16 @@ public abstract class _SubmissionFileStats
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<SubmissionFileStats> result =
+        NSArray<SubmissionFileStats> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 

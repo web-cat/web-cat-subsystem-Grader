@@ -137,11 +137,11 @@ public abstract class _GradingCriteria
         GradingCriteria obj = null;
         if (id > 0)
         {
-            NSArray<GradingCriteria> results =
+            NSArray<GradingCriteria> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -286,11 +286,11 @@ public abstract class _GradingCriteria
      */
     public double blankLinePt()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "blankLinePt" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -350,11 +350,11 @@ public abstract class _GradingCriteria
      */
     public long deadTimeDelta()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "deadTimeDelta" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -414,11 +414,11 @@ public abstract class _GradingCriteria
      */
     public boolean diffLineSyncing()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "diffLineSyncing" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -478,11 +478,11 @@ public abstract class _GradingCriteria
      */
     public double extraLinePt()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "extraLinePt" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -542,11 +542,11 @@ public abstract class _GradingCriteria
      */
     public boolean floatComparisonStyle()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "floatComparisonStyle" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -606,11 +606,11 @@ public abstract class _GradingCriteria
      */
     public double floatNegativeDelta()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "floatNegativeDelta" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -670,11 +670,11 @@ public abstract class _GradingCriteria
      */
     public double floatPositiveDelta()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "floatPositiveDelta" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -734,11 +734,11 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreBlankLines()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ignoreBlankLines" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -798,11 +798,11 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreCase()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ignoreCase" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -862,11 +862,11 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreNonprinting()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ignoreNonprinting" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -926,11 +926,11 @@ public abstract class _GradingCriteria
      */
     public boolean ignorePunctuation()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ignorePunctuation" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -990,11 +990,11 @@ public abstract class _GradingCriteria
      */
     public boolean ignoreWhitespace()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "ignoreWhitespace" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -1083,11 +1083,11 @@ public abstract class _GradingCriteria
      */
     public boolean normalizeWhitespace()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "normalizeWhitespace" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -1176,11 +1176,11 @@ public abstract class _GradingCriteria
      */
     public int stringComparsionStyle()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "stringComparsionStyle" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -1240,11 +1240,11 @@ public abstract class _GradingCriteria
      */
     public boolean tokenizingStyle()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "tokenizingStyle" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -1304,11 +1304,11 @@ public abstract class _GradingCriteria
      */
     public boolean trimWhitespace()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "trimWhitespace" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -1688,10 +1688,10 @@ public abstract class _GradingCriteria
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<GradingCriteria> results =
+        NSArray<GradingCriteria> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1712,14 +1712,14 @@ public abstract class _GradingCriteria
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<GradingCriteria> results =
+        NSArray<GradingCriteria> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1849,16 +1849,16 @@ public abstract class _GradingCriteria
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<GradingCriteria> result =
+        NSArray<GradingCriteria> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 

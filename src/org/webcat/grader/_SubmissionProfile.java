@@ -119,11 +119,11 @@ public abstract class _SubmissionProfile
         SubmissionProfile obj = null;
         if (id > 0)
         {
-            NSArray<SubmissionProfile> results =
+            NSArray<SubmissionProfile> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -285,11 +285,11 @@ public abstract class _SubmissionProfile
      */
     public boolean allowPartners()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "allowPartners" );
-        return ( result == null )
-            ? false
-            : ( result.intValue() > 0 );
+        return ( returnValue == null )
+            ? true
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -349,11 +349,11 @@ public abstract class _SubmissionProfile
      */
     public double availablePoints()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "availablePoints" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -413,11 +413,11 @@ public abstract class _SubmissionProfile
      */
     public long availableTimeDelta()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "availableTimeDelta" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -477,11 +477,11 @@ public abstract class _SubmissionProfile
      */
     public boolean awardEarlyBonus()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "awardEarlyBonus" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -541,11 +541,11 @@ public abstract class _SubmissionProfile
      */
     public long deadTimeDelta()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "deadTimeDelta" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -605,11 +605,11 @@ public abstract class _SubmissionProfile
      */
     public boolean deductLatePenalty()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "deductLatePenalty" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -669,11 +669,11 @@ public abstract class _SubmissionProfile
      */
     public double earlyBonusMaxPts()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "earlyBonusMaxPts" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -733,11 +733,11 @@ public abstract class _SubmissionProfile
      */
     public double earlyBonusUnitPts()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "earlyBonusUnitPts" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -797,11 +797,11 @@ public abstract class _SubmissionProfile
      */
     public long earlyBonusUnitTime()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "earlyBonusUnitTime" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -919,11 +919,11 @@ public abstract class _SubmissionProfile
      */
     public double latePenaltyMaxPts()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "latePenaltyMaxPts" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -983,11 +983,11 @@ public abstract class _SubmissionProfile
      */
     public double latePenaltyUnitPts()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "latePenaltyUnitPts" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -1047,11 +1047,11 @@ public abstract class _SubmissionProfile
      */
     public long latePenaltyUnitTime()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "latePenaltyUnitTime" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -1111,11 +1111,11 @@ public abstract class _SubmissionProfile
      */
     public long maxFileUploadSize()
     {
-        Long result =
+        Long returnValue =
             (Long)storedValueForKey( "maxFileUploadSize" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0L
-            : result.longValue();
+            : returnValue.longValue();
     }
 
 
@@ -1175,11 +1175,11 @@ public abstract class _SubmissionProfile
      */
     public int maxSubmissions()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "maxSubmissions" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.intValue();
+            : returnValue.intValue();
     }
 
 
@@ -1326,11 +1326,11 @@ public abstract class _SubmissionProfile
      */
     public byte submissionMethod()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "submissionMethod" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0
-            : result.byteValue();
+            : returnValue.byteValue();
     }
 
 
@@ -1390,11 +1390,11 @@ public abstract class _SubmissionProfile
      */
     public double taPoints()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "taPoints" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -1454,11 +1454,11 @@ public abstract class _SubmissionProfile
      */
     public double toolPoints()
     {
-        Double result =
+        Double returnValue =
             (Double)storedValueForKey( "toolPoints" );
-        return ( result == null )
+        return ( returnValue == null )
             ? 0.0
-            : result.doubleValue();
+            : returnValue.doubleValue();
     }
 
 
@@ -2016,10 +2016,10 @@ public abstract class _SubmissionProfile
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<SubmissionProfile> results =
+        NSArray<SubmissionProfile> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -2040,14 +2040,14 @@ public abstract class _SubmissionProfile
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<SubmissionProfile> results =
+        NSArray<SubmissionProfile> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -2177,16 +2177,16 @@ public abstract class _SubmissionProfile
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<SubmissionProfile> result =
+        NSArray<SubmissionProfile> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -2380,15 +2380,15 @@ public abstract class _SubmissionProfile
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionProfile> result =
+        NSArray<SubmissionProfile> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "profilesForCourse(ec"
                 + ", " + courseBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -2419,15 +2419,15 @@ public abstract class _SubmissionProfile
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<SubmissionProfile> result =
+        NSArray<SubmissionProfile> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "profilesForUser(ec"
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 

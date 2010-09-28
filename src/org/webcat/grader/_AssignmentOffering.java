@@ -117,11 +117,11 @@ public abstract class _AssignmentOffering
         AssignmentOffering obj = null;
         if (id > 0)
         {
-            NSArray<AssignmentOffering> results =
+            NSArray<AssignmentOffering> objects =
                 objectsMatchingValues(ec, "id", new Integer(id));
-            if (results != null && results.count() > 0)
+            if (objects != null && objects.count() > 0)
             {
-                obj = results.objectAtIndex(0);
+                obj = objects.objectAtIndex(0);
             }
         }
         return obj;
@@ -306,11 +306,11 @@ public abstract class _AssignmentOffering
      */
     public boolean gradingSuspended()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "gradingSuspended" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -531,11 +531,11 @@ public abstract class _AssignmentOffering
      */
     public boolean publish()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "publish" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -595,11 +595,11 @@ public abstract class _AssignmentOffering
      */
     public boolean updateMutableFields()
     {
-        Integer result =
+        Integer returnValue =
             (Integer)storedValueForKey( "updateMutableFields" );
-        return ( result == null )
+        return ( returnValue == null )
             ? false
-            : ( result.intValue() > 0 );
+            : ( returnValue.intValue() > 0 );
     }
 
 
@@ -1284,10 +1284,10 @@ public abstract class _AssignmentOffering
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        NSArray<AssignmentOffering> results =
+        NSArray<AssignmentOffering> objects =
             objectsMatchingQualifier(context, qualifier, sortOrderings);
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1308,14 +1308,14 @@ public abstract class _AssignmentOffering
         EOEditingContext context,
         EOQualifier qualifier) throws EOUtilities.MoreThanOneException
     {
-        NSArray<AssignmentOffering> results =
+        NSArray<AssignmentOffering> objects =
             objectsMatchingQualifier(context, qualifier);
-        if (results.size() > 1)
+        if (objects.size() > 1)
         {
             throw new EOUtilities.MoreThanOneException(null);
         }
-        return (results.size() > 0)
-            ? results.get(0)
+        return (objects.size() > 0)
+            ? objects.get(0)
             : null;
     }
 
@@ -1445,16 +1445,16 @@ public abstract class _AssignmentOffering
             sortOrderings);
         fspec.setFetchLimit(1);
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, fspec );
 
-        if ( result.count() == 0 )
+        if ( objects.count() == 0 )
         {
             return null;
         }
         else
         {
-            return result.objectAtIndex(0);
+            return objects.objectAtIndex(0);
         }
     }
 
@@ -1636,14 +1636,14 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "allOfferingsOrderedByDueDate", "AssignmentOffering" );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "allOfferingsOrderedByDueDate(ec"
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -1674,15 +1674,15 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "offeringsForCourse(ec"
                 + ", " + courseBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -1713,15 +1713,15 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "offeringsForCourseOffering(ec"
                 + ", " + courseOfferingBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -1740,14 +1740,14 @@ public abstract class _AssignmentOffering
         EOFetchSpecification spec = EOFetchSpecification
             .fetchSpecificationNamed( "offeringsForSubmitterEngineBase", "AssignmentOffering" );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "offeringsForSubmitterEngineBase(ec"
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -1778,15 +1778,15 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "offeringsWithUserAsStaff(ec"
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
@@ -1817,15 +1817,15 @@ public abstract class _AssignmentOffering
         }
         spec = spec.fetchSpecificationWithQualifierBindings( bindings );
 
-        NSArray<AssignmentOffering> result =
+        NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification( context, spec );
         if (log.isDebugEnabled())
         {
             log.debug( "offeringsWithUserAsStudent(ec"
                 + ", " + userBinding
-                + "): " + result );
+                + "): " + objects );
         }
-        return result;
+        return objects;
     }
 
 
