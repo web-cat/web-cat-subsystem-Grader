@@ -240,4 +240,72 @@
             }
         );
     };
+    submissionsForGrading = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = assignmentOffering;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = user;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = user; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = isSubmissionForGrading;
+                    selectorName = "isEqualTo:";
+                    value = {class = NSNumber; value = 1; };
+                }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = "compareDescending:";
+            }
+        );
+    };
+    submissionsWithFeedback = {
+        class = EOFetchSpecification;
+        entityName = Submission;
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = assignmentOffering;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = user;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = user; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = result.status;
+                    selectorName = "isNotEqualTo:";
+                    value = {class = NSNumber; value = 3; };
+                }
+            );
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = submitTime;
+                selectorName = "compareDescending:";
+            }
+        );
+    };
 }
