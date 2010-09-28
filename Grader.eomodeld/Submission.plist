@@ -1,132 +1,137 @@
 {
     attributes = (
         {
-            columnName = CASSIGNMENTID; 
-            name = assignmentOfferingId; 
-            prototypeName = foreignId; 
-        }, 
-        {columnName = CFILENAME; name = fileName; prototypeName = tinyText; }, 
-        {name = id; prototypeName = id; }, 
+            columnName = CASSIGNMENTID;
+            name = assignmentOfferingId;
+            prototypeName = foreignId;
+        },
+        {columnName = CFILENAME; name = fileName; prototypeName = tinyText; },
+        {name = id; prototypeName = id; },
         {
-            allowsNull = Y; 
-            columnName = CISSUBMISSIONFORGRADING; 
-            name = isSubmissionForGrading; 
-            prototypeName = boolean; 
+            allowsNull = Y;
+            columnName = CISSUBMISSIONFORGRADING;
+            name = isSubmissionForGrading;
+            prototypeName = boolean;
             userInfo = {
-                isScalar = true; 
-                needsMigration = true; 
-                scalarDefault = false; 
-                type = boolean; 
-            }; 
-        }, 
+                isScalar = true;
+                needsMigration = true;
+                scalarDefault = false;
+                type = boolean;
+            };
+        },
         {
-            columnName = CPARTNERLINK; 
-            externalType = BIT; 
-            name = partnerLink; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
-        {
-            allowsNull = Y; 
-            columnName = primarySubmissionId; 
-            name = primarySubmissionId; 
-            prototypeName = id; 
-        }, 
-        {columnName = CRESULTID; name = resultId; prototypeName = foreignId; }, 
-        {
-            columnName = CSUBMITNUMBER; 
-            name = submitNumber; 
-            prototypeName = integer; 
+            columnName = CPARTNERLINK;
+            externalType = BIT;
+            name = partnerLink;
+            prototypeName = boolean;
             userInfo = {
-                isScalar = true; 
-                scalarConversionMethodName = intValue; 
-                scalarDefault = 0; 
-                type = int; 
-                valueClassName = Integer; 
-            }; 
-        }, 
-        {columnName = CSUBMITTIME; name = submitTime; prototypeName = dateTime; }, 
+                isScalar = true;
+                needsMigration = true;
+                scalarDefault = false;
+                type = boolean;
+            };
+        },
+        {
+            allowsNull = Y;
+            columnName = primarySubmissionId;
+            name = primarySubmissionId;
+            prototypeName = id;
+        },
+        {columnName = CRESULTID; name = resultId; prototypeName = foreignId; },
+        {
+            columnName = CSUBMITNUMBER;
+            name = submitNumber;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        },
+        {columnName = CSUBMITTIME; name = submitTime; prototypeName = dateTime; },
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
-    ); 
+    );
     attributesUsedForLocking = (
-        assignmentOfferingId, 
-        fileName, 
-        isSubmissionForGrading, 
-        partnerLink, 
-        resultId, 
-        submitNumber, 
+        assignmentOfferingId,
+        fileName,
+        isSubmissionForGrading,
+        partnerLink,
+        resultId,
+        submitNumber,
         userId
-    ); 
-    className = "org.webcat.grader.Submission"; 
+    );
+    className = "org.webcat.grader.Submission";
     classProperties = (
-        assignmentOffering, 
-        enqueuedJobs, 
-        fileName, 
-        graderPrefs, 
-        isSubmissionForGrading, 
-        partneredSubmissions, 
-        partnerLink, 
-        primarySubmission, 
-        result, 
-        submitNumber, 
-        submitTime, 
+        assignmentOffering,
+        enqueuedJobs,
+        fileName,
+        graderPrefs,
+        isSubmissionForGrading,
+        partneredSubmissions,
+        partnerLink,
+        primarySubmission,
+        result,
+        submitNumber,
+        submitTime,
         user
-    ); 
-    externalName = TSUBMISSION; 
-    name = Submission; 
-    primaryKeyAttributes = (id); 
+    );
+    externalName = TSUBMISSION;
+    name = Submission;
+    primaryKeyAttributes = (id);
     relationships = (
         {
-            destination = AssignmentOffering; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; }); 
-            name = assignmentOffering; 
-        }, 
+            destination = AssignmentOffering;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; });
+            name = assignmentOffering;
+        },
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = EnqueuedJob; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = submissionId; sourceAttribute = id; }); 
-            name = enqueuedJobs; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = EnqueuedJob;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = submissionId; sourceAttribute = id; });
+            name = enqueuedJobs;
+        },
         {
-            destination = GraderPrefs; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = submissionId; sourceAttribute = id; }); 
-            name = graderPrefs; 
-        }, 
+            destination = GraderPrefs;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = submissionId; sourceAttribute = id; });
+            name = graderPrefs;
+        },
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = Submission; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = primarySubmissionId; sourceAttribute = id; }); 
-            name = partneredSubmissions; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = Submission;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = primarySubmissionId; sourceAttribute = id; });
+            name = partneredSubmissions;
+        },
         {
-            destination = Submission; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = primarySubmissionId; }); 
-            name = primarySubmission; 
-        }, 
+            destination = Submission;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = primarySubmissionId; });
+            name = primarySubmission;
+        },
         {
-            deleteRule = EODeleteRuleCascade; 
-            destination = SubmissionResult; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = resultId; }); 
-            name = result; 
-        }, 
+            deleteRule = EODeleteRuleCascade;
+            destination = SubmissionResult;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = resultId; });
+            name = result;
+        },
         {
-            destination = User; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
-            name = user; 
+            destination = User;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = userId; });
+            name = user;
         }
-    ); 
+    );
 }
