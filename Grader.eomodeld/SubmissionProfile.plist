@@ -1,280 +1,280 @@
 {
     attributes = (
         {
-            columnName = allowPartners;
-            name = allowPartners;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
-        },
+            columnName = allowPartners; 
+            name = allowPartners; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = true; type = boolean; }; 
+        }, 
         {
-            columnName = CAVAILABLEPOINTS;
-            name = availablePoints;
-            prototypeName = double;
+            columnName = CAVAILABLEPOINTS; 
+            name = availablePoints; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CAVAILABLETIMEDELTA;
-            name = availableTimeDelta;
-            prototypeName = long;
+            columnName = CAVAILABLETIMEDELTA; 
+            name = availableTimeDelta; 
+            prototypeName = long; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = longValue;
-                scalarDefault = 0L;
-                type = long;
-                valueClassName = Long;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = longValue; 
+                scalarDefault = 0L; 
+                type = long; 
+                valueClassName = Long; 
+            }; 
+        }, 
         {
-            columnName = FAWARDEARLYBONUS;
-            name = awardEarlyBonus;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
-        },
+            columnName = FAWARDEARLYBONUS; 
+            name = awardEarlyBonus; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
         {
-            columnName = CDEADTIMEDELTA;
-            name = deadTimeDelta;
-            prototypeName = long;
+            columnName = CDEADTIMEDELTA; 
+            name = deadTimeDelta; 
+            prototypeName = long; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = longValue;
-                scalarDefault = 0L;
-                type = long;
-                valueClassName = Long;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = longValue; 
+                scalarDefault = 0L; 
+                type = long; 
+                valueClassName = Long; 
+            }; 
+        }, 
         {
-            columnName = FDEDUCTLATEPENALTY;
-            name = deductLatePenalty;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
-        },
+            columnName = FDEDUCTLATEPENALTY; 
+            name = deductLatePenalty; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
         {
-            columnName = CEARLYBONUSMAXPTS;
-            name = earlyBonusMaxPts;
-            prototypeName = double;
+            columnName = CEARLYBONUSMAXPTS; 
+            name = earlyBonusMaxPts; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CEARLYBONUSUNITPTS;
-            name = earlyBonusUnitPts;
-            prototypeName = double;
+            columnName = CEARLYBONUSUNITPTS; 
+            name = earlyBonusUnitPts; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CEARLYBONUSUNITTIME;
-            name = earlyBonusUnitTime;
-            prototypeName = long;
+            columnName = CEARLYBONUSUNITTIME; 
+            name = earlyBonusUnitTime; 
+            prototypeName = long; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = longValue;
-                scalarDefault = 0L;
-                type = long;
-                valueClassName = Long;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = longValue; 
+                scalarDefault = 0L; 
+                type = long; 
+                valueClassName = Long; 
+            }; 
+        }, 
         {
-            columnName = CEXCLUDEDFILEPATTERNS;
-            name = excludedFilePatterns;
-            prototypeName = text;
-        },
-        {name = id; prototypeName = id; },
+            columnName = CEXCLUDEDFILEPATTERNS; 
+            name = excludedFilePatterns; 
+            prototypeName = text; 
+        }, 
+        {name = id; prototypeName = id; }, 
         {
-            columnName = CINCLUDEDFILEPATTERNS;
-            name = includedFilePatterns;
-            prototypeName = text;
-        },
+            columnName = CINCLUDEDFILEPATTERNS; 
+            name = includedFilePatterns; 
+            prototypeName = text; 
+        }, 
         {
-            columnName = CLATEPENALTYMAXPTS;
-            name = latePenaltyMaxPts;
-            prototypeName = double;
+            columnName = CLATEPENALTYMAXPTS; 
+            name = latePenaltyMaxPts; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CLATEPENALTYUNITPTS;
-            name = latePenaltyUnitPts;
-            prototypeName = double;
+            columnName = CLATEPENALTYUNITPTS; 
+            name = latePenaltyUnitPts; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CLATEPENALTYUNITTIME;
-            name = latePenaltyUnitTime;
-            prototypeName = long;
+            columnName = CLATEPENALTYUNITTIME; 
+            name = latePenaltyUnitTime; 
+            prototypeName = long; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = longValue;
-                scalarDefault = 0L;
-                type = long;
-                valueClassName = Long;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = longValue; 
+                scalarDefault = 0L; 
+                type = long; 
+                valueClassName = Long; 
+            }; 
+        }, 
         {
-            columnName = CMAXFILEUPLOADSIZE;
-            name = maxFileUploadSize;
-            prototypeName = long;
+            columnName = CMAXFILEUPLOADSIZE; 
+            name = maxFileUploadSize; 
+            prototypeName = long; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = longValue;
-                scalarDefault = 0L;
-                type = long;
-                valueClassName = Long;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = longValue; 
+                scalarDefault = 0L; 
+                type = long; 
+                valueClassName = Long; 
+            }; 
+        }, 
         {
-            columnName = CMAXSUBMITS;
-            name = maxSubmissions;
-            prototypeName = integer;
+            columnName = CMAXSUBMITS; 
+            name = maxSubmissions; 
+            prototypeName = integer; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = intValue;
-                scalarDefault = 0;
-                type = int;
-                valueClassName = Integer;
-            };
-        },
-        {columnName = FPROFILENAME; name = name; prototypeName = tinyText; },
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {columnName = FPROFILENAME; name = name; prototypeName = tinyText; }, 
         {
-            columnName = CREQUIREDFILEPATTERNS;
-            name = requiredFilePatterns;
-            prototypeName = text;
-        },
-        {columnName = CSCOREFORMAT; name = scoreFormat; prototypeName = tinyText; },
+            columnName = CREQUIREDFILEPATTERNS; 
+            name = requiredFilePatterns; 
+            prototypeName = text; 
+        }, 
+        {columnName = CSCOREFORMAT; name = scoreFormat; prototypeName = tinyText; }, 
         {
-            allowsNull = N;
-            columnName = CSUBMISSIONMETHOD;
-            name = submissionMethod;
-            prototypeName = tinyInteger;
+            allowsNull = N; 
+            columnName = CSUBMISSIONMETHOD; 
+            name = submissionMethod; 
+            prototypeName = tinyInteger; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = byteValue;
-                scalarDefault = 0;
-                type = byte;
-                valueClassName = Byte;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = byteValue; 
+                scalarDefault = 0; 
+                type = byte; 
+                valueClassName = Byte; 
+            }; 
+        }, 
         {
-            columnName = CTAPOINTS;
-            name = taPoints;
-            prototypeName = double;
+            columnName = CTAPOINTS; 
+            name = taPoints; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {
-            columnName = CTOOLPOINTS;
-            name = toolPoints;
-            prototypeName = double;
+            columnName = CTOOLPOINTS; 
+            name = toolPoints; 
+            prototypeName = double; 
             userInfo = {
-                isScalar = true;
-                scalarConversionMethodName = doubleValue;
-                scalarDefault = "0.0";
-                type = double;
-                valueClassName = Double;
-            };
-        },
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
         {columnName = CUSERID; name = userId; prototypeName = foreignId; }
-    );
+    ); 
     attributesUsedForLocking = (
-        allowPartners,
-        availableTimeDelta,
-        awardEarlyBonus,
-        deadTimeDelta,
-        deductLatePenalty,
-        earlyBonusUnitTime,
-        excludedFilePatterns,
-        includedFilePatterns,
-        latePenaltyUnitTime,
-        maxFileUploadSize,
-        maxSubmissions,
-        name,
-        requiredFilePatterns,
-        scoreFormat,
-        submissionMethod,
+        allowPartners, 
+        availableTimeDelta, 
+        awardEarlyBonus, 
+        deadTimeDelta, 
+        deductLatePenalty, 
+        earlyBonusUnitTime, 
+        excludedFilePatterns, 
+        includedFilePatterns, 
+        latePenaltyUnitTime, 
+        maxFileUploadSize, 
+        maxSubmissions, 
+        name, 
+        requiredFilePatterns, 
+        scoreFormat, 
+        submissionMethod, 
         userId
-    );
-    className = "org.webcat.grader.SubmissionProfile";
+    ); 
+    className = "org.webcat.grader.SubmissionProfile"; 
     classProperties = (
-        allowPartners,
-        assignment,
-        author,
-        availablePoints,
-        availableTimeDelta,
-        awardEarlyBonus,
-        courseOfferings,
-        deadTimeDelta,
-        deductLatePenalty,
-        earlyBonusMaxPts,
-        earlyBonusUnitPts,
-        earlyBonusUnitTime,
-        excludedFilePatterns,
-        includedFilePatterns,
-        latePenaltyMaxPts,
-        latePenaltyUnitPts,
-        latePenaltyUnitTime,
-        maxFileUploadSize,
-        maxSubmissions,
-        name,
-        requiredFilePatterns,
-        scoreFormat,
-        submissionMethod,
-        taPoints,
+        allowPartners, 
+        assignment, 
+        author, 
+        availablePoints, 
+        availableTimeDelta, 
+        awardEarlyBonus, 
+        courseOfferings, 
+        deadTimeDelta, 
+        deductLatePenalty, 
+        earlyBonusMaxPts, 
+        earlyBonusUnitPts, 
+        earlyBonusUnitTime, 
+        excludedFilePatterns, 
+        includedFilePatterns, 
+        latePenaltyMaxPts, 
+        latePenaltyUnitPts, 
+        latePenaltyUnitTime, 
+        maxFileUploadSize, 
+        maxSubmissions, 
+        name, 
+        requiredFilePatterns, 
+        scoreFormat, 
+        submissionMethod, 
+        taPoints, 
         toolPoints
-    );
-    externalName = TSUBMISSIONPROFILE;
-    name = SubmissionProfile;
-    primaryKeyAttributes = (id);
+    ); 
+    externalName = TSUBMISSIONPROFILE; 
+    name = SubmissionProfile; 
+    primaryKeyAttributes = (id); 
     relationships = (
         {
-            destination = Assignment;
-            isToMany = Y;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = submissionProfileId; sourceAttribute = id; });
-            name = assignment;
-        },
+            destination = Assignment; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = submissionProfileId; sourceAttribute = id; }); 
+            name = assignment; 
+        }, 
         {
-            destination = User;
-            isToMany = N;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = id; sourceAttribute = userId; });
-            name = author;
-        },
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = author; 
+        }, 
         {
-            definition = "assignment.offerings.courseOffering";
-            internalInfo = {"_nameInObjectStore" = "assignment_offerings_courseOffering"; };
-            name = courseOfferings;
+            definition = "assignment.offerings.courseOffering"; 
+            internalInfo = {"_nameInObjectStore" = "assignment_offerings_courseOffering"; }; 
+            name = courseOfferings; 
         }
-    );
+    ); 
 }
