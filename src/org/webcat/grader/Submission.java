@@ -556,86 +556,175 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    /**
-     * Returns a value indicating if this submission is the "submission for
-     * grading" of the user who submitted it for a particular assignment
-     * offering. The "submission for grading" is the one that would be exported
-     * by the grader and the one that should normally be considered for
-     * reporting; specifically, it is either the most recent graded submission,
-     * or if none have yet been graded, it is the most recent overall
-     * submission.
-     *
-     * @return true if this submission is the "submission for grading" for its
-     *     user and assignment offering; false if otherwise.
-     */
-    @Override
-    public boolean isSubmissionForGrading()
+    protected boolean shouldMigrateIsSubmissionForGrading()
     {
-        // Migrate the property value if it doesn't yet exist.
+        return (isSubmissionForGradingRaw() == null);
+    }
 
-        if (isSubmissionForGradingRaw() == null)
+
+    // ----------------------------------------------------------
+    protected void migrateIsSubmissionForGrading(MigratingEditingContext mec)
+    {
+        if (user() == null || assignmentOffering() == null)
         {
-            if (user() == null || assignmentOffering() == null)
+            setIsSubmissionForGrading(false);
+            return;
+        }
+
+        Submission latestSubmission = null;
+        Submission latestGradedSubmission = null;
+
+        NSArray<Submission> thisSubmissionSet = allSubmissions();
+
+        // Iterate over the whole submission set and find the
+        // submission for grading (which is either the last submission
+        // is none are graded, or the latest of those that are graded).
+
+        for ( Submission sub : thisSubmissionSet )
+        {
+            if ( latestSubmission == null )
             {
-                setIsSubmissionForGrading(false);
-                return false;
+                latestSubmission = sub;
+            }
+            else if (sub.submitNumber()
+                     > latestSubmission.submitNumber())
+            {
+                latestSubmission = sub;
             }
 
-            Submission latestSubmission = null;
-            Submission latestGradedSubmission = null;
-
-            NSArray<Submission> thisSubmissionSet =
-                objectsMatchingQualifier(editingContext(),
-                    user.eq(user()).and(
-                    assignmentOffering.eq(assignmentOffering())));
-
-            // Iterate over the whole submission set and find the submission
-            // for grading (which is either the last submission is none are
-            // graded, or the latest of those that are graded).
-
-            for ( Submission sub : thisSubmissionSet )
+            if ( sub.result() != null )
             {
-                if ( latestSubmission == null )
+                if ( sub.result().status() != Status.TO_DO )
                 {
-                    latestSubmission = sub;
-                }
-                else if (sub.submitNumber() > latestSubmission.submitNumber())
-                {
-                    latestSubmission = sub;
-                }
-
-                if ( sub.result() != null )
-                {
-                    if ( sub.result().status() != Status.TO_DO )
+                    if ( latestGradedSubmission == null )
                     {
-                        if ( latestGradedSubmission == null )
-                        {
-                            latestGradedSubmission = sub;
-                        }
-                        else if (sub.submitNumber() >
-                                 latestGradedSubmission.submitNumber() )
-                        {
-                            latestGradedSubmission = sub;
-                        }
+                        latestGradedSubmission = sub;
+                    }
+                    else if (sub.submitNumber() >
+                             latestGradedSubmission.submitNumber() )
+                    {
+                        latestGradedSubmission = sub;
                     }
                 }
             }
+        }
 
-            if ( latestGradedSubmission != null )
+        if ( latestGradedSubmission != null )
+        {
+            latestSubmission = latestGradedSubmission;
+        }
+
+        // Now that the entire submission chain is fetched, update the
+        // isSubmissionForGrading property among all of them.
+
+        for (Submission sub : thisSubmissionSet)
+        {
+            sub.setIsSubmissionForGrading(sub == latestSubmission);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    protected boolean shouldMigratePartnerLink()
+    {
+        // TODO: Fix the performance problems with auto-migration
+        // this method is temporarily disabled until the auto-migration
+        // performance problems can be worked out.
+
+//        return (partnerLink() && primarySubmission() == null)
+//            || (!partnerLink()
+//                && result() != null
+//                && result().submissions().count() > 1
+//                && partneredSubmissions().count() == 0);
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    protected void migratePartnerLink(MigratingEditingContext mec)
+    {
+        // TODO: Fix the performance problems with auto-migration
+        // this method is temporarily disabled until the auto-migration
+        // performance problems can be worked out.  To re-enable,
+        // erase migratePartnerLink() below and use its contents here.
+    }
+
+
+    // ----------------------------------------------------------
+    public void migratePartnerLink()
+    {
+        // guard from shouldMigratePartnerLink()
+        if (!((partnerLink() && primarySubmission() == null)
+             || (!partnerLink()
+                 && result() != null
+                 && result().submissions().count() > 1
+                 && partneredSubmissions().count() == 0)))
+        {
+            return;
+        }
+
+        // Implementation from migratePartnerLink(MigratingEditingContext)
+        NSArray<Submission> mySubmissions = result().submissions();
+        if (mySubmissions.count() <= 1)
+        {
+            return;
+        }
+
+        Submission primary = mySubmissions.get(0);
+
+        // Likely an old submission that has not been migrated
+        // to use the newer relationships, so search
+
+        // First, find the primary submission
+        for (Submission thisSubmission : mySubmissions)
+        {
+            // Don't check the relationship, since we're presuming
+            // this batch of submissions only has the bits set,
+            // but not the primarySubmission relationship filled.
+            if (!thisSubmission.partnerLink())
             {
-                latestSubmission = latestGradedSubmission;
-            }
-
-            // Now that the entire submission chain is fetched, update the
-            // isSubmissionForGrading property among all of them.
-
-            for (Submission sub : thisSubmissionSet)
-            {
-                sub.setIsSubmissionForGrading(sub == latestSubmission);
+                primary = thisSubmission;
+                break;
             }
         }
 
-        return super.isSubmissionForGrading();
+        if (primary.partnerLink())
+        {
+            // Yikes!  We searched, and didn't find *any* submissions
+            // for this result without the partnerLink bit set!  So
+            // promote this submission to be the primary submission
+            log.error("Cannot locate any primary submission for "
+                + "result " + this);
+            for (Submission thisSubmission : mySubmissions)
+            {
+                log.error("    partner sub = "
+                    + thisSubmission.user()
+                    + " # "
+                    + thisSubmission.submitNumber()
+                    + " "
+                    + thisSubmission.hashCode()
+                    + ", "
+                    + thisSubmission.partnerLink()
+                    + ", pri = "
+                    + (thisSubmission.primarySubmission() == null
+                        ? null
+                        : thisSubmission.primarySubmission().hashCode())
+                    + ", "
+                    + thisSubmission);
+            }
+            primary.setPartnerLink(false);
+        }
+
+        // Now, set up all the relationships for partners
+        for (Submission thisSubmission : mySubmissions)
+        {
+            if (thisSubmission.partnerLink())
+            {
+                thisSubmission.setPrimarySubmissionRelationship(primary);
+            }
+        }
+
+        // Now it is migrated!
     }
 
 

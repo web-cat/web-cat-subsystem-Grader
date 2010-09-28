@@ -85,6 +85,9 @@ public class SubmissionResultInfo
 
         if (submission != null)
         {
+            // TODO: fix this with auto-migration
+            submission.migratePartnerLink();
+
             NSMutableArray<User> partners = new NSMutableArray<User>();
 
             for (Submission partneredSubmission :

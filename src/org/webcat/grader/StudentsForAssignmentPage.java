@@ -81,6 +81,7 @@ public class StudentsForAssignmentPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
+        log.debug("\n\nappendToResponse()");
         if (maxSubmission == null)
         {
             maxSubmission = new HashMap<User, Submission>();
@@ -145,7 +146,92 @@ public class StudentsForAssignmentPage
                     {
                         mostRecentSubmission = sub;
                     }
-                    log.debug("\tsub #" + sub.submitNumber());
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("\tsub #" + sub.submitNumber()
+                            + " = " + sub.hashCode() + ", " + sub);
+                        log.debug("    partnerLink  = " + sub.partnerLink());
+                        if (sub.primarySubmission() != null)
+                        {
+                            Submission psub = sub.primarySubmission();
+                            log.debug("    primary      = "
+                                + psub.user()
+                                + " # "
+                                + psub.submitNumber()
+                                + " "
+                                + psub.hashCode()
+                                + ", "
+                                + psub.partnerLink()
+                                + ", pri = "
+                                + (psub.primarySubmission() == null
+                                    ? null
+                                    : psub.primarySubmission().hashCode())
+                                + ", "
+                                + psub);
+                        }
+                        else
+                        {
+                            log.debug("    primary      = null");
+                        }
+                        NSArray<Submission> partnered =
+                            sub.partneredSubmissions();
+                        if (partnered != null && partnered.count() > 0)
+                        {
+                            for (Submission psub : partnered)
+                            {
+                                log.debug("    partner rel  = "
+                                    + psub.user()
+                                    + " # "
+                                    + psub.submitNumber()
+                                    + " "
+                                    + psub.hashCode()
+                                    + ", "
+                                    + psub.partnerLink()
+                                    + ", pri = "
+                                    + (psub.primarySubmission() == null
+                                        ? null
+                                        : psub.primarySubmission().hashCode())
+                                    + ", "
+                                    + psub);
+                            }
+                        }
+                        else
+                        {
+                            log.debug("    partner rels = none");
+                        }
+                        if (sub.result() != null)
+                        {
+                            if (sub.result().submissions().count() > 0)
+                            {
+                                for (Submission psub :
+                                    sub.result().submissions())
+                                {
+                                    log.debug("    partners     = "
+                                        + psub.user()
+                                        + " # "
+                                        + psub.submitNumber()
+                                        + " "
+                                        + psub.hashCode()
+                                        + ", "
+                                        + psub.partnerLink()
+                                        + ", pri = "
+                                        + (psub.primarySubmission() == null
+                                            ? null
+                                            : psub.primarySubmission().hashCode())
+                                        + ", "
+                                        + psub);
+                                }
+                            }
+                            else
+                            {
+                                log.debug("    partners     = none");
+                            }
+                        }
+                        else
+                        {
+                            log.debug("    no result");
+                        }
+                    }
                     if (sub.result() != null
                         // The next two are mutually
                         && !sub.partnerLink()
@@ -195,7 +281,96 @@ public class StudentsForAssignmentPage
                         + thisSubmission.submitNumber());
 
                     // Force migration of partner relationships
-                    thisSubmission.result().submission();
+                    // TODO: fix this with auto-migration
+                    thisSubmission.migratePartnerLink();
+
+                    if (log.isDebugEnabled())
+                    {
+                        Submission sub = thisSubmission;
+                        log.debug("\tsub #" + sub.submitNumber()
+                            + " = " + sub.hashCode() + ", " + sub);
+                        log.debug("    partnerLink  = " + sub.partnerLink());
+                        if (sub.primarySubmission() != null)
+                        {
+                            Submission psub = sub.primarySubmission();
+                            log.debug("    primary      = "
+                                + psub.user()
+                                + " # "
+                                + psub.submitNumber()
+                                + " "
+                                + psub.hashCode()
+                                + ", "
+                                + psub.partnerLink()
+                                + ", pri = "
+                                + (psub.primarySubmission() == null
+                                    ? null
+                                    : psub.primarySubmission().hashCode())
+                                + ", "
+                                + psub);
+                        }
+                        else
+                        {
+                            log.debug("    primary      = null");
+                        }
+                        NSArray<Submission> partnered =
+                            sub.partneredSubmissions();
+                        if (partnered != null && partnered.count() > 0)
+                        {
+                            for (Submission psub : partnered)
+                            {
+                                log.debug("    partner rel  = "
+                                    + psub.user()
+                                    + " # "
+                                    + psub.submitNumber()
+                                    + " "
+                                    + psub.hashCode()
+                                    + ", "
+                                    + psub.partnerLink()
+                                    + ", pri = "
+                                    + (psub.primarySubmission() == null
+                                        ? null
+                                        : psub.primarySubmission().hashCode())
+                                    + ", "
+                                    + psub);
+                            }
+                        }
+                        else
+                        {
+                            log.debug("    partner rels = none");
+                        }
+                        if (sub.result() != null)
+                        {
+                            if (sub.result().submissions().count() > 0)
+                            {
+                                for (Submission psub :
+                                    sub.result().submissions())
+                                {
+                                    log.debug("    partners     = "
+                                        + psub.user()
+                                        + " # "
+                                        + psub.submitNumber()
+                                        + " "
+                                        + psub.hashCode()
+                                        + ", "
+                                        + psub.partnerLink()
+                                        + ", pri = "
+                                        + (psub.primarySubmission() == null
+                                            ? null
+                                            : psub.primarySubmission().hashCode())
+                                        + ", "
+                                        + psub);
+                                }
+                            }
+                            else
+                            {
+                                log.debug("    partners     = none");
+                            }
+                        }
+                        else
+                        {
+                            log.debug("    no result");
+                        }
+                    }
 
                     double score = thisSubmission.result().finalScore();
                     if (submissions.count() == 0)

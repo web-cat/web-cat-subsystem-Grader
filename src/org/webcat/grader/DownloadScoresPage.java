@@ -323,6 +323,8 @@ public class DownloadScoresPage
                 }
                 if (thisSubmission != null)
                 {
+                    // TODO: fix this with auto-migration
+                    thisSubmission.migratePartnerLink();
                     log.debug("\t saving for export = "
                               + thisSubmission.submitNumber());
                     submissionsToExport.addObject(thisSubmission);

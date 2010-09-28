@@ -75,50 +75,11 @@ public class SubmissionResult
         NSArray<Submission> mySubmissions = submissions();
         if (mySubmissions != null && mySubmissions.count() > 0)
         {
-            // First, try the link
             result = mySubmissions.objectAtIndex(0);
+
             if (result.primarySubmission() != null)
             {
                 result = result.primarySubmission();
-            }
-            else if (result.partnerLink())
-            {
-                // Likely an old submission that has not been migrated
-                // to use the newer relationships, so search
-
-                // First, find the primary submission
-                for (Submission thisSubmission : mySubmissions)
-                {
-                    // Don't check the relationship, since we're presuming
-                    // this batch of submissions only has the bits set,
-                    // but not the primarySubmission relationship filled.
-                    if (!thisSubmission.partnerLink())
-                    {
-                        result = thisSubmission;
-                        break;
-                    }
-                }
-
-                if (result.partnerLink())
-                {
-                    // Yikes!  We searched, and didn't find *any* submissions
-                    // for this result without the partnerLink bit set!  So
-                    // promote this submission to be the primary submission
-                    log.error("Cannot locate any primary submission for"
-                        + "result " + this);
-                    result.setPartnerLink(false);
-                }
-
-                // Now, set up all the relationships for partners
-                for (Submission thisSubmission : mySubmissions)
-                {
-                    if (thisSubmission.partnerLink())
-                    {
-                        thisSubmission.setPrimarySubmission(result);
-                    }
-                }
-
-                // Now its migrated!
             }
         }
         return result;
@@ -441,15 +402,69 @@ public class SubmissionResult
 
 
     // ----------------------------------------------------------
-    @Override
-    public boolean isMostRecent()
+    protected boolean shouldMigrateIsMostRecent()
     {
-        if (isMostRecentRaw() == null)
-        {
-            setAsMostRecentIfNecessary();
-        }
+        return (isMostRecentRaw() == null);
+    }
 
-        return super.isMostRecent();
+
+    // ----------------------------------------------------------
+    protected void migrateIsMostRecent(MigratingEditingContext mec)
+    {
+        setAsMostRecentIfNecessary(mec);
+    }
+
+
+    // ----------------------------------------------------------
+    private void setAsMostRecentIfNecessary(EOEditingContext mec)
+    {
+        if ( log.isDebugEnabled() )
+        {
+            NSArray<SubmissionResult> subs = resultsForAssignmentAndUser(
+                mec, submission().assignmentOffering(), submission().user() );
+            for ( int i = 0; i < subs.count(); i++ )
+            {
+                SubmissionResult sr = subs.objectAtIndex( i );
+                log.debug( "sub " + i + ": " + sr.submission().submitNumber()
+                           + " " + sr.submission().submitTime() );
+            }
+        }
+        SubmissionResult newest = null;
+        NSArray<SubmissionResult> subs = mostRecentResultsForAssignmentAndUser(
+            mec, submission().assignmentOffering(), submission().user() );
+        if ( subs.count() > 0 )
+        {
+            newest = subs.objectAtIndex(0);
+            if ( !newest.isMostRecent() )
+            {
+                log.warn(
+                    "most recent submission is unmarked: "
+                    + newest.submission().user().userName()
+                    + " #" + newest.submission().submitNumber() );
+            }
+        }
+        for ( int i = 1; i < subs.count(); i++ )
+        {
+            SubmissionResult thisSub = subs.objectAtIndex( i );
+            log.warn(
+                "multiple submissions marked most recent: "
+                + thisSub.submission().user().userName()
+                + " #" + thisSub.submission().submitNumber() );
+            thisSub.setIsMostRecent( false );
+        }
+        if ( newest != null )
+        {
+            if ( newest.submission().submitNumber() <
+                 submission().submitNumber() )
+            {
+                newest.setIsMostRecent( false );
+                setIsMostRecent( true );
+            }
+        }
+        else // ( newest == null )
+        {
+            setIsMostRecent( true );
+        }
     }
 
 
@@ -498,53 +513,7 @@ public class SubmissionResult
         }
 
         EOEditingContext ec = editingContext();
-        if ( log.isDebugEnabled() )
-        {
-            NSArray<SubmissionResult> subs = resultsForAssignmentAndUser(
-                ec, submission().assignmentOffering(), submission().user() );
-            for ( int i = 0; i < subs.count(); i++ )
-            {
-                SubmissionResult sr = subs.objectAtIndex( i );
-                log.debug( "sub " + i + ": " + sr.submission().submitNumber()
-                           + " " + sr.submission().submitTime() );
-            }
-        }
-        SubmissionResult newest = null;
-        NSArray<SubmissionResult> subs = mostRecentResultsForAssignmentAndUser(
-            ec, submission().assignmentOffering(), submission().user() );
-        if ( subs.count() > 0 )
-        {
-            newest = subs.objectAtIndex(0);
-            if ( !newest.isMostRecent() )
-            {
-                log.warn(
-                    "most recent submission is unmarked: "
-                    + newest.submission().user().userName()
-                    + " #" + newest.submission().submitNumber() );
-            }
-        }
-        for ( int i = 1; i < subs.count(); i++ )
-        {
-            SubmissionResult thisSub = subs.objectAtIndex( i );
-            log.warn(
-                "multiple submissions marked most recent: "
-                + thisSub.submission().user().userName()
-                + " #" + thisSub.submission().submitNumber() );
-            thisSub.setIsMostRecent( false );
-        }
-        if ( newest != null )
-        {
-            if ( newest.submission().submitNumber() <
-                 submission().submitNumber() )
-            {
-                newest.setIsMostRecent( false );
-                setIsMostRecent( true );
-            }
-        }
-        else // ( newest == null )
-        {
-            setIsMostRecent( true );
-        }
+        setAsMostRecentIfNecessary(ec);
         ec.saveChanges();
     }
 
