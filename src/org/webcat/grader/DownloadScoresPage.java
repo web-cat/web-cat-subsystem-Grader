@@ -246,30 +246,15 @@ public class DownloadScoresPage
     // ----------------------------------------------------------
     private void collectSubmissionsToExport()
     {
-        NSMutableArray<User> students =
-            assignmentOffering.courseOffering().students().mutableClone();
-        if (omitStaff)
-        {
-            students.removeObjectsInArray(
-                assignmentOffering.courseOffering().instructors());
-            students.removeObjectsInArray(
-                assignmentOffering.courseOffering().graders());
-        }
-        else
-        {
-            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
-                students,
-                assignmentOffering.courseOffering().instructors());
-            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
-                students,
-                assignmentOffering.courseOffering().graders());
-        }
+        NSArray<User> students = omitStaff
+            ? assignmentOffering.courseOffering().studentsWithoutStaff()
+            : assignmentOffering.courseOffering().students();
         submissionsToExport = new NSMutableArray<Submission>();
         if (students != null)
         {
             for (User student : students)
             {
-                log.debug("checking " + student.userName());
+                log.debug("checking " + student.userName() + ", " + student);
 
                 Submission thisSubmission = null;
                 Submission gradedSubmission = null;
@@ -285,9 +270,30 @@ public class DownloadScoresPage
                 log.debug("searching for submissions");
                 for (Submission sub : thisSubmissionSet)
                 {
-                    log.debug("\tsub #" + sub.submitNumber());
+                    log.debug("\tsub #" + sub.submitNumber() + " "
+                        + sub.partnerLink());
                     if (sub.result() != null)
                     {
+                        if (log.isDebugEnabled()
+                            && sub.result().submissions().count() > 1)
+                        {
+                            log.debug("\t  has partners");
+                            for (Submission psub : sub.result().submissions())
+                            {
+                                if (psub != sub)
+                                {
+                                    log.debug("\t    partner = "
+                                        + psub.user()
+                                        + " #"
+                                        + psub.submitNumber()
+                                        + " "
+                                        + psub.partnerLink()
+                                        + " to "
+                                        + psub.assignmentOffering());
+                                }
+                            }
+                        }
+
                         if (thisSubmission == null)
                         {
                             thisSubmission = sub;

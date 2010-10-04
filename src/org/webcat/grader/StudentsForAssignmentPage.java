@@ -24,7 +24,6 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
-import er.extensions.foundation.ERXArrayUtilities;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -111,14 +110,8 @@ public class StudentsForAssignmentPage
             }
         }
 
-        NSMutableArray<User> students =
-            assignmentOffering.courseOffering().students().mutableClone();
-        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
-            students,
-            assignmentOffering.courseOffering().instructors());
-        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
-            students,
-            assignmentOffering.courseOffering().graders());
+        NSArray<User> students = assignmentOffering.courseOffering()
+            .studentsWithoutStaff();
         NSMutableArray<Submission> submissions =
             new NSMutableArray<Submission>();
         highScore = 0.0;
@@ -548,6 +541,71 @@ public class StudentsForAssignmentPage
         assignmentOffering = null;
         super.flushNavigatorDerivedData();
     }
+
+
+    // ----------------------------------------------------------
+//    public WOComponent repartner()
+//    {
+//        for (Submission sub : submissionDisplayGroup.allObjects())
+//        {
+//            if (sub.result() != null)
+//            {
+//                for (Submission psub : sub.result().submissions())
+//                {
+//                    if (psub != sub
+//                        && psub.assignmentOffering().assignment()
+//                        != sub.assignmentOffering().assignment())
+//                    {
+//                        log.warn("found partner submission "
+//                            + psub.user() + " #" + psub.submitNumber()
+//                            + "\non incorrect assignment offering "
+//                            + psub.assignmentOffering());
+//
+//                        NSArray<AssignmentOffering> partnerOfferings =
+//                            AssignmentOffering.objectsMatchingQualifier(
+//                                localContext(),
+//                                AssignmentOffering.courseOffering
+//                                    .dot(CourseOffering.course).eq(
+//                                        sub.assignmentOffering()
+//                                        .courseOffering().course())
+//                                .and(AssignmentOffering.courseOffering
+//                                    .dot(CourseOffering.students).eq(
+//                                        psub.user()))
+//                                .and(AssignmentOffering.assignment
+//                                .eq(sub.assignmentOffering().assignment())));
+//                        if (partnerOfferings.count() == 0)
+//                        {
+//                            log.error("Cannot locate correct assignment "
+//                                + "offering for partner"
+//                                + psub.user() + " #" + psub.submitNumber()
+//                                + "\non incorrect assignment offering "
+//                                + psub.assignmentOffering());
+//                        }
+//                        else
+//                        {
+//                            if (partnerOfferings.count() > 1)
+//                            {
+//                                log.warn("Multiple possible offerings for "
+//                                    + "partner "
+//                                    + psub.user() + " #" + psub.submitNumber()
+//                                    + "\non incorrect assignment offering "
+//                                    + psub.assignmentOffering());
+//                                for (AssignmentOffering ao : partnerOfferings)
+//                                {
+//                                    log.warn("\t" + ao);
+//                                }
+//                            }
+//
+//                            psub.setAssignmentOfferingRelationship(
+//                                partnerOfferings.get(0));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        applyLocalChanges();
+//        return null;
+//    }
 
 
     //~ Instance/static variables .............................................
