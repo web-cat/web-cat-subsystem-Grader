@@ -513,8 +513,10 @@ extends WCComponent
                 }
             }
         }
+        FeatureDescriptor[] descriptors =
+            new FeatureDescriptor[availablePlugins.size()];
         return new NSArray<FeatureDescriptor>(
-            (FeatureDescriptor[])availablePlugins.toArray());
+            availablePlugins.toArray(descriptors));
     }
 
 
