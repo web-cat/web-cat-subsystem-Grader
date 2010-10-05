@@ -621,8 +621,9 @@ public class Grader
         }
 
         // Parse the partner list and get the User objects.
-        // TODO change this to something a little more UI-friendly
+
         NSMutableArray<User> partners = new NSMutableArray<User>();
+        NSMutableArray<String> partnersNotFound = new NSMutableArray<String>();
 
         if (partnerList != null)
         {
@@ -636,14 +637,20 @@ public class Grader
                 {
                     User partner = User.userWithDomainAndName(
                         ec, session.user().authenticationDomain(), username);
+
                     if (partner != null)
                     {
                         partners.addObject(partner);
+                    }
+                    else
+                    {
+                        partnersNotFound.addObject(username);
                     }
                 }
             }
         }
 
+        result.setPartnersNotFound(partnersNotFound);
         result.startSubmission( currentSubNo, result.user() );
         result.submissionInProcess().setPartners( partners );
         result.submissionInProcess().setUploadedFile( file );

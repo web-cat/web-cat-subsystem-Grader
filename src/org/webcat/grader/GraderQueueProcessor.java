@@ -1000,6 +1000,9 @@ public class GraderQueueProcessor
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
 
+        // TODO Set this latest submission as the submission for grading
+        // job.submission().setIsSubmissionForGrading(true);
+
         try
         {
             if (job.submission() != null)
@@ -1011,6 +1014,10 @@ public class GraderQueueProcessor
                     // Force it to be marked as a partner submission as
                     // a stop-gap until we find the real problem.
                     partneredSubmission.setPartnerLink(true);
+
+                    // TODO Set the partnered submissions as the submission for
+                    // grading as well.
+                    // partneredSubmission.setIsSubmissionForGrading(true);
                 }
             }
         }

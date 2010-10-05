@@ -2,6 +2,26 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head>
 <title>Web-CAT Grader Submission Response</title>
+<wo:if condition="$shouldRefreshImmediately">
+<meta http-equiv="refresh" content="0;url=<wo:str value="$resultsURL"/>" />
+</wo:if>
+<style type="text/css">
+body {
+    font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 125%;
+}
+.warning {
+    padding: 10px;
+    border: 1px solid #888800;
+    background-color: #FFFFCC;
+}
+.error {
+    padding: 10px;
+    border: 1px solid #880000;
+    background-color: #FFCCCC;
+}
+</style>
 </head><body>
 <wo:not condition="$criticalError">
   <wo:if condition="$notAcceptingSubmissions">
@@ -27,15 +47,30 @@
       </wo:if>
       <wo:else>
         <p>Your submission has been received by the Web-CAT Grader
-        and is being processed.  You can
-        <wo:link href="$resultsURL">view your graded results</wo:link>
-        on-line.</p>
+        and is being processed.  If you are not automatically redirected
+        to your graded results,
+        <wo:link href="$resultsURL">click here to view them.</wo:link>
+        </p>
       </wo:else>
     </wo:else>
   </wo:else>
 </wo:not>
 
-<wo:if condition="$error"><p>
-  <span stlye="color:red"><wo:str value="$message"/></span>
+<wo:if condition="$error"><p class="error">
+  <wo:str value="$message"/>
 </p></wo:if>
+
+<wo:if condition="$partnersNotFound.count"><div class="warning">
+    Your submission was successful, but Web-CAT could not find the following
+    partners that you entered. Are you sure that you typed their
+    <b>Web-CAT user names</b> correctly?
+    <ul><wo:loop list="$partnersNotFound" item="$aPartnerNotFound">
+        <li><wo:str value="$aPartnerNotFound"/></li>
+    </wo:loop></ul>
+    If one or more of your partners is in the list above, please make sure that
+    you correctly entered their <b>user names</b> (not their real names) and
+    make another submission so that they will also be able to view their
+    results and receive credit for the assignment.
+</div></wo:if>
+
 </body></html>
