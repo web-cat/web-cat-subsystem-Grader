@@ -38,6 +38,9 @@ HTMLArea.Config = function () {
     // in the size or not.
     this.sizeIncludesToolbar = true;
 
+    // Added: allevato, 2010.10.06
+    this._areCommentsHidden = false;
+
     this.bodyStyle = "background-color: #fff; font-family: verdana,sans-serif";
     this.editorURL = "http://web-cat.cs.vt.edu/htmlarea/";
     this.coreResourceURL = "http://web-cat.cs.vt.edu/";
@@ -62,7 +65,8 @@ HTMLArea.Config = function () {
             // [ "justifyleft", "justifycenter", "justifyright", "justifyfull", "separator" ],
             // [ "orderedlist", "unorderedlist", "outdent", "indent", "separator" ],
             // [ "forecolor", "backcolor", "textindicator", "separator" ],
-            ["createlink"]
+            ["createlink", "separator"],
+            ["showhidec"]
             // [ "htmlmode", "separator" ]
             // [ "horizontalrule", "createlink", "insertimage", "inserttable", "htmlmode", "separator" ],
             // [ "popupeditor", "about" ]
@@ -148,7 +152,8 @@ HTMLArea.Config = function () {
         //htmlmode:       ["HtmlMode",             "Toggle HTML Source", "ed_html.gif",              true],
         //popupeditor:    ["popupeditor",          "Enlarge Editor",     "fullscreen_maximize.gif",  true],
         //about:          ["about",                "About this editor",  "ed_about.gif",             true],
-        help:           ["showhelp",             "Help using editor",  "ed_help.gif",              true]
+        help:           ["showhelp",             "Help using editor",  "ed_help.gif",              true],
+        showhidec:      ["ShowHideC",            "Show/Hide Comments", "ed_showhidec.gif",         false],
     };
 
     // initialize tooltips from the I18N module
@@ -846,6 +851,7 @@ HTMLArea.prototype._insertComment = function(param) {
     var doc = editor._doc;
     var box_number = this._messageCounter;
 
+    
     function createMessageBox(parentid)
     {
     box_number++;
@@ -1300,6 +1306,30 @@ HTMLArea.prototype._insertTable = function() {
  *  Category: EVENT HANDLERS
  ***************************************************/
 
+/**
+ * Added: allevato, 2010.10.06
+ */
+HTMLArea.prototype.setCommentsVisible = function(visible) {
+    var editor = this;
+    var doc = editor._doc;
+    var table = doc.getElementById('bigtab');
+    var rows = table.rows;
+    for (var i = 0; i < rows.length; i++)
+    {
+        var row = rows[i];
+        if (row.id.match(/I\d+:\d+:\d+/))
+        {
+            row.style.display =
+                editor._areCommentsHidden ? 'none' : 'table-row';
+        }
+    }
+};
+HTMLArea.prototype._showHideComments = function() {
+    var editor = this;
+    editor._areCommentsHidden = !editor._areCommentsHidden;
+    editor.setCommentsVisible(!editor._areCommentsHidden);
+};
+
 // txt is the name of the button, as in config.toolbar
 HTMLArea.prototype._buttonClicked = function(txt) {
     var editor = this;	// needed in nested functions
@@ -1347,6 +1377,9 @@ HTMLArea.prototype._buttonClicked = function(txt) {
         break;
            case "about":
         this._popupDialog("about.html", null, null);
+        break;
+        case "showhidec":
+        this._showHideComments();
         break;
         case "newc":
         this._insertComment("");
