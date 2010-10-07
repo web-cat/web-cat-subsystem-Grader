@@ -38,9 +38,6 @@ HTMLArea.Config = function () {
     // in the size or not.
     this.sizeIncludesToolbar = true;
 
-    // Added: allevato, 2010.10.06
-    this._areCommentsHidden = false;
-
     this.bodyStyle = "background-color: #fff; font-family: verdana,sans-serif";
     this.editorURL = "http://web-cat.cs.vt.edu/htmlarea/";
     this.coreResourceURL = "http://web-cat.cs.vt.edu/";
@@ -66,11 +63,24 @@ HTMLArea.Config = function () {
             // [ "orderedlist", "unorderedlist", "outdent", "indent", "separator" ],
             // [ "forecolor", "backcolor", "textindicator", "separator" ],
             ["createlink", "separator"],
-            ["showhidec"]
+            ["showhidecomments"]
             // [ "htmlmode", "separator" ]
             // [ "horizontalrule", "createlink", "insertimage", "inserttable", "htmlmode", "separator" ],
             // [ "popupeditor", "about" ]
         ];
+
+    /* added: allevato, 2010.10.06 */
+    this.showhidecomments = {
+        "Show all comments":      "showall",
+        "Hide all comments":      "hideall",
+        "Show errors only":       "Error",
+        "Show warnings only":     "Warning",
+        "Show questions only":    "Question",
+        "Show suggestions only":  "Suggestion",
+        "Show answers only":      "Answer",
+        "Show good only":         "Good",
+        "Show extra credit only": "Extra_Credit"
+    };
 
     this.category = {
         "Error":		"Error",
@@ -79,7 +89,7 @@ HTMLArea.Config = function () {
         "Suggestion":		"Suggestion",
         "Answer":		"Answer",
         "Good":			"Good",
-        "Extra Credit":		"Extra Credit"
+        "Extra Credit":		"Extra_Credit"
     };
     this.target = {
         "To Everyone":		"To Everyone",
@@ -152,8 +162,7 @@ HTMLArea.Config = function () {
         //htmlmode:       ["HtmlMode",             "Toggle HTML Source", "ed_html.gif",              true],
         //popupeditor:    ["popupeditor",          "Enlarge Editor",     "fullscreen_maximize.gif",  true],
         //about:          ["about",                "About this editor",  "ed_about.gif",             true],
-        help:           ["showhelp",             "Help using editor",  "ed_help.gif",              true],
-        showhidec:      ["ShowHideC",            "Show/Hide Comments", "ed_showhidec.gif",         false],
+        help:           ["showhelp",             "Help using editor",  "ed_help.gif",              true]
     };
 
     // initialize tooltips from the I18N module
@@ -243,6 +252,7 @@ HTMLArea.prototype._createToolbar = function () {
                 case "category":
                 case "target":
                 case "historylist":
+                case "showhidecomments":
                 options = editor.config[txt]; // HACK ;)
                 cmd = txt;
                 break;
@@ -851,7 +861,7 @@ HTMLArea.prototype._insertComment = function(param) {
     var doc = editor._doc;
     var box_number = this._messageCounter;
 
-    
+
     function createMessageBox(parentid)
     {
     box_number++;
@@ -974,7 +984,7 @@ HTMLArea.prototype._insertComment = function(param) {
         + ":D\" class=\"messageBox\"><img id=\"" + idTag
         + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/"
             + editor.getIcon(cat)
-        + ".gif\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
+        + ".png\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
         + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
         + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
         + ":N\">[" + editor.config.userName + "]"
@@ -1222,21 +1232,21 @@ HTMLArea.prototype.highlightLine = function(row) {
 HTMLArea.prototype.getIcon = function(cat) {
     var imgname = "";
     if(cat == "Error")
-        imgname = "exclaim";
+        imgname = "comment-error";
     else if(cat == "Good")
-        imgname = "check";
+        imgname = "comment-good";
     else if(cat == "Warning")
-        imgname = "caution";
+        imgname = "comment-warning";
     else if(cat == "Extra Credit")
-        imgname = "excred";
+        imgname = "comment-extracredit";
     else if(cat == "Suggestion")
-        imgname = "suggestion";
+        imgname = "comment-suggestion";
     else if(cat == "Question")
-        imgname = "help";
+        imgname = "comment-question";
     else if(cat == "Answer")
-        imgname = "answer";
+        imgname = "comment-answer";
     else
-        imgname = "help";
+        imgname = "comment-question";
 
     return imgname;
 };
@@ -1309,7 +1319,7 @@ HTMLArea.prototype._insertTable = function() {
 /**
  * Added: allevato, 2010.10.06
  */
-HTMLArea.prototype.setCommentsVisible = function(visible) {
+HTMLArea.prototype.changeCommentVisibility = function(type) {
     var editor = this;
     var doc = editor._doc;
     var table = doc.getElementById('bigtab');
@@ -1317,17 +1327,18 @@ HTMLArea.prototype.setCommentsVisible = function(visible) {
     for (var i = 0; i < rows.length; i++)
     {
         var row = rows[i];
-        if (row.id.match(/I\d+:\d+:\d+/))
+        var lastRow, lastRowType;
+
+        if (row.id.match(/O:\d+/))
         {
-            row.style.display =
-                editor._areCommentsHidden ? 'none' : 'table-row';
+            lastRowType = row.className;
+        }
+        else if (row.id.match(/I\d+:\d+:\d+/))
+        {
+            var shouldShow = (type == "showall" || type == lastRowType);
+            row.style.display = shouldShow ? 'table-row' : 'none';
         }
     }
-};
-HTMLArea.prototype._showHideComments = function() {
-    var editor = this;
-    editor._areCommentsHidden = !editor._areCommentsHidden;
-    editor.setCommentsVisible(!editor._areCommentsHidden);
 };
 
 // txt is the name of the button, as in config.toolbar
@@ -1408,6 +1419,7 @@ HTMLArea.prototype._comboSelected = function(el, txt) {
         case "fontsize":
         case "category":
         case "target":
+        case "showhidecomments":
         case "historylist":
         if((value != "") && (value != null)){
             this._execCommand(txt, false, value);
@@ -1454,6 +1466,9 @@ HTMLArea.prototype._execCommand = function(cmdID, UI, param) {
         break;
         case "historylist":
         this._doHistory(param);
+        break;
+        case "showhidecomments":
+        this.changeCommentVisibility(param);
         break;
         default:
         //if(this._doc.isContentEditable)
@@ -1534,7 +1549,7 @@ HTMLArea.prototype._doCategory = function(param) {
             Ctarget.innerHTML = "&nbsp\;" + param + "&nbsp\;"; // replace the inner string with the new category
             var Iidtofind = "I" + boxnum + ":" + parent + ":" + reference + ":I"; // search for the element that has the icon
             var Itarget = doc.getElementById(Iidtofind);
-            Itarget.setAttribute("src", this.config.coreResourceURL + "/icons/"+ this.getIcon(param) +".gif");// replace the src to be the new icon
+            Itarget.setAttribute("src", this.config.coreResourceURL + "/icons/"+ this.getIcon(param) +".png");// replace the src to be the new icon
             var pts = "";
             if(editor.config.viewPoints) // check to see if the user is authorized to view points
             {
@@ -1709,7 +1724,7 @@ HTMLArea.prototype.updateHistory = function() {
                             + ":B\"><tr id=\"" + idTag + ":R\"><td id=\"" + idTag
                             + ":D\" class=\"messageBox\"><img id=\"" + idTag
                             + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/" + editor.getIcon(cat)
-                            + ".gif\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
+                            + ".png\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
                             + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
                             + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
                             + ":N\">[" + editor.config.userName + "]"

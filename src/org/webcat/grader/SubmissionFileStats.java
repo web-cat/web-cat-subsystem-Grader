@@ -531,13 +531,19 @@ public class SubmissionFileStats
                                 "content[e|E]ditable=\"[false|true]\"",
                                 "contentEditable=\"" + isEditable + "\"" );
                             log.debug( newmes );
+
+                            String resUrl = WCResourceManager.resourceURLFor(
+                                    "images/blank.gif", "Core", null, null);
+                            resUrl = resUrl.substring(0,
+                                    resUrl.length() - "images/blank.gif".length());
+
                             String vals = "<table id=\"" + idnum
                                 + ":X\" border=\"0\" cellpadding=\"0\"><tbody "
                                 + "id=\"" + idnum + ":B\"><tr id=\"" + idnum
                                 + ":R\"><td id=\"" + idnum
                                 + ":D\" class=\"messageBox\"><img id=\""
                                 + idnum + ":I\" src=\""
-                                + thisComment.categoryIcon()
+                                + resUrl + thisComment.categoryIcon()
                                 + "\" border=\"0\"/><option id=\"" + idnum
                                 + ":T\" value=\"" + thisComment.to()
                                 + "\"/><b id=\"" + idnum + "\"> <span id=\""
@@ -606,8 +612,9 @@ public class SubmissionFileStats
                                     child.removeAttribute( "class" );
                                 }
                             }
-                            child.setAttribute( "class",
-                            SubmissionFileComment.categoryName( newcat ) );
+                            child.setAttribute("class",
+                                    SubmissionFileComment.categoryName(newcat)
+                                    .replaceAll("\\s", "_"));
                             // inserting the comment box
                             iterator.add( doc1.detachRootElement() );
                             iterator.add( doc2.detachRootElement() );

@@ -294,13 +294,13 @@ public class SubmissionFileComment
         };
     static private String[] categoryIcon = new String[]{
             "/icons/todo.gif",
-            "/icons/exclaim.gif",
-            "/icons/caution.gif",
-            "/icons/help.gif",
-            "/icons/suggestion.gif",
-            "/icons/answer.gif",
-            "/icons/check.gif",
-            "/icons/excred.gif"
+            "/icons/comment-error.png",
+            "/icons/comment-warning.png",
+            "/icons/comment-question.png",
+            "/icons/comment-suggestion.png",
+            "/icons/comment-answer.png",
+            "/icons/comment-good.png",
+            "/icons/comment-extracredit.png"
         };
     static Logger log = Logger.getLogger( SubmissionFileComment.class );
 }
