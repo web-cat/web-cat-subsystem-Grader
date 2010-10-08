@@ -151,30 +151,43 @@ public class SubmissionInProcess
      */
     public boolean submissionInProcess()
     {
-        return submission != null;
+        return user != null;
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Get the submission currently in progress.
-     * @return The submission object, or null if none is in procress
+     * Begin a submission for the specified user with the specified
+     * submission number.
+     * @param forUser The user making the submission
+     * @param subNumber The number of the user's submission
      */
-    public Submission submission()
+    public void startSubmission(User forUser, int subNumber)
     {
-        return submission;
+        user = forUser;
+        submitNumber = subNumber;
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Set the submission currently in progress.
-     * @param submission The submission object, or null to indicate no
-     * submission is in progress anymore
+     * Get the user making the submission currently in progress.
+     * @return The user, or null if none is in process
      */
-    public void setSubmission( Submission submission )
+    public User user()
     {
-        this.submission = submission;
+        return user;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get the number of the submission currently in progress.
+     * @return The number, or -1 if none is in process
+     */
+    public int submitNumber()
+    {
+        return submitNumber;
     }
 
 
@@ -222,6 +235,19 @@ public class SubmissionInProcess
 
     // ----------------------------------------------------------
     /**
+     * End the current submission in process, if there is one, and clear
+     * any upload file data.
+     */
+    public void cancelSubmission()
+    {
+        user = null;
+        submitNumber = -1;
+        clearUpload();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Clear info related to the uploaded file.
      */
     public void clearUpload()
@@ -237,6 +263,7 @@ public class SubmissionInProcess
     private NSData                 uploadedFile;
     private String                 uploadedFileName;
     private NSArray<IArchiveEntry> uploadedFileList;
-    private Submission             submission;
+    private User                   user;
+    private int                    submitNumber = -1;
     private NSArray<User>          partners;
 }

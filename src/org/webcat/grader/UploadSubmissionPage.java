@@ -313,9 +313,8 @@ public class UploadSubmissionPage
             {
                 setLocalUser(submitAsStudent);
                 int currentSubNo = fillDisplayGroup(user());
-                submissionInProcess().submission().setSubmitNumber(
-                    currentSubNo);
-                submissionInProcess().submission().setUserRelationship(user());
+                // restart the submission with a new user/number
+                submissionInProcess().startSubmission(user(), currentSubNo);
             }
 
             submissionInProcess().setPartners(partnersForEditing);

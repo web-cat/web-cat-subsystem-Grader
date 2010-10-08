@@ -78,9 +78,8 @@ public class ConfirmSubmissionPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "The submission number is "
-                   + submissionInProcess().submission().submitNumber() );
-        if ( !submissionInProcess().hasValidFileUpload() )
+        if ( !submissionInProcess().submissionInProcess()
+            || !submissionInProcess().hasValidFileUpload() )
         {
             WOComponent prevPage = back();
             if ( prevPage != null )
@@ -92,6 +91,8 @@ public class ConfirmSubmissionPage
                 return;
             }
         }
+        log.debug( "The submission number is "
+            + submissionInProcess().submitNumber() );
         if ( submissionInProcess().uploadedFileList() == null )
         {
             // Initialize the list of files contained in this submission,

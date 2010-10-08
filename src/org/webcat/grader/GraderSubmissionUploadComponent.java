@@ -87,12 +87,8 @@ public class GraderSubmissionUploadComponent
      */
     public void startSubmission(int submitNumber, User user)
     {
-        Submission submission = Submission.create(localContext(), false);
-        submission.setSubmitNumber(submitNumber);
-        submission.setUserRelationship(user);
-
         log.debug("startSubmission( " + submitNumber + ", " + user + " )");
-        submissionInProcess().setSubmission(submission);
+        submissionInProcess().startSubmission(user, submitNumber);
     }
 
 
@@ -111,7 +107,10 @@ public class GraderSubmissionUploadComponent
     {
         String errorMessage = null;
         log.debug( "committing submission" );
-        Submission submission = submissionInProcess().submission();
+
+        Submission submission = Submission.create(localContext(), false);
+        submission.setSubmitNumber(submissionInProcess().submitNumber());
+        submission.setUserRelationship(submissionInProcess().user());
         String uploadedFileName = submissionInProcess().uploadedFileName();
         submission.setSubmitTime( submitTime );
         submission.setFileName( uploadedFileName );
@@ -127,8 +126,7 @@ public class GraderSubmissionUploadComponent
 
         if (submissionInProcess().partners() != null)
         {
-            submissionInProcess().submission().partnerWith(
-                submissionInProcess().partners());
+            submission.partnerWith(submissionInProcess().partners());
         }
 
         // Then, make the necessary directory.
@@ -145,7 +143,7 @@ public class GraderSubmissionUploadComponent
                     "Exception creating submission directory").send();
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
-            submissionInProcess().setSubmission( null );
+            submissionInProcess().cancelSubmission();
             applyLocalChanges();
             return "A file error occurred while saving your "
                    + "submission.  The error has been reported "
@@ -170,7 +168,7 @@ public class GraderSubmissionUploadComponent
                     "Exception uploading submission file").send();
             localContext().deleteObject( submission );
             prefs().setSubmissionRelationship( null );
-            submissionInProcess().setSubmission( null );
+            submissionInProcess().cancelSubmission();
             applyLocalChanges();
             return "A file error occurred while saving your "
                    + "submission.  The error has been reported "
@@ -208,8 +206,8 @@ public class GraderSubmissionUploadComponent
 
         Grader.getInstance().graderQueue().enqueue( null );
 
-        submissionInProcess().clearUpload();
-        submissionInProcess().setSubmission(null);
+        // reset the submission in process so it is clear again
+        submissionInProcess().cancelSubmission();
 
         return errorMessage;
     }
@@ -222,16 +220,7 @@ public class GraderSubmissionUploadComponent
      */
     public void clearSubmission()
     {
-        if ( submissionInProcess().submissionInProcess() )
-        {
-            Submission submission = submissionInProcess().submission();
-            if ( submission != null && submission.result() == null )
-            {
-                localContext().deleteObject( submission );
-                prefs().setSubmissionRelationship( null );
-            }
-            submissionInProcess().setSubmission(null);
-        }
+        submissionInProcess().cancelSubmission();
     }
 
 
