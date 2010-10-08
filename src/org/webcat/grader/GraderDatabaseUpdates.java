@@ -326,6 +326,10 @@ public class GraderDatabaseUpdates
 //            "ALTER TABLE TSUBMISSION ADD INDEX (CASSIGNMENTID)");
 //        database().executeSQL(
 //            "ALTER TABLE TSUBMISSION ADD INDEX (CUSERID)");
+//        database().executeSQL(
+//            "ALTER TABLE TSUBMISSION ADD INDEX (primarySubmissionId)");
+//        database().executeSQL(
+//            "ALTER TABLE TSUBMISSION ADD INDEX (CRESULTID)");
 //    }
 
 
