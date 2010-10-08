@@ -134,7 +134,7 @@ public class EditAssignmentPage
             else
             {
                 @SuppressWarnings("unchecked")
-                NSDictionary<Object, Object> params =
+                NSMutableDictionary<Object, Object> params =
                     offeringGroup.queryMatch();
                 params.put("courseOffering.semester", selectedSemester);
             }
