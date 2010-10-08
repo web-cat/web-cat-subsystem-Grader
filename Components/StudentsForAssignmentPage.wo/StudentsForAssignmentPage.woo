@@ -10,5 +10,13 @@
             selectsFirstObjectAfterFetch = YES; 
             sortOrdering = ({class = EOSortOrdering; key = user.name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
         }; 
+        staffSubmissionDisplayGroup = {
+            class = ERXDisplayGroup; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 100; 
+            selectsFirstObjectAfterFetch = YES; 
+            sortOrdering = ({class = EOSortOrdering; key = user.name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = user.userName; selectorName = "compareCaseInsensitiveAscending:"; }); 
+        }; 
     }; 
 }

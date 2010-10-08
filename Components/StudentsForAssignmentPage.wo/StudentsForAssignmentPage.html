@@ -50,9 +50,45 @@
 
 </wo:org.webcat.core.WCPageModule>
 
+<wo:if condition="$staffSubmissionDisplayGroup.allObjects.count">
+<wo:org.webcat.core.WCPageModule title="Staff Submissions">
+
+    <table><thead>
+    <tr class="batchnav"><td colspan="7"><wo name="BatchNavigator"/></td>
+        <wo name="UsesToolCheckScore"><td></td></wo>
+        <wo name="UsesBonusesOrPenalties"><td></td></wo>
+    </tr>
+    <tr><th class="sm">Done?<wo name="WCSortOrder3"/></th>
+        <th>Name<wo name="WCSortOrder1"/></th>
+        <th class="sm">Sub No.</th>
+        <th>Time<wo name="WCSortOrder4"/></th>
+        <th class="sm">Testing</th>
+        <wo name="UsesToolCheckScore"><th class="sm">Tool Checks</th></wo>
+        <th>TA</th>
+        <wo name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></wo>
+        <th class="sm">Score<wo name="WCSortOrder5"/></th>
+    </tr></thead><tbody>
+    <wo name="Repetition2"><wo name="TR2">
+        <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
+        <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
+        <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
+        (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
+        <td class="sm"><wo name="SubmitTime"/></td>
+        <td class="n"><wo name="TestingScore"/></td>
+        <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
+        <td class="n"><wo name="EditScore"><wo name="HasTAScore"><wo name="TAScore"/></wo><wo name="NoTAScore">&lt;edit&gt;</wo></wo></td>
+        <wo name="UsesBonusesOrPenalties"><td class="n"><wo name="ScoreAdjustment"/></td></wo>
+        <td class="n"><wo name="FinalScore"/></td>
+    </wo></wo>
+    </tbody></table>
+
+</wo:org.webcat.core.WCPageModule>
+</wo:if>
+
 <wo:if condition="$user.hasAdminPrivileges">
 <wo:org.webcat.core.WCPageModule title="Text/HTML Comments" open="false">
 
+  <wo:link action="$repartner">Recalculate partner assignment offerings</wo:link>
   <table><thead>
     <tr><th>Have Text Comments</th></tr>
   </thead><tbody>

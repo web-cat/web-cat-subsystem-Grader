@@ -1,5 +1,5 @@
 AvgScore: WOString {
-    value = avgScore;
+    value = studentStats.mean;
     numberformat = "0.0";
 }
 
@@ -24,12 +24,12 @@ HasTAScore: WOConditional {
 }
 
 HighScore: WOString {
-    value = highScore;
+    value = studentStats.max;
     numberformat = "0.0";
 }
 
 LowScore: WOString {
-    value = lowScore;
+    value = studentStats.min;
     numberformat = "0.0";
 }
 
@@ -62,6 +62,12 @@ Repetition1: WORepetition {
     item  = aSubmission;
     list  = submissionDisplayGroup.displayedObjects;
     index = index;
+}
+
+Repetition2: WORepetition {
+    item  = aSubmission;
+    list  = staffSubmissionDisplayGroup.displayedObjects;
+    index = staffIndex;
 }
 
 ScoreAdjustment: WOString {
@@ -127,6 +133,10 @@ ToolScore: WOString {
 
 TR: org.webcat.core.TableRow {
     index = index;
+}
+
+TR2: org.webcat.core.TableRow {
+    index = staffIndex;
 }
 
 UsesBonusesOrPenalties: WOConditional {
