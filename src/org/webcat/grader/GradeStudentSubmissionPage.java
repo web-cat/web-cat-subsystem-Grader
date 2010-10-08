@@ -451,6 +451,28 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
+    public Byte commentFormat()
+    {
+        Byte format = SubmissionResult.formats.get(0);
+        if (result != null)
+        {
+            format = SubmissionResult.formats.get(result.commentFormat());
+        }
+        return format;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setCommentFormat(Byte format)
+    {
+        if (format != null && result != null)
+        {
+            result.setCommentFormat(format.byteValue());
+        }
+    }
+
+
+    // ----------------------------------------------------------
     public Boolean showAutoGradedComments()
     {
         if (showAutoGradedComments == null)

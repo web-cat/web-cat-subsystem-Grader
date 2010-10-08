@@ -1,7 +1,7 @@
 CommentFormat: WCFilteringSelect {
     list	          = formats;
     item   	          = aFormat;
-    selection         = result.commentFormat;
+    selection         = commentFormat;
     displayString     = formatLabel;
 //	noSelectionString = "Select from your files ...";
 }
