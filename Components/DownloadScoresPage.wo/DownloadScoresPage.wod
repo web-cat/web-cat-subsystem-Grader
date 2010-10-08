@@ -23,13 +23,6 @@ Moodle: WORadioButton {
     checked = useMoodleFormat;
 }
 
-AssignNo: WOTextField {
-	numberformat = "0";
-	size = 5;
-	value = assignmentOffering.moodleId;
-}
-
-
 Full: WORadioButton {
     name = "Group";
     checked = useFullFormat;

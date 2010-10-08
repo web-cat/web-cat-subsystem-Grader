@@ -98,24 +98,6 @@ LastTR: org.webcat.core.TableRow {
     index = index;
 }
 
-MoodleId: WCTextBox {
-    numberformat = "0";
-    value        = assignment.moodleId;
-    id           = "moodleid";
-    style        = "width: 6em;";
-}
-
-MoodleIdInfo: org.webcat.core.PopUpInfo {
-    title   = "Moodle Id";
-    message = "If you are using our Moodle for your course web site and it has extensions to support uploading CSV gradebook information, place your Moodle course\'s ID in this slot.  Otherwise, leave it blank.";
-}
-
-OverrideMoodleId: WCTextBox {
-    size = 8;
-    numberformat = "0";
-    value = thisOffering.moodleId;
-}
-
 Name: WCTextBox {
     value = assignment.name;
     id    = "name";
