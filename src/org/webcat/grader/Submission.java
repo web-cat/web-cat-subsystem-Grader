@@ -73,6 +73,7 @@ public class Submission
      * {@link #dirName()}.
      * @return the description
      */
+    @Override
     public String userPresentableDescription()
     {
         if ( fileName() != null )
@@ -578,6 +579,7 @@ public class Submission
 
 
     // ----------------------------------------------------------
+    @Override
     public void setIsSubmissionForGrading(boolean value)
     {
         super.setIsSubmissionForGrading(value);
@@ -664,11 +666,11 @@ public class Submission
         // this method is temporarily disabled until the auto-migration
         // performance problems can be worked out.
 
-//        return (partnerLink() && primarySubmission() == null)
-//            || (!partnerLink()
-//                && result() != null
-//                && result().submissions().count() > 1
-//                && partneredSubmissions().count() == 0);
+//        return result() != null
+//            && ((partnerLink() && primarySubmission() == null)
+//                || (!partnerLink()
+//                    && result().submissions().count() > 1
+//                    && partneredSubmissions().count() == 0));
         return false;
     }
 
@@ -687,11 +689,11 @@ public class Submission
     public void migratePartnerLink()
     {
         // guard from shouldMigratePartnerLink()
-        if (!((partnerLink() && primarySubmission() == null)
-             || (!partnerLink()
-                 && result() != null
-                 && result().submissions().count() > 1
-                 && partneredSubmissions().count() == 0)))
+        if (!(result() != null
+              && ((partnerLink() && primarySubmission() == null)
+                  || (!partnerLink()
+                      && result().submissions().count() > 1
+                      && partneredSubmissions().count() == 0))))
         {
             return;
         }
@@ -798,6 +800,7 @@ public class Submission
     /**
      * Flush any cached data stored by the object in memory.
      */
+    @Override
     public void flushCaches()
     {
         // Clear the in-memory cache of the all-submissions chain so that it
@@ -1519,8 +1522,8 @@ public class Submission
         if (relativePath.startsWith("../") || relativePath.startsWith("/"))
         {
             throw new IllegalArgumentException(
-                    "Path must not include parent directory or root directory" +
-                    "components");
+                "Path must not include parent directory or root directory"
+                + "components");
         }
 
         File file = new File(resultDirName(), relativePath);
@@ -1528,7 +1531,7 @@ public class Submission
         if (file.isDirectory())
         {
             throw new IllegalArgumentException(
-                    "Path must be a file, not a directory");
+            "Path must be a file, not a directory");
         }
 
         return ERXFileUtilities.stringFromFile(file);
@@ -1567,6 +1570,396 @@ public class Submission
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Find all submissions that are used for scoring for a given
+     * assignment by the specified users.
+     *
+     * @param anAssignmentOffering The offering to search for.
+     * @param omitPartners       If false, include submissions from all
+     *                           partners working together.  If true,
+     *                           include only the primary submitter's
+     *                           submission.
+     * @param users              The list of users to find submissions for.
+     * @param accumulator        If non-null, use this object to accumulate
+     *                           descriptive summary statistics about the
+     *                           submissions.
+     * @return An array of the submissions found.
+     */
+    public static NSArray<Submission> submissionsForGrading(
+        EOEditingContext   ec,
+        AssignmentOffering anAssignmentOffering,
+        boolean            omitPartners,
+        NSArray<User>      users,
+        CumulativeStats    accumulator)
+    {
+        Submissions pair = submissionsForGradingWithMigration(
+            ec, anAssignmentOffering, omitPartners, users, accumulator);
+        if (pair.brokenPartners.count() > 0)
+        {
+            // On the first fetch, some partner subs were found that
+            // were hooked to the wrong assignment, and they were updated.
+            // So re-execute the action to pull in all the results after
+            // this fix.
+            pair = submissionsForGradingWithMigration(
+                ec, anAssignmentOffering, omitPartners, users, accumulator);
+            if (pair.brokenPartners.count() > 0)
+            {
+                log.error("submissionsForGrading() still found broken "
+                    + "partner submissions after two rounds.");
+            }
+        }
+        return pair.subs;
+    }
+
+
+    // ----------------------------------------------------------
+    private static class Submissions
+    {
+        public NSArray<Submission> subs;
+        public NSArray<Submission> brokenPartners;
+        public Submissions(
+            NSArray<Submission> subs, NSArray<Submission> brokenPartners)
+        {
+            this.subs = subs;
+            this.brokenPartners = brokenPartners;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Find all submissions that are used for scoring for a given
+     * assignment by the specified users.
+     *
+     * @param anAssignmentOffering The offering to search for.
+     * @param omitPartners       If false, include submissions from all
+     *                           partners working together.  If true,
+     *                           include only the primary submitter's
+     *                           submission.
+     * @param users              The list of users to find submissions for.
+     * @param accumulator        If non-null, use this object to accumulate
+     *                           descriptive summary statistics about the
+     *                           submissions.
+     * @return An array of the submissions found.
+     */
+    private static Submissions submissionsForGradingWithMigration(
+        EOEditingContext   ec,
+        AssignmentOffering anAssignmentOffering,
+        boolean            omitPartners,
+        NSArray<User>      users,
+        CumulativeStats    accumulator)
+    {
+        NSMutableArray<Submission> subs =
+            new NSMutableArray<Submission>(users.count());
+        NSMutableArray<Submission> brokenPartners =
+            new NSMutableArray<Submission>();
+
+        for (User student : users)
+        {
+            NSArray<Submission> candidates =
+                Submission.objectsMatchingQualifier(
+                    ec,
+                    Submission.assignmentOffering.eq(anAssignmentOffering).and(
+//                        Submission.result.isNotNull()).and(
+                            Submission.user.eq(student)));
+
+            Submission mostRecent = null;
+            Submission forGrading = null;
+            for (Submission sub : candidates)
+            {
+                if (sub.result() == null)
+                {
+                    continue;
+                }
+                // Check to see if any partners are accidentally broken,
+                // and point to the wrong assignment due to an earlier bug
+                // in partnerWith()
+                for (Submission psub : sub.result().submissions())
+                {
+                    if (psub != sub
+                        && psub.assignmentOffering() != null
+                        && sub.assignmentOffering() != null
+                        && psub.assignmentOffering().assignment() !=
+                            sub.assignmentOffering().assignment())
+                    {
+                        brokenPartners.add(psub);
+                    }
+                }
+                sub.migratePartnerLink();
+                if (mostRecent == null
+                    || sub.submitNumber() > mostRecent.submitNumber())
+                {
+                    mostRecent = sub;
+                }
+
+                if (sub.result().status() != Status.TO_DO
+                        && (forGrading == null
+                            || sub.submitNumber()
+                                > forGrading.submitNumber()))
+                {
+                    forGrading = sub;
+                }
+            }
+
+            if (forGrading != null)
+            {
+                if (!(omitPartners && forGrading.partnerLink()))
+                {
+                    subs.add(forGrading);
+                    if (accumulator != null)
+                    {
+                        accumulator.accumulate(forGrading);
+                    }
+                }
+            }
+            else if (mostRecent != null)
+            {
+                if (!(omitPartners && mostRecent.partnerLink()))
+                {
+                    subs.add(mostRecent);
+                    if (accumulator != null)
+                    {
+                        accumulator.accumulate(mostRecent);
+                    }
+                }
+            }
+
+            // If any partner submissions that were incorrectly hooked to
+            // the wrong assignment were found, patch them now.
+            if (brokenPartners.count() > 0)
+            {
+                EOEditingContext partnerEC =
+                    Application.newPeerEditingContext();
+                try
+                {
+                    partnerEC.lock();
+                    AssignmentOffering offering =
+                        anAssignmentOffering.localInstance(partnerEC);
+                    for (Submission sub : brokenPartners)
+                    {
+                        Submission psub = sub.localInstance(partnerEC);
+                        log.warn("found partner submission "
+                            + psub.user() + " #" + psub.submitNumber()
+                            + "\non incorrect assignment offering "
+                            + psub.assignmentOffering());
+
+                        NSArray<AssignmentOffering> partnerOfferings =
+                            AssignmentOffering.objectsMatchingQualifier(
+                                partnerEC,
+                                AssignmentOffering.courseOffering
+                                    .dot(CourseOffering.course).eq(
+                                        offering.courseOffering().course())
+                                .and(AssignmentOffering.courseOffering
+                                    .dot(CourseOffering.students).eq(
+                                        psub.user()))
+                                .and(AssignmentOffering.assignment
+                                .eq(offering.assignment())));
+                        if (partnerOfferings.count() == 0)
+                        {
+                            log.error("Cannot locate correct assignment "
+                                + "offering for partner"
+                                + psub.user() + " #" + psub.submitNumber()
+                                + "\non incorrect assignment offering "
+                                + psub.assignmentOffering());
+                        }
+                        else
+                        {
+                            if (partnerOfferings.count() > 1)
+                            {
+                                log.warn("Multiple possible offerings for "
+                                    + "partner "
+                                    + psub.user() + " #" + psub.submitNumber()
+                                    + "\non incorrect assignment offering "
+                                    + psub.assignmentOffering());
+                                for (AssignmentOffering ao : partnerOfferings)
+                                {
+                                    log.warn("\t" + ao);
+                                }
+                            }
+
+                            psub.setAssignmentOfferingRelationship(
+                                partnerOfferings.get(0));
+                        }
+                    }
+                    partnerEC.saveChanges();
+                }
+                catch (Exception e)
+                {
+                    log.error("Cannot update broken partner submissions", e);
+                }
+                finally
+                {
+                    partnerEC.unlock();
+                    Application.releasePeerEditingContext(partnerEC);
+                }
+            }
+        }
+
+        return new Submissions(subs, brokenPartners);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Find all submissions that are used for scoring for a given
+     * assignment.
+     *
+     * @param anAssignmentOffering The offering to search for.
+     * @param omitPartners       If false, include submissions from all
+     *                           partners working together.  If true,
+     *                           include only the primary submitter's
+     *                           submission.
+     * @param omitStaff          If true, leave out course staff.
+     * @param accumulator        If non-null, use this object to accumulate
+     *                           descriptive summary statistics about the
+     *                           submissions.
+     * @return An array of the submissions found.
+     */
+    public static NSArray<Submission> submissionsForGrading(
+        EOEditingContext   ec,
+        AssignmentOffering anAssignmentOffering,
+        boolean            omitPartners,
+        boolean            omitStaff,
+        CumulativeStats    accumulator)
+    {
+        CourseOffering courseOffering = anAssignmentOffering.courseOffering();
+        NSArray<User> users = omitStaff
+            ? courseOffering.studentsWithoutStaff()
+            : courseOffering.studentsAndStaff();
+        return submissionsForGrading(
+            ec, anAssignmentOffering, omitPartners, users, accumulator);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * A class used to accumulate basic descriptive statistics about
+     * multiple submission results.
+     */
+    public static class CumulativeStats
+    {
+        //~ Fields ............................................................
+
+        private double min;
+        private double max;
+        private double total;
+        private int    count;
+
+
+        //~ Constructors ......................................................
+
+        // ----------------------------------------------------------
+        /**
+         * Create a new, empty object.
+         */
+        public CumulativeStats()
+        {
+            min = 0.0;
+            max = 0.0;
+            total = 0.0;
+            count = 0;
+        }
+
+
+        //~ Methods ...........................................................
+
+        // ----------------------------------------------------------
+        /**
+         * Accumulate data about the given submission result.
+         * @param subResult The submission result to add
+         */
+        public void accumulate(SubmissionResult subResult)
+        {
+            double score = subResult.finalScore();
+            if (count == 0)
+            {
+                min = score;
+                max = score;
+            }
+            else
+            {
+                if (score < min)
+                {
+                    min = score;
+                }
+                if (score > max)
+                {
+                    max = score;
+                }
+            }
+            total += score;
+            ++count;
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Accumulate data about the given submission, if it has a result.
+         * @param submission The submission to add
+         */
+        public void accumulate(Submission submission)
+        {
+            if (submission.result() != null)
+            {
+                accumulate(submission.result());
+            }
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Retrieve the minimum final score of all submission results
+         * accumulated so far.
+         * @return The minimum score
+         */
+        public double min()
+        {
+            return min;
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Retrieve the maximum final score of all submission results
+         * accumulated so far.
+         * @return The maximum score
+         */
+        public double max()
+        {
+            return max;
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Retrieve the mean (average) final score over all submission
+         * results accumulated so far.
+         * @return The mean score
+         */
+        public double mean()
+        {
+            return (count > 1)
+                ? (total / count)
+                : total;
+        }
+
+
+        // ----------------------------------------------------------
+        public String toString()
+        {
+            return "stats: "
+                + count
+                + " subs: hi = "
+                + max()
+                + ", low = "
+                + min()
+                + ", avg = "
+                + mean();
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
     private int aoSubmissionsCountCache;
@@ -1578,5 +1971,5 @@ public class Submission
     private static final NSArray<Submission> NO_SUBMISSIONS =
         new NSArray<Submission>();
 
-    static Logger log = Logger.getLogger( Submission.class );
+    static Logger log = Logger.getLogger(Submission.class);
 }
