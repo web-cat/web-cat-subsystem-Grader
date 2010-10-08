@@ -24,7 +24,6 @@ package org.webcat.grader;
 import com.Ostermiller.util.ExcelCSVPrinter;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
-import er.extensions.foundation.ERXArrayUtilities;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import org.apache.log4j.Logger;
@@ -60,7 +59,7 @@ public class DownloadScoresPage
     /** Value of the corresponding checkbox on the page. */
     public boolean omitStaff = true;
     public boolean useBlackboardFormat;
-    public boolean useMoodleFormat;
+    public boolean useMoodleFormat = true;
     public boolean useFullFormat;
 
     public AssignmentOffering assignmentOffering;
@@ -89,19 +88,6 @@ public class DownloadScoresPage
                         AssignmentOffering.ASSIGNMENT_KEY,
                         assignment);
             }
-        }
-
-        if (assignmentOffering.moodleId() != null)
-        {
-            useBlackboardFormat = false;
-            useMoodleFormat     = true;
-            useFullFormat       = false;
-        }
-        else
-        {
-            useBlackboardFormat = true;
-            useMoodleFormat     = false;
-            useFullFormat       = false;
         }
         super.beforeAppendToResponse(response, context);
     }
@@ -209,9 +195,7 @@ public class DownloadScoresPage
         if (targetMoodle)
         {
             out.print("username");
-            Number moodleAssignmentNo = assignmentOffering.moodleId();
-            out.println(moodleAssignmentNo == null
-                ? "" : moodleAssignmentNo.toString());
+            out.println(assignmentOffering.assignment().name());
         }
         else
         {
@@ -248,99 +232,9 @@ public class DownloadScoresPage
     {
         NSArray<User> students = omitStaff
             ? assignmentOffering.courseOffering().studentsWithoutStaff()
-            : assignmentOffering.courseOffering().students();
-        submissionsToExport = new NSMutableArray<Submission>();
-        if (students != null)
-        {
-            for (User student : students)
-            {
-                log.debug("checking " + student.userName() + ", " + student);
-
-                Submission thisSubmission = null;
-                Submission gradedSubmission = null;
-                // Find the submission
-                NSArray<Submission> thisSubmissionSet =
-                    Submission.objectsMatchingValues(
-                        localContext(),
-                        Submission.USER_KEY,
-                        student,
-                        Submission.ASSIGNMENT_OFFERING_KEY,
-                        assignmentOffering
-                    );
-                log.debug("searching for submissions");
-                for (Submission sub : thisSubmissionSet)
-                {
-                    log.debug("\tsub #" + sub.submitNumber() + " "
-                        + sub.partnerLink());
-                    if (sub.result() != null)
-                    {
-                        if (log.isDebugEnabled()
-                            && sub.result().submissions().count() > 1)
-                        {
-                            log.debug("\t  has partners");
-                            for (Submission psub : sub.result().submissions())
-                            {
-                                if (psub != sub)
-                                {
-                                    log.debug("\t    partner = "
-                                        + psub.user()
-                                        + " #"
-                                        + psub.submitNumber()
-                                        + " "
-                                        + psub.partnerLink()
-                                        + " to "
-                                        + psub.assignmentOffering());
-                                }
-                            }
-                        }
-
-                        if (thisSubmission == null)
-                        {
-                            thisSubmission = sub;
-                        }
-                        else if (sub.submitNumberRaw() != null)
-                        {
-                            int num = sub.submitNumber();
-                            if (num > thisSubmission.submitNumber())
-                            {
-                                thisSubmission = sub;
-                            }
-                        }
-                        if (sub.result().status() != Status.TO_DO)
-                        {
-                            if (gradedSubmission == null)
-                            {
-                                gradedSubmission = sub;
-                            }
-                            else if (sub.submitNumberRaw() != null)
-                            {
-                                int num = sub.submitNumber();
-                                if (num > gradedSubmission.submitNumber())
-                                {
-                                    gradedSubmission = sub;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (gradedSubmission != null)
-                {
-                    thisSubmission = gradedSubmission;
-                }
-                if (thisSubmission != null)
-                {
-                    // TODO: fix this with auto-migration
-                    thisSubmission.migratePartnerLink();
-                    log.debug("\t saving for export = "
-                              + thisSubmission.submitNumber());
-                    submissionsToExport.addObject(thisSubmission);
-                }
-                else
-                {
-                    log.debug("no submission found");
-                }
-            }
-        }
+            : assignmentOffering.courseOffering().studentsAndStaff();
+        submissionsToExport = Submission.submissionsForGrading(
+            localContext(), assignmentOffering, false, students, null);
     }
 
 
@@ -381,7 +275,7 @@ public class DownloadScoresPage
 
     //~ Instance/static variables .............................................
 
-    private NSMutableArray<Submission> submissionsToExport;
+    private NSArray<Submission> submissionsToExport;
 
     static Logger log = Logger.getLogger(DownloadScoresPage.class);
 }
