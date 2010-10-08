@@ -57,11 +57,14 @@ public class StudentsForAssignmentPage
     //~ KVC Attributes (must be public) .......................................
 
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
+    public ERXDisplayGroup<Submission> staffSubmissionDisplayGroup;
     /** Submission in the worepetition */
     public Submission  aSubmission;
     public Submission  partnerSubmission;
-    /** index in the worepetition */
+    /** index in the student worepetition */
     public int         index;
+    /** index in the staff worepetition */
+    public int         staffIndex;
 
     public AssignmentOffering assignmentOffering;
 
@@ -69,9 +72,7 @@ public class StudentsForAssignmentPage
     /** Value of the corresponding checkbox on the page. */
     public boolean omitStaff           = true;
     public boolean useBlackboardFormat = true;
-    public double  highScore           = 0.0;
-    public double  lowScore            = 0.0;
-    public double  avgScore            = 0.0;
+    public Submission.CumulativeStats studentStats;
 
 
     //~ Methods ...............................................................
@@ -81,14 +82,6 @@ public class StudentsForAssignmentPage
         WOResponse response, WOContext context)
     {
         log.debug("\n\nappendToResponse()");
-        if (maxSubmission == null)
-        {
-            maxSubmission = new HashMap<User, Submission>();
-        }
-        else
-        {
-            maxSubmission.clear();
-        }
 
         if (assignmentOffering == null)
         {
@@ -110,292 +103,43 @@ public class StudentsForAssignmentPage
             }
         }
 
-        NSArray<User> students = assignmentOffering.courseOffering()
-            .studentsWithoutStaff();
-        NSMutableArray<Submission> submissions =
-            new NSMutableArray<Submission>();
-        highScore = 0.0;
-        lowScore  = 0.0;
-        avgScore  = 0.0;
-        if (students != null)
+        studentStats = new Submission.CumulativeStats();
+        NSArray<Submission> submissions = Submission.submissionsForGrading(
+            localContext(),
+            assignmentOffering,
+            true,  // omitPartners
+            omitStaff,
+            studentStats);
+
+        submissionDisplayGroup.setObjectArray(submissions);
+        if (log.isDebugEnabled())
         {
-            for (User student : students)
+            log.debug("Found " + submissions.count() + " submissions:");
+            for (Submission sub : submissions)
             {
-                log.debug("checking " + student.userName());
-
-                Submission thisSubmission = null;
-                Submission mostRecentSubmission = null;
-                Submission gradedSubmission = null;
-                // Find the submission
-                NSArray<Submission> thisSubmissionSet =
-                    Submission.submissionsForAssignmentOfferingAndUser(
-                        localContext(), assignmentOffering, student);
-                log.debug("searching for submissions");
-                for (Submission sub : thisSubmissionSet)
-                {
-                    if (mostRecentSubmission == null
-                        || sub.submitNumber() >
-                           mostRecentSubmission.submitNumber())
-                    {
-                        mostRecentSubmission = sub;
-                    }
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("\tsub #" + sub.submitNumber()
-                            + " = " + sub.hashCode() + ", " + sub);
-                        log.debug("    partnerLink  = " + sub.partnerLink());
-                        if (sub.primarySubmission() != null)
-                        {
-                            Submission psub = sub.primarySubmission();
-                            log.debug("    primary      = "
-                                + psub.user()
-                                + " # "
-                                + psub.submitNumber()
-                                + " "
-                                + psub.hashCode()
-                                + ", "
-                                + psub.partnerLink()
-                                + ", pri = "
-                                + (psub.primarySubmission() == null
-                                    ? null
-                                    : psub.primarySubmission().hashCode())
-                                + ", "
-                                + psub);
-                        }
-                        else
-                        {
-                            log.debug("    primary      = null");
-                        }
-                        NSArray<Submission> partnered =
-                            sub.partneredSubmissions();
-                        if (partnered != null && partnered.count() > 0)
-                        {
-                            for (Submission psub : partnered)
-                            {
-                                log.debug("    partner rel  = "
-                                    + psub.user()
-                                    + " # "
-                                    + psub.submitNumber()
-                                    + " "
-                                    + psub.hashCode()
-                                    + ", "
-                                    + psub.partnerLink()
-                                    + ", pri = "
-                                    + (psub.primarySubmission() == null
-                                        ? null
-                                        : psub.primarySubmission().hashCode())
-                                    + ", "
-                                    + psub);
-                            }
-                        }
-                        else
-                        {
-                            log.debug("    partner rels = none");
-                        }
-                        if (sub.result() != null)
-                        {
-                            if (sub.result().submissions().count() > 0)
-                            {
-                                for (Submission psub :
-                                    sub.result().submissions())
-                                {
-                                    log.debug("    partners     = "
-                                        + psub.user()
-                                        + " # "
-                                        + psub.submitNumber()
-                                        + " "
-                                        + psub.hashCode()
-                                        + ", "
-                                        + psub.partnerLink()
-                                        + ", pri = "
-                                        + (psub.primarySubmission() == null
-                                            ? null
-                                            : psub.primarySubmission().hashCode())
-                                        + ", "
-                                        + psub);
-                                }
-                            }
-                            else
-                            {
-                                log.debug("    partners     = none");
-                            }
-                        }
-                        else
-                        {
-                            log.debug("    no result");
-                        }
-                    }
-                    if (sub.result() != null
-                        // The next two are mutually
-                        && !sub.partnerLink()
-                        && sub.primarySubmission() == null)
-                    {
-                        if (thisSubmission == null)
-                        {
-                            thisSubmission = sub;
-                        }
-                        else if (sub.submitNumberRaw() != null)
-                        {
-                            int num = sub.submitNumber();
-                            if (num > thisSubmission.submitNumber())
-                            {
-                                thisSubmission = sub;
-                            }
-                        }
-                        if (sub.result().status() != Status.TO_DO)
-                        {
-                            if (gradedSubmission == null)
-                            {
-                                gradedSubmission = sub;
-                            }
-                            else if (sub.submitNumberRaw() != null)
-                            {
-                                int num = sub.submitNumber();
-                                if (num > gradedSubmission.submitNumber())
-                                {
-                                    gradedSubmission = sub;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (mostRecentSubmission != null)
-                {
-                    maxSubmission.put(mostRecentSubmission.user(),
-                                      mostRecentSubmission);
-                }
-                if (gradedSubmission != null)
-                {
-                    thisSubmission = gradedSubmission;
-                }
-                if (thisSubmission != null)
-                {
-                    log.debug("submission found = "
-                        + thisSubmission.submitNumber());
-
-                    // Force migration of partner relationships
-                    // TODO: fix this with auto-migration
-                    thisSubmission.migratePartnerLink();
-
-                    if (log.isDebugEnabled())
-                    {
-                        Submission sub = thisSubmission;
-                        log.debug("\tsub #" + sub.submitNumber()
-                            + " = " + sub.hashCode() + ", " + sub);
-                        log.debug("    partnerLink  = " + sub.partnerLink());
-                        if (sub.primarySubmission() != null)
-                        {
-                            Submission psub = sub.primarySubmission();
-                            log.debug("    primary      = "
-                                + psub.user()
-                                + " # "
-                                + psub.submitNumber()
-                                + " "
-                                + psub.hashCode()
-                                + ", "
-                                + psub.partnerLink()
-                                + ", pri = "
-                                + (psub.primarySubmission() == null
-                                    ? null
-                                    : psub.primarySubmission().hashCode())
-                                + ", "
-                                + psub);
-                        }
-                        else
-                        {
-                            log.debug("    primary      = null");
-                        }
-                        NSArray<Submission> partnered =
-                            sub.partneredSubmissions();
-                        if (partnered != null && partnered.count() > 0)
-                        {
-                            for (Submission psub : partnered)
-                            {
-                                log.debug("    partner rel  = "
-                                    + psub.user()
-                                    + " # "
-                                    + psub.submitNumber()
-                                    + " "
-                                    + psub.hashCode()
-                                    + ", "
-                                    + psub.partnerLink()
-                                    + ", pri = "
-                                    + (psub.primarySubmission() == null
-                                        ? null
-                                        : psub.primarySubmission().hashCode())
-                                    + ", "
-                                    + psub);
-                            }
-                        }
-                        else
-                        {
-                            log.debug("    partner rels = none");
-                        }
-                        if (sub.result() != null)
-                        {
-                            if (sub.result().submissions().count() > 0)
-                            {
-                                for (Submission psub :
-                                    sub.result().submissions())
-                                {
-                                    log.debug("    partners     = "
-                                        + psub.user()
-                                        + " # "
-                                        + psub.submitNumber()
-                                        + " "
-                                        + psub.hashCode()
-                                        + ", "
-                                        + psub.partnerLink()
-                                        + ", pri = "
-                                        + (psub.primarySubmission() == null
-                                            ? null
-                                            : psub.primarySubmission().hashCode())
-                                        + ", "
-                                        + psub);
-                                }
-                            }
-                            else
-                            {
-                                log.debug("    partners     = none");
-                            }
-                        }
-                        else
-                        {
-                            log.debug("    no result");
-                        }
-                    }
-
-                    double score = thisSubmission.result().finalScore();
-                    if (submissions.count() == 0)
-                    {
-                        highScore = score;
-                        lowScore  = score;
-                    }
-                    else
-                    {
-                        if (score > highScore)
-                        {
-                            highScore = score;
-                        }
-                        if (score < lowScore)
-                        {
-                            lowScore = score;
-                        }
-                    }
-                    avgScore += score;
-                    submissions.addObject(thisSubmission);
-                }
-                else
-                {
-                    log.debug("no submission found");
-                }
+                log.debug("    "
+                    + sub.user()
+                    + " # "
+                    + sub.submitNumber()
+                    + " "
+                    + sub.hashCode()
+                    + ", "
+                    + sub.partnerLink()
+                    + ", pri = "
+                    + (sub.primarySubmission() == null
+                        ? null
+                        : sub.primarySubmission().hashCode())
+                    + ", "
+                    + sub);
             }
         }
-        if (submissions.count() > 0)
-        {
-            avgScore /= submissions.count();
-        }
-        submissionDisplayGroup.setObjectArray(submissions);
+        staffSubmissionDisplayGroup.setObjectArray(
+            Submission.submissionsForGrading(
+                localContext(),
+                assignmentOffering,
+                true,  // omitPartners
+                assignmentOffering.courseOffering().staff(),
+                null));
         super.beforeAppendToResponse(response, context);
     }
 
@@ -524,14 +268,14 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public boolean isMostRecentSubmission()
     {
-        return aSubmission == maxSubmission.get(aSubmission.user());
+        return aSubmission == aSubmission.latestSubmission();
     }
 
 
     // ----------------------------------------------------------
     public int mostRecentSubmissionNo()
     {
-        return maxSubmission.get(aSubmission.user()).submitNumber();
+        return aSubmission.latestSubmission().submitNumber();
     }
 
 
@@ -544,72 +288,71 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-//    public WOComponent repartner()
-//    {
-//        for (Submission sub : submissionDisplayGroup.allObjects())
-//        {
-//            if (sub.result() != null)
-//            {
-//                for (Submission psub : sub.result().submissions())
-//                {
-//                    if (psub != sub
-//                        && psub.assignmentOffering().assignment()
-//                        != sub.assignmentOffering().assignment())
-//                    {
-//                        log.warn("found partner submission "
-//                            + psub.user() + " #" + psub.submitNumber()
-//                            + "\non incorrect assignment offering "
-//                            + psub.assignmentOffering());
-//
-//                        NSArray<AssignmentOffering> partnerOfferings =
-//                            AssignmentOffering.objectsMatchingQualifier(
-//                                localContext(),
-//                                AssignmentOffering.courseOffering
-//                                    .dot(CourseOffering.course).eq(
-//                                        sub.assignmentOffering()
-//                                        .courseOffering().course())
-//                                .and(AssignmentOffering.courseOffering
-//                                    .dot(CourseOffering.students).eq(
-//                                        psub.user()))
-//                                .and(AssignmentOffering.assignment
-//                                .eq(sub.assignmentOffering().assignment())));
-//                        if (partnerOfferings.count() == 0)
-//                        {
-//                            log.error("Cannot locate correct assignment "
-//                                + "offering for partner"
-//                                + psub.user() + " #" + psub.submitNumber()
-//                                + "\non incorrect assignment offering "
-//                                + psub.assignmentOffering());
-//                        }
-//                        else
-//                        {
-//                            if (partnerOfferings.count() > 1)
-//                            {
-//                                log.warn("Multiple possible offerings for "
-//                                    + "partner "
-//                                    + psub.user() + " #" + psub.submitNumber()
-//                                    + "\non incorrect assignment offering "
-//                                    + psub.assignmentOffering());
-//                                for (AssignmentOffering ao : partnerOfferings)
-//                                {
-//                                    log.warn("\t" + ao);
-//                                }
-//                            }
-//
-//                            psub.setAssignmentOfferingRelationship(
-//                                partnerOfferings.get(0));
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        applyLocalChanges();
-//        return null;
-//    }
+    public WOComponent repartner()
+    {
+        for (Submission sub : submissionDisplayGroup.allObjects())
+        {
+            if (sub.result() != null)
+            {
+                for (Submission psub : sub.result().submissions())
+                {
+                    if (psub != sub
+                        && psub.assignmentOffering().assignment()
+                        != sub.assignmentOffering().assignment())
+                    {
+                        log.warn("found partner submission "
+                            + psub.user() + " #" + psub.submitNumber()
+                            + "\non incorrect assignment offering "
+                            + psub.assignmentOffering());
+
+                        NSArray<AssignmentOffering> partnerOfferings =
+                            AssignmentOffering.objectsMatchingQualifier(
+                                localContext(),
+                                AssignmentOffering.courseOffering
+                                    .dot(CourseOffering.course).eq(
+                                        sub.assignmentOffering()
+                                        .courseOffering().course())
+                                .and(AssignmentOffering.courseOffering
+                                    .dot(CourseOffering.students).eq(
+                                        psub.user()))
+                                .and(AssignmentOffering.assignment
+                                .eq(sub.assignmentOffering().assignment())));
+                        if (partnerOfferings.count() == 0)
+                        {
+                            log.error("Cannot locate correct assignment "
+                                + "offering for partner"
+                                + psub.user() + " #" + psub.submitNumber()
+                                + "\non incorrect assignment offering "
+                                + psub.assignmentOffering());
+                        }
+                        else
+                        {
+                            if (partnerOfferings.count() > 1)
+                            {
+                                log.warn("Multiple possible offerings for "
+                                    + "partner "
+                                    + psub.user() + " #" + psub.submitNumber()
+                                    + "\non incorrect assignment offering "
+                                    + psub.assignmentOffering());
+                                for (AssignmentOffering ao : partnerOfferings)
+                                {
+                                    log.warn("\t" + ao);
+                                }
+                            }
+
+                            psub.setAssignmentOfferingRelationship(
+                                partnerOfferings.get(0));
+                        }
+                    }
+                }
+            }
+        }
+        applyLocalChanges();
+        return null;
+    }
 
 
     //~ Instance/static variables .............................................
 
-    private Map<User, Submission> maxSubmission;
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }
