@@ -42,8 +42,9 @@ FileDeduction: WOString {
     value        = stats.toolDeductions;
 }
 
-FileName: WOString {
-    value = stats.sourceFileName;
+FileName: WCLink {
+    string    = stats.sourceFileName;
+    action    = fileStatsDetails;
 }
 
 FileRemarks: WOString {
@@ -127,17 +128,6 @@ SelectSubmission: WCButton {
 
 ShowCoverageData: WOConditional {
     condition = showCoverageData;
-}
-
-ShowDetails: WOImageButton {
-    filename  = "icons/edit.gif";
-    framework = "Core";
-    action    = fileStatsDetails;
-    border    = "0";
-    width     = "18";
-    height    = "17";
-    alt       = "View file and enter comments";
-    title     = "View file and enter comments";
 }
 
 StatRepetition: WORepetition {

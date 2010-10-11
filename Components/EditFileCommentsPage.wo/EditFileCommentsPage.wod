@@ -1,6 +1,7 @@
-Adjustments: WOString {
-    numberformat = "0.0";
-    value        = prefs.submission.result.scoreAdjustment;
+Cancel: WCButton {
+    action = next;
+    label = "Cancel";
+    class = "neg";
 }
 
 ClassName: WOString {
@@ -8,7 +9,7 @@ ClassName: WOString {
 }
 
 Code: WOText {
-    rows  = 25;
+    rows  = 40;
     cols  = 80;
     value = codeWithComments;
     name  = "source";
@@ -16,120 +17,44 @@ Code: WOText {
     style = "width:100%;";
 }
 
-FileDeduction: WOString {
-    numberformat = "0.0";
-    value        = prefs.submissionFileStats.deductionsRaw;
+FileList: WCFilteringSelect {
+    list = filesDisplayGroup.displayedObjects;
+    item = file;
+    selection = selectedFile;
+    displayString = file.sourceFileName;
+    noSelectionString = "Overall summary of results";
+    style = "width: 15em;";
 }
 
-
-
-FileTaDeduction: WOString {
-    numberformat = "0.0";
-    value = prefs.submissionFileStats.staffDeductions;
-}
-
-
-FileToolTestingDeduction: WOString {
-    numberformat = "0.0";
-    value        = prefs.submissionFileStats.toolDeductions;
-}
-
-Form1: WOForm {
+Form: WCForm {
     multipleSubmit = true;
     enctype="multipart/form-data";
-//    otherTagString="enctype=\"multipart/form-data\"";
 }
 
-
-IfAdjustments: WOConditional {
-    condition = hasAdjustments;
+History: WOHiddenField {
+    name = "history";
+    value = prefs.commentHistory;
 }
 
-IfBonus: WOConditional {
-    condition = hasBonus;
+MarkAsFinished: WCCheckBox {
+    id = "markAsFinished";
+    checked = markAsFinished;
 }
 
-IsGrading: WOConditional {
-    condition = isGrading;
+SaveAndGo: WCButton {
+    action = saveChanges;
+    label = "Save and Go";
+    class = "pos";
 }
 
-OtherFilesDeduction: WOString {
-    numberformat = "0.0";
-    value        = otherFilesDeductions; //state.submissionFileStats.nDeductions;
-}
-
-OtherFilesTADeduction: WOString {
-    numberformat = "0.0";
-    value        = otherFilesTaDeductions; //state.submissionFileStats.nDeductions;
-}
-
-OtherFilesToolTestingDeduction: WOString {
-    numberformat = "0.0";
-    value        = toolTestingOtherFiles;
-}
-
-ProjectDeduction: WOString {
-    numberformat = "0.0";
-    value        = projectDeductions; //state.submissionFileStats.nDeductions;
-}
-
-ProjectPossible: WOString {
-    numberformat = "0.0";
-    value        = prefs.assignmentOffering.assignment.submissionProfile.availablePoints;
-}
-
-ProjectScore: WOString {
-    numberformat = "0.0";
-    value        = prefs.submission.result.finalScore;
-}
-
-ProjectTADeduction: WOString {
-    numberformat = "0.0";
-    value        = projectTADeduction; //state.submissionFileStats.nDeductions;
-}
-
-ProjectToolTestingDeduction: WOString {
-    numberformat = "0.0";
-    value        = projectToolTestingDeduction;
-}
-
-SaveContinue: WOSubmitButton {
-    action = saveContinue;
-    value = "Save & Continue";
-}
-
-SaveDone: WOSubmitButton {
-    action = saveDone;
-    value  = "Save & Mark Done";
-}
-
-Cancel: WOSubmitButton {
-    action = next;
-    value  = " Cancel ";
-}
-
-SaveFinishLater: WOSubmitButton {
-    action = saveFinishLater;
-    value  = "Save & Finish Later";
-}
-
-Page: org.webcat.core.PageWithNavigation {
+Page: org.webcat.core.WCPageWithNavigation {
     // /wc-code.css is added to the text box in the java class
-    stylesheet           = "Grader.framework/WebServerResources/htmlarea/htmlarea.css";
-    externalJavascript   = "Grader.framework/WebServerResources/htmlarea/codearea.js,Grader.framework/WebServerResources/htmlarea/htmlarea-lang-en.js,Grader.framework/WebServerResources/htmlarea/dialog.js";
+    extraCssFiles        = "Grader.framework/WebServerResources/htmlarea/htmlarea.css";
     inlineHeaderContents = javascriptText;
-    onLoad               = "initEditor()";
-    sideStepTitle        = "Add Comments to This File";
-    hideSteps            = true;
 }
 
 ResultInfo: org.webcat.grader.SubmissionResultInfo {
     showFileInfo = true;
     submission = prefs.submission;
     submissionFileStats = prefs.submissionFileStats;
-}
-
-History: WOHiddenField {
-    name = "history";
-    value = prefs.commentHistory;
 }

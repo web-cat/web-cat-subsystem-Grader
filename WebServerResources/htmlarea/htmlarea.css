@@ -1,11 +1,24 @@
 .htmlarea { background: #fff; }
 
-.htmlarea .toolbar { 
-  background: ButtonFace; 
-  padding: 1px; 
-  border: 1px solid;
-  border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+.htmlarea iframe {
+    border: 0px solid gray;
 }
+
+.htmlarea .toolbar {
+  background: ButtonFace;
+  padding: 1px;
+  border: 1px solid gray;
+}
+
+.htmlarea .toolbar table {
+    border: none;
+    margin: 0px;
+}
+
+.htmlarea .toolbar td {
+    padding: 0px;
+}
+
 .htmlarea .toolbar img { border: none; }
 
 .htmlarea .toolbar .button {

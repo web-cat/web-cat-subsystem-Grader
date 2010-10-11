@@ -32,6 +32,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.webcat.core.*;
 import org.webcat.grader.messaging.GraderMarkupParseError;
+import com.webobjects.appserver.WODisplayGroup;
 
 // -------------------------------------------------------------------------
 /**
@@ -60,6 +61,15 @@ public class EditFileCommentsPage
     }
 
 
+    //~ KVC attributes (must be public) .......................................
+
+    public boolean             markAsFinished;
+
+    public WODisplayGroup      filesDisplayGroup;
+    public SubmissionFileStats selectedFile;
+    public SubmissionFileStats file;
+
+
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
@@ -84,6 +94,15 @@ public class EditFileCommentsPage
             }
         }
         initializeCodeWithComments();
+
+        selectedFile = null;
+        markAsFinished =
+            (prefs().submissionFileStats().status() == Status.CHECK);
+
+        filesDisplayGroup.setObjectArray(
+                prefs().submissionFileStats().submissionResult()
+                .submissionFileStats());
+
         super.beforeAppendToResponse( response, context );
     }
 
@@ -98,12 +117,14 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    public WOComponent saveDone()
+    public WOComponent saveChanges()
     {
         try
         {
-            updateTAScore( storeComments() );
-            prefs().submissionFileStats().setStatus( Status.CHECK );
+            updateTAScore(storeComments());
+
+            byte status = markAsFinished ? Status.CHECK : Status.UNFINISHED;
+            prefs().submissionFileStats().setStatus(status);
             applyLocalChanges();
         }
         catch ( Exception e )
@@ -113,124 +134,27 @@ public class EditFileCommentsPage
             error(
                 "An error occurred while reading your comments.  "
                 + "They could not be saved successfully.  The situation has "
-                + "been reported to the administrator." );
+                + "been reported to the administrator.");
         }
-        return hasMessages() ? null : super.next();
+
+        return hasMessages() ? null : goToSelectedDestination();
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent saveContinue()
+    private WOComponent goToSelectedDestination()
     {
-        try
+        if (selectedFile == null)
         {
-            updateTAScore( storeComments() );
-            prefs().submissionFileStats().setStatus( Status.UNFINISHED );
-            applyLocalChanges();
+            return super.next();
         }
-        catch ( Exception e )
+        else
         {
-            // This is thrown by an XML parse error in storeComments(),
-            // so use it to avoid updating the TA Score
-            error(
-                "An error occurred while reading your comments.  "
-                + "They could not be saved successfully.  The situation has "
-                + "been reported to the administrator." );
+            prefs().setSubmissionFileStatsRelationship(selectedFile);
+            WCComponent statsPage = pageWithName(EditFileCommentsPage.class);
+            statsPage.nextPage = this.nextPage;
+            return statsPage;
         }
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent saveFinishLater()
-    {
-        try
-        {
-            updateTAScore( storeComments() );
-            prefs().submissionFileStats().setStatus( Status.UNFINISHED );
-            applyLocalChanges();
-        }
-        catch ( Exception e )
-        {
-            // This is thrown by an XML parse error in storeComments(),
-            // so use it to avoid updating the TA Score
-            error(
-                "An error occurred while reading your comments.  "
-                + "They could not be saved successfully.  The situation has "
-                + "been reported to the administrator." );
-        }
-        return hasMessages() ? null : super.next();
-    }
-
-
-    // ----------------------------------------------------------
-    public double toolTestingOtherFiles()
-    {
-        return otherFilesDeductions() - otherFilesTaDeductions();
-    }
-
-
-    // ----------------------------------------------------------
-    public double otherFilesTaDeductions()
-    {
-        return projectTADeduction()
-            - prefs().submissionFileStats().staffDeductions();
-    }
-
-
-    //---------------------------------------------
-    public double otherFilesDeductions()
-    {
-        return projectDeductions() - prefs().submissionFileStats().deductions();
-    }
-
-
-    //---------------------------------------------
-    public double projectDeductions()
-    {
-        double total = 0.0;
-        total += projectTADeduction();
-        total += projectToolTestingDeduction();
-        return total;
-    }
-
-
-    // ----------------------------------------------------------
-    public double projectTADeduction()
-    {
-        SubmissionResult result = prefs().submission().result();
-        Number taScore = result.taScoreRaw();
-        projectTADeduction = 0.0;
-        if ( taScore != null )
-        {
-            projectTADeduction += taScore.doubleValue();
-            projectTADeduction -= prefs().assignmentOffering().assignment()
-                .submissionProfile().taPoints();
-        }
-        return projectTADeduction;
-    }
-
-
-    // ----------------------------------------------------------
-    public double projectToolTestingDeduction()
-    {
-        SubmissionResult result   = prefs().submission().result();
-        Number correctnessScore   = result.correctnessScoreRaw();
-        SubmissionProfile profile = prefs().assignmentOffering()
-            .assignment().submissionProfile();
-
-        projectToolTestingDeduction = result.toolScore();
-        projectToolTestingDeduction -= profile.toolPoints();
-        if ( correctnessScore != null )
-        {
-            double correctnessPossible = 0.0;
-            correctnessPossible += profile.availablePoints();
-            correctnessPossible -= profile.taPoints();
-            correctnessPossible -= profile.toolPoints();
-            projectToolTestingDeduction +=
-                correctnessScore.doubleValue() - correctnessPossible;
-        }
-        return projectToolTestingDeduction;
     }
 
 
@@ -277,38 +201,20 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    public boolean hasAdjustments()
-    {
-        return prefs().submission().result().scoreAdjustment() != 0.0;
-    }
-
-
-    // ----------------------------------------------------------
     public boolean isGrading()
     {
         return true;
     }
 
 
-    // ----------------------------------------------------------
-    public boolean hasBonus()
-    {
-        return prefs().submission().result().scoreAdjustment() > 0.0;
-    }
-
-
-    // ----------------------------------------------------------
-    public Double fixMe()
-    {
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    // This function is called when we save the file after adding
-    // comments. It will extract all the comments that were added,
-    // and will insert them in the database.
-    //----------------------------------------------------------
+    /**
+     * This function is called when we save the file after adding comments. It
+     * will extract all the comments that were added and insert them in the
+     * database.
+     *
+     * @return the cumulative score adjustment of all the comments in the file
+     * @throws Exception if an error occurred
+     */
     public double storeComments()
         throws Exception
     {
@@ -678,8 +584,6 @@ public class EditFileCommentsPage
 
     //~ Instance/static variables .............................................
 
-    private double projectTADeduction          = 0.0;
-    private double projectToolTestingDeduction = 0.0;
     private String codeWithComments            = null;
     private String codeWithCommentsToStore     = null;
 

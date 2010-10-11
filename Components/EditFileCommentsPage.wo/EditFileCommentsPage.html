@@ -1,30 +1,22 @@
-<webobject name="Page"><webobject name="Form1">
-<webobject name="ResultInfo"/><webobject name="History"/>
+<wo name="Page">
+<wo:WCScriptFragment framework="Grader" filename="htmlarea/codearea.js"/>
+<wo:WCScriptFragment framework="Grader" filename="htmlarea/htmlarea-lang-en.js"/>
+<wo:WCScriptFragment framework="Grader" filename="htmlarea/dialog.js"/>
+<wo:WCScriptFragment>dojo.addOnLoad(function() { initEditor() });</wo:WCScriptFragment>
+<div class="module">
+<wo name="Form">
+<div class="floatLeft">
+<wo name="ResultInfo"/><wo name="History"/>
+</div>
+<div class="floatRight">
 <table class="layout">
-<tr><webobject name="IsGrading"><td style="padding-left:0"><div class="shadow"><table style="font-size:smaller"><thead>
-        <tr><th>Deductions</th><th>TA</th><th>Tools/Testing</th><th colspan="2">Total</th></tr></thead><tbody>
-        <tr class="o"><td><webobject name="ClassName"/></td>
-          <td class="n"><webobject name="FileTaDeduction"/></td>
-          <td class="n"><webobject name="FileToolTestingDeduction"/></td>
-          <td class="n"><webobject name="FileDeduction"/></td>
-          <td>&nbsp;</td></tr>
-        <tr class="e"><td>others</td>
-          <td class="n"><webobject name="OtherFilesTADeduction"/></td>
-          <td class="n"><webobject name="OtherFilesToolTestingDeduction"/></td>
-          <td class="n"><webobject name="OtherFilesDeduction"/></td>
-          <td>&nbsp;</td></tr>
-        <tr class="o"><td>Total</td>
-          <td class="n"><webobject name="ProjectTADeduction"/></td>
-          <td class="n"><webobject name="ProjectToolTestingDeduction"/></td>
-          <td class="n"><webobject name="ProjectDeduction"/></td>
-          <td class="n"><webobject name="IfAdjustments">(<webobject name="IfBonus">+</webobject><webobject name="Adjustments"/>)</webobject><webobject name="ProjectScore"/>/<webobject name="ProjectPossible"/></td>
-        </tr>
-  </tbody></table></div></td></webobject>
-  <td><webobject name="SaveContinue"/><br/>
-      <webobject name="SaveFinishLater"/><br/>
-      <webobject name="SaveDone"/><br/>
-      <webobject name="Cancel"/></td>
-</tr>
+<tr><td><wo name="MarkAsFinished"/> <label for="markAsFinished">Mark as finished</label></td></tr>
+<tr><td>Go to <wo name="FileList"/> <wo name="SaveAndGo"/></td></tr>
+<tr><td style="text-align: right"><wo name="Cancel"/></td></tr>
 </table>
-<webobject name="Code"/>
-</webobject></webobject>
+</div>
+<div class="spacer" style="clear: both">&nbsp;</div>
+<wo name="Code"/>
+</wo>
+</div>
+</wo>

@@ -560,7 +560,6 @@ HTMLArea.prototype.generate = function () {
              });
         editor.updateToolbar();
         editor.focusEditor();
-
     };
 
     setTimeout(initIframe, HTMLArea.is_gecko ? 10 : 0);

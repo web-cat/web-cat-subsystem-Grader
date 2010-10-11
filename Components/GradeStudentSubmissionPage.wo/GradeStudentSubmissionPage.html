@@ -1,13 +1,13 @@
 <wo name="Page"><wo name="WizardForm">
 
 <wo:org.webcat.core.WCPageModule title="Result Summary">
-  <div class="shadow">
+  <div class="shadow floatLeft">
     <wo name="ResultInfo"/>
   </div>
-  <div style="clear:both"><p><wo name="Done"/>Show grade to student? <wo name="Regrade"/> <wo name="SelectSubmission"/></p></div>
-  <div class="shadow">
+  <div class="shadow floatLeft">
     <wo name="ScoreSummary"/>
   </div>
+  <div style="clear:both"><p><wo name="Done"/>Show grade to student? <wo name="Regrade"/> <wo name="SelectSubmission"/></p></div>
   <div><wo name="FullPrintableReport"/></div>
 </wo:org.webcat.core.WCPageModule>
 <wo:org.webcat.core.WCPageModule title="File Details">
@@ -28,7 +28,7 @@
       </tr></thead><tbody>
       <wo name="StatRepetition"><wo name="TR">
         <td><wo name="FileStatus"/></td>
-        <td><wo name="ShowDetails"/>&nbsp;<wo name="FileName"/></td>
+        <td><wo name="FileName"/></td>
         <td class="n"><wo name="FileStaffRemarks"/></td>
         <td class="n"><wo name="FileStaffDeduction"/></td>
         <wo:if condition="$showAutoGradedComments">
