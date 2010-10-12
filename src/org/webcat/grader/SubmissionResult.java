@@ -535,6 +535,60 @@ public class SubmissionResult
 
 
     // ----------------------------------------------------------
+    public void addCommentByLineFor(User commenter, String priorComments)
+    {
+        String newComments = comments();
+        if (newComments != null
+            && newComments.trim().equals("<br />"))
+        {
+            setComments(null);
+            newComments = null;
+        }
+        if (status() == Status.TO_DO
+            && (taScoreRaw() != null
+                || newComments != null))
+        {
+            setStatus(Status.UNFINISHED);
+        }
+        if (newComments != null
+            && newComments.indexOf("<") < 0
+            && newComments.indexOf(">") < 0)
+        {
+            setCommentFormat(SubmissionResult.FORMAT_TEXT);
+        }
+        if (newComments != null && !newComments.equals(priorComments))
+        {
+            // update author info:
+            String byLine = "-- last updated by " + commenter.name();
+            if (commentFormat() == SubmissionResult.FORMAT_HTML)
+            {
+                byLine = "<p><span style=\"font-size:smaller\"><i>"
+                    + byLine + "</i></span></p>";
+            }
+            if (log.isDebugEnabled())
+            {
+                log.debug("new comments ='" + newComments + "'");
+                log.debug("byline ='" + byLine + "'");
+            }
+            if (!newComments.trim().endsWith(byLine))
+            {
+                log.debug("byLine not found");
+                if (commentFormat() == SubmissionResult.FORMAT_TEXT)
+                {
+                    byLine = "\n" + byLine + "\n";
+                }
+                if (!(newComments.endsWith( "\n")
+                      || newComments.endsWith("\r")))
+                {
+                    byLine = "\n" + byLine;
+                }
+                setComments(newComments + byLine);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
     @Override
     public void mightDelete()
     {

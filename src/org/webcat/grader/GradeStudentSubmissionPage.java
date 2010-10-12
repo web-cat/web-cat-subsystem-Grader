@@ -120,55 +120,7 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public void saveGrading()
     {
-        String comments = result.comments();
-        if ( comments != null
-             && comments.trim().equals( "<br />" ) )
-        {
-            result.setComments( null );
-            comments = null;
-        }
-        if (     result.status() == Status.TO_DO
-             && ( result.taScoreRaw() != null
-                  || comments != null ) )
-        {
-            result.setStatus( Status.UNFINISHED );
-        }
-        if ( comments != null
-             && priorComments == null
-             && comments.indexOf( "<" ) < 0
-             && comments.indexOf( ">" ) < 0 )
-        {
-            result.setCommentFormat( SubmissionResult.FORMAT_TEXT );
-        }
-        if ( comments != null && !comments.equals( priorComments ) )
-        {
-            // update author info:
-            String byLine = "-- last updated by " + user().name();
-            if ( result.commentFormat() == SubmissionResult.FORMAT_HTML )
-            {
-                byLine = "<p><span style=\"font-size:smaller\"><i>"
-                    + byLine + "</i></span></p>";
-            }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "new comments ='" + comments + "'" );
-                log.debug( "byline ='" + byLine + "'" );
-            }
-            if ( !comments.trim().endsWith( byLine ) )
-            {
-                log.debug( "byLine not found" );
-                if ( result.commentFormat() == SubmissionResult.FORMAT_TEXT )
-                {
-                    byLine = "\n" + byLine + "\n";
-                }
-                if ( !( comments.endsWith( "\n")
-                        || comments.endsWith( "\r" ) ) )
-                {
-                    byLine = "\n" + byLine;
-                }
-                result.setComments( comments + byLine );
-            }
-        }
+        result.addCommentByLineFor(user(), priorComments);
     }
 
 
