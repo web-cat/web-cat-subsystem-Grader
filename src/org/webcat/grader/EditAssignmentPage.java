@@ -25,6 +25,7 @@ import com.ibm.icu.text.MessageFormat;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -61,18 +62,16 @@ public class EditAssignmentPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup     scriptDisplayGroup;
-    public int                index;
-    public Step               thisStep;
-    public WODisplayGroup     submissionProfileDisplayGroup;
-    public SubmissionProfile  submissionProfile; // For Repetition1
-    public AssignmentOffering upcomingOffering;
-    public AssignmentOffering thisOffering;
-    public Assignment         assignment;
-    public AssignmentOffering selectedOffering;
-    public WODisplayGroup     offeringGroup;
-
-    public AssignmentOffering offeringToDelete;
+    public ERXDisplayGroup<Step>               scriptDisplayGroup;
+    public int                                 index;
+    public Step                                thisStep;
+    public ERXDisplayGroup<SubmissionProfile>  submissionProfileDisplayGroup;
+    public SubmissionProfile                   submissionProfile;
+    public AssignmentOffering                  upcomingOffering;
+    public AssignmentOffering                  thisOffering;
+    public Assignment                          assignment;
+    public AssignmentOffering                  selectedOffering;
+    public ERXDisplayGroup<AssignmentOffering> offeringGroup;
 
     public NSArray<GradingPlugin> gradingPluginsToAdd;
     public GradingPlugin gradingPluginToAdd;
@@ -454,29 +453,44 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent regradeSubs()
+    public WOActionResults regradeSubs()
     {
-        ConfirmPage confirmPage = null;
-        if (saveAndCanProceed())
+        if (!saveAndCanProceed())
         {
-            confirmPage = pageWithName(ConfirmPage.class);
-            confirmPage.nextPage       = this;
-            confirmPage.message        =
-                "This action will <b>regrade the most recent submission "
-                + "for every student</b> who has submitted to this "
-                + "assignment.</p><p>This will also <b>delete all prior "
-                + "results</b> for the submissions to be regraded and "
-                + "<b>delete all TA comments and scoring</b> that have been "
-                + "recorded for the submissions to be regraded.</p><p>Each "
-                + "student\'s most recent submission will be re-queued for "
-                + "grading, and each student will receive an e-mail message "
-                + "when their new results are available.";
-            confirmPage.actionReceiver = this;
-            confirmPage.actionOk       = "regradeSubsActionOk";
-            confirmPage.setTitle("Confirm Regrade of All Submissions");
-            offeringForAction = thisOffering;
+            return displayMessages();
         }
-        return confirmPage;
+
+        offeringForAction = thisOffering;
+        return new ConfirmingAction(this)
+        {
+            @Override
+            protected String confirmationTitle()
+            {
+                return "Regrade Everyone's Submission?";
+            }
+
+            @Override
+            protected String confirmationMessage()
+            {
+                return "<p>This action will <b>regrade the most recent "
+                    + "submission for every student</b> who has submitted to "
+                    + "this assignment.</p><p>This will also <b>delete all "
+                    + "prior results</b> for the submissions to be regraded "
+                    + "and <b>delete all TA comments and scoring</b> that "
+                    + "have been recorded for the submissions to be regraded."
+                    + "</p><p>Each student\'s most recent submission will be "
+                    + "re-queued for grading, and each student will receive "
+                    + "an e-mail message when their new results are "
+                    + "available.</p><p class=\"center\">Regrade everyone's "
+                    + "most recent submission?</p>";
+            }
+
+            @Override
+            protected WOActionResults performStandardAction()
+            {
+                return regradeSubsActionOk();
+            }
+        };
     }
 
 
@@ -535,8 +549,7 @@ public class EditAssignmentPage
              i < scriptDisplayGroup.displayedObjects().count();
              i++)
         {
-            ((Step)scriptDisplayGroup.displayedObjects()
-                .objectAtIndex(i)).setOrder(i);
+            scriptDisplayGroup.displayedObjects().objectAtIndex(i).setOrder(i);
         }
         if (   thisStep.config() != null
             && thisStep.config().steps().count() == 1)
@@ -585,7 +598,6 @@ public class EditAssignmentPage
             String targetId, int[] dropIndices,
             boolean isCopy)
     {
-        @SuppressWarnings("unchecked")
         NSMutableArray<Step> steps =
             scriptDisplayGroup.displayedObjects().mutableClone();
         NSMutableArray<Step> stepsRemoved = new NSMutableArray<Step>();
@@ -700,22 +712,19 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent deleteActionOk()
+    private WOComponent deleteActionOk()
     {
         prefs().setAssignmentOfferingRelationship(null);
-        @SuppressWarnings("unchecked")
-        NSArray<AssignmentOffering> offerings =
-            offeringGroup.displayedObjects();
-        for (AssignmentOffering ao : offerings)
+        for (AssignmentOffering ao : offeringGroup.displayedObjects())
         {
-            if (ao != offeringToDelete)
+            if (ao != offeringForAction)
             {
                 prefs().setAssignmentOfferingRelationship(ao);
                 break;
             }
         }
         if (!applyLocalChanges()) return flush(null);
-        localContext().deleteObject(offeringToDelete);
+        localContext().deleteObject(offeringForAction);
         if (!applyLocalChanges()) return flush(null);
         if (assignment.offerings().count() == 0)
         {
@@ -731,8 +740,12 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOActionResults delete()
     {
-        applyLocalChanges();
-        offeringToDelete = thisOffering;
+        if (!applyLocalChanges())
+        {
+            return displayMessages();
+        }
+
+        offeringForAction = thisOffering;
         return new ConfirmingAction(this) {
             @Override
             protected String confirmationTitle()
@@ -745,11 +758,11 @@ public class EditAssignmentPage
             {
                 String message =
                     "<p>This action will <b>delete the assignment offering \""
-                    + offeringToDelete
+                    + offeringForAction
                     + "\"</b>, "
                     + "together with any staff submissions that have been "
                     + "made to it.</p>";
-                if (offeringToDelete.assignment().offerings().count() == 1)
+                if (offeringForAction.assignment().offerings().count() == 1)
                 {
                     message +=
                         "<p>Since this is the only offering of the selected "
@@ -764,8 +777,6 @@ public class EditAssignmentPage
             @Override
             protected WOActionResults performStandardAction()
             {
-                System.out.println("performStandardAction() called");
-//                return null;
                 return deleteActionOk();
             }
         };

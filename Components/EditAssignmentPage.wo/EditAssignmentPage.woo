@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding; 
     variables = {
         scriptDisplayGroup = {
-            class = WODisplayGroup; 
+            class = ERXDisplayGroup; 
             dataSource = {
                 class = EODetailDataSource; 
                 detailKey = steps; 
@@ -17,7 +17,7 @@
             sortOrdering = ({class = EOSortOrdering; key = order; selectorName = "compareAscending:"; }); 
         }; 
         offeringGroup = {
-            class = WODisplayGroup; 
+            class = ERXDisplayGroup; 
             dataSource = {
                 class = EODetailDataSource; 
                 detailKey = offerings; 
@@ -31,7 +31,7 @@
             sortOrdering = ({class = EOSortOrdering; key = courseOffering.crn; selectorName = "compareAscending:"; }); 
         }; 
 	    submissionProfileDisplayGroup = {
-	        class = WODisplayGroup; 
+	        class = ERXDisplayGroup; 
 	        formatForLikeQualifier = "%@*"; 
 	        localKeys = (); 
 	        numberOfObjectsPerBatch = 0; 
