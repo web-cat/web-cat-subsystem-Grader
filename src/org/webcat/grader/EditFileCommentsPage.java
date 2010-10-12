@@ -55,19 +55,24 @@ public class EditFileCommentsPage
      *
      * @param context The page's context
      */
-    public EditFileCommentsPage( WOContext context )
+    public EditFileCommentsPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
     //~ KVC attributes (must be public) .......................................
+
+    public SubmissionFileStats fileStats;
 
     public boolean             markAsFinished;
 
     public WODisplayGroup      filesDisplayGroup;
     public SubmissionFileStats selectedFile;
     public SubmissionFileStats file;
+
+    public NSArray<Byte> formats = SubmissionResult.formats;
+    public byte aFormat;
 
 
     //~ Methods ...............................................................
@@ -82,37 +87,41 @@ public class EditFileCommentsPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
+        if (fileStats == null)
+        {
+            fileStats = prefs().submissionFileStats();
+        }
         if (log.isDebugEnabled())
         {
-            log.debug( "beginning appendToResponse()" );
-            SubmissionResult result = prefs().submission().result();
-            log.debug( "result = " + result);
+            log.debug("beginning appendToResponse()");
+            SubmissionResult result = fileStats.submissionResult();
+            log.debug("result = " + result);
             if (result != null)
             {
-                log.debug( "result = " + result.hashCode());
-                log.debug( "result EC = " + result.editingContext().hashCode());
+                log.debug("result = " + result.hashCode());
+                log.debug("result EC = " + result.editingContext().hashCode());
             }
         }
         initializeCodeWithComments();
 
         selectedFile = null;
-        markAsFinished =
-            (prefs().submissionFileStats().status() == Status.CHECK);
+        markAsFinished = (fileStats.status() == Status.CHECK);
 
         filesDisplayGroup.setObjectArray(
-                prefs().submissionFileStats().submissionResult()
-                .submissionFileStats());
+                fileStats.submissionResult().submissionFileStats());
 
-        super.beforeAppendToResponse( response, context );
+        priorOverallComments = fileStats.submissionResult().comments();
+        super.beforeAppendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    protected void afterAppendToResponse(
+        WOResponse response, WOContext context)
     {
         super.afterAppendToResponse(response, context);
         codeWithComments = null;
-        log.debug( "ending appendToResponse()" );
+        log.debug("ending appendToResponse()");
     }
 
 
@@ -124,15 +133,16 @@ public class EditFileCommentsPage
             updateTAScore(storeComments());
 
             byte status = markAsFinished ? Status.CHECK : Status.UNFINISHED;
-            prefs().submissionFileStats().setStatus(status);
+            fileStats.setStatus(status);
+            fileStats.submissionResult().addCommentByLineFor(
+                user(), priorOverallComments);
             applyLocalChanges();
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             // This is thrown by an XML parse error in storeComments(),
             // so use it to avoid updating the TA Score
-            error(
-                "An error occurred while reading your comments.  "
+            error("An error occurred while reading your comments.  "
                 + "They could not be saved successfully.  The situation has "
                 + "been reported to the administrator.");
         }
@@ -159,44 +169,43 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    public void updateTAScore( double ptsTakenOff )
+    public void updateTAScore(double ptsTakenOff)
     {
         double score = 0.0;
-        SubmissionResult result = prefs().submission().result();
+        SubmissionResult result = fileStats.submissionResult();
         Number taScore = result.taScoreRaw();
-        Number possible = prefs().assignmentOffering().assignment()
+        Number possible = result.submission().assignmentOffering().assignment()
                .submissionProfile().taPointsRaw();
-        log.debug( "updateTAScore()" );
-        if ( taScore != null )
+        log.debug( "updateTAScore()");
+        if ( taScore != null)
         {
             //calculate the TA score
             score = taScore.doubleValue();
-            log.debug( "  TA score = " + score );
+            log.debug("  TA score = " + score);
             // now subtract the new score, which takes care of the
             // difference in the scores
             score += ptsTakenOff;
-            log.debug( " After subtracting new deductions, score now is = "
-                       + score );
-            result.setTaScore( score );
+            log.debug(" After subtracting new deductions, score now is = "
+                + score);
+            result.setTaScore(score);
         }
         else
         {
-            if ( possible != null ) // there is a possible value
+            if (possible != null) // there is a possible value
             {
                 score = possible.doubleValue();
                 score += ptsTakenOff; // adding the deductions
-                result.setTaScore( score );
+                result.setTaScore(score);
             }
             else
             {
                 result.setTaScore(result.taScore() + ptsTakenOff);
             }
         }
-        SubmissionFileStats stats = prefs().submissionFileStats();
-        double oldDeductions = stats.deductions();
-        log.debug( "old deductions = " + oldDeductions );
-        stats.setDeductions( oldDeductions + ptsTakenOff );
-        log.debug( "new deductions = " + stats.deductions() );
+        double oldDeductions = fileStats.deductions();
+        log.debug("old deductions = " + oldDeductions);
+        fileStats.setDeductions(oldDeductions + ptsTakenOff);
+        log.debug("new deductions = " + fileStats.deductions());
     }
 
 
@@ -220,83 +229,57 @@ public class EditFileCommentsPage
     {
         double taPts = 0.0;
         EOEditingContext ec = localContext();
-        if ( codeWithCommentsToStore == null )
+        if (codeWithCommentsToStore == null)
         {
             return taPts;
         }
-        if ( codeWithCommentsToStore.length() < 50 &&
-             codeWithCommentsToStore.trim().equals( "<br />" ) )
+        if (codeWithCommentsToStore.length() < 50
+            && codeWithCommentsToStore.trim().equals("<br />"))
         {
             // An error occurred, but it should have already been
             // trapped elsewhere
             throw new Exception(
-                "storeComments(): null (<br/>) code returned from client" );
+                "storeComments(): null (<br/>) code returned from client");
         }
         try
         {
             // remove the link statement
 
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
-                log.debug( "before subst:\n---------------------------------" );
-                log.debug( codeWithCommentsToStore.substring( 0, 200 ) );
-                log.debug( "----------------------------------" );
+                log.debug("before subst:\n---------------------------------");
+                log.debug(codeWithCommentsToStore.substring(0, 200));
+                log.debug("----------------------------------");
             }
             codeWithCommentsToStore = codeWithCommentsToStore
-                .replaceFirst( "^\\s*<![^>]*>\\s*", "" )
-                .replaceFirst( "^\\s*<link [^>]*>\\s*", "" );
-//            if ( codeWithCommentsToStore.length() >= 85 )
-//            {
-//                if ( codeWithCommentsToStore.substring( 0, 5 ).equals( "<link" )
-//                     && codeWithCommentsToStore.substring( 83, 85 ).equals( "/>" ) )
-//                {
-//                    codeWithCommentsToStore = codeWithCommentsToStore.substring(
-//                        85, codeWithCommentsToStore.length() );
-//                }
-//            }
-            if ( log.isDebugEnabled() )
+                .replaceFirst("^\\s*<![^>]*>\\s*", "")
+                .replaceFirst("^\\s*<link [^>]*>\\s*", "");
+            if (log.isDebugEnabled())
             {
-                log.debug( "after subst:\n----------------------------------" );
-                log.debug( codeWithCommentsToStore.substring( 0, 200 ) );
-                log.debug( "----------------------------------" );
+                log.debug("after subst:\n----------------------------------");
+                log.debug(codeWithCommentsToStore.substring(0, 200));
+                log.debug("----------------------------------");
             }
-
-            // just for debugging purposes
-            /*
-            try
-            {
-                java.io.FileWriter out =
-                    new java.io.FileWriter( new File( "C:/comments1.out" ) );
-                out.write( codeWithComments );
-                out.close();
-            }
-            catch ( Exception e )
-            {
-                log.error( "exception trying to save comment input", e );
-            }
-            */
 
             SAXBuilder parser = new SAXBuilder();
             // Try parsing the file/string with the parser
             Document doc =
-                parser.build( new StringReader( codeWithCommentsToStore ) );
+                parser.build(new StringReader(codeWithCommentsToStore));
             Element root = doc.getRootElement();
             @SuppressWarnings("unchecked")
-            List<Element> children = root.getChild( "tbody" ).getChildren();
+            List<Element> children = root.getChild("tbody").getChildren();
 
             // Delete existing comments by the current user from the
             // database
-            NSArray<SubmissionFileComment> comments =
-                prefs().submissionFileStats().comments();
-            for (SubmissionFileComment thisComment : comments)
+            for (SubmissionFileComment thisComment : fileStats.comments())
             {
                  // if its the current users comments
-                 if ( user() == thisComment.author() )
+                 if (user() == thisComment.author())
                  {
-                     log.debug( "Deleting comment, line "
-                                + thisComment.lineNo() );
+                     log.debug("Deleting comment, line "
+                         + thisComment.lineNo());
                      taPts -= thisComment.deduction();
-                     ec.deleteObject( thisComment );
+                     ec.deleteObject(thisComment);
                  }
             }
             applyLocalChanges();
@@ -306,137 +289,121 @@ public class EditFileCommentsPage
             for (Element child : children)
             {
                 // get the id attribute from the row
-                String id = child.getAttributeValue( "id" );
-                if ( id == null )
+                String id = child.getAttributeValue("id");
+                if (id == null)
                 {
-                    log.error( "html tag is missing id attribute:" +
-                        prefs().submissionFileStats().markupFile().getPath() );
+                    log.error("html tag is missing id attribute:"
+                        + fileStats.markupFile().getPath());
                     continue;
                 }
-                if (    ( id.charAt( 0 ) == '\"' )
-                     && ( id.charAt( id.length() - 1 ) == '\"' ) )
+                if (   (id.charAt(0) == '\"')
+                    && (id.charAt(id.length() - 1) == '\"'))
                 {
                     // if there are quotes around the attribute value
-                    id = id.substring( 1, id.length() - 1 );
+                    id = id.substring(1, id.length() - 1);
                 }
-                String [] idarr = id.split( ":" );
-                if ( idarr[0].charAt( 0 ) == 'I' )
+                String [] idarr = id.split(":");
+                if (idarr[0].charAt(0) == 'I')
                 {
                     // This is a table tag
                     int    boxnum = Integer.parseInt(
-                        idarr[0].substring( 1, idarr[0].length() ) );
-                    int    rownum = Integer.parseInt( idarr[1] );
-                    int    refnum = Integer.parseInt( idarr[2] );
+                        idarr[0].substring(1, idarr[0].length()));
+                    int    rownum = Integer.parseInt(idarr[1]);
+                    int    refnum = Integer.parseInt(idarr[2]);
                     String idpart = "I" + boxnum + ":" + rownum + ":" + refnum;
-                    log.debug( "Tagged comment block found: " + idpart );
+                    log.debug("Tagged comment block found: " + idpart);
 
-                    Element msg = getElementById( child, idpart + ":M" );
-                    if ( msg != null )
+                    Element msg = getElementById(child, idpart + ":M");
+                    if (msg != null)
                     {
                         SubmissionFileComment comment =
                             new SubmissionFileComment();
-                        ec.insertObject( comment );
+                        ec.insertObject(comment);
                         applyLocalChanges();
-                        comment.setAuthorRelationship( user() );
-                        comment.setSubmissionFileStatsRelationship(
-                            prefs().submissionFileStats() );
+                        comment.setAuthorRelationship(user());
+                        comment.setSubmissionFileStatsRelationship(fileStats);
                         Element target =
-                            getElementById( child, idpart + ":T" );
-                        if ( target != null )
+                            getElementById(child, idpart + ":T");
+                        if (target != null)
                         {
                             comment.setTo(
-                                target.getAttribute( "value" ).getValue() );
-                            log.debug( "  to = " + comment.toNo() );
+                                target.getAttribute("value").getValue());
+                            log.debug("  to = " + comment.toNo());
                         }
                         Element category =
-                            getElementById( child, idpart + ":C" );
-                        if ( category != null )
+                            getElementById(child, idpart + ":C");
+                        if (category != null)
                         {
-                            comment.setCategory( category.getText() );
-                            log.debug( "  category = " + comment.category() );
+                            comment.setCategory(category.getText());
+                            log.debug("  category = " + comment.category());
                         }
-                        Element pts = getElementById( child, idpart + ":P" );
-                        if ( pts != null )
+                        Element pts = getElementById(child, idpart + ":P");
+                        if (pts != null)
                         {
                             String ptVal = pts.getText();
-                            int colonIndex = ptVal.indexOf( ":" );
-                            if ( colonIndex != -1 )
+                            int colonIndex = ptVal.indexOf(":");
+                            if (colonIndex != -1)
                             {
                                 // colon exists, so remove it
                                 ptVal = ptVal.substring(
-                                    colonIndex + 1, ptVal.length() );
+                                    colonIndex + 1, ptVal.length());
                             }
                             ptVal = ptVal.trim();
 
-                            if ( !ptVal.equals( "" ) )
+                            if (!ptVal.equals(""))
                             {
                                 try
                                 {
                                     double deduction =
-                                        Double.parseDouble( ptVal );
+                                        Double.parseDouble(ptVal);
                                     taPts += deduction;
-                                    comment.setDeduction( deduction );
+                                    comment.setDeduction(deduction);
                                 }
-                                catch ( NumberFormatException e )
+                                catch (NumberFormatException e)
                                 {
-                                    log.error( "Double conversion failure on "
+                                    log.error("Double conversion failure on "
                                                + "ptVal argument '"
-                                               + ptVal + "'", e );
+                                               + ptVal + "'", e);
                                 }
                             }
                             else // if no points given , then 0 is by default
                             {
-                                comment.setDeduction( 0.0 );
+                                comment.setDeduction(0.0);
                             }
-                            log.debug( "  deduction = "
-                                       + comment.deductionRaw() );
+                            log.debug("  deduction = "
+                                       + comment.deductionRaw());
                         }
                         XMLOutputter outputter = new XMLOutputter();
-                        outputter.setOmitDeclaration( true );
-                        String newmes = outputter.outputString( msg );
+                        outputter.setOmitDeclaration(true);
+                        String newmes = outputter.outputString(msg);
                         newmes = newmes.replaceAll(idpart,"&&&&");
-                        comment.setMessage( newmes );
-                        log.debug( "  message = '" + comment.message() + "'" );
-                        comment.setLineNo( rownum );
-                        log.debug( "  line = " + comment.lineNo() );
+                        comment.setMessage(newmes);
+                        log.debug("  message = '" + comment.message() + "'");
+                        comment.setLineNo(rownum);
+                        log.debug("  line = " + comment.lineNo());
                         applyLocalChanges();
-                        log.debug( "result = " + comment );
+                        log.debug("result = " + comment);
                     }
                     else
                     {
-                        log.debug( "Skipping blank separator TR" );
+                        log.debug("Skipping blank separator TR");
                     }
                 }
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            log.error( "exception reading comments for "
-                       + prefs().submissionFileStats().markupFile().getPath(),
-                       e );
+            log.error("exception reading comments for "
+                + fileStats.markupFile().getPath(), e);
 
-            new GraderMarkupParseError(prefs().submission(),
-                    GraderMarkupParseError.LOCATION_EDIT_FILE_COMMENTS,
-                    e, context(),
-                    prefs().submissionFileStats().markupFile(),
-                    "Raw XML (value of codeWithComments):\n"
-                    + codeWithCommentsToStore).send();
-
-/*            Application.sendAdminEmail(
-                null,
-                prefs().submission().assignmentOffering().courseOffering()
-                    .instructors(),
-                true,
-                "Exception in EditFileComments",
-                "This is an automatic message from the Web-CAT server.  An "
-                + "exception was caught while\nattempting to read "
-                + "comments edited by a user in the file:\n\n"
-                + prefs().submissionFileStats().markupFile().getPath()
-                + "\n\nThe raw XML follows the exception details.\n"
-                + ( (Application)application() )
-                      .informationForExceptionInContext( e, null, context() )
-                + "\n\nRaw XML (value of codeWithComments):\n"
-                + codeWithCommentsToStore, null );*/
+            new GraderMarkupParseError(
+                fileStats.submissionResult().submission(),
+                GraderMarkupParseError.LOCATION_EDIT_FILE_COMMENTS,
+                e,
+                context(),
+                fileStats.markupFile(),
+                "Raw XML (value of codeWithComments):\n"
+                + codeWithCommentsToStore).send();
 
             throw e;
         }
@@ -444,7 +411,7 @@ public class EditFileCommentsPage
         // finished with it
         codeWithCommentsToStore = null;
 
-        log.debug( " Store comments is returning = " + taPts );
+        log.debug(" Store comments is returning = " + taPts);
         return taPts;
     }
 
@@ -461,28 +428,27 @@ public class EditFileCommentsPage
     {
         try
         {
-            codeWithComments = prefs().submissionFileStats()
-                .codeWithComments( user(), isGrading(), context().request() );
-            if ( log.isDebugEnabled() )
+            codeWithComments = fileStats.codeWithComments(
+                user(), isGrading(), context().request());
+            if (log.isDebugEnabled())
             {
-                log.debug( "codeWithComments = "
-                                + codeWithComments.substring( 0, 200 ) );
+                log.debug("codeWithComments = "
+                    + codeWithComments.substring(0, 200));
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            error(
-                "An error occurred while trying to prepare the source code "
+            error("An error occurred while trying to prepare the source code "
                 + "view for this file.  The error has been reported to the "
                 + "administrator.  Please do not try to edit the comments "
-                + "in this file until the situation has been resolved." );
+                + "in this file until the situation has been resolved.");
             codeWithComments = null;
         }
     }
 
 
     // ----------------------------------------------------------
-    public void setCodeWithComments( String code )
+    public void setCodeWithComments(String code)
     {
         codeWithCommentsToStore = code;
     }
@@ -491,60 +457,60 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     public String javascriptText()
     {
-        StringBuffer buffer = new StringBuffer( 200 );
-        buffer.append( "<script type=\"text/javascript\">\n" );
-        buffer.append( "var editor = null;\nfunction initEditor() {\n" );
-        buffer.append( "editor = new HTMLArea(\"source\");\n" );
+        StringBuffer buffer = new StringBuffer(200);
+        buffer.append("<script type=\"text/javascript\">\n");
+        buffer.append("var editor = null;\nfunction initEditor() {\n");
+        buffer.append("editor = new HTMLArea(\"source\");\n");
         {
             String url = WCResourceManager.resourceURLFor(
-                "htmlarea/htmlarea.js", "Grader", null, context().request() );
-            if ( url != null )
+                "htmlarea/htmlarea.js", "Grader", null, context().request());
+            if (url != null)
             {
-                buffer.append( "editor.config.editorURL = \"");
-                buffer.append( url.substring( 0,
-                    url.length() - "htmlarea.js".length() ) );
-                buffer.append( "\";\n");
+                buffer.append("editor.config.editorURL = \"");
+                buffer.append(url.substring(0,
+                    url.length() - "htmlarea.js".length()));
+                buffer.append("\";\n");
             }
             url = WCResourceManager.resourceURLFor(
-                "images/blank.gif", "Core", null, context().request() );
-            if ( url != null )
+                "images/blank.gif", "Core", null, context().request());
+            if (url != null)
             {
-                buffer.append( "editor.config.coreResourceURL = \"");
-                buffer.append( url.substring( 0,
-                    url.length() - "images/blank.gif".length() ) );
-                buffer.append( "\";\n");
+                buffer.append("editor.config.coreResourceURL = \"");
+                buffer.append(url.substring(0,
+                    url.length() - "images/blank.gif".length()));
+                buffer.append("\";\n");
             }
         }
-        buffer.append( "editor.generate();\n" );
-        if ( wcSession() != null && user() != null )
+        buffer.append("editor.generate();\n");
+        if (wcSession() != null && user() != null)
         {
-            buffer.append( "editor.config.userName = \"" );
-            buffer.append( user().name() );
-                buffer.append( "\";\n" );
+            buffer.append("editor.config.userName = \"");
+            buffer.append(user().name());
+                buffer.append("\";\n");
         }
-        buffer.append( "editor.config.numComments = " );
+        buffer.append("editor.config.numComments = ");
         try
         {
-            buffer.append( prefs().submissionFileStats().comments().count() );
+            buffer.append(fileStats.comments().count());
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            buffer.append( 0 );
-            log.debug( "Exception caught in javascriptText():", e);
+            buffer.append(0);
+            log.debug("Exception caught in javascriptText():", e);
         }
-        buffer.append( ";\n" );
-        buffer.append( "editor.config.viewPoints = " );
+        buffer.append(";\n");
+        buffer.append("editor.config.viewPoints = ");
         // Check to see if the current user is authorized to view or modify
         // the deductions
-        buffer.append( isGrading() );
-        buffer.append( ";\n" );
-        buffer.append( "}\n</script>\n" );
+        buffer.append(isGrading());
+        buffer.append(";\n");
+        buffer.append("}\n</script>\n");
         return buffer.toString();
     }
 
 
     // ----------------------------------------------------------
-    public void setJavascriptText( String text )
+    public void setJavascriptText(String text)
     {
         // What?  This is just to satisfy WO, since we never need
         // to set this field meaningfully
@@ -552,14 +518,14 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    private static Element getElementById( Element current, String id )
+    private static Element getElementById(Element current, String id)
     {
         Element result = null;
-        if ( current != null )
+        if (current != null)
         {
-            String thisId = current.getAttributeValue( "id" );
-            if ( thisId != null &&
-                 thisId.equals( id ) )
+            String thisId = current.getAttributeValue("id");
+            if (thisId != null &&
+                 thisId.equals(id))
             {
                 result = current;
             }
@@ -569,8 +535,8 @@ public class EditFileCommentsPage
                 List<Element> children = current.getChildren();
                 for (Element child : children)
                 {
-                    Element e = getElementById( child, id );
-                    if ( e != null )
+                    Element e = getElementById(child, id);
+                    if (e != null)
                     {
                         result = e;
                         break;
@@ -582,10 +548,41 @@ public class EditFileCommentsPage
     }
 
 
+    // ----------------------------------------------------------
+    public Byte commentFormat()
+    {
+        Byte format = SubmissionResult.formats.get(0);
+        if (fileStats.submissionResult() != null)
+        {
+            format = SubmissionResult.formats.get(
+                fileStats.submissionResult().commentFormat());
+        }
+        return format;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setCommentFormat(Byte format)
+    {
+        if (format != null && fileStats.submissionResult() != null)
+        {
+            fileStats.submissionResult().setCommentFormat(format.byteValue());
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public String formatLabel()
+    {
+        return SubmissionResult.formatStrings.objectAtIndex(aFormat);
+    }
+
+
     //~ Instance/static variables .............................................
 
     private String codeWithComments            = null;
     private String codeWithCommentsToStore     = null;
+    private String priorOverallComments        = null;
 
-    static Logger log = Logger.getLogger( EditFileCommentsPage.class );
+    static Logger log = Logger.getLogger(EditFileCommentsPage.class);
 }

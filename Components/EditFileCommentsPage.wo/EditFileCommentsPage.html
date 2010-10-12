@@ -5,17 +5,18 @@
 <wo:WCScriptFragment>dojo.addOnLoad(function() { initEditor() });</wo:WCScriptFragment>
 <div class="module">
 <wo name="Form">
-<div class="floatLeft">
 <wo name="ResultInfo"/><wo name="History"/>
-</div>
-<div class="floatRight">
-<table class="layout">
-<tr><td><wo name="MarkAsFinished"/> <label for="markAsFinished">Mark as finished</label></td></tr>
-<tr><td>Go to <wo name="FileList"/> <wo name="SaveAndGo"/></td></tr>
-<tr><td style="text-align: right"><wo name="Cancel"/></td></tr>
+<table class="layout floatRight">
+<tr><td colspan="2">Go to <wo name="FileList"/> <wo name="SaveAndGo"/></td></tr>
+<tr><td class="left"><wo name="MarkAsFinished"/>
+      <label for="markAsFinished">Mark as finished</label></td>
+    <td class="right"><wo name="Cancel"/></td></tr>
 </table>
+<div class="clear" dojoType="webcat.TitlePane" title="Overall TA/Instructor Comments" open="false">
+  <div><wo name="Comments"/></div>
+  <div>Format: <wo name="CommentFormat"/></div>
 </div>
-<div class="spacer" style="clear: both">&nbsp;</div>
+<h2><wo:str value="$prefs.submissionFileStats.sourceFileName"/></h2>
 <wo name="Code"/>
 </wo>
 </div>

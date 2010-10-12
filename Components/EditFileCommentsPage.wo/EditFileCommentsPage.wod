@@ -4,10 +4,6 @@ Cancel: WCButton {
     class = "neg";
 }
 
-ClassName: WOString {
-    value = prefs.submissionFileStats.className;
-}
-
 Code: WOText {
     rows  = 40;
     cols  = 80;
@@ -15,6 +11,20 @@ Code: WOText {
     name  = "source";
     id    = "source";
     style = "width:100%;";
+}
+
+CommentFormat: WCFilteringSelect {
+    list              = formats;
+    item              = aFormat;
+    selection         = commentFormat;
+    displayString     = formatLabel;
+//  noSelectionString = "Select from your files ...";
+}
+
+Comments: WCSimpleTextArea {
+    rows  = 15;
+    cols  = 80;
+    value = fileStats.submissionResult.comments;
 }
 
 FileList: WCFilteringSelect {
@@ -55,6 +65,6 @@ Page: org.webcat.core.WCPageWithNavigation {
 
 ResultInfo: org.webcat.grader.SubmissionResultInfo {
     showFileInfo = true;
-    submission = prefs.submission;
-    submissionFileStats = prefs.submissionFileStats;
+    submission = fileStats.submissionResult.submission;
+    submissionFileStats = fileStats;
 }
