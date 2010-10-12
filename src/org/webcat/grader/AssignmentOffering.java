@@ -25,6 +25,7 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
+import er.extensions.eof.ERXKey;
 import er.extensions.eof.qualifiers.ERXInQualifier;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
@@ -120,6 +121,9 @@ public class AssignmentOffering
         + Department.INSTITUTION_KEY + "."
         + AuthenticationDomain.PROPERTY_NAME_KEY;
     public static final String ID_FORM_KEY = "aoid";
+
+    public static final ERXKey<String> titleString =
+        new ERXKey<String>("titleString");
 
 
     //~ Methods ...............................................................
