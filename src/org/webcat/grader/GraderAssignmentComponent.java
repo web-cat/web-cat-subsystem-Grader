@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2010 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -117,6 +117,7 @@ public class GraderAssignmentComponent
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
+    @Override
     public boolean startWith( NSDictionary<String, Object> params )
     {
         boolean result = false;
