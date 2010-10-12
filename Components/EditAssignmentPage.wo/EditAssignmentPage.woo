@@ -18,16 +18,9 @@
         }; 
         offeringGroup = {
             class = ERXDisplayGroup; 
-            dataSource = {
-                class = EODetailDataSource; 
-                detailKey = offerings; 
-                masterClassDescription = AssignmentOffering; 
-            }; 
-            fetchesOnLoad = YES; 
             formatForLikeQualifier = "%@*"; 
             localKeys = (); 
             numberOfObjectsPerBatch = 0; 
-            selectsFirstObjectAfterFetch = YES; 
             sortOrdering = ({class = EOSortOrdering; key = courseOffering.crn; selectorName = "compareAscending:"; }); 
         }; 
 	    submissionProfileDisplayGroup = {

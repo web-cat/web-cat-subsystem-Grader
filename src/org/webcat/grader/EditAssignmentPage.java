@@ -44,7 +44,7 @@ import org.webcat.ui.generators.JavascriptGenerator;
  *  @version $Revision$, $Date$
  */
 public class EditAssignmentPage
-    extends GraderAssignmentComponent
+    extends GraderAssignmentsComponent
 {
     //~ Constructors ..........................................................
 
@@ -81,26 +81,6 @@ public class EditAssignmentPage
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void awake()
-    {
-        long timeStartedHere = System.currentTimeMillis();
-        super.awake();
-        long timeTaken = System.currentTimeMillis() - timeStartedHere;
-        log.debug("Time in awake(): " + timeTaken + " ms");
-    }
-
-
-    // ----------------------------------------------------------
-    public void sleep()
-    {
-        long timeStartedHere = System.currentTimeMillis();
-        super.sleep();
-        long timeTaken = System.currentTimeMillis() - timeStartedHere;
-        log.debug("Time in sleep(): " + timeTaken + " ms");
-    }
-
-
-    // ----------------------------------------------------------
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
@@ -113,9 +93,18 @@ public class EditAssignmentPage
         gradingPluginsToAdd = GradingPlugin.pluginsAvailableToUser(
                 localContext(), user());
 
+        offeringGroup.setObjectArray(assignmentOfferings(courseOfferings()));
         if (selectedOffering == null)
         {
-            selectedOffering = prefs().assignmentOffering();
+            if (offeringGroup.displayedObjects().count() > 0)
+            {
+                selectedOffering = offeringGroup.displayedObjects()
+                    .objectAtIndex(0);
+            }
+            else
+            {
+                selectedOffering = prefs().assignmentOffering();
+            }
         }
         if (assignment == null)
         {
@@ -124,20 +113,6 @@ public class EditAssignmentPage
             {
                 assignment = selectedOffering.assignment();
             }
-            Semester selectedSemester = coreSelections().semester();
-            offeringGroup.setMasterObject(assignment);
-            if (selectedSemester == null)
-            {
-                offeringGroup.queryMatch().remove("courseOffering.semester");
-            }
-            else
-            {
-                @SuppressWarnings("unchecked")
-                NSMutableDictionary<Object, Object> params =
-                    offeringGroup.queryMatch();
-                params.put("courseOffering.semester", selectedSemester);
-            }
-            offeringGroup.qualifyDisplayGroup();
         }
         scriptDisplayGroup.setMasterObject(assignment);
         // TODO: Fix NPEs on this page when no selectedOffering
@@ -151,8 +126,8 @@ public class EditAssignmentPage
                     assignment.submissionProfile() )
                  );
         }
-        log.debug( "starting super.appendToResponse()" );
-        super.beforeAppendToResponse( response, context );
+        log.debug("starting super.appendToResponse()");
+        super.beforeAppendToResponse(response, context);
     }
 
 
