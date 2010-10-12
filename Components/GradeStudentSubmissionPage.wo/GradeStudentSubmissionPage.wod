@@ -108,6 +108,7 @@ Page: org.webcat.core.WCPageWithNavigation {
 Regrade: WCButton {
     action = regrade;
     label = "Regrade Submission";
+    remote = "true";
 }
 
 ResultInfo: org.webcat.grader.SubmissionResultInfo {
