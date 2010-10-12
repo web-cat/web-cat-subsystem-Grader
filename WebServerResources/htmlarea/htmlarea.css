@@ -1,13 +1,14 @@
 .htmlarea { background: #fff; }
 
 .htmlarea iframe {
-    border: 0px solid gray;
+    border: 1px solid gray;
+    border-top-width: 0;
 }
 
 .htmlarea .toolbar {
   background: ButtonFace;
-  padding: 1px;
-  border: 1px solid gray;
+  padding: 1px 5px;
+  border: 1px outset gray;
 }
 
 .htmlarea .toolbar table {
