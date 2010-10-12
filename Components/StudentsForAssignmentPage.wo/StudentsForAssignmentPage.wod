@@ -4,7 +4,7 @@ AvgScore: WOString {
 }
 
 BatchNavigator: org.webcat.core.WCBatchNavigator {
-    displayGroup = submissionDisplayGroup;
+    displayGroup = submissionGroup;
     persistentKey = "StudentsForAssignmentPage.batchSize";
 }
 
@@ -45,7 +45,6 @@ MostRecentSubmitNumber: WOString {
 }
 
 Navigator: org.webcat.grader.GraderNavigator {
-    allowsAllOfferingsForCourse = false;
 }
 
 NoTAScore: WOConditional {
@@ -60,13 +59,13 @@ NotMostRecent: WOConditional {
 
 Repetition1: WORepetition {
     item  = aSubmission;
-    list  = submissionDisplayGroup.displayedObjects;
+    list  = submissionGroup.displayedObjects;
     index = index;
 }
 
 Repetition2: WORepetition {
     item  = aSubmission;
-    list  = staffSubmissionDisplayGroup.displayedObjects;
+    list  = staffSubmissionGroup.displayedObjects;
     index = staffIndex;
 }
 
@@ -148,25 +147,25 @@ UsesToolCheckScore: WOConditional {
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
-    displayGroup = submissionDisplayGroup;
+    displayGroup = submissionGroup;
     displayKey = "Name";
     key = "user.name_LF";
 }
 
 WCSortOrder3: org.webcat.core.WCSortOrder {
-    displayGroup = submissionDisplayGroup;
+    displayGroup = submissionGroup;
     displayKey = "Grading Status";
     key = "result.status";
 }
 
 WCSortOrder4: org.webcat.core.WCSortOrder {
-    displayGroup = submissionDisplayGroup;
+    displayGroup = submissionGroup;
     displayKey = "Submission Time";
     key = "submitTime";
 }
 
 WCSortOrder5: org.webcat.core.WCSortOrder {
-    displayGroup = submissionDisplayGroup;
+    displayGroup = submissionGroup;
     displayKey = "Final Score";
     key = "result.finalScore";
 }

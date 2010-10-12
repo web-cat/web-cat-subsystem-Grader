@@ -3,12 +3,12 @@
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
 </wo:org.webcat.core.WCPageModule></wo:if><wo:else>
+<div class="module"><wo name="Navigator"/></div>
 
-<wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.assignment.name">
-<div class="floatRight"><wo name="Navigator"/></div>
-<p>For: <span class="hl"><wo:if condition="$prefs.assignmentOffering"><wo:str value="$prefs.assignmentOffering.titleString"/></wo:if><wo:else><wo:str value="$prefs.assignment.titleString"/></wo:else></span></p>
+<wo:loop list="$offerings.displayedObjects" item="$assignmentOffering">
+<wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.titleString">
 
-<wo:if condition="$submissionDisplayGroup.allObjects.count">
+<wo:if condition="$submissionGroup.displayedObjects.count">
     <p><b>Score Summary:</b>
     High: <span class="hl"><wo name="HighScore"/></span>
     Mean: <span class="hl"><wo name="AvgScore"/></span>
@@ -49,8 +49,9 @@
 </wo:else>
 
 </wo:org.webcat.core.WCPageModule>
+</wo:loop>
 
-<wo:if condition="$staffSubmissionDisplayGroup.allObjects.count">
+<wo:if condition="$staffSubmissionGroup.allObjects.count">
 <wo:org.webcat.core.WCPageModule title="Staff Submissions">
 
     <table><thead>

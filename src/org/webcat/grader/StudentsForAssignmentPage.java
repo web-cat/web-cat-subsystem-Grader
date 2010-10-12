@@ -21,11 +21,11 @@
 
 package org.webcat.grader;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -39,7 +39,7 @@ import org.webcat.core.*;
  * @version $Revision$, $Date$
  */
 public class StudentsForAssignmentPage
-    extends GraderAssignmentComponent
+    extends GraderAssignmentsComponent
 {
     //~ Constructors ..........................................................
 
@@ -51,28 +51,39 @@ public class StudentsForAssignmentPage
     public StudentsForAssignmentPage(WOContext context)
     {
         super(context);
+
+        staffSubmissionGroup = new ERXDisplayGroup<Submission>();
+        staffSubmissionGroup.setNumberOfObjectsPerBatch(100);
+        staffSubmissionGroup.setSortOrderings(
+            Submission.user.dot(User.name_LF).ascInsensitives().then(
+                Submission.user.dot(User.userName).ascInsensitive())
+            );
+
+        offerings = new ERXDisplayGroup<AssignmentOffering>();
+        offerings.setSortOrderings(
+            AssignmentOffering.titleString.ascInsensitives());
     }
 
 
     //~ KVC Attributes (must be public) .......................................
 
-    public ERXDisplayGroup<Submission> submissionDisplayGroup;
-    public ERXDisplayGroup<Submission> staffSubmissionDisplayGroup;
     /** Submission in the worepetition */
     public Submission  aSubmission;
     public Submission  partnerSubmission;
+
     /** index in the student worepetition */
     public int         index;
+
+    public ERXDisplayGroup<Submission> staffSubmissionGroup;
     /** index in the staff worepetition */
     public int         staffIndex;
 
+    public ERXDisplayGroup<AssignmentOffering> offerings;
     public AssignmentOffering assignmentOffering;
-
 
     /** Value of the corresponding checkbox on the page. */
     public boolean omitStaff           = true;
     public boolean useBlackboardFormat = true;
-    public Submission.CumulativeStats studentStats;
 
 
     //~ Methods ...............................................................
@@ -81,65 +92,40 @@ public class StudentsForAssignmentPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug("\n\nappendToResponse()");
+        log.debug("appendToResponse()");
 
-        if (assignmentOffering == null)
-        {
-            assignmentOffering = prefs().assignmentOffering();
-            if (assignmentOffering == null)
-            {
-                Assignment assignment = prefs().assignment();
-                CourseOffering courseOffering =
-                    coreSelections().courseOffering();
-                assignmentOffering = AssignmentOffering
-                    .firstObjectMatchingValues(
-                        localContext(),
-                        null,
-                        AssignmentOffering.COURSE_OFFERING_KEY,
-                        courseOffering,
-                        AssignmentOffering.ASSIGNMENT_KEY,
-                        assignment);
-                prefs().setAssignmentOfferingRelationship(assignmentOffering);
-            }
-        }
-
-        studentStats = new Submission.CumulativeStats();
-        NSArray<Submission> submissions = Submission.submissionsForGrading(
-            localContext(),
-            assignmentOffering,
-            true,  // omitPartners
-            omitStaff,
-            studentStats);
-
-        submissionDisplayGroup.setObjectArray(submissions);
+        offerings.setObjectArray(assignmentOfferings(courseOfferings()));
         if (log.isDebugEnabled())
         {
-            log.debug("Found " + submissions.count() + " submissions:");
-            for (Submission sub : submissions)
+            log.debug("assignment offerings:");
+            for (AssignmentOffering ao : offerings.allObjects())
             {
-                log.debug("    "
-                    + sub.user()
-                    + " # "
-                    + sub.submitNumber()
-                    + " "
-                    + sub.hashCode()
-                    + ", "
-                    + sub.partnerLink()
-                    + ", pri = "
-                    + (sub.primarySubmission() == null
-                        ? null
-                        : sub.primarySubmission().hashCode())
-                    + ", "
-                    + sub);
+                log.debug("\t" + ao);
             }
         }
-        staffSubmissionDisplayGroup.setObjectArray(
-            Submission.submissionsForGrading(
+
+        NSMutableArray<Submission> staffSubs =
+            new NSMutableArray<Submission>();
+        for (AssignmentOffering ao : offerings.displayedObjects())
+        {
+            // Stuff the index variable into the public key so the group/stats
+            // methods will work for us
+            assignmentOffering = ao;
+            submissionGroup().setObjectArray(Submission.submissionsForGrading(
                 localContext(),
-                assignmentOffering,
+                ao,
                 true,  // omitPartners
-                assignmentOffering.courseOffering().staff(),
-                null));
+                omitStaff,
+                studentStats()));
+            staffSubs.addAll(Submission.submissionsForGrading(
+                    localContext(),
+                    ao,
+                    true,  // omitPartners
+                    ao.courseOffering().staff(),
+                    null));
+        }
+
+        staffSubmissionGroup.setObjectArray(staffSubs);
         super.beforeAppendToResponse(response, context);
     }
 
@@ -167,7 +153,7 @@ public class StudentsForAssignmentPage
                 GradeStudentSubmissionPage page =
                     (GradeStudentSubmissionPage)destination;
                 page.availableSubmissions =
-                    submissionDisplayGroup.displayedObjects().immutableClone();
+                    submissionGroup().displayedObjects().immutableClone();
                 page.thisSubmissionIndex =
                     page.availableSubmissions.indexOf(aSubmission);
             }
@@ -185,7 +171,8 @@ public class StudentsForAssignmentPage
      */
     public WOComponent markAsCompleteActionOk()
     {
-        for (Submission sub : submissionDisplayGroup.allObjects())
+        assignmentOffering = offeringForAction;
+        for (Submission sub : submissionGroup().displayedObjects())
         {
             if (sub.result().status() == Status.UNFINISHED)
             {
@@ -207,19 +194,36 @@ public class StudentsForAssignmentPage
      * being completed, sending e-mail notifications as necessary.
      * @return null to force this page to reload
      */
-    public WOComponent markAsComplete()
+    public WOActionResults markAsComplete()
     {
-        ConfirmPage confirmPage = pageWithName(ConfirmPage.class);
-        confirmPage.nextPage       = this;
-        confirmPage.message        =
-            "You are about to mark all <b>partially graded</b> submissions "
-            + "as now complete.  Submissions that have no remarks or manual "
-            + "scoring information will not be affected.  All students who "
-            + "are affected will receive an e-mail notification.";
-        confirmPage.actionReceiver = this;
-        confirmPage.actionOk       = "markAsCompleteActionOk";
-        confirmPage.setTitle("Confirm Grading Is Complete");
-        return confirmPage;
+        offeringForAction = assignmentOffering;
+
+        return new ConfirmingAction(this)
+        {
+            @Override
+            protected String confirmationTitle()
+            {
+                return "Confirm Grading Is Complete?";
+            }
+
+            @Override
+            protected String confirmationMessage()
+            {
+                return "<p>You are about to mark all <b>partially graded</b> "
+                    + "submissions  as now complete so that students can see "
+                    + "their feedback from you.  Submissions that have "
+                    + "no remarks or manual scoring information will not be "
+                    + "affected.  All students who are affected will receive "
+                    + "an e-mail notification.</p><p class=\"center\">"
+                    + "Mark partially graded submissions as complete?</p>";
+            }
+
+            @Override
+            protected WOActionResults performStandardAction()
+            {
+                return markAsCompleteActionOk();
+            }
+        };
     }
 
 
@@ -259,7 +263,8 @@ public class StudentsForAssignmentPage
             submissions.count() - 1);
         if (lastSubmission == aSubmission)
         {
-            lastSubmission = submissions.objectAtIndex(submissions.count() - 2);
+            lastSubmission =
+                submissions.objectAtIndex(submissions.count() - 2);
         }
         return partnerSubmission != lastSubmission;
     }
@@ -290,7 +295,7 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public WOComponent repartner()
     {
-        for (Submission sub : submissionDisplayGroup.allObjects())
+        for (Submission sub : submissionGroup().displayedObjects())
         {
             if (sub.result() != null)
             {
@@ -352,7 +357,44 @@ public class StudentsForAssignmentPage
     }
 
 
+    // ----------------------------------------------------------
+    public Submission.CumulativeStats studentStats()
+    {
+        Submission.CumulativeStats stats = subStats.get(assignmentOffering);
+        if (stats == null)
+        {
+            stats = new Submission.CumulativeStats();
+            subStats.put(assignmentOffering, stats);
+        }
+        return stats;
+    }
+
+
+    // ----------------------------------------------------------
+    public ERXDisplayGroup<Submission> submissionGroup()
+    {
+        ERXDisplayGroup<Submission> group = subGroups.get(assignmentOffering);
+        if (group == null)
+        {
+            group = new ERXDisplayGroup<Submission>();
+            group.setNumberOfObjectsPerBatch(100);
+            group.setSortOrderings(
+                Submission.user.dot(User.name_LF).ascInsensitives().then(
+                    Submission.user.dot(User.userName).ascInsensitive())
+                );
+            subGroups.put(assignmentOffering, group);
+        }
+        return group;
+    }
+
+
     //~ Instance/static variables .............................................
+
+    private Map<AssignmentOffering, ERXDisplayGroup<Submission>> subGroups =
+        new HashMap<AssignmentOffering, ERXDisplayGroup<Submission>>();
+    private Map<AssignmentOffering, Submission.CumulativeStats> subStats =
+        new HashMap<AssignmentOffering, Submission.CumulativeStats>();
+    private AssignmentOffering offeringForAction;
 
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }
