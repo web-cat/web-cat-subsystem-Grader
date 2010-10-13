@@ -30,6 +30,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
+import org.webcat.core.EOBasedKeyGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -196,6 +197,8 @@ public abstract class _GradingPlugin
     // Fetch specifications ---
     public static final String PLUGINS_AVAILABLE_TO_USER_FSPEC = "pluginsAvailableToUser";
     public static final String ENTITY_NAME = "GradingPlugin";
+
+    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

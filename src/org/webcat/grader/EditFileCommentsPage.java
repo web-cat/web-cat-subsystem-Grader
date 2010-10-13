@@ -152,7 +152,7 @@ public class EditFileCommentsPage
 
 
     // ----------------------------------------------------------
-    private WOComponent goToSelectedDestination()
+    public WOComponent goToSelectedDestination()
     {
         if (selectedFile == null)
         {

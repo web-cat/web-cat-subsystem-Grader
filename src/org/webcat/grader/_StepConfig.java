@@ -30,6 +30,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
+import org.webcat.core.EOBasedKeyGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -161,6 +162,8 @@ public abstract class _StepConfig
     public static final String STEP_CONFIGS_FOR_COURSE_AND_SCRIPT_FSPEC = "stepConfigsForCourseAndScript";
     public static final String STEP_CONFIGS_FOR_USER_FSPEC = "stepConfigsForUser";
     public static final String ENTITY_NAME = "StepConfig";
+
+    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

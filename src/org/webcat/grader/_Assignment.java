@@ -30,6 +30,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
+import org.webcat.core.EOBasedKeyGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -178,6 +179,8 @@ public abstract class _Assignment
     public static final String ASSIGNMENTS_FOR_REUSE_IN_COURSE_FSPEC = "assignmentsForReuseInCourse";
     public static final String NEIGHBOR_ASSIGNMENTS_FSPEC = "neighborAssignments";
     public static final String ENTITY_NAME = "Assignment";
+
+    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

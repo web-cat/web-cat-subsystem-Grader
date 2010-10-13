@@ -87,7 +87,8 @@ public class GraderAssignmentsComponent
             {
                 // Just one offering selected
                 CourseOffering co = coreSelections().courseOffering();
-                if (co != null && co.isStaff(user()))
+                if (co != null &&
+                        (co.isStaff(user()) || user().hasAdminPrivileges()))
                 {
                     courseOfferings.add(co);
                 }
@@ -103,7 +104,7 @@ public class GraderAssignmentsComponent
 
                 for (CourseOffering co : candidates)
                 {
-                    if (co.isStaff(user()))
+                    if (co.isStaff(user()) || user().hasAdminPrivileges())
                     {
                         courseOfferings.add(co);
                     }

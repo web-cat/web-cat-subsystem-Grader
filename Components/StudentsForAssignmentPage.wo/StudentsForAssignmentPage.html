@@ -3,10 +3,11 @@
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
 </wo:org.webcat.core.WCPageModule></wo:if><wo:else>
-<div class="module"><wo name="Navigator"/></div>
+<div class="module" style="text-align: right"><wo name="Navigator"/></div>
 
 <wo:loop list="$offerings.displayedObjects" item="$assignmentOffering">
-<wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.titleString">
+<wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.titleString"
+    open="$assignmentOffering.generateKey.user.preferences.StudentsForAssignmentPage_open">
 
 <wo:if condition="$submissionGroup.displayedObjects.count">
     <p><b>Score Summary:</b>

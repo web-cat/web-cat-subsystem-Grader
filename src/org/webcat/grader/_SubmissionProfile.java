@@ -30,6 +30,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
+import org.webcat.core.EOBasedKeyGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -229,6 +230,8 @@ public abstract class _SubmissionProfile
     public static final String PROFILES_FOR_COURSE_FSPEC = "profilesForCourse";
     public static final String PROFILES_FOR_USER_FSPEC = "profilesForUser";
     public static final String ENTITY_NAME = "SubmissionProfile";
+
+    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

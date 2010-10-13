@@ -30,6 +30,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
+import org.webcat.core.EOBasedKeyGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -191,6 +192,8 @@ public abstract class _SubmissionResult
     public static final String MOST_RECENT_RESULTS_FOR_ASSIGNMENT_ORDERED_BY_NUMBER_FSPEC = "mostRecentResultsForAssignmentOrderedByNumber";
     public static final String RESULTS_FOR_ASSIGNMENT_AND_USER_FSPEC = "resultsForAssignmentAndUser";
     public static final String ENTITY_NAME = "SubmissionResult";
+
+    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................
