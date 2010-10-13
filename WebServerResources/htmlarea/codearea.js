@@ -1332,7 +1332,7 @@ HTMLArea.prototype.changeCommentVisibility = function(type) {
         {
             lastRowType = row.className;
         }
-        else if (row.id.match(/I\d+:\d+:\d+/))
+        else if (row.id.match(/[INF]\d*:.*/))
         {
             var shouldShow = (type == "showall" || type == lastRowType);
             row.style.display = shouldShow ? 'table-row' : 'none';
