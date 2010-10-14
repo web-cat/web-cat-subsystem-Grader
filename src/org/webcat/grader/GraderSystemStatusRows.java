@@ -46,9 +46,9 @@ public class GraderSystemStatusRows
      *
      * @param context The page's context
      */
-    public GraderSystemStatusRows( WOContext context )
+    public GraderSystemStatusRows(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -66,10 +66,10 @@ public class GraderSystemStatusRows
      * @param response The response being built
      * @param context  The context of the request
      */
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void appendToResponse(WOResponse response, WOContext context)
     {
         queuedJobs = -1;
-        super.appendToResponse( response, context );
+        super.appendToResponse(response, context);
     }
 
 
@@ -104,8 +104,7 @@ public class GraderSystemStatusRows
                 AssignmentOffering.gradingSuspended
                     .eq(ERXConstant.integerForInt(1)));
         }
-        return haltedAssignments == null
-            ? 0 : haltedAssignments.count();
+        return haltedAssignments == null ? 0 : haltedAssignments.count();
     }
 
 
@@ -116,7 +115,7 @@ public class GraderSystemStatusRows
      */
     public int queuedJobCount()
     {
-        if ( queuedJobs < 0 )
+        if (queuedJobs < 0)
         {
             NSArray<EnqueuedJob> jobs = null;
             try
@@ -125,14 +124,14 @@ public class GraderSystemStatusRows
                     ((Session)session()).sessionContext(),
                     EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-                log.debug( "Retrying queued job fetch" );
+                log.debug("Retrying queued job fetch");
                 jobs = EnqueuedJob.objectsMatchingQualifier(
                     ((Session)session()).sessionContext(),
                     EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
             }
-            queuedJobs = ( jobs == null ) ? 0 : jobs.count();
+            queuedJobs = (jobs == null) ? 0 : jobs.count();
         }
         return queuedJobs;
     }
@@ -150,14 +149,14 @@ public class GraderSystemStatusRows
         {
             jobs = EnqueuedJob.objectsMatchingQualifier(
                 ((Session)session()).sessionContext(),
-                EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
+                EnqueuedJob.paused.eq(ERXConstant.integerForInt(1)));
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            log.debug( "Retrying queued job fetch" );
+            log.debug("Retrying queued job fetch");
             jobs = EnqueuedJob.objectsMatchingQualifier(
                 ((Session)session()).sessionContext(),
-                EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
+                EnqueuedJob.paused.eq(ERXConstant.integerForInt(1)));
         }
         return jobs == null ? 0 : jobs.count();
     }
@@ -170,7 +169,7 @@ public class GraderSystemStatusRows
      */
     public int processedJobCount()
     {
-        return ( grader == null )
+        return (grader == null)
             ? -1
             : grader.processedJobCount();
     }
@@ -184,9 +183,9 @@ public class GraderSystemStatusRows
     public NSTimestamp estimatedWait()
     {
         NSTimestamp result =  new NSTimestamp(
-            ( grader == null )
+            (grader == null)
                 ? 0
-                : ( grader.estimatedJobTime() * ( queuedJobCount() + 1 ) ) );
+                : (grader.estimatedJobTime() * (queuedJobCount() + 1)));
         return result;
     }
 
@@ -200,9 +199,9 @@ public class GraderSystemStatusRows
     public String estimatedWaitFormat()
     {
         return FinalReportPage.formatForSmallTime(
-            ( grader == null )
+            (grader == null)
                 ? 0
-                : ( grader.estimatedJobTime() * ( queuedJobCount() + 1 ) ) );
+                : (grader.estimatedJobTime() * (queuedJobCount() + 1)));
     }
 
 
@@ -213,9 +212,10 @@ public class GraderSystemStatusRows
      */
     public NSTimestamp averageTimePerJob()
     {
-        NSTimestamp result =  new NSTimestamp( ( grader == null )
-                                               ? 0
-                                               : grader.estimatedJobTime() );
+        NSTimestamp result =  new NSTimestamp(
+            (grader == null)
+                ? 0
+                : grader.estimatedJobTime());
         return result;
     }
 
@@ -229,9 +229,9 @@ public class GraderSystemStatusRows
     public String averageTimePerJobFormat()
     {
         return FinalReportPage.formatForSmallTime(
-                        ( grader == null )
-                            ? 0
-                            : grader.estimatedJobTime() );
+            (grader == null)
+                ? 0
+                : grader.estimatedJobTime());
     }
 
 
@@ -242,10 +242,10 @@ public class GraderSystemStatusRows
      */
     public NSTimestamp mostRecentJobWait()
     {
-        NSTimestamp result =  new NSTimestamp( ( grader == null )
-                                               ? 0
-                                               : grader.mostRecentJobWait() );
-        // log.debug( "mostRecentJobWait() = " + result );
+        NSTimestamp result =  new NSTimestamp(
+            (grader == null)
+                ? 0
+                : grader.mostRecentJobWait());
         return result;
     }
 
@@ -259,9 +259,9 @@ public class GraderSystemStatusRows
     public String mostRecentJobWaitFormat()
     {
         return FinalReportPage.formatForSmallTime(
-                        ( grader == null )
-                            ? 0
-                            : grader.mostRecentJobWait() );
+            (grader == null)
+                ? 0
+                : grader.mostRecentJobWait());
     }
 
 
@@ -270,5 +270,5 @@ public class GraderSystemStatusRows
     private Grader grader;
     private int queuedJobs;
 
-    static Logger log = Logger.getLogger( GraderSystemStatusRows.class );
+    static Logger log = Logger.getLogger(GraderSystemStatusRows.class);
 }
