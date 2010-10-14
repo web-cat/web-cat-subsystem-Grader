@@ -80,7 +80,7 @@ public class Step
     // ----------------------------------------------------------
     public static boolean timeoutIsWithinLimits( int value )
     {
-        return value > 0  &&  value < maxTimeout;
+        return value > 0  &&  value <= maxTimeout;
     }
 
 
