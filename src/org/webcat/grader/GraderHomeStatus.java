@@ -208,6 +208,12 @@ public class GraderHomeStatus
     {
         coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
+        if (coreSelections().course() != null)
+        {
+            coreSelections().setCourseRelationship(
+                assignment.courseOffering().course());
+        }
+        prefs().setAssignmentRelationship(assignment.assignment());
         prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
             wcSession().tabs.selectById("UploadSubmission").pageName());
@@ -224,6 +230,12 @@ public class GraderHomeStatus
     {
         coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
+        if (coreSelections().course() != null)
+        {
+            coreSelections().setCourseRelationship(
+                assignment.courseOffering().course());
+        }
+        prefs().setAssignmentRelationship(assignment.assignment());
         prefs().setAssignmentOfferingRelationship(assignment);
         SubmissionResult subResult =
             assignment.mostRecentSubmissionResultFor(user());
@@ -253,6 +265,12 @@ public class GraderHomeStatus
     {
         coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
+        if (coreSelections().course() != null)
+        {
+            coreSelections().setCourseRelationship(
+                assignment.courseOffering().course());
+        }
+        prefs().setAssignmentRelationship(assignment.assignment());
         prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
             wcSession().tabs.selectById("GraphResults").pageName());
@@ -269,6 +287,12 @@ public class GraderHomeStatus
     {
         coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
+        if (coreSelections().course() != null)
+        {
+            coreSelections().setCourseRelationship(
+                assignment.courseOffering().course());
+        }
+        prefs().setAssignmentRelationship(assignment.assignment());
         prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
             wcSession().tabs.selectById("AssignmentProperties").pageName());
@@ -285,6 +309,12 @@ public class GraderHomeStatus
     {
         coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
+        if (coreSelections().course() != null)
+        {
+            coreSelections().setCourseRelationship(
+                assignment.courseOffering().course());
+        }
+        prefs().setAssignmentRelationship(assignment.assignment());
         prefs().setAssignmentOfferingRelationship(assignment);
         return pageWithName(
             wcSession().tabs.selectById("EnterGrades").pageName());
