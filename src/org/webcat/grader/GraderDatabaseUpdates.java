@@ -22,7 +22,6 @@
 package org.webcat.grader;
 
 import java.sql.SQLException;
-import org.apache.log4j.Logger;
 import org.webcat.dbupdate.UpdateSet;
 
 // -------------------------------------------------------------------------
@@ -316,21 +315,67 @@ public class GraderDatabaseUpdates
      * Add indexes for better performance.
      * @throws SQLException on error
      */
-//    public void updateIncrement15() throws SQLException
-//    {
-//        database().executeSQL(
-//            "ALTER TABLE TASSIGNMENTOFFERING ADD INDEX (CASSIGNMENTID)");
-//        database().executeSQL(
-//            "ALTER TABLE TASSIGNMENTOFFERING ADD INDEX (CCOURSEOFFERINGID)");
-//        database().executeSQL(
-//            "ALTER TABLE TSUBMISSION ADD INDEX (CASSIGNMENTID)");
-//        database().executeSQL(
-//            "ALTER TABLE TSUBMISSION ADD INDEX (CUSERID)");
-//        database().executeSQL(
-//            "ALTER TABLE TSUBMISSION ADD INDEX (primarySubmissionId)");
-//        database().executeSQL(
-//            "ALTER TABLE TSUBMISSION ADD INDEX (CRESULTID)");
-//    }
+    public void updateIncrement15() throws SQLException
+    {
+        // Indices for Assignment
+        createIndexFor("TASSIGNMENT", "CAUTHORID");
+
+        // Indices for AssignmentOffering
+        createIndexFor("TASSIGNMENTOFFERING", "CASSIGNMENTID");
+        createIndexFor("TASSIGNMENTOFFERING", "CCOURSEOFFERINGID");
+        createIndexFor("TASSIGNMENTOFFERING", "CDUEDATE");
+
+        // Indices for EnqueuedJob
+        // None, since the queue is so short an index doesn't help much.
+
+        // Indices for GraderPrefs
+        createIndexFor("TGRADERPREFS", "CASSIGNID");
+        createIndexFor("TGRADERPREFS", "CASSIGNMENTID");
+        createIndexFor("TGRADERPREFS", "CSTEPID");
+        createIndexFor("TGRADERPREFS", "CSUBMISSIONFILESTATSID");
+        createIndexFor("TGRADERPREFS", "CSUBMISSIONID");
+        createIndexFor("TGRADERPREFS", "CUSERID");
+
+        // Indices for GradingCriteria
+        createIndexFor("TGRADINGCRITERIA", "CUSERID");
+
+        // Indices for GradingPlugin
+        createIndexFor("TUPLOADEDSCRIPTFILES", "CAUTHORID");
+
+        // Indices for ResultFile
+        createIndexFor("TRESULTFILE", "CRESULTID");
+
+        // Indices for ResultOutcome
+        createIndexFor("TRESULTOUTCOME", "CRESULTID");
+        createIndexFor("TRESULTOUTCOME", "CSUBMISSIONID");
+
+        // Indices for Step
+        createIndexFor("TSTEP", "CASSIGNMENTID");
+        createIndexFor("TSTEP", "CSCRIPTID");
+        createIndexFor("TSTEP", "CSTEPCONFIGID");
+
+        // Indices for StepConfig
+        createIndexFor("TSTEPCONFIG", "CAUTHORID");
+
+        // Indices for Submission
+        createIndexFor("TSUBMISSION", "CASSIGNMENTID");
+        createIndexFor("TSUBMISSION", "primarySubmissionId");
+        createIndexFor("TSUBMISSION", "CRESULTID");
+        createIndexFor("TSUBMISSION", "CUSERID");
+
+        // Indices for SubmissionFileComment
+        createIndexFor("TSUBMISSIONFILECOMMENT", "CAUTHORID");
+        createIndexFor("TSUBMISSIONFILECOMMENT", "CSUBMISSIONFILESTATSID");
+
+        // Indices for SubmissionFileStats
+        createIndexFor("TSUBMISSIONFILESTATS", "CRESULTID");
+
+        // Indices for SubmissionProfile
+        createIndexFor("TSUBMISSIONPROFILE", "CUSERID");
+
+        // Indices for SubmissionResult
+        // None so far
+    }
 
 
     //~ Private Methods .......................................................
@@ -663,9 +708,4 @@ public class GraderDatabaseUpdates
                 "ALTER TABLE TSUBMISSIONRESULT ADD PRIMARY KEY (OID)" );
         }
     }
-
-
-    //~ Instance/static variables .............................................
-
-    static Logger log = Logger.getLogger( UpdateSet.class );
 }
