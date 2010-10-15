@@ -1449,11 +1449,10 @@ public class Submission
         // Set the initial properties that only depend on the submission or
         // the application configuration.
 
-        properties.addPropertiesFromDictionaryIfNotDefined(
-                ((Application) Application.application())
-                    .subsystemManager().pluginProperties());
+        properties.addPropertiesFromDictionaryIfNotDefined(Application
+            .wcApplication().subsystemManager().pluginProperties());
         properties.setProperty("frameworksBaseURL",
-                Application.application().frameworksBaseURL());
+            Application.application().frameworksBaseURL());
 
         properties.setProperty("userName", user().userName());
         properties.setProperty("resultDir", resultDirName());
@@ -1461,7 +1460,7 @@ public class Submission
 
         String crn = assignmentOffering().courseOffering().crn();
         properties.setProperty("course",
-                assignmentOffering().courseOffering().course().deptNumber());
+            assignmentOffering().courseOffering().course().deptNumber());
         properties.setProperty("CRN", (crn == null) ? "null" : crn);
         properties.setProperty("assignment",
             assignmentOffering().assignment().name());
@@ -1470,7 +1469,7 @@ public class Submission
         properties.setProperty("submissionTimestamp",
             Long.toString(submitTime().getTime()));
         properties.setProperty("submissionNo",
-                Integer.toString(submitNumber()));
+            Integer.toString(submitNumber()));
 
         properties.setProperty("numReports", "0");
 

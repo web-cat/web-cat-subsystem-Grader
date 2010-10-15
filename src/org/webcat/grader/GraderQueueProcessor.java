@@ -581,10 +581,8 @@ public class GraderQueueProcessor
             step.gradingPlugin().reinitializeConfigAttributesIfNecessary();
             log.debug( "creating properties file" );
             // Re-write the properties file
-            properties.addPropertiesFromDictionaryIfNotDefined(
-                ( (Application)Application.application() )
-                    .subsystemManager().pluginProperties()
-                );
+            properties.addPropertiesFromDictionaryIfNotDefined(Application
+                .wcApplication().subsystemManager().pluginProperties());
             properties.addPropertiesFromDictionaryIfNotDefined(
                 step.gradingPlugin().globalConfigSettings() );
             properties.addPropertiesFromDictionaryIfNotDefined(

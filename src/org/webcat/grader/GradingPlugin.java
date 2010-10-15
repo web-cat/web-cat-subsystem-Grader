@@ -165,8 +165,7 @@ public class GradingPlugin
             command = command + " " + args;
         }
 
-        ( (Application)Application.application() )
-            .executeExternalCommand( command, cwd );
+        Application.wcApplication().executeExternalCommand( command, cwd );
     }
 
 

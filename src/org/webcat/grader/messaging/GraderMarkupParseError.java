@@ -94,8 +94,8 @@ public class GraderMarkupParseError extends SysAdminMessage
         if (exception != null)
         {
             body.append("Exception details:\n\n");
-            body.append(((Application)Application.application())
-                    .informationForExceptionInContext(exception, null, context));
+            body.append(Application.wcApplication()
+                .informationForExceptionInContext(exception, null, context));
             body.append("\n\n");
         }
 

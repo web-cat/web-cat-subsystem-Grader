@@ -734,8 +734,7 @@ public class Grader
              || genericGComp.prefs().submission() == null )
         {
 
-            result = ( (Application)Application.application() ).gotoLoginPage(
-                            context );
+            result = Application.wcApplication().gotoLoginPage(context);
         }
         else
         {
