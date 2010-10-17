@@ -21,8 +21,8 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr></thead><tbody>
 <webobject name="AssignmentRepetition">
 <webobject name="TR2"><td><wo:if condition="$assignment.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
-<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
-<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
+<span class="caution">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
+<span class="caution">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
 <td valign="center"><webobject name="Graph"/></td>
 <td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="CanGradeAssignment"><webobject name="GradeAssignment"/></webobject><webobject name="CanEditAssignment"><webobject name="EditAssignment"/></webobject></td></webobject>
@@ -39,8 +39,8 @@ indicate assignments where the instructor has temporarily suspended all grading.
 <tr><th>Assignment</th><th>Due</th><webobject name="IsAdminUser"><th>Action</th></webobject></tr></thead><tbody>
 <webobject name="UpcomingAssignmentRepetition">
 <webobject name="TR2"><td><wo:if condition="$assignment.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
-<span style="background-color:yellow">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
-<span style="background-color:yellow">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
+<span class="caution">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
+<span class="caution">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
 <webobject name="IsAdminUser"><td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="GradeAssignment"/><webobject name="EditAssignment"/></td></webobject></webobject>
 </webobject></tbody></table>
