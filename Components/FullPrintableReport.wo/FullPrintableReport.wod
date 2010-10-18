@@ -16,13 +16,13 @@ CollapsibleDiv: WOGenericContainer {
 }
 
 Coverage: WOString {
-	numberformat = "0.0";
-	value        = stats.file.gradedElementsCoveragePercent;
+    numberformat = "0.0";
+    value        = stats.file.gradedElementsCoveragePercent;
 }
 
 CoverageMeter: WOString {
-	escapeHTML = false;
-	value      = coverageMeter;
+    escapeHTML = false;
+    value      = coverageMeter;
 }
 
 DeptNumber: WOString {
@@ -30,52 +30,52 @@ DeptNumber: WOString {
 }
 
 Expanded : WOImage {
-	width     = "16";
-	height    = "16";
-	title     = "show/hide";
-	alt       = "show/hide";
-	filename  = "icons/expanded.gif";
-	framework = "Core";
+    width     = "16";
+    height    = "16";
+    title     = "show/hide";
+    alt       = "show/hide";
+    filename  = "icons/expanded.gif";
+    framework = "Core";
 }
 
 FileDeduction: WOString {
-	numberformat = "0.0";
-	value        = stats.file.deductions;
+    numberformat = "0.0";
+    value        = stats.file.deductions;
 }
 
 FileRemarks: WOString {
-	numberformat = "0";
-	value        = stats.file.remarks;
+    numberformat = "0";
+    value        = stats.file.remarks;
 }
 
 Form : WOForm {
 }
 
 HasCoverageData: WOConditional {
-	condition = stats.file.elementsRaw;
+    condition = stats.file.elementsRaw;
 }
 
 HasFileStats: WOConditional {
-	condition = formattedFiles.count;
+    condition = formattedFiles.count;
 }
 
 HasNoCoverageData: WOConditional {
-	condition = stats.file.elementsRaw;
-	negate    = true;
+    condition = stats.file.elementsRaw;
+    negate    = true;
 }
 
 HasNonZeroScore: WOConditional {
-	condition = result.finalScore;
+    condition = result.finalScore;
 }
 
 HasTAComments: WOConditional {
-	condition = hasTAComments;
+    condition = hasTAComments;
 }
 
 LongResponse : org.webcat.core.LongResponse {
-	task = longResponse;
-	refreshInterval = 3;
-	message = "Formatting the file(s) submitted for this assignment";
+    task = longResponse;
+    refreshInterval = 3;
+    message = "Formatting the file(s) submitted for this assignment";
 }
 
 Page : org.webcat.core.BarePage {
@@ -86,6 +86,7 @@ Page : org.webcat.core.BarePage {
 }
 
 PartialInlineReport: org.webcat.grader.PartialInlineReport {
+    submissionResult = result;
     file = result.resultFile;
     substituteOldCollapsingRegions = false;
 }
@@ -109,13 +110,13 @@ ShowCoverageData: WOConditional {
 }
 
 StatsLabel: WOString {
-	value = result.statElementsLabel;
+    value = result.statElementsLabel;
 }
 
 StatRepetition: WORepetition {
-	item  = stats;
-	list  = formattedFiles;
-	index = index;
+    item  = stats;
+    list  = formattedFiles;
+    index = index;
 }
 
 StudentName: WOString {
@@ -123,16 +124,17 @@ StudentName: WOString {
 }
 
 SummaryReport: org.webcat.grader.PartialInlineReport {
+    submissionResult = result;
     file = result.summaryFile;
     substituteOldCollapsingRegions = false;
 }
 
 TAComments: org.webcat.core.FormattedString {
-	value  = result.comments;
-	format = result.commentFormat;
+    value  = result.comments;
+    format = result.commentFormat;
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 

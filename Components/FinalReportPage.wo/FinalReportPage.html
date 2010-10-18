@@ -7,12 +7,12 @@
   <webobject name="GradingHalted">
   <wo:org.webcat.core.WCPageModule title="Assignment Grading Disabled">
     <p>Processing of submissions for this assignment has been
-	temporarily halted.  Your submission has been received and
-	the time has been properly recorded.  It will be processed
-	once the instructor has resolved the issue.
-	If the delay is long, an e-mail message will be sent to you at
-	<wo:str value="$user.email"/>
-	once the results for this submission are available.</p>
+    temporarily halted.  Your submission has been received and
+    the time has been properly recorded.  It will be processed
+    once the instructor has resolved the issue.
+    If the delay is long, an e-mail message will be sent to you at
+    <wo:str value="$user.email"/>
+    once the results for this submission are available.</p>
   </wo:org.webcat.core.WCPageModule>
   </webobject><webobject name="GradingNotHalted">
     <wo:if condition="$gradingPaused">
@@ -101,8 +101,8 @@
       <p>Your submission has been received for grading by the course staff.</p>
     </wo:org.webcat.core.WCPageModule>
   </wo:if>
-  <wo:org.webcat.grader.PartialInlineReport file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
-  <wo:org.webcat.grader.PartialInlineReport file="$result.resultFile" title="Automated Feedback" open="$true"/>
+  <wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
+  <wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.resultFile" title="Automated Feedback" open="$true"/>
   <wo:if condition="$reportArray.count">
     <wo:org.webcat.core.WCPageModule title="Downloadables" open="false">
     <table><thead>
@@ -111,6 +111,6 @@
     <wo:TableRow index="$index"><td><wo:link action="$fileDeliveryAction"><wo:str value="$reportFileName"/></wo:link></td><td><wo:str value="$report.label"/></td></wo:TableRow>
     </wo:loop>
     </tbody></table>
-	</wo:org.webcat.core.WCPageModule>
+    </wo:org.webcat.core.WCPageModule>
   </wo:if>
 </wo:else></wo:else></wo>

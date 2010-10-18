@@ -22,6 +22,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.NSMutableDictionary;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
 import java.util.regex.Matcher;
@@ -82,6 +83,19 @@ public class PartialInlineReport
                 try
                 {
                     content = ERXFileUtilities.stringFromFile(file, "UTF-8");
+
+                    NSMutableDictionary<String, Object> queryDict =
+                        new NSMutableDictionary<String, Object>();
+                    queryDict.setObjectForKey(submissionResult.id(), "id");
+
+                    String resultResourceURL =
+                        context.directActionURLForActionNamed(
+                                "submissionResultResource", queryDict);
+
+                    resultResourceURL += "&path=";
+
+                    content = content.replaceAll("\\$\\{publicResourceURL\\}",
+                            resultResourceURL);
 
                     if (substituteOldCollapsingRegions)
                     {
@@ -233,9 +247,34 @@ public class PartialInlineReport
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Access the submissionResult property value.
+     *
+     * @return the submissionResult property's current value
+     */
+    public SubmissionResult submissionResult()
+    {
+        return submissionResult;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the submissionResult property.
+     *
+     * @param value the new value for the property
+     */
+    public void setSubmissionResult( SubmissionResult value )
+    {
+        submissionResult = value;
+    }
+
+
     //~ Instance/static variables .............................................
 
     private File   file;
+    private SubmissionResult submissionResult;
     private String content;
     private boolean useModule = false;
 
