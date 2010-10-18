@@ -4,7 +4,7 @@
 dijit.byId('<wo:str value="$idFor.dialog"/>').show();
 </script>
 </wo:WCButton>
-<wo:WCDiv id="$idFor.dialog" dojoType="dijit.Dialog" title="Choose Assignment">
+<wo:WCDiv id="$idFor.dialog" dojoType="dijit.Dialog" title="Choose Assignment" style="display: none">
 <script type="dojo/connect" event="onCancel">
 dijit.byId('<wo:str value="$idFor.form"/>').reset();
 </script>
