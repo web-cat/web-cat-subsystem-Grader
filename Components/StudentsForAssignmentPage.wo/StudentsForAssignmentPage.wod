@@ -8,6 +8,15 @@ BatchNavigator: org.webcat.core.WCBatchNavigator {
     persistentKey = "StudentsForAssignmentPage.batchSize";
 }
 
+DownloadScores: WCButton {
+    label = "Download Scores";
+}
+
+DownloadScoresDialog: DownloadScoresDialog {
+    courseOfferings = courseOfferings;
+    assignmentOfferings = offerings.displayedObjects;
+}
+
 EditScore: WOHyperlink {
     action = editSubmissionScore;
     alt    = "View, score, or make comments on submission";

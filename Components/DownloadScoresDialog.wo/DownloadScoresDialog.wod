@@ -1,0 +1,43 @@
+Cancel : WCButton {
+    label = "Cancel";
+    class = "neg";
+}
+
+Dialog : WCContentPane {
+    dojoType = "webcat.Dialog";
+    id = "downloadScoresDialog";
+    title = "Download Scores";
+    style = "display: none";
+}
+
+Download : WCButton {
+    action = downloadScores;
+    label = "Download";
+    class = "pos";
+}
+
+Form : WCForm {
+}
+
+BlackboardFormat: WCRadioButton {
+    id = idFor.blackboardFormat;
+    name = "scoreFormat";
+    checked = useBlackboardFormat;
+}
+
+MoodleFormat: WCRadioButton {
+    id = idFor.moodleFormat;
+    name = "scoreFormat";
+    checked = useMoodleFormat;
+}
+
+FullFormat: WCRadioButton {
+    id = idFor.fullFormat;
+    name = "scoreFormat";
+    checked = useFullFormat;
+}
+
+OmitStaff: WCCheckBox {
+    id = idFor.omitStaff;
+    checked = omitStaff;
+}

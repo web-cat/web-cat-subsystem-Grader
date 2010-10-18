@@ -5,7 +5,7 @@
         accessLevel = 40;
         priority = 200;
         children = {
-          "Enter Remarks" = {
+          "View Submissions" = {
             accessLevel = 40;
             priority = 2;
             children = {
@@ -22,7 +22,7 @@
               };
             };
           };
-          "Download Scores" = {
+/*          "Download Scores" = {
             accessLevel = 40;
             priority = 3;
             children = {
@@ -32,7 +32,7 @@
                 priority = 3;
               };
             };
-          };
+          };*/
           "Submit for Student" = {
             accessLevel = 40;
             priority = 4;

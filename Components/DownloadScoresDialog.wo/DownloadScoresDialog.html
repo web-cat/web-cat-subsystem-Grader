@@ -1,0 +1,28 @@
+<wo name="Dialog"><wo name="Form">
+<div>
+    Download scores for: <span class="hl"><wo:str value="$courseTitleString"/>, <wo:str value="$assignment.titleString"/></span>
+    <fieldset>
+    <legend>Available Formats</legend>
+    <ol>
+    <li><wo name="BlackboardFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.blackboardFormat" class="trailing">Blackboard-compatible CSV</wo:WOGenericContainer></li>
+    <li><wo name="MoodleFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.moodleFormat" class="trailing">Moodle-compatible CSV</wo:WOGenericContainer></li>
+    <li><wo name="FullFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.fullFormat" class="trailing">Fully-detailed Web-CAT CSV</wo:WOGenericContainer></li>
+    </ol>
+    </fieldset>
+    <p>
+    <wo name="OmitStaff"/> <wo:WOGenericContainer elementName="label" for="$idFor.omitStaff" class="trailing">Omit course staff</wo:WOGenericContainer>
+    </p>
+</div>
+<div style="text-align: center">
+    <wo name="Download">
+        <script type="dojo/connect" event="onClick">
+        dijit.byId('downloadScoresDialog').hide();
+        </script>
+    </wo>
+    <wo name="Cancel">
+        <script type="dojo/connect" event="onClick">
+        dijit.byId('downloadScoresDialog').hide();
+        </script>
+    </wo>
+</div>
+</wo></wo>

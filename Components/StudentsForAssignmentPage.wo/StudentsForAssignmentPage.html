@@ -3,7 +3,15 @@
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
 </wo:org.webcat.core.WCPageModule></wo:if><wo:else>
-<div class="module" style="text-align: right"><wo name="Navigator"/></div>
+<div class="module" style="text-align: right">
+<wo name="DownloadScoresDialog"/>
+<wo name="DownloadScores">
+    <script type="dojo/connect" event="onClick">
+        dijit.byId('downloadScoresDialog').show();
+    </script>
+</wo>
+<wo name="Navigator"/>
+</div>
 
 <wo:loop list="$offerings.displayedObjects" item="$assignmentOffering">
 <wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.titleString"
