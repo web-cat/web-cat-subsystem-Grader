@@ -7,11 +7,8 @@ OptionEditor: org.webcat.core.OptionSetEditor {
     base              = baseDir;
 }
 
-Page: org.webcat.core.WizardPage {
-    sideStepTitle = "Edit Plug-in Global Options";
-    applyEnabled  = true;
-    backEnabled   = false;
-    nextEnabled   = false;
+Page: org.webcat.core.SaveCancelPage {
+//    sideStepTitle = "Edit Plug-in Global Options";
 }
 
 PluginName: WOString {
