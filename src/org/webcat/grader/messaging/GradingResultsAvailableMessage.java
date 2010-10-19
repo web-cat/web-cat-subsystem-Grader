@@ -24,8 +24,6 @@ package org.webcat.grader.messaging;
 import org.webcat.core.User;
 import org.webcat.core.WCProperties;
 import org.webcat.core.messaging.Message;
-import org.webcat.core.messaging.UnexpectedExceptionMessage;
-import com.webobjects.appserver.WOContext;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableDictionary;
@@ -35,12 +33,14 @@ import com.webobjects.foundation.NSMutableDictionary;
  * A message that is sent to the owner of a submission when his or her grading
  * results are available.
  *
- * @author Tony Allevato
- * @author  latest changes by: $Author$
+ * @author  Tony Allevato
+ * @author  Latest changes by: $Author$
  * @version $Revision$ $Date$
  */
 public class GradingResultsAvailableMessage extends Message
 {
+    //~ Constructor ...........................................................
+
     // ----------------------------------------------------------
     public GradingResultsAvailableMessage(User user, WCProperties properties)
     {
