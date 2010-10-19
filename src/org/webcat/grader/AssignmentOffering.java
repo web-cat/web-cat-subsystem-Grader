@@ -42,8 +42,8 @@ import org.webcat.grader.graphs.*;
  * Represents the binding between an assignment and a course offering
  * (i.e., giving a specific assignment in a given section of a course).
  *
- * @author Stephen Edwards
- * @author Last changed by $Author$
+ * @author  Stephen Edwards
+ * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
 public class AssignmentOffering
@@ -124,8 +124,6 @@ public class AssignmentOffering
 
     public static final ERXKey<String> titleString =
         new ERXKey<String>("titleString");
-
-    public static final String ENQUEUE_SURVEY_JOB = "enqueueSurveyJob";
 
 
     //~ Methods ...............................................................
@@ -1045,22 +1043,6 @@ public class AssignmentOffering
     {
         setLastModified(new NSTimestamp());
         super.willInsert();
-    }
-
-
-    // ----------------------------------------------------------
-    public void triggerSurveyNotificationsIfNecessary()
-    {
-
-        if (assignment() != null && assignment().trackOpinions())
-        {
-            NSTimestamp now = new NSTimestamp();
-            if (now.after(lateDeadline()))
-            {
-                NSNotificationCenter.defaultCenter().postNotification(
-                    new NSNotification(ENQUEUE_SURVEY_JOB, id()));
-            }
-        }
     }
 
 
