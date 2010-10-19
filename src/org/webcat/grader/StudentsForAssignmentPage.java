@@ -28,6 +28,7 @@ import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.ui.util.ComponentIDGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -68,6 +69,7 @@ public class StudentsForAssignmentPage
     //~ KVC Attributes (must be public) .......................................
 
     /** Submission in the worepetition */
+    public UserSubmissionPair aUserSubmission;
     public Submission  aSubmission;
     public Submission  partnerSubmission;
 
@@ -85,6 +87,8 @@ public class StudentsForAssignmentPage
     public boolean omitStaff           = true;
     public boolean useBlackboardFormat = true;
 
+    public ComponentIDGenerator idFor;
+
 
     //~ Methods ...............................................................
 
@@ -92,6 +96,8 @@ public class StudentsForAssignmentPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
+        idFor = new ComponentIDGenerator(this);
+
         log.debug("appendToResponse()");
 
         offerings.setObjectArray(assignmentOfferings(courseOfferings()));
@@ -111,22 +117,53 @@ public class StudentsForAssignmentPage
             // Stuff the index variable into the public key so the group/stats
             // methods will work for us
             assignmentOffering = ao;
-            submissionGroup().setObjectArray(Submission.submissionsForGrading(
-                localContext(),
-                ao,
-                true,  // omitPartners
-                omitStaff,
-                studentStats()));
-            staffSubs.addAll(Submission.submissionsForGrading(
-                    localContext(),
-                    ao,
-                    true,  // omitPartners
-                    ao.courseOffering().staff(),
-                    null));
+            NSArray<UserSubmissionPair> subs =
+                Submission.submissionsForGrading(
+                        localContext(),
+                        ao,
+                        true,  // omitPartners
+                        omitStaff,
+                        studentStats());
+            userGroup().setObjectArray(subs);
+
+            staffSubs.addAll(extractSubmissions(
+                    Submission.submissionsForGrading(
+                            localContext(),
+                            ao,
+                            true,  // omitPartners
+                            ao.courseOffering().staff(),
+                            null)));
         }
 
         staffSubmissionGroup.setObjectArray(staffSubs);
         super.beforeAppendToResponse(response, context);
+    }
+
+
+    // ----------------------------------------------------------
+    private NSArray<Submission> extractSubmissions(
+            NSArray<UserSubmissionPair> userSubs)
+    {
+        NSMutableArray<Submission> submissions =
+            new NSMutableArray<Submission>();
+
+        for (UserSubmissionPair pair : userSubs)
+        {
+            if (pair.userHasSubmission())
+            {
+                submissions.addObject(pair.submission());
+            }
+        }
+
+        return submissions;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setAUserSubmission(UserSubmissionPair pair)
+    {
+        aUserSubmission = pair;
+        aSubmission = (pair != null ? pair.submission() : null);
     }
 
 
@@ -146,17 +183,23 @@ public class StudentsForAssignmentPage
                 log.error("student = " + aSubmission.user().userName());
             }
             prefs().setSubmissionRelationship(aSubmission);
-//          destination = pageWithName(GradeStudentSubmissionPage.class);
+
+//            destination = pageWithName(GradeStudentSubmissionPage.class);
             destination = (WCComponent)super.next();
             if (destination instanceof GradeStudentSubmissionPage)
             {
                 GradeStudentSubmissionPage page =
                     (GradeStudentSubmissionPage)destination;
-                page.availableSubmissions =
-                    submissionGroup().displayedObjects().immutableClone();
-                page.thisSubmissionIndex =
-                    page.availableSubmissions.indexOf(aSubmission);
+
+                if (aUserSubmission != null)
+                {
+                    page.availableSubmissions =
+                        userGroup().displayedObjects().immutableClone();
+                    page.thisSubmissionIndex =
+                        page.availableSubmissions.indexOf(aUserSubmission);
+                }
             }
+
             destination.nextPage = this;
         }
         return destination;
@@ -172,15 +215,20 @@ public class StudentsForAssignmentPage
     public WOComponent markAsCompleteActionOk()
     {
         assignmentOffering = offeringForAction;
-        for (Submission sub : submissionGroup().displayedObjects())
+        for (UserSubmissionPair pair : userGroup().displayedObjects())
         {
-            if (sub.result().status() == Status.UNFINISHED)
+            if (pair.userHasSubmission())
             {
-                sub.result().setStatus(Status.CHECK);
-                if (applyLocalChanges())
+                Submission sub = pair.submission();
+
+                if (sub.result().status() == Status.UNFINISHED)
                 {
-                    sub.emailNotificationToStudent(
-                        "has been updated by the course staff");
+                    sub.result().setStatus(Status.CHECK);
+                    if (applyLocalChanges())
+                    {
+                        sub.emailNotificationToStudent(
+                            "has been updated by the course staff");
+                    }
                 }
             }
         }
@@ -210,7 +258,7 @@ public class StudentsForAssignmentPage
             protected String confirmationMessage()
             {
                 return "<p>You are about to mark all <b>partially graded</b> "
-                    + "submissions  as now complete so that students can see "
+                    + "submissions as now complete so that students can see "
                     + "their feedback from you.  Submissions that have "
                     + "no remarks or manual scoring information will not be "
                     + "affected.  All students who are affected will receive "
@@ -235,42 +283,6 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    public boolean hasPartners()
-    {
-        return aSubmission.result().submissions().count() > 1;
-    }
-
-
-    // ----------------------------------------------------------
-    public boolean hasMultiplePartners()
-    {
-        return aSubmission.result().submissions().count() > 2;
-    }
-
-
-    // ----------------------------------------------------------
-    public boolean isAPartner()
-    {
-        return partnerSubmission.user() != aSubmission.user();
-    }
-
-
-    // ----------------------------------------------------------
-    public boolean morePartners()
-    {
-        NSArray<Submission> submissions = aSubmission.result().submissions();
-        Submission lastSubmission = submissions.objectAtIndex(
-            submissions.count() - 1);
-        if (lastSubmission == aSubmission)
-        {
-            lastSubmission =
-                submissions.objectAtIndex(submissions.count() - 2);
-        }
-        return partnerSubmission != lastSubmission;
-    }
-
-
-    // ----------------------------------------------------------
     public boolean isMostRecentSubmission()
     {
         return aSubmission == aSubmission.latestSubmission();
@@ -285,6 +297,20 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
+    public String submitTimeSpanStyle()
+    {
+        if (aSubmission.isLate())
+        {
+            return "color: red;";
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
     public void flushNavigatorDerivedData()
     {
         assignmentOffering = null;
@@ -295,9 +321,11 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public WOComponent repartner()
     {
-        for (Submission sub : submissionGroup().displayedObjects())
+        for (UserSubmissionPair pair : userGroup().displayedObjects())
         {
-            if (sub.result() != null)
+            Submission sub = pair.submission();
+
+            if (sub != null && sub.result() != null)
             {
                 for (Submission psub : sub.result().submissions())
                 {
@@ -371,18 +399,19 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    public ERXDisplayGroup<Submission> submissionGroup()
+    public ERXDisplayGroup<UserSubmissionPair> userGroup()
     {
-        ERXDisplayGroup<Submission> group = subGroups.get(assignmentOffering);
+        ERXDisplayGroup<UserSubmissionPair> group =
+            userGroups.get(assignmentOffering);
         if (group == null)
         {
-            group = new ERXDisplayGroup<Submission>();
+            group = new ERXDisplayGroup<UserSubmissionPair>();
             group.setNumberOfObjectsPerBatch(100);
             group.setSortOrderings(
-                Submission.user.dot(User.name_LF).ascInsensitives().then(
-                    Submission.user.dot(User.userName).ascInsensitive())
+                UserSubmissionPair.user.dot(User.name_LF).ascInsensitives().then(
+                    UserSubmissionPair.user.dot(User.userName).ascInsensitive())
                 );
-            subGroups.put(assignmentOffering, group);
+            userGroups.put(assignmentOffering, group);
         }
         return group;
     }
@@ -390,10 +419,11 @@ public class StudentsForAssignmentPage
 
     //~ Instance/static variables .............................................
 
-    private Map<AssignmentOffering, ERXDisplayGroup<Submission>> subGroups =
-        new HashMap<AssignmentOffering, ERXDisplayGroup<Submission>>();
+    private Map<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>> userGroups =
+        new HashMap<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>>();
     private Map<AssignmentOffering, Submission.CumulativeStats> subStats =
         new HashMap<AssignmentOffering, Submission.CumulativeStats>();
+
     private AssignmentOffering offeringForAction;
 
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);

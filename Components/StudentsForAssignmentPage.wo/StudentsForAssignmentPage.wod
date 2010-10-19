@@ -1,11 +1,17 @@
-AvgScore: WOString {
-    value = studentStats.mean;
-    numberformat = "0.0";
+BatchNavigator: org.webcat.core.WCBatchNavigator {
+    displayGroup = userGroup;
+    persistentKey = "StudentsForAssignmentPage.batchSize";
 }
 
-BatchNavigator: org.webcat.core.WCBatchNavigator {
-    displayGroup = submissionGroup;
+BatchNavigatorStaff: org.webcat.core.WCBatchNavigator {
+    displayGroup = staffSubmissionGroup;
     persistentKey = "StudentsForAssignmentPage.batchSize";
+}
+
+BoxAndWhiskerChart: BoxAndWhiskerChart {
+    assignmentOffering = assignmentOffering;
+    submissionStats = studentStats;
+    style = "vertical-align: middle;";
 }
 
 DownloadScores: WCButton {
@@ -49,11 +55,28 @@ MarkAsComplete: WCButton {
     title  = "Make all entered scores visible to students and send e-mail";
 }
 
+MeanScore: WOString {
+    value = studentStats.mean;
+    numberformat = "0.0";
+}
+
+MedianScore: WOString {
+    value = studentStats.median;
+    numberformat = "0.0";
+}
+
 MostRecentSubmitNumber: WOString {
     value = mostRecentSubmissionNo;
 }
 
 Navigator: org.webcat.grader.GraderNavigator {
+}
+
+NoSubmissionsPlaceholder: WOGenericContainer {
+    elementName = "td";
+    colSpan = "~ 5 + (assignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0) + (assignmentOffering.assignment.usesToolCheckScore ? 1 : 0)";
+    class = "sm";
+    style = "text-align: center";
 }
 
 NoTAScore: WOConditional {
@@ -67,8 +90,8 @@ NotMostRecent: WOConditional {
 }
 
 Repetition1: WORepetition {
-    item  = aSubmission;
-    list  = submissionGroup.displayedObjects;
+    item  = aUserSubmission;
+    list  = userGroup.displayedObjects;
     index = index;
 }
 
@@ -81,6 +104,14 @@ Repetition2: WORepetition {
 ScoreAdjustment: WOString {
     value = aSubmission.result.scoreAdjustment;
     numberformat = "0.0";
+}
+
+StatusBlank: WOImage {
+    border    = "0";
+    filename  = "icons/blank.png";
+    framework = "Grader";
+    height    = "16";
+    width     = "16";
 }
 
 StatusToDo: WOImage {
@@ -124,6 +155,12 @@ SubmitTime: WOString {
     formatter = session.timeFormatter;
 }
 
+SubmitTimeSpan: WOGenericContainer {
+    elementName = "span";
+    style = submitTimeSpanStyle;
+    title = aSubmission.result.earlyLateStatus;
+}
+
 TAScore: WOString {
     value = aSubmission.result.taScoreRaw;
     numberformat = "0.0";
@@ -155,26 +192,50 @@ UsesToolCheckScore: WOConditional {
     condition = assignmentOffering.assignment.usesToolCheckScore;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
-    displayGroup = submissionGroup;
+SortOrderUserNameLF: org.webcat.core.WCSortOrder {
+    displayGroup = userGroup;
     displayKey = "Name";
     key = "user.name_LF";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
-    displayGroup = submissionGroup;
+SortOrderStatus: org.webcat.core.WCSortOrder {
+    displayGroup = userGroup;
+    displayKey = "Grading Status";
+    key = "submission.result.status";
+}
+
+SortOrderSubmitTime: org.webcat.core.WCSortOrder {
+    displayGroup = userGroup;
+    displayKey = "Submission Time";
+    key = "submission.submitTime";
+}
+
+SortOrderFinalScore: org.webcat.core.WCSortOrder {
+    displayGroup = userGroup;
+    displayKey = "Final Score";
+    key = "submission.result.finalScore";
+}
+
+SortOrderStaffUserNameLF: org.webcat.core.WCSortOrder {
+    displayGroup = staffSubmissionGroup;
+    displayKey = "Name";
+    key = "user.name_LF";
+}
+
+SortOrderStaffStatus: org.webcat.core.WCSortOrder {
+    displayGroup = staffSubmissionGroup;
     displayKey = "Grading Status";
     key = "result.status";
 }
 
-WCSortOrder4: org.webcat.core.WCSortOrder {
-    displayGroup = submissionGroup;
+SortOrderStaffSubmitTime: org.webcat.core.WCSortOrder {
+    displayGroup = staffSubmissionGroup;
     displayKey = "Submission Time";
     key = "submitTime";
 }
 
-WCSortOrder5: org.webcat.core.WCSortOrder {
-    displayGroup = submissionGroup;
+SortOrderStaffFinalScore: org.webcat.core.WCSortOrder {
+    displayGroup = staffSubmissionGroup;
     displayKey = "Final Score";
     key = "result.finalScore";
 }

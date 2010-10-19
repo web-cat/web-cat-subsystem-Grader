@@ -79,7 +79,7 @@ HasFileStats: WOConditional {
 }
 
 HasNextStudent: WOConditional {
-    condition = "~availableSubmissions.count > (thisSubmissionIndex + 1)";
+    condition = "~availableSubmissions.count > indexOfNextSubmission";
 }
 
 HasNoCoverageData: WOConditional {

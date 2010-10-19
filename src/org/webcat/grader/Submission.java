@@ -31,6 +31,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
@@ -1488,6 +1490,21 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Gets a value indicating whether or not the submission was late.
+     *
+     * @return true if the submission was late, otherwise false
+     */
+    public boolean isLate()
+    {
+        long submitTime = submitTime().getTime();
+        long dueTime = assignmentOffering().dueDate().getTime();
+
+        return submitTime >= dueTime;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Gets the path to the grading.properties file associated with this
      * submission, or where it would be if it did exist.
      *
@@ -1664,37 +1681,62 @@ public class Submission
      * @param accumulator        If non-null, use this object to accumulate
      *                           descriptive summary statistics about the
      *                           submissions.
-     * @return An array of the submissions found.
+     * @return An array of the user/submission pairs.
      */
-    public static NSArray<Submission> submissionsForGrading(
+    public static NSArray<UserSubmissionPair> submissionsForGrading(
         EOEditingContext   ec,
         AssignmentOffering anAssignmentOffering,
         boolean            omitPartners,
         NSArray<User>      users,
         CumulativeStats    accumulator)
     {
-        Submissions pair = submissionsForGradingWithMigration(
-            ec, anAssignmentOffering, omitPartners, users, accumulator);
-        if (pair.brokenPartners.count() > 0)
+        NSMutableDictionary<User, Submission> submissions =
+            new NSMutableDictionary<User, Submission>();
+        NSMutableArray<User> realUsers = users.mutableClone();
+
+        boolean brokenPartners = submissionsForGradingWithMigration(
+            ec, anAssignmentOffering, omitPartners, realUsers, submissions,
+            accumulator);
+        if (brokenPartners)
         {
             // On the first fetch, some partner subs were found that
             // were hooked to the wrong assignment, and they were updated.
             // So re-execute the action to pull in all the results after
             // this fix.
-            pair = submissionsForGradingWithMigration(
-                ec, anAssignmentOffering, omitPartners, users, accumulator);
-            if (pair.brokenPartners.count() > 0)
+            realUsers = users.mutableClone();
+            brokenPartners = submissionsForGradingWithMigration(
+                ec, anAssignmentOffering, omitPartners, realUsers,
+                submissions, accumulator);
+            if (brokenPartners)
             {
                 log.error("submissionsForGrading() still found broken "
                     + "partner submissions after two rounds.");
             }
         }
-        return pair.subs;
+
+        return generateUserSubmissionPairs(realUsers, submissions);
     }
 
 
     // ----------------------------------------------------------
-    private static class Submissions
+    private static NSArray<UserSubmissionPair> generateUserSubmissionPairs(
+            NSArray<User> users, NSDictionary<User, Submission> submissions)
+    {
+        NSMutableArray<UserSubmissionPair> pairs =
+            new NSMutableArray<UserSubmissionPair>();
+
+        for (User user : users)
+        {
+            Submission submission = submissions.objectForKey(user);
+            pairs.addObject(new UserSubmissionPair(user, submission));
+        }
+
+        return pairs;
+    }
+
+
+    // ----------------------------------------------------------
+/*    private static class Submissions
     {
         public NSArray<Submission> subs;
         public NSArray<Submission> brokenPartners;
@@ -1704,7 +1746,7 @@ public class Submission
             this.subs = subs;
             this.brokenPartners = brokenPartners;
         }
-    }
+    }*/
 
 
     // ----------------------------------------------------------
@@ -1718,24 +1760,27 @@ public class Submission
      *                           include only the primary submitter's
      *                           submission.
      * @param users              The list of users to find submissions for.
+     * @param submissions        The submissions for grading, keyed by user.
      * @param accumulator        If non-null, use this object to accumulate
      *                           descriptive summary statistics about the
      *                           submissions.
-     * @return An array of the submissions found.
+     * @return True if any broken partner submissions were found and we need
+     *     to refetch.
      */
-    private static Submissions submissionsForGradingWithMigration(
-        EOEditingContext   ec,
-        AssignmentOffering anAssignmentOffering,
-        boolean            omitPartners,
-        NSArray<User>      users,
-        CumulativeStats    accumulator)
+    private static boolean submissionsForGradingWithMigration(
+        EOEditingContext                      ec,
+        AssignmentOffering                    anAssignmentOffering,
+        boolean                               omitPartners,
+        NSMutableArray<User>                  users,
+        NSMutableDictionary<User, Submission> submissions,
+        CumulativeStats                       accumulator)
     {
-        NSMutableArray<Submission> subs =
-            new NSMutableArray<Submission>(users.count());
+/*        NSMutableArray<Submission> subs =
+            new NSMutableArray<Submission>(users.count());*/
         NSMutableArray<Submission> brokenPartners =
             new NSMutableArray<Submission>();
 
-        for (User student : users)
+        for (User student : users.immutableClone())
         {
             NSArray<Submission> candidates =
                 Submission.objectsMatchingQualifier(
@@ -1784,9 +1829,13 @@ public class Submission
 
             if (forGrading != null)
             {
-                if (!(omitPartners && forGrading.partnerLink()))
+                if (omitPartners && forGrading.partnerLink())
                 {
-                    subs.add(forGrading);
+                    users.removeObject(student);
+                }
+                else if (!(omitPartners && forGrading.partnerLink()))
+                {
+                    submissions.setObjectForKey(forGrading, student);
                     if (accumulator != null)
                     {
                         accumulator.accumulate(forGrading);
@@ -1795,9 +1844,13 @@ public class Submission
             }
             else if (mostRecent != null)
             {
-                if (!(omitPartners && mostRecent.partnerLink()))
+                if (omitPartners && mostRecent.partnerLink())
                 {
-                    subs.add(mostRecent);
+                    users.removeObject(student);
+                }
+                else if (!(omitPartners && mostRecent.partnerLink()))
+                {
+                    submissions.setObjectForKey(mostRecent, student);
                     if (accumulator != null)
                     {
                         accumulator.accumulate(mostRecent);
@@ -1876,7 +1929,8 @@ public class Submission
             }
         }
 
-        return new Submissions(subs, brokenPartners);
+        //return new Submissions(subs, brokenPartners);
+        return brokenPartners.count() > 0;
     }
 
 
@@ -1897,7 +1951,7 @@ public class Submission
      *                           submissions.
      * @return An array of the submissions found.
      */
-    public static NSArray<Submission> submissionsForGrading(
+    public static NSArray<UserSubmissionPair> submissionsForGrading(
         EOEditingContext   ec,
         AssignmentOffering anAssignmentOffering,
         boolean            omitPartners,
@@ -1908,6 +1962,7 @@ public class Submission
         NSArray<User> users = omitStaff
             ? courseOffering.studentsWithoutStaff()
             : courseOffering.studentsAndStaff();
+
         return submissionsForGrading(
             ec, anAssignmentOffering, omitPartners, users, accumulator);
     }
@@ -1922,10 +1977,11 @@ public class Submission
     {
         //~ Fields ............................................................
 
-        private double min;
-        private double max;
-        private double total;
-        private int    count;
+        private double            min;
+        private double            max;
+        private double            total;
+        private ArrayList<Double> allScores;
+        private Double            cachedMedian;
 
 
         //~ Constructors ......................................................
@@ -1939,7 +1995,7 @@ public class Submission
             min = 0.0;
             max = 0.0;
             total = 0.0;
-            count = 0;
+            allScores = new ArrayList<Double>();
         }
 
 
@@ -1953,7 +2009,7 @@ public class Submission
         public void accumulate(SubmissionResult subResult)
         {
             double score = subResult.finalScore();
-            if (count == 0)
+            if (allScores.size() == 0)
             {
                 min = score;
                 max = score;
@@ -1970,7 +2026,9 @@ public class Submission
                 }
             }
             total += score;
-            ++count;
+
+            cachedMedian = null;
+            allScores.add(score);
         }
 
 
@@ -2020,9 +2078,49 @@ public class Submission
          */
         public double mean()
         {
-            return (count > 1)
-                ? (total / count)
+            return (allScores.size() > 1)
+                ? (total / allScores.size())
                 : total;
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Retrieve the median final score over all submission results
+         * accumulated so far.
+         * @return the median score
+         */
+        public double median()
+        {
+            if (cachedMedian == null)
+            {
+                Collections.sort(allScores);
+
+                int count = allScores.size();
+
+                if (count == 0)
+                {
+                    return 0;
+                }
+                else if (count % 2 == 0)
+                {
+                    return (allScores.get((count / 2) - 1)
+                            + allScores.get(count / 2)) / 2;
+                }
+                else
+                {
+                    return allScores.get(count / 2);
+                }
+            }
+
+            return (cachedMedian != null ? cachedMedian : 0.0);
+        }
+
+
+        // ----------------------------------------------------------
+        public java.util.List<Double> allScores()
+        {
+            return allScores;
         }
 
 
@@ -2030,7 +2128,7 @@ public class Submission
         public String toString()
         {
             return "stats: "
-                + count
+                + allScores.size()
                 + " subs: hi = "
                 + max()
                 + ", low = "

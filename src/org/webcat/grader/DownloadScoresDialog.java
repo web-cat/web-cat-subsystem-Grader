@@ -84,16 +84,14 @@ public class DownloadScoresDialog extends WCComponent
     {
         idFor = new ComponentIDGenerator(this);
 
-        for (AssignmentOffering ao : assignmentOfferings)
-        {
-            // We just grab these every time through the loop and assume
-            // they'll always be the same (which they should be, unless we
-            // redesign the navigation).
+        AssignmentOffering ao = assignmentOfferings.objectAtIndex(0);
 
-            assignment = ao.assignment();
-            course = ao.courseOffering().course();
-            semester = ao.courseOffering().semester();
-        }
+        // Assume these are the same for all assignment offerings (which they
+        // should be, unless we redesign the navigation).
+
+        assignment = ao.assignment();
+        course = ao.courseOffering().course();
+        semester = ao.courseOffering().semester();
 
         super.appendToResponse(response, context);
     }
@@ -135,7 +133,7 @@ public class DownloadScoresDialog extends WCComponent
             rawData = exportAsBlackboardCSV(useMoodleFormat);
         }
 
-        String filename = "";
+        String filename;
         if (assignmentOfferings.count() == 1)
         {
             filename = assignmentOfferings.objectAtIndex(0).courseOffering()
@@ -143,12 +141,10 @@ public class DownloadScoresDialog extends WCComponent
         }
         else
         {
-            filename = assignmentOfferings.objectAtIndex(0).courseOffering()
-                .course().deptNumber() + "-";
+            filename = course.deptNumber() + "-";
         }
 
-        filename += assignmentOfferings.objectAtIndex(0).assignment().subdirName()
-            + ".csv";
+        filename += assignment.subdirName() + ".csv";
 
         DeliverFile csvFile = pageWithName(DeliverFile.class);
         csvFile.setFileData(new NSData(rawData));
@@ -162,8 +158,8 @@ public class DownloadScoresDialog extends WCComponent
     // ----------------------------------------------------------
     private void collectSubmissionsToExport()
     {
-        NSMutableArray<Submission> submissions =
-            new NSMutableArray<Submission>();
+        NSMutableArray<UserSubmissionPair> submissions =
+            new NSMutableArray<UserSubmissionPair>();
 
         for (AssignmentOffering ao : assignmentOfferings)
         {
@@ -240,22 +236,23 @@ public class DownloadScoresDialog extends WCComponent
         out.print("Penalty/Bonus");
         out.println("Total");
 
-        NSArray<Submission> submissions = submissionsToExport;
-        if (submissions != null)
+        for (UserSubmissionPair pair : submissionsToExport)
         {
-            for (Submission thisSubmission : submissions)
+            if (pair.userHasSubmission())
             {
-                User student = thisSubmission.user();
+                User student = pair.user();
+                Submission submission = pair.submission();
+
                 print(out, student.universityIDNo());
                 print(out, student.userName());
                 print(out, student.lastName());
                 print(out, student.firstName());
 
                 log.debug("submission found = "
-                    + thisSubmission.submitNumber());
-                print(out, thisSubmission.submitNumberRaw());
-                print(out, thisSubmission.submitTime().toString());
-                SubmissionResult result = thisSubmission.result();
+                    + submission.submitNumber());
+                print(out, submission.submitNumberRaw());
+                print(out, submission.submitTime().toString());
+                SubmissionResult result = pair.submission().result();
                 print(out, result.correctnessScoreRaw());
                 print(out, result.toolScoreRaw());
                 print(out, result.taScoreRaw());
@@ -291,16 +288,17 @@ public class DownloadScoresDialog extends WCComponent
             }
             out.println(name);
         }
-        NSArray<Submission> submissions = submissionsToExport;
-        if (submissions != null)
+
+        for (UserSubmissionPair pair : submissionsToExport)
         {
-            for (Submission thisSubmission : submissions)
+            if (pair.userHasSubmission())
             {
-                print(out, thisSubmission.user().userName());
+                print(out, pair.user().userName());
                 out.println(Double.toString(
-                    thisSubmission.result().finalScore()));
+                        pair.submission().result().finalScore()));
             }
         }
+
         if (!targetMoodle)
         {
             out.print("Points Possible");
@@ -311,20 +309,9 @@ public class DownloadScoresDialog extends WCComponent
     }
 
 
-    // ----------------------------------------------------------
-/*    public void flushNavigatorDerivedData()
-    {
-        assignment = null;
-        course = null;
-        semester = null;
-
-        super.flushNavigatorDerivedData();
-    }*/
-
-
     //~ Static/instance variables .............................................
 
-    private NSArray<Submission> submissionsToExport;
+    private NSArray<UserSubmissionPair> submissionsToExport;
 
     private static final Logger log =
         Logger.getLogger(DownloadScoresDialog.class);

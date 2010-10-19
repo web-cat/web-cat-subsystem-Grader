@@ -74,8 +74,8 @@ public class GradeStudentSubmissionPage
     public NSArray<Byte> formats = SubmissionResult.formats;
     public byte aFormat;
 
-    public NSArray<Submission> availableSubmissions;
-    public int                 thisSubmissionIndex;
+    public NSArray<UserSubmissionPair> availableSubmissions;
+    public int                         thisSubmissionIndex;
 
     //~ Methods ...............................................................
 
@@ -141,10 +141,26 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
+    public int indexOfNextSubmission()
+    {
+        int index = thisSubmissionIndex;
+
+        do
+        {
+            index++;
+        } while (index < availableSubmissions.count()
+                && !availableSubmissions.objectAtIndex(
+                        index).userHasSubmission());
+
+        return index;
+    }
+
+
+    // ----------------------------------------------------------
     public WOComponent saveThenNextStudent()
     {
         if (availableSubmissions == null
-            || thisSubmissionIndex >= availableSubmissions.count() - 1)
+            || indexOfNextSubmission() >= availableSubmissions.count() - 1)
         {
             // If there's no place to go, then go back to the list
             return saveThenList();
@@ -152,14 +168,16 @@ public class GradeStudentSubmissionPage
 
         if (applyLocalChanges())
         {
-            thisSubmissionIndex++;
+            thisSubmissionIndex = indexOfNextSubmission();
+
             Submission target = availableSubmissions
-                .objectAtIndex(thisSubmissionIndex);
+                .objectAtIndex(thisSubmissionIndex).submission();
             prefs().setSubmissionRelationship(target);
             prefs().setSubmissionFileStatsRelationship(null);
             submission = target;
             result = null;
         }
+
         return null;
     }
 

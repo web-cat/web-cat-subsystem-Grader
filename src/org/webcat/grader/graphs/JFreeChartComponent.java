@@ -89,6 +89,12 @@ public abstract class JFreeChartComponent extends WCComponent
                     + "height   = chartHeight;";
             }
 
+            if (style != null)
+            {
+                bindingDefinitions +=
+                    "style    = \"" + style + "\";";
+            }
+
             bindingDefinitions +=
                 "title    = title;"
                 + "alt      = title;"
@@ -313,6 +319,30 @@ public abstract class JFreeChartComponent extends WCComponent
 
     // ----------------------------------------------------------
     /**
+     * Gets the label to display on the x-axis of this chart.
+     *
+     * @return the x-axis label
+     */
+    public String style()
+    {
+        return style;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Sets the label to display on the x-axis of this chart.
+     *
+     * @param aLabel the x-axis label
+     */
+    public void setStyle(String aStyle)
+    {
+        style = aStyle;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Gets a value indicating whether the specified chart width and height
      * values should be ignored and the image tag should automatically size to
      * fit the chart.
@@ -438,6 +468,7 @@ public abstract class JFreeChartComponent extends WCComponent
     private String          title;
     private String          xAxisLabel;
     private String          yAxisLabel;
+    private String          style;
     private PlotOrientation orientation = PlotOrientation.VERTICAL;
 
     protected static Logger log = Logger.getLogger(JFreeChartComponent.class);
