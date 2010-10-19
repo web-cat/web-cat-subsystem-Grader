@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
 /**
- *  Generates the grader subsystem's rows in the system status block.
+ *  Generates the grader subsystem's page sections for the home->status page.
  *
  *  @author  Stephen Edwards
  *  @author  Last changed by $Author$
