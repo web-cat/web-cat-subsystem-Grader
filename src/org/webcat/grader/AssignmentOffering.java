@@ -125,6 +125,8 @@ public class AssignmentOffering
     public static final ERXKey<String> titleString =
         new ERXKey<String>("titleString");
 
+    public static final String ENQUEUE_SURVEY_JOB = "enqueueSurveyJob";
+
 
     //~ Methods ...............................................................
 
@@ -1043,6 +1045,22 @@ public class AssignmentOffering
     {
         setLastModified(new NSTimestamp());
         super.willInsert();
+    }
+
+
+    // ----------------------------------------------------------
+    public void triggerSurveyNotificationsIfNecessary()
+    {
+
+        if (assignment() != null && assignment().trackOpinions())
+        {
+            NSTimestamp now = new NSTimestamp();
+            if (now.after(lateDeadline()))
+            {
+                NSNotificationCenter.defaultCenter().postNotification(
+                    new NSNotification(ENQUEUE_SURVEY_JOB, id()));
+            }
+        }
     }
 
 
