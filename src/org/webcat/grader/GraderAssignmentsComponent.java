@@ -72,46 +72,44 @@ public class GraderAssignmentsComponent
 
 
     // ----------------------------------------------------------
+    @Override
+    public void awake()
+    {
+        willForceNavigatorSelection = null;
+        super.awake();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean forceNavigatorSelection()
+    {
+        boolean answer = super.forceNavigatorSelection();
+        if (!answer)
+        {
+            if (willForceNavigatorSelection == null)
+            {
+                NSArray<CourseOffering> courses = internalCourseOfferings();
+                willForceNavigatorSelection =
+                    (courses.count() == 0)
+                    || (assignmentOfferings(courses).count() == 0);
+            }
+            answer = willForceNavigatorSelection;
+        }
+        return answer;
+    }
+
+
+    // ----------------------------------------------------------
     /*
      * Get the selected course offering(s) for this page.
      * @return The list of course offerings (empty if none is selected).
      */
     public NSArray<CourseOffering> courseOfferings()
     {
-        NSMutableArray<CourseOffering> courseOfferings =
-            new NSMutableArray<CourseOffering>(10);
-        if (!forceNavigatorSelection())
-        {
-            Course course = coreSelections().course();
-            if (course == null)
-            {
-                // Just one offering selected
-                CourseOffering co = coreSelections().courseOffering();
-                if (co != null &&
-                        (co.isStaff(user()) || user().hasAdminPrivileges()))
-                {
-                    courseOfferings.add(co);
-                }
-            }
-            else
-            {
-                Semester semester = coreSelections().semester();
-                // Find all offerings that this user can see
-                NSArray<CourseOffering> candidates = (semester == null)
-                    ? course.offerings()
-                    : CourseOffering.offeringsForSemesterAndCourse(
-                        localContext(), course, semester);
-
-                for (CourseOffering co : candidates)
-                {
-                    if (co.isStaff(user()) || user().hasAdminPrivileges())
-                    {
-                        courseOfferings.add(co);
-                    }
-                }
-            }
-        }
-        return courseOfferings;
+        return forceNavigatorSelection()
+            ? new NSArray<CourseOffering>()
+            : internalCourseOfferings();
     }
 
 
@@ -141,5 +139,48 @@ public class GraderAssignmentsComponent
     }
 
 
+    // ----------------------------------------------------------
+    /*
+     * Get the selected course offering(s) for this page.
+     * @return The list of course offerings (empty if none is selected).
+     */
+    private NSArray<CourseOffering> internalCourseOfferings()
+    {
+        NSMutableArray<CourseOffering> courseOfferings =
+            new NSMutableArray<CourseOffering>(10);
+        Course course = coreSelections().course();
+        if (course == null)
+        {
+            // Just one offering selected
+            CourseOffering co = coreSelections().courseOffering();
+            if (co != null &&
+                    (co.isStaff(user()) || user().hasAdminPrivileges()))
+            {
+                courseOfferings.add(co);
+            }
+        }
+        else
+        {
+            Semester semester = coreSelections().semester();
+            // Find all offerings that this user can see
+            NSArray<CourseOffering> candidates = (semester == null)
+                ? course.offerings()
+                : CourseOffering.offeringsForSemesterAndCourse(
+                    localContext(), course, semester);
+
+            for (CourseOffering co : candidates)
+            {
+                if (co.isStaff(user()) || user().hasAdminPrivileges())
+                {
+                    courseOfferings.add(co);
+                }
+            }
+        }
+        return courseOfferings;
+    }
+
+
     //~ Instance/static variables ...............NSMutableArray................
+
+    private Boolean willForceNavigatorSelection;
 }
