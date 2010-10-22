@@ -43,7 +43,7 @@
     <wo name="Repetition1"><wo name="TR">
         <wo:if condition="$aUserSubmission.userHasSubmission">
             <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-            <td><b><wo:str value="$aSubmission.namesOfAllUsers"/></b></td>
+            <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/></td>
             <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
             (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
             <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>

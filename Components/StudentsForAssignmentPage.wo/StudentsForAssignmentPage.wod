@@ -157,7 +157,7 @@ SubmitTime: WOString {
 
 SubmitTimeSpan: WOGenericContainer {
     elementName = "span";
-    style = submitTimeSpanStyle;
+    class = submitTimeSpanClass;
     title = aSubmission.result.earlyLateStatus;
 }
 

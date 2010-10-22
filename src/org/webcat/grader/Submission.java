@@ -539,6 +539,48 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Gets a string containing the names of the user who made this submission
+     * and all of his or her partners, in the form "User 1, User 2, ..., and
+     * User N".
+     *
+     * @return a string containing the names of all of the partners
+     */
+    public String namesOfAllUsers_LF()
+    {
+        NSMutableArray<String> names = new NSMutableArray<String>();
+        names.addObject(user().name_LF());
+
+        for (Submission partnerSub : partneredSubmissions())
+        {
+            names.addObject(partnerSub.user().name_LF());
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(names.objectAtIndex(0));
+
+        if (names.count() > 1)
+        {
+            for (int i = 1; i < names.count() - 1; i++)
+            {
+                buffer.append("; ");
+                buffer.append(names.objectAtIndex(i));
+            }
+
+            if (names.count() > 2)
+            {
+                buffer.append(';');
+            }
+
+            buffer.append(" and ");
+            buffer.append(names.lastObject());
+        }
+
+        return buffer.toString();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Delete all the result information for this submission, including
      * all partner links.  This method uses the submission's current
      * editing context to make changes, but does <b>not</b> commit those

@@ -297,11 +297,11 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    public String submitTimeSpanStyle()
+    public String submitTimeSpanClass()
     {
         if (aSubmission.isLate())
         {
-            return "color: red;";
+            return "warn";
         }
         else
         {
