@@ -302,8 +302,7 @@ public class GraderDatabaseUpdates
     public void updateIncrement14() throws SQLException
     {
         database().executeSQL(
-            "alter table TSUBMISSION add "
-            + "primarySubmissionId INTEGER" );
+            "alter table TSUBMISSION add primarySubmissionId INTEGER" );
         database().executeSQL(
                 "alter table TSUBMISSIONPROFILE add "
                 + "allowPartners BIT NOT NULL" );
@@ -375,6 +374,18 @@ public class GraderDatabaseUpdates
 
         // Indices for SubmissionResult
         // None so far
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds lastUpdated field to submission result table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement16() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONRESULT add lastUpdated DATETIME" );
     }
 
 
