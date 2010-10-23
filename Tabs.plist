@@ -22,17 +22,6 @@
               };
             };
           };
-/*          "Download Scores" = {
-            accessLevel = 40;
-            priority = 3;
-            children = {
-              "Pick the Format" = {
-                pageName = org.webcat.grader.DownloadScoresPage;
-                accessLevel = 40;
-                priority = 3;
-              };
-            };
-          };*/
           "Submit for Student" = {
             accessLevel = 40;
             priority = 4;
@@ -70,26 +59,8 @@
           Properties = {
             accessLevel = 50;
             priority = 2;
-//            children = {
-//              "Pick the Course" = {
-//                pageName = org.webcat.grader.PickCourseTaughtPage;
-//                accessLevel = 50;
-//                priority = 1;
-//                wantsStart = YES;
-//              };
-//              "Pick the Assignment" = {
-//                pageName = org.webcat.grader.PickAssignmentToEditPage;
-//                accessLevel = 50;
-//                priority = 2;
-//                config = { allowCreate = true; };
-//              };
-//              "Edit Assignment Properties" = {
-                pageName = org.webcat.grader.EditAssignmentPage;
-//                accessLevel = 50;
-//                priority = 3;
-                id = AssignmentProperties;
-//              };
-//            };
+            pageName = org.webcat.grader.EditAssignmentPage;
+            id = AssignmentProperties;
           };
           New = {
             accessLevel = 50;
@@ -121,50 +92,36 @@
           Properties = {
             accessLevel = 50;
             priority = 2;
-//            pageName = org.webcat.grader.EditCoursePage;
-//            id       = EditCourseProperties;
-                children = {
-//                  "Pick the Course" = {
-//                    pageName = org.webcat.grader.PickCourseTaughtPage;
-//                    accessLevel = 50;
-//                    priority = 1;
-//                    wantsStart = YES;
-//                  };
-                  "Edit Course Properties" = {
+            children = {
+                "Edit Course Properties" = {
                     pageName  = org.webcat.grader.EditCoursePage;
                     accessLevel = 50;
                     priority  = 2;
                     id      = EditCourseProperties;
-                  };
-                  "Edit Student Roster" = {
+                };
+                "Edit Student Roster" = {
                     pageName = org.webcat.grader.CourseRosterPage;
                     accessLevel = 50;
                     priority = 3;
-                  };
-              };
+                };
+            };
           };
           New = {
             accessLevel = 50;
             priority = 3;
-//            pageName = org.webcat.grader.NewCourseOfferingPage;
-                children = {
-                  "Pick the Course" = {
+            children = {
+                "Pick the Course" = {
                     pageName = org.webcat.grader.NewCourseOfferingPage;
                     accessLevel = 50;
                     priority = 1;
                     wantsStart = YES;
                 };
-                  "Edit Course Properties" = {
+                "Edit Course Properties" = {
                     accessLevel = 50;
                     priority = 2;
                     config = { jumpTo = EditCourseProperties; };
-                  };
-//                  "Edit Student Roster" = {
-//                    pageName = org.webcat.grader.CourseRosterPage;
-//                    accessLevel = 50;
-//                    priority = 3;
-//                  };
-              };
+                };
+            };
           };
         };
       };
