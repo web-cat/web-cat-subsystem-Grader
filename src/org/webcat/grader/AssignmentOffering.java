@@ -124,6 +124,10 @@ public class AssignmentOffering
 
     public static final ERXKey<String> titleString =
         new ERXKey<String>("titleString");
+    public static final ERXKey<NSTimestamp> availableFrom =
+        new ERXKey<NSTimestamp>(AVAILABLE_FROM_KEY);
+    public static final ERXKey<NSTimestamp> lateDeadline =
+        new ERXKey<NSTimestamp>(LATE_DEADLINE_KEY);
 
 
     //~ Methods ...............................................................
