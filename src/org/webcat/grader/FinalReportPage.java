@@ -613,6 +613,15 @@ public class FinalReportPage
     }
 
 
+    // ----------------------------------------------------------
+    @Override
+    public void flushNavigatorDerivedData()
+    {
+        submission = null;
+        super.flushNavigatorDerivedData();
+    }
+
+
     //~ Instance/static variables .............................................
 
     private JobData jobData;

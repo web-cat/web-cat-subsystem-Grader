@@ -64,6 +64,10 @@ MostRecentJobWait: WOString {
 	dateformat = mostRecentJobWaitFormat;
 }
 
+Navigator: org.webcat.grader.GraderNavigator {
+    allowsAllOfferingsForCourse = false;
+}
+
 Page: org.webcat.core.WCPageWithNavigation {
     title     = "Your Assignment Submission Results";
     permalink = submission.permalink;

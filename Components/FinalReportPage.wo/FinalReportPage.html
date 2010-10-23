@@ -1,11 +1,13 @@
 <wo name="Page"><wo:not condition="$submissionChosen">
   <wo:org.webcat.core.WCPageModule title="Please Choose a Submission">
+    <div class="floatRight"><wo name="Navigator"/></div>
     <p>Please choose
     a submission under <webobject name="PastResults"/> to see your feedback.</p>
   </wo:org.webcat.core.WCPageModule>
 </wo:not><wo:else><wo:not condition="$reportIsReady">
   <webobject name="GradingHalted">
   <wo:org.webcat.core.WCPageModule title="Assignment Grading Disabled">
+    <div class="floatRight"><wo name="Navigator"/></div>
     <p>Processing of submissions for this assignment has been
     temporarily halted.  Your submission has been received and
     the time has been properly recorded.  It will be processed
@@ -17,6 +19,7 @@
   </webobject><webobject name="GradingNotHalted">
     <wo:if condition="$gradingPaused">
     <wo:org.webcat.core.WCPageModule title="Assignment Submission Suspended">
+    <div class="floatRight"><wo name="Navigator"/></div>
       <p>An internal error occured while the Grader was processing
       your submission.  The administrator and your instructor have been
       notifed of the error.  An e-mail message will be sent to you at
@@ -26,6 +29,7 @@
     </wo:if><wo:else>
     <wo:org.webcat.core.WCPageModule title="Assignment Queued for Grading">
       <webobject name="MetaRefresh1"/>
+      <div class="floatRight"><wo name="Navigator"/></div>
       <div style="float:left;margin:2em;"><webobject name="Image"/></div>
       <table><thead>
       <tr><th colspan="2">Submission Status</th></tr></thead><tbody>
@@ -46,6 +50,7 @@
   </webobject>
 </wo:not><wo:else>
   <wo:org.webcat.core.WCPageModule title="Result Summary">
+    <div class="floatRight"><wo:org.webcat.grader.GraderNavigator/></div>
   <wo:WCForm multipleSubmit="true" style="margin-bottom: 0.5em;">
     <wo:if condition="$showReturnToGrading"><wo name="ReturnToGrading"/></wo:if>
     <wo:if condition="$canSubmitAgain"><wo name="SubmitAgain"/></wo:if>
