@@ -22,6 +22,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.NSNumberFormatter;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -137,7 +138,30 @@ public class SubmissionFileDetailsPage
     }
 
 
+    // ----------------------------------------------------------
+    @Override
+    public String title()
+    {
+        Submission submission = thisFile.submissionResult().submission();
+        AssignmentOffering offering = submission.assignmentOffering();
+        return offering.courseOffering().compactName()
+            + ": "
+            + offering.assignment().name()
+            + " try #"
+            + submission.submitNumber()
+            + " ("
+            + formatter.format(
+                thisFile.submissionResult().finalScoreVisibleTo(user()))
+            + "/"
+            + formatter.format(
+                offering.assignment().submissionProfile().availablePoints())
+            + ")";
+    }
+
+
     //~ Instance/static variables .............................................
 
+    private static final NSNumberFormatter formatter =
+        new NSNumberFormatter("0.0");
     static Logger log = Logger.getLogger( SubmissionFileDetailsPage.class );
 }

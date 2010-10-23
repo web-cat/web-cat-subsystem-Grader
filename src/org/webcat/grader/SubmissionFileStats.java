@@ -207,6 +207,46 @@ public class SubmissionFileStats
 
     // ----------------------------------------------------------
     /**
+     * Retrieve the total number of point deductions on this file visible
+     * to the student.
+     * @return the value of the attribute
+     */
+    public double deductionsForStudent()
+    {
+        if (submissionResult().status() == Status.CHECK)
+        {
+            return deductions();
+        }
+        else
+        {
+            return deductions() - staffDeductions();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the total number of point deductions on this file visible
+     * to the given user.
+     * @return the value of the attribute
+     */
+    public double deductionsVisibleTo(User user)
+    {
+        if (user.hasAdminPrivileges()
+            || submissionResult().submission().assignmentOffering()
+                .courseOffering().isStaff(user))
+        {
+            return deductions();
+        }
+        else
+        {
+            return deductionsForStudent();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the total number of manual point deductions on this file.
      * @return the value of the attribute
      */
@@ -392,8 +432,8 @@ public class SubmissionFileStats
 //        contents.append( "/xhtml1-strict.dtd\">\n" );
         contents.append(
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
-        contents.append( WCResourceManager.resourceURLFor(
-            "wc-code.css", "Grader", null, request ) );
+        contents.append(WCResourceManager.versionlessResourceURLFor(
+            "wc-code.css", "Grader", null, request ));
         contents.append( "\"/>\n" );
 
         //get the array of file comments from the database
@@ -501,9 +541,12 @@ public class SubmissionFileStats
                             // ---- first row ----
                             String firstrow = "<tr id=\"" + idnum
                                 + "\"><td id=\"" + idnum + "\" colspan=\"3\">"
-                                + "<div id=\"" + idnum + "\"><img id=\""
-                                + idnum + "\" src=\"/images/blank.gif\" "
-                                + "width=\"1\" height=\"2\"/></div></td></tr>";
+                                + "<img id=\""
+                                + idnum + "\" src=\""
+                                +  WCResourceManager.resourceURLFor(
+                                    "images/blank.gif", "Core", null, null)
+                                + "\" width=\"1\" height=\"2\"/>"
+                                + "</td></tr>";
                             // pass it through the XML parser before putting
                             // it in JDOM
                             Document doc1 = parser.build(
@@ -532,18 +575,15 @@ public class SubmissionFileStats
                                 "contentEditable=\"" + isEditable + "\"" );
                             log.debug( newmes );
 
-                            String resUrl = WCResourceManager.resourceURLFor(
-                                    "images/blank.gif", "Core", null, null);
-                            resUrl = resUrl.substring(0,
-                                    resUrl.length() - "images/blank.gif".length());
-
                             String vals = "<table id=\"" + idnum
                                 + ":X\" border=\"0\" cellpadding=\"0\"><tbody "
                                 + "id=\"" + idnum + ":B\"><tr id=\"" + idnum
                                 + ":R\"><td id=\"" + idnum
                                 + ":D\" class=\"messageBox\"><img id=\""
                                 + idnum + ":I\" src=\""
-                                + resUrl + thisComment.categoryIcon()
+                                + WCResourceManager.resourceURLFor(
+                                    thisComment.categoryIcon(),
+                                    "Core", null, null)
                                 + "\" border=\"0\"/><option id=\"" + idnum
                                 + ":T\" value=\"" + thisComment.to()
                                 + "\"/><b id=\"" + idnum + "\"> <span id=\""
@@ -578,10 +618,12 @@ public class SubmissionFileStats
                             // ---- third row ----
                             String thirdrow = "<tr id=\"" + idnum
                                 + "\"><td id=\"" + idnum
-                                + "\" colspan=\"3\"><div id=\"" + idnum
-                                + "\"><img id=\"" + idnum
-                                + "\" src=\"/images/blank.gif\" "
-                               + "width=\"1\" height=\"2\"/></div> </td></tr>";
+                                + "\" colspan=\"3\"><img id=\"" + idnum
+                                + "\" src=\""
+                                + WCResourceManager.resourceURLFor(
+                                    "images/blank.gif", "Core", null, null)
+                                + "\" width=\"1\" height=\"2\"/>"
+                                + "</td></tr>";
                             // pass it through the XML parser before putting
                             // it in JDOM
                             Document doc3 = parser.build(
@@ -697,38 +739,10 @@ public class SubmissionFileStats
     }
 
 
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
-
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
-
-
     //~ Instance/static variables .............................................
+
     private double staffDeductions;
     private boolean staffDeductionsIsValid;
 
-    static Logger log = Logger.getLogger( SubmissionFileStats.class );
+    static Logger log = Logger.getLogger(SubmissionFileStats.class);
 }

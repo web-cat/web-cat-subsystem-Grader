@@ -63,6 +63,9 @@ public class StudentsForAssignmentPage
         offerings = new ERXDisplayGroup<AssignmentOffering>();
         offerings.setSortOrderings(
             AssignmentOffering.titleString.ascInsensitives());
+
+        studentNewerSubmissions = new ERXDisplayGroup<Submission>();
+        studentNewerSubmissions.setDetailKey("allSubmissions");
     }
 
 
@@ -82,6 +85,8 @@ public class StudentsForAssignmentPage
 
     public ERXDisplayGroup<AssignmentOffering> offerings;
     public AssignmentOffering assignmentOffering;
+
+    public Submission                  aNewerSubmission;
 
     /** Value of the corresponding checkbox on the page. */
     public boolean omitStaff           = true;
@@ -207,6 +212,45 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
+    public WOComponent editNewerSubmissionScore()
+    {
+        WCComponent destination = null;
+        if (!hasMessages())
+        {
+            if (aNewerSubmission == null)
+            {
+                log.error("editNewerSubmissionScore(): null submission!");
+            }
+            else if (aNewerSubmission.result() == null)
+            {
+                log.error("editNewerSubmissionScore(): null submission result!");
+                log.error("student = " + aNewerSubmission.user().userName());
+            }
+            prefs().setSubmissionRelationship(aNewerSubmission);
+
+//            destination = pageWithName(GradeStudentSubmissionPage.class);
+            destination = (WCComponent)super.next();
+            if (destination instanceof GradeStudentSubmissionPage)
+            {
+                GradeStudentSubmissionPage page =
+                    (GradeStudentSubmissionPage)destination;
+
+                if (aUserSubmission != null)
+                {
+                    page.availableSubmissions =
+                        userGroup().displayedObjects().immutableClone();
+                    page.thisSubmissionIndex =
+                        page.availableSubmissions.indexOf(aUserSubmission);
+                }
+            }
+
+            destination.nextPage = this;
+        }
+        return destination;
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Marks all the submissions shown that have been partially graded as
      * being completed, sending e-mail notifications as necessary.
@@ -276,6 +320,23 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
+    public ERXDisplayGroup<Submission> studentNewerSubmissions()
+    {
+        if (studentNewerSubmissions.masterObject() != aSubmission)
+        {
+            studentNewerSubmissions.setMasterObject(aSubmission);
+            studentNewerSubmissions.setObjectArray(
+                aSubmission.allSubmissions());
+            studentNewerSubmissions.queryMin().takeValueForKey(
+                aSubmission.submitNumber() + 1, Submission.SUBMIT_NUMBER_KEY);
+            studentNewerSubmissions.setQualifier(
+                studentNewerSubmissions.qualifierFromQueryValues());
+        }
+        return studentNewerSubmissions;
+    }
+
+
+    // ----------------------------------------------------------
     public boolean hasTAScore()
     {
         return aSubmission.result().taScoreRaw() != null;
@@ -306,6 +367,20 @@ public class StudentsForAssignmentPage
         else
         {
             return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public String newerSubmitTimeSpanClass()
+    {
+        if (aNewerSubmission.isLate())
+        {
+            return "warn sm";
+        }
+        else
+        {
+            return "sm";
         }
     }
 
@@ -417,6 +492,41 @@ public class StudentsForAssignmentPage
     }
 
 
+    // ----------------------------------------------------------
+    public String newerSubmissionStatus()
+    {
+        String result = null;
+        if (aNewerSubmission.result() == null)
+        {
+            result = "suspended";
+            EnqueuedJob job = aNewerSubmission.enqueuedJob();
+            if (job == null)
+            {
+                result = "cancelled";
+            }
+            else if (!job.paused())
+            {
+                result = "queued for grading";
+            }
+        }
+        else
+        {
+            // check date of submission against date of feedback
+            NSTimestamp feedbackTime = aSubmission.submitTime();
+            if (aSubmission.result() != null)
+            {
+                feedbackTime = aSubmission.result().lastUpdated();
+            }
+            if (aNewerSubmission.submitTime().after(feedbackTime))
+            {
+                result = "newer than feedback";
+            }
+        }
+        log.debug("newerSubmissionStatus() = " + result);
+        return result;
+    }
+
+
     //~ Instance/static variables .............................................
 
     private Map<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>> userGroups =
@@ -425,6 +535,8 @@ public class StudentsForAssignmentPage
         new HashMap<AssignmentOffering, Submission.CumulativeStats>();
 
     private AssignmentOffering offeringForAction;
+
+    private ERXDisplayGroup<Submission> studentNewerSubmissions;
 
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }

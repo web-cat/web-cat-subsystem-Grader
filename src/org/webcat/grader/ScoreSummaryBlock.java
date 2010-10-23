@@ -137,7 +137,7 @@ public class ScoreSummaryBlock
     {
         double possible = submission.assignmentOffering()
             .assignment().submissionProfile().availablePoints();
-        double pts = result.finalScore();
+        double pts = result.finalScoreVisibleTo(user());
         return FinalReportPage.meter( pts / possible );
     }
 

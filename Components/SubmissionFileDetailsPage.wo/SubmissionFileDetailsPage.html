@@ -1,9 +1,7 @@
-<webobject name="Page">
-<wo:org.webcat.core.WCPageModule title="Your Submission">
-From: <wo name="DeptNumber"/>: <wo name="AssignmentName"/>
-try #<wo name="SubmitNumber"/>
-(<wo name="FinalScore"/>/<wo name="AvailablePoints"/>)<br />
-<wo name="Form">View: <wo name="FileList"/> <wo name="Go"/></wo>
+<wo:org.webcat.core.WCPageWithNavigation>
+<wo:org.webcat.core.WCPageModule title="$thisFile.sourceFileName">
+<wo:WCForm>View: <wo name="FileList"/>
+  <wo:WCButton action="$viewNextFile" label="Go"/></wo:WCForm>
+<wo:str value="$codeWithComments" escapeHTML="false"/>
 </wo:org.webcat.core.WCPageModule>
-<webobject name="FileDetails"/>
-</webobject>
+</wo:org.webcat.core.WCPageWithNavigation>

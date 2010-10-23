@@ -72,6 +72,17 @@ MostRecentSubmitNumber: WOString {
 Navigator: org.webcat.grader.GraderNavigator {
 }
 
+NewerSubmitTime: WOString {
+    value     = aNewerSubmission.submitTime;
+    formatter = session.timeFormatter;
+}
+
+NewerSubmitTimeSpan: WOGenericContainer {
+    elementName = "span";
+    class = newerSubmitTimeSpanClass;
+    title = aNewerSubmission.result.earlyLateStatus;
+}
+
 NoSubmissionsPlaceholder: WOGenericContainer {
     elementName = "td";
     colSpan = "~ 5 + (assignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0) + (assignmentOffering.assignment.usesToolCheckScore ? 1 : 0)";
@@ -81,11 +92,6 @@ NoSubmissionsPlaceholder: WOGenericContainer {
 
 NoTAScore: WOConditional {
     condition = hasTAScore;
-    negate    = true;
-}
-
-NotMostRecent: WOConditional {
-    condition = isMostRecentSubmission;
     negate    = true;
 }
 

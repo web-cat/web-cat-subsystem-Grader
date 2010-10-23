@@ -25,7 +25,7 @@ FinalMeter: WOString {
 
 FinalScore: WOString {
     numberformat = "0.0";
-    value        = result.finalScore;
+    value        = "~result.finalScoreVisibleTo(user)";
 }
 
 Graph: org.webcat.grader.graphs.MiniBarGraph {

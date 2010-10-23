@@ -39,13 +39,21 @@
         <th>TA</th>
         <wo name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></wo>
         <th class="sm">Score<wo name="SortOrderFinalScore"/></th>
-    </tr></thead><tbody>
+    </tr></thead><tbody class="top">
     <wo name="Repetition1"><wo name="TR">
         <wo:if condition="$aUserSubmission.userHasSubmission">
             <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-            <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/></td>
-            <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
-            (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
+            <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/>
+              <wo:not condition="$isMostRecentSubmission">
+                <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
+                  <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
+                  <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
+                </wo:loop>
+              </wo:not></td>
+            <td class="n"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
+            (of <wo name="MostRecentSubmitNumber"/>)</wo:not></td>
             <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
             <td class="n"><wo name="TestingScore"/></td>
             <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
@@ -84,12 +92,20 @@
         <th>TA</th>
         <wo name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></wo>
         <th class="sm">Score<wo name="SortOrderStaffFinalScore"/></th>
-    </tr></thead><tbody>
+    </tr></thead><tbody class="top">
     <wo name="Repetition2"><wo name="TR2">
         <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-        <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
-        <td class="n"><wo name="SubmitNumber"/><wo name="NotMostRecent">
-        (of <wo name="MostRecentSubmitNumber"/>)</wo></td>
+        <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/>
+              <wo:not condition="$isMostRecentSubmission">
+                <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
+                  <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
+                  <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
+                </wo:loop>
+              </wo:not></td>
+        <td class="n"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
+        (of <wo name="MostRecentSubmitNumber"/>)</wo:not></td>
         <td class="sm"><wo name="SubmitTime"/></td>
         <td class="n"><wo name="TestingScore"/></td>
         <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
