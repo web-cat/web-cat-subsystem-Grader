@@ -22,14 +22,6 @@ AssignmentRepetition: WORepetition {
 	index = index;
 }
 
-CanEditAssignment: WOConditional {
-    condition = canEditAssignment;
-}
-
-CanGradeAssignment: WOConditional {
-    condition = canGradeAssignment;
-}
-
 DueDate: WOString {
     formatter = session.timeFormatter;
     value     = assignment.dueDate;
@@ -104,21 +96,6 @@ JobAssignmentName: WOHyperlink {
 	target = "_new";
 }
 
-JobRepetition: WORepetition {
-	item  = job;
-	list  = enqueuedJobGroup.displayedObjects;
-	index = index;
-}
-
-JobIsNotSuspended: WOConditional {
-    condition = job.paused;
-    negate    = true;
-}
-
-JobIsSuspended: WOConditional {
-    condition = job.paused;
-}
-
 JobSubmissionTime: WOString {
     formatter = session.timeFormatter;
     value     = job.submission.submitTime;
@@ -145,8 +122,6 @@ SuspendedCount: WOString {
 
 TR : org.webcat.core.TableRow {
     index       = index;
-    showCaution = job.paused;
-    showError   = job.submission.assignmentOffering.gradingSuspended;
 }
 
 TR2 : org.webcat.core.TableRow {

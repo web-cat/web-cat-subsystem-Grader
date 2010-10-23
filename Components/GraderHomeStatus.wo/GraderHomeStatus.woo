@@ -54,6 +54,29 @@
                     selectorName = "compareAscending:"; }
             );
         };
+        oldAssignmentGroup = {
+            class = WODisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = AssignmentOffering;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {   class = EOSortOrdering;
+                    key = dueDate;
+                    selectorName = "compareDescending:"; }
+            );
+        };
         upcomingAssignmentsGroup = {
             class = WODisplayGroup;
             dataSource = {

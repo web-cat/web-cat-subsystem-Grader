@@ -24,8 +24,11 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.eof.ERXConstant;
+import er.extensions.eof.ERXQ;
 import org.apache.log4j.Logger;
+import org.webcat.core.Application;
+import org.webcat.core.CourseOffering;
+import org.webcat.core.Semester;
 
 // -------------------------------------------------------------------------
 /**
@@ -57,6 +60,7 @@ public class GraderHomeStatus
     public WODisplayGroup     enqueuedJobGroup;
     public EnqueuedJob        job;
     public WODisplayGroup     assignmentGroup;
+    public WODisplayGroup     oldAssignmentGroup;
     public WODisplayGroup     upcomingAssignmentsGroup;
     public AssignmentOffering assignment;
     public int                index;
@@ -74,7 +78,11 @@ public class GraderHomeStatus
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "starting appendToResponse()" );
+        if (log.isDebugEnabled())
+        {
+            log.debug( "starting beforeAppendToResponse()" );
+            Application.enableSQLLogging();
+        }
 
         enqueuedJobGroup.queryBindings().setObjectForKey(
                 user(),
@@ -83,45 +91,24 @@ public class GraderHomeStatus
         enqueuedJobGroup.fetch();
 
         currentTime = new NSTimestamp();
-        NSMutableArray<EOQualifier> qualifiers =
-            new NSMutableArray<EOQualifier>();
-        qualifiers.addObject( new EOKeyValueQualifier(
-                AssignmentOffering.AVAILABLE_FROM_KEY,
-                EOQualifier.QualifierOperatorLessThan,
-                currentTime
-            ) );
-        qualifiers.addObject( new EOKeyValueQualifier(
-                AssignmentOffering.PUBLISH_KEY,
-                EOQualifier.QualifierOperatorEqual,
-                ERXConstant.integerForInt( 1 )
-            ) );
-        qualifiers.addObject( new EOKeyValueQualifier(
-                AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                EOQualifier.QualifierOperatorContains,
-                user()
-            ) );
-        qualifiers = new NSMutableArray<EOQualifier>(
-            new EOAndQualifier(qualifiers));
-        qualifiers.addObject( new EOKeyValueQualifier(
+        EOQualifier baseQualifier =
+            AssignmentOffering.availableFrom.lessThan(currentTime).and(
+            AssignmentOffering.publish.isTrue()).and(
+                new EOKeyValueQualifier(
+                    AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    user()));
+        baseQualifier = ERXQ.or(baseQualifier,
+            new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
                 EOQualifier.QualifierOperatorContains,
-                user()
-            ) );
-        qualifiers.addObject( new EOKeyValueQualifier(
+                user()),
+            new EOKeyValueQualifier(
                 AssignmentOffering.COURSE_OFFERING_GRADERS_KEY,
                 EOQualifier.QualifierOperatorContains,
-                user()
-            ) );
-        qualifiers = new NSMutableArray<EOQualifier>(
-            new EOOrQualifier(qualifiers));
-        EOQualifier deadlineQualifier = new EOKeyValueQualifier(
-            AssignmentOffering.LATE_DEADLINE_KEY,
-            EOQualifier.QualifierOperatorGreaterThan,
-            currentTime
-            );
-        qualifiers.addObject( deadlineQualifier );
-        EOQualifier assignmentQualifier = new EOAndQualifier( qualifiers );
-        assignmentGroup.setQualifier( assignmentQualifier );
+                user()));
+        assignmentGroup.setQualifier( ERXQ.and(baseQualifier,
+            AssignmentOffering.lateDeadline.greaterThan(currentTime)));
         if (log.isDebugEnabled())
         {
             log.debug( "qualifier = " + assignmentGroup.qualifier() );
@@ -132,24 +119,45 @@ public class GraderHomeStatus
             log.debug( "results = " + assignmentGroup.displayedObjects() );
         }
 
+        Semester currentSemester = null;
+        NSArray<Semester> semesters =
+            Semester.allObjectsOrderedByStartDate(localContext());
+        if (semesters.count() > 0)
+        {
+            currentSemester = semesters.get(0);
+        }
+        oldAssignmentGroup.setQualifier(
+            currentSemester == null
+                ? ERXQ.and(baseQualifier,
+                    ERXQ.not(AssignmentOffering.lateDeadline
+                        .greaterThan(currentTime)))
+                : ERXQ.and(baseQualifier,
+                    ERXQ.not(AssignmentOffering.lateDeadline
+                        .greaterThan(currentTime)),
+                    AssignmentOffering.courseOffering.dot(
+                        CourseOffering.semester).is(currentSemester))
+            );
+        oldAssignmentGroup.fetch();
+
+
         // Now set up the upcoming assignments list
-        qualifiers = new NSMutableArray<EOQualifier>(deadlineQualifier);
-        // Also, more recent than two weeks ago
-        qualifiers.addObject( new EOKeyValueQualifier(
-            AssignmentOffering.DUE_DATE_KEY,
-            EOQualifier.QualifierOperatorGreaterThan,
-            currentTime.timestampByAddingGregorianUnits( 0, 0, -14, 0, 0, 0 )
-            ) );
-        // Also, some time within the next 4 weeks
-        qualifiers.addObject( new EOKeyValueQualifier(
-            AssignmentOffering.DUE_DATE_KEY,
-            EOQualifier.QualifierOperatorLessThan,
-            currentTime.timestampByAddingGregorianUnits( 0, 0, 28, 0, 0, 0 )
-            ) );
-        qualifiers.addObject( new EONotQualifier( assignmentQualifier ) );
-        upcomingAssignmentsGroup.setQualifier(
-            new EOAndQualifier( qualifiers ) );
+        upcomingAssignmentsGroup.setQualifier(ERXQ.and(
+            // Not in either of the upper lists
+            ERXQ.not(baseQualifier),
+            // Also, more recent than two weeks ago
+            AssignmentOffering.dueDate.greaterThan(
+                currentTime.timestampByAddingGregorianUnits(0, 0, -14, 0, 0, 0)
+                ),
+            // Also, some time within the next 4 weeks
+            AssignmentOffering.dueDate.lessThan(
+                currentTime.timestampByAddingGregorianUnits(0, 0, 28, 0, 0, 0))
+            ));
         upcomingAssignmentsGroup.fetch();
+        if (log.isDebugEnabled())
+        {
+            Application.disableSQLLogging();
+            log.debug("ending beforeAppendToResponse()");
+        }
         super.beforeAppendToResponse( response, context );
     }
 
