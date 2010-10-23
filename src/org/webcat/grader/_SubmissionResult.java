@@ -157,6 +157,9 @@ public abstract class _SubmissionResult
     public static final String IS_MOST_RECENT_KEY = "isMostRecent";
     public static final ERXKey<Integer> isMostRecent =
         new ERXKey<Integer>(IS_MOST_RECENT_KEY);
+    public static final String LAST_UPDATED_KEY = "lastUpdated";
+    public static final ERXKey<NSTimestamp> lastUpdated =
+        new ERXKey<NSTimestamp>(LAST_UPDATED_KEY);
     public static final String STAT_ELEMENTS_LABEL_KEY = "statElementsLabel";
     public static final ERXKey<String> statElementsLabel =
         new ERXKey<String>(STAT_ELEMENTS_LABEL_KEY);
@@ -564,6 +567,35 @@ public abstract class _SubmissionResult
                 + value + "): was " + isMostRecentRaw() );
         }
         takeStoredValueForKey( value, "isMostRecent" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>lastUpdated</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp lastUpdated()
+    {
+        return (NSTimestamp)storedValueForKey( "lastUpdated" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lastUpdated</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setLastUpdated( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLastUpdated("
+                + value + "): was " + lastUpdated() );
+        }
+        takeStoredValueForKey( value, "lastUpdated" );
     }
 
 
