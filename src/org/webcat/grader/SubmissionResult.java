@@ -206,30 +206,107 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Computes the final score for this submission.  The final
-     * score is the rawScore() plus the earlyBonus() minus the
-     * latePenalty().
+     * Computes the raw score for this submission, viewable by students.
+     * The raw score is the correctnessScore() plus the toolScore() plus
+     * (if grading results are viewable by students) the taScore().
      *
-     * @return the final score
+     * @return the raw score
      */
-    public double finalScore()
+    public double rawScoreForStudent()
     {
-        double result = correctnessScore() + toolScore() + taScore()
-            + earlyBonus() - latePenalty();
+        double result = correctnessScore() + toolScore();
+        if (status() == Status.CHECK)
+        {
+            result += taScore();
+        }
         return ( result >= 0.0 ) ? result : 0.0;
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Check whether manual grading has been completed on this
-     * submission.
+     * Computes the raw score for this submission, viewable by staff.
+     * The raw score is the correctnessScore() plus the toolScore() plus
+     * the taScore().
      *
-     * @return true if TA markup by hand has been completed
+     * @return the raw score
      */
-    public boolean taGradingFinished()
+    public double rawScore()
     {
-        return taScoreRaw() != null;
+        double result = correctnessScore() + toolScore() + taScore();
+        return ( result >= 0.0 ) ? result : 0.0;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the raw score for this submission, as viewable by the
+     * given user (either course staff or a student).
+     *
+     * @return the final score
+     */
+    public double rawScoreVisibleTo(User user)
+    {
+        if (user.hasAdminPrivileges() ||
+            submission().assignmentOffering().courseOffering().isStaff(user))
+        {
+            return rawScore();
+        }
+        else
+        {
+            return rawScoreForStudent();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the final score for this submission, viewable by students.
+     * The final score is the rawScore() plus the earlyBonus() minus the
+     * latePenalty().
+     *
+     * @return the final score
+     */
+    public double finalScoreForStudent()
+    {
+        double result = rawScoreForStudent() + earlyBonus() - latePenalty();
+        return ( result >= 0.0 ) ? result : 0.0;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the final score for this submission, viewable by staff.
+     * The final score is the rawScoreForStaff() plus the earlyBonus()
+     * minus the latePenalty().
+     *
+     * @return the final score
+     */
+    public double finalScore()
+    {
+        double result = rawScore() + earlyBonus() - latePenalty();
+        return ( result >= 0.0 ) ? result : 0.0;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the final score for this submission, viewable by the
+     * given user (either course staff or a student).
+     *
+     * @return the final score
+     */
+    public double finalScoreVisibleTo(User user)
+    {
+        if (user.hasAdminPrivileges()
+            || submission().assignmentOffering().courseOffering().isStaff(user))
+        {
+            return finalScore();
+        }
+        else
+        {
+            return finalScoreForStudent();
+        }
     }
 
 
@@ -360,7 +437,8 @@ public class SubmissionResult
         if ( latePenalty < 0.0 )
         {
             rawScore -= latePenalty;
-            result = " - " + latePenalty + " late penalty";
+            result = (result == null ? "" : result)
+                + " - " + (-latePenalty) + " late penalty";
         }
         if ( result != null )
         {
@@ -539,14 +617,12 @@ public class SubmissionResult
     {
         String newComments = comments();
         if (newComments != null
-            && newComments.trim().equals("<br />"))
+            && (newComments.trim().equals("<br />") || newComments.equals("")))
         {
             setComments(null);
             newComments = null;
         }
-        if (status() == Status.TO_DO
-            && (taScoreRaw() != null
-                || newComments != null))
+        if (status() == Status.TO_DO && newComments != null)
         {
             setStatus(Status.UNFINISHED);
         }
