@@ -181,7 +181,7 @@ public class MiniBarGraph
     {
         if ( _markerUrlPrefix == null )
         {
-            _markerUrlPrefix = WCResourceManager.resourceURLFor(
+            _markerUrlPrefix = WCResourceManager.versionlessResourceURLFor(
                 "images/marker0.gif", "Grader", null, null );
             if ( _markerUrlPrefix != null )
             {
@@ -201,5 +201,5 @@ public class MiniBarGraph
     //~ Instance/static variables .............................................
 
     private static String _markerUrlPrefix;
-    private static NSNumberFormatter formatter = new NSNumberFormatter( "0.0" );
+    private static NSNumberFormatter formatter = new NSNumberFormatter("0.0");
 }
