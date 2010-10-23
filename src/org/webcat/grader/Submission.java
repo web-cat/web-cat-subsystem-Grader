@@ -1538,10 +1538,7 @@ public class Submission
      */
     public boolean isLate()
     {
-        long submitTime = submitTime().getTime();
-        long dueTime = assignmentOffering().dueDate().getTime();
-
-        return submitTime >= dueTime;
+        return submitTime().after(assignmentOffering().dueDate());
     }
 
 
@@ -1767,10 +1764,10 @@ public class Submission
         NSMutableArray<UserSubmissionPair> pairs =
             new NSMutableArray<UserSubmissionPair>();
 
-        for (User user : users)
+        for (User aUser : users)
         {
-            Submission submission = submissions.objectForKey(user);
-            pairs.addObject(new UserSubmissionPair(user, submission));
+            Submission submission = submissions.objectForKey(aUser);
+            pairs.addObject(new UserSubmissionPair(aUser, submission));
         }
 
         return pairs;
@@ -1860,10 +1857,19 @@ public class Submission
                     mostRecent = sub;
                 }
 
-                if (sub.result().status() != Status.TO_DO
-                        && (forGrading == null
-                            || sub.submitNumber()
-                                > forGrading.submitNumber()))
+                if (// If there is any feedback in sub
+                    sub.result().status() != Status.TO_DO
+                    && (// we haven't found one "for grading" yet
+                        forGrading == null
+                        // or sub has newer feedback
+                        || (forGrading.result().lastUpdated() != null
+                            && sub.result().lastUpdated() != null
+                            && sub.result().lastUpdated().after(
+                                forGrading.result().lastUpdated()))
+                        // or we can't compare times, but sub has higher number
+                        || (forGrading.result().lastUpdated() == null
+                            && sub.submitNumber()
+                                > forGrading.submitNumber())))
                 {
                     forGrading = sub;
                 }
