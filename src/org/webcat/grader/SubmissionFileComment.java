@@ -293,14 +293,14 @@ public class SubmissionFileComment
             "Extra Credit"
         };
     static private String[] categoryIcon = new String[]{
-            "/icons/todo.gif",
-            "/icons/comment-error.png",
-            "/icons/comment-warning.png",
-            "/icons/comment-question.png",
-            "/icons/comment-suggestion.png",
-            "/icons/comment-answer.png",
-            "/icons/comment-good.png",
-            "/icons/comment-extracredit.png"
+            "icons/todo.gif",
+            "icons/comment-error.png",
+            "icons/comment-warning.png",
+            "icons/comment-question.png",
+            "icons/comment-suggestion.png",
+            "icons/comment-answer.png",
+            "icons/comment-good.png",
+            "icons/comment-extracredit.png"
         };
     static Logger log = Logger.getLogger( SubmissionFileComment.class );
 }
