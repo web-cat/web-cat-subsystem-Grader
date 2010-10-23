@@ -143,16 +143,16 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public int indexOfNextSubmission()
     {
-        int index = thisSubmissionIndex;
+        int nextIndex = thisSubmissionIndex;
 
         do
         {
-            index++;
-        } while (index < availableSubmissions.count()
+            nextIndex++;
+        } while (nextIndex < availableSubmissions.count()
                 && !availableSubmissions.objectAtIndex(
-                        index).userHasSubmission());
+                        nextIndex).userHasSubmission());
 
-        return index;
+        return nextIndex;
     }
 
 
@@ -193,63 +193,46 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
-        log.debug( "defaultAction()" );
-        log.debug( "form values = " + context().request().formValues() );
+        log.debug("defaultAction()");
+        log.debug("form values = " + context().request().formValues());
         return null;
     }
-
-
-//    // ----------------------------------------------------------
-//    public WOComponent finish()
-//    {
-//        log.debug( "finish()" );
-//        return super.finish();
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    public WOComponent apply()
-//    {
-//        log.debug( "apply()" );
-//        return super.apply();
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    public WOActionResults invokeAction( WORequest arg0, WOContext arg1 )
-//    {
-//        log.debug( "invokeAction(): request.formValues = " + arg0.formValues() );
-//        log.debug( "invokeAction(): request = " + arg0 );
-////         log.debug( "invokeAction(): context = " + arg1 );
-//        log.debug( "invokeAction(): senderID = " + arg1.senderID() );
-//        log.debug( "invokeAction(): elementID = " + arg1.elementID() );
-//        wcSession().logExtraInfo( log, org.apache.log4j.Level.DEBUG, arg1 );
-//        return super.invokeAction( arg0, arg1 );
-//    }
 
 
     // ----------------------------------------------------------
     public boolean applyLocalChanges()
     {
+        NSTimestamp now = new NSTimestamp();
         saveGrading();
+        if (result.status() == Status.TO_DO)
+        {
+            if (result.taScoreRaw() != null
+                && result.taScore() != result.submission()
+                    .assignmentOffering().assignment()
+                    .submissionProfile().taPoints())
+            {
+                result.setStatus(Status.UNFINISHED);
+            }
+            else
+            {
+                for (SubmissionFileStats fs : result.submissionFileStats())
+                {
+                    if (fs.comments().count() > 0)
+                    {
+                        result.setStatus(Status.UNFINISHED);
+                        break;
+                    }
+                }
+            }
+        }
+        if (result.changedProperties().size() > 0)
+        {
+            result.setLastUpdated(now);
+        }
         log.debug("Before commiting, result = " + result.snapshot());
         return super.applyLocalChanges();
     }
 
-
-    // ----------------------------------------------------------
-//    public WOComponent downloadSubmission()
-//    {
-//        saveGrading();
-//        DeliverFile filePage = pageWithName(DeliverFile.class);
-//        filePage.setFileName( new java.io.File(
-//            prefs().submission().resultDirName(),
-//            "../" + prefs().submission().fileName() ) );
-//        filePage.setContentType( "application/octet-stream" );
-//        filePage.setStartDownload( true );
-//        return nextPage;
-//    }
-//
 
     // ----------------------------------------------------------
     public WOComponent fileStatsDetails()
@@ -260,17 +243,6 @@ public class GradeStudentSubmissionPage
         statsPage.nextPage = this;
         return statsPage;
     }
-
-
-    // ----------------------------------------------------------
-//    public WOComponent previewStudentFeedback()
-//    {
-//        saveGrading();
-//        FinalReportPage reportPage = pageWithName(FinalReportPage.class);
-//        reportPage.nextPage = this;
-//        reportPage.showReturnToGrading = true;
-//        return reportPage;
-//    }
 
 
     // ----------------------------------------------------------
@@ -304,38 +276,16 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
-    public void setGradingDone( boolean done )
+    public void setGradingDone(boolean done)
     {
-        boolean canSet = done;
-        if ( done )
+        if (done)
         {
-            // Not ready for this part yet
-//            for ( int i = 0; i < statsDisplayGroup.allObjects().count(); i++ )
-//            {
-//                if ( ( (SubmissionFileStats) statsDisplayGroup
-//                         .allObjects().objectAtIndex( i ) ).statusAsInt()
-//                     != WCCoreTask.TASK_DONE )
-//                {
-//                    canSet = false;
-//                    errorMessage = "Please finish commenting on all classes "
-//                                   + "listed before marking this submission "
-//                                   + "as completely graded.";
-//                    break;
-//                }
-//            }
-        }
-        if ( canSet )
-        {
-            result.setStatus( Status.CHECK );
+            result.setStatus(Status.CHECK);
             for (Submission sub : result.submissions())
             {
                 sub.emailNotificationToStudent(
-                    "has been updated by the course staff" );
+                    "has been updated by the course staff");
             }
-        }
-        else
-        {
-            result.setStatus( Status.UNFINISHED );
         }
     }
 

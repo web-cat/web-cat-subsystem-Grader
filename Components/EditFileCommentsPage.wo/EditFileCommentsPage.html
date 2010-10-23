@@ -1,17 +1,10 @@
 <wo name="Page">
-<wo:WCScriptFragment framework="Grader" filename="htmlarea/codearea.js"/>
-<wo:WCScriptFragment framework="Grader" filename="htmlarea/htmlarea-lang-en.js"/>
-<wo:WCScriptFragment framework="Grader" filename="htmlarea/dialog.js"/>
-<wo:WCScriptFragment>dojo.addOnLoad(function() { initEditor() });</wo:WCScriptFragment>
 <div class="module">
 <wo name="Form">
 <wo name="ResultInfo"/><wo name="History"/>
-<table class="layout floatRight">
-<tr><td colspan="2">Go to <wo name="FileList"/> <wo name="SaveAndGo"/></td></tr>
-<tr><td class="left"><wo name="MarkAsFinished"/>
-      <label for="markAsFinished">Mark as finished</label></td>
-    <td class="right"><wo name="DiscardAndGo"/></td></tr>
-</table>
+<div class="floatRight">
+Go to <wo name="FileList"/> <wo name="SaveAndGo"/>
+</div>
 <div class="clear" dojoType="webcat.TitlePane" title="Overall TA/Instructor Comments" open="false">
   <div><wo name="Comments"/></div>
   <div>Format: <wo name="CommentFormat"/></div>

@@ -65,8 +65,6 @@ public class EditFileCommentsPage
 
     public SubmissionFileStats fileStats;
 
-    public boolean             markAsFinished;
-
     public WODisplayGroup      filesDisplayGroup;
     public SubmissionFileStats selectedFile;
     public SubmissionFileStats file;
@@ -105,7 +103,6 @@ public class EditFileCommentsPage
         initializeCodeWithComments();
 
         selectedFile = null;
-        markAsFinished = (fileStats.status() == Status.CHECK);
 
         filesDisplayGroup.setObjectArray(
                 fileStats.submissionResult().submissionFileStats());
@@ -131,11 +128,12 @@ public class EditFileCommentsPage
         try
         {
             updateTAScore(storeComments());
-
-            byte status = markAsFinished ? Status.CHECK : Status.UNFINISHED;
-            fileStats.setStatus(status);
             fileStats.submissionResult().addCommentByLineFor(
                 user(), priorOverallComments);
+            if (fileStats.submissionResult().changedProperties().size() > 0)
+            {
+                fileStats.submissionResult().setLastUpdated(new NSTimestamp());
+            }
             applyLocalChanges();
         }
         catch (Exception e)
@@ -171,6 +169,12 @@ public class EditFileCommentsPage
     // ----------------------------------------------------------
     public void updateTAScore(double ptsTakenOff)
     {
+        if (ptsTakenOff == 0.0d)
+        {
+            // do nothing
+            return;
+        }
+
         double score = 0.0;
         SubmissionResult result = fileStats.submissionResult();
         Number taScore = result.taScoreRaw();
@@ -206,6 +210,10 @@ public class EditFileCommentsPage
         log.debug("old deductions = " + oldDeductions);
         fileStats.setDeductions(oldDeductions + ptsTakenOff);
         log.debug("new deductions = " + fileStats.deductions());
+        if (result.status() == Status.TO_DO)
+        {
+            result.setStatus(Status.UNFINISHED);
+        }
     }
 
 
@@ -227,6 +235,7 @@ public class EditFileCommentsPage
     public double storeComments()
         throws Exception
     {
+        boolean commentsModified = false;
         double taPts = 0.0;
         EOEditingContext ec = localContext();
         if (codeWithCommentsToStore == null)
@@ -280,6 +289,7 @@ public class EditFileCommentsPage
                          + thisComment.lineNo());
                      taPts -= thisComment.deduction();
                      ec.deleteObject(thisComment);
+                     commentsModified = true;
                  }
             }
             applyLocalChanges();
@@ -383,6 +393,7 @@ public class EditFileCommentsPage
                         log.debug("  line = " + comment.lineNo());
                         applyLocalChanges();
                         log.debug("result = " + comment);
+                        commentsModified = true;
                     }
                     else
                     {
@@ -390,6 +401,15 @@ public class EditFileCommentsPage
                     }
                 }
             }
+            if (commentsModified)
+            {
+                fileStats.submissionResult().setLastUpdated(new NSTimestamp());
+                if (fileStats.submissionResult().status() == Status.TO_DO)
+                {
+                    fileStats.submissionResult().setStatus(Status.UNFINISHED);
+                }
+            }
+            applyLocalChanges();
         }
         catch (Exception e)
         {
@@ -458,11 +478,26 @@ public class EditFileCommentsPage
     public String javascriptText()
     {
         StringBuffer buffer = new StringBuffer(200);
+        buffer.append("<script type=\"text/javascript\" src=\"");
+        buffer.append(WCResourceManager.resourceURLFor(
+            "htmlarea/codearea.js", "Grader", null, context().request()));
+        buffer.append("\"></script>\n");
+        buffer.append("<script type=\"text/javascript\" src=\"");
+        buffer.append(WCResourceManager.resourceURLFor(
+            "htmlarea/htmlarea-lang-en.js", "Grader", null,
+            context().request()));
+        buffer.append("\"></script>\n");
+        buffer.append("<script type=\"text/javascript\" src=\"");
+        buffer.append(WCResourceManager.resourceURLFor(
+            "htmlarea/dialog.js", "Grader", null,
+            context().request()));
+        buffer.append("\"></script>\n");
+
         buffer.append("<script type=\"text/javascript\">\n");
         buffer.append("var editor = null;\nfunction initEditor() {\n");
         buffer.append("editor = new HTMLArea(\"source\");\n");
         {
-            String url = WCResourceManager.resourceURLFor(
+            String url = WCResourceManager.versionlessResourceURLFor(
                 "htmlarea/htmlarea.js", "Grader", null, context().request());
             if (url != null)
             {
@@ -471,7 +506,7 @@ public class EditFileCommentsPage
                     url.length() - "htmlarea.js".length()));
                 buffer.append("\";\n");
             }
-            url = WCResourceManager.resourceURLFor(
+            url = WCResourceManager.versionlessResourceURLFor(
                 "images/blank.gif", "Core", null, context().request());
             if (url != null)
             {
@@ -503,8 +538,9 @@ public class EditFileCommentsPage
         // Check to see if the current user is authorized to view or modify
         // the deductions
         buffer.append(isGrading());
-        buffer.append(";\n");
-        buffer.append("}\n</script>\n");
+        buffer.append(";\n}\n");
+        buffer.append("dojo.addOnLoad(function() { initEditor() });\n");
+        buffer.append("</script>\n");
         return buffer.toString();
     }
 

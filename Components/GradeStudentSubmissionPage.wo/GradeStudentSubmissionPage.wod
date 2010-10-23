@@ -62,14 +62,6 @@ FileStaffRemarks: WOString {
     value        = stats.staffRemarks;
 }
 
-FileStatus: WOImage {
-    border    = "0";
-    filename  = stats.statusURL;
-    framework = "Core";
-    height    = "16";
-    width     = "16";
-}
-
 HasCoverageData: WOConditional {
     condition = stats.elementsRaw;
 }
@@ -172,12 +164,6 @@ WCSortOrder4: org.webcat.core.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "Remarks";
     key = "remarks";
-}
-
-WCSortOrder7: org.webcat.core.WCSortOrder {
-    displayGroup = statsDisplayGroup;
-    displayKey = "Status";
-    key = "status";
 }
 
 WCSortOrder5: org.webcat.core.WCSortOrder {

@@ -46,15 +46,9 @@ History: WOHiddenField {
     value = prefs.commentHistory;
 }
 
-MarkAsFinished: WCCheckBox {
-    id = "markAsFinished";
-    checked = markAsFinished;
-}
-
 SaveAndGo: WCButton {
     action = saveChanges;
-    label = "Save Changes and Go";
-    class = "pos";
+    label = "Go";
 }
 
 Page: org.webcat.core.WCPageWithNavigation {
