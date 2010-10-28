@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding;
     variables = {
         studentDisplayGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
@@ -12,7 +12,7 @@
             sortOrdering = ({class = EOSortOrdering; key = name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };
         notStudentDisplayGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;

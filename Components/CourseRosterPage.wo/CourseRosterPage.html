@@ -34,7 +34,23 @@ dojo.ready(function() {
 
 <wo:org.webcat.core.WCPageModule title="Manually Add Existing Student Accounts" open="$manuallyAdding">
 <wo:str value="$forceManuallyAdding"/>
-<table><thead>
+<wo:WCTable id="unenrolledStudents" displayGroup="$notStudentDisplayGroup" searchOnKeyPaths="userName,firstName,lastName">
+    <wo:WCTableHeadings>
+        <wo:WCTableHeading title="User ID" sortOnKeyPaths="userName"/>
+        <wo:WCTableHeading title="Name" sortOnKeyPaths="lastName,firstName,userName"/>
+        <wo:WCTableHeading title="E-mail" sortOnKeyPaths="email"/>
+        <th>Action</th>
+    </wo:WCTableHeadings>
+    <wo:WCTableRows item="$student" noRowsMessage="The search returned zero students.">
+        <wo:WCTableRow>
+            <td><wo:tstr value="$student.userName"/></td>
+            <td><wo name="Name"><wo:tstr value="$student.name_LF"/></wo></td>
+            <td><wo name="Email"><wo:tstr value="$student.email"/></wo></td>
+            <td><wo name="AddStudent"/></td>
+        </wo:WCTableRow>
+    </wo:WCTableRows>
+</wo:WCTable>
+<!-- table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator2"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder4"/></th>
     <th>Name<webobject name="WCSortOrder3"/></th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
@@ -45,6 +61,6 @@ dojo.ready(function() {
   <wo:not condition="$notStudentDisplayGroup.allObjects.count">
   <webobject name="TR"><td colspan="4">No unenrolled users to list.</td></webobject>
   </wo:not>
-</tbody></table>
+</tbody></table -->
 </wo:org.webcat.core.WCPageModule>
 </webobject>
