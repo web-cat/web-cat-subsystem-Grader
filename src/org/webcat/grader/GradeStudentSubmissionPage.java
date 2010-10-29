@@ -26,6 +26,7 @@ import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.ui.generators.JavascriptGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -59,6 +60,9 @@ public class GradeStudentSubmissionPage
     // For iterating over display group
     public SubmissionFileStats stats;
     public int                 index;
+
+    public UserSubmissionPair  selectedUserSubmissionForPickerDialog;
+    public NSArray<UserSubmissionPair> allUserSubmissionsForNavigationForPickerDialog;
 
     /** true if submission file stats are recorded for this submission */
     public boolean hasFileStats = false;
@@ -246,17 +250,17 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
-    public WOComponent selectSubmission()
+    public WOActionResults pickOtherSubmission()
     {
         saveGrading();
-        PickSubmissionPage submissionPage =
-            pageWithName(PickSubmissionPage.class);
-        prefs().setSubmissionRelationship(submission);
-        submissionPage.nextPage = this;
-        submissionPage.sideStepTitle = "Pick submission to grade";
-        submission = null;
-        result = null;
-        return submissionPage;
+
+        selectedUserSubmissionForPickerDialog =
+            new UserSubmissionPair(submission.user(), submission);
+        allUserSubmissionsForNavigationForPickerDialog = availableSubmissions;
+
+        JavascriptGenerator js = new JavascriptGenerator();
+        js.dijit("pickSubmissionDialog").call("show");
+        return js;
     }
 
 

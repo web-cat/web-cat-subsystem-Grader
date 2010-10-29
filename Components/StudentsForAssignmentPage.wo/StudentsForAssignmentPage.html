@@ -4,6 +4,7 @@
 <div style="width:50%;"><p>Please select the course and assignment.</p></div>
 </wo:org.webcat.core.WCPageModule></wo:if><wo:else>
 <div class="module" style="text-align: right">
+<wo name="PickSubmissionDialog"/>
 <wo name="DownloadScoresDialog"/>
 <wo name="DownloadScores">
     <script type="dojo/connect" event="onClick">
@@ -17,7 +18,7 @@
 <wo:org.webcat.core.WCPageModule title="~ 'Submissions for ' + assignmentOffering.titleString"
     open="$assignmentOffering.generateKey.user.preferences.StudentsForAssignmentPage_open">
 
-<wo:if condition="$userGroup.displayedObjects.count">
+<wo:if condition="$userGroup.allObjects.count">
     <p><b>Score Summary:</b>
     High:   <span class="hl"><wo name="HighScore"/></span>
     Mean:   <span class="hl"><wo name="MeanScore"/></span>
@@ -25,7 +26,48 @@
     Low:    <span class="hl"><wo name="LowScore"/></span>
     Box plot: <wo name="BoxAndWhiskerChart"/>
     </p><wo:WCForm multipleSubmit="true">
-    <table><thead>
+    <wo name="UserSubmissionsTable">
+        <wo:WCTableHeadings>
+            <wo:WCTableHeading title="Done?" class="sm" sortOnKeyPaths="submission.result.status"/>
+            <wo:WCTableHeading title="Name" sortOnKeyPaths="user.name_LF,user.userName"/>
+            <wo:WCTableHeading title="Sub No." class="sm"/>
+            <wo:WCTableHeading title="Time" sortOnKeyPaths="submission.submitTime"/>
+            <wo:WCTableHeading title="Testing" class="sm"/>
+            <wo name="UsesToolCheckScore"><wo:WCTableHeading title="Tool Checks" class="sm"/></wo>
+            <wo:WCTableHeading title="TA"/>
+            <wo name="UsesBonusesOrPenalties"><wo:WCTableHeading title="Early/Late" class="sm"/></wo>
+            <wo:WCTableHeading title="Score" class="sm" sortOnKeyPaths="submission.result.finalScore"/>
+        </wo:WCTableHeadings>
+        <wo:WCTableRows item="$aUserSubmission" noRowsMessage="No submissions matching your criteria have been found.">
+            <wo:WCTableRow>
+                <wo:if condition="$aUserSubmission.userHasSubmission">
+                    <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
+                    <td><wo:tstr value="$aSubmission.namesOfAllUsers_LF"/>
+                      <wo:not condition="$isMostRecentSubmission">
+                        <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
+                          <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                          <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                          <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
+                          <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
+                        </wo:loop>
+                      </wo:not></td>
+                    <td class="n"><wo name="PickSubmissionLink"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
+                    (of <wo name="MostRecentSubmitNumber"/>)</wo:not></wo></td>
+                    <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
+                    <td class="n"><wo name="TestingScore"/></td>
+                    <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
+                    <td class="n"><wo name="EditScore"><wo name="HasTAScore"><wo name="TAScore"/></wo><wo name="NoTAScore">&lt;edit&gt;</wo></wo></td>
+                    <wo name="UsesBonusesOrPenalties"><td class="n"><wo name="ScoreAdjustment"/></td></wo>
+                    <td class="n"><wo name="FinalScore"/></td>
+                </wo:if><wo:else>
+                    <td><wo name="StatusBlank"/></td>
+                    <td><wo:tstr value="$aUserSubmission.user.name_LF"/></td>
+                    <wo name="NoSubmissionsPlaceholder">No submissions</wo>
+                </wo:else>
+            </wo:WCTableRow>
+        </wo:WCTableRows>
+    </wo>
+    <!-- table><thead>
     <tr class="batchnav"><td colspan="7"><wo name="BatchNavigator"/></td>
         <wo name="UsesToolCheckScore"><td></td></wo>
         <wo name="UsesBonusesOrPenalties"><td></td></wo>
@@ -66,7 +108,7 @@
             <wo name="NoSubmissionsPlaceholder">No submissions</wo>
         </wo:else>
     </wo></wo>
-    </tbody></table>
+    </tbody></table -->
     <wo name="MarkAsComplete"/></wo:WCForm>
 </wo:if><wo:else>
     <p>No submissions matching your criteria have been found.</p>

@@ -95,6 +95,13 @@ NoTAScore: WOConditional {
     negate    = true;
 }
 
+PickSubmissionLink: WCLink {
+    remote = true;
+    action = pickOtherSubmission;
+    disabled = "~mostRecentSubmissionNo eq 1";
+    title = "View a different submission";
+}
+
 Repetition1: WORepetition {
     item  = aUserSubmission;
     list  = userGroup.displayedObjects;
@@ -190,6 +197,11 @@ TR2: org.webcat.core.TableRow {
     index = staffIndex;
 }
 
+UserSubmissionsTable: WCTable {
+    displayGroup = userGroup;
+    searchOnKeyPaths = "user.lastName,user.firstName,submission.partneredSubmissions.user.lastName,submission.partneredSubmissions.user.firstName";
+}
+
 UsesBonusesOrPenalties: WOConditional {
     condition = assignmentOffering.assignment.usesBonusesOrPenalties;
 }
@@ -244,4 +256,10 @@ SortOrderStaffFinalScore: org.webcat.core.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Final Score";
     key = "result.finalScore";
+}
+
+PickSubmissionDialog: PickSubmissionDialog {
+    rootUserSubmission = selectedUserSubmissionForPickerDialog;
+    allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
+    nextPageForResultsPage = self;
 }

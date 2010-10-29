@@ -97,6 +97,12 @@ Page: org.webcat.core.WCPageWithNavigation {
 //    applyEnabled = true;
 }
 
+PickSubmissionDialog: PickSubmissionDialog {
+    rootUserSubmission = selectedUserSubmissionForPickerDialog;
+    allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
+    nextPageForResultsPage = nextPage;
+}
+
 Regrade: WCButton {
     action = regrade;
     label = "Regrade Submission";
@@ -115,7 +121,8 @@ ScoreSummary: org.webcat.grader.ScoreSummaryBlock {
 }
 
 SelectSubmission: WCButton {
-    action = selectSubmission;
+    remote = true;
+    action = pickOtherSubmission;
     label  = "View Other Submissions";
 }
 

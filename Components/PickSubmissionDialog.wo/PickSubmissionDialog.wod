@@ -1,0 +1,54 @@
+Cancel : WCButton {
+    label = "Cancel";
+    class = "neg";
+}
+
+Dialog : WCContentPane {
+    dojoType = "webcat.Dialog";
+    id = "pickSubmissionDialog";
+    title = "View Another Submission";
+    style = "display: none";
+    refreshOnShow = true;
+    alwaysDynamic = true;
+}
+
+OK: WCButton {
+    action = viewSubmission;
+    label = "OK";
+    class = "pos";
+}
+
+Form : WCForm {
+}
+
+BatchNavigator: org.webcat.core.WCBatchNavigator {
+    displayGroup = submissionDisplayGroup;
+    persistentKey = "PickSubmissionPage.batchSize";
+}
+
+SubmissionTable: WCTable {
+    displayGroup = submissionDisplayGroup;
+    canSelectRows = true;
+    fixedPageSize = true;
+    style = "width: 100%;";
+}
+
+SubmitTime: WOString {
+    value     = aSubmission.submitTime;
+    formatter = session.timeFormatter;
+}
+
+SubmitTimeSpan: WOGenericContainer {
+    elementName = "span";
+    class = submitTimeSpanClass;
+    title = aSubmission.result.earlyLateStatus;
+}
+
+FinalScore: WOString {
+    numberformat = "0.0";
+    value        = aSubmission.result.finalScore;
+}
+
+TR: org.webcat.core.TableRow {
+    index = index;
+}
