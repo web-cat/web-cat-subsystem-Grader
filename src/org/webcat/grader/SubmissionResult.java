@@ -243,6 +243,7 @@ public class SubmissionResult
      * Computes the raw score for this submission, as viewable by the
      * given user (either course staff or a student).
      *
+     * @param user the user
      * @return the final score
      */
     public double rawScoreVisibleTo(User user)
@@ -294,6 +295,7 @@ public class SubmissionResult
      * Computes the final score for this submission, viewable by the
      * given user (either course staff or a student).
      *
+     * @param user the user
      * @return the final score
      */
     public double finalScoreVisibleTo(User user)
