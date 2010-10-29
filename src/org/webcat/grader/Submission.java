@@ -262,31 +262,52 @@ public class Submission
         // seconds      = time / 1000;
         // milliseconds = time % 1000;
 
-        if ( days > 0 )
+        if (days > 0)
         {
-            buffer.append( days );
-            buffer.append( " day" );
-            if ( days > 1 )
-                buffer.append( 's' );
+            buffer.append(days);
+            buffer.append(" day");
+            if (days > 1)
+            {
+                buffer.append('s');
+            }
         }
-        if ( hours > 0 )
+
+        if (hours > 0)
         {
-            if ( buffer.length() > 0 )
+            if (buffer.length() > 0)
+            {
+                buffer.append(", ");
+            }
+
+            buffer.append(hours);
+            buffer.append(" hr");
+            if (hours > 1)
+            {
+                buffer.append('s');
+            }
+        }
+
+        if (minutes > 0)
+        {
+            if (buffer.length() > 0)
+            {
                 buffer.append( ", " );
-            buffer.append( hours );
-            buffer.append( " hr" );
-            if ( hours > 1 )
-                buffer.append( 's' );
+            }
+
+            buffer.append(minutes);
+            buffer.append(" min");
+
+            if (minutes > 1)
+            {
+                buffer.append('s');
+            }
         }
-        if ( minutes > 0 )
+
+        if (days == 0 && hours == 0 && minutes == 0)
         {
-            if ( buffer.length() > 0 )
-                buffer.append( ", " );
-            buffer.append( minutes );
-            buffer.append( " min" );
-            if ( minutes > 1 )
-                buffer.append( 's' );
+            buffer.append("less than 1 min");
         }
+
         return buffer.toString();
     }
 
