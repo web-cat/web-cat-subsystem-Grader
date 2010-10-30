@@ -4,7 +4,7 @@
 <div class="floatRight"><wo name="Navigator"/></div>
 <div style="width:50%;"><p>Please select the assignment to edit.</p></div>
 </wo:WCPageModule></wo:if><wo:else>
-<div class="module"><wo name="Navigator"/></div>
+<div class="module right"><wo name="Navigator"/></div>
 <wo:WCForm multipleSubmit="true">
 <wo:WCPageModule title="Properties for All Instances of This Assignment">
 <table class="layout">
@@ -98,9 +98,9 @@
 <tr><td colspan="3" style="color:red">
 &nbsp;<b><webobject name="NumSuspended"/> submissions</b> currently
 suspended&nbsp;</td></tr>
-<tr><td align="left"><webobject name="ReleaseSubs"/></td>
-<td align="center">&nbsp;or&nbsp;</td>
-<td align="right"><webobject name="CancelSubs"/></td></tr></table>
+<tr><td class="left"><webobject name="ReleaseSubs"/></td>
+<td class="center">&nbsp;or&nbsp;</td>
+<td class="right"><webobject name="CancelSubs"/></td></tr></table>
 </td></tr>
 </webobject>
 <tr><td>&nbsp;</td><td><wo:WCButton action="$regradeSubs" remote="true"
