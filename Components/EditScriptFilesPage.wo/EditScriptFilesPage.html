@@ -1,5 +1,5 @@
 <webobject name="Page">
-<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data" id="fileForm">
 
 <wo name="Section">
 <wo:if condition="$isEditable"><p>
@@ -9,6 +9,7 @@ to be applied.  All file actions will take effect immediately.</p></wo:if>
 <wo name="FileBrowser"/>
 
 <wo:if condition="$isEditable">
+<wo:WCContentPane id="folderControls">
 <h2>Create a New Subfolder</h2>
 <p>In: <wo name="FolderList1"/>
 new folder name: <wo name="FolderName"/>
@@ -16,14 +17,11 @@ new folder name: <wo name="FolderName"/>
 
 <h2>Upload a New File</h2>
 <p>In: <wo name="FolderList2"/>
-upload: <wo name="UploadFile2"/>
+upload: <span style="display:inline-block;width:25em;padding-bottom:-0.2em;vertical-align:middle;"><wo name="UploadFile"/></span>
 <wo name="Upload"/><br />
 (<wo name="Unzip"/> unzip/expand archive in target folder)
 </p>
-
-<h2>Replace This Entire Folder</h2>
-<p>Replace with contents of this zip or jar file: <wo name="UploadFile3"/>
-<wo name="Replace"/></p>
+</wo:WCContentPane>
 </wo:if>
 
 </wo>

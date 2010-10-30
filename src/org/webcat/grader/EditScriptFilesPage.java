@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import org.apache.log4j.Logger;
 import org.webcat.archives.ArchiveManager;
 import org.webcat.core.*;
+import org.webcat.ui.generators.JavascriptGenerator;
 
 // -------------------------------------------------------------------------
 /**
@@ -40,7 +41,7 @@ import org.webcat.core.*;
  */
 public class EditScriptFilesPage
     extends GraderComponent
-    implements EditFilePage.FileEditListener
+    implements EditFilePage.FileEditListener, FileBrowser.FileSelectionListener
 {
     //~ Constructors ..........................................................
 
@@ -50,9 +51,9 @@ public class EditScriptFilesPage
      *
      * @param context The page's context
      */
-    public EditScriptFilesPage( WOContext context )
+    public EditScriptFilesPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -75,6 +76,7 @@ public class EditScriptFilesPage
     public boolean                unzip = false;
     public FileBrowser.FileSelectionListener fileSelectionListener = null;
     public String                 currentSelection;
+    public String                 browserId;
 
 
     //~ Methods ...............................................................
@@ -83,59 +85,28 @@ public class EditScriptFilesPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "listener = " + fileSelectionListener );
-        folderName = null;
-        if ( base == null )
-        {
-            if ( gradingPlugin.hasSubdir() )
-            {
-                base = new File( gradingPlugin.dirName() );
-            }
-            else
-            {
-                base = new File( gradingPlugin.mainFilePath() );
-            }
-        }
-        if ( folderList == null )
-        {
-            folderList = new NSMutableArray<String>();
-            String parent = base.getParent();
-            int stripLength = 0;
-            if ( parent != null && parent.length() > 0 )
-            {
-                stripLength = parent.length() + 1;
-            }
-            addFolders( folderList, base, stripLength );
-        }
-        super.beforeAppendToResponse( response, context );
+        log.debug("listener = " + fileSelectionListener);
+        rescanFolders();
+        super.beforeAppendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    private void addFolders(
-        NSMutableArray<String> list, File file, int stripLength )
+    protected void afterAppendToResponse(
+        WOResponse response, WOContext context)
     {
-        if ( !file.isDirectory() ) return;
-        String name = file.getName();
-        if ( name.equals( "." ) || name.equals( ".." ) ) return;
-        name = file.getPath().substring( stripLength )
-            .replaceAll( "\\\\", "/" );
-        list.addObject( name );
-        File[] files = file.listFiles();
-        for ( int i = 0; i < files.length; i++ )
-        {
-            addFolders( list, files[i], stripLength );
-        }
+        super.afterAppendToResponse(response, context);
+        showFiles.clear();
     }
 
 
     // ----------------------------------------------------------
     public String sideStepTitle()
     {
-        if ( title == null )
+        if (title == null)
         {
             title = isEditable ? "Edit Your " : "Browse Your ";
-            if ( gradingPlugin == null )
+            if (gradingPlugin == null)
             {
                 title += "Configuration ";
             }
@@ -143,7 +114,7 @@ public class EditScriptFilesPage
             {
                 title += "Script ";
             }
-            if ( base.isDirectory() )
+            if (base.isDirectory())
             {
                 title += "Files";
             }
@@ -157,13 +128,6 @@ public class EditScriptFilesPage
 
 
     // ----------------------------------------------------------
-    public String browserTitle()
-    {
-        return sideStepTitle();
-    }
-
-
-    // ----------------------------------------------------------
     public boolean allowSelection()
     {
         return fileSelectionListener != null;
@@ -171,110 +135,103 @@ public class EditScriptFilesPage
 
 
     // ----------------------------------------------------------
-    public WOComponent createFolder()
+    public void setSelectedParentFolderForSubFolder(String value)
     {
-        if (!applyLocalChanges()) return null;
-        if ( folderName == null || folderName.length() == 0 )
-        {
-            error( "Please enter a folder name." );
-        }
-        else
-        {
-            File target =
-                new File( base.getParent(),
-                          selectedParentFolderForSubFolder + "/" + folderName );
-            try
-            {
-                target.mkdirs();
-            }
-            catch ( Exception e )
-            {
-                error( e.getMessage() );
-            }
-        }
-        folderList = null;
-        return null;
+        selectedParentFolderForSubFolder = value;
+        log.debug("setSelectedParentFolderForSubFolder(\"" + value + "\")");
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent uploadFile()
+    public WOActionResults createFolder()
     {
-        if (!applyLocalChanges()) return null;
-        if ( unzip && FileUtilities.isArchiveFile( uploadedFileName2 ) )
+        log.debug("createFolder()");
+        JavascriptGenerator page = new JavascriptGenerator();
+        page.refresh("error-panel");
+        if (applyLocalChanges())
         {
-            File target =
-                new File( base.getParent(), selectedParentFolderForUpload );
-            // ZipInputStream zipStream =
-            //    new ZipInputStream( uploadedFile2.stream() );
-            try
+            if (folderName == null || folderName.length() == 0)
             {
-                ArchiveManager.getInstance().unpack(
-                    target, uploadedFileName2, uploadedFile2.stream() );
+                log.debug("createFolder(): no folder name");
+                error("Please enter a folder name.");
             }
-            catch ( java.io.IOException e )
+            else
             {
-                error( e.getMessage() );
+                String fullName =
+                    selectedParentFolderForSubFolder + "/" + folderName;
+                File target = new File(base.getParent(), fullName);
+                log.debug("createFolder(): attempting to create " + target);
+                try
+                {
+                    target.mkdirs();
+                }
+                catch (Exception e)
+                {
+                    error(e.getMessage());
+                }
+                rescanFolders();
+                page.refresh(browserId, "folderControls");
+                showFiles.add(fullName);
             }
-            folderList = null;
         }
         else
         {
-            uploadedFileName2 = new File( uploadedFileName2 ).getName();
-            File target =
-                new File( base.getParent(), selectedParentFolderForUpload
-                                            + "/" + uploadedFileName2 );
-            try
-            {
-                FileOutputStream out = new FileOutputStream( target );
-                uploadedFile2.writeToStream( out );
-                out.close();
-            }
-            catch ( java.io.IOException e )
-            {
-                error( e.getMessage() );
-            }
+            log.debug("createFolder(): applyLocalChanges() failed");
         }
-        if ( gradingPlugin != null )
-        {
-            gradingPlugin.initializeConfigAttributes();
-            applyLocalChanges();
-        }
-        return null;
+        return page;
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent replaceEntireFolder()
+    public WOActionResults uploadFile()
     {
-        if (!applyLocalChanges()) return null;
-        if ( FileUtilities.isArchiveFile( uploadedFileName3 ) )
+//        JavascriptGenerator page = new JavascriptGenerator();
+//        page.refresh("error-panel");
+        if (applyLocalChanges())
         {
-            FileUtilities.deleteDirectory( base );
-            base.mkdirs();
-            // ZipInputStream zipStream =
-            //    new ZipInputStream( uploadedFile3.stream() );
-            try
+            if (unzip && FileUtilities.isArchiveFile(uploadedFileName2))
             {
-                ArchiveManager.getInstance().unpack(
-                    base, uploadedFileName3, uploadedFile3.stream() );
+                File target =
+                    new File(base.getParent(), selectedParentFolderForUpload);
+                try
+                {
+                    ArchiveManager.getInstance().unpack(
+                        target, uploadedFileName2, uploadedFile2.stream());
+                }
+                catch (java.io.IOException e)
+                {
+                    error(e.getMessage());
+                }
+//                page.refresh("folderControls");
+                showFiles.add(selectedParentFolderForUpload);
+                rescanFolders();
             }
-            catch ( java.io.IOException e )
+            else
             {
-                error( e.getMessage() );
+                uploadedFileName2 = new File(uploadedFileName2).getName();
+                String fullName =
+                    selectedParentFolderForUpload + "/" + uploadedFileName2;
+                File target = new File(base.getParent(), fullName);
+                try
+                {
+                    FileOutputStream out = new FileOutputStream(target);
+                    uploadedFile2.writeToStream(out);
+                    out.close();
+                }
+                catch (java.io.IOException e)
+                {
+                    error(e.getMessage());
+                }
+                showFiles.add(fullName);
             }
-            if ( gradingPlugin != null )
+            if (gradingPlugin != null)
             {
                 gradingPlugin.initializeConfigAttributes();
                 applyLocalChanges();
             }
-            folderList = null;
+//            page.refresh(browserId);
         }
-        else
-        {
-            error( "To replace this entire folder, you must upload a "
-                          + "zip or a jar file." );
-        }
+//        return page;
         return null;
     }
 
@@ -283,7 +240,7 @@ public class EditScriptFilesPage
     public boolean nextEnabled()
     {
         return !hideNextBack
-            && ( nextPage != null || currentTab().hasNextSibling() );
+            && (nextPage != null || currentTab().hasNextSibling());
     }
 
 
@@ -295,28 +252,115 @@ public class EditScriptFilesPage
 
 
     // ----------------------------------------------------------
-    public void hideNextAndBack( boolean value )
+    public void hideNextAndBack(boolean value)
     {
         hideNextBack = value;
     }
 
 
     // ----------------------------------------------------------
-    public void saveFile( String fileName )
+    public void saveFile(String fileName)
     {
-        if ( gradingPlugin != null )
+        if (gradingPlugin != null)
         {
             gradingPlugin.initializeConfigAttributes();
-            gradingPlugin.setLastModified( new NSTimestamp() );
+            gradingPlugin.setLastModified(new NSTimestamp());
             applyLocalChanges();
         }
     }
 
 
     // ----------------------------------------------------------
-    public EditFilePage.FileEditListener thisPage()
+    public WOComponent selectFile(String filePath)
+    {
+        WOComponent page = this;
+        if (fileSelectionListener != null)
+        {
+            page = fileSelectionListener.selectFile(filePath);
+        }
+
+        if (page == this)
+        {
+            currentSelection = base.getParentFile().getName() + "/" + filePath;
+        }
+        return page;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSArray<String> focusedFiles()
+    {
+        return showFiles;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * This property is read-only, so the setter does nothing and is
+     * provided only for synchronized binding pushing.
+     */
+    public void setFocusedFiles(NSArray<String> values)
+    {
+        // ignore
+    }
+
+
+    // ----------------------------------------------------------
+    public WCComponent thisPage()
     {
         return this;
+    }
+
+
+    // ----------------------------------------------------------
+    private void rescanFolders()
+    {
+        folderName = null;
+        folderList = null;
+        if (base == null)
+        {
+            if (gradingPlugin.hasSubdir())
+            {
+                base = new File(gradingPlugin.dirName());
+            }
+            else
+            {
+                base = new File(gradingPlugin.mainFilePath());
+            }
+        }
+        if (folderList == null)
+        {
+            folderList = new NSMutableArray<String>();
+            String parent = base.getParent();
+            int stripLength = 0;
+            if (parent != null && parent.length() > 0)
+            {
+                stripLength = parent.length() + 1;
+            }
+            addFolders(folderList, base, stripLength);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private void addFolders(
+        NSMutableArray<String> list, File folder, int stripLength)
+    {
+        if (!folder.isDirectory())
+        {
+            return;
+        }
+        String name = folder.getName();
+        if (name.equals( "." ) || name.equals( ".." ))
+        {
+            return;
+        }
+        name = folder.getPath().substring(stripLength).replaceAll("\\\\", "/");
+        list.addObject(name);
+        for (File file : folder.listFiles())
+        {
+            addFolders(list, file, stripLength);
+        }
     }
 
 
@@ -324,5 +368,7 @@ public class EditScriptFilesPage
 
     private String title;
     private boolean hideNextBack = false;
-    static Logger log = Logger.getLogger( EditScriptFilesPage.class );
+    private NSMutableArray<String> showFiles = new NSMutableArray<String>(1);
+
+    static Logger log = Logger.getLogger(EditScriptFilesPage.class);
 }

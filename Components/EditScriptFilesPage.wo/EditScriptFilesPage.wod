@@ -1,6 +1,7 @@
-CreateFolder: WOSubmitButton {
-    value  = "Create Folder";
+CreateFolder: WCButton {
+    label  = "Create Folder";
     action = createFolder;
+    remote = true;
 }
 
 FolderList1: WOPopUpButton {
@@ -17,32 +18,31 @@ FolderList2: WOPopUpButton {
     selection     = selectedParentFolderForUpload;
 }
 
-FolderName: WOTextField {
+FolderName: WCTextBox {
     value = folderName;
+    id    = "folderName";
     width = 25;
 }
 
 FileBrowser: org.webcat.core.FileBrowser {
-    title                 = browserTitle;
     file                  = base;
     isEditable            = isEditable;
     allowSelection        = allowSelection;
-    fileSelectionListener = fileSelectionListener;
+    fileSelectionListener = thisPage;
     allowSelectDir        = allowSelectDir;
     allowSelectExtensions = allowSelectExtensions;
     includeSeparator      = true;
     fileEditListener      = thisPage;
     applyChangesOnMod     = true;
     currentSelection      = currentSelection;
+    initialExpansionDepth = 0;
+    browserId             = browserId;
+    formId                = "fileForm";
+    focusedFiles          = focusedFiles;
 }
 
 Page: org.webcat.core.WCPageWithNavigation {
     title = sideStepTitle;
-}
-
-Replace: WOSubmitButton {
-    value  = "Replace Entire Folder";
-    action = replaceEntireFolder;
 }
 
 Section: WCPageModule {
@@ -53,19 +53,15 @@ Unzip: WOCheckBox {
     checked = unzip;
 }
 
-Upload: WOSubmitButton {
-    value  = "Upload File";
+Upload: WCButton {
+    label  = "Upload File";
     action = uploadFile;
 }
 
-UploadFile2: WOFileUpload {
+UploadFile: WOFileUpload {
     data = uploadedFile2;
     filePath = uploadedFileName2;
     size = 60;
-}
-
-UploadFile3: WOFileUpload {
-    data = uploadedFile3;
-    filePath = uploadedFileName3;
-    size = 60;
+    dojoType = "dojox.form.FileInput";
+    style = "display:inline-block";
 }
