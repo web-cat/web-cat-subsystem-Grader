@@ -31,10 +31,9 @@ Done: WCCheckBox {
 }
 
 FileBrowser: org.webcat.core.FileBrowser {
-    title                 = "Browse Raw Files: Submission and Results";
     file                  = submission.file.getParentFile;
     initialExpansionDepth = 1;
-//    includeSeparator = true;
+//    alsoRefresh           = "fileBrowserModule";
 }
 
 FileDeduction: WOString {
