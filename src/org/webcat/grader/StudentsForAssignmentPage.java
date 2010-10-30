@@ -109,6 +109,8 @@ public class StudentsForAssignmentPage
 
         log.debug("appendToResponse()");
 
+        subStats =
+            new HashMap<AssignmentOffering, Submission.CumulativeStats>();
         offerings.setObjectArray(assignmentOfferings(courseOfferings()));
         if (log.isDebugEnabled())
         {
@@ -559,8 +561,7 @@ public class StudentsForAssignmentPage
 
     private Map<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>> userGroups =
         new HashMap<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>>();
-    private Map<AssignmentOffering, Submission.CumulativeStats> subStats =
-        new HashMap<AssignmentOffering, Submission.CumulativeStats>();
+    private Map<AssignmentOffering, Submission.CumulativeStats> subStats;
 
     private AssignmentOffering offeringForAction;
 
