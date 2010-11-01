@@ -436,7 +436,7 @@ public class EditAssignmentPage
         }
 
         offeringForAction = thisOffering;
-        return new ConfirmingAction(this)
+        return new ConfirmingAction(this, false)
         {
             @Override
             protected String confirmationTitle()
@@ -461,7 +461,7 @@ public class EditAssignmentPage
             }
 
             @Override
-            protected WOActionResults performStandardAction()
+            protected WOActionResults actionWasConfirmed()
             {
                 return regradeSubsActionOk();
             }
@@ -721,7 +721,7 @@ public class EditAssignmentPage
         }
 
         offeringForAction = thisOffering;
-        return new ConfirmingAction(this) {
+        return new ConfirmingAction(this, false) {
             @Override
             protected String confirmationTitle()
             {
@@ -750,7 +750,7 @@ public class EditAssignmentPage
             }
 
             @Override
-            protected WOActionResults performStandardAction()
+            protected WOActionResults actionWasConfirmed()
             {
                 return deleteActionOk();
             }

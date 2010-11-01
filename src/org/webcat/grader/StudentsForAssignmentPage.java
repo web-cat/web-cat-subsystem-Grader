@@ -320,7 +320,7 @@ public class StudentsForAssignmentPage
     {
         offeringForAction = assignmentOffering;
 
-        return new ConfirmingAction(this)
+        return new ConfirmingAction(this, false)
         {
             @Override
             protected String confirmationTitle()
@@ -341,7 +341,7 @@ public class StudentsForAssignmentPage
             }
 
             @Override
-            protected WOActionResults performStandardAction()
+            protected WOActionResults actionWasConfirmed()
             {
                 return markAsCompleteActionOk();
             }
