@@ -25,7 +25,8 @@
     Median: <span class="hl"><wo name="MedianScore"/></span>
     Low:    <span class="hl"><wo name="LowScore"/></span>
     Box plot: <wo name="BoxAndWhiskerChart"/>
-    </p><wo:WCForm multipleSubmit="true">
+    </p>
+    <wo:WCForm multipleSubmit="true">
     <wo name="UserSubmissionsTable">
         <wo:WCTableHeadings>
             <wo:WCTableHeading title="Done?" class="sm" sortOnKeyPaths="submission.result.status"/>
@@ -67,49 +68,8 @@
             </wo:WCTableRow>
         </wo:WCTableRows>
     </wo>
-    <!-- table><thead>
-    <tr class="batchnav"><td colspan="7"><wo name="BatchNavigator"/></td>
-        <wo name="UsesToolCheckScore"><td></td></wo>
-        <wo name="UsesBonusesOrPenalties"><td></td></wo>
-    </tr>
-    <tr><th class="sm">Done?<wo name="SortOrderStatus"/></th>
-        <th>Name<wo name="SortOrderUserNameLF"/></th>
-        <th class="sm">Sub No.</th>
-        <th>Time<wo name="SortOrderSubmitTime"/></th>
-        <th class="sm">Testing</th>
-        <wo name="UsesToolCheckScore"><th class="sm">Tool Checks</th></wo>
-        <th>TA</th>
-        <wo name="UsesBonusesOrPenalties"><th class="sm">Early/Late</th></wo>
-        <th class="sm">Score<wo name="SortOrderFinalScore"/></th>
-    </tr></thead><tbody class="top">
-    <wo name="Repetition1"><wo name="TR">
-        <wo:if condition="$aUserSubmission.userHasSubmission">
-            <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-            <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/>
-              <wo:not condition="$isMostRecentSubmission">
-                <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
-                  <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
-                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
-                  <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
-                  <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
-                </wo:loop>
-              </wo:not></td>
-            <td class="n"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
-            (of <wo name="MostRecentSubmitNumber"/>)</wo:not></td>
-            <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
-            <td class="n"><wo name="TestingScore"/></td>
-            <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
-            <td class="n"><wo name="EditScore"><wo name="HasTAScore"><wo name="TAScore"/></wo><wo name="NoTAScore">&lt;edit&gt;</wo></wo></td>
-            <wo name="UsesBonusesOrPenalties"><td class="n"><wo name="ScoreAdjustment"/></td></wo>
-            <td class="n"><wo name="FinalScore"/></td>
-        </wo:if><wo:else>
-            <td><wo name="StatusBlank"/></td>
-            <td><wo:str value="$aUserSubmission.user.name_LF"/></td>
-            <wo name="NoSubmissionsPlaceholder">No submissions</wo>
-        </wo:else>
-    </wo></wo>
-    </tbody></table -->
-    <wo name="MarkAsComplete"/></wo:WCForm>
+    <wo name="MarkAsComplete"/><wo name="MarkAsCompleteStatus"></wo>
+    </wo:WCForm>
 </wo:if><wo:else>
     <p>No submissions matching your criteria have been found.</p>
 </wo:else>

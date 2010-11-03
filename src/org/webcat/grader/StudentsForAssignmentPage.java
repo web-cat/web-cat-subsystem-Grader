@@ -28,6 +28,8 @@ import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.ui.WCTable;
+import org.webcat.ui.generators.JavascriptFunction;
 import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
 
@@ -203,6 +205,21 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
+    public String tableId()
+    {
+        return idFor.get("submissionsTable_" + assignmentOffering.id());
+    }
+
+
+    // ----------------------------------------------------------
+    public String markCompleteStatusIndicatorId()
+    {
+        return idFor.get("markCompleteStatusIndicator_"
+                + assignmentOffering.id());
+    }
+
+
+    // ----------------------------------------------------------
     public WOComponent editSubmissionScore()
     {
         WCComponent destination = null;
@@ -286,8 +303,10 @@ public class StudentsForAssignmentPage
      * being completed, sending e-mail notifications as necessary.
      * @return null to force this page to reload
      */
-    public WOComponent markAsCompleteActionOk()
+    public int markSubmissionsAsComplete()
     {
+        int numberNotified = 0;
+
         assignmentOffering = offeringForAction;
         for (UserSubmissionPair pair : userGroup().allObjects())
         {
@@ -300,13 +319,15 @@ public class StudentsForAssignmentPage
                     sub.result().setStatus(Status.CHECK);
                     if (applyLocalChanges())
                     {
+                        numberNotified++;
                         sub.emailNotificationToStudent(
                             "has been updated by the course staff");
                     }
                 }
             }
         }
-        return null;
+
+        return numberNotified;
     }
 
 
@@ -320,7 +341,7 @@ public class StudentsForAssignmentPage
     {
         offeringForAction = assignmentOffering;
 
-        return new ConfirmingAction(this, false)
+        return new ConfirmingAction(this, true)
         {
             @Override
             protected String confirmationTitle()
@@ -341,9 +362,42 @@ public class StudentsForAssignmentPage
             }
 
             @Override
+            protected void beforeActionWasConfirmed(JavascriptGenerator js)
+            {
+                InlineStatusIndicator.updateWithSpinner(js,
+                        markCompleteStatusIndicatorId(),
+                        "Notifying students that their scores are ready...");
+            }
+
+            @Override
             protected WOActionResults actionWasConfirmed()
             {
-                return markAsCompleteActionOk();
+                final int numberNotified = markSubmissionsAsComplete();
+
+                JavascriptGenerator js = new JavascriptGenerator();
+                WCTable.refresh(js, tableId(), new JavascriptFunction() {
+                    @Override
+                    public void generate(JavascriptGenerator g)
+                    {
+                        String students;
+
+                        if (numberNotified == 1)
+                        {
+                            students = "1 student was";
+                        }
+                        else
+                        {
+                            students = "" + numberNotified + " students were";
+                        }
+
+                        InlineStatusIndicator.updateWithState(g,
+                                markCompleteStatusIndicatorId(),
+                                InlineStatusIndicator.SUCCESS,
+                                students + " notified.");
+                    }
+                });
+
+                return js;
             }
         };
     }

@@ -51,6 +51,7 @@ LowScore: WOString {
 MarkAsComplete: WCButton {
     label  = "Show All Scores to Students";
     action = markAsComplete;
+    remote = true;
     alt    = "Make all entered scores visible to students and send e-mail";
     title  = "Make all entered scores visible to students and send e-mail";
 }
@@ -159,6 +160,10 @@ Status: WOImage {
     width     = "16";
 }
 
+MarkAsCompleteStatus: InlineStatusIndicator {
+    id = markCompleteStatusIndicatorId;
+}
+
 SubmitNumber: WOString {
     value = aSubmission.submitNumber;
 }
@@ -198,6 +203,7 @@ TR2: org.webcat.core.TableRow {
 }
 
 UserSubmissionsTable: WCTable {
+    id = tableId;
     displayGroup = userGroup;
     searchOnKeyPaths = "user.lastName,user.firstName,submission.partneredSubmissions.user.lastName,submission.partneredSubmissions.user.firstName";
 }
