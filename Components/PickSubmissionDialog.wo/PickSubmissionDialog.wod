@@ -21,11 +21,6 @@ OK: WCButton {
 Form : WCForm {
 }
 
-BatchNavigator: org.webcat.core.WCBatchNavigator {
-    displayGroup = submissionDisplayGroup;
-    persistentKey = "PickSubmissionPage.batchSize";
-}
-
 SubmissionTable: WCTable {
     displayGroup = submissionDisplayGroup;
     canSelectRows = true;
@@ -47,8 +42,4 @@ SubmitTimeSpan: WOGenericContainer {
 FinalScore: WOString {
     numberformat = "0.0";
     value        = aSubmission.result.finalScore;
-}
-
-TR: org.webcat.core.TableRow {
-    index = index;
 }
