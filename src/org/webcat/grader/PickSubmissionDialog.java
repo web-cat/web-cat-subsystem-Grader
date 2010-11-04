@@ -22,12 +22,9 @@
 package org.webcat.grader;
 
 import org.apache.log4j.Logger;
-import org.webcat.core.User;
 import org.webcat.core.WCComponent;
-import org.webcat.ui.util.ComponentIDGenerator;
 import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WOResponse;
 import com.webobjects.foundation.NSArray;
 import er.extensions.appserver.ERXDisplayGroup;
 
