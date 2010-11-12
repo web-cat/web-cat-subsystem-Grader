@@ -593,19 +593,15 @@ public class StudentsForAssignmentPage
                 result = "queued for grading";
             }
         }
-        else
+        // check date of submission against date of feedback
+        else if (aSubmission.result() != null
+                && aSubmission.result().lastUpdated() != null
+                && aNewerSubmission.submitTime().after(
+                    aSubmission.result().lastUpdated()))
         {
-            // check date of submission against date of feedback
-            NSTimestamp feedbackTime = aSubmission.submitTime();
-            if (aSubmission.result() != null)
-            {
-                feedbackTime = aSubmission.result().lastUpdated();
-            }
-            if (aNewerSubmission.submitTime().after(feedbackTime))
-            {
-                result = "newer than feedback";
-            }
+            result = "newer than feedback";
         }
+
         log.debug("newerSubmissionStatus() = " + result);
         return result;
     }
