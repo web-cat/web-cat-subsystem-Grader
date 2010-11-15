@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -46,16 +47,22 @@ public class SubmitResponse
      * Creates a new SubmitResponse object.
      * @param context the context for the request
      */
-    public SubmitResponse( WOContext context )
+    public SubmitResponse(WOContext context)
     {
-        super( context );
-        log.debug( "constructor" );
+        super(context);
+        log.debug("constructor");
     }
 
 
     //~ KVC attributes (must be public) .......................................
 
     public String aPartnerNotFound;
+    public String  sessionID;
+    public boolean criticalError = false;
+    public boolean assignmentClosed = false;
+    public NSArray<String> partnersNotFound;
+    public NSMutableArray<String> messages = new NSMutableArray<String>();
+    public String aMessage;
 
 
     //~ Methods ...............................................................
@@ -67,9 +74,9 @@ public class SubmitResponse
      */
     public boolean error()
     {
-        log.debug( "error() = " + ( ( message != null )
-                                    ? "true" : "false" ) );
-        return message != null;
+        boolean result = messages != null && messages.count() > 0;
+        log.debug("error() = " + result);
+        return result;
     }
 
 
@@ -82,7 +89,7 @@ public class SubmitResponse
      */
     public boolean gradingPaused()
     {
-        if ( prefs() == null || prefs().submission() == null )
+        if (prefs() == null || prefs().submission() == null)
             return false;
         EnqueuedJob job = prefs().submission().enqueuedJob();
         return job != null  &&  job.paused();
@@ -99,11 +106,11 @@ public class SubmitResponse
     public boolean notAcceptingSubmissions()
     {
         boolean result = assignmentClosed;
-        if ( result )
+        if (result)
         {
-            if ( message == null )
+            if (error())
             {
-                message = "This assignment is not open for submission.";
+                messages.add("This assignment is not open for submission.");
             }
         }
         return result;
@@ -123,9 +130,8 @@ public class SubmitResponse
                 "report",
                 "wosid=" + sessionID,
                 false,
-                0
-            );
-        log.debug( "link = " + dest );
+                0);
+        log.debug("link = " + dest);
         return dest;
     }
 
@@ -144,39 +150,7 @@ public class SubmitResponse
     }
 
 
-    // ----------------------------------------------------------
-    /**
-     * Gets the list of partner names that were not found.
-     *
-     * @return the list of partner names that were not found
-     */
-    public NSArray<String> partnersNotFound()
-    {
-        return partnersNotFound;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Sets the list of partner names that were not found. We want to display
-     * these to the user so that they can fix it in a future submission if
-     * necessary.
-     *
-     * @param partnersNotFound the names of any partners that were not found
-     */
-    public void setPartnersNotFound(NSArray<String> partnersNotFound)
-    {
-        this.partnersNotFound = partnersNotFound;
-    }
-
-
     //~ Instance/static variables .............................................
 
-    public String  message;
-    public String  sessionID;
-    public boolean criticalError = false;
-    public boolean assignmentClosed = false;
-    public NSArray<String> partnersNotFound;
-
-    static Logger log = Logger.getLogger( SubmitResponse.class );
+    static Logger log = Logger.getLogger(SubmitResponse.class);
 }

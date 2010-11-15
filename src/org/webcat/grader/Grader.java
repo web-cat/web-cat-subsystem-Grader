@@ -495,8 +495,12 @@ public class Grader
                     log.debug( "found matching assignment that is open." );
                     if ( assignment != null )
                     {
-                        result.message =
+                        String msg =
                             "Warning: multiple matching assignments found.";
+                        result.messages.add(msg);
+                        log.warn(msg + "  User = " + session.user()
+                            + "\n\t" + assignment
+                            + "\n\t" + thisAssignment);
                     }
                     assignment = thisAssignment;
                 }
@@ -571,10 +575,21 @@ public class Grader
                     log.debug( "found matching assignment for course staff." );
                     if ( assignments.count() > 1 )
                     {
-                        result.message =
+                        String msg =
                             "Warning: multiple matching assignments found.";
+                        result.messages.add(msg);
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(msg);
+                        builder.append("  User = ");
+                        builder.append(session.user());
+                        for (AssignmentOffering ao : assignments)
+                        {
+                            builder.append("\n\t");
+                            builder.append(ao);
+                        }
+                        log.warn(builder);
                     }
-                    assignment = assignments.objectAtIndex( 0 );
+                    assignment = assignments.objectAtIndex(0);
                 }
             }
             catch ( Exception e )
@@ -586,10 +601,13 @@ public class Grader
         if ( assignment == null )
         {
             log.debug( "no assignments are open." );
-            result.message = "The requested assignment is not accepting "
+            String msg = "The requested assignment is not accepting "
                 + "submissions at this time or it could not be found.  "
                 + "The deadline may have passed.";
+            result.messages.add(msg);
             result.assignmentClosed = true;
+            log.warn(msg + "  User = " + session.user() + ", a = " + scheme
+                + ", crn = " + crn + ", courseNo = " + courseNo);
             return result.generateResponse();
         }
 
@@ -615,8 +633,11 @@ public class Grader
         if ( maxSubmissions != null
              && currentSubNo > maxSubmissions.intValue() )
         {
-            result.message = "You have exceeded the allowable number "
+            String msg = "You have exceeded the allowable number "
                 + "of submissions for this assignment.";
+            result.messages.add(msg);
+            log.warn(msg + "  User = " + session.user()
+                + "\n\t" + assignment);
             return result.generateResponse();
         }
 
@@ -650,7 +671,7 @@ public class Grader
             }
         }
 
-        result.setPartnersNotFound(partnersNotFound);
+        result.partnersNotFound = partnersNotFound;
         result.startSubmission( currentSubNo, result.user() );
         result.submissionInProcess().setPartners( partners );
         result.submissionInProcess().setUploadedFile( file );
@@ -669,9 +690,11 @@ public class Grader
         {
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
-            result.message =
-                "Your file submission is empty.  "
+            String msg = "Your file submission is empty.  "
                 + "Please choose an appropriate file.";
+            result.messages.add(msg);
+            log.warn(msg + "  User = " + session.user()
+                + "\n\t" + assignment);
             return result.generateResponse();
         }
         else if ( len > assignment.assignment().submissionProfile()
@@ -679,18 +702,25 @@ public class Grader
         {
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
-            result.message =
-                "Your file exceeds the file size limit for this "
-                + "assignment ("
+            String msg = "Your file exceeds the file size limit for "
+                + "this assignment ("
                 + assignment.assignment().submissionProfile()
                       .effectiveMaxFileUploadSize()
                 + ").  Please choose a smaller file.";
+            result.messages.add(msg);
+            log.warn(msg + "  User = " + session.user()
+                + "\n\t" + assignment);
             return result.generateResponse();
         }
         try
         {
-            result.message =
-                result.commitSubmission( context, currentTime );
+            String msg = result.commitSubmission(context, currentTime);
+            if (msg != null)
+            {
+                log.warn(msg + "  User = " + session.user()
+                    + "\n\t" + assignment);
+                result.messages.add(msg);
+            }
         }
         catch ( Exception e )
         {
@@ -698,10 +728,13 @@ public class Grader
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             result.cancelLocalChanges();
-            result.message =
+            String msg =
                 "An unexpected exception occurred while trying to commit "
                 + "your submission.  The error has been reported to the "
                 + "Web-CAT administrator.  Please try your submission again.";
+            result.messages.add(msg);
+            log.error(msg + "  User = " + session.user()
+                + "\n\t" + assignment, e);
             result.criticalError = true;
         }
 

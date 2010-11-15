@@ -55,7 +55,9 @@ body {
 </wo:not>
 
 <wo:if condition="$error"><p class="error">
-  <wo:str value="$message"/>
+  <wo:loop list="$messages" item="$aMessage">
+    <wo:str value="$aMessage"/>
+  </wo:loop>
 </p></wo:if>
 
 <wo:if condition="$partnersNotFound.count"><div class="warning">
