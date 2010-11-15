@@ -189,7 +189,6 @@ public abstract class _AssignmentOffering
     public static final String ALL_OFFERINGS_ORDERED_BY_DUE_DATE_FSPEC = "allOfferingsOrderedByDueDate";
     public static final String OFFERINGS_FOR_COURSE_FSPEC = "offeringsForCourse";
     public static final String OFFERINGS_FOR_COURSE_OFFERING_FSPEC = "offeringsForCourseOffering";
-    public static final String OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC = "offeringsForSubmitterEngineBase";
     public static final String OFFERINGS_WITH_USER_AS_STAFF_FSPEC = "offeringsWithUserAsStaff";
     public static final String OFFERINGS_WITH_USER_AS_STUDENT_FSPEC = "offeringsWithUserAsStudent";
     public static final String ENTITY_NAME = "AssignmentOffering";
@@ -1722,32 +1721,6 @@ public abstract class _AssignmentOffering
         {
             log.debug( "offeringsForCourseOffering(ec"
                 + ", " + courseOfferingBinding
-                + "): " + objects );
-        }
-        return objects;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve objects according to the <code>offeringsForSubmitterEngineBase</code>
-     * fetch specification.
-     *
-     * @param context The editing context to use
-     * @return an NSArray of the entities retrieved
-     */
-    public static NSArray<AssignmentOffering> offeringsForSubmitterEngineBase(
-            EOEditingContext context
-        )
-    {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "offeringsForSubmitterEngineBase", "AssignmentOffering" );
-
-        NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
-        if (log.isDebugEnabled())
-        {
-            log.debug( "offeringsForSubmitterEngineBase(ec"
                 + "): " + objects );
         }
         return objects;

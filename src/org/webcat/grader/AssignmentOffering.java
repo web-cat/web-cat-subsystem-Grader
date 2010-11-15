@@ -26,6 +26,8 @@ import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXKey;
+import er.extensions.eof.ERXQ;
+import er.extensions.eof.ERXSortOrdering;
 import er.extensions.eof.qualifiers.ERXInQualifier;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
@@ -100,26 +102,10 @@ public class AssignmentOffering
         COURSE_OFFERING_KEY + "." + CourseOffering.INSTRUCTORS_KEY;
     public static final String COURSE_OFFERING_GRADERS_KEY  =
         COURSE_OFFERING_KEY + "." + CourseOffering.GRADERS_KEY;
-    public static final String COURSE_OFFERING_CRN_KEY  =
-        COURSE_OFFERING_KEY + "." + CourseOffering.CRN_KEY;
-    public static final String COURSE_NUMBER_KEY  =
-        COURSE_OFFERING_KEY + "."
-        + CourseOffering.COURSE_KEY + "."
-        + Course.NUMBER_KEY;
     public static final String COURSE_OFFERING_SEMESTER_KEY =
         COURSE_OFFERING_KEY + "."
         + CourseOffering.SEMESTER_KEY;
 
-    public static final String SUBMISSION_METHOD_KEY =
-        ASSIGNMENT_KEY + "."
-        + Assignment.SUBMISSION_PROFILE_KEY + "."
-        + SubmissionProfile.SUBMISSION_METHOD_KEY;
-    public static final String INSTITUTION_PROPERTY_NAME_KEY =
-        COURSE_OFFERING_KEY + "."
-        + CourseOffering.COURSE_KEY + "."
-        + Course.DEPARTMENT_KEY + "."
-        + Department.INSTITUTION_KEY + "."
-        + AuthenticationDomain.PROPERTY_NAME_KEY;
     public static final String ID_FORM_KEY = "aoid";
 
     public static final ERXKey<String> titleString =
@@ -795,6 +781,24 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
+    private static EOQualifier and(EOQualifier left, EOQualifier right)
+    {
+        if (left == null)
+        {
+            return right;
+        }
+        else if (right == null)
+        {
+            return left;
+        }
+        else
+        {
+            return ERXQ.and(left, right);
+        }
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Retrieves a sorted set of assignment offerings that are available for
      * submission via a given submitter engine.  The set of assignments are
@@ -853,58 +857,48 @@ public class AssignmentOffering
         boolean                 preserveDateDifferences
         )
     {
-        EOFetchSpecification spec =
-            EOFetchSpecification.fetchSpecificationNamed(
-                OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC,
-                ENTITY_NAME );
+//        EOFetchSpecification spec =
+//            EOFetchSpecification.fetchSpecificationNamed(
+//                OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC,
+//                ENTITY_NAME );
+
         // Set up the qualifier
-        NSMutableDictionary<String, Object> restrictions =
-            new NSMutableDictionary<String, Object>();
+        EOQualifier qualifier = null;
         if ( submitterEngine > 0 )
         {
-            restrictions.setObjectForKey(
-                ERXConstant.integerForInt( submitterEngine ),
-                SUBMISSION_METHOD_KEY );
+            qualifier = and(qualifier,
+                AssignmentOffering.assignment.dot(Assignment.submissionProfile)
+                .dot(SubmissionProfile.submissionMethod).is(submitterEngine));
         }
         Object valueObj = formValueForKey( formValues, "institution" );
         if ( valueObj != null )
         {
-            restrictions.setObjectForKey(
-                "authenticator." + valueObj,
-                INSTITUTION_PROPERTY_NAME_KEY );
+            qualifier = and(qualifier,
+                courseOffering.dot(CourseOffering.course)
+                .dot(Course.department).dot(Department.institution)
+                .dot(AuthenticationDomain.propertyName).is(
+                    "authenticator." + valueObj));
         }
         valueObj = formValueForKey( formValues, "crn" );
         if ( valueObj != null )
         {
-            restrictions.setObjectForKey(
-                valueObj,
-                COURSE_OFFERING_CRN_KEY );
+            qualifier = and(qualifier,
+                courseOffering.dot(CourseOffering.crn).is(valueObj.toString()));
         }
         valueObj = formValueForKey( formValues, "course" );
         if ( valueObj != null )
         {
-            try
-            {
-                restrictions.setObjectForKey(
-                    Integer.valueOf( valueObj.toString() ),
-                    COURSE_NUMBER_KEY
-                    );
-            }
-            catch ( NumberFormatException e )
-            {
-                new UnexpectedExceptionMessage(e, null, null,
-                    "trying to parse course number = '" + valueObj + "'").send();
-            }
+            qualifier = and(qualifier,
+                courseOffering.dot(CourseOffering.course).dot(Course.number)
+                .is(ERXValueUtilities.intValue(valueObj)));
         }
         boolean forStaff = ERXValueUtilities.booleanValue(
-            formValueForKey( formValues, "staff" ) );
+            formValueForKey(formValues, "staff"));
         showAll = ERXValueUtilities.booleanValueWithDefault(
-            formValueForKey( formValues, "showAll" ), showAll || forStaff );
-        if ( !forStaff )
+            formValueForKey(formValues, "showAll"), showAll || forStaff);
+        if (!forStaff)
         {
-            restrictions.setObjectForKey(
-                ERXConstant.integerForInt( 1 ),
-                PUBLISH_KEY );
+            qualifier = and(qualifier, publish.isTrue());
         }
 
 //        if (forStaff || showAll)
@@ -914,107 +908,79 @@ public class AssignmentOffering
 //                    Semester.forDate(context, new NSTimestamp())).and(
 //                        EOQualifier.qualifierToMatchAllValues(restrictions)));
 //        }
-//        else
-//        {
-            spec.setQualifier(
-                EOQualifier.qualifierToMatchAllValues(restrictions));
-//        }
-        if ( log.isDebugEnabled() )
+
+        if (qualifier == null)
         {
-            log.debug(
-                "objectsForSubmitterEngine(): qualifier = "
-                + spec.qualifier() );
+            qualifier = assignment.isNotNull();
         }
-        if ( groupByCRN )
+
+        if (log.isDebugEnabled())
         {
-            NSMutableArray<EOSortOrdering> orderings =
-                spec.sortOrderings().mutableClone();
-            orderings.insertObjectAtIndex(
-                EOSortOrdering.sortOrderingWithKey(
-                    COURSE_OFFERING_CRN_KEY,
-                    EOSortOrdering.CompareAscending ),
-                orderings.count() - 2
-                );
-            spec.setSortOrderings( orderings );
+            log.debug("objectsForSubmitterEngine(): qualifier = " + qualifier);
         }
+        NSArray<EOSortOrdering> orderings = groupByCRN
+            ? SUBMISSION_CRN_ORDERINGS
+            : SUBMISSION_ORDERINGS;
         NSArray<AssignmentOffering> results =
-            objectsWithFetchSpecification(context, spec);
-        valueObj = formValueForKey( formValues, "courses" );
-        if ( valueObj != null )
+            objectsMatchingQualifier(context, qualifier, orderings);
+        valueObj = formValueForKey(formValues, "courses");
+        if (valueObj != null)
         {
             // filter down to the given list of courses
-            log.debug( "before courses filter: " + results );
+            log.debug("before courses filter: " + results);
             NSArray<String> courses = new NSArray<String>(
-                valueObj.toString().split( "\\s*,\\s*" ) );
-            log.debug( "courses filter = " + courses );
-            results = EOQualifier.filteredArrayWithQualifier( results,
-                new InQualifier( COURSE_NUMBER_KEY + ".toString",
-                    courses
-                )
-            );
-            log.debug( "after courses filter: " + results );
+                valueObj.toString().split("\\s*,\\s*"));
+            log.debug("courses filter = " + courses);
+            results = EOQualifier.filteredArrayWithQualifier(results,
+                new InQualifier(courseOffering.dot(CourseOffering.course)
+                    .dot(Course.number).dot("toString").key(), courses));
+            log.debug("after courses filter: " + results);
         }
-        valueObj = formValueForKey( formValues, "crns" );
-        if ( valueObj != null )
+        valueObj = formValueForKey(formValues, "crns");
+        if (valueObj != null)
         {
             // filter down to the given list of crns
-            log.debug( "before crns filter: " + results );
-            results = EOQualifier.filteredArrayWithQualifier( results,
-                new InQualifier( COURSE_OFFERING_CRN_KEY + ".toString",
-                    new NSArray<String>(
-                        valueObj.toString().split( "\\s*,\\s*" ) )
-                )
-            );
-            log.debug( "after crns filter: " + results );
+            log.debug("before crns filter: " + results);
+            results = EOQualifier.filteredArrayWithQualifier(results,
+                new InQualifier(
+                    courseOffering.dot(CourseOffering.crn)
+                        .dot("toString").key(),
+                    new NSArray<String>(valueObj.toString().split("\\s*,\\s*"))
+                ));
+            log.debug("after crns filter: " + results);
         }
-        NSMutableArray<EOQualifier> qualifiers =
-            new NSMutableArray<EOQualifier>();
+        qualifier = null;
         if (showAll)
         {
-            qualifiers.add(
-                new EOKeyValueQualifier(
-                    LATE_DEADLINE_KEY,
-                    EOQualifier.QualifierOperatorGreaterThan,
-                    Semester.forDate(context, currentTime).semesterStartDate()
-                ) );
+            qualifier = lateDeadline.greaterThan(Semester
+                .forDate(context, currentTime).semesterStartDate());
         }
         else
         {
-            qualifiers.add(
-                new EOKeyValueQualifier(
-                    AVAILABLE_FROM_KEY,
-                    EOQualifier.QualifierOperatorLessThan,
-                    currentTime
-                ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
-                LATE_DEADLINE_KEY,
-                EOQualifier.QualifierOperatorGreaterThan,
-                currentTime
-                ) );
+            qualifier = availableFrom.lessThan(currentTime).and(
+                lateDeadline.greaterThan(currentTime));
         }
         {
             @SuppressWarnings("unchecked")
             NSArray<AssignmentOffering> newResults =
                 ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                    results,
-                    new EOAndQualifier(qualifiers));
+                    results, qualifier);
             results = newResults;
         }
-        if ( !groupByCRN )
+        if (!groupByCRN)
         {
             NSMutableArray<AssignmentOffering> filteredResults =
                 results.mutableClone();
             Map<Course, Map<Assignment, NSMutableArray<AssignmentOffering>>>
                 courseAssignmentMap = new HashMap<Course,
                     Map<Assignment, NSMutableArray<AssignmentOffering>>>();
-            for ( int i = 0; i < filteredResults.count(); i++ )
+            for (int i = 0; i < filteredResults.count(); i++)
             {
-                AssignmentOffering ao =
-                    filteredResults.objectAtIndex( i );
-                if ( !addAssignmentIfNecessary(
-                    ao, courseAssignmentMap, preserveDateDifferences ) )
+                AssignmentOffering ao = filteredResults.objectAtIndex(i);
+                if (!addAssignmentIfNecessary(
+                    ao, courseAssignmentMap, preserveDateDifferences))
                 {
-                    filteredResults.removeObjectAtIndex( i );
+                    filteredResults.removeObjectAtIndex(i);
                     i--;
                 }
             }
@@ -1025,7 +991,8 @@ public class AssignmentOffering
             log.debug("results = " + results);
             for (AssignmentOffering ao : results)
             {
-                log.debug("offering = " + ao + ", semester = " + ao.courseOffering().semester());
+                log.debug("offering = " + ao + ", semester = "
+                    + ao.courseOffering().semester());
             }
         }
         return results;
@@ -1164,5 +1131,35 @@ public class AssignmentOffering
 
     private String cachedPermalink;
     private String subdirToDelete;
+
+    private static final NSArray<EOSortOrdering> SUBMISSION_ORDERINGS =
+        courseOffering.dot(CourseOffering.course)
+        .dot(Course.department).dot(Department.institution)
+        .dot(AuthenticationDomain.displayableName).ascInsensitive()
+    .then(
+        courseOffering.dot(CourseOffering.course)
+        .dot(Course.department).dot(Department.abbreviation)
+        .ascInsensitive())
+    .then(
+        courseOffering.dot(CourseOffering.course).dot(Course.number)
+        .asc())
+    .then(dueDate.asc())
+    .then(assignment.dot(Assignment.name).ascInsensitive());
+
+    private static final NSArray<EOSortOrdering> SUBMISSION_CRN_ORDERINGS =
+        courseOffering.dot(CourseOffering.course)
+        .dot(Course.department).dot(Department.institution)
+        .dot(AuthenticationDomain.displayableName).ascInsensitive()
+    .then(
+        courseOffering.dot(CourseOffering.course)
+        .dot(Course.department).dot(Department.abbreviation)
+        .ascInsensitive())
+    .then(
+        courseOffering.dot(CourseOffering.course).dot(Course.number)
+        .asc())
+    .then(courseOffering.dot(CourseOffering.crn).asc())
+    .then(dueDate.asc())
+    .then(assignment.dot(Assignment.name).ascInsensitive());
+
     static Logger log = Logger.getLogger( AssignmentOffering.class );
 }
