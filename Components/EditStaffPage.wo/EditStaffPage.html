@@ -37,7 +37,7 @@
   <webobject name="Repetition1"><webobject name="TR">
     <td><webobject name="UserID"/></td><td><wo:if condition="$aUser.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$aUser.name_LF"/></wo:else></td>
     <td><wo:link href="$aUser.emailHref" string="$aUser.email"/></td>
-    <td><wo:not condition="$isStaff"><webobject name="Add"/></wo><wo:else>&nbsp;</wo:else></td>
+    <td><wo:not condition="$isStaff"><webobject name="AddStaff"/></wo><wo:else>&nbsp;</wo:else></td>
   </webobject></webobject>
   <wo:not condition="$potentialDisplayGroup.displayedObjects.count">
     <tr><td colspan="4">No potential <wo:str value="$userRole"/>(s)</td></tr>
