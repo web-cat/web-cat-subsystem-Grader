@@ -96,7 +96,7 @@ IsNotFirstInInstitution: WOConditional {
 Name: WOGenericContainer {
     elementName = "param";
     name = "a";
-    value = assignmentName;
+    value = assignmentNameParameter;
 }
 
 RequirePattern: WOGenericContainer {
