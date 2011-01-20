@@ -25,6 +25,7 @@ import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.qualifiers.ERXKeyValueQualifier;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
@@ -355,15 +356,15 @@ public class Grader
             Session   session,
             WOContext context )
     {
-        log.debug( "handleSubmission()" );
-        String scheme   = request.stringFormValueForKey( "a" );
-        log.debug( "scheme = " + scheme );
-        String crn      = request.stringFormValueForKey( "crn" );
-        log.debug( "crn = " + crn );
+        log.debug("handleSubmission()");
+        String scheme   = request.stringFormValueForKey("a");
+        log.debug("scheme = " + scheme);
+        String crn      = request.stringFormValueForKey("crn");
+        log.debug("crn = " + crn);
         Integer courseNo = null;
         try
         {
-            Number num = request.numericFormValueForKey( "course",
+            Number num = request.numericFormValueForKey("course",
                 new NSNumberFormatter("0"));
             courseNo = (num instanceof Integer)
                 ? (Integer)num
@@ -373,238 +374,95 @@ public class Grader
         {
             // Ignore it, and treat it as an undefined course number
         }
-        log.debug( "courseNo = " + courseNo );
-        String partnerList = request.stringFormValueForKey( "partners" );
-        log.debug( "partners = " + partnerList );
-        NSData file     = (NSData)request.formValueForKey( "file1" );
-        String fileName = request.stringFormValueForKey( "file1.filename" );
-        log.debug( "fileName = " + fileName );
+        log.debug("courseNo = " + courseNo);
+        String partnerList = request.stringFormValueForKey("partners");
+        log.debug("partners = " + partnerList);
+        NSData file = (NSData)request.formValueForKey("file1");
+        String fileName = request.stringFormValueForKey("file1.filename");
+        log.debug("fileName = " + fileName);
 
-        SubmitResponse result = (SubmitResponse)Application.application()
-           .pageWithName( SubmitResponse.class.getName(), context );
+        SubmitResponse result = Application.wcApplication().pageWithName(
+            SubmitResponse.class, context);
         EOEditingContext ec = result.localContext();
         result.sessionID = session.sessionID();
-        log.debug( "handleSubmission(): sessionID = " + result.sessionID );
+        log.debug("handleSubmission(): sessionID = " + result.sessionID);
         NSTimestamp currentTime   = new NSTimestamp();
-//        NSMutableArray qualifiers = new NSMutableArray();
-        log.debug( "user = " + session.user()
-                   + "(prime = " + session.primeUser() + ")" );
-//        qualifiers.addObject( new EOKeyValueQualifier(
-//                              AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-//                              EOQualifier.QualifierOperatorEqual,
-//                              session.user()
-//                             ) );
-//        log.debug( "scheme = " + scheme );
-//        qualifiers.addObject( new EOKeyValueQualifier(
-//                                      AssignmentOffering.ASSIGNMENT_NAME_KEY,
-//                                      EOQualifier.QualifierOperatorEqual,
-//                                      scheme
-//                                  ) );
-//        qualifiers.addObject( new EOKeyValueQualifier(
-//                                      AssignmentOffering.PUBLISH_KEY,
-//                                      EOQualifier.QualifierOperatorGreaterThan,
-//                                      ERXConstant.integerForInt( 0 )
-//                                    ) );
+        log.debug("user = " + session.user()
+            + "(prime = " + session.primeUser() + ")");
+
+        NSArray<EOSortOrdering> orderings = AssignmentOffering.dueDate.descs();
+        ERXKeyValueQualifier matchesScheme = AssignmentOffering.assignment
+            .dot(Assignment.name).eq(scheme);
+        EOQualifier qualifier = matchesScheme;
         NSArray<AssignmentOffering> assignments = null;
+        if (crn != null)
+        {
+            qualifier = matchesScheme.and(AssignmentOffering.courseOffering
+                .dot(CourseOffering.crn).eq(crn));
+        }
+        else if (courseNo != null)
+        {
+            qualifier = matchesScheme.and(AssignmentOffering.courseOffering
+                .dot(CourseOffering.course).dot(Course.number).eq(courseNo));
+        }
+
         try
         {
-            if ( crn != null )
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                        .dot(CourseOffering.students).eq(session.user()).and(
-                    AssignmentOffering.assignment.dot(Assignment.name)
-                        .eq(scheme).and(
-                    AssignmentOffering.publish.eq(1).and(
-                    AssignmentOffering.courseOffering.dot(CourseOffering.crn)
-                        .eq(crn)))));
-            }
-            else if ( courseNo != null )
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.students).eq(session.user()).and(
-                AssignmentOffering.assignment.dot(Assignment.name)
-                    .eq(scheme).and(
-                AssignmentOffering.publish.eq(1).and(
-                AssignmentOffering.courseOffering.dot(CourseOffering.course)
-                    .dot(Course.number).eq(courseNo)))));
-            }
-            else
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.students).eq(session.user()).and(
-                AssignmentOffering.assignment.dot(Assignment.name)
-                    .eq(scheme).and(
-                AssignmentOffering.publish.eq(1))));
-            }
-//            ec.objectsWithFetchSpecification(
-//                new EOFetchSpecification(
-//                        AssignmentOffering.ENTITY_NAME,
-//                        new EOAndQualifier( qualifiers ),
-//                        null ) );
+            assignments = AssignmentOffering.objectsMatchingQualifier(
+                ec, qualifier, orderings);
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            if ( crn != null )
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                        .dot(CourseOffering.students).eq(session.user()).and(
-                    AssignmentOffering.assignment.dot(Assignment.name)
-                        .eq(scheme).and(
-                    AssignmentOffering.publish.eq(1).and(
-                    AssignmentOffering.courseOffering.dot(CourseOffering.crn)
-                        .eq(crn)))));
-            }
-            else if ( courseNo != null )
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.students).eq(session.user()).and(
-                AssignmentOffering.assignment.dot(Assignment.name)
-                    .eq(scheme).and(
-                AssignmentOffering.publish.eq(1).and(
-                AssignmentOffering.courseOffering.dot(CourseOffering.course)
-                    .dot(Course.number).eq(courseNo)))));
-            }
-            else
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(ec,
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.students).eq(session.user()).and(
-                AssignmentOffering.assignment.dot(Assignment.name)
-                    .eq(scheme).and(
-                AssignmentOffering.publish.eq(1))));
-            }
+            assignments = AssignmentOffering.objectsMatchingQualifier(
+                ec, qualifier, orderings);
         }
         AssignmentOffering assignment = null;
-        if ( assignments != null && assignments.count() > 0 )
+        if (assignments != null && assignments.count() > 0)
         {
+            String msg = null;
             for (AssignmentOffering thisAssignment : assignments)
             {
-                log.debug( "assignment = "
-                           + thisAssignment.assignment().name() );
+                log.debug("assignment = " + thisAssignment.assignment().name());
                 CourseOffering co = thisAssignment.courseOffering();
-                if ( co.isInstructor( session.user() )
-                     || co.isGrader( session.user() )
-                     || ( currentTime.after( thisAssignment.availableFrom() )
-                     && currentTime.before( thisAssignment.lateDeadline() ) ) )
+                if (co.isInstructor(session.user())
+                    || co.isGrader(session.user())
+                    || (co.students().contains(session.user())
+                        && thisAssignment.publish()
+                        && currentTime.after(thisAssignment.availableFrom())
+                        && currentTime.before(thisAssignment.lateDeadline())))
                 {
-                    log.debug( "found matching assignment that is open." );
-                    if ( assignment != null )
+                    log.debug("found matching assignment that is open.");
+                    if (assignment == null)
                     {
-                        String msg =
-                            "Warning: multiple matching assignments found.";
-                        result.messages.add(msg);
-                        log.warn(msg + "  User = " + session.user()
-                            + "\n\t" + assignment
-                            + "\n\t" + thisAssignment);
+                        assignment = thisAssignment;
                     }
-                    assignment = thisAssignment;
+                    else
+                    {
+                        if (msg == null)
+                        {
+                            msg = "Warning: multiple matching assignments "
+                                + "found.<br/>"
+                                + "Submitting to: " + assignment;
+                        }
+                        msg += "<br/>Ignoring: " + thisAssignment;
+                    }
                 }
             }
-        }
-        if ( assignment == null )
-        {
-            // Look for an assignment where this user is course staff
-            NSMutableArray<EOQualifier> qualifiers =
-                new NSMutableArray<EOQualifier>();
-//            qualifiers.addObject( new EOKeyValueQualifier(
-//                                  AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
-//                                  EOQualifier.QualifierOperatorEqual,
-//                                  session.user()
-//                                 ) );
-//            qualifiers.addObject( new EOKeyValueQualifier(
-//                            AssignmentOffering.COURSE_OFFERING_TAS_KEY,
-//                            EOQualifier.QualifierOperatorEqual,
-//                            session.user()
-//                           ) );
-//            qualifiers = new NSMutableArray( new EOOrQualifier( qualifiers ) );
-            qualifiers.addObject(
-                AssignmentOffering.assignment.dot(Assignment.name).eq(scheme));
-            if ( crn != null )
+            if (msg != null)
             {
-                qualifiers.addObject(
-                    AssignmentOffering.courseOffering
-                        .dot(CourseOffering.crn).eq(crn));
-            }
-            else if ( courseNo != null )
-            {
-                qualifiers.addObject(
-                    AssignmentOffering.courseOffering
-                        .dot(CourseOffering.course)
-                        .dot(Course.number).eq(courseNo));
-            }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "qualifiers = " + qualifiers );
-            }
-            try
-            {
-                assignments = AssignmentOffering.objectsMatchingQualifier(
-                    ec, new EOAndQualifier(qualifiers));
-                // Remove any that the user doesn't have staff access to.
-                // Can't put this in an EOOrQualifier, since the generated
-                // SQL will be broken.
-                if (assignments.count() > 0 )
-                {
-                    NSMutableArray<AssignmentOffering> filtered =
-                        assignments.mutableClone();
-                    int i = 0;
-                    while (i < filtered.count())
-                    {
-                        AssignmentOffering ao = filtered.objectAtIndex(i);
-                        CourseOffering co = ao.courseOffering();
-                        if ( session.user().hasAdminPrivileges()
-                             || co.isInstructor(session.user())
-                             || co.isGrader(session.user()) )
-                        {
-                            i++;
-                        }
-                        else
-                        {
-                            filtered.remove(i);
-                        }
-                    }
-                    assignments = filtered;
-                }
-                if ( assignments.count() > 0 )
-                {
-                    log.debug( "found matching assignment for course staff." );
-                    if ( assignments.count() > 1 )
-                    {
-                        String msg =
-                            "Warning: multiple matching assignments found.";
-                        result.messages.add(msg);
-                        StringBuilder builder = new StringBuilder();
-                        builder.append(msg);
-                        builder.append("  User = ");
-                        builder.append(session.user());
-                        for (AssignmentOffering ao : assignments)
-                        {
-                            builder.append("\n\t");
-                            builder.append(ao);
-                        }
-                        log.warn(builder);
-                    }
-                    assignment = assignments.objectAtIndex(0);
-                }
-            }
-            catch ( Exception e )
-            {
-                // Swallow it
+                result.errorMessages.add(msg);
+                msg = msg.replaceAll("<br/>", "\n\t");
+                log.warn(msg + "\n\tUser = " + session.user());
             }
         }
 
-        if ( assignment == null )
+        if (assignment == null)
         {
-            log.debug( "no assignments are open." );
+            log.debug("no assignments are open.");
             String msg = "The requested assignment is not accepting "
                 + "submissions at this time or it could not be found.  "
                 + "The deadline may have passed.";
-            result.messages.add(msg);
+            result.errorMessages.add(msg);
             result.assignmentClosed = true;
             log.warn(msg + "  User = " + session.user() + ", a = " + scheme
                 + ", crn = " + crn + ", courseNo = " + courseNo);
@@ -612,8 +470,8 @@ public class Grader
         }
 
         result.coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering() );
-        result.prefs().setAssignmentOfferingRelationship( assignment );
+            assignment.courseOffering());
+        result.prefs().setAssignmentOfferingRelationship(assignment);
         NSArray<Submission> submissions =
             Submission.submissionsForAssignmentOfferingAndUser(
                 ec, assignment, result.user());
@@ -630,12 +488,13 @@ public class Grader
         // TODO: This max submission check doesn't take partners into account
         Number maxSubmissions = assignment.assignment().submissionProfile()
             .maxSubmissionsRaw();
-        if ( maxSubmissions != null
-             && currentSubNo > maxSubmissions.intValue() )
+        if (maxSubmissions != null
+            && currentSubNo > maxSubmissions.intValue()
+            && !assignment.courseOffering().isStaff(session.user()))
         {
             String msg = "You have exceeded the allowable number "
                 + "of submissions for this assignment.";
-            result.messages.add(msg);
+            result.errorMessages.add(msg);
             log.warn(msg + "  User = " + session.user()
                 + "\n\t" + assignment);
             return result.generateResponse();
@@ -672,10 +531,10 @@ public class Grader
         }
 
         result.partnersNotFound = partnersNotFound;
-        result.startSubmission( currentSubNo, result.user() );
-        result.submissionInProcess().setPartners( partners );
-        result.submissionInProcess().setUploadedFile( file );
-        result.submissionInProcess().setUploadedFileName( fileName );
+        result.startSubmission(currentSubNo, result.user());
+        result.submissionInProcess().setPartners(partners);
+        result.submissionInProcess().setUploadedFile(file);
+        result.submissionInProcess().setUploadedFileName(fileName);
 
         int len = 0;
         try
@@ -686,19 +545,19 @@ public class Grader
         {
             // Ignore it: length() could produce an NPE on a bad POST request
         }
-        if ( len == 0 )
+        if (len == 0)
         {
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             String msg = "Your file submission is empty.  "
                 + "Please choose an appropriate file.";
-            result.messages.add(msg);
+            result.errorMessages.add(msg);
             log.warn(msg + "  User = " + session.user()
                 + "\n\t" + assignment);
             return result.generateResponse();
         }
-        else if ( len > assignment.assignment().submissionProfile()
-                        .effectiveMaxFileUploadSize() )
+        else if (len > assignment.assignment().submissionProfile()
+                        .effectiveMaxFileUploadSize())
         {
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
@@ -707,7 +566,7 @@ public class Grader
                 + assignment.assignment().submissionProfile()
                       .effectiveMaxFileUploadSize()
                 + ").  Please choose a smaller file.";
-            result.messages.add(msg);
+            result.errorMessages.add(msg);
             log.warn(msg + "  User = " + session.user()
                 + "\n\t" + assignment);
             return result.generateResponse();
@@ -719,10 +578,10 @@ public class Grader
             {
                 log.warn(msg + "  User = " + session.user()
                     + "\n\t" + assignment);
-                result.messages.add(msg);
+                result.errorMessages.add(msg);
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             new UnexpectedExceptionMessage(e, context, null, null).send();
             result.clearSubmission();
@@ -732,13 +591,13 @@ public class Grader
                 "An unexpected exception occurred while trying to commit "
                 + "your submission.  The error has been reported to the "
                 + "Web-CAT administrator.  Please try your submission again.";
-            result.messages.add(msg);
+            result.errorMessages.add(msg);
             log.error(msg + "  User = " + session.user()
                 + "\n\t" + assignment, e);
             result.criticalError = true;
         }
 
-        log.debug( "handleSubmission() returning" );
+        log.debug("handleSubmission() returning");
         return result.generateResponse();
     }
 
