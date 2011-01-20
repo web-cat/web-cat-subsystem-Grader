@@ -314,6 +314,21 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Check whether manual grading has been completed on this
+     * submission.
+     *
+     * @return true if TA markup by hand has been completed
+     * @deprecated Resurrected for old reports, but should not be used by
+     *             any new code.
+     */
+    public boolean taGradingFinished()
+    {
+        return taScoreRaw() != null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the "inline report" file as a File object.
      * @return the file for this submission
      */
