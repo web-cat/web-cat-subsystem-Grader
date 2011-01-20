@@ -148,10 +148,18 @@ public class PickSubmissionDialog extends GraderComponent
 
         prefs().setSubmissionRelationship(selectedSub);
 
-        page.availableSubmissions =
-            allUserSubmissionsForNavigation.immutableClone();
-        page.thisSubmissionIndex =
-            page.availableSubmissions.indexOf(rootUserSubmission);
+        if (allUserSubmissionsForNavigation == null)
+        {
+            page.availableSubmissions = null;
+            page.thisSubmissionIndex = 0;
+        }
+        else
+        {
+            page.availableSubmissions =
+                allUserSubmissionsForNavigation.immutableClone();
+            page.thisSubmissionIndex =
+                page.availableSubmissions.indexOf(rootUserSubmission);
+        }
         page.nextPage = nextPageForResultsPage;
 
         page.reloadGraderPrefs();
