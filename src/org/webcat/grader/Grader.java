@@ -417,6 +417,7 @@ public class Grader
                 ec, qualifier, orderings);
         }
         AssignmentOffering assignment = null;
+        User localizedUser = result.user();
         if (assignments != null && assignments.count() > 0)
         {
             String msg = null;
@@ -424,9 +425,9 @@ public class Grader
             {
                 log.debug("assignment = " + thisAssignment.assignment().name());
                 CourseOffering co = thisAssignment.courseOffering();
-                if (co.isInstructor(session.user())
-                    || co.isGrader(session.user())
-                    || (co.students().contains(session.user())
+                if (co.isInstructor(localizedUser)
+                    || co.isGrader(localizedUser)
+                    || (co.students().contains(localizedUser)
                         && thisAssignment.publish()
                         && currentTime.after(thisAssignment.availableFrom())
                         && currentTime.before(thisAssignment.lateDeadline())))
