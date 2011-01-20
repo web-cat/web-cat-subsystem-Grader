@@ -61,7 +61,7 @@ public class SubmitResponse
     public boolean criticalError = false;
     public boolean assignmentClosed = false;
     public NSArray<String> partnersNotFound;
-    public NSMutableArray<String> messages = new NSMutableArray<String>();
+    public NSMutableArray<String> errorMessages = new NSMutableArray<String>();
     public String aMessage;
 
 
@@ -74,7 +74,7 @@ public class SubmitResponse
      */
     public boolean error()
     {
-        boolean result = messages != null && messages.count() > 0;
+        boolean result = errorMessages != null && errorMessages.count() > 0;
         log.debug("error() = " + result);
         return result;
     }
@@ -110,7 +110,7 @@ public class SubmitResponse
         {
             if (error())
             {
-                messages.add("This assignment is not open for submission.");
+                errorMessages.add("This assignment is not open for submission.");
             }
         }
         return result;
@@ -143,6 +143,7 @@ public class SubmitResponse
             (partnersNotFound != null && partnersNotFound.count() > 0);
 
         return !criticalError
+            && !error()
             && !notAcceptingSubmissions()
             && !gradingPaused()
             && !prefs().assignmentOffering().gradingSuspended()

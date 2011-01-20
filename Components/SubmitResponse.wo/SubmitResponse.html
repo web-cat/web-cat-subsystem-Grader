@@ -55,7 +55,7 @@ body {
 </wo:not>
 
 <wo:if condition="$error"><p class="error">
-  <wo:loop list="$messages" item="$aMessage">
+  <wo:loop list="$errorMessages" item="$aMessage">
     <wo:str value="$aMessage"/>
   </wo:loop>
 </p></wo:if>
