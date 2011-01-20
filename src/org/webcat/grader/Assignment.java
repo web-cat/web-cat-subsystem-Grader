@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.foundation.*;
 import com.webobjects.eocontrol.*;
+import er.extensions.eof.ERXKey;
 import er.extensions.foundation.ERXArrayUtilities;
 import java.io.File;
 import java.util.*;
@@ -56,14 +57,20 @@ public class Assignment
     //~ Constants (for key names) .............................................
 
     public static final String COURSE_OFFERINGS_KEY =
-        OFFERINGS_KEY
-        + "." + AssignmentOffering.COURSE_OFFERING_KEY;
+        OFFERINGS_KEY + "." + AssignmentOffering.COURSE_OFFERING_KEY;
+    public static final ERXKey<CourseOffering> courseOfferings =
+        new ERXKey<CourseOffering>(COURSE_OFFERINGS_KEY);
+
     public static final String COURSES_KEY =
-        COURSE_OFFERINGS_KEY
-        + "." + CourseOffering.COURSE_KEY;
+        COURSE_OFFERINGS_KEY + "." + CourseOffering.COURSE_KEY;
+    public static final ERXKey<Course> courses =
+        new ERXKey<Course>(COURSES_KEY);
+
     public static final String SEMESTERS_KEY =
-        COURSE_OFFERINGS_KEY
-        + "." + CourseOffering.SEMESTER_KEY;
+        COURSE_OFFERINGS_KEY + "." + CourseOffering.SEMESTER_KEY;
+    public static final ERXKey<Semester> semesters =
+        new ERXKey<Semester>(SEMESTERS_KEY);
+
     public static final String ID_FORM_KEY = "aid";
 
 
