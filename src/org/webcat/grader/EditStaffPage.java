@@ -22,6 +22,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -53,12 +54,12 @@ public class EditStaffPage
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup      staffDisplayGroup;
-    public WODisplayGroup      potentialDisplayGroup;
-    public User                aUser;
-    public int                 index;
-    public boolean             editInstructors = true;
-    public String              sideStepTitle;
+    public ERXDisplayGroup<User>      staffDisplayGroup;
+    public ERXDisplayGroup<User>      potentialDisplayGroup;
+    public User                       aUser;
+    public int                        index;
+    public boolean                    editInstructors = true;
+    public String                     sideStepTitle;
 
 
     //~ Methods ...............................................................
@@ -123,7 +124,7 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public WOComponent addStaff()
     {
-        if( editInstructors)
+        if (editInstructors)
         {
             if (aUser.accessLevel() < User.INSTRUCTOR_PRIVILEGES)
             {

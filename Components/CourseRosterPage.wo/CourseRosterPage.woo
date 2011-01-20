@@ -9,7 +9,7 @@
             localKeys = ();
             numberOfObjectsPerBatch = 30;
             selectsFirstObjectAfterFetch = YES;
-            sortOrdering = ({class = EOSortOrdering; key = name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
+            sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };
         notStudentDisplayGroup = {
             class = ERXDisplayGroup;
@@ -28,7 +28,7 @@
             localKeys = ();
             numberOfObjectsPerBatch = 20;
             selectsFirstObjectAfterFetch = YES;
-            sortOrdering = ({class = EOSortOrdering; key = name_LF; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
+            sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };
     };
 }

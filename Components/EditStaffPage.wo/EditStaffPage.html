@@ -8,13 +8,29 @@
     <td><wo:link href="$aUser.emailHref" string="$aUser.email"/></td><td><webobject name="Remove"/></td>
   </webobject></webobject>
   <wo:not condition="$staffDisplayGroup.displayedObjects.count">
-	<tr><td colspan="4">No <wo:str value="$userRole"/>(s) listed for this course</td></tr>
+    <tr><td colspan="4">No <wo:str value="$userRole"/>(s) listed for this course</td></tr>
   </wo:not>
 </tbody></table>
 </wo>
 
 <wo:WCPageModule title="Potential Staff to Add">
-<table><thead>
+<wo:WCTable id="potentialStaff" displayGroup="$potentialDisplayGroup" searchOnKeyPaths="userName,firstName,lastName">
+    <wo:WCTableHeadings>
+        <wo:WCTableHeading title="User ID" sortOnKeyPaths="userName"/>
+        <wo:WCTableHeading title="Name" sortOnKeyPaths="lastName,firstName,userName"/>
+        <wo:WCTableHeading title="E-mail" sortOnKeyPaths="email"/>
+        <th>Action</th>
+    </wo:WCTableHeadings>
+    <wo:WCTableRows item="$aUser" noRowsMessage="The search returned zero users.">
+        <wo:WCTableRow>
+            <td><wo:tstr value="$aUser.userName"/></td>
+            <td><wo name="Name"><wo:tstr value="$aUser.name_LF"/></wo></td>
+            <td><wo name="Email"><wo:tstr value="$aUser.email"/></wo></td>
+            <td><wo name="AddStaff"/></td>
+        </wo:WCTableRow>
+    </wo:WCTableRows>
+</wo:WCTable>
+<!-- table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator1"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder2"/></th>
     <th>Name<webobject name="WCSortOrder1"/></th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
@@ -24,8 +40,8 @@
     <td><wo:not condition="$isStaff"><webobject name="Add"/></wo><wo:else>&nbsp;</wo:else></td>
   </webobject></webobject>
   <wo:not condition="$potentialDisplayGroup.displayedObjects.count">
-	<tr><td colspan="4">No potential <wo:str value="$userRole"/>(s)</td></tr>
+    <tr><td colspan="4">No potential <wo:str value="$userRole"/>(s)</td></tr>
   </wo:not>
-</tbody></table>
+</tbody></table -->
 </wo:WCPageModule>
 </webobject>

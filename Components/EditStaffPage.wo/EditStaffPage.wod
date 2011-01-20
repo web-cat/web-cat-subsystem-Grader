@@ -1,4 +1,4 @@
-Add: WOImageButton {
+AddStaff: WOImageButton {
     filename = "images/add-sm-btn.gif";
     action   = addStaff;
     border   = "0";
@@ -14,9 +14,12 @@ BatchNavigator1: org.webcat.core.WCBatchNavigator {
     persistentKey = "EditStaffPage.batchSize";
 }
 
+Email: WOHyperlink {
+    href = aUser.emailHref;
+}
+
 Name: WOHyperlink {
     href = aUser.url;
-    string = aUser.name_LF;
 }
 
 Page: SaveCancelPage {
@@ -43,9 +46,9 @@ Repetition1: WORepetition {
 }
 
 Repetition2: WORepetition {
-	item = aUser;
-	list = staffDisplayGroup.displayedObjects;
-	index = index;
+    item = aUser;
+    list = staffDisplayGroup.displayedObjects;
+    index = index;
 }
 
 StaffSection: WCPageModule {
@@ -57,7 +60,7 @@ TR: org.webcat.core.TableRow {
 }
 
 UserID: WOString {
-	value = aUser.userName;
+    value = aUser.userName;
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
@@ -73,13 +76,13 @@ WCSortOrder2: org.webcat.core.WCSortOrder {
 }
 
 WCSortOrder3: org.webcat.core.WCSortOrder {
-	displayGroup = staffDisplayGroup;
-	displayKey = "Name";
-	key = "name_LF";
+    displayGroup = staffDisplayGroup;
+    displayKey = "Name";
+    key = "name_LF";
 }
 
 WCSortOrder4: org.webcat.core.WCSortOrder {
-	displayGroup = staffDisplayGroup;
-	displayKey = "User Name";
-	key = "userName";
+    displayGroup = staffDisplayGroup;
+    displayKey = "User Name";
+    key = "userName";
 }

@@ -1,9 +1,9 @@
 {
     "WebObjects Release" = "WebObjects 5.1";
-	encoding = NSUTF8StringEncoding;
+    encoding = NSUTF8StringEncoding;
     variables = {
         staffDisplayGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODetailDataSource;
                 detailKey = instructors;
@@ -17,7 +17,7 @@
             sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };
         potentialDisplayGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
