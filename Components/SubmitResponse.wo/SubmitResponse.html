@@ -56,7 +56,7 @@ body {
 
 <wo:if condition="$error"><p class="error">
   <wo:loop list="$errorMessages" item="$aMessage">
-    <wo:str value="$aMessage"/>
+    <wo:str value="$aMessage" escapeHTML="true"/>
   </wo:loop>
 </p></wo:if>
 
