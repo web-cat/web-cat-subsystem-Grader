@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -36,7 +36,8 @@ import org.webcat.grader.*;
  * the BlueJ submitter extension.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class BlueJSubmitterDefinitions
     extends WOComponent
@@ -88,7 +89,6 @@ public class BlueJSubmitterDefinitions
                     ec,
                     context().request().formValues(),
                     currentTime,
-                    submitterEngine(),
                     groupByCRN,
                     showAll(),
                     preserveDateDifferences()
@@ -252,13 +252,6 @@ public class BlueJSubmitterDefinitions
     public boolean useSecureSubmissionURLs()
     {
         return false;
-    }
-
-
-    // ----------------------------------------------------------
-    public int submitterEngine()
-    {
-        return 1;
     }
 
 

@@ -53,14 +53,6 @@ public class SubmissionProfile
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void awakeFromInsertion( EOEditingContext ec )
-    {
-        super.awakeFromInsertion( ec );
-        setSubmissionMethod( (byte)0 );
-    }
-
-
-    // ----------------------------------------------------------
     /**
      * Get a short (no longer than 60 characters) description of this profile,
      * which currently returns its {@link #name()} and its author's uid.
@@ -210,39 +202,6 @@ public class SubmissionProfile
 
     // ----------------------------------------------------------
     /**
-     * Retrieve this object's <code>submissionMethod</code> value.
-     * @return the value of the attribute
-     */
-    public String submissionMethodAsString()
-    {
-        int i = submissionMethod();
-        return submitters[i];
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>submissionMethod</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setSubmissionMethodAsString( String value )
-    {
-        for ( byte i = 0; i < submitters.length; i++ )
-        {
-            if ( submitters[i].equals( value ) )
-            {
-                setSubmissionMethod( i );
-                return;
-            }
-        }
-        setSubmissionMethod( (byte)0 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Retrieve all submission profiles used by assignments associated
      * with the given course.  Also guarantees that an additional
      * submission profile, if specified, is included in the list.
@@ -280,13 +239,6 @@ public class SubmissionProfile
     public NSArray<TimeUnit> timeUnits()
     {
         return timeUnitsArray;
-    }
-
-
-    // ----------------------------------------------------------
-    public NSArray<String> submitters()
-    {
-        return submittersArray;
     }
 
 
@@ -382,17 +334,8 @@ public class SubmissionProfile
             new TimeUnit( "Month(s) (30 days)", 30L*24L*60L*60000L )
         };
 
-    public static final String[] submitters = new String[] {
-        "Not listed for external submission",
-        "List for BlueJ submitter",
-        "List for Eclipse submitter"
-    };
-
     public static final NSArray<TimeUnit> timeUnitsArray =
         new NSArray<TimeUnit>(timeUnits);
-
-    public static final NSArray<String> submittersArray =
-        new NSArray<String>(submitters);
 
     static Logger log = Logger.getLogger( SubmissionProfile.class );
 }

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -801,13 +801,12 @@ public class AssignmentOffering
     // ----------------------------------------------------------
     /**
      * Retrieves a sorted set of assignment offerings that are available for
-     * submission via a given submitter engine.  The set of assignments are
+     * submission via an external submitter engine.  The set of assignments
      * retrieved is determined by specific keys in the formValues dictionary
      * that is passed in.  If the dictionary is empty, then all published
      * assignment offerings that are both currently accepting submissions
-     * and that are also associated with submission profiles that designate
-     * the given submitter engine will be returned.  Specific keys in the
-     * formValues dictionary can be used to narrow the search:
+     * will be returned.  Specific keys in the formValues dictionary can be
+     * used to narrow the search:
      *
      * institution     the institution property name: only assignments
      *                 associated with courses in departments from this
@@ -826,11 +825,6 @@ public class AssignmentOffering
      *                   assignment offerings to retrieve, and in what order.
      * @param currentTime the time to use when deciding whether or not due
      *                    dates have past.
-     * @param submitterEngine the submitter engine to look for.  Possible
-     *                        values correspond to the acceptable values for
-     *                        a {@link SubmissionProfile}'s submissionMethod
-     *                        attribute, which are defined by the values in
-     *                        the {@link SubmissionProfile#submitters} array.
      * @param groupByCRN request that each separate offering of a course will
      *                   have all of its assignment offerings listed separately
      *                   and grouped together.  Otherwise (the default), only
@@ -851,25 +845,13 @@ public class AssignmentOffering
         EOEditingContext        context,
         NSDictionary<String, ?> formValues,
         NSTimestamp             currentTime,
-        int                     submitterEngine,
         boolean                 groupByCRN,
         boolean                 showAll,
         boolean                 preserveDateDifferences
         )
     {
-//        EOFetchSpecification spec =
-//            EOFetchSpecification.fetchSpecificationNamed(
-//                OFFERINGS_FOR_SUBMITTER_ENGINE_BASE_FSPEC,
-//                ENTITY_NAME );
-
         // Set up the qualifier
         EOQualifier qualifier = null;
-        if ( submitterEngine > 0 )
-        {
-            qualifier = and(qualifier,
-                AssignmentOffering.assignment.dot(Assignment.submissionProfile)
-                .dot(SubmissionProfile.submissionMethod).is(submitterEngine));
-        }
         Object valueObj = formValueForKey( formValues, "institution" );
         if ( valueObj != null )
         {
@@ -900,14 +882,6 @@ public class AssignmentOffering
         {
             qualifier = and(qualifier, publish.isTrue());
         }
-
-//        if (forStaff || showAll)
-//        {
-//            spec.setQualifier(
-//                courseOffering.dot(CourseOffering.semester).is(
-//                    Semester.forDate(context, new NSTimestamp())).and(
-//                        EOQualifier.qualifierToMatchAllValues(restrictions)));
-//        }
 
         if (qualifier == null)
         {

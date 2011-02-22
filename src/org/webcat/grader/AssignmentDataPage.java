@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -174,7 +174,6 @@ public class AssignmentDataPage
                 out.print( "penalty.limit" );  // penalty limit
                 out.print( "penalty.increment" );  // penalty increment
                 out.print( "penalty.time.unit" );  // penalty time unit
-                out.print( "external.submitter" );
                 out.println();
             }
             if ( assignments != null && stepNumber < assignments.count() )
@@ -275,9 +274,6 @@ public class AssignmentDataPage
                             // penalty time unit
                             outPrintObject( ao.assignment().submissionProfile()
                                 .latePenaltyUnitTimeRaw() );
-                            // submitter
-                            outPrintObject( ao.assignment().submissionProfile()
-                                .submissionMethodRaw() );
                         }
                         else
                         {

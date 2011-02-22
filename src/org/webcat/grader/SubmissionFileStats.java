@@ -22,8 +22,11 @@
 package org.webcat.grader;
 
 import com.webobjects.foundation.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.*;
 import org.apache.log4j.Logger;
@@ -418,6 +421,61 @@ public class SubmissionFileStats
 
 
     // ----------------------------------------------------------
+    // To fix up incorrect markup generated between 1/21/2011 and 2/9/2011.
+    // SF bug 3174285.
+    private static final long PERIOD_START =
+        new NSTimestamp(2011, 1, 21, 0, 0, 0, TimeZone.getTimeZone("UTC"))
+        .getTime();
+    private static final long PERIOD_END =
+        new NSTimestamp(2011, 2, 10, 0, 0, 0, TimeZone.getTimeZone("UTC"))
+        .getTime();
+    private void rewriteMarkupIfNecessary(File markupFile)
+    {
+        if (!markupFile.exists()) return;
+        long lastModified = markupFile.lastModified();
+        if (lastModified > PERIOD_START && lastModified < PERIOD_END)
+        {
+            // Attempt to correct problems in markup
+            File revised = new File(markupFile.getParentFile(),
+                markupFile.getName() + ".rev");
+            if (markupFile.exists() && !revised.exists())
+            {
+                try
+                {
+                    BufferedReader in =
+                        new BufferedReader(new FileReader(markupFile));
+                    PrintWriter out = new PrintWriter(revised);
+
+                    String line = in.readLine();
+                    while (line != null)
+                    {
+                        line = line.replace("&#xD;", "\r");
+                        out.println(line);
+                        line = in.readLine();
+                    }
+
+                    in.close();
+                    out.close();
+
+                    if (markupFile.delete())
+                    {
+                        if (!revised.renameTo(markupFile))
+                        {
+                            log.error("cannot rename " + revised + " to "
+                                + markupFile);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.error("error patching HTML file " + markupFile, e);
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
     public String codeWithComments(
         User user,
         boolean isGrading,
@@ -425,6 +483,8 @@ public class SubmissionFileStats
         throws Exception
     {
         File file = markupFile();
+        rewriteMarkupIfNecessary(file);
+
         //make the html file
         StringBuffer contents = new StringBuffer( (int)file.length() );
 //        contents.append( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 " );

@@ -249,7 +249,6 @@
         name, 
         requiredFilePatterns, 
         scoreFormat, 
-        submissionMethod, 
         taPoints, 
         toolPoints
     ); 

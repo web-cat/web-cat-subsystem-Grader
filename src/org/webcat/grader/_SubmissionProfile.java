@@ -66,15 +66,13 @@ public abstract class _SubmissionProfile
      * @param allowPartnersValue
      * @param awardEarlyBonusValue
      * @param deductLatePenaltyValue
-     * @param submissionMethodValue
      * @return The newly created object
      */
     public static SubmissionProfile create(
         EOEditingContext editingContext,
         boolean allowPartnersValue,
         boolean awardEarlyBonusValue,
-        boolean deductLatePenaltyValue,
-        byte submissionMethodValue
+        boolean deductLatePenaltyValue
         )
     {
         SubmissionProfile eoObject = (SubmissionProfile)
@@ -84,7 +82,6 @@ public abstract class _SubmissionProfile
         eoObject.setAllowPartners(allowPartnersValue);
         eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
         eoObject.setDeductLatePenalty(deductLatePenaltyValue);
-        eoObject.setSubmissionMethod(submissionMethodValue);
         return eoObject;
     }
 
@@ -206,9 +203,6 @@ public abstract class _SubmissionProfile
     public static final String SCORE_FORMAT_KEY = "scoreFormat";
     public static final ERXKey<String> scoreFormat =
         new ERXKey<String>(SCORE_FORMAT_KEY);
-    public static final String SUBMISSION_METHOD_KEY = "submissionMethod";
-    public static final ERXKey<Integer> submissionMethod =
-        new ERXKey<Integer>(SUBMISSION_METHOD_KEY);
     public static final String TA_POINTS_KEY = "taPoints";
     public static final ERXKey<Double> taPoints =
         new ERXKey<Double>(TA_POINTS_KEY);
@@ -1319,70 +1313,6 @@ public abstract class _SubmissionProfile
                 + value + "): was " + scoreFormat() );
         }
         takeStoredValueForKey( value, "scoreFormat" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>submissionMethod</code> value.
-     * @return the value of the attribute
-     */
-    public byte submissionMethod()
-    {
-        Integer returnValue =
-            (Integer)storedValueForKey( "submissionMethod" );
-        return ( returnValue == null )
-            ? 0
-            : returnValue.byteValue();
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>submissionMethod</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setSubmissionMethod( byte value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setSubmissionMethod("
-                + value + "): was " + submissionMethod() );
-        }
-        Integer actual =
-            er.extensions.eof.ERXConstant.integerForInt( value );
-            setSubmissionMethodRaw( actual );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>submissionMethod</code> value.
-     * @return the value of the attribute
-     */
-    public Integer submissionMethodRaw()
-    {
-        return (Integer)storedValueForKey( "submissionMethod" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>submissionMethod</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setSubmissionMethodRaw( Integer value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setSubmissionMethodRaw("
-                + value + "): was " + submissionMethodRaw() );
-        }
-        takeStoredValueForKey( value, "submissionMethod" );
     }
 
 
