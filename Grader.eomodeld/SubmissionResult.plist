@@ -51,6 +51,18 @@
         }, 
         {columnName = lastUpdated; name = lastUpdated; prototypeName = dateTime; }, 
         {
+            columnName = staffReportStyleVersion; 
+            name = staffReportStyleVersion; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {
             columnName = CSTATELEMENTSLABEL; 
             name = statElementsLabel; 
             prototypeName = tinyText; 
@@ -65,6 +77,18 @@
                 scalarDefault = "org.webcat.core.Status.TO_DO"; 
                 type = byte; 
                 valueClassName = Byte; 
+            }; 
+        }, 
+        {
+            columnName = studentReportStyleVersion; 
+            name = studentReportStyleVersion; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
             }; 
         }, 
         {
@@ -98,7 +122,15 @@
             userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
         }
     ); 
-    attributesUsedForLocking = (commentFormat, isMostRecent, statElementsLabel, status, updateMutableFields); 
+    attributesUsedForLocking = (
+        commentFormat, 
+        isMostRecent, 
+        staffReportStyleVersion, 
+        statElementsLabel, 
+        status, 
+        studentReportStyleVersion, 
+        updateMutableFields
+    ); 
     className = "org.webcat.grader.SubmissionResult"; 
     classProperties = (
         accumulatedSavedProperties, 
@@ -109,8 +141,10 @@
         lastUpdated, 
         resultFiles, 
         resultOutcomes, 
+        staffReportStyleVersion, 
         statElementsLabel, 
         status, 
+        studentReportStyleVersion, 
         submissionFileStats, 
         submissions, 
         taScore, 

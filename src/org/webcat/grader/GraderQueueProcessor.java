@@ -594,25 +594,28 @@ public class GraderQueueProcessor
             }
             properties.addPropertiesFromDictionary(
                 step.configSettings() );
-            properties.setProperty( "userName",
-                                    job.submission().user().userName() );
-            properties.setProperty( "workingDir",
-                                    job.workingDirName() );
-            properties.setProperty( "resultDir",
-                                    job.submission().resultDirName() );
-            properties.setProperty( "scriptHome",
-                                    step.gradingPlugin().dirName() );
-            properties.setProperty( "scriptData",
-                            GradingPlugin.scriptDataRoot() );
-            properties.setProperty( "timeout",
-                                    Integer.toString(
-                                        step.effectiveEndToEndTimeout() ) );
-            properties.setProperty( "timeoutForOneRun",
+            properties.setProperty("userName",
+                                   job.submission().user().userName());
+            properties.setProperty("workingDir",
+                                   job.workingDirName());
+            properties.setProperty("resultDir",
+                                   job.submission().resultDirName());
+            properties.setProperty("scriptHome",
+                                   step.gradingPlugin().dirName());
+            properties.setProperty("pluginResourcePrefix",
+                    "${pluginResource:" + step.gradingPlugin().id().toString()
+                        + "}");
+            properties.setProperty("scriptData",
+                                   GradingPlugin.scriptDataRoot());
+            properties.setProperty("timeout",
+                                   Integer.toString(
+                                       step.effectiveEndToEndTimeout()));
+            properties.setProperty("timeoutForOneRun",
                             Integer.toString(
-                                step.effectiveTimeoutForOneRun() ) );
-            properties.setProperty( "course",
+                                step.effectiveTimeoutForOneRun()));
+            properties.setProperty("course",
                 job.submission().assignmentOffering().courseOffering()
-                .course().deptNumber() );
+                .course().deptNumber());
             {
                 String crn = job.submission().assignmentOffering()
                     .courseOffering().crn();
@@ -736,6 +739,8 @@ public class GraderQueueProcessor
                   : properties.booleanForKey( attributeBase + "inline" ) );
             boolean border =
                 properties.booleanForKey( attributeBase + "border" );
+            int styleVersion = properties.intForKeyWithDefault(
+                    attributeBase + "styleVersion", 0 );
             String to = properties.getProperty( attributeBase + "to" );
             boolean toStudent =
                 to == null
@@ -763,6 +768,16 @@ public class GraderQueueProcessor
                                         fileName,
                                         mimeType,
                                         border ) );
+
+                    int currentVersion =
+                        submissionResult.studentReportStyleVersion();
+
+                    if (submissionResult.studentReportStyleVersionRaw() == null
+                            || styleVersion < currentVersion)
+                    {
+                        submissionResult.setStudentReportStyleVersion(
+                                styleVersion);
+                    }
                 }
                 else
                 {
@@ -785,6 +800,16 @@ public class GraderQueueProcessor
                                         fileName,
                                         mimeType,
                                         border ) );
+
+                    int currentVersion =
+                        submissionResult.staffReportStyleVersion();
+
+                    if (submissionResult.staffReportStyleVersionRaw() == null
+                            || styleVersion < currentVersion)
+                    {
+                        submissionResult.setStaffReportStyleVersion(
+                                styleVersion);
+                    }
                 }
                 else
                 {

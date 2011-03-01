@@ -28,6 +28,8 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
+import org.webcat.core.EntityResourceRequestHandler;
+import org.webcat.core.WCComponent;
 
 // -------------------------------------------------------------------------
 /**
@@ -40,7 +42,7 @@ import org.apache.log4j.Logger;
  * @version $Revision$, $Date$
  */
 public class PartialInlineReport
-    extends WOComponent
+    extends WCComponent
 {
     //~ Constructors ..........................................................
 
@@ -60,10 +62,79 @@ public class PartialInlineReport
 
     public String title;
     public boolean open;
+    public int styleVersion;
     public boolean substituteOldCollapsingRegions = true;
 
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    /**
+     * <p>
+     * Replaces variable URLs in the content of the report; this allows plug-in
+     * authors to embed or link to resources that are generated as part of the
+     * grading process.
+     * </p><p>
+     * Currently, two variables are supported:
+     * <dl>
+     * <dt>${submissionResultResource}</dt>
+     * <dd>Points to the <code>public</code> directory in the submission
+     * results folder.</dd>
+     * <dt>${pluginResource:NAME}</dt>
+     * <dd>Points to the <code>public</code> directory in the grading plug-in
+     * with the specified name, where NAME is the name of the plug-in given in
+     * its config.plist file.</dd>
+     * <dd></dd>
+     * </dl>
+     * </p>
+     *
+     */
+    private String replaceVariableURLs(String content, WOContext context)
+    {
+        // Replace ${submissionResultResource}.
+
+        NSMutableDictionary<String, Object> queryDict =
+            new NSMutableDictionary<String, Object>();
+        queryDict.setObjectForKey(submissionResult.id(), "id");
+
+        String resultResourceURL =
+            context.directActionURLForActionNamed(
+                    "submissionResultResource", queryDict);
+
+        resultResourceURL += "&path=";
+
+        content = content.replaceAll("\\$\\{publicResourceURL\\}",
+                resultResourceURL);
+
+        // Replace ${pluginResource:NAME}.
+
+        Pattern regex = Pattern.compile("\\$\\{pluginResource:([^}]+)\\}");
+        Matcher matcher = regex.matcher(content);
+
+        StringBuffer contentBuffer = new StringBuffer();
+        while (matcher.find())
+        {
+            String pluginName = matcher.group(1);
+
+            GradingPlugin plugin = GradingPlugin.firstObjectMatchingQualifier(
+                    localContext(),
+                    GradingPlugin.name.is(pluginName),
+                    GradingPlugin.lastModified.ascs());
+
+            String pluginResourceURL =
+                EntityResourceRequestHandler.urlForEntityResource(
+                        context, plugin, "");
+
+            matcher.appendReplacement(contentBuffer, pluginResourceURL);
+        }
+
+        matcher.appendTail(contentBuffer);
+
+        content = contentBuffer.toString();
+
+        return content;
+    }
+
 
     // ----------------------------------------------------------
     /**
@@ -74,7 +145,8 @@ public class PartialInlineReport
      */
     public void appendToResponse( WOResponse response, WOContext context )
     {
-        useModule = title != null;
+        useModule = (styleVersion == 0);
+
         if ( file != null )
         {
             // Only read the file if it is really there, of course
@@ -83,19 +155,7 @@ public class PartialInlineReport
                 try
                 {
                     content = ERXFileUtilities.stringFromFile(file, "UTF-8");
-
-                    NSMutableDictionary<String, Object> queryDict =
-                        new NSMutableDictionary<String, Object>();
-                    queryDict.setObjectForKey(submissionResult.id(), "id");
-
-                    String resultResourceURL =
-                        context.directActionURLForActionNamed(
-                                "submissionResultResource", queryDict);
-
-                    resultResourceURL += "&path=";
-
-                    content = content.replaceAll("\\$\\{publicResourceURL\\}",
-                            resultResourceURL);
+                    content = replaceVariableURLs(content, context);
 
                     if (substituteOldCollapsingRegions)
                     {

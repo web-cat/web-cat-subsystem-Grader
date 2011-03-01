@@ -160,12 +160,18 @@ public abstract class _SubmissionResult
     public static final String LAST_UPDATED_KEY = "lastUpdated";
     public static final ERXKey<NSTimestamp> lastUpdated =
         new ERXKey<NSTimestamp>(LAST_UPDATED_KEY);
+    public static final String STAFF_REPORT_STYLE_VERSION_KEY = "staffReportStyleVersion";
+    public static final ERXKey<Integer> staffReportStyleVersion =
+        new ERXKey<Integer>(STAFF_REPORT_STYLE_VERSION_KEY);
     public static final String STAT_ELEMENTS_LABEL_KEY = "statElementsLabel";
     public static final ERXKey<String> statElementsLabel =
         new ERXKey<String>(STAT_ELEMENTS_LABEL_KEY);
     public static final String STATUS_KEY = "status";
     public static final ERXKey<Integer> status =
         new ERXKey<Integer>(STATUS_KEY);
+    public static final String STUDENT_REPORT_STYLE_VERSION_KEY = "studentReportStyleVersion";
+    public static final ERXKey<Integer> studentReportStyleVersion =
+        new ERXKey<Integer>(STUDENT_REPORT_STYLE_VERSION_KEY);
     public static final String TA_SCORE_KEY = "taScore";
     public static final ERXKey<Double> taScore =
         new ERXKey<Double>(TA_SCORE_KEY);
@@ -601,6 +607,70 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>staffReportStyleVersion</code> value.
+     * @return the value of the attribute
+     */
+    public int staffReportStyleVersion()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "staffReportStyleVersion" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>staffReportStyleVersion</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setStaffReportStyleVersion( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStaffReportStyleVersion("
+                + value + "): was " + staffReportStyleVersion() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setStaffReportStyleVersionRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>staffReportStyleVersion</code> value.
+     * @return the value of the attribute
+     */
+    public Integer staffReportStyleVersionRaw()
+    {
+        return (Integer)storedValueForKey( "staffReportStyleVersion" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>staffReportStyleVersion</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setStaffReportStyleVersionRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStaffReportStyleVersionRaw("
+                + value + "): was " + staffReportStyleVersionRaw() );
+        }
+        takeStoredValueForKey( value, "staffReportStyleVersion" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>statElementsLabel</code> value.
      * @return the value of the attribute
      */
@@ -689,6 +759,70 @@ public abstract class _SubmissionResult
                 + value + "): was " + statusRaw() );
         }
         takeStoredValueForKey( value, "status" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>studentReportStyleVersion</code> value.
+     * @return the value of the attribute
+     */
+    public int studentReportStyleVersion()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "studentReportStyleVersion" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>studentReportStyleVersion</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setStudentReportStyleVersion( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStudentReportStyleVersion("
+                + value + "): was " + studentReportStyleVersion() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setStudentReportStyleVersionRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>studentReportStyleVersion</code> value.
+     * @return the value of the attribute
+     */
+    public Integer studentReportStyleVersionRaw()
+    {
+        return (Integer)storedValueForKey( "studentReportStyleVersion" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>studentReportStyleVersion</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setStudentReportStyleVersionRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setStudentReportStyleVersionRaw("
+                + value + "): was " + studentReportStyleVersionRaw() );
+        }
+        takeStoredValueForKey( value, "studentReportStyleVersion" );
     }
 
 

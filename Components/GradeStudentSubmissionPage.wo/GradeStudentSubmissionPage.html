@@ -50,8 +50,8 @@
 </wo:org.webcat.core.WCPageModule>
 
 <wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
-<wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.resultFile" title="Student Inline Report" open="$true"/>
-<wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.staffResultFile" title="Staff Inline Report" open="$true"/>
+<wo:org.webcat.grader.PartialInlineReport submissionResult="$result" styleVersion="$result.studentReportStyleVersion" file="$result.resultFile" title="Student Inline Report" open="$true"/>
+<wo:org.webcat.grader.PartialInlineReport submissionResult="$result" styleVersion="$result.staffReportStyleVersion" file="$result.staffResultFile" title="Staff Inline Report" open="$true"/>
 
 <wo:org.webcat.core.WCPageModule
   title="Browse Raw Files: Submission and Results" dynamic="true" open="false" id="fileBrowserModule">

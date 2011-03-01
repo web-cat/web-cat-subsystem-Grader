@@ -389,6 +389,23 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds studentReportStyleVersion and staffReportStyleVersion fields to
+     * submission result table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement17() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONRESULT add "
+                + "studentReportStyleVersion INTEGER" );
+        database().executeSQL(
+            "alter table TSUBMISSIONRESULT add "
+                + "staffReportStyleVersion INTEGER" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
