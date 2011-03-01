@@ -193,7 +193,7 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public String assignmentName()
     {
-        String name = anAssignmentOffering.assignment().name();
+        String name = anAssignmentOffering.assignment().titleString();
         if ( name == null )
         {
             name = "(missing name)";
