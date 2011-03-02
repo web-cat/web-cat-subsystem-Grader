@@ -602,9 +602,8 @@ public class GraderQueueProcessor
                                    job.submission().resultDirName());
             properties.setProperty("scriptHome",
                                    step.gradingPlugin().dirName());
-            properties.setProperty("pluginResourcePrefix",
-                    "${pluginResource:" + step.gradingPlugin().id().toString()
-                        + "}");
+            properties.setProperty("pluginResourcePrefix", "${pluginResource:"
+                    + step.gradingPlugin().name() + "}");
             properties.setProperty("scriptData",
                                    GradingPlugin.scriptDataRoot());
             properties.setProperty("timeout",
