@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,9 +21,7 @@
 
 package org.webcat.grader.graphs;
 
-import com.webobjects.appserver.*;
 import com.webobjects.foundation.NSArray;
-
 import org.jfree.data.xy.TableXYDataset;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.webcat.grader.*;
@@ -34,8 +32,10 @@ import org.webcat.grader.*;
  * results.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
+@SuppressWarnings("unchecked")
 public class SubmissionResultDataset
     extends AbstractXYDataset
     implements TableXYDataset

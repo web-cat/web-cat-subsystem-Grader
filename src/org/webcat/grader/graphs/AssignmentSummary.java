@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -35,7 +35,8 @@ import org.webcat.core.*;
  * submissions to an assignment offering or an assignment.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class AssignmentSummary
     implements org.webcat.core.MutableContainer,
@@ -703,6 +704,7 @@ public class AssignmentSummary
 
     //~ Dataset Class .........................................................
 
+    @SuppressWarnings("unchecked")
     private class Dataset
         extends AbstractIntervalXYDataset
     {

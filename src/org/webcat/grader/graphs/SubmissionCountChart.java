@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -36,7 +36,8 @@ import er.extensions.eof.ERXConstant;
  * A histogram component, implemented using JFreeChart.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class SubmissionCountChart extends HistogramChart
 {
@@ -106,6 +107,7 @@ public class SubmissionCountChart extends HistogramChart
 
 
     // ----------------------------------------------------------
+    @SuppressWarnings("unchecked")
     private class Dataset extends AbstractIntervalXYDataset
     {
         public static final String SUBMISSION_COUNT_KEY = "No. of Submissions";
