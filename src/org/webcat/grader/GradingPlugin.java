@@ -155,23 +155,30 @@ public class GradingPlugin
      */
     public File fileForPublicResourceAtPath(String path)
     {
-        File file = new File(publicResourcesDir(), path);
-
-        try
+        if (path == null)
         {
-            if (file.getCanonicalPath().startsWith(
-                    publicResourcesDir().getCanonicalPath()))
+            return publicResourcesDir();
+        }
+        else
+        {
+            File file = new File(publicResourcesDir(), path);
+
+            try
             {
-                return file;
+                if (file.getCanonicalPath().startsWith(
+                        publicResourcesDir().getCanonicalPath()))
+                {
+                    return file;
+                }
             }
-        }
-        catch (IOException e)
-        {
-            log.error("An error occurred while retrieving the canonical path "
-                    + "of the file " + file.toString());
-        }
+            catch (IOException e)
+            {
+                log.error("An error occurred while retrieving the canonical path "
+                        + "of the file " + file.toString());
+            }
 
-        return null;
+            return null;
+        }
     }
 
 
