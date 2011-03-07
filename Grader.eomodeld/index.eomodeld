@@ -31,16 +31,11 @@
             className = "org.webcat.grader.SubmissionFileStats"; 
             name = SubmissionFileStats; 
         }, 
-        {
-            className = "org.webcat.grader.SubmissionProfile"; 
-            name = SubmissionProfile; 
-        }, 
-        {
-            className = "org.webcat.grader.SubmissionResult"; 
-            name = SubmissionResult; 
-        }
+        {className = "org.webcat.grader.SubmissionProfile"; name = SubmissionProfile; }, 
+        {className = "org.webcat.grader.SubmissionResult"; name = SubmissionResult; }
     ); 
     internalInfo = {
+        "_deletedEntityNamesInObjectStore" = (SubmissionProfile); 
         "_schemaSynchronizationOptions" = {
             EOSchemaSynchronizationForeignKeyConstraintsKey = YES; 
             EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES; 

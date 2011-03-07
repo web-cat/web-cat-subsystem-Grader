@@ -169,7 +169,6 @@
         }, 
         {columnName = CSCOREFORMAT; name = scoreFormat; prototypeName = tinyText; }, 
         {
-            allowsNull = N; 
             columnName = CSUBMISSIONMETHOD; 
             name = submissionMethod; 
             prototypeName = tinyInteger; 

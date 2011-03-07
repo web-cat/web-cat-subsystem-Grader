@@ -406,6 +406,20 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Submission method is no longer used (will eventually be deleted),
+     * so make it optional.
+     * @throws SQLException on error
+     */
+    public void updateIncrement18() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE modify "
+            + "CSUBMISSIONMETHOD TINYINT NOT NULL Default 0" );
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
