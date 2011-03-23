@@ -69,6 +69,7 @@ public class EditAssignmentPage
     public SubmissionProfile                   submissionProfile;
     public AssignmentOffering                  upcomingOffering;
     public AssignmentOffering                  thisOffering;
+    public int                                 thisOfferingIndex;
     public Assignment                          assignment;
     public AssignmentOffering                  selectedOffering;
     public ERXDisplayGroup<AssignmentOffering> offeringGroup;
@@ -127,6 +128,9 @@ public class EditAssignmentPage
                  );
         }
         log.debug("starting super.appendToResponse()");
+
+        areDueDatesLocked = areDueDatesSame();
+
         super.beforeAppendToResponse(response, context);
     }
 
@@ -340,12 +344,201 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
+    public boolean canDeleteOffering(AssignmentOffering offering)
+    {
+        return !offering.isNewObject() && !offering.hasStudentSubmissions();
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean canDeleteThisOffering()
+    {
+        return canDeleteOffering(thisOffering);
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean canDeleteAnyOffering()
+    {
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            if (canDeleteOffering(offering))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean shouldShowDueDatePicker()
+    {
+        return !areDueDatesLocked
+            || (offeringGroup.displayedObjects().count() > 0
+                && thisOffering.equals(
+                        offeringGroup.displayedObjects().objectAtIndex(0)));
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean areDueDatesLocked()
+    {
+        return areDueDatesLocked;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean areDueDatesSame()
+    {
+        NSTimestamp exemplar = null;
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            if (exemplar == null)
+            {
+                exemplar = offering.dueDate();
+            }
+            else
+            {
+                if (offering.dueDate() == null
+                        || !exemplar.equals(offering.dueDate()))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults lockDueDates()
+    {
+        if (saveAndCanProceed())
+        {
+            areDueDatesLocked = true;
+
+            NSTimestamp exemplar = null;
+
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                if (exemplar == null)
+                {
+                    exemplar = offering.dueDate();
+                }
+                else
+                {
+                    offering.setDueDate(exemplar);
+                }
+            }
+
+            applyLocalChanges();
+        }
+
+        return new JavascriptGenerator().refresh("allOfferings");
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults unlockDueDates()
+    {
+        if (saveAndCanProceed())
+        {
+            areDueDatesLocked = false;
+            applyLocalChanges();
+        }
+
+        return new JavascriptGenerator().refresh("allOfferings");
+    }
+
+
+    // ----------------------------------------------------------
+    public NSTimestamp dueDate()
+    {
+        return thisOffering.dueDate();
+    }
+
+
+    // ----------------------------------------------------------
+    public void setDueDate(NSTimestamp value)
+    {
+        if (areDueDatesLocked)
+        {
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                offering.setDueDate(value);
+            }
+        }
+        else
+        {
+            thisOffering.setDueDate(value);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean isPublished()
+    {
+        boolean published = true;
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            if (!offering.publish())
+            {
+                published = false;
+                break;
+            }
+        }
+
+        return published;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults togglePublished()
+    {
+        return updatePublishedAction(!isPublished());
+    }
+
+
+    // ----------------------------------------------------------
+    private WOActionResults updatePublishedAction(boolean value)
+    {
+        if (saveAndCanProceed())
+        {
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                offering.setPublish(value);
+            }
+
+            applyLocalChanges();
+        }
+
+        return new JavascriptGenerator().refresh("publishPane");
+    }
+
+
+    // ----------------------------------------------------------
+    public String iconForPublishedListItem()
+    {
+        return "icons/" + (isPublished() ? "eye.png" : "eye-half.png");
+    }
+
+
+    // ----------------------------------------------------------
     public boolean hasSuspendedSubs()
     {
-        log.debug(
-            "script count = " + scriptDisplayGroup.displayedObjects().count());
-        suspendedSubmissionCount =
-            thisOffering.getSuspendedSubs().count();
+        suspendedSubmissionCount = 0;
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            suspendedSubmissionCount +=
+                offering.suspendedSubmissionsInQueue().count();
+        }
+
         return suspendedSubmissionCount > 0;
     }
 
@@ -358,22 +551,74 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent releaseSuspendedSubs()
+    public String descriptionOfEnqueuedSubmissions()
+    {
+        int active = thisOffering.activeSubmissionsInQueue().count();
+        int suspended = thisOffering.suspendedSubmissionsInQueue().count();
+
+        StringBuffer buffer = new StringBuffer();
+
+        if (active == 0 && suspended == 0)
+        {
+            return "No submissions in queue";
+        }
+        else
+        {
+            if (active > 0 && suspended > 0)
+            {
+                buffer.append(Integer.toString(active));
+                buffer.append(" <span class=\"check\">active</span>, ");
+                buffer.append(Integer.toString(suspended));
+                buffer.append(" <span class=\"warn\">suspended</span>");
+            }
+            else if (active > 0)
+            {
+                buffer.append(Integer.toString(active));
+                buffer.append(" <span class=\"check\">active</span>");
+            }
+            else
+            {
+                buffer.append(Integer.toString(suspended));
+                buffer.append(" <span class=\"warn\">suspended</span>");
+            }
+        }
+
+        buffer.append(" submission");
+
+        if (active + suspended > 1)
+        {
+            buffer.append('s');
+        }
+
+        buffer.append(" in queue");
+
+        return buffer.toString();
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults releaseSuspendedSubs()
     {
         log.info("releasing all paused assignments: "
-              + thisOffering.titleString());
+              + assignment.titleString());
+
         EOEditingContext ec = Application.newPeerEditingContext();
         try
         {
             ec.lock();
-            AssignmentOffering localAO = thisOffering.localInstance(ec);
-            NSArray<EnqueuedJob> jobList = localAO.getSuspendedSubs();
-            for (EnqueuedJob job : jobList)
+
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
             {
-                job.setPaused(false);
-                job.setQueueTime(new NSTimestamp());
+                AssignmentOffering localAO = offering.localInstance(ec);
+                NSArray<EnqueuedJob> jobList = localAO.suspendedSubmissionsInQueue();
+                for (EnqueuedJob job : jobList)
+                {
+                    job.setPaused(false);
+                    job.setQueueTime(new NSTimestamp());
+                }
+                log.info("released " + jobList.count() + " jobs");
             }
-            log.info("released " + jobList.count() + " jobs");
+
             ec.saveChanges();
         }
         finally
@@ -383,29 +628,36 @@ public class EditAssignmentPage
         }
         // trigger the grading queue to read the released jobs
         Grader.getInstance().graderQueue().enqueue(null);
-        return null;
+
+        return new JavascriptGenerator().refresh(
+                "allOfferings", "suspendedPane");
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent cancelSuspendedSubs()
+    public WOActionResults cancelSuspendedSubs()
     {
         EOEditingContext ec = Application.newPeerEditingContext();
         try
         {
             ec.lock();
-            AssignmentOffering localAO = thisOffering.localInstance(ec);
-            log.info(
-                "cancelling all paused assignments: "
-                + coreSelections().courseOffering().course().deptNumber()
-                + " "
-                + localAO.assignment().name());
-            NSArray<EnqueuedJob> jobList = localAO.getSuspendedSubs();
-            for (EnqueuedJob job : jobList)
+
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
             {
-                ec.deleteObject(job);
+                AssignmentOffering localAO = offering.localInstance(ec);
+                log.info(
+                    "cancelling all paused assignments: "
+                    + coreSelections().courseOffering().course().deptNumber()
+                    + " "
+                    + localAO.assignment().name());
+                NSArray<EnqueuedJob> jobList = localAO.suspendedSubmissionsInQueue();
+                for (EnqueuedJob job : jobList)
+                {
+                    ec.deleteObject(job);
+                }
+                log.info("cancelled " + jobList.count() + " jobs");
             }
-            log.info("cancelled " + jobList.count() + " jobs");
+
             ec.saveChanges();
         }
         finally
@@ -413,7 +665,9 @@ public class EditAssignmentPage
             ec.unlock();
             Application.releasePeerEditingContext(ec);
         }
-        return null;
+
+        return new JavascriptGenerator().refresh(
+                "allOfferings", "suspendedPane");
     }
 
 
@@ -470,29 +724,55 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOComponent suspendGrading()
+    public WOActionResults toggleSuspended()
     {
-        if (saveAndCanProceed())
-        {
-            thisOffering.setGradingSuspended(true);
-            applyLocalChanges();
-        }
-        return null;
+        return updateSuspendedAction(!isSuspended());
     }
 
 
     // ----------------------------------------------------------
-    public WOComponent resumeGrading()
+    private WOActionResults updateSuspendedAction(boolean value)
     {
         if (saveAndCanProceed())
         {
-            thisOffering.setGradingSuspended(false);
-            if (applyLocalChanges())
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                offering.setGradingSuspended(value);
+            }
+
+            if (applyLocalChanges() && !value)
             {
                 releaseSuspendedSubs();
             }
         }
-        return null;
+
+        return new JavascriptGenerator().refresh(
+                "allOfferings", "suspendedPane");
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean isSuspended()
+    {
+        boolean suspended = false;
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            if (offering.gradingSuspended())
+            {
+                suspended = true;
+                break;
+            }
+        }
+
+        return suspended;
+    }
+
+
+    // ----------------------------------------------------------
+    public String iconForSuspendedListItem()
+    {
+        return "icons/" + (isSuspended() ? "robot-off.png" : "robot.png");
     }
 
 
@@ -517,30 +797,68 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public JavascriptGenerator removeStep()
+    public WOActionResults removeStepActionOK()
     {
-        int pos = thisStep.order();
+        int pos = stepForAction.order();
+
         for (int i = pos;
              i < scriptDisplayGroup.displayedObjects().count();
              i++)
         {
             scriptDisplayGroup.displayedObjects().objectAtIndex(i).setOrder(i);
         }
-        if (   thisStep.config() != null
-            && thisStep.config().steps().count() == 1)
+
+        if (stepForAction.config() != null
+                && stepForAction.config().steps().count() == 1)
         {
-            StepConfig thisConfig = thisStep.config();
-            thisStep.setConfigRelationship(null);
+            StepConfig thisConfig = stepForAction.config();
+            stepForAction.setConfigRelationship(null);
             localContext().deleteObject(thisConfig);
         }
-        localContext().deleteObject(thisStep);
+
+        localContext().deleteObject(stepForAction);
         localContext().saveChanges();
+
+        stepForAction = null;
 
         scriptDisplayGroup.fetch();
 
-        return new JavascriptGenerator()
-            .refresh("gradingSteps")
-            .unblock("gradingStepsTable");
+        return new JavascriptGenerator().refresh("gradingSteps");
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults removeStep()
+    {
+        if (!saveAndCanProceed())
+        {
+            return displayMessages();
+        }
+
+        stepForAction = thisStep;
+        return new ConfirmingAction(this, true)
+        {
+            @Override
+            protected String confirmationTitle()
+            {
+                return "Remove This Grading Step?";
+            }
+
+            @Override
+            protected String confirmationMessage()
+            {
+                return "<p>Are you sure that you want to remove the grading"
+                    + " step <b>" + stepForAction.gradingPlugin().name()
+                    + "</b>? All of the configuration settings for this step"
+                    + "will be lost. This cannot be undone.</p>";
+            }
+
+            @Override
+            protected WOActionResults actionWasConfirmed()
+            {
+                return removeStepActionOK();
+            }
+        };
     }
 
 
@@ -635,11 +953,17 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public JavascriptGenerator clearGraph()
     {
-        thisOffering.clearGraphSummary();
+        JavascriptGenerator js = new JavascriptGenerator();
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            offering.clearGraphSummary();
+            js.refresh("scoreHistogram" + offering.id());
+        }
+
         applyLocalChanges();
 
-        return new JavascriptGenerator()
-            .refresh("scoreHistogram" + thisOffering.id());
+        return js;
     }
 
 
@@ -687,7 +1011,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    private WOComponent deleteActionOk()
+    private WOComponent deleteOfferingActionOk()
     {
         prefs().setAssignmentOfferingRelationship(null);
         for (AssignmentOffering ao : offeringGroup.displayedObjects())
@@ -713,7 +1037,7 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public WOActionResults delete()
+    public WOActionResults deleteOffering()
     {
         if (!applyLocalChanges())
         {
@@ -752,7 +1076,7 @@ public class EditAssignmentPage
             @Override
             protected WOActionResults actionWasConfirmed()
             {
-                return deleteActionOk();
+                return deleteOfferingActionOk();
             }
         };
     }
@@ -820,6 +1144,8 @@ public class EditAssignmentPage
     private NSMutableArray<AssignmentOffering> upcomingOfferings;
     private NSTimestamp    currentTime;
     private AssignmentOffering offeringForAction;
+    private Step           stepForAction;
+    private boolean        areDueDatesLocked;
 
     private long timeStart;
 

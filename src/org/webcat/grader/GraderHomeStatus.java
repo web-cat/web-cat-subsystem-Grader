@@ -342,7 +342,7 @@ public class GraderHomeStatus
         return ( user().hasAdminPrivileges()
                  || assignment.courseOffering().instructors()
                      .containsObject( user() ) )
-               && assignment.getSuspendedSubs().count() > 0;
+               && assignment.suspendedSubmissionsInQueue().count() > 0;
     }
 
 

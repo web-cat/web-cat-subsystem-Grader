@@ -18,8 +18,8 @@ Graph: org.webcat.grader.graphs.MiniBarGraph {
 }
 
 Name: WOHyperlink {
-	href   = anAssignmentOffering.assignment.url;
-	target = "_new";
+    href   = anAssignmentOffering.assignment.url;
+    target = "_new";
     string = anAssignmentOffering.assignment.titleString;
 }
 
@@ -34,7 +34,7 @@ RadioButton: WCRadioButton {
 }
 
 SuspendedCount: WOString {
-    value = anAssignmentOffering.getSuspendedSubs.count;
+    value = anAssignmentOffering.suspendedSubmissionsInQueue.count;
 }
 
 TR: org.webcat.core.TableRow {

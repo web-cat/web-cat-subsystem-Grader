@@ -35,8 +35,8 @@ LastTR: org.webcat.core.TableRow {
 }
 
 Name: WOHyperlink {
-	href   = anAssignmentOffering.assignment.url;
-	target = "_new";
+    href   = anAssignmentOffering.assignment.url;
+    target = "_new";
     string = anAssignmentOffering.assignment.titleString;
 }
 
@@ -65,7 +65,7 @@ ShowTable: WOConditional {
 }
 
 SuspendedCount: WOString {
-    value = anAssignmentOffering.getSuspendedSubs.count;
+    value = anAssignmentOffering.suspendedSubmissionsInQueue.count;
 }
 
 TR: org.webcat.core.TableRow {

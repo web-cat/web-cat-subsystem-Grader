@@ -8,20 +8,34 @@ CanDelete: WOConditional {
     condition = "~!thisOffering.isNewObject && !thisOffering.hasStudentSubmissions";
 }
 
-CancelSubs: WCButton {
+CancelSubs: WCLink {
     action = cancelSuspendedSubs;
-    label  = "Cancel Them";
+    remote = true;
 }
 
 ClearGraph: WCButton {
     action = clearGraph;
-    label  = "Refresh Cached Graph Data";
+    label  = "Refresh";
     remote = true;
     style  = "margin-top:0;";
 }
 
 CourseOfferingSection: WCPageModule {
     title = "~ \"Properties for \" + thisOffering.courseOffering.deptNumberAndName";
+}
+
+DeleteOffering: WCImageButton {
+    filename  = "icons/delete.png";
+    framework = "Core";
+    remote    = true;
+    action    = deleteOffering;
+    alt       = "Delete this assignment offering";
+    title     = "Delete this assignment offering";
+    class     = "icon";
+}
+
+DeletePopupInfo: PopUpInfo {
+    message = "An assignment offering cannot be deleted once students (not staff) begin making submissions.";
 }
 
 Description: WCTextBox {
@@ -39,30 +53,26 @@ DragHandle: WCDragHandle {
     id = "dragHandle";
 }
 
-DueDate2: WCDateTimePicker {
-     value      = thisOffering.dueDate;
+DueDate: WCDateTimePicker {
+     value      = dueDate;
      dateformat = user.dateFormat;
      timeformat = user.timeFormat;
      timeZone   = timeZone;
 }
 
-EditStep: WOImageButton {
-    filename  = "icons/edit.gif";
+EditStep: WCImageButton {
+    filename  = "icons/settings.png";
     framework = "Core";
     action    = editStep;
-    width     = "18";
-    height    = "17";
-    alt       = "Set/edit parameters for this step";
-    title     = "Set/edit parameters for this step";
+    alt       = "Configure options for this step";
+    title     = "Configure options for this step";
     class     = "icon";
 }
 
 EditSubmissionProfile: WOImageButton {
-    filename  = "icons/edit.gif";
+    filename  = "icons/settings.png";
     framework = "Core";
     action    = editSubmissionProfile;
-    width     = "18";
-    height    = "17";
     alt       = "Edit selected submission rules";
     title     = "Edit selected submission rules";
     class     = "icon";
@@ -90,12 +100,17 @@ Graph: org.webcat.grader.graphs.MiniBarGraph {
     graphSummary = thisOffering.graphSummary;
 }
 
-HasSuspendedSubs: WOConditional {
-    condition = hasSuspendedSubs;
-}
-
 LastTR: org.webcat.core.TableRow {
     index = index;
+}
+
+LockDueDates: WCImageButton {
+    filename  = "icons/lock-unlock.png";
+    framework = "Core";
+    action    = lockDueDates;
+    remote    = true;
+    title     = "Force all due dates to be the same";
+    alt       = "Force all due dates to be the same";
 }
 
 Name: WCTextBox {
@@ -122,40 +137,33 @@ NumSuspended: WOString {
 
 Page: org.webcat.core.WCPageWithNavigation {
     title = "Edit Assignment Properties";
-//    stylesheet           = "Grader.framework/WebServerResources/jscalendar/skins/aqua/theme.css";
-//    externalJavascript   = "Grader.framework/WebServerResources/jscalendar/calendar.js,Grader.framework/WebServerResources/jscalendar/lang/calendar-en.js,Grader.framework/WebServerResources/jscalendar/calendar-setup.js";
 }
 
-PublishIt: WCCheckBox {
-    checked = thisOffering.publish;
+RefreshScoreSummaries: WCImageButton {
+    filename  = "icons/refresh.png";
+    framework = "Core";
+    remote    = true;
+    action    = clearGraph;
+    alt       = "Refresh cached score summaries";
+    title     = "Refresh cached score summaries";
+    class     = "icon";
 }
 
-PublishItInfo: org.webcat.core.PopUpInfo {
-    title   = "Publish It";
-    message = "Determines whether or not the assignment is visible and available to students. When this box is unchecked, only course staff can access the assignment.";
-}
-
-ReleaseSubs: WCButton {
-    action = releaseSuspendedSubs;
-    label  = "Re-grade Them";
-}
-
-RemoveStep: WOGenericContainer {
-    elementName = "a";
-    onClick     = "~'removeGradingStep(removeStepAction_' + index + ');'";
-}
-
-RemoveStepFunction: WCActionFunction {
-    jsId   = "~'removeStepAction_' + index";
-    action = removeStep;
+RegradeSubmissions: WCLink {
+    action = regradeSubs;
     remote = true;
 }
 
-RemoveStepImage: WOImage {
-    filename  = "icons/trash.gif";
+ReleaseSubs: WCLink {
+    action = releaseSuspendedSubs;
+    remote = true;
+}
+
+RemoveStep: WCImageButton {
+    filename  = "icons/delete.png";
     framework = "Core";
-    width     = "14";
-    height    = "17";
+    action    = removeStep;
+    remote    = true;
     alt       = "Remove this step";
     title     = "Remove this step";
     class     = "icon";
@@ -199,6 +207,16 @@ Timeout: WCTextBox {
     value        = stepTimeout;
 }
 
+TogglePublished: WCLink {
+    action = togglePublished;
+    remote = true;
+}
+
+ToggleSuspended: WCLink {
+    action = toggleSuspended;
+    remote = true;
+}
+
 TR: org.webcat.core.TableRow {
     index = index;
     dragHandle = "dragHandle";
@@ -209,6 +227,15 @@ TR2: org.webcat.core.TableRow {
     index = index;
     showCaution = upcomingOfferingIsLate;
     showError   = upcomingOffering.gradingSuspended;
+}
+
+UnlockDueDates: WCImageButton {
+    filename  = "icons/lock.png";
+    framework = "Core";
+    action    = unlockDueDates;
+    remote    = true;
+    title     = "Allow offerings to have different due dates";
+    alt       = "Allow offerings to have different due dates";
 }
 
 UpcomingAssignmentName: WOHyperlink {

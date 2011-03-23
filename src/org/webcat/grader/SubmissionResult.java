@@ -570,26 +570,33 @@ public class SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setIsMostRecent( boolean value )
+    public void setIsMostRecent(boolean value)
     {
         boolean wasMostRecent = isMostRecent();
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug( "setIsMostRecent(" + value + ") called" );
-            log.debug( "   submission = " + submission() );
-            log.debug( "   wasMostRecent = " + wasMostRecent );
+            log.debug("setIsMostRecent(" + value + ") called");
+            log.debug("   submission = " + submission());
+            log.debug("   wasMostRecent = " + wasMostRecent);
         }
-        if ( wasMostRecent && !value )
+
+        User user = submission().user();
+
+        if (!submission().assignmentOffering().courseOffering().isStaff(user))
         {
-            submission().assignmentOffering().graphSummary().removeSubmission(
-                automatedScore() );
+            if (wasMostRecent && !value)
+            {
+                submission().assignmentOffering().graphSummary()
+                    .removeSubmission(automatedScore());
+            }
+            else if (!wasMostRecent && value)
+            {
+                submission().assignmentOffering().graphSummary()
+                    .addSubmission(automatedScore());
+            }
         }
-        else if ( !wasMostRecent && value )
-        {
-            submission().assignmentOffering().graphSummary().addSubmission(
-                automatedScore() );
-        }
-        super.setIsMostRecent( value );
+
+        super.setIsMostRecent(value);
     }
 
 

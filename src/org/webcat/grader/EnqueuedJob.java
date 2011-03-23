@@ -21,6 +21,10 @@
 
 package org.webcat.grader;
 
+import org.webcat.core.User;
+import com.webobjects.foundation.NSTimestamp;
+import er.extensions.eof.ERXKey;
+
 // -------------------------------------------------------------------------
 /**
  * This class represents the database record of a student file submission
@@ -50,12 +54,19 @@ public class EnqueuedJob
     public static final String ASSIGNMENT_OFFERING_KEY =
         SUBMISSION_KEY
         + "." + Submission.ASSIGNMENT_OFFERING_KEY;
+    public static final ERXKey<AssignmentOffering> assignmentOffering =
+        new ERXKey<AssignmentOffering>(ASSIGNMENT_OFFERING_KEY);
+
     public static final String SUBMIT_TIME_KEY =
         SUBMISSION_KEY
         + "." + Submission.SUBMIT_TIME_KEY;
+    public static final ERXKey<NSTimestamp> submitTime =
+        new ERXKey<NSTimestamp>(SUBMIT_TIME_KEY);
+
     public static final String USER_KEY =
         SUBMISSION_KEY
         + "." + Submission.USER_KEY;
+    public static final ERXKey<User> user = new ERXKey<User>(USER_KEY);
 
 
     //~ Methods ...............................................................

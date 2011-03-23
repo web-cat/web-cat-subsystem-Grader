@@ -6,7 +6,7 @@
 </wo:WCPageModule></wo:if><wo:else>
 <div class="module right"><wo name="Navigator"/></div>
 <wo:WCForm multipleSubmit="true">
-<wo:WCPageModule title="Properties for All Instances of This Assignment">
+<wo:WCPageModule title="Properties for All Offerings of This Assignment">
 <table class="layout">
 <tr><td class="R"><label for="name">Name:</label></td>
     <td><webobject name="Name"/> <webobject name="NameInfo"/></td></tr>
@@ -25,7 +25,7 @@
       <label for="useSurvey">Give student engagement/frustration
       survey</label></td></tr></wo:if>
 </table>
-<h3>Grading Scheme for All Instances</h3>
+<h3>Grading Scheme for All Offerings</h3>
 <p><label for="policy">Submission Rules:</label>
 <wo:if condition="$submissionProfileDisplayGroup.displayedObjects.count">
 <webobject name="SubmissionProfileList"/><webobject name="EditSubmissionProfile"/>&nbsp;<webobject name="NewSubmissionProfile"/>
@@ -45,7 +45,7 @@
         <td align="center"><wo name="DragHandle"/></td>
         <td><webobject name="ScriptName"/></td>
         <td align="center"><webobject name="StepAllowsTimeout"><webobject name="Timeout"/></webobject></td>
-        <td><webobject name="EditStep"/> <wo name="RemoveStep"><wo name="RemoveStepImage"/></wo><wo name="RemoveStepFunction"/></td>
+        <td><webobject name="EditStep"/> <wo name="RemoveStep"/></td>
     </wo></wo>
     <wo name="LastTR">
         <td colspan="4">
@@ -64,51 +64,53 @@
 </wo:WCContentPane>
 </wo:WCPageModule>
 
-<wo:loop list="$offeringGroup.displayedObjects" item="$thisOffering">
-<wo name="CourseOfferingSection">
-<table class="layout" style="margin: 0;">
-<wo name="CanDelete">
-<tr><td class="R"><wo:WCButton action="$delete" label="Delete" class="neg" remote="true"/></td>
-    <td>You may delete this assignment offering.   It cannot be deleted once
-    students (not staff) begin making submissions.</td></tr>
-</wo>
-<tr><td class="R" valign="top">Due:</td>
-    <td>
-    <wo name="DueDate2"/></td></tr>
-<tr><td class="R">Score Summary:</td><td><table class="layout" style="margin: 0;"><tr>
-    <td style="padding: 0 0.6em 0 0;"><wo:WCContentSpan id="~'scoreHistogram' + thisOffering.id"><wo name="Graph"/></wo></td>
-    <td style="padding: 0 0 0 0.6em;"><wo name="ClearGraph"/></td></tr></table></td></tr>
-<tr><td class="R">Publish it:</td>
-    <td><webobject name="PublishIt"/>
-    <webobject name="PublishItInfo"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <wo:if condition="$thisOffering.gradingSuspended">
-      <span class="warn">All grading is suspended</span>
-      <wo:WCButton action="$resumeGrading" style="margin-top:0;">Resume Grading</wo:WCButton>
-      <webobject name="SuspendInfo"/>
-    </wo:if>
-    <wo:else>
-      <span class="check">Grading is enabled</span>
-      <wo:WCButton action="$suspendGrading" style="margin-top:0;">Suspend All Grading</wo:WCButton>
-      <webobject name="SuspendInfo"/>
-    </wo:else>
-    </td></tr>
-<webobject name="HasSuspendedSubs">
-<tr><td></td><td>
-<table class="layout">
-<tr><td colspan="3" style="color:red">
-&nbsp;<b><webobject name="NumSuspended"/> submissions</b> currently
-suspended&nbsp;</td></tr>
-<tr><td class="left"><webobject name="ReleaseSubs"/></td>
-<td class="center">&nbsp;or&nbsp;</td>
-<td class="right"><webobject name="CancelSubs"/></td></tr></table>
-</td></tr>
-</webobject>
-<tr><td>&nbsp;</td><td><wo:WCButton action="$regradeSubs" remote="true"
-  alt="Regrade everyone's most recent submission">Regrade Everyone</wo:WCButton>
-</td></tr>
+<wo:WCPageModule title="Offerings of This Assignment">
+<wo:WCContentPane id="allOfferings">
+<table>
+    <thead><tr>
+        <th class="sm">Course Offering</th>
+        <th>Due Date <wo:if condition="$areDueDatesLocked"><wo name="UnlockDueDates"/></wo:if><wo:else><wo name="LockDueDates"/></wo:else></th>
+        <th>Score Summary <wo name="RefreshScoreSummaries"/></th>
+        <th>Queue Status</th>
+        <wo:if condition="$canDeleteAnyOffering"><th class="sm">Delete? <wo name="DeletePopupInfo"/></th></wo:if>
+    </tr></thead>
+    <tbody>
+        <wo:loop list="$offeringGroup.displayedObjects" item="$thisOffering" index="$thisOfferingIndex">
+        <wo:tr index="$thisOfferingIndex">
+            <td><strong><wo:str value="$thisOffering.courseOffering.compactName"/></strong></td>
+            <td><wo:if condition="$shouldShowDueDatePicker"><wo name="DueDate"/></wo></td>
+            <td><wo:WCContentSpan id="~'scoreHistogram' + thisOffering.id"><wo name="Graph"/></wo></td>
+            <td>
+                <wo:str value="$descriptionOfEnqueuedSubmissions" escapeHTML="false"/>
+            </td>
+            <wo:if condition="$canDeleteAnyOffering"><td><wo name="DeleteOffering"/></td></wo:if>
+        </wo:tr>
+        </wo:loop>
+    </tbody>
 </table>
-</wo>
-</wo:loop>
+</wo:WCContentPane>
+<wo:WCIconList heading="Actions for All Offerings">
+    <wo:WCIconListItem id="publishPane" filename="$iconForPublishedListItem" framework="Core" action="$togglePublished" remote="true">
+        <wo:if condition="$isPublished">
+        This assignment is <span class="check">published</span>, so students can see it. <wo name="TogglePublished">Unpublish it</wo>.
+        </wo:if><wo:else>
+        This assignment is <span class="warn">not published</span>, so only course staff can see it. <wo name="TogglePublished">Publish it</wo>.
+        </wo:else>
+    </wo:WCIconListItem>
+    <wo:WCIconListItem id="suspendedPane" filename="$iconForSuspendedListItem" action="$toggleSuspended" remote="true">
+        <wo:if condition="$isSuspended">
+            Grading of this assignment is <span class="warn">suspended</span>. <wo name="ToggleSuspended">Resume grading</wo><wo:if condition="$hasSuspendedSubs">,
+            or <wo name="CancelSubs">cancel the suspended submissions</wo></wo:if>.
+        </wo:if><wo:else>
+            Grading of this assignment is <span class="check">enabled</span>. <wo name="ToggleSuspended">Suspend grading</wo><wo:if condition="$hasSuspendedSubs">,
+            <wo name="ReleaseSubs">re-grade the suspended submissions</wo>, or <wo name="CancelSubs">cancel them</wo></wo:if>.
+        </wo:else>
+    </wo:WCIconListItem>
+    <wo:WCIconListItem filename="icons/regrade.png" action="$regradeSubs" remote="true">
+        <wo name="RegradeSubmissions">Regrade everyone's most recent submission</wo>.
+    </wo:WCIconListItem>
+</wo:WCIconList>
+</wo:WCPageModule>
 
 <wo:WCPageModule title="Other Upcoming Assignment Deadlines" open="false">
 <table><thead>

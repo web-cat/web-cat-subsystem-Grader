@@ -193,7 +193,7 @@ public class PickAssignmentToEditPage
         return ( user().hasAdminPrivileges()
                  || anAssignmentOffering.courseOffering().instructors()
                      .containsObject( user() ) )
-               && anAssignmentOffering.getSuspendedSubs().count() > 0;
+               && anAssignmentOffering.suspendedSubmissionsInQueue().count() > 0;
     }
 
 
