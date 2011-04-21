@@ -13,7 +13,7 @@
               <wo:if condition="$aSubmission.result">
                 <td align="right"><wo:str value="$aSubmission.submitNumber"/></td>
                 <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
-                <td align="right"><wo name="FinalScore"/></td>
+                <td align="right"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></td>
               </wo:if><wo:else>
                 <td align="right"><wo:str value="$aSubmission.submitNumber"/></td>
                 <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
