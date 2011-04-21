@@ -1,8 +1,8 @@
-.srcView a,
-.srcView a:active,
-.srcView a:link,
-.srcView a:visited,
-.srcView a:hover  {
+.srcView a[id],
+.srcView a[id]:link,
+.srcView a[id]:visited,
+.srcView a[id]:hover,
+.srcView a[id]:active {
     text-decoration: none;
     color: inherit;
     background-color: inherit;
