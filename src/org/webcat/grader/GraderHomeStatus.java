@@ -27,6 +27,7 @@ import com.webobjects.foundation.*;
 import er.extensions.eof.ERXQ;
 import org.apache.log4j.Logger;
 import org.webcat.core.Application;
+import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Semester;
 
@@ -214,15 +215,7 @@ public class GraderHomeStatus
      */
     public WOComponent submitAssignment()
     {
-        coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering());
-        if (coreSelections().course() != null)
-        {
-            coreSelections().setCourseRelationship(
-                assignment.courseOffering().course());
-        }
-        prefs().setAssignmentRelationship(assignment.assignment());
-        prefs().setAssignmentOfferingRelationship(assignment);
+        selectAssignment(assignment);
         return pageWithName(
             wcSession().tabs.selectById("UploadSubmission").pageName());
     }
@@ -236,30 +229,21 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering());
-        if (coreSelections().course() != null)
-        {
-            coreSelections().setCourseRelationship(
-                assignment.courseOffering().course());
-        }
-        prefs().setAssignmentRelationship(assignment.assignment());
-        prefs().setAssignmentOfferingRelationship(assignment);
+        selectAssignment(assignment);
         SubmissionResult subResult =
             assignment.mostRecentSubmissionResultFor(user());
-        String destinationPageName = null;
         if (subResult != null)
         {
-            prefs().setSubmissionRelationship( subResult.submission());
-            destinationPageName =
-                wcSession().tabs.selectById("MostRecent").pageName();
+            for (Submission s : subResult.submissions())
+            {
+                if (s.user() == user())
+                {
+                    prefs().setSubmissionRelationship(s);
+                }
+            }
         }
-        else
-        {
-            destinationPageName =
-                wcSession().tabs.selectById("MostRecent").pageName();
-        }
-        return pageWithName(destinationPageName);
+        return pageWithName(
+            wcSession().tabs.selectById("MostRecent").pageName());
     }
 
 
@@ -271,15 +255,7 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering());
-        if (coreSelections().course() != null)
-        {
-            coreSelections().setCourseRelationship(
-                assignment.courseOffering().course());
-        }
-        prefs().setAssignmentRelationship(assignment.assignment());
-        prefs().setAssignmentOfferingRelationship(assignment);
+        selectAssignment(assignment);
         return pageWithName(
             wcSession().tabs.selectById("GraphResults").pageName());
     }
@@ -293,15 +269,7 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
-        coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering());
-        if (coreSelections().course() != null)
-        {
-            coreSelections().setCourseRelationship(
-                assignment.courseOffering().course());
-        }
-        prefs().setAssignmentRelationship(assignment.assignment());
-        prefs().setAssignmentOfferingRelationship(assignment);
+        selectAssignment(assignment);
         return pageWithName(
             wcSession().tabs.selectById("AssignmentProperties").pageName());
     }
@@ -315,17 +283,35 @@ public class GraderHomeStatus
      */
     public WOComponent gradeAssignment()
     {
-        coreSelections().setCourseOfferingRelationship(
-            assignment.courseOffering());
-        if (coreSelections().course() != null)
-        {
-            coreSelections().setCourseRelationship(
-                assignment.courseOffering().course());
-        }
-        prefs().setAssignmentRelationship(assignment.assignment());
-        prefs().setAssignmentOfferingRelationship(assignment);
+        selectAssignment(assignment);
         return pageWithName(
             wcSession().tabs.selectById("EnterGrades").pageName());
+    }
+
+
+    // ----------------------------------------------------------
+    private void selectAssignment(AssignmentOffering offering)
+    {
+        coreSelections().setSemester(offering.courseOffering().semester());
+        coreSelections().setCourseOfferingRelationship(
+            offering.courseOffering());
+        coreSelections().setCourseRelationship(
+            offering.courseOffering().course());
+        prefs().setAssignmentRelationship(offering.assignment());
+        prefs().setAssignmentOfferingRelationship(offering);
+        if (!assignment.courseOffering().isStaff(user())
+            && user().hasAdminPrivileges())
+        {
+            coreSelections().setIncludeAdminAccess(true);
+        }
+        if (!offering.publish())
+        {
+            prefs().setShowUnpublishedAssignments(true);
+        }
+        if (offering.lateDeadline().before(new NSTimestamp()))
+        {
+            prefs().setShowClosedAssignments(true);
+        }
     }
 
 
@@ -346,8 +332,53 @@ public class GraderHomeStatus
     }
 
 
+    // ----------------------------------------------------------
+    private NSMutableDictionary<Course,
+        NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
+        organizeAssignments(NSArray<AssignmentOffering> offerings)
+    {
+        NSMutableDictionary<Course, NSMutableDictionary<Assignment,
+            NSMutableArray<AssignmentOffering>>> result =
+            new NSMutableDictionary<Course, NSMutableDictionary<Assignment,
+                NSMutableArray<AssignmentOffering>>>();
+
+        for (AssignmentOffering ao : offerings)
+        {
+            Course c = ao.courseOffering().course();
+
+            // Look up the course in the result, creating it if necessary
+            NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>
+                courseAssignments = result.get(c);
+            if (courseAssignments == null)
+            {
+                courseAssignments = new NSMutableDictionary<Assignment,
+                    NSMutableArray<AssignmentOffering>>();
+                result.put(c, courseAssignments);
+            }
+
+            // Look up the assignment, creating its array if necessary
+            Assignment a = ao.assignment();
+            NSMutableArray<AssignmentOffering> cOfferings =
+                courseAssignments.get(a);
+            if (cOfferings == null)
+            {
+                cOfferings = new NSMutableArray<AssignmentOffering>();
+                courseAssignments.put(a, cOfferings);
+            }
+
+            cOfferings.add(ao);
+        }
+        return result;
+    }
+
     //~ Instance/static variables .............................................
 
     private NSTimestamp currentTime;
+    private NSMutableDictionary<Course,
+        NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
+        currentAssignments;
+    private NSMutableDictionary<Course,
+        NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
+        oldAssignments;
     static Logger log = Logger.getLogger( GraderHomeStatus.class );
 }
