@@ -53,11 +53,11 @@ public class GraderNavigatorObjects
                 : assignment.titleString();
             if (unpublished)
             {
-                result += "(unpub.)";
+                result += " (unpub.)";
             }
             if (closed)
             {
-                result += "(closed)";
+                result += " (closed)";
             }
             return result;
         }

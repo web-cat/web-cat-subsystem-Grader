@@ -1,5 +1,5 @@
-<wo:WCButton id="$idFor.navigatorButton">
-<span>Change Assignment</span>
+<span style="margin-right: 0.5em; font-size: 110%"><b><wo:str value="$selectedSemester"/></b>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<b><wo:str value="$selectedCourseOffering"/></b>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<b><wo:str value="$selectedAssignment"/></b></span>
+<wo:WCButton id="$idFor.navigatorButton" label="Change Assignment">
 <script type="dojo/connect" event="onClick" args="e">
 dijit.byId('<wo:str value="$idFor.dialog"/>').show();
 </script>
