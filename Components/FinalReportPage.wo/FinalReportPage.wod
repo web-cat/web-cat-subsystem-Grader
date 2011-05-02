@@ -1,81 +1,78 @@
 Coverage: WOString {
-	numberformat = "0.0";
-	value        = stats.gradedElementsCoveragePercent;
+    numberformat = "0.0";
+    value        = stats.gradedElementsCoveragePercent;
 }
 
 CoverageMeter: WOString {
-	escapeHTML = false;
-	value      = coverageMeter;
+    escapeHTML = false;
+    value      = coverageMeter;
 }
 
 EstimatedWait: WOString {
-	value      = estimatedWait;
-	dateformat = estimatedWaitFormat;
+    value      = estimatedWait;
+    dateformat = estimatedWaitFormat;
 }
 
 FileDeduction: WOString {
-	numberformat = "0.0";
-	value        = stats.toolDeductions;
+    numberformat = "0.0";
+    value        = stats.toolDeductions;
 }
 
 FileRemarks: WOString {
-	numberformat = "0";
-	value        = stats.remarks;
+    numberformat = "0";
+    value        = stats.remarks;
 }
 
 FileStaffDeduction: WOString {
-	numberformat = "0.0";
-	value        = stats.staffDeductions;
+    numberformat = "0.0";
+    value        = stats.staffDeductions;
 }
 
 FileStaffRemarks: WOString {
-	numberformat = "0";
-	value        = stats.staffRemarks;
+    numberformat = "0";
+    value        = stats.staffRemarks;
 }
 
 FullPrintableReport: WCButton {
-	action = fullPrintableReport;
-	label  = "Full Printable Report";
+    action = fullPrintableReport;
+    label  = "Full Printable Report";
 }
 
 GradingHalted: WOConditional {
-	condition = submission.assignmentOffering.gradingSuspended;
+    condition = submission.assignmentOffering.gradingSuspended;
 }
 
 GradingNotHalted: WOConditional {
-	condition = submission.assignmentOffering.gradingSuspended;
-	negate    = true;
+    condition = submission.assignmentOffering.gradingSuspended;
+    negate    = true;
 }
 
 Image: WOImage {
-	filename = "images/evaluating.gif";
-	width    = 64;
-	height   = 64;
-	alt      = "Still Grading";
+    filename = "images/evaluating.gif";
+    width    = 64;
+    height   = 64;
+    alt      = "Still Grading";
 }
 
 MetaRefresh1: WOMetaRefresh {
-	action = refreshAction;
-	seconds = refreshTimeout;
+    action = refreshAction;
+    seconds = refreshTimeout;
 }
 
 MostRecentJobWait: WOString {
-	value      = mostRecentJobWait;
-	dateformat = mostRecentJobWaitFormat;
+    value      = mostRecentJobWait;
+    dateformat = mostRecentJobWaitFormat;
 }
 
-Navigator: org.webcat.grader.GraderNavigator {
+Page: PageWithAssignmentNavigation {
+    title     = "Your Assignment Submission Results";
+    permalink = submission.permalink;
     allowsAllOfferingsForCourse = false;
 }
 
-Page: org.webcat.core.WCPageWithNavigation {
-    title     = "Your Assignment Submission Results";
-    permalink = submission.permalink;
-}
-
 PastResults: WOHyperlink {
-	action = pastResults;
-	string = "Past Results";
+    action = pastResults;
+    string = "Past Results";
 }
 
 ReturnToGrading: WCButton {
@@ -89,13 +86,13 @@ ScoreSummary: org.webcat.grader.ScoreSummaryBlock {
 }
 
 StatsLabel: WOString {
-	value = result.statElementsLabel;
+    value = result.statElementsLabel;
 }
 
 StatRepetition: WORepetition {
-	item  = stats;
-	list  = statsDisplayGroup.displayedObjects;
-	index = index;
+    item  = stats;
+    list  = statsDisplayGroup.displayedObjects;
+    index = index;
 }
 
 SubmitAgain: WCButton {
@@ -104,46 +101,46 @@ SubmitAgain: WCButton {
 }
 
 TAComments: org.webcat.core.FormattedString {
-	value  = result.comments;
-	format = result.commentFormat;
+    value  = result.comments;
+    format = result.commentFormat;
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = "File Name";
-	key = "sourceFileName";
+    displayGroup = statsDisplayGroup;
+    displayKey = "File Name";
+    key = "sourceFileName";
 }
 
 WCSortOrder2: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = "Automatically Graded Points Lost";
-	key = "deductions";
+    displayGroup = statsDisplayGroup;
+    displayKey = "Automatically Graded Points Lost";
+    key = "deductions";
 }
 
 WCSortOrder3: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = result.statElementsLabel;
-	key = "gradedElementsCoverage";
+    displayGroup = statsDisplayGroup;
+    displayKey = result.statElementsLabel;
+    key = "gradedElementsCoverage";
 }
 
 WCSortOrder4: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = "Automatically Graded Feedback Comments";
-	key = "remarks";
+    displayGroup = statsDisplayGroup;
+    displayKey = "Automatically Graded Feedback Comments";
+    key = "remarks";
 }
 
 WCSortOrder5: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = "Staff Feedback Comments";
-	key = "staffRemarks";
+    displayGroup = statsDisplayGroup;
+    displayKey = "Staff Feedback Comments";
+    key = "staffRemarks";
 }
 
 WCSortOrder6: org.webcat.core.WCSortOrder {
-	displayGroup = statsDisplayGroup;
-	displayKey = "Staff Points Lost";
-	key = "taDeductions";
+    displayGroup = statsDisplayGroup;
+    displayKey = "Staff Points Lost";
+    key = "taDeductions";
 }

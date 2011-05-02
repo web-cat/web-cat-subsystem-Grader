@@ -90,10 +90,7 @@ NextStudentButton: WCButton {
 }
 
 Page: org.webcat.core.WCPageWithNavigation {
-//Page: org.webcat.core.WizardPage {
     title = "Grade One Submission";
-    //hideSteps = true;
-//    applyEnabled = true;
 }
 
 PickSubmissionDialog: PickSubmissionDialog {

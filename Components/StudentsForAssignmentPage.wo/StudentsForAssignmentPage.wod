@@ -14,13 +14,25 @@ BoxAndWhiskerChart: BoxAndWhiskerChart {
     style = "vertical-align: middle;";
 }
 
-DownloadScores: WCButton {
-    label = "Download Scores";
+DownloadScores: WOGenericContainer {
+    elementName = "a";
+    href = "javascript:void(0);";
+    onClick = "dijit.byId('downloadScoresDialog').show();";
 }
 
 DownloadScoresDialog: DownloadScoresDialog {
     courseOfferings = courseOfferings;
     assignmentOfferings = offerings.displayedObjects;
+}
+
+DownloadScoresIcon: WCImageButton {
+    href = "javascript:void(0);";
+    onClick = "dijit.byId('downloadScoresDialog').show();";
+    framework = "Grader";
+    filename = "icons/table-export.png";
+    alt = "Download scores";
+    title = "Download scores";
+    class = "icon";
 }
 
 EditScore: WOHyperlink {
@@ -70,9 +82,6 @@ MostRecentSubmitNumber: WOString {
     value = mostRecentSubmissionNo;
 }
 
-Navigator: org.webcat.grader.GraderNavigator {
-}
-
 NewerSubmitTime: WOString {
     value     = aNewerSubmission.submitTime;
     formatter = session.timeFormatter;
@@ -101,6 +110,21 @@ PickSubmissionLink: WCLink {
     action = pickOtherSubmission;
     disabled = "~mostRecentSubmissionNo eq 1";
     title = "View a different submission";
+}
+
+RegradeSubmissions: WCLink {
+    action = regradeSubmissions;
+    remote = true;
+}
+
+RegradeSubmissionsIcon: WCImageButton {
+    action = regradeSubmissions;
+    remote = true;
+    framework = "Grader";
+    filename = "icons/regrade.png";
+    alt = "Regrade submissions";
+    title = "Regrade submissions";
+    class = "icon";
 }
 
 Repetition1: WORepetition {
@@ -268,4 +292,5 @@ PickSubmissionDialog: PickSubmissionDialog {
     rootUserSubmission = selectedUserSubmissionForPickerDialog;
     allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
     nextPageForResultsPage = self;
+    sendsToGradingPage = true;
 }

@@ -17,7 +17,7 @@ NameInfo: PopUpInfo {
     message = "Use a short 1-3 word assignment name, like &quot;Program 1&quot; or &quot;Lab 04&quot;.  The name cannot be blank.  This name is used to construct human-readable directory names for the assignment, and is also used as a shorthand for referring to the assignment in student feedback.";
 }
 
-Page : WCPageWithNavigation {
+Page: PageWithCourseNavigation {
     title = "Create a New Assignment";
 }
 

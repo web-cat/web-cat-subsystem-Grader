@@ -1,22 +1,22 @@
 AddInstructor: WOImageButton {
     filename = "images/add-sm-btn.gif";
-	action   = addInstructor;
-	border   = "0";
-	width    = "46";
-	height   = "17";
-	alt      = "Add another instructor";
-	title    = "Add another instructor";
+    action   = addInstructor;
+    border   = "0";
+    width    = "46";
+    height   = "17";
+    alt      = "Add another instructor";
+    title    = "Add another instructor";
     class    = "icon";
 }
 
 AddTA: WOImageButton {
     filename = "images/add-sm-btn.gif";
-	action   = addTA;
-	border   = "0";
-	width    = "46";
-	height   = "17";
-	alt      = "Add another grader/TA";
-	title    = "Add another grader/TA";
+    action   = addTA;
+    border   = "0";
+    width    = "46";
+    height   = "17";
+    alt      = "Add another grader/TA";
+    title    = "Add another grader/TA";
     class    = "icon";
 }
 
@@ -25,12 +25,12 @@ CanDelete: WOConditional {
 }
 
 CourseList: WCFilteringSelect {
-	list          = courseDisplayGroup.allObjects;
-	selection     = courseOffering.course;
-	item          = course;
-	displayString = course.deptNumberAndName;
-	style         = "width:25em;";
-	id            = "course";
+    list          = courseDisplayGroup.allObjects;
+    selection     = courseOffering.course;
+    item          = course;
+    displayString = course.deptNumberAndName;
+    style         = "width:25em;";
+    id            = "course";
 }
 
 CourseInfo: org.webcat.core.PopUpInfo {
@@ -54,9 +54,9 @@ Email: WOHyperlink {
 }
 
 InstructorRepetition: WORepetition {
-	item  = aUser;
-	list  = instructorDisplayGroup.displayedObjects;
-	index = index;
+    item  = aUser;
+    list  = instructorDisplayGroup.displayedObjects;
+    index = index;
 }
 
 IsThisUser: WOConditional {
@@ -93,10 +93,10 @@ MoodleGroupIdInfo: org.webcat.core.PopUpInfo {
 }
 
 MoodleId: WCTextBox {
-	numberformat = "0";
-	value        = courseOffering.moodleId;
-	id           = "moodleid";
-	style        = "width: 6em;";
+    numberformat = "0";
+    value        = courseOffering.moodleId;
+    id           = "moodleid";
+    style        = "width: 6em;";
 }
 
 MoodleIdInfo: org.webcat.core.PopUpInfo {
@@ -109,39 +109,37 @@ Name: WOHyperlink {
     string = aUser.name;
 }
 
-Navigator: org.webcat.core.CoreNavigator {
-}
-
 NotThisUser: WOConditional {
     condition = matchesUser;
     negate    = true;
 }
 
-Page : org.webcat.core.WCPageWithNavigation {
+Page : PageWithCourseNavigation {
     title = "Edit Course Properties";
+    allowsAllOfferingsForCourse = false;
 }
 
 RemoveInstructor: WOImageButton {
     filename  = "icons/trash.gif";
     framework = "Core";
-	action    = removeInstructor;
-	border    = "0";
-	width     = "14";
-	height    = "17";
-	title     = "Remove this instructor";
-	alt       = "Remove this instructor";
+    action    = removeInstructor;
+    border    = "0";
+    width     = "14";
+    height    = "17";
+    title     = "Remove this instructor";
+    alt       = "Remove this instructor";
     class     = "icon";
 }
 
 RemoveTA: WOImageButton {
     filename  = "icons/trash.gif";
     framework = "Core";
-	action    = removeTA;
-	border    = "0";
-	width     = "14";
-	height    = "17";
-	title     = "Remove this grader/TA";
-	alt       = "Remove this grader/TA";
+    action    = removeTA;
+    border    = "0";
+    width     = "14";
+    height    = "17";
+    title     = "Remove this grader/TA";
+    alt       = "Remove this grader/TA";
     class     = "icon";
 }
 
@@ -151,17 +149,17 @@ SemesterInfo: org.webcat.core.PopUpInfo {
 }
 
 SemesterList: WCFilteringSelect {
-	list      = semesters;
-	item      = aSemester;
-	selection = courseOffering.semester;
+    list      = semesters;
+    item      = aSemester;
+    selection = courseOffering.semester;
     style     = "width:25em;";
     id        = "semester";
 }
 
 TARepetition: WORepetition {
-	item  = aUser;
-	list  = TADisplayGroup.displayedObjects;
-	index = index;
+    item  = aUser;
+    list  = TADisplayGroup.displayedObjects;
+    index = index;
 }
 
 TR: org.webcat.core.TableRow {

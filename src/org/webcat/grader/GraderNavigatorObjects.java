@@ -46,19 +46,33 @@ public class GraderNavigatorObjects
 
 
         // ----------------------------------------------------------
+        public boolean isUnpublished()
+        {
+            return unpublished;
+        }
+
+
+        // ----------------------------------------------------------
+        public boolean isClosed()
+        {
+            return closed;
+        }
+
+
+        // ----------------------------------------------------------
         public String toString()
         {
             String result = (assignment == null)
                 ? "null"
                 : assignment.titleString();
-            if (unpublished)
+            /*if (unpublished)
             {
                 result += " (unpub.)";
             }
             if (closed)
             {
                 result += " (closed)";
-            }
+            }*/
             return result;
         }
 
@@ -82,4 +96,28 @@ public class GraderNavigatorObjects
         private boolean unpublished;
         private boolean closed;
     }
+
+
+    //~ Static/instance variables .............................................
+
+    public static final INavigatorObject FILTER_PLACEHOLDER =
+        new INavigatorObject()
+    {
+        // --------------------------------------------------
+        public NSArray<?> representedObjects()
+        {
+            return null;
+        }
+    };
+
+
+    public static final INavigatorObject NO_COURSE_PLACEHOLDER =
+        new INavigatorObject()
+    {
+        // --------------------------------------------------
+        public NSArray<?> representedObjects()
+        {
+            return null;
+        }
+    };
 }

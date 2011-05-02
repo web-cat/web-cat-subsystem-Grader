@@ -1,57 +1,95 @@
-CourseFilter: WCFilteringSelect {
-    list = courseOfferings;
-    item = courseOfferingInRepetition;
-    selection = selectedCourseOffering;
-    id = idFor.courseSelector;
-    autoComplete = true;
-    invalidMessage = "Invalid course selection";
+AssignmentControls: WCDropDownItem {
+    isSelectable = false;
 }
 
-SemesterFilter: WCFilteringSelect {
-    list = semesters;
-    item = semesterInRepetition;
-    selection = selectedSemester;
-    id = idFor.semesterSelector;
-    autoComplete = true;
-    invalidMessage = "Invalid semester selection";
-}
-
-IncludeWhatImTeaching: WCCheckBox {
-    id = idFor.includeWhatImTeachingCheckbox;
-    checked = includeWhatImTeaching;
-}
-
-IncludeAdminAccess: WCCheckBox {
-    id = idFor.includeAdminAccessCheckbox;
-    checked = includeAdminAccess;
-}
-
-AssignmentFilter: WCFilteringSelect {
+AssignmentMenu: WCDropDownList {
     list = assignments;
     item = assignmentInRepetition;
     selection = selectedAssignment;
     id = idFor.assignmentSelector;
-    autoComplete = true;
-    invalidMessage = "Invalid assignment selection";
+    menuId = idFor.assignmentMenu;
+    noSelectionString = "Select an assignment...";
 }
 
-ShowUnpublishedAssignments: WCCheckBox {
-    id = idFor.showUnpublishedAssignmentsCheckbox;
-    checked = showUnpublishedAssignments;
-}
-
-ShowClosedAssignments: WCCheckBox {
-    id = idFor.showClosedAssignmentsCheckbox;
-    checked = showClosedAssignments;
-}
-
-OK: WCButton {
+AssignmentMenuItem: WCDropDownItem {
     action = okPressed;
-    class = "pos";
-    label = "OK";
 }
 
-Cancel: WCButton {
-    class = "neg";
-    label = "Cancel";
+AssignmentPane: WCContentPane {
+    id = idFor.assignmentPane;
+    class = "inlined";
+}
+
+ClosedIcon: WOImage {
+    framework = "Grader";
+    filename = "icons/assignment-closed.png";
+    alt = "Closed";
+    title = "Closed";
+    class = "icon";
+}
+
+CourseMenu: WCDropDownList {
+    list = courseOfferings;
+    item = courseOfferingInRepetition;
+    selection = selectedCourseOffering;
+    id = idFor.courseSelector;
+    menuId = idFor.courseMenu;
+    noSelectionString = "Select a course...";
+}
+
+CourseMenuItem: WCDropDownItem {
+    action = updateAssignmentsAndClearSelection;
+    remote = true;
+}
+
+CourseOfferingControls: WCDropDownItem {
+    isSelectable = false;
+}
+
+CoursePane: WCContentPane {
+    id = idFor.coursePane;
+    class = "inlined";
+}
+
+OpenIcon: WOImage {
+    framework = "Grader";
+    filename = "icons/assignment-open.png";
+    alt = "Open for submissions";
+    title = "Open for submissions";
+    class = "icon";
+}
+
+SemesterMenu: WCDropDownList {
+    list = semesters;
+    item = semesterInRepetition;
+    selection = selectedSemester;
+    id = idFor.semesterMenu;
+}
+
+SemesterMenuItem: WCDropDownItem {
+    action = updateCourseOfferingsAndClearSelection;
+    remote = true;
+}
+
+ToggleClosedAssignments: WCLink {
+    action = toggleClosedAssignments;
+    remote = true;
+}
+
+ToggleIncludeAdminAccess: WCLink {
+    action = toggleIncludeAdminAccess;
+    remote = true;
+}
+
+ToggleUnpublishedAssignments: WCLink {
+    action = toggleUnpublishedAssignments;
+    remote = true;
+}
+
+UnpublishedIcon: WOImage {
+    framework = "Grader";
+    filename = "icons/assignment-unpublished.png";
+    alt = "Unpublished";
+    title = "Unpublished";
+    class = "icon";
 }

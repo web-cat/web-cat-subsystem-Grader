@@ -1,87 +1,47 @@
-<span style="margin-right: 0.5em; font-size: 110%"><b><wo:str value="$selectedSemester"/></b>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<b><wo:str value="$selectedCourseOffering"/></b>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<b><wo:str value="$selectedAssignment"/></b></span>
-<wo:WCButton id="$idFor.navigatorButton" label="Change Assignment">
-<script type="dojo/connect" event="onClick" args="e">
-dijit.byId('<wo:str value="$idFor.dialog"/>').show();
-</script>
-</wo:WCButton>
-<wo:WCDiv id="$idFor.dialog" dojoType="dijit.Dialog" title="Choose Assignment" style="display: none">
-<script type="dojo/connect" event="onCancel">
-dijit.byId('<wo:str value="$idFor.form"/>').reset();
-</script>
-<wo:WCForm id="$idFor.form">
-<fieldset class="course">
-<legend>Selected Course</legend>
-<ol>
-<li><wo:WOGenericContainer elementName="label" for="$idFor.semesterSelector">Show semester:</wo:WOGenericContainer>
-<wo name="SemesterFilter">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
+<wo:WCForm><b>Viewing:</b>&nbsp;&nbsp;<div class="inlined"><wo name="SemesterMenu">
+<wo name="SemesterMenuItem">
+    <wo:str value="$semesterInRepetition"/>
 </wo>
-</li>
-<li>
-<wo:WCContentPane id="$idFor.coursePane">
-<wo:WOGenericContainer elementName="label" for="$idFor.courseSelector">Course offering:</wo:WOGenericContainer>
-<wo name="CourseFilter">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
-</wo>
-</wo:WCContentPane>
-</li>
-<wo:if condition="false"> <!-- was $user.hasTAPrivileges -->
-<li><wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox">Include:</wo:WOGenericContainer>
-<wo name="IncludeWhatImTeaching">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
-</wo>
-<wo:WOGenericContainer elementName="label" for="$idFor.includeWhatImTeachingCheckbox" class="trailing">what I'm teaching</wo:WOGenericContainer>
-</li>
-</wo:if>
-<wo:if condition="$user.hasAdminPrivileges">
-<li><wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox">Include:</wo:WOGenericContainer>
-<wo name="IncludeAdminAccess">
-    <wo:WCConnectAction event="onChange" action="$updateCourseOfferings" remote="true"/>
-</wo>
-<wo:WOGenericContainer elementName="label" for="$idFor.includeAdminAccessCheckbox" class="trailing">admin access</wo:WOGenericContainer>
-</li>
-</wo:if>
-</ol></fieldset>
-<fieldset class="assignment">
-<legend>Selected Assignment</legend><ol>
-<li>
-<wo:WCContentPane id="$idFor.assignmentPane">
-<wo:WOGenericContainer elementName="label" for="$idFor.assignmentSelector">Assignment:</wo:WOGenericContainer>
-<wo name="AssignmentFilter">
-</wo>
-</wo:WCContentPane>
-</li>
-<wo:if condition="$userIsStaffForSelectedCourse">
-<li><wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
-<wo name="ShowUnpublishedAssignments">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
-</wo>
-<wo:WOGenericContainer elementName="label" for="$idFor.showUnpublishedAssignmentsCheckbox" class="trailing">unpublished</wo:WOGenericContainer>
-</li>
-</wo:if>
-<wo:if negate="true" condition="$hideClosedAssignmentsFromStudents">
-<li><wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox">Show:</wo:WOGenericContainer>
-<wo name="ShowClosedAssignments">
-    <wo:WCConnectAction event="onChange" action="$updateAssignments" remote="true"/>
-</wo>
-<wo:WOGenericContainer elementName="label" for="$idFor.showClosedAssignmentsCheckbox" class="trailing">closed</wo:WOGenericContainer>
-</li>
-</wo:if>
-</ol></fieldset>
-<div class="center">
-<wo name="OK"/>
-<wo:if negate="true" condition="$startOpen">
-<wo name="Cancel">
-<script type="dojo/connect" event="onClick" args="evt">
-dijit.byId('<wo:str value="$idFor.form"/>').reset();
-dijit.byId('<wo:str value="$idFor.dialog"/>').hide();
-</script>
-</wo>
-</wo:if>
-</div>
-</wo:WCForm>
-</wo:WCDiv>
-<wo:if condition="$startOpen">
-<script type="text/javascript">
-dojo.addOnLoad(function() { dijit.byId('<wo:str value="$idFor.dialog"/>').show(); });
-</script></wo:if>
+</wo></div>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<wo name="CoursePane"><wo name="CourseMenu">
+    <wo:if condition="$isCourseOfferingFilterPlaceholder">
+        <wo name="CourseOfferingControls">
+            <div><wo name="ToggleIncludeAdminAccess">
+                <wo:if condition="$includeAdminAccess">Hide admin access
+                </wo:if><wo:else>Show admin access</wo:else>
+            </wo></div>
+        </wo>
+    </wo:if><wo:else>
+        <wo name="CourseMenuItem">
+            <wo:str value="$courseOfferingInRepetition"/>
+        </wo>
+    </wo:else>
+</wo></wo>&nbsp;&nbsp;&raquo;&nbsp;&nbsp;<wo name="AssignmentPane"><wo name="AssignmentMenu">
+<wo:if condition="$isAssignmentNoCoursePlaceholder">
+    <wo:WCDropDownItem isSelectable="false">
+        Please make a course selection first.
+    </wo:WCDropDownItem>
+</wo:if><wo:else>
+<wo:if condition="$isAssignmentFilterPlaceholder">
+    <wo name="AssignmentControls">
+        <wo:if condition="$userIsStaffForSelectedCourse">
+        <div><wo name="ToggleUnpublishedAssignments">
+            <wo:if condition="$showUnpublishedAssignments">Hide unpublished assignments
+            </wo:if><wo:else>Show unpublished assignments</wo:else>
+        </wo></div>
+        </wo:if>
+        <wo:if negate="true" condition="$hideClosedAssignmentsFromStudents">
+        <div><wo name="ToggleClosedAssignments">
+            <wo:if condition="$showClosedAssignments">Hide closed assignments
+            </wo:if><wo:else>Show closed assignments</wo:else>
+        </wo></div>
+        </wo:if>
+    </wo>
+</wo:if><wo:else>
+    <wo name="AssignmentMenuItem">
+        <wo:if condition="$assignmentInRepetition.isUnpublished"><wo name="UnpublishedIcon"/></wo:if>
+        <wo:else><wo:if condition="$assignmentInRepetition.isClosed"><wo name="ClosedIcon"/></wo:if>
+        <wo:else><wo name="OpenIcon"/></wo:else></wo:else>
+        <wo:str value="$assignmentInRepetition"/>
+    </wo>
+</wo:else></wo:else>
+</wo></wo></wo:WCForm>

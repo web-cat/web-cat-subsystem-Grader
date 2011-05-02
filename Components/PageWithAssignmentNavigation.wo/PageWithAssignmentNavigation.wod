@@ -1,0 +1,51 @@
+BasePage: org.webcat.ui.WCBasePage {
+    title                = title;
+    extraBodyCssClass    = extraBodyCssClass;
+    extraRequires        = extraRequires;
+    extraCssFiles        = extraCssFiles;
+    pageScriptName       = pageScriptName;
+    includePageWrapping  = includePageWrapping;
+    inlineHeaderContents = inlineHeaderContents;
+}
+
+Errors: org.webcat.core.WCErrorDictionaryPanel {
+    errorMessages          = thisPage.messages;
+    extraErrorMessage      = application.deathMessage;
+    shouldShowNewlineBelow = true;
+}
+
+HasMultipleRoles: WOConditional {
+    condition = "~session.user != null && session.user.accessLevel > 25";
+}
+
+IsNotFirstRole: WOConditional {
+    condition = "~aRoleIndex > 0";
+}
+
+Navigator: GraderNavigator {
+    allowsAllOfferingsForCourse = allowsAllOfferingsForCourse;
+    hideClosedAssignmentsFromStudents = hideClosedAssignmentsFromStudents;
+}
+
+PrimaryTab: WOGenericContainer {
+    elementName = "li";
+    class       = "~primaryTabItem.isSelected ? \"here\" : \"\"";
+}
+
+SecondaryTab: WOGenericContainer {
+    elementName = "li";
+    class       = "~secondaryTabItem.isSelected ? \"here\" : \"\"";
+}
+
+CanToggleView: WOConditional {
+    condition = session.user.canChangeViews;
+}
+
+RoleIsVisible: WOConditional {
+    condition = "~session.user.accessLevel >= aRole.accessLevel";
+}
+
+StudentView: WOHyperlink {
+    action = toggleStudentView;
+    string = session.user.toggleViewLabel;
+}

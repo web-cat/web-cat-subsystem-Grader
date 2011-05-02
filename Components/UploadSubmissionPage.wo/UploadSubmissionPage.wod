@@ -55,10 +55,6 @@ Instructions: WOString {
     escapeHTML = false;
 }
 
-Navigator: org.webcat.grader.GraderNavigator {
-    hideClosedAssignmentsFromStudents = true;
-}
-
 String1: WOString {
     value = aSubmission.submitNumber;
 }
@@ -107,12 +103,9 @@ WCSortOrder3: org.webcat.core.WCSortOrder {
     key = "submitNumber";
 }
 
-//Page: org.webcat.core.WizardPage {
-//    finishEnabled = false;
-//}
-
-Page: org.webcat.core.WCPageWithNavigation {
+Page: PageWithAssignmentNavigation {
     permalink = permalink;
+    hideClosedAssignmentsFromStudents = true;
 }
 
 BatchNavigator: org.webcat.core.WCBatchNavigator {

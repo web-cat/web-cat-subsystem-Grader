@@ -1,18 +1,5 @@
 <webobject name="Page">
-<wo:if condition="$forceNavigatorSelection">
-<wo:org.webcat.core.WCPageModule title="Pick a Semester and Course">
-<div class="floatRight"><wo:CoreNavigator/></div>
-<div style="width:50%;"><p>Please choose a single semester and a
-course (one offering or all offerings).</p></div>
-</wo:org.webcat.core.WCPageModule>
-</wo:if>
-
-<wo:else>
-<wo:org.webcat.core.WCPageModule title="For Which Course?">
-<table class="layout"><tbody>
-<tr><td class="R">In course(s):</td>
-    <td><wo:str value="$targetCourse"/> <wo:CoreNavigator/> <wo name="CourseInfo"/></td></tr>
-</tbody></table>
+<wo:org.webcat.core.WCPageModule title="Create New Assignment">
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <table class="layout"><tbody>
 <tr><td class="R"><label for="name">Name:</label></td>
@@ -65,5 +52,4 @@ assignment:</p>
 </wo:if>
 </ol></fieldset>
 </wo:WOForm></wo:org.webcat.core.WCPageModule>
-</wo:else>
 </webobject>

@@ -31,10 +31,7 @@ Chart4: org.webcat.grader.graphs.SubmissionCountChart {
     yAxisLabel        = "No. of Submissions";
 }
 
-Navigator: org.webcat.grader.GraderNavigator {
-}
-
-Page : org.webcat.core.WCPageWithNavigation {
+Page : PageWithAssignmentNavigation {
 }
 
 Panel1: org.webcat.core.WCPageModule {

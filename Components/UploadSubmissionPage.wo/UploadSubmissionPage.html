@@ -1,11 +1,5 @@
 <wo name="Page">
-<wo:if condition="$forceNavigatorSelection">
 <wo:org.webcat.core.WCPageModule title="Upload Your File(s)">
-<div class="floatRight"><wo name="Navigator"/></div>
-<div style="width:50%;"><p>Please select the course and assignment.</p></div>
-</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
-<wo:org.webcat.core.WCPageModule title="Upload Your File(s)">
-<div class="floatRight"><wo name="Navigator"/></div>
 For: <span class="hl"><webobject name="AssignmentName"/></span>
 <webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
 <webobject name="HasInstructions">
@@ -61,5 +55,5 @@ to choose them.
   </webobject></webobject></tbody></table>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
 </webobject></wo:org.webcat.core.WCPageModule>
-</wo:not></wo:else>
+</wo:not>
 </wo>

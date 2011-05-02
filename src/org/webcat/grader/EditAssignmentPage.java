@@ -76,7 +76,6 @@ public class EditAssignmentPage
 
     public NSArray<GradingPlugin> gradingPluginsToAdd;
     public GradingPlugin gradingPluginToAdd;
-    public GradingPlugin selectedGradingPluginToAdd;
 
 
     //~ Methods ...............................................................
@@ -320,30 +319,6 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public String searchStringForGradingPluginToAdd()
-    {
-        String name = gradingPluginToAdd.name();
-        return name;
-    }
-
-
-    // ----------------------------------------------------------
-    public String displayStringForGradingPluginToAdd()
-    {
-        String name = gradingPluginToAdd.name();
-        String version = gradingPluginToAdd.descriptor().currentVersion();
-        NSTimestamp lastModified = gradingPluginToAdd.lastModified();
-        String formattedTime =
-            wcSession().timeFormatter().format(lastModified);
-
-        return MessageFormat.format(
-                "<p class=\"pluginListTitle\">{0}</p>" +
-                "<p class=\"pluginListSubtitle\">version {1} ({2})</p>",
-                new Object[] { name, version, formattedTime });
-    }
-
-
-    // ----------------------------------------------------------
     public boolean canDeleteOffering(AssignmentOffering offering)
     {
         return !offering.isNewObject() && !offering.hasStudentSubmissions();
@@ -517,7 +492,7 @@ public class EditAssignmentPage
             applyLocalChanges();
         }
 
-        return new JavascriptGenerator().refresh("publishPane");
+        return new JavascriptGenerator().refresh("allOfferingsActions");
     }
 
 
@@ -630,7 +605,7 @@ public class EditAssignmentPage
         Grader.getInstance().graderQueue().enqueue(null);
 
         return new JavascriptGenerator().refresh(
-                "allOfferings", "suspendedPane");
+                "allOfferings", "allOfferingsActions");
     }
 
 
@@ -667,59 +642,7 @@ public class EditAssignmentPage
         }
 
         return new JavascriptGenerator().refresh(
-                "allOfferings", "suspendedPane");
-    }
-
-
-    // ----------------------------------------------------------
-    public WOComponent regradeSubsActionOk()
-    {
-        if (!applyLocalChanges()) return null;
-        offeringForAction.regradeMostRecentSubsForAll(localContext());
-        applyLocalChanges();
-        return null;
-    }
-
-
-    // ----------------------------------------------------------
-    public WOActionResults regradeSubs()
-    {
-        if (!saveAndCanProceed())
-        {
-            return displayMessages();
-        }
-
-        offeringForAction = thisOffering;
-        return new ConfirmingAction(this, false)
-        {
-            @Override
-            protected String confirmationTitle()
-            {
-                return "Regrade Everyone's Submission?";
-            }
-
-            @Override
-            protected String confirmationMessage()
-            {
-                return "<p>This action will <b>regrade the most recent "
-                    + "submission for every student</b> who has submitted to "
-                    + "this assignment.</p><p>This will also <b>delete all "
-                    + "prior results</b> for the submissions to be regraded "
-                    + "and <b>delete all TA comments and scoring</b> that "
-                    + "have been recorded for the submissions to be regraded."
-                    + "</p><p>Each student\'s most recent submission will be "
-                    + "re-queued for grading, and each student will receive "
-                    + "an e-mail message when their new results are "
-                    + "available.</p><p class=\"center\">Regrade everyone's "
-                    + "most recent submission?</p>";
-            }
-
-            @Override
-            protected WOActionResults actionWasConfirmed()
-            {
-                return regradeSubsActionOk();
-            }
-        };
+                "allOfferings", "allOfferingsActions");
     }
 
 
@@ -747,7 +670,7 @@ public class EditAssignmentPage
         }
 
         return new JavascriptGenerator().refresh(
-                "allOfferings", "suspendedPane");
+                "allOfferings", "allOfferingsActions");
     }
 
 
@@ -779,11 +702,11 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public JavascriptGenerator addStep()
     {
-        if (selectedGradingPluginToAdd != null)
+        if (gradingPluginToAdd != null)
         {
             if (saveAndCanProceed())
             {
-                assignment.addNewStep(selectedGradingPluginToAdd);
+                assignment.addNewStep(gradingPluginToAdd);
                 applyLocalChanges();
 
                 scriptDisplayGroup.fetch();

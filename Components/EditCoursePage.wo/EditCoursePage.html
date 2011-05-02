@@ -1,11 +1,5 @@
 <webobject name="Page">
-<wo:if condition="$forceNavigatorSelection">
-<wo:org.webcat.core.WCPageModule title="Select Your Course Offering">
-<div class="floatRight"><wo name="Navigator"/></div>
-<div style="width:50%;"><p>Please select the course offering.</p></div>
-</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
 <wo:org.webcat.core.WCPageModule title="Selected Course Offering">
-<div class="floatRight"><wo name="Navigator"/></div>
 <wo:WCForm multipleSubmit="true"><table class="layout">
 <wo name="CanDelete">
 <tr><td align="right"><wo:WCButton action="$delete" label="Delete" class="neg"/></td>
@@ -37,7 +31,7 @@
         </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
   </webobject></webobject>
   <webobject name="LastInstrTR">
-	<td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
+    <td colspan="4"><webobject name="AddInstructor"/> Add another instructor</td>
   </webobject>
 </tbody></table></wo:form>
 </wo:org.webcat.core.WCPageModule>
@@ -52,7 +46,7 @@
         </webobject><webobject name="IsThisUser">&nbsp;</webobject></td>
   </webobject></webobject>
   <webobject name="LastTATR">
-	<td colspan="4"><webobject name="AddTA"/> Add another grader/TA</td>
+    <td colspan="4"><webobject name="AddTA"/> Add another grader/TA</td>
   </webobject>
 </tbody></table></wo:form>
 </wo:org.webcat.core.WCPageModule>
@@ -70,7 +64,7 @@
 </wo:if><wo:else>
 <p>No submissions found for any assignment in this course offering.</p>
 </wo:else>
-</wo:org.webcat.core.WCPageModule></wo:else>
+</wo:org.webcat.core.WCPageModule>
 
 <!-- wo:org.webcat.core.WCPageModule title="Test User List Browser" open="false" -->
 <!-- wo:UserListBrowser master="$courseOffering" keyPath="students"/ -->

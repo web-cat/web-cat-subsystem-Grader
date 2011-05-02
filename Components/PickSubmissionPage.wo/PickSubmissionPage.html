@@ -1,10 +1,5 @@
-<wo name="Page"><wo:if condition="$forceNavigatorSelection">
+<wo name="Page">
 <wo:org.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
-<div class="floatRight"><wo name="Navigator"/></div>
-<div style="width:50%;"><p>Please select the course and assignment.</p></div>
-</wo:org.webcat.core.WCPageModule></wo:if><wo:else>
-<wo:org.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
-<div class="floatRight"><wo name="Navigator"/></div>
 <p>For: <span class="hl"><wo:if condition="$prefs.assignmentOffering"><wo:str value="$prefs.assignmentOffering.titleString"/></wo:if><wo:else><wo:str value="$prefs.assignment.titleString"/></wo:else></span></p>
 <wo:if condition="$previousSubmissions"><wo:if condition="$selectingForDifferentUser">
   <p>Select from all submissions by <wo:str value="$prefs.submission.user.nameAndUid"/> for this assignment.</p>
@@ -34,4 +29,4 @@
   submissions for the selected assignment.</p>
 </wo:if><wo:else>
   <p>You have not made any submissions for the selected assignment.</p>
-</wo:else></wo:else></wo:org.webcat.core.WCPageModule></wo:else></wo>
+</wo:else></wo:else></wo:org.webcat.core.WCPageModule></wo>

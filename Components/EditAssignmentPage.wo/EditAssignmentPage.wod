@@ -78,15 +78,15 @@ EditSubmissionProfile: WOImageButton {
     class     = "icon";
 }
 
-GradingPluginsToAdd: WCFilteringSelect {
+GradingPluginsToAdd: WCDropDownList {
+    title         = "Select a plug-in to add...";
     list          = gradingPluginsToAdd;
     item          = gradingPluginToAdd;
-    selection     = selectedGradingPluginToAdd;
-    useDividers   = true;
-    searchString  = searchStringForGradingPluginToAdd;
-    displayString = displayStringForGradingPluginToAdd;
-    noSelectionString = "(select a plug-in to add)";
-    id            = "plugins";
+}
+
+GradingPluginMenuItem: WCDropDownItem {
+    action = addStep;
+    remote = true;
 }
 
 GradingStepsTable: WCStyledTable {
@@ -135,7 +135,7 @@ NumSuspended: WOString {
     value = numSuspendedSubs;
 }
 
-Page: org.webcat.core.WCPageWithNavigation {
+Page: org.webcat.grader.PageWithAssignmentNavigation {
     title = "Edit Assignment Properties";
 }
 
@@ -147,11 +147,6 @@ RefreshScoreSummaries: WCImageButton {
     alt       = "Refresh cached score summaries";
     title     = "Refresh cached score summaries";
     class     = "icon";
-}
-
-RegradeSubmissions: WCLink {
-    action = regradeSubs;
-    remote = true;
 }
 
 ReleaseSubs: WCLink {
@@ -212,9 +207,25 @@ TogglePublished: WCLink {
     remote = true;
 }
 
+TogglePublishedIcon: WCImageButton {
+    action = togglePublished;
+    remote = true;
+    framework = "Core";
+    filename = iconForPublishedListItem;
+    class = "icon";
+}
+
 ToggleSuspended: WCLink {
     action = toggleSuspended;
     remote = true;
+}
+
+ToggleSuspendedIcon: WCImageButton {
+    action = toggleSuspended;
+    remote = true;
+    framework = "Grader";
+    filename = iconForSuspendedListItem;
+    class = "icon";
 }
 
 TR: org.webcat.core.TableRow {
