@@ -1,0 +1,84 @@
+AssignmentOfferingRepetition : WORepetition {
+    list = assignmentOfferingsDisplayGroup.displayedObjects;
+    item = assignmentOffering;
+    index = index;
+}
+
+AssignmentTitle : WOString {
+    value = assignmentOffering.assignment.titleString;
+}
+
+ChangeStudent : WCButton {
+    label = "Change Student";
+    action = changeStudent;
+}
+
+DueDate : WOString {
+    value = assignmentOffering.dueDate;
+    formatter = session.timeFormatter;
+}
+
+FinalScore : WOString {
+    value = submissionForAssignmentOffering.result.finalScore;
+    numberformat = "0.0";
+}
+
+HistogramWithScore: org.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = assignmentOffering.graphSummary;
+    markScore    = submissionForAssignmentOffering.result.finalScore;
+}
+
+HistogramWithoutScore: org.webcat.grader.graphs.MiniBarGraph {
+    graphSummary = assignmentOffering.graphSummary;
+}
+
+MostRecentSubmitNumber: WOString {
+    value = mostRecentSubmissionNo;
+}
+
+Page : PageWithCourseNavigation {
+    title = "Course Summary for Student";
+}
+
+PickSubmissionDialog: PickSubmissionDialog {
+    rootUserSubmission = selectedUserSubmissionForPickerDialog;
+    nextPageForResultsPage = self;
+    sendsToGradingPage = isUserStaff;
+}
+
+PickSubmissionLink: WCLink {
+    remote = true;
+    action = pickOtherSubmission;
+    disabled = "~mostRecentSubmissionNo eq 1";
+    title = "View a different submission";
+}
+
+StudentList : WCFilteringSelect {
+    list = studentsInCourse;
+    item = aStudent;
+    selection = selectedStudent;
+    displayString = aStudent.name_LF;
+}
+
+SubmissionHistory : WCLink {
+    action = view;
+}
+
+SubmitNumber : WOString {
+    value = submissionForAssignmentOffering.submitNumber;
+}
+
+SubmitTime: WOString {
+    value     = submissionForAssignmentOffering.submitTime;
+    formatter = session.timeFormatter;
+}
+
+SubmitTimeSpan: WOGenericContainer {
+    elementName = "span";
+    class = submitTimeSpanClass;
+    title = submissionForAssignmentOffering.result.earlyLateStatus;
+}
+
+ViewSubmission: WCLink {
+    action = viewSubmission;
+}

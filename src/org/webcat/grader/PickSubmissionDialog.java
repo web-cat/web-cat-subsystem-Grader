@@ -55,6 +55,7 @@ public class PickSubmissionDialog extends GraderComponent
     public NSArray<UserSubmissionPair> allUserSubmissionsForNavigation;
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
     public Submission                  aSubmission;
+    public boolean                     sendsToGradingPage;
 
 
     //~ Methods ...............................................................
@@ -143,28 +144,40 @@ public class PickSubmissionDialog extends GraderComponent
             selectedSub = rootUserSubmission.submission();
         }
 
-        GradeStudentSubmissionPage page =
-            pageWithName(GradeStudentSubmissionPage.class);
+        GraderComponent pageToReturn;
 
         prefs().setSubmissionRelationship(selectedSub);
 
-        if (allUserSubmissionsForNavigation == null)
+        if (sendsToGradingPage)
         {
-            page.availableSubmissions = null;
-            page.thisSubmissionIndex = 0;
+            GradeStudentSubmissionPage page =
+                pageWithName(GradeStudentSubmissionPage.class);
+
+            if (allUserSubmissionsForNavigation == null)
+            {
+                page.availableSubmissions = null;
+                page.thisSubmissionIndex = 0;
+            }
+            else
+            {
+                page.availableSubmissions =
+                    allUserSubmissionsForNavigation.immutableClone();
+                page.thisSubmissionIndex =
+                    page.availableSubmissions.indexOf(rootUserSubmission);
+            }
+
+            page.nextPage = nextPageForResultsPage;
+
+            pageToReturn = page;
         }
         else
         {
-            page.availableSubmissions =
-                allUserSubmissionsForNavigation.immutableClone();
-            page.thisSubmissionIndex =
-                page.availableSubmissions.indexOf(rootUserSubmission);
+            pageToReturn = pageWithName(FinalReportPage.class);
         }
-        page.nextPage = nextPageForResultsPage;
 
-        page.reloadGraderPrefs();
+        pageToReturn.reloadGraderPrefs();
 
-        return page;
+        return pageToReturn;
     }
 
 

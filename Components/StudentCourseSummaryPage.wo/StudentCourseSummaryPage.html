@@ -1,0 +1,39 @@
+<wo name="Page">
+<wo:org.webcat.core.WCPageModule title="Student Assignment History">
+<wo name="PickSubmissionDialog"/>
+<wo:WCForm>
+<wo:if condition="$isUserStaff">
+    <p>Pick student to view: <wo name="StudentList"/> <wo name="ChangeStudent"/></p>
+</wo:if>
+</wo:WCForm>
+<table>
+<thead>
+<tr>
+    <th>Assignment</th>
+    <th>Due Date</th>
+    <th>Submit Time</th>
+    <th>Submission #</th>
+    <th>Score</th>
+    <th>Score Distribution</th>
+</tr>
+</thead><tbody>
+<wo name="AssignmentOfferingRepetition">
+<wo:tr index="$index">
+    <td><wo name="AssignmentTitle"/></td>
+    <td class="sm"><wo name="DueDate"/></td>
+    <wo:if condition="$submissionForAssignmentOffering">
+        <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
+        <td class="n"><wo name="PickSubmissionLink"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
+        (of <wo name="MostRecentSubmitNumber"/>)</wo:not></wo></td>
+        <td class="n"><wo name="ViewSubmission"><wo name="FinalScore"/></wo></td>
+        <td><wo name="HistogramWithScore"/></td>
+    </wo:if><wo:else>
+        <td colspan="3" class="sm" style="text-align: center">(No submissions)</td>
+        <td><wo name="HistogramWithoutScore"/></td>
+    </wo:else>
+</wo:tr>
+</wo>
+</tbody>
+</table>
+</wo:WCPageModule>
+</wo>

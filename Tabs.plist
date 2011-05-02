@@ -22,6 +22,11 @@
               };
             };
           };
+          "View Student Summary" = {
+            pageName = org.webcat.grader.StudentCourseSummaryPage;
+            accessLevel = 40;
+            priority = 3;
+          };
           "Submit for Student" = {
             accessLevel = 40;
             priority = 4;

@@ -1,0 +1,32 @@
+{
+    "WebObjects Release" = "WebObjects 5.0";
+    encoding = NSUTF8StringEncoding;
+    variables = {
+        assignmentOfferingsDisplayGroup = {
+            class = ERXDisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = "session.defaultEditingContext";
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = AssignmentOffering;
+                    isDeep = YES;
+                    prefetchingRelationshipKeyPaths = ();
+                    qualifier = {
+                        class = EOKeyValueQualifier;
+                        key = courseOffering.course;
+                        selectorName = "isEqualTo:";
+                        value = { _key = course;
+                            class = EOQualifierVariable; };
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = NO;
+            sortOrdering = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; },
+                            {class = EOSortOrdering; key = assignment.name; selectorName = "compareCaseInsensitiveAscending:"; });
+        };
+    };
+}
