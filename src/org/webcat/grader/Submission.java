@@ -363,7 +363,7 @@ public class Submission
         NSMutableSet<User> studentsEnrolled = new NSMutableSet<User>();
 
         EOEditingContext ec = editingContext();
-        if (ec == null && assignmentOffering( )!= null)
+        if (ec == null && assignmentOffering() != null)
         {
             ec = assignmentOffering().editingContext();
         }

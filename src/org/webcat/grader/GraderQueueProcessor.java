@@ -31,8 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.webcat.core.Application;
+import org.webcat.core.Course;
+import org.webcat.core.CourseOffering;
 import org.webcat.core.FileUtilities;
 import org.webcat.core.MutableDictionary;
+import org.webcat.core.User;
 import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.GraderKilledMessage;
@@ -47,6 +50,8 @@ import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSKeyValueCoding;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSMutableDictionary;
+import com.webobjects.foundation.NSMutableSet;
+import com.webobjects.foundation.NSSet;
 import com.webobjects.foundation.NSTimestamp;
 import er.extensions.appserver.ERXApplication;
 import er.extensions.eof.ERXConstant;
@@ -986,10 +991,7 @@ public class GraderQueueProcessor
                               double       toolScore )
     {
         SubmissionResult submissionResult = new SubmissionResult();
-//      if ( rawScore >= 0.0 )
-//      {
-//          submissionResult.setRawScore( rawScore );
-//      }
+
         submissionResult.setCorrectnessScore( correctnessScore );
         submissionResult.setToolScore( toolScore );
         editingContext.insertObject( submissionResult );
@@ -1021,6 +1023,13 @@ public class GraderQueueProcessor
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
+
+        if (job.submission().assignmentOffering().assignment()
+                .submissionProfile().allowPartners())
+        {
+            connectPartnersFromProperty(job, properties.getProperty(
+                "grader.potentialpartners"));
+        }
 
         // TODO Set this latest submission as the submission for grading
         // job.submission().setIsSubmissionForGrading(true);
@@ -1085,22 +1094,57 @@ public class GraderQueueProcessor
 
             new AdminReportsForSubmissionMessage(submission, adminReports)
                 .send();
-
-/*            AssignmentOffering assignment = submission.assignmentOffering();
-            Application.sendAdminEmail(
-                null,
-                submission.assignmentOffering().courseOffering()
-                    .instructors(),
-                true,
-                "[Grader] reports: "
-                + submission.user().email() + " #"
-                + submission.submitNumber()
-                + ( assignment == null
-                    ? ""
-                    : ( ", " + assignment.titleString() ) ),
-                "Reports addressed to the adminstrator are attached.\n",
-                adminReports );*/
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Parses the specified space-separated list of partner candidates and
+     * pairs the submission with any of those usernames who are in the same
+     * course.
+     *
+     * @param job the job with the primary submission
+     * @param candidateString the space-separated list of partner candidates
+     */
+    private void connectPartnersFromProperty(EnqueuedJob job,
+            String candidateString)
+    {
+        NSMutableSet<User> potentialPartners = new NSMutableSet<User>();
+
+        if (candidateString != null)
+        {
+            String[] candidates = candidateString.split("\\s+");
+
+            for (String candidate : candidates)
+            {
+                candidate = candidate.trim();
+
+                if (candidate.length() > 0)
+                {
+                    User user = User.userWithDomainAndName(
+                        job.editingContext(),
+                        job.submission().user().authenticationDomain(),
+                        candidate);
+
+                    if (user != null)
+                    {
+                        potentialPartners.addObject(user);
+                    }
+                }
+            }
+        }
+
+        // Now that we've found the set of people who can be partners, filter
+        // out the ones who already have submissions (say, through an external
+        // submitter) and create submissions for the ones who don't.
+
+        for (Submission partneredSub : job.submission().partneredSubmissions())
+        {
+            potentialPartners.removeObject(partneredSub.user());
+        }
+
+        job.submission().partnerWith(potentialPartners.allObjects());
     }
 
 
