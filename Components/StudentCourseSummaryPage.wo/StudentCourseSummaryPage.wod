@@ -9,7 +9,7 @@ AssignmentTitle : WOString {
 }
 
 ChangeStudent : WCButton {
-    label = "Change Student";
+    label = "Go";
     action = changeStudent;
 }
 
@@ -37,7 +37,7 @@ MostRecentSubmitNumber: WOString {
 }
 
 Page : PageWithCourseNavigation {
-    title = "Course Summary for Student";
+    title = "Past Results";
 }
 
 PickSubmissionDialog: PickSubmissionDialog {

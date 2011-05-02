@@ -113,24 +113,56 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
             selectedStudent = wcSession().primeUser();
         }
 
-        assignmentOfferingsDisplayGroup.queryBindings().setObjectForKey(
-                courseToFetch, "course");
-        assignmentOfferingsDisplayGroup.fetch();
+        // For every assignment in the course, determine the assignment
+        // offering that the student actually submitted to (if a student
+        // switched labs, it might be different than his "home" offering). If
+        // the student didn't make any submissions, just use his "home"
+        // offering as the one to display.
+
+        CourseOffering homeOffering = courseOfferings.objectAtIndex(0);
+
+        NSArray<Assignment> assignments = Assignment.objectsMatchingQualifier(
+                localContext(), Assignment.courses.is(courseToFetch));
+
+        NSMutableArray<AssignmentOffering> assignmentOfferings =
+            new NSMutableArray<AssignmentOffering>();
 
         NSMutableDictionary<AssignmentOffering, Submission> submissions =
             new NSMutableDictionary<AssignmentOffering, Submission>();
 
-        for (AssignmentOffering ao :
-            assignmentOfferingsDisplayGroup.displayedObjects())
+        for (Assignment assignment : assignments)
         {
-            NSArray<Submission> subs = Submission.submissionsForGrading(
-                    localContext(), ao, selectedStudent);
+            boolean foundSubmission = false;
+            AssignmentOffering homeAssignmentOffering = null;
 
-            if (subs.size() > 0)
+            for (AssignmentOffering ao : assignment.offerings())
             {
-                submissions.setObjectForKey(subs.objectAtIndex(0), ao);
+                CourseOffering co = ao.courseOffering();
+
+                if (co.equals(homeOffering))
+                {
+                    homeAssignmentOffering = ao;
+                }
+
+                NSArray<Submission> subs = Submission.submissionsForGrading(
+                        localContext(), ao, selectedStudent);
+
+                if (subs.size() > 0)
+                {
+                    foundSubmission = true;
+                    assignmentOfferings.addObject(ao);
+                    submissions.setObjectForKey(subs.objectAtIndex(0), ao);
+                }
+            }
+
+            if (!foundSubmission && homeAssignmentOffering != null)
+            {
+                assignmentOfferings.addObject(homeAssignmentOffering);
             }
         }
+
+        assignmentOfferingsDisplayGroup.setObjectArray(assignmentOfferings);
+        //assignmentOfferingsDisplayGroup.fetch();
 
         submissionsByAssignmentOffering = submissions;
 

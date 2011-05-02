@@ -12,13 +12,6 @@
                     entityName = AssignmentOffering;
                     isDeep = YES;
                     prefetchingRelationshipKeyPaths = ();
-                    qualifier = {
-                        class = EOKeyValueQualifier;
-                        key = courseOffering.course;
-                        selectorName = "isEqualTo:";
-                        value = { _key = course;
-                            class = EOQualifierVariable; };
-                    };
                 };
             };
             fetchesOnLoad = NO;

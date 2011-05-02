@@ -168,18 +168,8 @@
             wantsStart = YES;
           };
           "Past Results" = {
+            pageName = org.webcat.grader.StudentCourseSummaryPage;
             priority = 2;
-            children = {
-              "Pick the Submission" = {
-                pageName = org.webcat.grader.PickSubmissionPage;
-                priority = 3;
-                id       = PastResults;
-              };
-              "View Your Results" = {
-                config = { jumpTo = MostRecent; };
-                priority = 4;
-              };
-            };
           };
           "Graphs" = {
             priority = 3;

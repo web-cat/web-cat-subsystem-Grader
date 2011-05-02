@@ -1,5 +1,5 @@
 <wo name="Page">
-<wo:org.webcat.core.WCPageModule title="Student Assignment History">
+<wo:org.webcat.core.WCPageModule title="Past Results">
 <wo name="PickSubmissionDialog"/>
 <wo:WCForm>
 <wo:if condition="$isUserStaff">
@@ -25,7 +25,7 @@
         <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
         <td class="n"><wo name="PickSubmissionLink"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
         (of <wo name="MostRecentSubmitNumber"/>)</wo:not></wo></td>
-        <td class="n"><wo name="ViewSubmission"><wo name="FinalScore"/></wo></td>
+        <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo></td>
         <td><wo name="HistogramWithScore"/></td>
     </wo:if><wo:else>
         <td colspan="3" class="sm" style="text-align: center">(No submissions)</td>
