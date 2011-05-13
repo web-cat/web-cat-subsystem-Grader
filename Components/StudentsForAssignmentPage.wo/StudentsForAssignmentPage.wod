@@ -105,6 +105,13 @@ NoTAScore: WOConditional {
     negate    = true;
 }
 
+PickSubmissionDialog: PickSubmissionDialog {
+    rootUserSubmission = selectedUserSubmissionForPickerDialog;
+    allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
+    nextPageForResultsPage = self;
+    sendsToGradingPage = true;
+}
+
 PickSubmissionLink: WCLink {
     remote = true;
     action = pickOtherSubmission;
@@ -286,11 +293,4 @@ SortOrderStaffFinalScore: org.webcat.core.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Final Score";
     key = "result.finalScore";
-}
-
-PickSubmissionDialog: PickSubmissionDialog {
-    rootUserSubmission = selectedUserSubmissionForPickerDialog;
-    allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
-    nextPageForResultsPage = self;
-    sendsToGradingPage = true;
 }

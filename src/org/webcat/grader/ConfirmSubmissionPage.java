@@ -134,13 +134,13 @@ public class ConfirmSubmissionPage
 
     // ----------------------------------------------------------
     /**
-     * Returns a string version of the file size for the currrent file.
+     * Returns the file size for the current file.
      *
-     * @return the file size as a string
+     * @return the file size
      */
-    public String fileSize()
+    public long fileSize()
     {
-        return FileUtilities.fileSizeAsString( file.length() );
+        return file.length();
     }
 
 

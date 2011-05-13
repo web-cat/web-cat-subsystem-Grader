@@ -3,20 +3,13 @@
 <div class="floatLeft width50">
 <p>1. Choose one or more <b>course offerings.</b></p>
 <div style="border: 1px solid gray; overflow: auto; max-height: 250px; height: 250px">
+<wo name="CourseTreeSelectionChanged"/>
 <wo name="CourseTree">
-    <script type="dojo/connect" event="onCheckChanged" args="item,checked,node">
-        if (!checked)
-        {
-            <wo:str value="$idFor.JSONRPC"/>.page.pruneAssignmentsFromUnselectedCourses(
-                function() {
-                    webcat.refresh('<wo:str value="$idFor.assignmentPane"/>');
-                });
-        }
-        else
-        {
-            webcat.refresh('<wo:str value="$idFor.assignmentPane"/>');
-        }
-    </script>
+    <wo:WCTreeItems item="$courseTreeItem">
+        <wo:WCTreeItem>
+            <wo:WCTreeCell><wo:str value="$titleOfCourseTreeItem"/></wo:WCTreeCell>
+        </wo:WCTreeItem>
+    </wo:WCTreeItems>
 </wo>
 </div>
 </div>
@@ -24,7 +17,13 @@
 <div class="floatRight width50">
 <p>2. Choose an <b>assignment.</b> <wo name="AssignmentInfo"/></p>
 <wo name="AssignmentPane">
-<wo name="AssignmentTree"/>
+<wo name="AssignmentTree">
+    <wo:WCTreeItems item="$assignmentTreeItem">
+        <wo:WCTreeItem>
+            <wo:WCTreeCell><wo:str value="$titleOfAssignmentTreeItem"/></wo:WCTreeCell>
+        </wo:WCTreeItem>
+    </wo:WCTreeItems>
+</wo>
 </wo>
 </div>
 

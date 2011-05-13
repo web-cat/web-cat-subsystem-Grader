@@ -21,14 +21,18 @@
 
 package org.webcat.grader.objectquery;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Department;
 import org.webcat.core.Semester;
 import org.webcat.core.WCComponent;
 import org.webcat.grader.Assignment;
-import org.webcat.ui.AbstractTreeModel;
+import org.webcat.ui.WCTreeModel;
+import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
+import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOFetchSpecification;
@@ -74,45 +78,38 @@ public class CourseAndAssignmentSubmissionsAssistant
     public CourseTreeModel                     courseModel;
     public AssignmentTreeModel                 assignmentModel;
     public ComponentIDGenerator                idFor;
+    public Object                              courseTreeItem;
+    public Object                              assignmentTreeItem;
 
 
     //~ Public Nested Classes .................................................
 
     // ----------------------------------------------------------
-    public class CourseTreeModel extends AbstractTreeModel
+    public class CourseTreeModel extends WCTreeModel<Object>
     {
         //~ Public Methods ....................................................
 
         // ----------------------------------------------------------
-        @Override
-        protected NSArray<?> childrenOfItem(Object parentItem)
+        public NSArray childrenOfObject(Object item)
         {
-            if (parentItem == null)
+            NSArray children = null;
+
+            if (item == null)
             {
-                return allSemesters();
+                children = allSemesters();
             }
-            else if (parentItem instanceof Semester)
+            else if (item instanceof Semester)
             {
-                return courseOfferingsForSemester((Semester) parentItem);
+                children = courseOfferingsForSemester((Semester) item);
             }
-            else
-            {
-                return null;
-            }
+
+            return children;
         }
 
 
         // ----------------------------------------------------------
         @Override
-        protected boolean itemHasChildren(Object parentItem)
-        {
-            return !(parentItem instanceof CourseOffering);
-        }
-
-
-        // ----------------------------------------------------------
-        @Override
-        protected String idForItem(Object item)
+        public String persistentIdOfObject(Object item)
         {
             if (item instanceof EOGenericRecord)
             {
@@ -128,39 +125,10 @@ public class CourseAndAssignmentSubmissionsAssistant
 
 
         // ----------------------------------------------------------
-        @Override
-        protected String labelForItem(Object item)
-        {
-            if (item instanceof Semester)
-            {
-                Semester s = (Semester) item;
-                return "<b>" + s.seasonName() + " " + s.year() + "</b>";
-            }
-            else if (item instanceof CourseOffering)
-            {
-                CourseOffering co = (CourseOffering) item;
-                return "<b>" + co.course().deptNumberAndName() + "</b> ("
-                    + co.crn() + ")";
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-
-        // ----------------------------------------------------------
         private NSArray<Semester> allSemesters()
         {
-            NSMutableArray<EOSortOrdering> orderings =
-                new NSMutableArray<EOSortOrdering>();
-            orderings.addObject(ERXS.asc(Semester.YEAR_KEY));
-            orderings.addObject(ERXS.asc(Semester.SEASON_KEY));
-
-            EOFetchSpecification fspec = new EOFetchSpecification(
-                    Semester.ENTITY_NAME, null, orderings);
-            return Semester
-                .objectsWithFetchSpecification(localContext(), fspec);
+            return Semester.objectsMatchingQualifier(localContext(), null,
+                    Semester.year.asc().then(Semester.season.asc()));
         }
 
 
@@ -176,48 +144,38 @@ public class CourseAndAssignmentSubmissionsAssistant
                             CourseOffering.COURSE_KEY + "." +
                             Course.DEPARTMENT_KEY + "." +
                             Department.ABBREVIATION_KEY),
-                    ERXS.asc(
-                            CourseOffering.COURSE_NUMBER_KEY),
-                    ERXS.asc(CourseOffering.CRN_KEY));
+                    CourseOffering.courseNumber.asc(),
+                    CourseOffering.crn.asc());
         }
     }
 
 
     // ----------------------------------------------------------
-    public class AssignmentTreeModel extends AbstractTreeModel
+    public class AssignmentTreeModel extends WCTreeModel<Object>
     {
         //~ Public Methods ....................................................
 
         // ----------------------------------------------------------
-        @Override
-        protected NSArray<?> childrenOfItem(Object parentItem)
+        public NSArray childrenOfObject(Object item)
         {
-            if (parentItem == null)
+            NSArray children = null;
+
+            if (item == null)
             {
-                return model.selectedCourses();
+                children = model.selectedCourses();
             }
-            else if (parentItem instanceof Course)
+            else if (item instanceof Course)
             {
-                return assignmentsForCourse((Course) parentItem);
+                children = assignmentsForCourse((Course) item);
             }
-            else
-            {
-                return null;
-            }
+
+            return children;
         }
 
 
         // ----------------------------------------------------------
         @Override
-        protected boolean itemHasChildren(Object parentItem)
-        {
-            return (parentItem instanceof Course);
-        }
-
-
-        // ----------------------------------------------------------
-        @Override
-        protected String idForItem(Object item)
+        public String persistentIdOfObject(Object item)
         {
             if (item instanceof EOGenericRecord)
             {
@@ -233,36 +191,12 @@ public class CourseAndAssignmentSubmissionsAssistant
 
 
         // ----------------------------------------------------------
-        @Override
-        protected String labelForItem(Object item)
-        {
-            if (item instanceof Course)
-            {
-                Course c = (Course) item;
-                return "<b>" + c.deptNumberAndName() + "</b>";
-            }
-            else if (item instanceof Assignment)
-            {
-                Assignment a = (Assignment) item;
-                return a.name();
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-
-        // ----------------------------------------------------------
         private NSArray<Assignment> assignmentsForCourse(Course course)
         {
-            ERXSortOrderings sortOrderings = Assignment.name.ascInsensitives();
-
-            EOFetchSpecification fetchSpec =
-                new EOFetchSpecification(Assignment.ENTITY_NAME,
-                        ERXQ.containsObject(
-                                Assignment.COURSES_KEY, course),
-                        sortOrderings);
+            EOFetchSpecification fetchSpec = new EOFetchSpecification(
+                    Assignment.ENTITY_NAME,
+                    ERXQ.containsObject(Assignment.COURSES_KEY, course),
+                    Assignment.name.ascInsensitives());
             fetchSpec.setUsesDistinct(true);
 
             return Assignment.objectsWithFetchSpecification(
@@ -281,6 +215,63 @@ public class CourseAndAssignmentSubmissionsAssistant
         assignmentModel = new AssignmentTreeModel();
 
         super.appendToResponse(response, context);
+    }
+
+
+    // ----------------------------------------------------------
+    public String titleOfCourseTreeItem()
+    {
+        if (courseTreeItem instanceof Semester)
+        {
+            Semester semester = (Semester) courseTreeItem;
+            return semester.name();
+        }
+        else if (courseTreeItem instanceof CourseOffering)
+        {
+            CourseOffering co = (CourseOffering) courseTreeItem;
+            return co.deptNumberAndName();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public String titleOfAssignmentTreeItem()
+    {
+        if (assignmentTreeItem instanceof Course)
+        {
+            Course course = (Course) assignmentTreeItem;
+            return course.deptNumberAndName();
+        }
+        else if (assignmentTreeItem instanceof Assignment)
+        {
+            Assignment assignment = (Assignment) assignmentTreeItem;
+            return assignment.name() + ": " + assignment.shortDescription();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public String onCourseTreeSelectionChangedScript()
+    {
+        return idFor.get("courseTreeSelectionChanged") + "(this);";
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults courseTreeSelectionChanged()
+    {
+        assignmentModel.rearrangeObjects();
+        model.setSelectedCourseModelItems(
+                courseModel.selectedObjects().allObjects());
+        return new JavascriptGenerator().refresh(idFor.get("assignmentPane"));
     }
 
 

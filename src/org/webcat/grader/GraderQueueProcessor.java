@@ -30,11 +30,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.webcat.archives.ArchiveManager;
+import org.webcat.archives.IWritableContainer;
 import org.webcat.core.Application;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.FileUtilities;
 import org.webcat.core.MutableDictionary;
+import org.webcat.core.RepositoryEntryRef;
 import org.webcat.core.User;
 import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
@@ -500,13 +503,45 @@ public class GraderQueueProcessor
                 return;
             }
         }
-        // Clean up the working directory
-        FileUtilities.deleteDirectory( job.workingDirName() );
 
-        generateFinalReport( job,
-                             gradingProperties,
-                             correctnessScore,
-                             toolScore );
+        // Clean up the working directory.
+        FileUtilities.deleteDirectory(job.workingDirName());
+
+        generateFinalReport(job,
+                            gradingProperties,
+                            correctnessScore,
+                            toolScore);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the location where checked out files should be stored, creating it
+     * if desired.
+     *
+     * @param job the grader job to associate the checkout with
+     * @param clean true to clean out the checkout location and create it fresh,
+     *     or false to just return the path (which may or may not exist)
+     * @return the path to the checkout location
+     */
+    private File repositoryCheckoutLocation(EnqueuedJob job, boolean clean)
+    {
+        File root = new File(org.webcat.core.Application
+            .configurationProperties().getProperty("grader.workarea"),
+            "_GraderCheckout");
+        File location = new File(root, job.id().toString());
+
+        if (clean)
+        {
+            if (location.exists())
+            {
+                FileUtilities.deleteDirectory(location);
+            }
+
+            location.mkdirs();
+        }
+
+        return location;
     }
 
 
@@ -523,23 +558,15 @@ public class GraderQueueProcessor
         throws java.io.IOException
     {
         // Create the working compilation directory for the user
-        File workingDir = new File( job.workingDirName() );
-        if ( workingDir.exists() )
+        File workingDir = new File(job.workingDirName());
+        if (workingDir.exists())
         {
-            FileUtilities.deleteDirectory( workingDir );
+            FileUtilities.deleteDirectory(workingDir);
         }
         workingDir.mkdirs();
 
         // Copy the user's submission to the working dir
         Submission submission = job.submission();
-//        if ( submission.fileIsArchive() )
-//        {
-//            Grader.unZip( submission.file(), workingDir );
-//        }
-//        else
-//        {
-//            Grader.copyFile( submission.file(), workingDir );
-//        }
         org.webcat.archives.ArchiveManager.getInstance()
             .unpack( workingDir, submission.file() );
 
@@ -550,6 +577,112 @@ public class GraderQueueProcessor
             FileUtilities.deleteDirectory( graderLD );
         }
         graderLD.mkdirs();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Checks out the specified file into the temporary space used for grading.
+     *
+     * @param fileInfo a String representing an old-style absolute path to the
+     *     old script-data area, or a dictionary containing the repository info
+     *     for a file
+     * @return a File object that points to the location of the checked out
+     *     file
+     * @throws IOException if an I/O error occurred
+     */
+    private File checkOutRepositoryFiles(EnqueuedJob job, Object fileInfo)
+        throws IOException
+    {
+        RepositoryEntryRef entryRef = null;
+
+        if (fileInfo instanceof String)
+        {
+            entryRef = RepositoryEntryRef.fromOldStylePath((String) fileInfo);
+        }
+        else if (fileInfo instanceof NSDictionary<?, ?>)
+        {
+            entryRef = RepositoryEntryRef.fromDictionary(
+                    (NSDictionary<String, Object>) fileInfo);
+        }
+
+        if (entryRef != null)
+        {
+            entryRef.resolve(editingContext);
+
+            File checkoutLocation = repositoryCheckoutLocation(job, false);
+
+            File repoDir = new File(entryRef.repositoryName());
+            File filePath = new File(repoDir, entryRef.path());
+
+            File containerPath = new File(checkoutLocation, filePath.getPath());
+            if (!entryRef.isDirectory())
+            {
+                containerPath = containerPath.getParentFile();
+            }
+
+            containerPath.mkdirs();
+
+            IWritableContainer container =
+                ArchiveManager.getInstance().createWritableContainer(
+                        containerPath, false);
+
+            entryRef.repository().copyItemToContainer(
+                    entryRef.objectId(), entryRef.name(), container);
+
+            return filePath;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds settings from a configuration settings dictionary to the properties
+     * file for grading, checking out any required files into temporary storage
+     * if necessary.
+     *
+     * @param job the job
+     * @param config the configuration settings to add
+     * @param properties the properties file to add the settings to
+     * @param fileSettings a dictionary whose keys represent settings that are
+     *     intended to be file paths
+     * @param onlyIfNotDefined true to only add the property if it doesn't
+     *     already exist
+     */
+    private void addConfigSettingsToProperties(
+            EnqueuedJob job, MutableDictionary config,
+            WCProperties properties, MutableDictionary fileSettings,
+            boolean onlyIfNotDefined) throws IOException
+    {
+        for (String property : (NSArray<String>) config.allKeys())
+        {
+            if (!onlyIfNotDefined || !properties.containsKey(property))
+            {
+                Object value = config.objectForKey(property);
+
+                if (fileSettings.containsKey(property))
+                {
+                    // Check out the file or directory, write it to a temporary
+                    // location, and then write the value of the property to
+                    // point to that location.
+
+                    File location = checkOutRepositoryFiles(job, value);
+
+                    if (location != null)
+                    {
+                        properties.setProperty(property, location.getPath());
+                    }
+                }
+                else
+                {
+                    properties.setProperty(property, value.toString());
+                }
+            }
+        }
     }
 
 
@@ -571,10 +704,10 @@ public class GraderQueueProcessor
      * @param propertiesFile the file to record the properties in
      */
     //     * @throws IOException if one occurs
-    void executeStep( EnqueuedJob  job,
-                      Step         step,
-                      WCProperties properties,
-                      File         propertiesFile )
+    private void executeStep(EnqueuedJob  job,
+                             Step         step,
+                             WCProperties properties,
+                             File         propertiesFile)
     {
         faultOccurredInStep = false;
         timeoutOccurredInStep = false;
@@ -585,20 +718,51 @@ public class GraderQueueProcessor
         {
             step.gradingPlugin().reinitializeConfigAttributesIfNecessary();
             log.debug( "creating properties file" );
+
+            MutableDictionary fileProps =
+                step.gradingPlugin().fileConfigSettings();
+
+            // Create a clean checkout location at the beginning of each step.
+            File checkoutLocation = repositoryCheckoutLocation(job, true);
+
+            properties.setProperty("scriptData",
+                    checkoutLocation.getAbsolutePath());
+
             // Re-write the properties file
             properties.addPropertiesFromDictionaryIfNotDefined(Application
                 .wcApplication().subsystemManager().pluginProperties());
-            properties.addPropertiesFromDictionaryIfNotDefined(
+
+            addConfigSettingsToProperties(job,
+                    step.gradingPlugin().globalConfigSettings(),
+                    properties, fileProps, true);
+            addConfigSettingsToProperties(job,
+                    step.gradingPlugin().defaultConfigSettings(),
+                    properties, fileProps, true);
+
+            if (step.config() != null)
+            {
+                addConfigSettingsToProperties(job,
+                        step.config().configSettings(),
+                        properties, fileProps, false);
+            }
+
+            addConfigSettingsToProperties(
+                    job, step.configSettings(), properties, fileProps, false);
+
+            /*properties.addPropertiesFromDictionaryIfNotDefined(
                 step.gradingPlugin().globalConfigSettings() );
             properties.addPropertiesFromDictionaryIfNotDefined(
                 step.gradingPlugin().defaultConfigSettings() );
+
             if ( step.config() != null )
             {
                 properties.addPropertiesFromDictionary(
                     step.config().configSettings() );
             }
+
             properties.addPropertiesFromDictionary(
-                step.configSettings() );
+                step.configSettings() );*/
+
             properties.setProperty("userName",
                                    job.submission().user().userName());
             properties.setProperty("workingDir",
@@ -609,8 +773,6 @@ public class GraderQueueProcessor
                                    step.gradingPlugin().dirName());
             properties.setProperty("pluginResourcePrefix", "${pluginResource:"
                     + step.gradingPlugin().name() + "}");
-            properties.setProperty("scriptData",
-                                   GradingPlugin.scriptDataRoot());
             properties.setProperty("timeout",
                                    Integer.toString(
                                        step.effectiveEndToEndTimeout()));
@@ -697,6 +859,15 @@ public class GraderQueueProcessor
                             "in stage " + step,
                             e,
                             propertiesFile.getParentFile() );
+        }
+        finally
+        {
+            // Clean up the checked out files.
+            File checkoutLocation = repositoryCheckoutLocation(job, false);
+            if (checkoutLocation.exists())
+            {
+                FileUtilities.deleteDirectory(checkoutLocation);
+            }
         }
     }
 

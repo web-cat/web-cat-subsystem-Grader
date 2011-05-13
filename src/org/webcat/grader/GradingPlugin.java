@@ -261,7 +261,11 @@ public class GradingPlugin
             NSTimestamp lastRead = lastModified();
             NSTimestamp modified =
                 new NSTimestamp( configPlist.lastModified() );
-            if ( lastRead != null && modified.after( lastRead ) )
+
+            // The check against fileConfigSettings that has been added is to
+            // migrate older plugins.
+            if (lastRead != null && modified.after(lastRead)
+                    || storedValueForKey("fileConfigSettings") == null)
             {
                 // silently swallow returned message
                 initializeConfigAttributes( configPlist );
@@ -315,10 +319,29 @@ public class GradingPlugin
 //              log.debug( "script config.plist = " + dict );
                 String dictName = (String)dict.objectForKey( "name" );
                 setName( dictName );
-                NSArray<?> options = (NSArray<?>)dict.objectForKey( "options" );
-//              log.debug( "options = " + options );
-                if ( options != null )
+
+                MutableDictionary fileSettings = new MutableDictionary();
+
+                NSArray<?> globalOptions = (NSArray<?>)dict.objectForKey(
+                        "globalOptions");
+                if (globalOptions != null)
                 {
+                    addFilePropertiesToDictionary(fileSettings, globalOptions);
+                }
+
+                NSArray<?> assignmentOptions = (NSArray<?>)dict.objectForKey(
+                        "assignmentOptions");
+                if (assignmentOptions != null)
+                {
+                    addFilePropertiesToDictionary(fileSettings,
+                            assignmentOptions);
+                }
+
+                NSArray<?> options = (NSArray<?>)dict.objectForKey("options");
+                if (options != null)
+                {
+                    addFilePropertiesToDictionary(fileSettings, options);
+
                     MutableDictionary defaults = new MutableDictionary();
                     for ( int i = 0; i < options.count(); i++ )
                     {
@@ -337,14 +360,30 @@ public class GradingPlugin
                             {
                                 defaults.setObjectForKey( value, property );
                             }
+
+                            String type = (String) thisOption
+                                .objectForKey("type");
+
+                            if (type.equals("file"))
+                            {
+                                fileSettings.setObjectForKey(false, property);
+                            }
+                            else if (type.equals("fileOrDir"))
+                            {
+                                fileSettings.setObjectForKey(true, property);
+                            }
                         }
                     }
-                    setDefaultConfigSettings( defaults );
+
+                    setDefaultConfigSettings(defaults);
                 }
                 else
                 {
-                    setDefaultConfigSettings( null );
+                    setDefaultConfigSettings(null);
                 }
+
+                setFileConfigSettings(fileSettings);
+
                 setLastModified(
                     new NSTimestamp( configPlist.lastModified() ) );
                 if ( ERXValueUtilities.booleanValue(
@@ -364,6 +403,31 @@ public class GradingPlugin
             return "This script is missing its 'config.plist' file.";
         }
         return null;
+    }
+
+
+    // ----------------------------------------------------------
+    private void addFilePropertiesToDictionary(MutableDictionary fileProps,
+            NSArray<?> options)
+    {
+        for (NSDictionary<String, ?> option :
+            (NSArray<NSDictionary<String, ?>>) options)
+        {
+            if (option.objectForKey("disable") == null)
+            {
+                String property = (String) option.objectForKey("property");
+                String type = (String) option.objectForKey("type");
+
+                if (type.equalsIgnoreCase("file"))
+                {
+                    fileProps.setObjectForKey(false, property);
+                }
+                else if (type.equalsIgnoreCase("fileOrDir"))
+                {
+                    fileProps.setObjectForKey(true, property);
+                }
+            }
+        }
     }
 
 

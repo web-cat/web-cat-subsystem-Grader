@@ -1,130 +1,142 @@
 {
     attributes = (
-        {columnName = CAUTHORID; name = authorId; prototypeName = foreignId; }, 
+        {columnName = CAUTHORID; name = authorId; prototypeName = foreignId; },
         {
-            columnName = CCONFIGDESCRIPTION; 
-            name = configDescription; 
-            prototypeName = mutableDictionary; 
+            columnName = CCONFIGDESCRIPTION;
+            name = configDescription;
+            prototypeName = mutableDictionary;
             userInfo = {
-                adaptorValueConversionMethodName = archiveData; 
-                isMutable = true; 
-                valueClassName = "org.webcat.core.MutableDictionary"; 
-                valueFactoryMethodName = objectWithArchiveData; 
-            }; 
-        }, 
+                adaptorValueConversionMethodName = archiveData;
+                isMutable = true;
+                valueClassName = "org.webcat.core.MutableDictionary";
+                valueFactoryMethodName = objectWithArchiveData;
+            };
+        },
         {
-            columnName = CDEFAULTCONFIGSETTINGS; 
-            name = defaultConfigSettings; 
-            prototypeName = mutableDictionary; 
+            columnName = CDEFAULTCONFIGSETTINGS;
+            name = defaultConfigSettings;
+            prototypeName = mutableDictionary;
             userInfo = {
-                adaptorValueConversionMethodName = archiveData; 
-                isMutable = true; 
-                valueClassName = "org.webcat.core.MutableDictionary"; 
-                valueFactoryMethodName = objectWithArchiveData; 
-            }; 
-        }, 
+                adaptorValueConversionMethodName = archiveData;
+                isMutable = true;
+                valueClassName = "org.webcat.core.MutableDictionary";
+                valueFactoryMethodName = objectWithArchiveData;
+            };
+        },
         {
-            columnName = CGLOBALCONFIGSETTINGS; 
-            name = globalConfigSettings; 
-            prototypeName = mutableDictionary; 
+            columnName = fileConfigSettings;
+            name = fileConfigSettings;
+            prototypeName = mutableDictionary;
             userInfo = {
-                adaptorValueConversionMethodName = archiveData; 
-                isMutable = true; 
-                valueClassName = "org.webcat.core.MutableDictionary"; 
-                valueFactoryMethodName = objectWithArchiveData; 
-            }; 
-        }, 
-        {name = id; prototypeName = id; }, 
+                adaptorValueConversionMethodName = archiveData;
+                isMutable = true;
+                valueClassName = "org.webcat.core.MutableDictionary";
+                valueFactoryMethodName = objectWithArchiveData;
+            };
+        },
         {
-            columnName = CISCONFIGFILE; 
-            name = isConfigFile; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
+            columnName = CGLOBALCONFIGSETTINGS;
+            name = globalConfigSettings;
+            prototypeName = mutableDictionary;
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData;
+                isMutable = true;
+                valueClassName = "org.webcat.core.MutableDictionary";
+                valueFactoryMethodName = objectWithArchiveData;
+            };
+        },
+        {name = id; prototypeName = id; },
         {
-            columnName = CISPUBLISHED; 
-            name = isPublished; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
-        {columnName = CLANGUAGEID; name = languageId; prototypeName = foreignId; }, 
+            columnName = CISCONFIGFILE;
+            name = isConfigFile;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
         {
-            columnName = CLASTMODIFIEDTIME; 
-            name = lastModified; 
-            prototypeName = dateTime; 
-        }, 
-        {columnName = CMAINFILENAME; name = mainFileName; prototypeName = tinyText; }, 
-        {columnName = CNAME; name = name; prototypeName = tinyText; }, 
-        {columnName = CSUBDIRNAME; name = subdirName; prototypeName = tinyText; }, 
+            columnName = CISPUBLISHED;
+            name = isPublished;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
+        {columnName = CLANGUAGEID; name = languageId; prototypeName = foreignId; },
         {
-            name = updateMutableFields; 
-            prototypeName = updateMutableFields; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
+            columnName = CLASTMODIFIEDTIME;
+            name = lastModified;
+            prototypeName = dateTime;
+        },
+        {columnName = CMAINFILENAME; name = mainFileName; prototypeName = tinyText; },
+        {columnName = CNAME; name = name; prototypeName = tinyText; },
+        {columnName = CSUBDIRNAME; name = subdirName; prototypeName = tinyText; },
         {
-            columnName = CUPLOADEDFILENAME; 
-            name = uploadedFileName; 
-            prototypeName = tinyText; 
+            name = updateMutableFields;
+            prototypeName = updateMutableFields;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
+        {
+            columnName = CUPLOADEDFILENAME;
+            name = uploadedFileName;
+            prototypeName = tinyText;
         }
-    ); 
+    );
     attributesUsedForLocking = (
-        authorId, 
-        isConfigFile, 
-        isPublished, 
-        languageId, 
-        mainFileName, 
-        name, 
-        subdirName, 
-        updateMutableFields, 
+        authorId,
+        isConfigFile,
+        isPublished,
+        languageId,
+        mainFileName,
+        name,
+        subdirName,
+        updateMutableFields,
         uploadedFileName
-    ); 
-    className = "org.webcat.grader.GradingPlugin"; 
+    );
+    className = "org.webcat.grader.GradingPlugin";
     classProperties = (
-        author, 
-        configDescription, 
-        courseOfferings, 
-        defaultConfigSettings, 
-        globalConfigSettings, 
-        isConfigFile, 
-        isPublished, 
-        language, 
-        lastModified, 
-        mainFileName, 
-        name, 
-        steps, 
-        subdirName, 
-        updateMutableFields, 
+        author,
+        configDescription,
+        courseOfferings,
+        defaultConfigSettings,
+        fileConfigSettings,
+        globalConfigSettings,
+        isConfigFile,
+        isPublished,
+        language,
+        lastModified,
+        mainFileName,
+        name,
+        steps,
+        subdirName,
+        updateMutableFields,
         uploadedFileName
-    ); 
-    externalName = TUPLOADEDSCRIPTFILES; 
-    name = GradingPlugin; 
-    primaryKeyAttributes = (id); 
+    );
+    externalName = TUPLOADEDSCRIPTFILES;
+    name = GradingPlugin;
+    primaryKeyAttributes = (id);
     relationships = (
         {
-            destination = User; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
-            name = author; 
-        }, 
+            destination = User;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = authorId; });
+            name = author;
+        },
         {
-            definition = "steps.assignment.offerings.courseOffering"; 
-            internalInfo = {"_nameInObjectStore" = "steps_assignment_offerings_courseOffering"; }; 
-            name = courseOfferings; 
-        }, 
+            definition = "steps.assignment.offerings.courseOffering";
+            internalInfo = {"_nameInObjectStore" = "steps_assignment_offerings_courseOffering"; };
+            name = courseOfferings;
+        },
         {
-            destination = Language; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = languageId; }); 
-            name = language; 
-        }, 
+            destination = Language;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = languageId; });
+            name = language;
+        },
         {
-            destination = Step; 
-            isToMany = Y; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = scriptId; sourceAttribute = id; }); 
-            name = steps; 
+            destination = Step;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = scriptId; sourceAttribute = id; });
+            name = steps;
         }
-    ); 
+    );
 }

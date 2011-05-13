@@ -420,6 +420,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Submission method is no longer used (will eventually be deleted),
+     * so make it optional.
+     * @throws SQLException on error
+     */
+    public void updateIncrement19() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TUPLOADEDSCRIPTFILES add fileConfigSettings BLOB");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

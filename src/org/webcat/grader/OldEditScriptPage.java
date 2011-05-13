@@ -359,9 +359,9 @@ public class OldEditScriptPage
 
 
     // ----------------------------------------------------------
-    public String fileSize()
+    public long fileSize()
     {
-        return FileUtilities.fileSizeAsString( file.length() );
+        return file.length();
     }
 
 

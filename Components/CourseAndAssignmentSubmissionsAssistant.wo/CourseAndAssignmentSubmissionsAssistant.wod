@@ -3,11 +3,20 @@ RPC: WCJSONRPC {
     proxyName = "page";
 }
 
-CourseTree: WCCheckTree {
+CourseTree: WCTree {
     id = idFor.courseTree;
-    model = courseModel;
-    checkedItems = model.selectedCourseModelItems;
-    showRoot = false;
+    treeModel = courseModel;
+    settingsKey = "Reporter_CourseAndAssignmentSubmissionsAssistant";
+    canSelectItems = true;
+    multipleSelection = true;
+    initialExpandDepth = 1;
+    onSelectionChanged = onCourseTreeSelectionChangedScript;
+}
+
+CourseTreeSelectionChanged: WCActionFunction {
+    jsId = idFor.courseTreeSelectionChanged;
+    action = courseTreeSelectionChanged;
+    remote = true;
 }
 
 AssignmentPane: WCContentPane {
@@ -15,11 +24,12 @@ AssignmentPane: WCContentPane {
     style = "border: 1px solid gray; overflow: auto; max-height: 250px; height: 250px";
 }
 
-AssignmentTree: WCCheckTree {
+AssignmentTree: WCTree {
     id = idFor.assignmentTree;
-    model = assignmentModel;
-    checkedItems = model.selectedAssignmentModelItems;
-    showRoot = false;
+    treeModel = assignmentModel;
+    canSelectItems = true;
+    multipleSelection = true;
+    initialExpandDepth = 1;
 }
 
 AssignmentInfo: org.webcat.core.PopUpInfo {

@@ -7,7 +7,7 @@ For: <span class="hl"><webobject name="AssignmentName"/></span>
 </webobject><webobject name="HasValidFileUpload">
     <p>So far, you have uploaded the file
     <b><wo:str value="$submissionInProcess.uploadedFileName"/></b>
-    (<wo:str value="$uploadedFileSize"/>) for submission.  You can
+    (<wo:str value="$uploadedFileSize" formatter="$application.fileSizeFormatter"/>) for submission.  You can
     replace this with a different file, or choose to continue.</p>
 </webobject><webobject name="OkayToSubmit">
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">

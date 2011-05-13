@@ -1,57 +1,58 @@
 HasExistingFiles : WOConditional {
-	condition = hasExistingFiles;
+    condition = hasExistingFiles;
 }
 
 NoExistingFiles : WOConditional {
-	condition = hasExistingFiles;
-	negate    = true;
+    condition = hasExistingFiles;
+    negate    = true;
 }
 
 RadioButton1: WORadioButton {
-	name = "Group";
-	selection = selectedIndex;
-	value = index;
+    name = "Group";
+    selection = selectedIndex;
+    value = index;
 }
 
 Repetition1: WORepetition {
-	item = file;
-	list = fileDisplayGroup.displayedObjects;
-	index = index;
+    item = file;
+    list = fileDisplayGroup.displayedObjects;
+    index = index;
 }
 
 WCSortOrder1: org.webcat.core.WCSortOrder {
-	displayGroup = fileDisplayGroup;
-	displayKey = "Name";
-	key = "getPath";
+    displayGroup = fileDisplayGroup;
+    displayKey = "Name";
+    key = "getPath";
 }
 
 WCSortOrder2: org.webcat.core.WCSortOrder {
-	displayGroup = fileDisplayGroup;
-	displayKey = "Last Modified";
-	key = "lastModified";
+    displayGroup = fileDisplayGroup;
+    displayKey = "Last Modified";
+    key = "lastModified";
 }
 
 String1: WOString {
-	value = fileName;
+    value = fileName;
 }
 
 String2: WOString {
     formatter = session.timeFormatter;
-	value     = fileDate;
+    value     = fileDate;
 }
 
 String3: WOString {
-	value = fileSize;
+    value = fileSize;
+    formatter = application.fileSizeFormatter;
 }
 
 TR: org.webcat.core.TableRow {
-	index = index;
+    index = index;
 }
 
 UploadScript: WOFileUpload {
-	data     = uploadedData;
-	filePath = uploadedName;
-	size     = 60;
+    data     = uploadedData;
+    filePath = uploadedName;
+    size     = 60;
 }
 
 Page: org.webcat.core.WizardPage {

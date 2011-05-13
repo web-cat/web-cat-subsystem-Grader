@@ -347,12 +347,11 @@ public class UploadSubmissionPage
 
     // ----------------------------------------------------------
     /**
-     * Returns a string version of the file size for the currently
-     * uploaded file.
+     * Returns the file size for the currently uploaded file.
      *
-     * @return the file size as a string
+     * @return the file size
      */
-    public String uploadedFileSize()
+    public long uploadedFileSize()
     {
         long size = 0L;
         NSData file = submissionInProcess().uploadedFile();
@@ -360,7 +359,7 @@ public class UploadSubmissionPage
         {
             size = file.length();
         }
-        return FileUtilities.fileSizeAsString( size );
+        return size;
     }
 
 
