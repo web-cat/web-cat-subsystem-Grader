@@ -166,7 +166,8 @@ public abstract class _EnqueuedJob
     // Fetch specifications ---
     public static final String ENTITY_NAME = "EnqueuedJob";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

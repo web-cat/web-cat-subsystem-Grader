@@ -180,7 +180,8 @@ public abstract class _Assignment
     public static final String NEIGHBOR_ASSIGNMENTS_FSPEC = "neighborAssignments";
     public static final String ENTITY_NAME = "Assignment";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

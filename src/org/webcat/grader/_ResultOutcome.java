@@ -164,7 +164,8 @@ public abstract class _ResultOutcome
     // Fetch specifications ---
     public static final String ENTITY_NAME = "ResultOutcome";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

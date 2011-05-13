@@ -202,7 +202,8 @@ public abstract class _SubmissionResult
     public static final String RESULTS_FOR_ASSIGNMENT_AND_USER_FSPEC = "resultsForAssignmentAndUser";
     public static final String ENTITY_NAME = "SubmissionResult";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

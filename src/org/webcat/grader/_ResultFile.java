@@ -154,7 +154,8 @@ public abstract class _ResultFile
     // Fetch specifications ---
     public static final String ENTITY_NAME = "ResultFile";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

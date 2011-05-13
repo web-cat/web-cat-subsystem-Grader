@@ -193,7 +193,8 @@ public abstract class _AssignmentOffering
     public static final String OFFERINGS_WITH_USER_AS_STUDENT_FSPEC = "offeringsWithUserAsStudent";
     public static final String ENTITY_NAME = "AssignmentOffering";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

@@ -175,7 +175,8 @@ public abstract class _SubmissionFileComment
     // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileComment";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

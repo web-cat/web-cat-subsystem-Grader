@@ -164,7 +164,8 @@ public abstract class _GraderPrefs
     public static final String OBJECTS_FOR_USER_FSPEC = "objectsForUser";
     public static final String ENTITY_NAME = "GraderPrefs";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

@@ -205,7 +205,8 @@ public abstract class _SubmissionFileStats
     // Fetch specifications ---
     public static final String ENTITY_NAME = "SubmissionFileStats";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

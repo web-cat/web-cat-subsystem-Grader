@@ -225,7 +225,8 @@ public abstract class _SubmissionProfile
     public static final String PROFILES_FOR_USER_FSPEC = "profilesForUser";
     public static final String ENTITY_NAME = "SubmissionProfile";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

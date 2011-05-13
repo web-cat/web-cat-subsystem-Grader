@@ -193,7 +193,8 @@ public abstract class _Submission
     public static final String SUBMISSIONS_WITH_FEEDBACK_FSPEC = "submissionsWithFeedback";
     public static final String ENTITY_NAME = "Submission";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

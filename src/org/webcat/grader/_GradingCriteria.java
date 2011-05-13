@@ -232,7 +232,8 @@ public abstract class _GradingCriteria
     // Fetch specifications ---
     public static final String ENTITY_NAME = "GradingCriteria";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

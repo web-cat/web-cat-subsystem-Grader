@@ -163,7 +163,8 @@ public abstract class _StepConfig
     public static final String STEP_CONFIGS_FOR_USER_FSPEC = "stepConfigsForUser";
     public static final String ENTITY_NAME = "StepConfig";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................

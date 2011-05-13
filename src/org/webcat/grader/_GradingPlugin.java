@@ -153,6 +153,9 @@ public abstract class _GradingPlugin
     public static final String DEFAULT_CONFIG_SETTINGS_KEY = "defaultConfigSettings";
     public static final ERXKey<NSData> defaultConfigSettings =
         new ERXKey<NSData>(DEFAULT_CONFIG_SETTINGS_KEY);
+    public static final String FILE_CONFIG_SETTINGS_KEY = "fileConfigSettings";
+    public static final ERXKey<NSData> fileConfigSettings =
+        new ERXKey<NSData>(FILE_CONFIG_SETTINGS_KEY);
     public static final String GLOBAL_CONFIG_SETTINGS_KEY = "globalConfigSettings";
     public static final ERXKey<NSData> globalConfigSettings =
         new ERXKey<NSData>(GLOBAL_CONFIG_SETTINGS_KEY);
@@ -198,7 +201,8 @@ public abstract class _GradingPlugin
     public static final String PLUGINS_AVAILABLE_TO_USER_FSPEC = "pluginsAvailableToUser";
     public static final String ENTITY_NAME = "GradingPlugin";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................
@@ -451,6 +455,109 @@ public abstract class _GradingPlugin
         takeStoredValueForKey( null, "defaultConfigSettings" );
         defaultConfigSettingsRawCache = null;
         defaultConfigSettingsCache = null;
+    }
+
+
+    //-- Local mutable cache --
+    private org.webcat.core.MutableDictionary fileConfigSettingsCache;
+    private NSData fileConfigSettingsRawCache;
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>fileConfigSettings</code> value.
+     * @return the value of the attribute
+     */
+    public org.webcat.core.MutableDictionary fileConfigSettings()
+    {
+        NSData dbValue =
+            (NSData)storedValueForKey( "fileConfigSettings" );
+        if ( fileConfigSettingsRawCache != dbValue )
+        {
+            if ( dbValue != null && dbValue.equals( fileConfigSettingsRawCache ) )
+            {
+                // They are still equal, so just update the raw cache
+                fileConfigSettingsRawCache = dbValue;
+            }
+            else
+            {
+                // Underlying attribute may have changed because
+                // of a concurrent update through another editing
+                // context, so throw away current values.
+                fileConfigSettingsRawCache = dbValue;
+                org.webcat.core.MutableDictionary newValue =
+                    org.webcat.core.MutableDictionary
+                    .objectWithArchiveData( dbValue );
+                if ( fileConfigSettingsCache != null )
+                {
+                    fileConfigSettingsCache.copyFrom( newValue );
+                }
+                else
+                {
+                    fileConfigSettingsCache = newValue;
+                }
+                fileConfigSettingsCache.setOwner( this );
+                setUpdateMutableFields( true );
+            }
+        }
+        else if ( dbValue == null && fileConfigSettingsCache == null )
+        {
+            fileConfigSettingsCache =
+                org.webcat.core.MutableDictionary
+                .objectWithArchiveData( dbValue );
+             fileConfigSettingsCache.setOwner( this );
+             setUpdateMutableFields( true );
+        }
+        return fileConfigSettingsCache;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>fileConfigSettings</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setFileConfigSettings( org.webcat.core.MutableDictionary value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setFileConfigSettings("
+                + value + ")" );
+        }
+        if ( fileConfigSettingsCache == null )
+        {
+            fileConfigSettingsCache = value;
+            value.setHasChanged( false );
+            fileConfigSettingsRawCache = value.archiveData();
+            takeStoredValueForKey( fileConfigSettingsRawCache, "fileConfigSettings" );
+        }
+        else if ( fileConfigSettingsCache != value )  // ( fileConfigSettingsCache != null )
+        {
+            fileConfigSettingsCache.copyFrom( value );
+            setUpdateMutableFields( true );
+        }
+        else  // ( fileConfigSettingsCache == non-null value )
+        {
+            // no nothing
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Clear the value of this object's <code>fileConfigSettings</code>
+     * property.
+     */
+    public void clearFileConfigSettings()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "clearFileConfigSettings()" );
+        }
+        takeStoredValueForKey( null, "fileConfigSettings" );
+        fileConfigSettingsRawCache = null;
+        fileConfigSettingsCache = null;
     }
 
 
@@ -915,6 +1022,13 @@ public abstract class _GradingPlugin
             takeStoredValueForKey( defaultConfigSettingsRawCache, "defaultConfigSettings" );
             defaultConfigSettingsCache.setHasChanged( false );
         }
+        if ( fileConfigSettingsCache != null
+            && fileConfigSettingsCache.hasChanged() )
+        {
+            fileConfigSettingsRawCache = fileConfigSettingsCache.archiveData();
+            takeStoredValueForKey( fileConfigSettingsRawCache, "fileConfigSettings" );
+            fileConfigSettingsCache.setHasChanged( false );
+        }
         if ( globalConfigSettingsCache != null
             && globalConfigSettingsCache.hasChanged() )
         {
@@ -962,6 +1076,8 @@ public abstract class _GradingPlugin
         configDescriptionRawCache  = null;
         defaultConfigSettingsCache = null;
         defaultConfigSettingsRawCache  = null;
+        fileConfigSettingsCache = null;
+        fileConfigSettingsRawCache  = null;
         globalConfigSettingsCache = null;
         globalConfigSettingsRawCache  = null;
         super.flushCaches();

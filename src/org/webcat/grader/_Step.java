@@ -170,7 +170,8 @@ public abstract class _Step
     // Fetch specifications ---
     public static final String ENTITY_NAME = "Step";
 
-    public final EOBasedKeyGenerator generateKey = new EOBasedKeyGenerator(this);
+    public transient final EOBasedKeyGenerator generateKey =
+        new EOBasedKeyGenerator(this);
 
 
     //~ Methods ...............................................................
