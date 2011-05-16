@@ -98,7 +98,7 @@ public class StudentsForAssignmentPage
     public boolean omitStaff           = true;
     public boolean useBlackboardFormat = true;
 
-    public ComponentIDGenerator idFor;
+    public ComponentIDGenerator idFor = new ComponentIDGenerator(this);
 
 
     //~ Methods ...............................................................
@@ -107,8 +107,6 @@ public class StudentsForAssignmentPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        idFor = new ComponentIDGenerator(this);
-
         log.debug("appendToResponse()");
 
         subStats =
