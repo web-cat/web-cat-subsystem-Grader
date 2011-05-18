@@ -12,6 +12,7 @@ Comments: WCSimpleTextArea {
     value = result.comments;
     name  = "source";
     id    = "source";
+    class = "fixed";
 //	style = "width:100%;";
 }
 

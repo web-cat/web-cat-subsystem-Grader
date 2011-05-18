@@ -86,7 +86,7 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
         else
         {
             courseOfferings = coreSelections().course().offerings();
-            courseToFetch = courseOfferings.objectAtIndex(0).course();
+            courseToFetch = coreSelections().course();
         }
 
         // Collect the students to display in the drop-down list.

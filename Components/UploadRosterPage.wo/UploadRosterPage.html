@@ -6,7 +6,7 @@ For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
 </td><td>
 <wo:WCContentPane id="fileInfo">
 Uploaded file: <span class="hl"><wo:str value="$filePath"/>
-(<wo:str value="$numberOfRecords"/> records, <wo:str value="~@org.webcat.grader.Submission@fileSizeAsString(data.length)"/>)</span>
+(<wo:str value="$numberOfRecords"/> records, <wo:str value="$data.length" formatter="$application.fileSizeFormatter"/>)</span>
 </wo:WCContentPane></td></tr><tr><td>
 <label for="delim" style="width:auto;">Delimiter:</label> <wo name="Delimiter">
   <wo:WCConnectAction event="onChange" remote="true" action="$refresh"/>
