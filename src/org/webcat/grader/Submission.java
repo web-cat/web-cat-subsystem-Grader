@@ -1565,6 +1565,32 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Get the "status" for this submission: suspended, cancelled, or queued.
+     * @return The status, or null if the submission has been completely
+     *         processed and has a result available.
+     */
+    public String status()
+    {
+        String status = null;
+        if (result() == null)
+        {
+            status = "suspended";
+            EnqueuedJob job = enqueuedJob();
+            if (job == null)
+            {
+                status = "cancelled";
+            }
+            else if (!job.paused())
+            {
+                status = "queued for grading";
+            }
+        }
+        return status;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Gets the path to the grading.properties file associated with this
      * submission, or where it would be if it did exist.
      *
