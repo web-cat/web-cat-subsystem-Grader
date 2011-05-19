@@ -60,10 +60,6 @@ StudentList : WCFilteringSelect {
     displayString = aStudent.name_LF;
 }
 
-SubmissionHistory : WCLink {
-    action = view;
-}
-
 SubmitNumber : WOString {
     value = submissionForAssignmentOffering.submitNumber;
 }
@@ -81,4 +77,5 @@ SubmitTimeSpan: WOGenericContainer {
 
 ViewSubmission: WCLink {
     action = viewSubmission;
+    title  = "View this submission";
 }

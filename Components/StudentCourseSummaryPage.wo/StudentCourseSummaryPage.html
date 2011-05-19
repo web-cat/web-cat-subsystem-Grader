@@ -10,30 +10,66 @@
 <thead>
 <tr>
     <th>Assignment</th>
-    <th>Due Date</th>
+    <th>Sub #</th>
     <th>Submit Time</th>
-    <th>Submission #</th>
+    <th>Due Date</th>
+    <wo:if condition="$anyAssignmentUsesExtraColumns">
+      <wo:if condition="$anyAssignmentUsesTestingScore"><th class="sm">Correctness/<br/>Testing</th></wo:if>
+      <wo:if condition="$anyAssignmentUsesToolCheckScore"><th class="sm">Style/<br/>Coding</th></wo:if>
+      <wo:if condition="$anyAssignmentUsesTAScore"><th class="sm">Design/<br/>Readability</th></wo:if>
+      <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><th class="sm">Early/<br/>Late</th></wo:if>
+    </wo:if>
     <th>Score</th>
     <th>Score Distribution</th>
 </tr>
 </thead><tbody>
 <wo name="AssignmentOfferingRepetition">
 <wo:tr index="$index">
-    <td><wo name="AssignmentTitle"/></td>
-    <td class="sm"><wo name="DueDate"/></td>
+    <td><wo:if condition="$submissionForAssignmentOffering"><wo name="ViewSubmission"><wo name="AssignmentTitle"/></wo></wo:if>
+        <wo:else><wo name="AssignmentTitle"/></wo:else></td>
     <wo:if condition="$submissionForAssignmentOffering">
-        <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
         <td class="n"><wo name="PickSubmissionLink"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
         (of <wo name="MostRecentSubmitNumber"/>)</wo:not></wo></td>
+        <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
+    </wo:if>
+    <wo:else>
+        <td colspan="2" class="sm">(No submissions)</td>
+    </wo:else>
+    <td class="sm"><wo name="DueDate"/></td>
+    <wo:if condition="$submissionForAssignmentOffering">
+        <wo:if condition="$anyAssignmentUsesExtraColumns">
+          <wo:if condition="$anyAssignmentUsesTestingScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesToolCheckScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesTAScore"><td class="n"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)">
+            <wo:if condition="$submissionForAssignmentOffering.assignmentOffering.assignment.submissionProfile.taPoints">
+              <wo:if condition="~submissionForAssignmentOffering.result.taScore gt 0">
+                <wo:str value="$submissionForAssignmentOffering.result.taScoreRaw" numberformat="0.0"/>
+              </wo:if>
+              <wo:else>
+                &lt;Awaiting TA&gt;
+              </wo:else>
+            </wo:if>
+            <wo:else>
+                <wo:str value="$submissionForAssignmentOffering.result.taScoreRaw" numberformat="0.0"/>
+            </wo:else>
+          </wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
+        </wo:if>
         <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo></td>
         <td><wo name="HistogramWithScore"/></td>
     </wo:if><wo:else>
-        <td colspan="3" class="sm" style="text-align: center">(No submissions)</td>
+        <wo:if condition="$anyAssignmentUsesExtraColumns">
+          <wo:if condition="$anyAssignmentUsesTestingScore"><td></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesToolCheckScore"><td></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesTAScore"><td></td></wo:if>
+          <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><td></td></wo:if>
+        </wo:if>
+        <td></td>
         <td><wo name="HistogramWithoutScore"/></td>
     </wo:else>
 </wo:tr>
 </wo>
 </tbody>
 </table>
-</wo:WCPageModule>
+</wo:org.webcat.core.WCPageModule>
 </wo>

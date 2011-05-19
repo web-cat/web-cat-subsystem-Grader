@@ -56,6 +56,7 @@ public class PickSubmissionDialog extends GraderComponent
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
     public Submission                  aSubmission;
     public boolean                     sendsToGradingPage;
+    public int                         extraColumnCount;
 
 
     //~ Methods ...............................................................
@@ -72,6 +73,27 @@ public class PickSubmissionDialog extends GraderComponent
     {
         rootUserSubmission = pair;
         collectSubmissions();
+        extraColumnCount = 0;
+        if (pair != null && pair.submission() != null)
+        {
+            Assignment a = pair.submission().assignmentOffering().assignment();
+            if (a.usesTAScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesTestingScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesToolCheckScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesBonusesOrPenalties())
+            {
+                extraColumnCount++;
+            }
+        }
     }
 
 
@@ -112,25 +134,6 @@ public class PickSubmissionDialog extends GraderComponent
         {
             return null;
         }
-    }
-
-
-    // ----------------------------------------------------------
-    public String submissionStatus()
-    {
-        String result = "suspended";
-        EnqueuedJob job = aSubmission.enqueuedJob();
-
-        if (job == null)
-        {
-            result = "cancelled";
-        }
-        else if (!job.paused())
-        {
-            result = "queued for grading";
-        }
-
-        return result;
     }
 
 

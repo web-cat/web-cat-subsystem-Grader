@@ -64,7 +64,7 @@ String2: WOString {
     formatter = session.timeFormatter;
 }
 
-String3: WOString {
+FinalScore: WOString {
     numberformat = "0.0";
     value        = aSubmission.result.finalScore;
 }

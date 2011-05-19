@@ -67,6 +67,12 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
 
     public UserSubmissionPair selectedUserSubmissionForPickerDialog;
 
+    public boolean anyAssignmentUsesTestingScore;
+    public boolean anyAssignmentUsesToolCheckScore;
+    public boolean anyAssignmentUsesTAScore;
+    public boolean anyAssignmentUsesBonusesOrPenalties;
+    public boolean anyAssignmentUsesExtraColumns;
+
 
     //~ Methods ...............................................................
 
@@ -130,6 +136,10 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
         NSMutableDictionary<AssignmentOffering, Submission> submissions =
             new NSMutableDictionary<AssignmentOffering, Submission>();
 
+        anyAssignmentUsesTestingScore = false;
+        anyAssignmentUsesToolCheckScore = false;
+        anyAssignmentUsesTAScore = false;
+        anyAssignmentUsesBonusesOrPenalties = false;
         for (Assignment assignment : assignments)
         {
             boolean foundSubmission = false;
@@ -151,6 +161,22 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
                 {
                     foundSubmission = true;
                     assignmentOfferings.addObject(ao);
+                    if (ao.assignment().usesTestingScore())
+                    {
+                        anyAssignmentUsesTestingScore = true;
+                    }
+                    if (ao.assignment().usesToolCheckScore())
+                    {
+                        anyAssignmentUsesToolCheckScore = true;
+                    }
+                    if (ao.assignment().usesTAScore())
+                    {
+                        anyAssignmentUsesTAScore = true;
+                    }
+                    if (ao.assignment().usesBonusesOrPenalties())
+                    {
+                        anyAssignmentUsesBonusesOrPenalties = true;
+                    }
                     submissions.setObjectForKey(subs.objectAtIndex(0), ao);
                 }
             }
@@ -160,6 +186,24 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
                 assignmentOfferings.addObject(homeAssignmentOffering);
             }
         }
+        int extraColCount = 0;
+        if (anyAssignmentUsesTestingScore)
+        {
+            extraColCount++;
+        }
+        if (anyAssignmentUsesToolCheckScore)
+        {
+            extraColCount++;
+        }
+        if (anyAssignmentUsesTAScore)
+        {
+            extraColCount++;
+        }
+        if (anyAssignmentUsesBonusesOrPenalties)
+        {
+            extraColCount++;
+        }
+        anyAssignmentUsesExtraColumns = (extraColCount > 1);
 
         assignmentOfferingsDisplayGroup.setObjectArray(assignmentOfferings);
         //assignmentOfferingsDisplayGroup.fetch();
@@ -265,8 +309,7 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
         }
         else if (prefs().submission().result() == null)
         {
-            error("The Grader has not yet completed processing "
-                + "on that submission.");
+            error("Processing of that submission is not yet completed.");
         }
 
         return !hasMessages();

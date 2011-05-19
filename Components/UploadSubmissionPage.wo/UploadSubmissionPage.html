@@ -42,16 +42,49 @@ to choose them.
 <wo:org.webcat.core.WCPageModule title="Previous Submissions" open="false">
 <webobject name="HasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
 <table><thead>
-  <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
+  <tr><wo:WOGenericContainer elementName="td" colspan="~4 + ((extraColumnCount gt 1) ? extraColumnCount : 0)" class="batchnav"><wo:WCForm multipleSumbit="true"><webobject name="BatchNavigator"/></wo:WCForm></wo:WOGenericContainer></tr>
   <tr><th>No.<webobject name="WCSortOrder3"/></th>
     <th>Time<webobject name="WCSortOrder1"/></th>
+    <wo:if condition="~extraColumnCount gt 1">
+      <wo:if condition="$offering.assignment.usesTestingScore"><th class="sm">Correctness/<br/>Testing</th></wo:if>
+      <wo:if condition="$offering.assignment.usesToolCheckScore"><th class="sm">Style/<br/>Coding</th></wo:if>
+      <wo:if condition="$offering.assignment.usesTAScore"><th class="sm">Design/<br/>Readability</th></wo:if>
+      <wo:if condition="$offering.assignment.usesBonusesOrPenalties"><th class="sm">Early/<br/>Late</th></wo:if>
+    </wo:if>
     <th>Score<webobject name="WCSortOrder2"/></th>
     <th>Student and Partners</th></tr></thead><tbody>
   <webobject name="Repetition1"><webobject name="TR">
     <td><webobject name="String1"/></td>
     <td><webobject name="String2"/></td>
-    <td align="right"><webobject name="String3"/></td>
-    <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
+              <wo:if condition="$aSubmission.result">
+    <wo:if condition="~extraColumnCount gt 1">
+      <wo:if condition="$offering.assignment.usesTestingScore"><td class="n"><wo:str value="$aSubmission.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
+      <wo:if condition="$offering.assignment.usesToolCheckScore"><td class="n"><wo:str value="$aSubmission.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
+      <wo:if condition="$offering.assignment.usesTAScore"><td class="n">
+        <wo:if condition="$aSubmission.isSubmissionForGrading">
+          <wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || aSubmission.assignmentOffering.courseOffering.isStaff(user)">
+            <wo:if condition="$offering.assignment.submissionProfile.taPoints">
+              <wo:if condition="~aSubmission.result.taScore gt 0">
+                <wo:str value="$aSubmission.result.taScoreRaw" numberformat="0.0"/>
+              </wo:if>
+              <wo:else>
+                &lt;Awaiting TA&gt;
+              </wo:else>
+            </wo:if>
+            <wo:else>
+                <wo:str value="$aSubmission.result.taScoreRaw" numberformat="0.0"/>
+            </wo:else>
+          </wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else>
+        </wo:if></td></wo:if>
+      <wo:if condition="$offering.assignment.usesBonusesOrPenalties"><td class="n"><wo:str value="$aSubmission.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
+    </wo:if>
+                <td class="n"><wo:if condition="$aSubmission.isSubmissionForGrading"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || offering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo:if></td>
+              </wo:if><wo:else>
+                <wo:WOGenericContainer elementName="td" colspan="~(extraColumnCount gt 1) ? (extraColumnCount + 1) : 1" style="color: red">&lt;<wo:str value="$aSubmission.status"/>&gt;</wo:WOGenericContainer>
+              </wo:else>
+    <td>
+    <wo:str value="$aSubmission.isSubmissionForGrading"/>
+    <wo:str value="$aSubmission.namesOfAllUsers"/></td>
   </webobject></webobject></tbody></table>
 </webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
 </webobject></wo:org.webcat.core.WCPageModule>

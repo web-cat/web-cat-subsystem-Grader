@@ -59,6 +59,7 @@ public class UploadSubmissionPage
 
     //~ KVC Attributes (must be public) .......................................
 
+    public AssignmentOffering offering;
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
     /** submission item in the repetition */
     public Submission aSubmission;
@@ -75,6 +76,7 @@ public class UploadSubmissionPage
     public NSMutableArray<User>  partnersForEditing;
     public User                  aPartner;
     public int                   partnerIndex;
+    public int                   extraColumnCount;
 
 
     //~ Methods ...............................................................
@@ -99,10 +101,13 @@ public class UploadSubmissionPage
                 config != null
                 && config.containsKey("showStudentSelector"));
         }
+        if (offering == null)
+        {
+            offering = prefs().assignmentOffering();
+        }
         if (showStudentSelector)
         {
-            studentDisplayGroup.setMasterObject(
-                prefs().assignmentOffering().courseOffering());
+            studentDisplayGroup.setMasterObject(offering.courseOffering());
             if (submitAsStudent == null
                 && studentDisplayGroup.displayedObjects().count() > 0)
             {
@@ -116,7 +121,7 @@ public class UploadSubmissionPage
 
         Submission latestSub =
             Submission.latestSubmissionForAssignmentOfferingAndUser(
-                    localContext(), prefs().assignmentOffering(), user());
+                    localContext(), offering, user());
 
         if (previousPartners == null)
         {
@@ -145,37 +150,66 @@ public class UploadSubmissionPage
             partnersForEditing = previousPartners.mutableClone();
         }
 
-        Number maxSubmissions = prefs().assignmentOffering()
+        Number maxSubmissions = offering
             .assignment().submissionProfile().maxSubmissionsRaw();
         okayToSubmit = (maxSubmissions == null
                         || currentSubNo <= maxSubmissions.intValue());
 
-        if ( okayToSubmit )
+        if (okayToSubmit)
         {
             startSubmission(currentSubNo, user());
         }
 
-        if (prefs().assignmentOffering().dueDate() != null)
+        if (offering.dueDate() != null)
         {
-            log.debug( "due = "
-                       + prefs().assignmentOffering().dueDate().getTime() );
-            log.debug( "grace = " +
-                       prefs().assignmentOffering().assignment()
-                           .submissionProfile().deadTimeDelta() );
+            log.debug("due = " + offering.dueDate().getTime());
+            log.debug("grace = "
+                + offering.assignment().submissionProfile().deadTimeDelta());
 
             NSTimestamp deadline = new NSTimestamp(
-                    prefs().assignmentOffering().dueDate().getTime()
-                    + prefs().assignmentOffering().assignment()
-                       .submissionProfile().deadTimeDelta() );
-            log.debug( "time = " + deadline );
+                offering.dueDate().getTime()
+                + offering.assignment().submissionProfile().deadTimeDelta());
+            log.debug("time = " + deadline);
         }
 
-        super.beforeAppendToResponse( response, context );
+        extraColumnCount = 0;
+        if (offering != null)
+        {
+            Assignment a = offering.assignment();
+            if (a.usesTAScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesTestingScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesToolCheckScore())
+            {
+                extraColumnCount++;
+            }
+            if (a.usesBonusesOrPenalties())
+            {
+                extraColumnCount++;
+            }
+        }
+
+        super.beforeAppendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    @Override
+    public void flushNavigatorDerivedData()
+    {
+        offering = null;
+        super.flushNavigatorDerivedData();
+    }
+
+
+    // ----------------------------------------------------------
+    protected void afterAppendToResponse(
+        WOResponse response, WOContext context)
     {
         super.afterAppendToResponse(response, context);
         oldBatchSize  = submissionDisplayGroup.numberOfObjectsPerBatch();
@@ -203,11 +237,12 @@ public class UploadSubmissionPage
             // assignment offering selection to be null and pop open the
             // navigator.
 
-            AssignmentOffering assnOff = prefs().assignmentOffering();
+            AssignmentOffering assnOff = offering;
 
             if (!user().hasAdminPrivileges() && !assnOff.userCanSubmit(user()))
             {
                 prefs().setAssignmentOfferingRelationship(null);
+                offering = null;
                 result = true;
             }
         }
@@ -226,10 +261,10 @@ public class UploadSubmissionPage
      */
     public boolean okayToSubmit()
     {
-        if ( !okayToSubmit )
+        if (!okayToSubmit)
         {
-            error( "You have already made the maximum allowed "
-                          + "number of submissions for this assignment." );
+            error("You have already made the maximum allowed "
+                + "number of submissions for this assignment.");
         }
         return okayToSubmit;
     }
@@ -245,68 +280,65 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug( "next():" );
-            log.debug(" request = " + context().request() );
-            log.debug(" form values = " + context().request().formValues() );
+            log.debug("next():");
+            log.debug(" request = " + context().request());
+            log.debug(" form values = " + context().request().formValues());
             log.debug(" multipart = "
-                + context().request().isMultipartFormData() );
+                + context().request().isMultipartFormData());
         }
         if (showStudentSelector && submitAsStudent == null)
         {
             error("Please select a student for this submission.");
             return null;
         }
-        if ( okayToSubmit )
+        if (okayToSubmit)
         {
             NSTimestamp deadline = new NSTimestamp(
-                    prefs().assignmentOffering().dueDate().getTime()
-                    + prefs().assignmentOffering().assignment()
-                      .submissionProfile().deadTimeDelta() );
-            log.debug( "deadline = " + deadline );
-            log.debug( "now = " + ( new NSTimestamp() ) );
-            CourseOffering course =
-                prefs().assignmentOffering().courseOffering();
+                offering.dueDate().getTime()
+                + offering.assignment().submissionProfile().deadTimeDelta());
+            log.debug("deadline = " + deadline);
+            log.debug("now = " + new NSTimestamp());
+            CourseOffering course = offering.courseOffering();
             User primeUser =
                 wcSession().primeUser().localInstance(localContext());
-            if ( deadline.before( new NSTimestamp() )
-                 && !course.isInstructor( primeUser )
-                 && !course.isGrader( primeUser ) )
+            if (deadline.before(new NSTimestamp())
+                 && !course.isInstructor(primeUser)
+                 && !course.isGrader(primeUser))
             {
-                error(
-                    "Unfortunately, the final deadline for this assignment "
-                    + "has passed.  No more submissions are being accepted." );
+                error("Unfortunately, the final deadline for this assignment "
+                    + "has passed.  No more submissions are being accepted.");
                 return null;
             }
             boolean clearFileList = true;
-            if ( !submissionInProcess().hasValidFileUpload() )
+            if (!submissionInProcess().hasValidFileUpload())
             {
-                submissionInProcess().setUploadedFile( cachedUploadedFile );
+                submissionInProcess().setUploadedFile(cachedUploadedFile);
                 submissionInProcess().setUploadedFileName(
-                    cachedUploadedFileName );
+                    cachedUploadedFileName);
                 submissionInProcess().setUploadedFileList(
-                    cachedUploadedFileList );
+                    cachedUploadedFileList);
                 clearFileList = false;
             }
-            if ( !submissionInProcess().hasValidFileUpload() )
+            if (!submissionInProcess().hasValidFileUpload())
             {
-                error( "Please select a file to upload." );
+                error("Please select a file to upload.");
                 return null;
             }
-            if ( clearFileList )
+            if (clearFileList)
             {
-                submissionInProcess().setUploadedFileList( null );
+                submissionInProcess().setUploadedFileList(null);
             }
-            if ( submissionInProcess().uploadedFile().length() >
-                 prefs().assignmentOffering().assignment()
-                     .submissionProfile().effectiveMaxFileUploadSize() )
+            if (submissionInProcess().uploadedFile().length() >
+                offering.assignment().submissionProfile()
+                    .effectiveMaxFileUploadSize())
             {
-                error(
-                    "You file exceeds the file size limit for this assignment ("
-                    + prefs().assignmentOffering().assignment()
-                          .submissionProfile().effectiveMaxFileUploadSize()
-                    + ").  Please choose a smaller file." );
+                error("You file exceeds the file size limit for this "
+                    + "assignment ("
+                    + offering.assignment().submissionProfile()
+                        .effectiveMaxFileUploadSize()
+                    + ").  Please choose a smaller file.");
                 return null;
             }
             if (showStudentSelector)
@@ -339,9 +371,8 @@ public class UploadSubmissionPage
      */
     public boolean hasInstructions()
     {
-        String instructions = prefs().assignmentOffering()
-            .assignment().fileUploadMessage();
-        return instructions != null && !instructions.equals( "" );
+        String instructions = offering.assignment().fileUploadMessage();
+        return instructions != null && !instructions.equals("");
     }
 
 
@@ -355,7 +386,7 @@ public class UploadSubmissionPage
     {
         long size = 0L;
         NSData file = submissionInProcess().uploadedFile();
-        if ( file != null )
+        if (file != null)
         {
             size = file.length();
         }
@@ -366,9 +397,9 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
-        log.debug( "defaultAction()" );
-        if ( oldBatchSize != submissionDisplayGroup.numberOfObjectsPerBatch()
-             || oldBatchIndex != submissionDisplayGroup.currentBatchIndex() )
+        log.debug("defaultAction()");
+        if (oldBatchSize != submissionDisplayGroup.numberOfObjectsPerBatch()
+            || oldBatchIndex != submissionDisplayGroup.currentBatchIndex())
         {
             return null;
         }
@@ -396,22 +427,15 @@ public class UploadSubmissionPage
 
 
     // ----------------------------------------------------------
-    public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
+    public void takeValuesFromRequest(WORequest request, WOContext context)
     {
         try
         {
-            super.takeValuesFromRequest( arg0, arg1 );
+            super.takeValuesFromRequest(request, context);
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             // Ignore it
-//            error( e.getMessage() );
-//            Application.emailExceptionToAdmins( e, arg1,
-//                "In UploadSubmissionPage:takeValuesFromRequest(), a post "
-//                + "request without an attached file submission was received\n."
-//                + "Browser info = \n"
-//                + context().request().headerForKey("user-agent")
-//                );
         }
     }
 
@@ -419,9 +443,9 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     public String permalink()
     {
-        if (prefs().assignmentOffering() != null)
+        if (offering != null)
         {
-            return prefs().assignmentOffering().permalink();
+            return offering.permalink();
         }
         else
         {
@@ -442,7 +466,7 @@ public class UploadSubmissionPage
     {
         NSArray<Submission> submissions =
             Submission.submissionsForAssignmentOfferingAndUser(
-                localContext(), prefs().assignmentOffering(), user);
+                localContext(), offering, user);
         submissionDisplayGroup.setObjectArray(submissions);
         int currentSubNo = submissions.count() + 1;
         for (int i = 0; i < submissions.count(); i++)
@@ -480,8 +504,7 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     public EOQualifier qualifierForStudentsInCourse()
     {
-        CourseOffering courseOffering =
-            prefs().assignmentOffering().courseOffering();
+        CourseOffering courseOffering = offering.courseOffering();
         NSArray<CourseOffering> offerings =
             CourseOffering.offeringsForSemesterAndCourse(localContext(),
                 courseOffering.course(),
@@ -489,9 +512,9 @@ public class UploadSubmissionPage
 
         EOQualifier[] enrollmentQuals = new EOQualifier[offerings.count()];
         int i = 0;
-        for (CourseOffering offering : offerings)
+        for (CourseOffering co : offerings)
         {
-            enrollmentQuals[i++] = User.enrolledIn.is(offering);
+            enrollmentQuals[i++] = User.enrolledIn.is(co);
         }
 
         return ERXQ.or(enrollmentQuals);
