@@ -98,6 +98,7 @@ PickSubmissionDialog: PickSubmissionDialog {
     rootUserSubmission = selectedUserSubmissionForPickerDialog;
     allUserSubmissionsForNavigation = allUserSubmissionsForNavigationForPickerDialog;
     nextPageForResultsPage = nextPage;
+    sendsToGradingPage = true;
 }
 
 Regrade: WCButton {
