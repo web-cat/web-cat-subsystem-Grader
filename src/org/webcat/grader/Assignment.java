@@ -237,6 +237,15 @@ public class Assignment
 
 
     // ----------------------------------------------------------
+    public boolean usesTAScore()
+    {
+        SubmissionProfile profile = submissionProfile();
+        return profile != null
+            && ( profile.taPoints() > 0.0 );
+    }
+
+
+    // ----------------------------------------------------------
     public boolean usesBonusesOrPenalties()
     {
         SubmissionProfile profile = submissionProfile();
