@@ -126,7 +126,7 @@ public class SubmissionFileDetailsPage
         {
             prefs().setSubmissionFileStatsRelationship( selectedFile );
             prefs().setSubmissionRelationship(
-                selectedFile.submissionResult().submission() );
+                thisFile.submissionResult().submissionFor(user()));
             SubmissionFileDetailsPage statsPage = (SubmissionFileDetailsPage)
                 pageWithName(
                     SubmissionFileDetailsPage.class.getName() );
@@ -142,7 +142,8 @@ public class SubmissionFileDetailsPage
     @Override
     public String title()
     {
-        Submission submission = thisFile.submissionResult().submission();
+        Submission submission =
+            thisFile.submissionResult().submissionFor(user());
         AssignmentOffering offering = submission.assignmentOffering();
         return offering.courseOffering().compactName()
             + ": "

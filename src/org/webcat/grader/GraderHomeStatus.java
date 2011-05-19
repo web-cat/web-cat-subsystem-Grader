@@ -229,19 +229,7 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        selectAssignment(assignment);
-        SubmissionResult subResult =
-            assignment.mostRecentSubmissionResultFor(user());
-        if (subResult != null)
-        {
-            for (Submission s : subResult.submissions())
-            {
-                if (s.user() == user())
-                {
-                    prefs().setSubmissionRelationship(s);
-                }
-            }
-        }
+        selectSubmission(assignment);
         return pageWithName(
             wcSession().tabs.selectById("MostRecent").pageName());
     }
@@ -255,7 +243,7 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        selectAssignment(assignment);
+        selectSubmission(assignment);
         return pageWithName(
             wcSession().tabs.selectById("GraphResults").pageName());
     }
@@ -312,6 +300,21 @@ public class GraderHomeStatus
         {
             prefs().setShowClosedAssignments(true);
         }
+    }
+
+
+    // ----------------------------------------------------------
+    private void selectSubmission(AssignmentOffering offering)
+    {
+        selectAssignment(offering);
+        SubmissionResult subResult =
+            assignment.mostRecentSubmissionResultFor(user());
+        Submission sub = null;
+        if (subResult != null)
+        {
+            sub = subResult.submissionFor(user());
+        }
+        prefs().setSubmissionRelationship(sub);
     }
 
 

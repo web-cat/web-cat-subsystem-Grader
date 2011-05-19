@@ -173,7 +173,7 @@ public class SubmissionFileComment
             return true;
         }
         CourseOffering course = submissionFileStats().submissionResult()
-            .submission().assignmentOffering().courseOffering();
+            .submissionFor(user).assignmentOffering().courseOffering();
         if (target <= TO_FACULTY_AND_TAS
             && course.graders().contains(user))
         {

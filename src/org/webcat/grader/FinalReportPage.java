@@ -407,8 +407,8 @@ public class FinalReportPage
      */
     public boolean justCollecting()
     {
-        NSArray<Step> steps =
-            result.submission().assignmentOffering().assignment().steps();
+        NSArray<Step> steps = result.submissionFor(user())
+            .assignmentOffering().assignment().steps();
         return !result.summaryFile().exists()
             && !result.resultFile().exists()
             && (steps == null || steps.count() == 0);
@@ -431,7 +431,7 @@ public class FinalReportPage
 
             // This is all debugging code to figure out why we occasionally
             // get NPEs on the original line commented out above.
-            Submission sub = result.submission();
+            Submission sub = result.submissionFor(user());
             if (sub == null)
             {
                 log.error("null submission for result found!");
