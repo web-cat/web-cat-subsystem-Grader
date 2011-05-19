@@ -51,6 +51,24 @@ CoursePane: WCContentPane {
     class = "inlined";
 }
 
+IsClosed: WOConditional {
+    condition = assignmentInRepetition.isClosed;  // VALID
+}
+
+IsOpen: WOConditional {
+    condition = assignmentInRepetition.isClosed;  // VALID
+    negate = true;
+}
+
+IsPublished: WOConditional {
+    condition = assignmentInRepetition.isUnpublished;  // VALID
+    negate = true;
+}
+
+IsUnpublished: WOConditional {
+    condition = assignmentInRepetition.isUnpublished;  // VALID
+}
+
 OpenIcon: WOImage {
     framework = "Grader";
     filename = "icons/assignment-open.png";

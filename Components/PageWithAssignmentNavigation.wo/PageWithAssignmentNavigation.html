@@ -49,8 +49,8 @@
   <div style="clear:both;"></div>
 </div></wo:if>
 <webobject name="Errors"/>
-<wo:if condition="$parent.forceNavigatorSelection">
+<wo name="ForceNavigation">
 <div class="module">
-<p>Please select a course and assignment above to continue.</div>
-</div></wo:if><wo:else><wo:content/></wo:else>
+<p>Please select a course and assignment above to continue.</p>
+</div></wo><wo name="DoNotForceNavigation"><wo:content/></wo>
 </div></div></div><wo:if condition="$includePageWrapping"><wo:org.webcat.core.Footer/></wo:if></wo>

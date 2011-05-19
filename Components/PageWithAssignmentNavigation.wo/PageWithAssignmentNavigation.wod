@@ -8,10 +8,19 @@ BasePage: org.webcat.ui.WCBasePage {
     inlineHeaderContents = inlineHeaderContents;
 }
 
+DoNotForceNavigation: WOConditional {
+    condition = parent.forceNavigatorSelection;    // VALID
+    negate = true;
+}
+
 Errors: org.webcat.core.WCErrorDictionaryPanel {
     errorMessages          = thisPage.messages;
     extraErrorMessage      = application.deathMessage;
     shouldShowNewlineBelow = true;
+}
+
+ForceNavigation: WOConditional {
+    condition = parent.forceNavigatorSelection;    // VALID
 }
 
 HasMultipleRoles: WOConditional {

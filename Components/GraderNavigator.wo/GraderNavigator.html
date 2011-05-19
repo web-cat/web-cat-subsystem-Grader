@@ -38,9 +38,9 @@
     </wo>
 </wo:if><wo:else>
     <wo name="AssignmentMenuItem">
-        <wo:if condition="$assignmentInRepetition.isUnpublished"><wo name="UnpublishedIcon"/></wo:if>
-        <wo:else><wo:if condition="$assignmentInRepetition.isClosed"><wo name="ClosedIcon"/></wo:if>
-        <wo:else><wo name="OpenIcon"/></wo:else></wo:else>
+        <wo name="IsUnpublished"><wo name="UnpublishedIcon"/></wo>
+        <wo name="IsPublished"><wo name="IsClosed"><wo name="ClosedIcon"/></wo>
+        <wo name="IsOpen"><wo name="OpenIcon"/></wo></wo>
         <wo:str value="$assignmentInRepetition"/>
     </wo>
 </wo:else></wo:else>
