@@ -193,10 +193,15 @@ extends WCComponent
         }
         else
         {
-            if ( FeatureProvider.getProvider( providerURL ) == null )
+            try
             {
-                error( "Cannot read feature provider information from "
-                    + " specified URL: '" + providerURL + "'." );
+                // TODO: fix this to correctly re-load ...
+                FeatureProvider.getProvider(providerURL);
+            }
+            catch (java.io.IOException e)
+            {
+                error("Cannot read feature provider information from "
+                    + " specified URL: '" + providerURL + "'.");
             }
         }
 

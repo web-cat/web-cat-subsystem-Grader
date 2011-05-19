@@ -856,21 +856,29 @@ public class GradingPlugin
         {
             for (GradingPlugin plugin : pluginList)
             {
-                if (plugin.descriptor().updateIsAvailable())
+                try
                 {
-                    log.info("Updating plug-in: \"" + plugin.name() + "\"");
-                    String msg = plugin.installUpdate();
-                    if (msg != null)
+                    if (plugin.descriptor().updateIsAvailable())
                     {
-                        log.error("Error updating plug-in \""
-                            + plugin.name() + "\": " + msg);
+                        log.info("Updating plug-in: \"" + plugin.name() + "\"");
+                        String msg = plugin.installUpdate();
+                        if (msg != null)
+                        {
+                            log.error("Error updating plug-in \""
+                                + plugin.name() + "\": " + msg);
+                        }
+                        ec.saveChanges();
                     }
-                    ec.saveChanges();
+                    else
+                    {
+                        log.debug("Plug-in \"" + plugin.name()
+                            + "\" is up to date.");
+                    }
                 }
-                else
+                catch (IOException e)
                 {
-                    log.debug("Plug-in \"" + plugin.name()
-                        + "\" is up to date.");
+                    log.error("Error checking for updates to plug-in \""
+                        + plugin.name() + "\": " + e);
                 }
             }
         }
