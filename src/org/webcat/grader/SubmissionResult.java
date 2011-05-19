@@ -69,6 +69,13 @@ public class SubmissionResult
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+    /**
+     * Retrieve the primary submission associated with this result.
+     * The primary submission is the one associated with the student
+     * who actually made the submission, as opposed to one of the
+     * partners associated with this submission.
+     * @return The submission from the primary submitter.
+     */
     public Submission submission()
     {
         Submission result = null;
@@ -76,13 +83,37 @@ public class SubmissionResult
         if (mySubmissions != null && mySubmissions.count() > 0)
         {
             result = mySubmissions.objectAtIndex(0);
+            Submission primary = result.primarySubmission();
 
-            if (result.primarySubmission() != null)
+            if (primary != null)
             {
-                result = result.primarySubmission();
+                result = primary;
             }
         }
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrueve the submission associated with this result for the
+     * given user.
+     * @param partner The user whose submission should be retrieved--either
+     *                the primary submitter or one of the partners.
+     * @return The submission associated with the given user (partner) and
+     *         this result, or the primary submission if this user does
+     *         not have any submission for this result.
+     */
+    public Submission submissionFor(User partner)
+    {
+        for (Submission sub : submissions())
+        {
+            if (sub.user() == partner)
+            {
+                return sub;
+            }
+        }
+        return submission();
     }
 
 
