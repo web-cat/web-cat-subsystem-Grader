@@ -211,7 +211,7 @@ public class GradeStudentSubmissionPage
         if (result.status() == Status.TO_DO)
         {
             if (result.taScoreRaw() != null
-                && result.taScore() != result.submission()
+                && result.taScore() != submission
                     .assignmentOffering().assignment()
                     .submissionProfile().taPoints())
             {
@@ -414,7 +414,7 @@ public class GradeStudentSubmissionPage
     {
         if (showAutoGradedComments == null)
         {
-            if (result.submission().assignmentOffering().assignment()
+            if (submission.assignmentOffering().assignment()
                     .submissionProfile().toolPoints() > 0.0)
             {
                 showAutoGradedComments = Boolean.TRUE;
