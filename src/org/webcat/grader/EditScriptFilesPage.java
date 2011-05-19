@@ -87,6 +87,24 @@ public class EditScriptFilesPage
     {
         log.debug("listener = " + fileSelectionListener);
         rescanFolders();
+        if ((selectedParentFolderForSubFolder == null
+             || selectedParentFolderForUpload == null)
+            && currentSelection != null)
+        {
+            int pos = currentSelection.lastIndexOf('/');
+            if (pos > 0)
+            {
+                String path = currentSelection.substring(0, pos);
+                if (selectedParentFolderForSubFolder == null)
+                {
+                    selectedParentFolderForSubFolder = path;
+                }
+                if (selectedParentFolderForUpload == null)
+                {
+                    selectedParentFolderForUpload = path;
+                }
+            }
+        }
         super.beforeAppendToResponse(response, context);
     }
 
