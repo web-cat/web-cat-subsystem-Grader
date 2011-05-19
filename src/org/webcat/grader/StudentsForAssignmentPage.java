@@ -620,7 +620,7 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public String newerSubmissionStatus()
     {
-        String result = null;
+        String result = "feedback entered on earlier submission";
         if (aNewerSubmission.result() == null)
         {
             result = "suspended";
@@ -643,7 +643,19 @@ public class StudentsForAssignmentPage
             result = "newer than feedback";
         }
 
-        log.debug("newerSubmissionStatus() = " + result);
+        if (log.isDebugEnabled())
+        {
+            log.debug("newerSubmissionStatus() for " + aNewerSubmission
+                + " = " + result);
+            if (aSubmission.result() != null
+                && aSubmission.result().lastUpdated() != null)
+            {
+                log.debug("    selected submission last updated: "
+                    + aSubmission.result().lastUpdated());
+            }
+            log.debug("    newer submission on: "
+                + aNewerSubmission.submitTime());
+        }
         return result;
     }
 

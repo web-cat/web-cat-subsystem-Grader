@@ -1,8 +1,3 @@
-BatchNavigator: org.webcat.core.WCBatchNavigator {
-    displayGroup = userGroup;
-    persistentKey = "StudentsForAssignmentPage.batchSize";
-}
-
 BatchNavigatorStaff: org.webcat.core.WCBatchNavigator {
     displayGroup = staffSubmissionGroup;
     persistentKey = "StudentsForAssignmentPage.batchSize";
@@ -97,7 +92,6 @@ NoSubmissionsPlaceholder: WOGenericContainer {
     elementName = "td";
     colSpan = "~ 5 + (assignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0) + (assignmentOffering.assignment.usesToolCheckScore ? 1 : 0)";
     class = "sm";
-    style = "text-align: center";
 }
 
 NoTAScore: WOConditional {
@@ -132,12 +126,6 @@ RegradeSubmissionsIcon: WCImageButton {
     alt = "Regrade submissions";
     title = "Regrade submissions";
     class = "icon";
-}
-
-Repetition1: WORepetition {
-    item  = aUserSubmission;
-    list  = userGroup.displayedObjects;
-    index = index;
 }
 
 Repetition2: WORepetition {
@@ -225,10 +213,6 @@ ToolScore: WOString {
     numberformat = "0.0";
 }
 
-TR: org.webcat.core.TableRow {
-    index = index;
-}
-
 TR2: org.webcat.core.TableRow {
     index = staffIndex;
 }
@@ -243,32 +227,12 @@ UsesBonusesOrPenalties: WOConditional {
     condition = assignmentOffering.assignment.usesBonusesOrPenalties;
 }
 
+UsesTestingScore: WOConditional {
+    condition = assignmentOffering.assignment.usesTestingScore;
+}
+
 UsesToolCheckScore: WOConditional {
     condition = assignmentOffering.assignment.usesToolCheckScore;
-}
-
-SortOrderUserNameLF: org.webcat.core.WCSortOrder {
-    displayGroup = userGroup;
-    displayKey = "Name";
-    key = "user.name_LF";
-}
-
-SortOrderStatus: org.webcat.core.WCSortOrder {
-    displayGroup = userGroup;
-    displayKey = "Grading Status";
-    key = "submission.result.status";
-}
-
-SortOrderSubmitTime: org.webcat.core.WCSortOrder {
-    displayGroup = userGroup;
-    displayKey = "Submission Time";
-    key = "submission.submitTime";
-}
-
-SortOrderFinalScore: org.webcat.core.WCSortOrder {
-    displayGroup = userGroup;
-    displayKey = "Final Score";
-    key = "submission.result.finalScore";
 }
 
 SortOrderStaffUserNameLF: org.webcat.core.WCSortOrder {

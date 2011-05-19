@@ -28,9 +28,9 @@
         <wo:WCTableHeadings>
             <wo:WCTableHeading title="Done?" class="sm" sortOnKeyPaths="submission.result.status"/>
             <wo:WCTableHeading title="Name" sortOnKeyPaths="user.name_LF,user.userName"/>
-            <wo:WCTableHeading title="Sub No." class="sm"/>
+            <wo:WCTableHeading title="Sub #" class="sm"/>
             <wo:WCTableHeading title="Time" sortOnKeyPaths="submission.submitTime"/>
-            <wo:WCTableHeading title="Testing" class="sm"/>
+            <wo name="UsesTestingScore"><wo:WCTableHeading title="Testing" class="sm"/></wo>
             <wo name="UsesToolCheckScore"><wo:WCTableHeading title="Tool Checks" class="sm"/></wo>
             <wo:WCTableHeading title="TA"/>
             <wo name="UsesBonusesOrPenalties"><wo:WCTableHeading title="Early/Late" class="sm"/></wo>
@@ -45,14 +45,13 @@
                         <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
                           <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
                           <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
-                          <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
-                          <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
+                          <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:&nbsp;<span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
                         </wo:loop>
                       </wo:not></td>
                     <td class="n"><wo name="PickSubmissionLink"><wo name="SubmitNumber"/><wo:not condition="$isMostRecentSubmission">
                     (of <wo name="MostRecentSubmitNumber"/>)</wo:not></wo></td>
                     <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
-                    <td class="n"><wo name="TestingScore"/></td>
+                    <wo name="UsesTestingScore"><td class="n"><wo name="TestingScore"/></td></wo>
                     <wo name="UsesToolCheckScore"><td class="n"><wo name="ToolScore"/></td></wo>
                     <td class="n"><wo name="EditScore"><wo name="HasTAScore"><wo name="TAScore"/></wo><wo name="NoTAScore">&lt;edit&gt;</wo></wo></td>
                     <wo name="UsesBonusesOrPenalties"><td class="n"><wo name="ScoreAdjustment"/></td></wo>
@@ -133,4 +132,4 @@
 
 </wo:org.webcat.core.WCPageModule>
 </wo:if>
-</wo:GraderPageWithNavigation>
+</wo:PageWithAssignmentNavigation>
