@@ -136,8 +136,8 @@ public class submissionResultResource
    private boolean userHasPermission(User user, SubmissionResult result)
    {
        if (result.submission() == null
-               || result.submission().assignmentOffering() == null
-               || result.submission().assignmentOffering().courseOffering() == null)
+           || result.submission().assignmentOffering() == null
+           || result.submission().assignmentOffering().courseOffering() == null)
        {
            return false;
        }
