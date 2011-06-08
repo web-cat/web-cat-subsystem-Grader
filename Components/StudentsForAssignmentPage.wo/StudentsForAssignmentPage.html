@@ -40,7 +40,7 @@
             <wo:WCTableRow>
                 <wo:if condition="$aUserSubmission.userHasSubmission">
                     <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-                    <td><wo:tstr value="$aSubmission.namesOfAllUsers_LF"/>
+                    <td><wo:tstr value="$aSubmission.result.submission.namesOfAllUsers_LF"/>
                       <wo:not condition="$isMostRecentSubmission">
                         <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
                           <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
@@ -93,7 +93,7 @@
     </tr></thead><tbody class="top">
     <wo name="Repetition2"><wo name="TR2">
         <td><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@TO_DO"><wo name="StatusToDo"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@UNFINISHED"><wo name="StatusUnfinished"/></wo:if><wo:else><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="StatusDone"/></wo:if><wo:else><webobject name="Status"/></wo:else></wo:else></wo:else></td>
-        <td><wo:str value="$aSubmission.namesOfAllUsers_LF"/>
+        <td><wo:str value="$aSubmission.result.submission.namesOfAllUsers_LF"/>
               <wo:not condition="$isMostRecentSubmission">
                 <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
                   <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,

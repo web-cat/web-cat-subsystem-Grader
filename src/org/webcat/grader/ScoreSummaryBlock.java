@@ -78,7 +78,7 @@ public class ScoreSummaryBlock
             .submissionProfile().taPoints() > 0.0
             || (result != null
                 && result.taScoreRaw() != null
-                && result.taScore() != 0.0)
+                && result.taScore() > 0.0)
             || allowScoreEdit;
     }
 
@@ -103,7 +103,7 @@ public class ScoreSummaryBlock
         if ( taPtsNum == null ||
              ( !allowScoreEdit && result.status() != Status.CHECK ) )
         {
-            return "&lt;Awaiting TA&gt;";
+            return "&lt;Awaiting Staff&gt;";
         }
         double taPts = taPtsNum.doubleValue();
         return FinalReportPage.meter( taPts / taPossible );

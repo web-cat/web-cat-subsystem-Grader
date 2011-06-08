@@ -40,22 +40,22 @@
         <wo:if condition="$anyAssignmentUsesExtraColumns">
           <wo:if condition="$anyAssignmentUsesTestingScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
           <wo:if condition="$anyAssignmentUsesToolCheckScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
-          <wo:if condition="$anyAssignmentUsesTAScore"><td class="n"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)">
+          <wo:if condition="$anyAssignmentUsesTAScore"><td class="n"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || !submissionForAssignmentOffering.assignmentOffering.assignment.usesTAScore || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)">
             <wo:if condition="$submissionForAssignmentOffering.assignmentOffering.assignment.submissionProfile.taPoints">
               <wo:if condition="~submissionForAssignmentOffering.result.taScore gt 0">
                 <wo:str value="$submissionForAssignmentOffering.result.taScoreRaw" numberformat="0.0"/>
               </wo:if>
               <wo:else>
-                &lt;Awaiting TA&gt;
+                &lt;Awaiting Staff&gt;
               </wo:else>
             </wo:if>
             <wo:else>
                 <wo:str value="$submissionForAssignmentOffering.result.taScoreRaw" numberformat="0.0"/>
             </wo:else>
-          </wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></td></wo:if>
+          </wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></td></wo:if>
           <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
         </wo:if>
-        <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo></td>
+        <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || !submissionForAssignmentOffering.assignmentOffering.assignment.usesTAScore || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo></td>
         <td><wo name="HistogramWithScore"/></td>
     </wo:if><wo:else>
         <wo:if condition="$anyAssignmentUsesExtraColumns">

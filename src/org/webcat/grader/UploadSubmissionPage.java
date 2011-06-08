@@ -237,9 +237,14 @@ public class UploadSubmissionPage
             // assignment offering selection to be null and pop open the
             // navigator.
 
+            if (offering == null)
+            {
+                offering = prefs().assignmentOffering();
+            }
             AssignmentOffering assnOff = offering;
 
-            if (!user().hasAdminPrivileges() && !assnOff.userCanSubmit(user()))
+            if (!user().hasAdminPrivileges() &&
+                (assnOff == null || !assnOff.userCanSubmit(user())))
             {
                 prefs().setAssignmentOfferingRelationship(null);
                 offering = null;

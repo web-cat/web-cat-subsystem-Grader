@@ -107,6 +107,14 @@ public class PickSubmissionDialog extends GraderComponent
 
             NSArray<Submission> submissions =
                 rootUserSubmission.submission().allSubmissions();
+            // Migrate graded submission, if needed
+            Submission graded =
+                rootUserSubmission.submission().gradedSubmission();
+            if (log.isDebugEnabled())
+            {
+                log.debug("graded submission = " + graded + " = "
+                    + graded.isSubmissionForGradingRaw());
+            }
             submissionDisplayGroup.setObjectArray(submissions);
 
             for (int i = 0; i < submissions.count(); i++)

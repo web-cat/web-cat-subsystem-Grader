@@ -158,6 +158,13 @@ public class EditStepPage
 
 
     // ----------------------------------------------------------
+    public WOComponent myProfile()
+    {
+        return pageWithName(currentTab().selectById("Profile").pageName());
+    }
+
+
+    // ----------------------------------------------------------
     public String title()
     {
         String plugin = "Plug-in";

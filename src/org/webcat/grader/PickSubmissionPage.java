@@ -83,10 +83,11 @@ public class PickSubmissionPage
         log.debug( "entering appendToResponse()" );
         selectedIndex = -1;
         User user = user();
-        if ( prefs().submission() != null )
-        {
-            user = prefs().submission().user();
-        }
+        // Why is this here?
+//        if ( prefs().submission() != null )
+//        {
+//            user = prefs().submission().user();
+//        }
         previousSubmissions = false;
         if (prefs().assignmentOffering() != null)
         {

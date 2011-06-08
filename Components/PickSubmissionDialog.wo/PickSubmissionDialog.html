@@ -24,27 +24,27 @@
       <wo:if condition="$rootUserSubmission.submission.assignmentOffering.assignment.usesToolCheckScore"><td class="n"><wo:str value="$aSubmission.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
       <wo:if condition="$rootUserSubmission.submission.assignmentOffering.assignment.usesTAScore"><td class="n">
         <wo:if condition="$aSubmission.isSubmissionForGrading">
-          <wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || aSubmission.assignmentOffering.courseOffering.isStaff(user)">
+          <wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)">
             <wo:if condition="$aSubmission.assignmentOffering.assignment.submissionProfile.taPoints">
               <wo:if condition="~aSubmission.result.taScore gt 0">
                 <wo:str value="$aSubmission.result.taScoreRaw" numberformat="0.0"/>
               </wo:if>
               <wo:else>
-                &lt;Awaiting TA&gt;
+                &lt;Awaiting Staff&gt;
               </wo:else>
             </wo:if>
             <wo:else>
                 <wo:str value="$aSubmission.result.taScoreRaw" numberformat="0.0"/>
             </wo:else>
-          </wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else>
+          </wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else>
         </wo:if></td></wo:if>
       <wo:if condition="$rootUserSubmission.submission.assignmentOffering.assignment.usesBonusesOrPenalties"><td class="n"><wo:str value="$aSubmission.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
     </wo:if>
-                <td class="n"><wo:if condition="$aSubmission.isSubmissionForGrading"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo:if></td>
+                <td class="n"><wo:if condition="$aSubmission.isSubmissionForGrading"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo:if></td>
               </wo:if><wo:else>
                 <wo:WOGenericContainer elementName="td" colspan="~(extraColumnCount gt 1) ? (extraColumnCount + 1) : 1" style="color: red">&lt;<wo:str value="$aSubmission.status"/>&gt;</wo:WOGenericContainer>
               </wo:else>
-              <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
+              <td><wo:str value="$aSubmission.result.submission.namesOfAllUsers"/></td>
             </wo:WCTableRow>
         </wo:WCTableRows>
     </wo>

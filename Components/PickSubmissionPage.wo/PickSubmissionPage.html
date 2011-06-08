@@ -13,13 +13,13 @@
       <wo:if condition="$hasResult">
         <td align="right"><wo:link action="$selectSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
         <td><wo:link action="$selectSubmission"><wo name="String2"/></wo:link></td>
-        <td align="right"><wo:link action="$selectSubmission"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK"><wo name="String3"/></wo:if><wo:else>&lt;Awaiting TA&gt;</wo:else></wo:link></td>
+        <td align="right"><wo:link action="$selectSubmission"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo name="String3"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo:link></td>
       </wo:if><wo:else>
         <td align="right"><wo:str value="$aSubmission.submitNumber"/></td>
         <td><wo name="String2"/></td>
         <td style="color:red">&lt;<wo:str value="$submissionStatus"/>&gt;</td>
       </wo:else>
-      <td><wo:str value="$aSubmission.namesOfAllUsers"/></td>
+      <td><wo:str value="$aSubmission.result.submission.namesOfAllUsers"/></td>
     </wo></wo>
   </tbody></table>
   </wo:WCForm>
