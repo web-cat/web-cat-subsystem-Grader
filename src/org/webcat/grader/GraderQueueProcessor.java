@@ -792,11 +792,25 @@ public class GraderQueueProcessor
             properties.setProperty( "assignment",
                 job.submission().assignmentOffering().assignment()
                 .name() );
+
             properties.setProperty( "dueDateTimestamp",
                 Long.toString( job.submission().assignmentOffering()
                                .dueDate().getTime() ) );
+            properties.setProperty( "lateDeadlineTimestamp",
+                Long.toString( job.submission().assignmentOffering()
+                               .lateDeadline().getTime() ) );
             properties.setProperty( "submissionTimestamp",
                 Long.toString( job.submission().submitTime().getTime() ) );
+            properties.setProperty( "jobQueueTimestamp",
+                    Long.toString( job.queueTime().getTime() ) );
+
+            properties.setProperty("jobQueuedAfterLateDeadline",
+                    Boolean.toString(job.queueTime().after(
+                            job.submission().assignmentOffering()
+                                .lateDeadline())));
+            properties.setProperty("jobIsRegrading",
+                    Boolean.toString(job.regrading()));
+
             properties.setProperty( "submissionNo",
                 Integer.toString( job.submission().submitNumber() ) );
             properties.setProperty( "frameworksBaseURL",
