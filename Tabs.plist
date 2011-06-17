@@ -169,6 +169,7 @@
           };
           "Past Results" = {
             pageName = org.webcat.grader.StudentCourseSummaryPage;
+            id       = PastResults;
             priority = 2;
           };
           "Graphs" = {
