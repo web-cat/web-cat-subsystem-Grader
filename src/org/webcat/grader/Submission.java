@@ -610,6 +610,10 @@ public class Submission
      */
     private void deleteResultsForAllPartners()
     {
+        // TODO: This method is broken, since it is called only during
+        // regrades, and the old submissions will end up being orphaned,
+        // but there is no plan to "reattach" the new results to those.
+        //
         SubmissionResult myResult = result();
         if ( myResult != null )
         {
