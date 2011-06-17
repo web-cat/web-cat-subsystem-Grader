@@ -433,6 +433,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Clear all values from isSubmissionForGrading so that all new
+     * stuff will be migrated correctly.
+     * @throws SQLException on error
+     */
+    public void updateIncrement20dontuse() throws SQLException
+    {
+        database().executeSQL(
+            "update table TSUBMISSION set CISSUBMISSIONFORGRADING NULL");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
