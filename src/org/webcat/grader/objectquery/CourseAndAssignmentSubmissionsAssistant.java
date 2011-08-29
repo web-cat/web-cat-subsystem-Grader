@@ -202,6 +202,14 @@ public class CourseAndAssignmentSubmissionsAssistant
             return Assignment.objectsWithFetchSpecification(
                 localContext(), fetchSpec);
         }
+
+
+        // ----------------------------------------------------------
+        protected void selectionDidChange()
+        {
+            model.setSelectedAssignmentModelItems(
+                    assignmentModel.selectedObjects().allObjects());
+        }
     }
 
 
