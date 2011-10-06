@@ -1,76 +1,28 @@
 AssignmentHasSuspendedSubs: WOConditional {
-    condition = assignmentHasSuspendedSubs;
+    condition = assignmentOfferingHasSuspendedSubs;
 }
 
 AssignmentIsUnpublished: WOConditional {
-    condition = assignment.publish;
+    condition = assignmentOffering.publish;
     negate = true;
 }
 
 AssignmentLink: WOHyperlink {
-    string = "~assignment.titleString(coreSelections.semester)";
-    href   = assignment.assignment.url;
+    string = "~assignmentOffering.titleString(coreSelections.semester)";
+    href   = assignmentOffering.assignment.url;
 }
 
 AssignmentName: WOString {
-    value = "~assignment.titleString(coreSelections.semester)";
-}
-
-AssignmentRepetition: WORepetition {
-    item  = assignment;
-    list  = assignmentGroup.displayedObjects;
-    index = index;
+    value = "~assignmentOffering.titleString(coreSelections.semester)";
 }
 
 DueDate: WOString {
     formatter = session.timeFormatter;
-    value     = assignment.dueDate;
-}
-
-EditAssignment: WOActiveImage {
-    filename  = "icons/edit.gif";
-    framework = "Core";
-    action    = editAssignment;
-    border    = "0";
-    width     = "18";
-    height    = "17";
-    alt       = "Edit assignment properties";
-    title     = "Edit assignment properties";
-}
-
-GradeAssignment: WOActiveImage {
-    filename  = "icons/comment.gif";
-    framework = "Grader";
-    action    = gradeAssignment;
-    border    = "0";
-    width     = "16";
-    height    = "16";
-    alt       = "Grade student submissions";
-    title     = "Grade student submissions";
-}
-
-Graph: org.webcat.grader.graphs.MiniBarGraph {
-    graphSummary = assignment.graphSummary;
-    markScore    = mostRecentScore;
-}
-
-GraphResults: WOActiveImage {
-    filename  = "icons/graph.gif";
-    framework = "Grader";
-    action    = graphResults;
-    border    = "0";
-    width     = "17";
-    height    = "16";
-    alt       = "Graph your results";
-    title     = "Graph your results";
+    value     = assignmentOffering.dueDate;
 }
 
 HasAssignments: WOConditional {
-    condition = assignmentGroup.displayedObjects.count;
-}
-
-HasUpcomingAssignments: WOConditional {
-    condition = upcomingAssignmentsGroup.displayedObjects.count;
+    condition = courses.displayedObjects.count;
 }
 
 HasEnqueuedJobs: WOConditional {
@@ -82,7 +34,7 @@ IsFacultyUser: WOConditional {
 }
 
 HasNoAssignments: WOConditional {
-    condition = assignmentGroup.displayedObjects.count;
+    condition = courses.displayedObjects.count;
     negate    = true;
 }
 
@@ -101,23 +53,12 @@ JobSubmissionTime: WOString {
     value     = job.submission.submitTime;
 }
 
-SubmitAssignment: WOActiveImage {
-    filename  = "icons/upload.gif";
-    framework = "Core";
-    action    = submitAssignment;
-    border    = "0";
-    width     = "18";
-    height    = "18";
-    alt       = "Submit to this assignment";
-    title     = "Submit to this assignment";
-}
-
 SubmitNumber: WOString {
     value = job.submission.submitNumber;
 }
 
 SuspendedCount: WOString {
-    value = assignment.suspendedSubmissionsInQueue.count;
+    value = assignmentOffering.suspendedSubmissionsInQueue.count;
 }
 
 TR : org.webcat.core.TableRow {
@@ -126,23 +67,12 @@ TR : org.webcat.core.TableRow {
 
 TR2 : org.webcat.core.TableRow {
     index       = index;
-    showCaution = assignment.isLate;
-    showError   = assignment.gradingSuspended;
+    showCaution = assignmentOffering.isLate;
+    showError   = assignmentOffering.gradingSuspended;
 }
 
 UpcomingAssignmentRepetition: WORepetition {
-    item  = assignment;
+    item  = assignmentOffering;
     list  = upcomingAssignmentsGroup.displayedObjects;
     index = index;
-}
-
-ViewResults: WOActiveImage {
-    filename  = "icons/report.gif";
-    framework = "Core";
-    action    = viewResults;
-    border    = "0";
-    width     = "16";
-    height    = "15";
-    alt       = "View your most recent results";
-    title     = "View your most recent results";
 }

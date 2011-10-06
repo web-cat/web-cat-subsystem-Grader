@@ -18,18 +18,40 @@ await action from the instructor or adminstrator for completion; red lines
 indicate assignments where the instructor has temporarily suspended all grading.)</p>
 </wo:org.webcat.core.WCPageModule></webobject>
 
-<wo:org.webcat.core.WCPageModule title="Assignments Accepting Submissions">
+<wo:WCForm mutipleSubmit="true">
+<wo:org.webcat.core.WCPageModule title="Assignments Accepting Submissions in Your Courses">
 <webobject name="HasAssignments">
-<table><thead>
-<tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr></thead><tbody>
-<webobject name="AssignmentRepetition">
-<webobject name="TR2"><td><wo:if condition="$assignment.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
-<span class="caution">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
-<span class="caution">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
-<td class="nowrap"><webobject name="DueDate"/></td>
-<td valign="center"><webobject name="Graph"/></td>
-<td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><wo:if condition="$canGradeAssignment"><webobject name="GradeAssignment"/></wo:if><wo:if condition="$canEditAssignment"><webobject name="EditAssignment"/></wo:if></td></webobject>
-</webobject></tbody></table>
+
+<wo:loop list="$courses.displayedObjects" item="$course">
+<div class="assignments">
+<p class="course"><b>For <wo:str value="$course"/></b></p>
+<table class="course-list"><tbody>
+  <wo:loop list="$assignments.displayedObjects" item="$anAssignment">
+    <tr class="assignment"><td colspan="4">
+    <b><wo:if condition="$anAssignment.url"><wo:link href="$anAssignment.url"><wo:str value="$anAssignment.name"/></wo:link></wo:if><wo:else><wo:str value="$anAssignment.name"/></wo:else></b>
+    <wo:if condition="$anAssignment.shortDescription">: <i><wo:str value="$anAssignment.shortDescription"/></i></wo:if>
+    <wo:if condition="$canGradeAssignment">
+    &nbsp;&nbsp;<wo:WCButton label="View or Grade" iconClass="clipboard" action="$viewOrGrade"/>
+        <wo:if condition="$canEditAssignment">
+             <wo:WCButton label="Edit Assignment" iconClass="edit" action="$editAssignment"/></wo:if></wo:if></td></tr>
+    <tr><th>Offering</th><th>Due On</th><th>Graphed Scores</th><th></th></tr>
+    <wo:loop list="$offerings.displayedObjects" item="$assignmentOffering" index="$index">
+      <wo:tr index="$index"><td>
+      <wo:if condition="$assignmentOffering.courseOffering.label"><wo:str value="$assignmentOffering.courseOffering.label"/> (<wo:str value="$assignmentOffering.courseOffering.crn"/>)</wo:if><wo:else><wo:str value="$assignmentOffering.courseOffering.crn"/></wo:else>
+      <wo:not condition="$assignmentOffering.publish"><span class="caution">(unpublished)</span></wo:not>
+      <wo:if condition="$assignmentOfferingHasSuspendedSubs"><span class="caution">(<wo:str value="$assignmentOffering.suspendedSubmissionsInQueue.count"/> suspended)</span></wo:if>
+      </td>
+      <td><wo:str value="$assignmentOffering.dueDate" formatter="$session.timeFormatter"/></td>
+      <td><wo:org.webcat.grader.graphs.MiniBarGraph graphSummary="$assignmentOffering.graphSummary" markScore="$mostRecentScore"/></td>
+      <td><wo:WCButton label="Submit" iconClass="upload" action="$submitAssignment"/>
+          <wo:if condition="~mostRecentScore != null"><wo:WCButton label="Latest Results" iconClass="report" action="$viewResults"/></wo:if></td>
+      </wo:tr>
+    </wo:loop>
+  </wo:loop>
+</tbody></table>
+</div>
+</wo:loop>
+
 </webobject><webobject name="HasNoAssignments">
 <p>There are no assignments currently accepting submissions in your course(s).
 </p>
@@ -37,30 +59,53 @@ indicate assignments where the instructor has temporarily suspended all grading.
 </wo:org.webcat.core.WCPageModule>
 
 <wo:if condition="$oldAssignmentGroup.displayedObjects.count">
-<wo:org.webcat.core.WCPageModule title="Older Assignments" open="false" dynamic="true">
-<table><thead>
-<tr><th>Assignment</th><th>Due</th><th class="sm">Score Distribution</th><th>Action</th></tr></thead><tbody>
-<wo:loop list="$oldAssignmentGroup.displayedObjects" item="$assignment" index="$index">
-<wo:org.webcat.core.TableRow index="$index" showError="$assignment.gradingSuspended">
-<td><wo:if condition="$assignment.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
-<span class="caution">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
-<span class="caution">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
-<td class="nowrap"><webobject name="DueDate"/></td>
-<td valign="center"><webobject name="Graph"/></td>
-<td class="nowrap"><wo:if condition="~assignment.courseOffering.isStaff(user)"><webobject name="SubmitAssignment"/></wo:if><webobject name="ViewResults"/><webobject name="GraphResults"/><wo:if condition="$canGradeAssignment"><webobject name="GradeAssignment"/></wo:if><wo:if condition="$canEditAssignment"><webobject name="EditAssignment"/></wo:if></td></wo:org.webcat.core.TableRow>
-</wo:loop></tbody></table>
+<wo:org.webcat.core.WCPageModule title="Older Assignments">
+<wo:loop list="$coursesForOld.displayedObjects" item="$courseForOld">
+<div class="assignments">
+<p class="course"><b>For <wo:str value="$courseForOld"/></b></p>
+<table class="course-list"><tbody>
+  <wo:loop list="$assignments.displayedObjects" item="$anOldAssignment">
+    <tr class="assignment"><td colspan="4">
+    <b><wo:if condition="$anOldAssignment.url"><wo:link href="$anOldAssignment.url"><wo:str value="$anOldAssignment.name"/></wo:link></wo:if><wo:else><wo:str value="$anOldAssignment.name"/></wo:else></b>
+    <wo:if condition="$anOldAssignment.shortDescription">: <i><wo:str value="$anOldAssignment.shortDescription"/></i></wo:if>
+    <wo:if condition="$canGradeAssignment">
+    &nbsp;&nbsp;<wo:WCButton label="View or Grade" iconClass="clipboard" action="$viewOrGradeOld"/>
+        <wo:if condition="$canEditAssignment">
+             <wo:WCButton label="Edit Assignment" iconClass="edit" action="$editOldAssignment"/></wo:if></wo:if></td></tr>
+    <tr><th>Offering</th><th>Due On</th><th>Graphed Scores</th><th></th></tr>
+    <wo:loop list="$offerings.displayedObjects" item="$assignmentOffering" index="$index">
+      <wo:tr index="$index"><td>
+      <wo:if condition="$assignmentOffering.courseOffering.label"><wo:str value="$assignmentOffering.courseOffering.label"/> (<wo:str value="$assignmentOffering.courseOffering.crn"/>)</wo:if><wo:else><wo:str value="$assignmentOffering.courseOffering.crn"/></wo:else>
+      <wo:not condition="$assignmentOffering.publish"><span class="caution">(unpublished)</span></wo:not>
+      <wo:if condition="$assignmentOfferingHasSuspendedSubs"><span class="caution">(<wo:str value="$assignmentOffering.suspendedSubmissionsInQueue.count"/> suspended)</span></wo:if>
+      </td>
+      <td><wo:str value="$assignmentOffering.dueDate" formatter="$session.timeFormatter"/></td>
+      <td><wo:org.webcat.grader.graphs.MiniBarGraph graphSummary="$assignmentOffering.graphSummary" markScore="$mostRecentScore"/></td>
+      <td><wo:if condition="$canGradeAssignmentOffering"><wo:WCButton label="Submit" iconClass="upload" action="$submitAssignment"/></wo:if>
+          <wo:if condition="~mostRecentScore != null"><wo:WCButton label="Latest Results" iconClass="report" action="$viewResults"/></wo:if></td>
+      </wo:tr>
+    </wo:loop>
+  </wo:loop>
+</tbody></table>
+</div>
+</wo:loop>
 </wo:org.webcat.core.WCPageModule>
 </wo:if>
+</wo:WCForm>
 
-<webobject name="IsFacultyUser"><webobject name="HasUpcomingAssignments">
-<wo:org.webcat.core.WCPageModule title="Other Upcoming Assignment Deadlines" open="false">
+<webobject name="IsFacultyUser">
+<wo:org.webcat.core.WCPageModule title="Other Upcoming Assignment Deadlines" open="false" dynamic="true">
+<wo:if condition="$hasUpcomingAssignments">
 <table><thead>
 <tr><th>Assignment</th><th>Due</th><webobject name="IsAdminUser"><th>Action</th></webobject></tr></thead><tbody>
 <webobject name="UpcomingAssignmentRepetition">
-<webobject name="TR2"><td><wo:if condition="$assignment.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
+<webobject name="TR2"><td><wo:if condition="$assignmentOffering.assignment.url"><wo name="AssignmentLink"/></wo:if><wo:else><wo name="AssignmentName"/></wo:else><webobject name="AssignmentIsUnpublished">
 <span class="caution">(unpublished)</span></webobject><webobject name="AssignmentHasSuspendedSubs">
 <span class="caution">(<webobject name="SuspendedCount"/> suspended)</span></webobject></td>
 <td class="nowrap"><webobject name="DueDate"/></td>
-<webobject name="IsAdminUser"><td class="nowrap"><webobject name="SubmitAssignment"/><webobject name="ViewResults"/><webobject name="GraphResults"/><webobject name="GradeAssignment"/><webobject name="EditAssignment"/></td></webobject></webobject>
+</webobject>
 </webobject></tbody></table>
-</wo:org.webcat.core.WCPageModule></webobject></webobject>
+</wo:if><wo:else>
+<p>No other upcoming assignments are scheduled.</p>
+</wo:else>
+</wo:org.webcat.core.WCPageModule></webobject>

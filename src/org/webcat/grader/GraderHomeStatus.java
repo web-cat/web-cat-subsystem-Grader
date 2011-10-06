@@ -24,9 +24,10 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.appserver.ERXDisplayGroup;
 import er.extensions.eof.ERXQ;
+import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.Logger;
-import org.webcat.core.Application;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Semester;
@@ -50,21 +51,25 @@ public class GraderHomeStatus
      *
      * @param context The page's context
      */
-    public GraderHomeStatus( WOContext context )
+    public GraderHomeStatus(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
     //~ KVC Attributes (must be public) .......................................
 
-    public WODisplayGroup     enqueuedJobGroup;
-    public EnqueuedJob        job;
-    public WODisplayGroup     assignmentGroup;
-    public WODisplayGroup     oldAssignmentGroup;
-    public WODisplayGroup     upcomingAssignmentsGroup;
-    public AssignmentOffering assignment;
-    public int                index;
+    public ERXDisplayGroup<EnqueuedJob>        enqueuedJobGroup;
+    public EnqueuedJob                         job;
+    public ERXDisplayGroup<AssignmentOffering> oldAssignmentGroup;
+    public ERXDisplayGroup<AssignmentOffering> upcomingAssignmentsGroup;
+    public int                                 index;
+
+    public ERXDisplayGroup<Course> courses;
+    public ERXDisplayGroup<Assignment> assignments;
+    public ERXDisplayGroup<AssignmentOffering> offerings;
+    public AssignmentOffering assignmentOffering;
+    public ERXDisplayGroup<Course> coursesForOld;
 
 
     //~ Methods ...............................................................
@@ -82,7 +87,7 @@ public class GraderHomeStatus
         if (log.isDebugEnabled())
         {
             log.debug( "starting beforeAppendToResponse()" );
-            Application.enableSQLLogging();
+//            Application.enableSQLLogging();
         }
 
         enqueuedJobGroup.queryBindings().setObjectForKey(
@@ -92,32 +97,40 @@ public class GraderHomeStatus
         enqueuedJobGroup.fetch();
 
         currentTime = new NSTimestamp();
-        EOQualifier baseQualifier =
-            AssignmentOffering.availableFrom.lessThan(currentTime).and(
-            AssignmentOffering.publish.isTrue()).and(
-                new EOKeyValueQualifier(
-                    AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                    EOQualifier.QualifierOperatorContains,
-                    user()));
-        baseQualifier = ERXQ.or(baseQualifier,
-            new EOKeyValueQualifier(
-                AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
-                EOQualifier.QualifierOperatorContains,
-                user()),
-            new EOKeyValueQualifier(
-                AssignmentOffering.COURSE_OFFERING_GRADERS_KEY,
-                EOQualifier.QualifierOperatorContains,
-                user()));
-        assignmentGroup.setQualifier( ERXQ.and(baseQualifier,
-            AssignmentOffering.lateDeadline.greaterThan(currentTime)));
+        // First, grab all this student can see
+        @SuppressWarnings("unchecked")
+        NSMutableArray<AssignmentOffering> interesting =
+            new NSMutableArray<AssignmentOffering>(
+                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                    AssignmentOffering.objectsMatchingQualifier(localContext(),
+                        AssignmentOffering.publish.isTrue().and(
+                        AssignmentOffering.courseOffering
+                        .dot(CourseOffering.students).is(user()))),
+                    AssignmentOffering.availableFrom.lessThan(currentTime)));
+
+        // Now, add any user has instructor access to:
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
+            AssignmentOffering.objectsMatchingQualifier(localContext(),
+                AssignmentOffering.courseOffering
+                .dot(CourseOffering.instructors).is(user())));
+
+        // Now, add any user has grader access to:
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
+            AssignmentOffering.objectsMatchingQualifier(localContext(),
+                AssignmentOffering.courseOffering
+                .dot(CourseOffering.graders).is(user())));
+
+        @SuppressWarnings("unchecked")
+        NSArray<AssignmentOffering> open = ERXArrayUtilities
+            .filteredArrayWithQualifierEvaluation(interesting,
+                AssignmentOffering.lateDeadline.greaterThan(currentTime));
+
+        currentAssignments = organizeAssignments(open);
+        courses.setObjectArray(
+            new NSArray<Course>(currentAssignments.keySet()));
         if (log.isDebugEnabled())
         {
-            log.debug( "qualifier = " + assignmentGroup.qualifier() );
-        }
-        assignmentGroup.fetch();
-        if (log.isDebugEnabled())
-        {
-            log.debug( "results = " + assignmentGroup.displayedObjects() );
+            log.debug("organized = " + currentAssignments);
         }
 
         Semester currentSemester = null;
@@ -127,36 +140,26 @@ public class GraderHomeStatus
         {
             currentSemester = semesters.get(0);
         }
-        oldAssignmentGroup.setQualifier(
-            currentSemester == null
-                ? ERXQ.and(baseQualifier,
-                    ERXQ.not(AssignmentOffering.lateDeadline
-                        .greaterThan(currentTime)))
-                : ERXQ.and(baseQualifier,
+        @SuppressWarnings("unchecked")
+        NSArray<AssignmentOffering> old = ERXArrayUtilities
+            .filteredArrayWithQualifierEvaluation(interesting,
+                currentSemester == null
+                ? ERXQ.not(AssignmentOffering.lateDeadline
+                        .greaterThan(currentTime))
+                : ERXQ.and(
                     ERXQ.not(AssignmentOffering.lateDeadline
                         .greaterThan(currentTime)),
                     AssignmentOffering.courseOffering.dot(
-                        CourseOffering.semester).is(currentSemester))
-            );
-        oldAssignmentGroup.fetch();
+                        CourseOffering.semester).is(currentSemester)));
+        oldAssignments = organizeAssignments(old);
+        coursesForOld.setObjectArray(
+            new NSArray<Course>(oldAssignments.keySet()));
+        // FIXME: remove
+        oldAssignmentGroup.setObjectArray(old);
 
-
-        // Now set up the upcoming assignments list
-        upcomingAssignmentsGroup.setQualifier(ERXQ.and(
-            // Not in either of the upper lists
-            ERXQ.not(baseQualifier),
-            // Also, more recent than two weeks ago
-            AssignmentOffering.dueDate.greaterThan(
-                currentTime.timestampByAddingGregorianUnits(0, 0, -14, 0, 0, 0)
-                ),
-            // Also, some time within the next 4 weeks
-            AssignmentOffering.dueDate.lessThan(
-                currentTime.timestampByAddingGregorianUnits(0, 0, 28, 0, 0, 0))
-            ));
-        upcomingAssignmentsGroup.fetch();
         if (log.isDebugEnabled())
         {
-            Application.disableSQLLogging();
+//            Application.disableSQLLogging();
             log.debug("ending beforeAppendToResponse()");
         }
         super.beforeAppendToResponse( response, context );
@@ -171,8 +174,8 @@ public class GraderHomeStatus
      */
     public Number mostRecentScore()
     {
-        SubmissionResult subResult = assignment.mostRecentSubmissionResultFor(
-            user());
+        SubmissionResult subResult =
+            assignmentOffering.mostRecentSubmissionResultFor(user());
         return (subResult == null)
             ? null
             : new Double(subResult.automatedScore());
@@ -187,7 +190,29 @@ public class GraderHomeStatus
      */
     public boolean canEditAssignment()
     {
-        return assignment.courseOffering().isInstructor( user() );
+        if (offerings.displayedObjects() == null
+            || offerings.displayedObjects().count() == 0)
+        {
+            return false;
+        }
+        AssignmentOffering ao = offerings.displayedObjects().get(0);
+        return ao.courseOffering().isInstructor(user());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Check whether the user can edit the selected assignment.
+     *
+     * @return true if the user can edit the assignment
+     */
+    public boolean canGradeAssignmentOffering()
+    {
+        boolean result =
+            assignmentOffering.courseOffering().isInstructor(user())
+            || assignmentOffering.courseOffering().isGrader(user());
+        log.debug("can grade = " + result);
+        return result;
     }
 
 
@@ -199,9 +224,15 @@ public class GraderHomeStatus
      */
     public boolean canGradeAssignment()
     {
+        if (offerings.displayedObjects() == null
+            || offerings.displayedObjects().count() == 0)
+        {
+            return false;
+        }
+        AssignmentOffering ao = offerings.displayedObjects().get(0);
         boolean result =
-            assignment.courseOffering().isInstructor(user())
-            || assignment.courseOffering().isGrader(user());
+            ao.courseOffering().isInstructor(user())
+            || ao.courseOffering().isGrader(user());
         log.debug("can grade = " + result);
         return result;
     }
@@ -215,7 +246,7 @@ public class GraderHomeStatus
      */
     public WOComponent submitAssignment()
     {
-        selectAssignment(assignment);
+        selectAssignment(assignmentOffering);
         return pageWithName(
             wcSession().tabs.selectById("UploadSubmission").pageName());
     }
@@ -229,7 +260,7 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        selectSubmission(assignment);
+        selectSubmission(assignmentOffering);
         return pageWithName(
             wcSession().tabs.selectById("MostRecent").pageName());
     }
@@ -243,7 +274,7 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        selectSubmission(assignment);
+        selectSubmission(assignmentOffering);
         return pageWithName(
             wcSession().tabs.selectById("GraphResults").pageName());
     }
@@ -257,7 +288,9 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
-        selectAssignment(assignment);
+        assignmentOffering =
+            currentAssignments.get(course()).get(anAssignment()).get(0);
+        selectAssignment(assignmentOffering);
         return pageWithName(
             wcSession().tabs.selectById("AssignmentProperties").pageName());
     }
@@ -269,9 +302,43 @@ public class GraderHomeStatus
      *
      * @return the properties page for the selected assignment
      */
-    public WOComponent gradeAssignment()
+    public WOComponent editOldAssignment()
     {
-        selectAssignment(assignment);
+        assignmentOffering =
+            oldAssignments.get(courseForOld()).get(anOldAssignment()).get(0);
+        selectAssignment(assignmentOffering);
+        return pageWithName(
+            wcSession().tabs.selectById("AssignmentProperties").pageName());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * An action to go to edit page for a given assignment.
+     *
+     * @return the properties page for the selected assignment
+     */
+    public WOComponent viewOrGrade()
+    {
+        assignmentOffering =
+            currentAssignments.get(course()).get(anAssignment()).get(0);
+        selectAssignment(assignmentOffering);
+        return pageWithName(
+            wcSession().tabs.selectById("EnterGrades").pageName());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * An action to go to edit page for a given assignment.
+     *
+     * @return the properties page for the selected assignment
+     */
+    public WOComponent viewOrGradeOld()
+    {
+        assignmentOffering =
+            oldAssignments.get(courseForOld()).get(anOldAssignment()).get(0);
+        selectAssignment(assignmentOffering);
         return pageWithName(
             wcSession().tabs.selectById("EnterGrades").pageName());
     }
@@ -287,7 +354,7 @@ public class GraderHomeStatus
             offering.courseOffering().course());
         prefs().setAssignmentRelationship(offering.assignment());
         prefs().setAssignmentOfferingRelationship(offering);
-        if (!assignment.courseOffering().isStaff(user())
+        if (!offering.courseOffering().isStaff(user())
             && user().hasAdminPrivileges())
         {
             coreSelections().setIncludeAdminAccess(true);
@@ -308,7 +375,7 @@ public class GraderHomeStatus
     {
         selectAssignment(offering);
         SubmissionResult subResult =
-            assignment.mostRecentSubmissionResultFor(user());
+            offering.mostRecentSubmissionResultFor(user());
         Submission sub = null;
         if (subResult != null)
         {
@@ -326,26 +393,194 @@ public class GraderHomeStatus
      * @return true if the user can see this assignment's status and this
      * assignment has suspended submissions
      */
-    public boolean assignmentHasSuspendedSubs()
+    public boolean assignmentOfferingHasSuspendedSubs()
     {
         return ( user().hasAdminPrivileges()
-                 || assignment.courseOffering().instructors()
+                 || assignmentOffering.courseOffering().instructors()
                      .containsObject( user() ) )
-               && assignment.suspendedSubmissionsInQueue().count() > 0;
+               && assignmentOffering.suspendedSubmissionsInQueue().count() > 0;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasUpcomingAssignments()
+    {
+        // set up the upcoming assignments list
+        if (upcomingAssignmentsGroup.displayedObjects() == null
+            || upcomingAssignmentsGroup.displayedObjects().count() == 0)
+        {
+            EOQualifier baseQualifier =
+                AssignmentOffering.availableFrom.lessThan(currentTime).and(
+                AssignmentOffering.publish.isTrue()).and(
+                new EOKeyValueQualifier(
+                    AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    user()));
+            baseQualifier = ERXQ.or(baseQualifier,
+                new EOKeyValueQualifier(
+                    AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    user()),
+                new EOKeyValueQualifier(
+                    AssignmentOffering.COURSE_OFFERING_GRADERS_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    user()));
+            upcomingAssignmentsGroup.setQualifier(ERXQ.and(
+                // Not in either of the upper lists
+                ERXQ.not(baseQualifier),
+                // Also, more recent than two weeks ago
+                AssignmentOffering.dueDate.greaterThan(
+                    currentTime.timestampByAddingGregorianUnits(
+                        0, 0, -14, 0, 0, 0)
+                    ),
+                // Also, some time within the next 4 weeks
+                AssignmentOffering.dueDate.lessThan(
+                    currentTime.timestampByAddingGregorianUnits(
+                        0, 0, 28, 0, 0, 0))
+                ));
+            upcomingAssignmentsGroup.fetch();
+        }
+        return upcomingAssignmentsGroup.displayedObjects().count() > 0;
+    }
+
+
+    // ----------------------------------------------------------
+    public Course course()
+    {
+        return course;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setCourse(Course newCourse)
+    {
+        if (newCourse == null)
+        {
+            assignments.setObjectArray(NSArray.EmptyArray);
+        }
+        else
+        {
+            NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>
+                newAssignments = currentAssignments.get(newCourse);
+            if (newAssignments == null || newAssignments.isEmpty())
+            {
+                assignments.setObjectArray(NSArray.EmptyArray);
+            }
+            else
+            {
+                assignments.setObjectArray(
+                    new NSArray<Assignment>(newAssignments.keySet()));
+            }
+        }
+        course = newCourse;
+    }
+
+
+    // ----------------------------------------------------------
+    public Assignment anAssignment()
+    {
+        return anAssignment;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setAnAssignment(Assignment newAssignment)
+    {
+        if (newAssignment == null)
+        {
+            offerings.setObjectArray(NSArray.EmptyArray);
+        }
+        else
+        {
+            NSMutableArray<AssignmentOffering> newOfferings =
+                currentAssignments.get(course()).get(newAssignment);
+            if (newOfferings == null || newOfferings.isEmpty())
+            {
+                offerings.setObjectArray(NSArray.EmptyArray);
+            }
+            else
+            {
+                offerings.setObjectArray(newOfferings);
+            }
+        }
+        anAssignment = newAssignment;
+    }
+
+
+    // ----------------------------------------------------------
+    public Course courseForOld()
+    {
+        return courseForOld;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setCourseForOld(Course aCourse)
+    {
+        if (aCourse == null)
+        {
+            assignments.setObjectArray(NSArray.EmptyArray);
+        }
+        else
+        {
+            NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>
+                newAssignments = oldAssignments.get(aCourse);
+            if (newAssignments == null || newAssignments.isEmpty())
+            {
+                assignments.setObjectArray(NSArray.EmptyArray);
+            }
+            else
+            {
+                assignments.setObjectArray(
+                    new NSArray<Assignment>(newAssignments.keySet()));
+            }
+        }
+        courseForOld = aCourse;
+    }
+
+
+    // ----------------------------------------------------------
+    public Assignment anOldAssignment()
+    {
+        return anOldAssignment;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setAnOldAssignment(Assignment oldAssignment)
+    {
+        if (oldAssignment == null)
+        {
+            offerings.setObjectArray(NSArray.EmptyArray);
+        }
+        else
+        {
+            NSMutableArray<AssignmentOffering> newOfferings =
+                oldAssignments.get(courseForOld()).get(oldAssignment);
+            if (newOfferings == null || newOfferings.isEmpty())
+            {
+                offerings.setObjectArray(NSArray.EmptyArray);
+            }
+            else
+            {
+                offerings.setObjectArray(newOfferings);
+            }
+        }
+        anOldAssignment = oldAssignment;
     }
 
 
     // ----------------------------------------------------------
     private NSMutableDictionary<Course,
         NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
-        organizeAssignments(NSArray<AssignmentOffering> offerings)
+        organizeAssignments(NSArray<AssignmentOffering> offeringList)
     {
         NSMutableDictionary<Course, NSMutableDictionary<Assignment,
             NSMutableArray<AssignmentOffering>>> result =
             new NSMutableDictionary<Course, NSMutableDictionary<Assignment,
                 NSMutableArray<AssignmentOffering>>>();
 
-        for (AssignmentOffering ao : offerings)
+        for (AssignmentOffering ao : offeringList)
         {
             Course c = ao.courseOffering().course();
 
@@ -374,6 +609,7 @@ public class GraderHomeStatus
         return result;
     }
 
+
     //~ Instance/static variables .............................................
 
     private NSTimestamp currentTime;
@@ -383,5 +619,12 @@ public class GraderHomeStatus
     private NSMutableDictionary<Course,
         NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
         oldAssignments;
+
+    private Course course;
+    private Assignment anAssignment;
+
+    private Course courseForOld;
+    private Assignment anOldAssignment;
+
     static Logger log = Logger.getLogger( GraderHomeStatus.class );
 }

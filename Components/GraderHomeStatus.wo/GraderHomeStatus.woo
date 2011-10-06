@@ -3,7 +3,7 @@
     encoding = NSUTF8StringEncoding;
     variables = {
         enqueuedJobGroup = {
-            class = WODisplayGroup;
+            class = ERXDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
@@ -31,46 +31,63 @@
                     selectorName = "compareAscending:"; }
             );
         };
-        assignmentGroup = {
-            class = WODisplayGroup;
-            dataSource = {
-                class = EODatabaseDataSource;
-                editingContext = localContext;
-                fetchSpecification = {
-                    class = EOFetchSpecification;
-                    entityName = AssignmentOffering;
-                    fetchLimit = 0;
-                    isDeep = YES;
-                };
-            };
+        assignments = {
+            class = ERXDisplayGroup;
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
             numberOfObjectsPerBatch = 0;
-            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
-                    key = dueDate;
-                    selectorName = "compareAscending:"; }
+                    key = name;
+                    selectorName = "compareCaseInsensitiveAscending:"; },
+                {   class = EOSortOrdering;
+                    key = description;
+                    selectorName = "compareCaseInsensitiveAscending:"; }
+            );
+        };
+        courses = {
+            class = ERXDisplayGroup;
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            sortOrdering = (
+                {   class = EOSortOrdering;
+                    key = deptNumber;
+                    selectorName = "compareCaseInsensitiveAscending:"; }
+            );
+        };
+        coursesForOld = {
+            class = ERXDisplayGroup;
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            sortOrdering = (
+                {   class = EOSortOrdering;
+                    key = deptNumber;
+                    selectorName = "compareCaseInsensitiveAscending:"; }
+            );
+        };
+        offerings = {
+            class = ERXDisplayGroup;
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            sortOrdering = (
+                {   class = EOSortOrdering;
+                    key = "courseOffering.crn";
+                    selectorName = "compareCaseInsensitiveAscending:"; }
             );
         };
         oldAssignmentGroup = {
-            class = WODisplayGroup;
-            dataSource = {
-                class = EODatabaseDataSource;
-                editingContext = localContext;
-                fetchSpecification = {
-                    class = EOFetchSpecification;
-                    entityName = AssignmentOffering;
-                    fetchLimit = 0;
-                    isDeep = YES;
-                };
-            };
+            class = ERXDisplayGroup;
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
             numberOfObjectsPerBatch = 0;
-            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
                     key = dueDate;
@@ -78,22 +95,11 @@
             );
         };
         upcomingAssignmentsGroup = {
-            class = WODisplayGroup;
-            dataSource = {
-                class = EODatabaseDataSource;
-                editingContext = localContext;
-                fetchSpecification = {
-                    class = EOFetchSpecification;
-                    entityName = AssignmentOffering;
-                    fetchLimit = 0;
-                    isDeep = YES;
-                };
-            };
+            class = ERXDisplayGroup;
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
             numberOfObjectsPerBatch = 0;
-            selectsFirstObjectAfterFetch = YES;
             sortOrdering = (
                 {   class = EOSortOrdering;
                     key = dueDate;
