@@ -17,7 +17,7 @@ For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
 
 <wo:org.webcat.core.WCPageModule title="Upload a CSV Roster">
 <p>Add more students to your roster using a comma-delimited text file:</p>
-<p>CSV File: <wo:upload data="$data" filePath="$filePath" size="60" id="theDiv" style="display:inline" dojoType="dojox.form.FileInput"/>
+<p>CSV File: <wo:upload data="$data" filePath="$filePath" size="60" id="theDiv" style="display:inline; vertical-align: middle;" dojoType="dojox.form.FileInput"/>
 <wo:WCButton action="$upload" label="Upload"/><wo name="UploadInfo"/></p>
 <script type="text/javascript">
 dojo.ready(function() {
@@ -50,17 +50,5 @@ dojo.ready(function() {
         </wo:WCTableRow>
     </wo:WCTableRows>
 </wo:WCTable>
-<!-- table><thead>
-  <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator2"/></td></tr>
-  <tr><th>User ID<webobject name="WCSortOrder4"/></th>
-    <th>Name<webobject name="WCSortOrder3"/></th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
-  <webobject name="NotStudentRepetition"><webobject name="TR">
-    <td><wo:str value="$student.userName"/></td><td><webobject name="Name"/></td>
-    <td><webobject name="Email"/></td><td><webobject name="AddStudent"/></td>
-  </webobject></webobject>
-  <wo:not condition="$notStudentDisplayGroup.allObjects.count">
-  <webobject name="TR"><td colspan="4">No unenrolled users to list.</td></webobject>
-  </wo:not>
-</tbody></table -->
 </wo:org.webcat.core.WCPageModule>
 </webobject>
