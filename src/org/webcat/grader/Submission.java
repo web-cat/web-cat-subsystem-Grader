@@ -1963,7 +1963,7 @@ public class Submission
                 {
                     users.removeObject(student);
                 }
-                else if (!(omitPartners && forGrading.partnerLink()))
+                else
                 {
                     submissions.setObjectForKey(forGrading, student);
                     if (accumulator != null)
@@ -1978,7 +1978,7 @@ public class Submission
                 {
                     users.removeObject(student);
                 }
-                else if (!(omitPartners && mostRecent.partnerLink()))
+                else
                 {
                     submissions.setObjectForKey(mostRecent, student);
                     if (accumulator != null)
