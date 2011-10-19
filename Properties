@@ -1,5 +1,5 @@
 #This file is automatically rewritten by ANT, so all formatting will be trashed.
-#Fri Jun 17 11:36:23 EDT 2011
+#Wed Oct 19 09:05:22 EDT 2011
 Grader.version.revision=1
 Grader.license.url=http\://www.gnu.org/licenses/agpl.html
 Grader.description=This subsystem provides all of Web-CAT's automated grading services.  It manages all grading plug-ins as well.
@@ -10,7 +10,7 @@ grader.mailResultNotificationAfterMinutes=15
 Grader.copyright=(c) 2006-2011 Virginia Tech Department of Computer Science
 grader.timeout.max=600
 Grader.provider=Virginia Tech Computer Science
-Grader.version.date=20110617
+Grader.version.date=20111019
 Grader.depends=env, pluginProperties
 subsystem.Grader=org.webcat.grader.Grader
 grader.timeout.default=60
@@ -21,5 +21,5 @@ grader.resumeSuspendedJobs=true
 Grader.provider.url=http\://web-cat.org/updates
 log4j.logger.org.webcat.grader=INFO
 Grader.license=GNU Affero General Public License v.3
-grader.defaultMaxFileUploadSize=204800
 Grader.info.url=http\://web-cat.org/WCWiki/GraderSubsystem
+grader.defaultMaxFileUploadSize=204800
