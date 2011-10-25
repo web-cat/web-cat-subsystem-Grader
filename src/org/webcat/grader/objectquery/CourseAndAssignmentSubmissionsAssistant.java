@@ -257,7 +257,7 @@ public class CourseAndAssignmentSubmissionsAssistant
         else if (assignmentTreeItem instanceof Assignment)
         {
             Assignment assignment = (Assignment) assignmentTreeItem;
-            return assignment.name() + ": " + assignment.shortDescription();
+            return assignment.titleString();
         }
         else
         {
