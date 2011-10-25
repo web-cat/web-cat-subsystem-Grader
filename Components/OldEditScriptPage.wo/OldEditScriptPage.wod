@@ -19,13 +19,13 @@ Repetition1: WORepetition {
     index = index;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
     displayGroup = fileDisplayGroup;
     displayKey = "Name";
     key = "getPath";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
     displayGroup = fileDisplayGroup;
     displayKey = "Last Modified";
     key = "lastModified";

@@ -64,25 +64,25 @@ UploadInfo: org.webcat.core.PopUpInfo {
     message = "Select the text file you want to upload and click \'Upload\'.  On the next page, you will see a preview of your data and be able to specify the meaning of your columns.  Use UTF-8 encoding for uploaded files that contain extended characters.";
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
     displayGroup = studentDisplayGroup;
     displayKey = "Name";
     key = "name_LF";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
     displayGroup = studentDisplayGroup;
     displayKey = "User ID";
     key = "userName";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.woextensions.WCSortOrder {
     displayGroup = notStudentDisplayGroup;
     displayKey = "Name";
     key = "name_LF";
 }
 
-WCSortOrder4: org.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.woextensions.WCSortOrder {
     displayGroup = notStudentDisplayGroup;
     displayKey = "User ID";
     key = "userName";

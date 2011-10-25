@@ -35,13 +35,13 @@ TR1: org.webcat.core.TableRow {
 	index = studentIndex;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "Name";
 	key = "name_LF";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
 	displayGroup = studentDisplayGroup;
 	displayKey = "User Name";
 	key = "userName";

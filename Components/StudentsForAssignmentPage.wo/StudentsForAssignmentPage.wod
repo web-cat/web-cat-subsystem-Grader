@@ -235,25 +235,25 @@ UsesToolCheckScore: WOConditional {
     condition = assignmentOffering.assignment.usesToolCheckScore;
 }
 
-SortOrderStaffUserNameLF: org.webcat.core.WCSortOrder {
+SortOrderStaffUserNameLF: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Name";
     key = "user.name_LF";
 }
 
-SortOrderStaffStatus: org.webcat.core.WCSortOrder {
+SortOrderStaffStatus: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Grading Status";
     key = "result.status";
 }
 
-SortOrderStaffSubmitTime: org.webcat.core.WCSortOrder {
+SortOrderStaffSubmitTime: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Submission Time";
     key = "submitTime";
 }
 
-SortOrderStaffFinalScore: org.webcat.core.WCSortOrder {
+SortOrderStaffFinalScore: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffSubmissionGroup;
     displayKey = "Final Score";
     key = "result.finalScore";

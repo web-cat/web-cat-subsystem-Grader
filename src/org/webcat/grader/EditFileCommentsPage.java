@@ -32,6 +32,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.webcat.core.*;
 import org.webcat.grader.messaging.GraderMarkupParseError;
+import org.webcat.woextensions.WCResourceManager;
 import com.webobjects.appserver.WODisplayGroup;
 
 // -------------------------------------------------------------------------

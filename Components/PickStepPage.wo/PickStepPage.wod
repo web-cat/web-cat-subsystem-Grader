@@ -86,19 +86,19 @@ TR: org.webcat.core.TableRow {
 	index = index;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Name";
 	key = "uploadedFileName";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Last Modified";
 	key = "lastModified";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.woextensions.WCSortOrder {
 	displayGroup = scriptGroup;
 	displayKey = "Author";
 	key = "author.lastName";

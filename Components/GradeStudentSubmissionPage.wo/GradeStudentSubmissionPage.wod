@@ -147,37 +147,37 @@ FullPrintableReport: WCButton {
     label = "Full Printable Report";
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "File Name";
     key = "sourceFileName";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "Deductions";
     key = "deductions";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = result.statElementsLabel;
     key = "gradedElementsCoverage";
 }
 
-WCSortOrder4: org.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "Remarks";
     key = "remarks";
 }
 
-WCSortOrder5: org.webcat.core.WCSortOrder {
+WCSortOrder5: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "Staff Feedback Comments";
     key = "staffRemarks";
 }
 
-WCSortOrder6: org.webcat.core.WCSortOrder {
+WCSortOrder6: org.webcat.woextensions.WCSortOrder {
     displayGroup = statsDisplayGroup;
     displayKey = "Staff Points Lost";
     key = "taDeductions";

@@ -28,6 +28,7 @@ import er.extensions.eof.ERXConstant;
 import java.io.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.woextensions.WCResourceManager;
 
 // -------------------------------------------------------------------------
 /**

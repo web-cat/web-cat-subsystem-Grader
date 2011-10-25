@@ -19,13 +19,13 @@ ProfileRepetition: WORepetition {
 	index = index;
 }
 
-NameSort: org.webcat.core.WCSortOrder {
+NameSort: org.webcat.woextensions.WCSortOrder {
 	displayGroup = gradingProfileDisplayGroup;
 	displayKey = "Name";
 	key = "name";
 }
 
-AuthorSort: org.webcat.core.WCSortOrder {
+AuthorSort: org.webcat.woextensions.WCSortOrder {
 	displayGroup = gradingProfileDisplayGroup;
 	displayKey   = "Author";
 	key          = "author.lastName";

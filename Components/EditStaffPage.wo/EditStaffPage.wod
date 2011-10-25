@@ -63,25 +63,25 @@ UserID: WOString {
     value = aUser.userName;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
     displayGroup = potentialDisplayGroup;
     displayKey = "Name";
     key = "name_LF";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
     displayGroup = potentialDisplayGroup;
     displayKey = "User Name";
     key = "userName";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffDisplayGroup;
     displayKey = "Name";
     key = "name_LF";
 }
 
-WCSortOrder4: org.webcat.core.WCSortOrder {
+WCSortOrder4: org.webcat.woextensions.WCSortOrder {
     displayGroup = staffDisplayGroup;
     displayKey = "User Name";
     key = "userName";

@@ -26,6 +26,8 @@ import com.webobjects.appserver._private.WODynamicElementCreationException;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSNumberFormatter;
 import org.webcat.core.*;
+import org.webcat.woextensions.DynamicElement;
+import org.webcat.woextensions.WCResourceManager;
 
 // -------------------------------------------------------------------------
 /**

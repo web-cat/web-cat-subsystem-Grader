@@ -85,19 +85,19 @@ TR: org.webcat.core.TableRow {
     index = index;
 }
 
-WCSortOrder1: org.webcat.core.WCSortOrder {
+WCSortOrder1: org.webcat.woextensions.WCSortOrder {
     displayGroup = submissionDisplayGroup;
     displayKey = "Time";
     key = "submitTime";
 }
 
-WCSortOrder2: org.webcat.core.WCSortOrder {
+WCSortOrder2: org.webcat.woextensions.WCSortOrder {
     displayGroup = submissionDisplayGroup;
     displayKey = "Score";
     key = "result.finalScore";
 }
 
-WCSortOrder3: org.webcat.core.WCSortOrder {
+WCSortOrder3: org.webcat.woextensions.WCSortOrder {
     displayGroup = submissionDisplayGroup;
     displayKey = "Submission No.";
     key = "submitNumber";
