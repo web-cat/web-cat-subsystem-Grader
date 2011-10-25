@@ -22,7 +22,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.foundation.NSMutableDictionary;
+import com.webobjects.foundation.NSDictionary;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.File;
 import java.util.regex.Matcher;
@@ -87,29 +87,30 @@ public class PartialInlineReport
      * <dd></dd>
      * </dl>
      * </p>
+     * @param rawContent The component content to process
+     * @param context The current page request context
+     * @return The modified content with all required substitutions made.
      *
      */
-    private String replaceVariableURLs(String content, WOContext context)
+    private String replaceVariableURLs(String rawContent, WOContext context)
     {
         // Replace ${submissionResultResource}.
 
-        NSMutableDictionary<String, Object> queryDict =
-            new NSMutableDictionary<String, Object>();
-        queryDict.setObjectForKey(submissionResult.id(), "id");
+        if (submissionResult != null)
+        {
+            String resultResourceURL = context.directActionURLForActionNamed(
+                "submissionResultResource",
+                new NSDictionary<String, Object>(submissionResult.id(), "id"))
+                + "&path=";
 
-        String resultResourceURL =
-            context.directActionURLForActionNamed(
-                    "submissionResultResource", queryDict);
-
-        resultResourceURL += "&path=";
-
-        content = content.replaceAll("\\$\\{publicResourceURL\\}",
+            rawContent = rawContent.replaceAll("\\$\\{publicResourceURL\\}",
                 resultResourceURL);
+        }
 
         // Replace ${pluginResource:NAME}.
 
         Pattern regex = Pattern.compile("\\$\\{pluginResource:([^}]+)\\}");
-        Matcher matcher = regex.matcher(content);
+        Matcher matcher = regex.matcher(rawContent);
 
         StringBuffer contentBuffer = new StringBuffer();
         while (matcher.find())
@@ -130,9 +131,9 @@ public class PartialInlineReport
 
         matcher.appendTail(contentBuffer);
 
-        content = contentBuffer.toString();
+        rawContent = contentBuffer.toString();
 
-        return content;
+        return rawContent;
     }
 
 
