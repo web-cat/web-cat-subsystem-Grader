@@ -39,6 +39,7 @@ indicate assignments where the instructor has temporarily suspended all grading.
       <wo:tr index="$index"><td>
       <wo:if condition="$assignmentOffering.courseOffering.label"><wo:str value="$assignmentOffering.courseOffering.label"/> (<wo:str value="$assignmentOffering.courseOffering.crn"/>)</wo:if><wo:else><wo:str value="$assignmentOffering.courseOffering.crn"/></wo:else>
       <wo:not condition="$assignmentOffering.publish"><span class="caution">(unpublished)</span></wo:not>
+      <wo:else><wo:if condition="$assignmentOfferingIsUnavailable"><span class="caution">(hidden until <wo:str value="$assignmentOffering.availableFrom" formatter="$session.timeFormatter"/>)</span></wo:if></wo:else>
       <wo:if condition="$assignmentOfferingHasSuspendedSubs"><span class="caution">(<wo:str value="$assignmentOffering.suspendedSubmissionsInQueue.count"/> suspended)</span></wo:if>
       </td>
       <td><wo:str value="$assignmentOffering.dueDate" formatter="$session.timeFormatter"/></td>

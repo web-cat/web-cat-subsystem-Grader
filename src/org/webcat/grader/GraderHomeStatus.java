@@ -403,6 +403,20 @@ public class GraderHomeStatus
 
 
     // ----------------------------------------------------------
+    /**
+     * Determine if the current assignment is available to students.
+     *
+     * @return true if the "available from" time for the offering is after
+     * now.
+     */
+    public boolean assignmentOfferingIsUnavailable()
+    {
+        return assignmentOffering.availableFrom() != null
+            && assignmentOffering.availableFrom().after(currentTime);
+    }
+
+
+    // ----------------------------------------------------------
     public boolean hasUpcomingAssignments()
     {
         // set up the upcoming assignments list
