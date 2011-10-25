@@ -1,8 +1,7 @@
-
 {
     objectsForUser =
     {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = GraderPrefs;
         fetchLimit = 0;
         isDeep = YES;

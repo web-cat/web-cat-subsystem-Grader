@@ -31,6 +31,7 @@ import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
 import org.webcat.core.EOBasedKeyGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -112,7 +113,7 @@ public abstract class _SubmissionProfile
      * @return The object, or null if no such id exists
      */
     public static SubmissionProfile forId(
-        EOEditingContext ec, int id )
+        EOEditingContext ec, int id)
     {
         SubmissionProfile obj = null;
         if (id > 0)
@@ -137,9 +138,9 @@ public abstract class _SubmissionProfile
      * @return The object, or null if no such id exists
      */
     public static SubmissionProfile forId(
-        EOEditingContext ec, String id )
+        EOEditingContext ec, String id)
     {
-        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
+        return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
     }
 
 
@@ -254,7 +255,7 @@ public abstract class _SubmissionProfile
     public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
-            editingContext().committedSnapshotForObject(this) );
+            editingContext().committedSnapshotForObject(this));
     }
 
 
@@ -268,7 +269,7 @@ public abstract class _SubmissionProfile
         try
         {
             return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
+                editingContext() , this).objectForKey("id");
         }
         catch (Exception e)
         {
@@ -1927,8 +1928,9 @@ public abstract class _SubmissionProfile
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME, qualifier, sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
@@ -2019,7 +2021,7 @@ public abstract class _SubmissionProfile
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -2081,7 +2083,7 @@ public abstract class _SubmissionProfile
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -2105,10 +2107,11 @@ public abstract class _SubmissionProfile
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME,
-            EOQualifier.qualifierToMatchAllValues(keysAndValues),
-            sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME,
+                EOQualifier.qualifierToMatchAllValues(keysAndValues),
+                sortOrderings);
         fspec.setFetchLimit(1);
 
         NSArray<SubmissionProfile> objects =
@@ -2161,7 +2164,7 @@ public abstract class _SubmissionProfile
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -2261,7 +2264,7 @@ public abstract class _SubmissionProfile
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);
@@ -2298,29 +2301,29 @@ public abstract class _SubmissionProfile
      */
     public static NSArray<SubmissionProfile> profilesForCourse(
             EOEditingContext context,
-            org.webcat.core.Course courseBinding
-        )
+            org.webcat.core.Course courseBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "profilesForCourse", "SubmissionProfile" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("profilesForCourse", "SubmissionProfile");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( courseBinding != null )
+        if (courseBinding != null)
         {
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
+            bindings.setObjectForKey(courseBinding,
+                                     "course");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<SubmissionProfile> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "profilesForCourse(ec"
+            log.debug("profilesForCourse(ec"
                 + ", " + courseBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -2337,29 +2340,29 @@ public abstract class _SubmissionProfile
      */
     public static NSArray<SubmissionProfile> profilesForUser(
             EOEditingContext context,
-            org.webcat.core.User userBinding
-        )
+            org.webcat.core.User userBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "profilesForUser", "SubmissionProfile" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("profilesForUser", "SubmissionProfile");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
+        if (userBinding != null)
         {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
+            bindings.setObjectForKey(userBinding,
+                                     "user");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<SubmissionProfile> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "profilesForUser(ec"
+            log.debug("profilesForUser(ec"
                 + ", " + userBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -2383,5 +2386,5 @@ public abstract class _SubmissionProfile
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( SubmissionProfile.class );
+    static Logger log = Logger.getLogger(SubmissionProfile.class);
 }

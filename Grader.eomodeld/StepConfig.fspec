@@ -1,37 +1,37 @@
 {
     stepConfigsForCourseAndScript = {
-        class = EOFetchSpecification; 
-        entityName = StepConfig; 
-        fetchLimit = 0; 
-        isDeep = YES; 
+        class = WCFetchSpecification;
+        entityName = StepConfig;
+        fetchLimit = 0;
+        isDeep = YES;
         qualifier = {
-            class = EOAndQualifier; 
+            class = EOAndQualifier;
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier; 
-                    key = "steps.gradingPlugin"; 
-                    selectorName = "isEqualTo:"; 
-                    value = {"_key" = scriptFile; class = EOQualifierVariable; }; 
-                }, 
+                    class = EOKeyValueQualifier;
+                    key = "steps.gradingPlugin";
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = scriptFile; class = EOQualifierVariable; };
+                },
                 {
-                    class = EOKeyValueQualifier; 
-                    key = "steps.assignment.offerings.courseOffering.course"; 
-                    selectorName = "doesContain:"; 
-                    value = {"_key" = course; class = EOQualifierVariable; }; 
+                    class = EOKeyValueQualifier;
+                    key = "steps.assignment.offerings.courseOffering.course";
+                    selectorName = "doesContain:";
+                    value = {"_key" = course; class = EOQualifierVariable; };
                 }
-            ); 
-        }; 
-    }; 
+            );
+        };
+    };
     stepConfigsForUser = {
-        class = EOFetchSpecification; 
-        entityName = StepConfig; 
-        fetchLimit = 0; 
-        isDeep = YES; 
+        class = WCFetchSpecification;
+        entityName = StepConfig;
+        fetchLimit = 0;
+        isDeep = YES;
         qualifier = {
-            class = EOKeyValueQualifier; 
-            key = author; 
-            selectorName = "isEqualTo:"; 
-            value = {"_key" = user; class = EOQualifierVariable; }; 
-        }; 
-    }; 
+            class = EOKeyValueQualifier;
+            key = author;
+            selectorName = "isEqualTo:";
+            value = {"_key" = user; class = EOQualifierVariable; };
+        };
+    };
 }

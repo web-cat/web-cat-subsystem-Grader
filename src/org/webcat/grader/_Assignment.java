@@ -31,6 +31,7 @@ import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
 import org.webcat.core.EOBasedKeyGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -106,7 +107,7 @@ public abstract class _Assignment
      * @return The object, or null if no such id exists
      */
     public static Assignment forId(
-        EOEditingContext ec, int id )
+        EOEditingContext ec, int id)
     {
         Assignment obj = null;
         if (id > 0)
@@ -131,9 +132,9 @@ public abstract class _Assignment
      * @return The object, or null if no such id exists
      */
     public static Assignment forId(
-        EOEditingContext ec, String id )
+        EOEditingContext ec, String id)
     {
-        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
+        return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
     }
 
 
@@ -209,7 +210,7 @@ public abstract class _Assignment
     public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
-            editingContext().committedSnapshotForObject(this) );
+            editingContext().committedSnapshotForObject(this));
     }
 
 
@@ -223,7 +224,7 @@ public abstract class _Assignment
         try
         {
             return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
+                editingContext() , this).objectForKey("id");
         }
         catch (Exception e)
         {
@@ -1044,8 +1045,9 @@ public abstract class _Assignment
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME, qualifier, sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
@@ -1136,7 +1138,7 @@ public abstract class _Assignment
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1198,7 +1200,7 @@ public abstract class _Assignment
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1222,10 +1224,11 @@ public abstract class _Assignment
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME,
-            EOQualifier.qualifierToMatchAllValues(keysAndValues),
-            sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME,
+                EOQualifier.qualifierToMatchAllValues(keysAndValues),
+                sortOrderings);
         fspec.setFetchLimit(1);
 
         NSArray<Assignment> objects =
@@ -1278,7 +1281,7 @@ public abstract class _Assignment
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1378,7 +1381,7 @@ public abstract class _Assignment
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);
@@ -1417,35 +1420,35 @@ public abstract class _Assignment
     public static NSArray<Assignment> assignmentsForReuseInCourse(
             EOEditingContext context,
             org.webcat.core.Course courseBinding,
-            org.webcat.core.CourseOffering courseOfferingBinding
-        )
+            org.webcat.core.CourseOffering courseOfferingBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "assignmentsForReuseInCourse", "Assignment" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("assignmentsForReuseInCourse", "Assignment");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( courseBinding != null )
+        if (courseBinding != null)
         {
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
+            bindings.setObjectForKey(courseBinding,
+                                     "course");
         }
-        if ( courseOfferingBinding != null )
+        if (courseOfferingBinding != null)
         {
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
+            bindings.setObjectForKey(courseOfferingBinding,
+                                     "courseOffering");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<Assignment> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "assignmentsForReuseInCourse(ec"
+            log.debug("assignmentsForReuseInCourse(ec"
                 + ", " + courseBinding
                 + ", " + courseOfferingBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1462,29 +1465,29 @@ public abstract class _Assignment
      */
     public static NSArray<Assignment> neighborAssignments(
             EOEditingContext context,
-            org.webcat.core.CourseOffering courseOfferingBinding
-        )
+            org.webcat.core.CourseOffering courseOfferingBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "neighborAssignments", "Assignment" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("neighborAssignments", "Assignment");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( courseOfferingBinding != null )
+        if (courseOfferingBinding != null)
         {
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
+            bindings.setObjectForKey(courseOfferingBinding,
+                                     "courseOffering");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<Assignment> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "neighborAssignments(ec"
+            log.debug("neighborAssignments(ec"
                 + ", " + courseOfferingBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1508,5 +1511,5 @@ public abstract class _Assignment
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( Assignment.class );
+    static Logger log = Logger.getLogger(Assignment.class);
 }

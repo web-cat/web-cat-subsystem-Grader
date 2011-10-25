@@ -1,27 +1,27 @@
 {
     profilesForCourse = {
-        class = EOFetchSpecification; 
-        entityName = SubmissionProfile; 
-        fetchLimit = 0; 
-        isDeep = YES; 
+        class = WCFetchSpecification;
+        entityName = SubmissionProfile;
+        fetchLimit = 0;
+        isDeep = YES;
         qualifier = {
-            class = EOKeyValueQualifier; 
-            key = "courseOfferings.course"; 
-            selectorName = "doesContain:"; 
-            value = {"_key" = course; class = EOQualifierVariable; }; 
-        }; 
-        usesDistinct = YES; 
-    }; 
+            class = EOKeyValueQualifier;
+            key = "courseOfferings.course";
+            selectorName = "doesContain:";
+            value = {"_key" = course; class = EOQualifierVariable; };
+        };
+        usesDistinct = YES;
+    };
     profilesForUser = {
-        class = EOFetchSpecification; 
-        entityName = SubmissionProfile; 
-        fetchLimit = 0; 
-        isDeep = YES; 
+        class = WCFetchSpecification;
+        entityName = SubmissionProfile;
+        fetchLimit = 0;
+        isDeep = YES;
         qualifier = {
-            class = EOKeyValueQualifier; 
-            key = author; 
-            selectorName = "doesContain:"; 
-            value = {"_key" = user; class = EOQualifierVariable; }; 
-        }; 
-    }; 
+            class = EOKeyValueQualifier;
+            key = author;
+            selectorName = "doesContain:";
+            value = {"_key" = user; class = EOQualifierVariable; };
+        };
+    };
 }

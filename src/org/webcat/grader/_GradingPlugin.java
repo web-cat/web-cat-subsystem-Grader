@@ -31,6 +31,7 @@ import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
 import org.webcat.core.EOBasedKeyGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -113,7 +114,7 @@ public abstract class _GradingPlugin
      * @return The object, or null if no such id exists
      */
     public static GradingPlugin forId(
-        EOEditingContext ec, int id )
+        EOEditingContext ec, int id)
     {
         GradingPlugin obj = null;
         if (id > 0)
@@ -138,9 +139,9 @@ public abstract class _GradingPlugin
      * @return The object, or null if no such id exists
      */
     public static GradingPlugin forId(
-        EOEditingContext ec, String id )
+        EOEditingContext ec, String id)
     {
-        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
+        return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
     }
 
 
@@ -230,7 +231,7 @@ public abstract class _GradingPlugin
     public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
-            editingContext().committedSnapshotForObject(this) );
+            editingContext().committedSnapshotForObject(this));
     }
 
 
@@ -244,7 +245,7 @@ public abstract class _GradingPlugin
         try
         {
             return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
+                editingContext() , this).objectForKey("id");
         }
         catch (Exception e)
         {
@@ -264,10 +265,10 @@ public abstract class _GradingPlugin
     public org.webcat.core.MutableDictionary configDescription()
     {
         NSData dbValue =
-            (NSData)storedValueForKey( "configDescription" );
-        if ( configDescriptionRawCache != dbValue )
+            (NSData)storedValueForKey("configDescription");
+        if (configDescriptionRawCache != dbValue)
         {
-            if ( dbValue != null && dbValue.equals( configDescriptionRawCache ) )
+            if (dbValue != null && dbValue.equals( configDescriptionRawCache))
             {
                 // They are still equal, so just update the raw cache
                 configDescriptionRawCache = dbValue;
@@ -367,10 +368,10 @@ public abstract class _GradingPlugin
     public org.webcat.core.MutableDictionary defaultConfigSettings()
     {
         NSData dbValue =
-            (NSData)storedValueForKey( "defaultConfigSettings" );
-        if ( defaultConfigSettingsRawCache != dbValue )
+            (NSData)storedValueForKey("defaultConfigSettings");
+        if (defaultConfigSettingsRawCache != dbValue)
         {
-            if ( dbValue != null && dbValue.equals( defaultConfigSettingsRawCache ) )
+            if (dbValue != null && dbValue.equals( defaultConfigSettingsRawCache))
             {
                 // They are still equal, so just update the raw cache
                 defaultConfigSettingsRawCache = dbValue;
@@ -470,10 +471,10 @@ public abstract class _GradingPlugin
     public org.webcat.core.MutableDictionary fileConfigSettings()
     {
         NSData dbValue =
-            (NSData)storedValueForKey( "fileConfigSettings" );
-        if ( fileConfigSettingsRawCache != dbValue )
+            (NSData)storedValueForKey("fileConfigSettings");
+        if (fileConfigSettingsRawCache != dbValue)
         {
-            if ( dbValue != null && dbValue.equals( fileConfigSettingsRawCache ) )
+            if (dbValue != null && dbValue.equals( fileConfigSettingsRawCache))
             {
                 // They are still equal, so just update the raw cache
                 fileConfigSettingsRawCache = dbValue;
@@ -573,10 +574,10 @@ public abstract class _GradingPlugin
     public org.webcat.core.MutableDictionary globalConfigSettings()
     {
         NSData dbValue =
-            (NSData)storedValueForKey( "globalConfigSettings" );
-        if ( globalConfigSettingsRawCache != dbValue )
+            (NSData)storedValueForKey("globalConfigSettings");
+        if (globalConfigSettingsRawCache != dbValue)
         {
-            if ( dbValue != null && dbValue.equals( globalConfigSettingsRawCache ) )
+            if (dbValue != null && dbValue.equals( globalConfigSettingsRawCache))
             {
                 // They are still equal, so just update the raw cache
                 globalConfigSettingsRawCache = dbValue;
@@ -1637,8 +1638,9 @@ public abstract class _GradingPlugin
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME, qualifier, sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
@@ -1729,7 +1731,7 @@ public abstract class _GradingPlugin
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1791,7 +1793,7 @@ public abstract class _GradingPlugin
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1815,10 +1817,11 @@ public abstract class _GradingPlugin
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME,
-            EOQualifier.qualifierToMatchAllValues(keysAndValues),
-            sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME,
+                EOQualifier.qualifierToMatchAllValues(keysAndValues),
+                sortOrderings);
         fspec.setFetchLimit(1);
 
         NSArray<GradingPlugin> objects =
@@ -1871,7 +1874,7 @@ public abstract class _GradingPlugin
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1971,7 +1974,7 @@ public abstract class _GradingPlugin
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);
@@ -2008,29 +2011,29 @@ public abstract class _GradingPlugin
      */
     public static NSArray<GradingPlugin> pluginsAvailableToUser(
             EOEditingContext context,
-            org.webcat.core.User authorBinding
-        )
+            org.webcat.core.User authorBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "pluginsAvailableToUser", "GradingPlugin" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("pluginsAvailableToUser", "GradingPlugin");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( authorBinding != null )
+        if (authorBinding != null)
         {
-            bindings.setObjectForKey( authorBinding,
-                                      "author" );
+            bindings.setObjectForKey(authorBinding,
+                                     "author");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<GradingPlugin> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "pluginsAvailableToUser(ec"
+            log.debug("pluginsAvailableToUser(ec"
                 + ", " + authorBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -2054,5 +2057,5 @@ public abstract class _GradingPlugin
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( GradingPlugin.class );
+    static Logger log = Logger.getLogger(GradingPlugin.class);
 }

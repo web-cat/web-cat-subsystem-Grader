@@ -1,13 +1,13 @@
 {
     allOfferingsOrderedByDueDate = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
         isDeep = YES;
         sortOrderings = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; });
     };
     offeringsForCourseOffering = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
         isDeep = YES;
@@ -22,7 +22,7 @@
         );
     };
     offeringsForCourse = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
         isDeep = YES;
@@ -37,7 +37,7 @@
         );
     };
     offeringsWithUserAsStaff = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
         isDeep = YES;
@@ -63,7 +63,7 @@
         );
     };
     offeringsWithUserAsStudent = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
         isDeep = YES;

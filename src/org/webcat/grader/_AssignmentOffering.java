@@ -31,6 +31,7 @@ import er.extensions.eof.ERXEOControlUtilities;
 import er.extensions.eof.ERXKey;
 import org.apache.log4j.Logger;
 import org.webcat.core.EOBasedKeyGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -113,7 +114,7 @@ public abstract class _AssignmentOffering
      * @return The object, or null if no such id exists
      */
     public static AssignmentOffering forId(
-        EOEditingContext ec, int id )
+        EOEditingContext ec, int id)
     {
         AssignmentOffering obj = null;
         if (id > 0)
@@ -138,9 +139,9 @@ public abstract class _AssignmentOffering
      * @return The object, or null if no such id exists
      */
     public static AssignmentOffering forId(
-        EOEditingContext ec, String id )
+        EOEditingContext ec, String id)
     {
-        return forId( ec, er.extensions.foundation.ERXValueUtilities.intValue( id ) );
+        return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
     }
 
 
@@ -222,7 +223,7 @@ public abstract class _AssignmentOffering
     public NSDictionary<String, Object> changedProperties()
     {
         return changesFromSnapshot(
-            editingContext().committedSnapshotForObject(this) );
+            editingContext().committedSnapshotForObject(this));
     }
 
 
@@ -236,7 +237,7 @@ public abstract class _AssignmentOffering
         try
         {
             return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
+                editingContext() , this).objectForKey("id");
         }
         catch (Exception e)
         {
@@ -378,10 +379,10 @@ public abstract class _AssignmentOffering
     public org.webcat.grader.graphs.AssignmentSummary graphSummary()
     {
         NSData dbValue =
-            (NSData)storedValueForKey( "graphSummary" );
-        if ( graphSummaryRawCache != dbValue )
+            (NSData)storedValueForKey("graphSummary");
+        if (graphSummaryRawCache != dbValue)
         {
-            if ( dbValue != null && dbValue.equals( graphSummaryRawCache ) )
+            if (dbValue != null && dbValue.equals( graphSummaryRawCache))
             {
                 // They are still equal, so just update the raw cache
                 graphSummaryRawCache = dbValue;
@@ -1264,8 +1265,9 @@ public abstract class _AssignmentOffering
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME, qualifier, sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
     }
@@ -1356,7 +1358,7 @@ public abstract class _AssignmentOffering
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1418,7 +1420,7 @@ public abstract class _AssignmentOffering
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1442,10 +1444,11 @@ public abstract class _AssignmentOffering
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        EOFetchSpecification fspec = new EOFetchSpecification(
-            ENTITY_NAME,
-            EOQualifier.qualifierToMatchAllValues(keysAndValues),
-            sortOrderings);
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification fspec = new WCFetchSpecification(
+                ENTITY_NAME,
+                EOQualifier.qualifierToMatchAllValues(keysAndValues),
+                sortOrderings);
         fspec.setFetchLimit(1);
 
         NSArray<AssignmentOffering> objects =
@@ -1498,7 +1501,7 @@ public abstract class _AssignmentOffering
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1598,7 +1601,7 @@ public abstract class _AssignmentOffering
                 throw new IllegalArgumentException("Keys should be strings.");
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);
@@ -1633,18 +1636,18 @@ public abstract class _AssignmentOffering
      * @return an NSArray of the entities retrieved
      */
     public static NSArray<AssignmentOffering> allOfferingsOrderedByDueDate(
-            EOEditingContext context
-        )
+            EOEditingContext context)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "allOfferingsOrderedByDueDate", "AssignmentOffering" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("allOfferingsOrderedByDueDate", "AssignmentOffering");
 
         NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "allOfferingsOrderedByDueDate(ec"
-                + "): " + objects );
+            log.debug("allOfferingsOrderedByDueDate(ec"
+                + "): " + objects);
         }
         return objects;
     }
@@ -1661,29 +1664,29 @@ public abstract class _AssignmentOffering
      */
     public static NSArray<AssignmentOffering> offeringsForCourse(
             EOEditingContext context,
-            org.webcat.core.Course courseBinding
-        )
+            org.webcat.core.Course courseBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "offeringsForCourse", "AssignmentOffering" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("offeringsForCourse", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( courseBinding != null )
+        if (courseBinding != null)
         {
-            bindings.setObjectForKey( courseBinding,
-                                      "course" );
+            bindings.setObjectForKey(courseBinding,
+                                     "course");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "offeringsForCourse(ec"
+            log.debug("offeringsForCourse(ec"
                 + ", " + courseBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1700,29 +1703,29 @@ public abstract class _AssignmentOffering
      */
     public static NSArray<AssignmentOffering> offeringsForCourseOffering(
             EOEditingContext context,
-            org.webcat.core.CourseOffering courseOfferingBinding
-        )
+            org.webcat.core.CourseOffering courseOfferingBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "offeringsForCourseOffering", "AssignmentOffering" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("offeringsForCourseOffering", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( courseOfferingBinding != null )
+        if (courseOfferingBinding != null)
         {
-            bindings.setObjectForKey( courseOfferingBinding,
-                                      "courseOffering" );
+            bindings.setObjectForKey(courseOfferingBinding,
+                                     "courseOffering");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "offeringsForCourseOffering(ec"
+            log.debug("offeringsForCourseOffering(ec"
                 + ", " + courseOfferingBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1739,29 +1742,29 @@ public abstract class _AssignmentOffering
      */
     public static NSArray<AssignmentOffering> offeringsWithUserAsStaff(
             EOEditingContext context,
-            org.webcat.core.User userBinding
-        )
+            org.webcat.core.User userBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "offeringsWithUserAsStaff", "AssignmentOffering" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("offeringsWithUserAsStaff", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
+        if (userBinding != null)
         {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
+            bindings.setObjectForKey(userBinding,
+                                     "user");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "offeringsWithUserAsStaff(ec"
+            log.debug("offeringsWithUserAsStaff(ec"
                 + ", " + userBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1778,29 +1781,29 @@ public abstract class _AssignmentOffering
      */
     public static NSArray<AssignmentOffering> offeringsWithUserAsStudent(
             EOEditingContext context,
-            org.webcat.core.User userBinding
-        )
+            org.webcat.core.User userBinding)
     {
-        EOFetchSpecification spec = EOFetchSpecification
-            .fetchSpecificationNamed( "offeringsWithUserAsStudent", "AssignmentOffering" );
+        @SuppressWarnings("unchecked")
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("offeringsWithUserAsStudent", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( userBinding != null )
+        if (userBinding != null)
         {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
+            bindings.setObjectForKey(userBinding,
+                                     "user");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<AssignmentOffering> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug( "offeringsWithUserAsStudent(ec"
+            log.debug("offeringsWithUserAsStudent(ec"
                 + ", " + userBinding
-                + "): " + objects );
+                + "): " + objects);
         }
         return objects;
     }
@@ -1824,5 +1827,5 @@ public abstract class _AssignmentOffering
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( AssignmentOffering.class );
+    static Logger log = Logger.getLogger(AssignmentOffering.class);
 }

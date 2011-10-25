@@ -1,6 +1,6 @@
 {
     earliestSubmissionForAssignmentOfferingAndUser = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         fetchLimit = 1;
         qualifier = {
@@ -29,7 +29,7 @@
         );
     };
     earliestSubmissionForCourseOffering = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         fetchLimit = 1;
         qualifier = {
@@ -47,7 +47,7 @@
         );
     };
     latestSubmissionForAssignmentOfferingAndUser = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         fetchLimit = 1;
         qualifier = {
@@ -76,7 +76,7 @@
         );
     };
     latestSubmissionForAssignmentAndUser = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         fetchLimit = 1;
         qualifier = {
@@ -105,7 +105,7 @@
         );
     };
     latestSubmissionForCourseOffering = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         fetchLimit = 1;
         qualifier = {
@@ -123,7 +123,7 @@
         );
     };
     specificSubmission = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;
@@ -151,7 +151,7 @@
         userInfo = {ensureUnique = true; };
     };
     submissionsForAssignmentAndUserDescending = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;
@@ -185,7 +185,7 @@
         );
     };
     submissionsForAssignmentOfferingAndUser = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;
@@ -213,7 +213,7 @@
         );
     };
     submissionsForAssignmentOfferingAndUserDescending = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;
@@ -241,7 +241,7 @@
         );
     };
     submissionsForGrading = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;
@@ -275,7 +275,7 @@
         );
     };
     submissionsWithFeedback = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = Submission;
         qualifier = {
             class = EOAndQualifier;

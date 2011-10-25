@@ -1,6 +1,6 @@
 {
     pluginsAvailableToUser = {
-        class = EOFetchSpecification;
+        class = WCFetchSpecification;
         entityName = GradingPlugin;
         prefetchingRelationshipKeyPaths = ();
         qualifier = {
