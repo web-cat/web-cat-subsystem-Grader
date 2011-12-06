@@ -21,14 +21,9 @@
 
 package org.webcat.grader.messaging;
 
-import java.io.File;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
-import org.webcat.grader.Submission;
-import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSData;
-import com.webobjects.foundation.NSMutableDictionary;
 
 //-------------------------------------------------------------------------
 /**

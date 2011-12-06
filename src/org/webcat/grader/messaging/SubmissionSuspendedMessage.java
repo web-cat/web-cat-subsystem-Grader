@@ -25,6 +25,7 @@ import java.io.File;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
+import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableDictionary;
@@ -45,7 +46,16 @@ public class SubmissionSuspendedMessage extends Message
     public SubmissionSuspendedMessage(Submission submission, Exception e,
             String stage, File attachmentsDir)
     {
-        this.submission = submission;
+        EOEditingContext ec = editingContext();
+        try
+        {
+            ec.lock();
+            this.submission = submission;
+        }
+        finally
+        {
+            ec.unlock();
+        }
         this.exception = e;
         this.stage = stage;
 
@@ -136,16 +146,27 @@ public class SubmissionSuspendedMessage extends Message
 
     // ----------------------------------------------------------
     @Override
-    public NSArray<User> users()
+    public synchronized NSArray<User> users()
     {
-        if (submission != null && submission.assignmentOffering() != null &&
-                submission.assignmentOffering().courseOffering() != null)
+        EOEditingContext ec = editingContext();
+        try
         {
-            return submission.assignmentOffering().courseOffering().instructors();
+            ec.lock();
+            if (submission != null
+                && submission.assignmentOffering() != null
+                && submission.assignmentOffering().courseOffering() != null)
+            {
+                return submission.assignmentOffering().courseOffering()
+                    .instructors();
+            }
+            else
+            {
+                return new NSArray<User>();
+            }
         }
-        else
+        finally
         {
-            return new NSArray<User>();
+            ec.unlock();
         }
     }
 

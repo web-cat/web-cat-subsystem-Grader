@@ -22,18 +22,14 @@
 package org.webcat.grader.messaging;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.core.messaging.SysAdminMessage;
-import org.webcat.core.messaging.UnexpectedExceptionMessage;
-import org.webcat.grader.Assignment;
 import org.webcat.grader.AssignmentOffering;
 import org.webcat.grader.Submission;
+import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSData;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableDictionary;
 
@@ -54,7 +50,16 @@ public class AdminReportsForSubmissionMessage extends SysAdminMessage
     public AdminReportsForSubmissionMessage(Submission submission,
             List<String> attachmentPaths)
     {
-        this.submission = submission;
+        EOEditingContext ec = editingContext();
+        try
+        {
+            ec.lock();
+            this.submission = submission.localInstance(ec);
+        }
+        finally
+        {
+            ec.unlock();
+        }
 
         this.attachments = new NSMutableDictionary<String, String>();
 
@@ -121,9 +126,28 @@ public class AdminReportsForSubmissionMessage extends SysAdminMessage
 
     // ----------------------------------------------------------
     @Override
-    public NSArray<User> users()
+    public synchronized NSArray<User> users()
     {
-        return submission.assignmentOffering().courseOffering().instructors();
+        EOEditingContext ec = editingContext();
+        try
+        {
+            ec.lock();
+            if (submission != null
+                && submission.assignmentOffering() != null
+                && submission.assignmentOffering().courseOffering() != null)
+            {
+                return submission.assignmentOffering().courseOffering()
+                    .instructors();
+            }
+            else
+            {
+                return new NSArray<User>();
+            }
+        }
+        finally
+        {
+            ec.unlock();
+        }
     }
 
 

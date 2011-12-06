@@ -28,6 +28,7 @@ import org.webcat.core.messaging.Message;
 import org.webcat.core.messaging.SysAdminMessage;
 import org.webcat.grader.Submission;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
 
 //-------------------------------------------------------------------------
@@ -48,7 +49,16 @@ public class GraderMarkupParseError extends SysAdminMessage
             Exception exception, WOContext context, File markupFile,
             String detail)
     {
-        this.submission = submission;
+        EOEditingContext ec = editingContext();
+        try
+        {
+            ec.lock();
+            this.submission = submission;
+        }
+        finally
+        {
+            ec.unlock();
+        }
         this.location = location;
         this.exception = exception;
         this.context = context;
@@ -154,9 +164,28 @@ public class GraderMarkupParseError extends SysAdminMessage
 
     // ----------------------------------------------------------
     @Override
-    public NSArray<User> users()
+    public synchronized NSArray<User> users()
     {
-        return submission.assignmentOffering().courseOffering().instructors();
+        EOEditingContext ec = editingContext();
+        try
+        {
+            ec.lock();
+            if (submission != null
+                && submission.assignmentOffering() != null
+                && submission.assignmentOffering().courseOffering() != null)
+            {
+                return submission.assignmentOffering().courseOffering()
+                    .instructors();
+            }
+            else
+            {
+                return new NSArray<User>();
+            }
+        }
+        finally
+        {
+            ec.unlock();
+        }
     }
 
 
