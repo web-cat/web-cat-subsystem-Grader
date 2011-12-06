@@ -85,7 +85,7 @@ NewerSubmitTime: WOString {
 NewerSubmitTimeSpan: WOGenericContainer {
     elementName = "span";
     class = newerSubmitTimeSpanClass;
-    title = aNewerSubmission.result.earlyLateStatus;
+    title = aNewerSubmission.earlyLateStatus;
 }
 
 NoSubmissionsPlaceholder: WOGenericContainer {
@@ -195,7 +195,7 @@ SubmitTime: WOString {
 SubmitTimeSpan: WOGenericContainer {
     elementName = "span";
     class = submitTimeSpanClass;
-    title = aSubmission.result.earlyLateStatus;
+    title = aSubmission.earlyLateStatus;
 }
 
 TAScore: WOString {

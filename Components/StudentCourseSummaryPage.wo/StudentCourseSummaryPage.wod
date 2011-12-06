@@ -72,7 +72,7 @@ SubmitTime: WOString {
 SubmitTimeSpan: WOGenericContainer {
     elementName = "span";
     class = submitTimeSpanClass;
-    title = submissionForAssignmentOffering.result.earlyLateStatus;
+    title = submissionForAssignmentOffering.earlyLateStatus;
 }
 
 ViewSubmission: WCLink {

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -79,9 +79,13 @@ public class Submission
     public String userPresentableDescription()
     {
         if ( fileName() != null )
+        {
             return file().getPath();
+        }
         else
+        {
             return dirName();
+        }
     }
 
 
@@ -1586,6 +1590,36 @@ public class Submission
             }
         }
         return status;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the difference between the submission time and the
+     * due date/time, and renders it in a human-readable string.
+     *
+     * @return the string representation of how early or late
+     */
+    public String earlyLateStatus()
+    {
+        String description = null;
+        long time = submitTime().getTime();
+        long dueTime = assignmentOffering().dueDate().getTime();
+        if (dueTime >= time)
+        {
+            // Early submission
+            description =
+                Submission.getStringTimeRepresentation(dueTime - time)
+                + " early";
+        }
+        else
+        {
+            // Late submission
+            description =
+                Submission.getStringTimeRepresentation(time - dueTime)
+                + " late";
+        }
+        return description;
     }
 
 

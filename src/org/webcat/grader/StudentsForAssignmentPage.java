@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -123,6 +123,8 @@ public class StudentsForAssignmentPage
 
         NSMutableArray<Submission> staffSubs =
             new NSMutableArray<Submission>();
+        NSArray<User> admins = User.administrators(localContext());
+
         for (AssignmentOffering ao : offerings.displayedObjects())
         {
             // Stuff the index variable into the public key so the group/stats
@@ -142,7 +144,8 @@ public class StudentsForAssignmentPage
                             localContext(),
                             ao,
                             true,  // omitPartners
-                            ao.courseOffering().staff(),
+                            ao.courseOffering().staff()
+                                .arrayByAddingObjectsFromArray(admins),
                             null)));
         }
 

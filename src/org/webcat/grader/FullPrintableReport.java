@@ -87,15 +87,25 @@ public class FullPrintableReport
         {
             formattedFiles = new NSMutableArray<Pair>();
             Pair[] rawPairs = (Pair[])task.result();
-            if ( rawPairs != null )
+            if (rawPairs != null && rawPairs.length > 0)
             {
-                for (int i = 0; i < rawPairs.length; i++ )
+                EOEditingContext taskContext =
+                    rawPairs[0].file.editingContext();
+                try
                 {
-                    Pair pair = new Pair();
-                    formattedFiles.addObject( pair );
-                    pair.file = rawPairs[i].file
-                        .localInstance( localContext() );
-                    pair.html = rawPairs[i].html;
+                    taskContext.lock();
+                    for (int i = 0; i < rawPairs.length; i++)
+                    {
+                        Pair pair = new Pair();
+                        formattedFiles.addObject(pair);
+                        pair.file = rawPairs[i].file
+                            .localInstance(localContext());
+                        pair.html = rawPairs[i].html;
+                    }
+                }
+                finally
+                {
+                    taskContext.unlock();
                 }
             }
             task.resultNoLongerNeeded();
@@ -200,8 +210,7 @@ public class FullPrintableReport
 
                     for ( int i = 0; i < files.count(); i++ )
                     {
-                        SubmissionFileStats file =
-                            (SubmissionFileStats)files.objectAtIndex( i );
+                        SubmissionFileStats file = files.objectAtIndex(i);
                         pairs[i] = new Pair();
                         pairs[i].file = file;
                         int lines = file.loc();

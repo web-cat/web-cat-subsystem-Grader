@@ -29,7 +29,7 @@
 </wo>
 <wo name="TR">
   <th class="R" valign="top">Total Score</th>
-  <td><wo name="ScoreModifiers"/><b><wo name="FinalScore"/></b>/<wo name="AvailablePoints"/></td>
+  <td><wo name="ScoreModifiers"/><b><wo:if condition="$submission.result"><wo name="FinalScore"/></wo:if><wo:else>&lt;Queued&gt;</wo:else></b>/<wo name="AvailablePoints"/></td>
 </wo>
 
 <wo name="ShowFileInfo">

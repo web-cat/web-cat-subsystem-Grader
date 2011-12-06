@@ -54,9 +54,9 @@ public class FinalReportPage
      *
      * @param context The page's context
      */
-    public FinalReportPage( WOContext context )
+    public FinalReportPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -69,7 +69,6 @@ public class FinalReportPage
     public SubmissionFileStats stats;
     public int                 index;
 
-    public boolean submissionChosen = false;
     /** The job's isFinished attribute is tested once and stored here.
         This prevents race conditions arising from testing that field
         multiple times in the body of the page, or between generating a
@@ -81,7 +80,7 @@ public class FinalReportPage
     /** The report object */
     public ResultFile report;
     /** Array of all the downloadable report files */
-    public NSArray<ResultFile> reportArray;
+    public NSMutableArray<ResultFile> reportArray;
 
     public boolean showReturnToGrading = false;
 
@@ -98,9 +97,9 @@ public class FinalReportPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "beginning appendToResponse()" );
+        log.debug("beginning appendToResponse()");
         jobData = null;
-        if ( submission == null && prefs() != null )
+        if (submission == null && prefs() != null)
         {
             submission = prefs().submission();
             if (submission != null
@@ -123,28 +122,31 @@ public class FinalReportPage
                 }
             }
         }
-        if ( submission != null )
+        if (submission != null)
         {
-            submissionChosen = true;
             result = submission.result();
-            reportIsReady   = ( result != null );
-            if ( reportIsReady )
+            reportIsReady   = (result != null);
+            if (reportIsReady)
             {
-                statsDisplayGroup.setObjectArray( result.submissionFileStats() );
+                statsDisplayGroup.setObjectArray(result.submissionFileStats());
 
-                NSMutableArray<ResultFile> fileList =
-                    result.resultFiles().mutableClone();
-                ResultFile userSubmission = new ResultFile();
-                userSubmission.setFileName(
-                    "../" + submission.fileName() );
-                userSubmission.setMimeType( "application/octet-stream" );
-                userSubmission.setLabel( "Your original submission" );
-                fileList.addObject( userSubmission );
-                reportArray = fileList;
+                reportArray = result.resultFiles().mutableClone();
             }
+            else
+            {
+                reportArray = new NSMutableArray<ResultFile>();
+            }
+
+            // Add user submission file to the downloadable results
+            ResultFile userSubmission = new ResultFile();
+            userSubmission.setFileName(
+                "../" + submission.fileName());
+            userSubmission.setMimeType("application/octet-stream");
+            userSubmission.setLabel("Your original submission");
+            reportArray.addObject(userSubmission);
         }
         showCoverageData = null;
-        super.beforeAppendToResponse( response, context );
+        super.beforeAppendToResponse(response, context);
     }
 
 
@@ -185,7 +187,7 @@ public class FinalReportPage
     public WOComponent pastResults()
     {
         return pageWithName(
-            wcSession().tabs.selectById( "PastResults" ).pageName() );
+            wcSession().tabs.selectById("PastResults").pageName());
     }
 
 
@@ -197,7 +199,7 @@ public class FinalReportPage
     public boolean gradingPaused()
     {
         EnqueuedJob job = submission.enqueuedJob();
-        return ( job != null  &&  job.paused() );
+        return (job != null  &&  job.paused());
     }
 
 
@@ -206,24 +208,24 @@ public class FinalReportPage
     {
         return result.status() == Status.CHECK
             && result.comments() != null
-            && !result.comments().equals( "" );
+            && !result.comments().equals("");
     }
 
 
     // ----------------------------------------------------------
     public boolean hasNonZeroScore()
     {
-    return result.finalScore() > 0.0;
+    return result != null && result.finalScore() > 0.0;
     }
 
 
     // ----------------------------------------------------------
     public WOComponent fileStatsDetails()
     {
-        log.debug( "fileStatsDetails()" );
-        prefs().setSubmissionFileStatsRelationship( stats );
+        log.debug("fileStatsDetails()");
+        prefs().setSubmissionFileStatsRelationship(stats);
         WCComponent statsPage = (WCComponent)pageWithName(
-                        SubmissionFileDetailsPage.class.getName() );
+                        SubmissionFileDetailsPage.class.getName());
         statsPage.nextPage = this;
         return statsPage;
     }
@@ -232,8 +234,8 @@ public class FinalReportPage
     // ----------------------------------------------------------
     public WOComponent fullPrintableReport()
     {
-        FullPrintableReport fullReport = (FullPrintableReport)
-            pageWithName( FullPrintableReport.class.getName() );
+        FullPrintableReport fullReport = pageWithName(
+            FullPrintableReport.class);
         fullReport.result = result;
         fullReport.nextPage = this;
         return fullReport;
@@ -241,49 +243,51 @@ public class FinalReportPage
 
 
     // ----------------------------------------------------------
-    public static String meter( double fraction )
+    public static String meter(double fraction)
     {
-        if ( blankGifUrl == null )
+        if (blankGifUrl == null)
         {
             blankGifUrl = WCResourceManager.resourceURLFor(
-                "images/blank.gif", "Core", null, null );
+                "images/blank.gif", "Core", null, null);
         }
-        StringBuffer buffer = new StringBuffer( 250 );
-        int covered = (int)( 200.0 * fraction + 0.5 );
+        StringBuffer buffer = new StringBuffer(250);
+        int covered = (int)(200.0 * fraction + 0.5);
         int uncovered = 200 - covered;
-        buffer.append( "<table class=\"percentbar\"><tr><td " );
-        if ( covered < 1 )
+        buffer.append("<table class=\"percentbar\"><tr><td ");
+        if (covered < 1)
         {
             // Completely uncovered
-            buffer.append( "class=\"minus\"><img src=\"" );
-            buffer.append( blankGifUrl );
-            buffer.append( "\" width=\"200\" height=\"12\" alt=\"nothing covered\">" );
+            buffer.append("class=\"minus\"><img src=\"");
+            buffer.append(blankGifUrl);
+            buffer.append(
+                "\" width=\"200\" height=\"12\" alt=\"nothing covered\">");
         }
-        else if ( uncovered > 0 )
+        else if (uncovered > 0)
         {
             // Partially covered
-            buffer.append( "class=\"plus\"><img src=\"" );
-            buffer.append( blankGifUrl );
-            buffer.append( "\" width=\"" );
-            buffer.append( covered );
-            buffer.append( "\" height=\"12\" alt=\"" );
-            buffer.append( (int)( 100.0 * fraction + 0.5 ) );
-            buffer.append( " covered\"></td><td class=\"minus\"><img src=\"" );
-            buffer.append( blankGifUrl );
-            buffer.append( "\" width=\"" );
-            buffer.append( uncovered );
-            buffer.append( "\" height=\"12\" alt=\"" );
-            buffer.append( 100 - (int)( 100.0 * fraction + 0.5 ) );
-            buffer.append( " uncovered\">" );
+            buffer.append("class=\"plus\"><img src=\"");
+            buffer.append(blankGifUrl);
+            buffer.append("\" width=\"");
+            buffer.append(covered);
+            buffer.append("\" height=\"12\" alt=\"");
+            buffer.append((int)(100.0 * fraction + 0.5));
+            buffer.append(" covered\"></td><td class=\"minus\"><img src=\"");
+            buffer.append(blankGifUrl);
+            buffer.append("\" width=\"");
+            buffer.append(uncovered);
+            buffer.append("\" height=\"12\" alt=\"");
+            buffer.append(100 - (int)(100.0 * fraction + 0.5));
+            buffer.append(" uncovered\">");
         }
         else
         {
             // Completely covered
-            buffer.append( "class=\"plus\"><img src=\"" );
-            buffer.append( blankGifUrl );
-            buffer.append( "\" width=\"200\" height=\"12\" alt=\"fully covered\">" );
+            buffer.append("class=\"plus\"><img src=\"");
+            buffer.append(blankGifUrl);
+            buffer.append(
+                "\" width=\"200\" height=\"12\" alt=\"fully covered\">");
         }
-        buffer.append( "</td></tr></table>" );
+        buffer.append("</td></tr></table>");
         return buffer.toString();
     }
 
@@ -291,8 +295,8 @@ public class FinalReportPage
     // ----------------------------------------------------------
     public String coverageMeter()
     {
-        return meter( ( (double)stats.elementsCovered() ) /
-                      ( (double)stats.elements() ) );
+        return meter(((double)stats.elementsCovered()) /
+                     ((double)stats.elements()));
     }
 
 
@@ -320,7 +324,7 @@ public class FinalReportPage
     public NSTimestamp estimatedWait()
     {
         ensureJobDataIsInitialized();
-        return new NSTimestamp( jobData.estimatedWait );
+        return new NSTimestamp(jobData.estimatedWait);
     }
 
 
@@ -332,7 +336,7 @@ public class FinalReportPage
     public NSTimestamp mostRecentJobWait()
     {
         ensureJobDataIsInitialized();
-        return new NSTimestamp( jobData.mostRecentWait );
+        return new NSTimestamp(jobData.mostRecentWait);
     }
 
 
@@ -342,21 +346,21 @@ public class FinalReportPage
      * @param timeDelta the time to format
      * @return the time format to use
      */
-    public static String formatForSmallTime( long timeDelta )
+    public static String formatForSmallTime(long timeDelta)
     {
         String format = "%j days, %H:%M:%S";
         final int minute = 60 * 1000;
         final int hour   = 60 * minute;
         final int day    = 24 * hour;
-        if ( timeDelta < minute )
+        if (timeDelta < minute)
         {
             format = "%S seconds";
         }
-        else if ( timeDelta < hour )
+        else if (timeDelta < hour)
         {
             format = "%M:%S minutes";
         }
-        else if ( timeDelta < day )
+        else if (timeDelta < day)
         {
             format = "%H:%M:%S hours";
         }
@@ -372,7 +376,7 @@ public class FinalReportPage
     public String estimatedWaitFormat()
     {
         ensureJobDataIsInitialized();
-        return formatForSmallTime( jobData.estimatedWait );
+        return formatForSmallTime(jobData.estimatedWait);
     }
 
 
@@ -384,16 +388,16 @@ public class FinalReportPage
     public String mostRecentJobWaitFormat()
     {
         ensureJobDataIsInitialized();
-        return formatForSmallTime( jobData.mostRecentWait );
+        return formatForSmallTime(jobData.mostRecentWait);
     }
 
 
     // ----------------------------------------------------------
     public Boolean showCoverageData()
     {
-        if ( showCoverageData == null )
+        if (showCoverageData == null)
         {
-            showCoverageData = Boolean.valueOf( result.hasCoverageData() );
+            showCoverageData = Boolean.valueOf(result.hasCoverageData());
         }
         return showCoverageData;
     }
@@ -425,7 +429,7 @@ public class FinalReportPage
     public boolean canSubmitAgain()
     {
         boolean answer = false;
-        if ( result != null && !showReturnToGrading )
+        if (result != null && !showReturnToGrading)
         {
 //            answer = result.submission().assignmentOffering().userCanSubmit(
 //                wcSession().localUser() );
@@ -464,7 +468,7 @@ public class FinalReportPage
                 }
                 else
                 {
-                    answer = ao.userCanSubmit( user() );
+                    answer = ao.userCanSubmit(user());
                 }
             }
         }
@@ -481,7 +485,7 @@ public class FinalReportPage
     public WOComponent submitAgain()
     {
         return pageWithName(
-            wcSession().tabs.selectById( "UploadSubmission" ).pageName() );
+            wcSession().tabs.selectById("UploadSubmission").pageName());
     }
 
 
@@ -551,65 +555,60 @@ public class FinalReportPage
     // ----------------------------------------------------------
     private void ensureJobDataIsInitialized()
     {
-        if ( jobData == null )
+        if (jobData == null)
         {
             jobData = new JobData();
             NSMutableArray<EOQualifier> qualifiers =
                 new NSMutableArray<EOQualifier>();
-            qualifiers.addObject( new EOKeyValueQualifier(
+            qualifiers.addObject(new EOKeyValueQualifier(
                             EnqueuedJob.DISCARDED_KEY,
                             EOQualifier.QualifierOperatorEqual,
-                            ERXConstant.integerForInt( 0 )
-            ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
+                            ERXConstant.integerForInt(0)));
+            qualifiers.addObject(new EOKeyValueQualifier(
                             EnqueuedJob.PAUSED_KEY,
                             EOQualifier.QualifierOperatorEqual,
-                            ERXConstant.integerForInt( 0 )
-            ) );
-            qualifiers.addObject( new EOKeyValueQualifier(
+                            ERXConstant.integerForInt(0)));
+            qualifiers.addObject(new EOKeyValueQualifier(
                             EnqueuedJob.REGRADING_KEY,
                             EOQualifier.QualifierOperatorEqual,
-                            ERXConstant.integerForInt( 0 )
-            ) );
+                            ERXConstant.integerForInt(0)));
             EOFetchSpecification fetchSpec =
                 new EOFetchSpecification(
                         EnqueuedJob.ENTITY_NAME,
-                        new EOAndQualifier( qualifiers ),
-                        new NSArray<EOSortOrdering>( new EOSortOrdering[]{
+                        new EOAndQualifier(qualifiers),
+                        new NSArray<EOSortOrdering>(new EOSortOrdering[]{
                                 new EOSortOrdering(
                                         EnqueuedJob.SUBMIT_TIME_KEY,
-                                        EOSortOrdering.CompareAscending
-                                    )
-                            } )
-                    );
+                                        EOSortOrdering.CompareAscending)
+                            }));
             jobData.jobs = EnqueuedJob.objectsWithFetchSpecification(
                 localContext(), fetchSpec);
             jobData.queueSize = jobData.jobs.count();
-            if ( oldQueuePos < 0
-                 || oldQueuePos >= jobData.queueSize )
+            if (oldQueuePos < 0
+                || oldQueuePos >= jobData.queueSize)
             {
                 oldQueuePos = jobData.queueSize - 1;
             }
             jobData.queuePosition = jobData.queueSize;
-            for ( int i = oldQueuePos; i >= 0; i-- )
+            for (int i = oldQueuePos; i >= 0; i--)
             {
-                if ( jobData.jobs.objectAtIndex( i )
-                     == submission.enqueuedJob() )
+                if (jobData.jobs.objectAtIndex(i)
+                    == submission.enqueuedJob())
                 {
                     jobData.queuePosition = i;
                     break;
                 }
             }
             oldQueuePos = jobData.queuePosition;
-            if ( jobData.queuePosition == jobData.queueSize )
+            if (jobData.queuePosition == jobData.queueSize)
             {
-                log.error( "cannot find job in queue for:"
-                           + submission );
+                log.error("cannot find job in queue for:"
+                           + submission);
             }
             Grader grader = Grader.getInstance();
             jobData.mostRecentWait = grader.mostRecentJobWait();
             jobData.estimatedWait =
-                grader.estimatedJobTime() * ( jobData.queuePosition + 1 );
+                grader.estimatedJobTime() * (jobData.queuePosition + 1);
         }
     }
 
@@ -631,5 +630,5 @@ public class FinalReportPage
     private Boolean showAutoGradedComments;
 
     private static String blankGifUrl;
-    static Logger log = Logger.getLogger( FinalReportPage.class );
+    static Logger log = Logger.getLogger(FinalReportPage.class);
 }

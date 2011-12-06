@@ -36,7 +36,7 @@ SubmitTime: WOString {
 SubmitTimeSpan: WOGenericContainer {
     elementName = "span";
     class = submitTimeSpanClass;
-    title = aSubmission.result.earlyLateStatus;
+    title = aSubmission.earlyLateStatus;
 }
 
 FinalScore: WOString {

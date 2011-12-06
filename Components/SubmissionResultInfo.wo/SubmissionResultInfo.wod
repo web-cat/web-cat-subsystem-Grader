@@ -57,7 +57,7 @@ StudentName: WOString {
 }
 
 SubmitEarlyLateStatus: WOString {
-    value = submission.result.earlyLateStatus;
+    value = submission.earlyLateStatus;
 }
 
 SubmitNumber: WOString {

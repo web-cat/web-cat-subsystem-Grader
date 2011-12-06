@@ -119,37 +119,6 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Computes the difference between the submission time and the
-     * due date/time, and renders it in a human-readable string.
-     *
-     * @return the string representation of how early or late
-     */
-    public String earlyLateStatus()
-    {
-        String result = null;
-        Submission submission = submission();
-        long submitTime = submission.submitTime().getTime();
-        long dueTime = submission.assignmentOffering().dueDate().getTime();
-        if ( dueTime >= submitTime )
-        {
-            // Early submission
-            result =
-                Submission.getStringTimeRepresentation( dueTime - submitTime )
-                + " early";
-        }
-        else
-        {
-            // Late submission
-            result =
-                Submission.getStringTimeRepresentation( submitTime - dueTime )
-                + " late";
-        }
-        return result;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Computes the early bonus for this submission.  The bonus
      * is a positive amount added to the raw score.
      *

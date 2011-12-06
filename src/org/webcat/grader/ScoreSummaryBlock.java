@@ -66,8 +66,11 @@ public class ScoreSummaryBlock
         WOResponse response, WOContext context)
     {
         rowNumber = 0;
-        result = submission.result();
-        super.beforeAppendToResponse( response, context );
+        if (submission != null)
+        {
+            result = submission.result();
+            super.beforeAppendToResponse( response, context );
+        }
     }
 
 
