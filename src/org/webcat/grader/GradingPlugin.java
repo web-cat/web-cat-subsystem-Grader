@@ -217,7 +217,22 @@ public class GradingPlugin
             command = command + " " + args;
         }
 
-        Application.wcApplication().executeExternalCommand( command, cwd );
+        EOEditingContext ec = editingContext();
+        try
+        {
+            if (ec != null)
+            {
+                ec.unlock();
+            }
+            Application.wcApplication().executeExternalCommand( command, cwd );
+        }
+        finally
+        {
+            if (ec != null)
+            {
+                ec.lock();
+            }
+        }
     }
 
 
