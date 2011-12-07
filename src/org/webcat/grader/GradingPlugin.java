@@ -222,7 +222,7 @@ public class GradingPlugin
         {
             if (ec != null)
             {
-                ec.unlock();
+//                ec.unlock();
             }
             Application.wcApplication().executeExternalCommand( command, cwd );
         }
@@ -230,7 +230,7 @@ public class GradingPlugin
         {
             if (ec != null)
             {
-                ec.lock();
+//                ec.lock();
             }
         }
     }
