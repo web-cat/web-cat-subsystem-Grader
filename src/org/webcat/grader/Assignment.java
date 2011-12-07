@@ -232,7 +232,7 @@ public class Assignment
         SubmissionProfile profile = submissionProfile();
         return profile != null
             && ( profile.toolPointsRaw() != null
-                 || profile.toolPoints() != 0 );
+                 && profile.toolPoints() != 0 );
     }
 
 
