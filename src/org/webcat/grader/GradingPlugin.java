@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -173,8 +173,8 @@ public class GradingPlugin
             }
             catch (IOException e)
             {
-                log.error("An error occurred while retrieving the canonical path "
-                        + "of the file " + file.toString());
+                log.error("An error occurred while retrieving the canonical "
+                    + "path of the file " + file.toString());
             }
 
             return null;
@@ -425,8 +425,10 @@ public class GradingPlugin
     private void addFilePropertiesToDictionary(MutableDictionary fileProps,
             NSArray<?> options)
     {
-        for (NSDictionary<String, ?> option :
-            (NSArray<NSDictionary<String, ?>>) options)
+        @SuppressWarnings("unchecked")
+        NSArray<NSDictionary<String, ?>> optionsDict =
+            (NSArray<NSDictionary<String, ?>>) options;
+        for (NSDictionary<String, ?> option : optionsDict)
         {
             if (option.objectForKey("disable") == null)
             {
