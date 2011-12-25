@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,12 +21,12 @@
 
 package org.webcat.grader;
 
-import org.webcat.core.Application;
 import org.webcat.core.User;
 import org.webcat.ui.generators.JavascriptGenerator;
+import org.webcat.woextensions.ECAction;
+import org.webcat.woextensions.WCEC;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
-import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
@@ -41,10 +41,11 @@ import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
  * plug-in).
  *
  * @author  Tony Allevato
- * @author  latest changes by: $Author$
+ * @author  Last changed by: $Author$
  * @version $Revision$, $Date$
  */
-public class MassRegraderPage extends GraderAssignmentComponent
+public class MassRegraderPage
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 
@@ -370,6 +371,7 @@ public class MassRegraderPage extends GraderAssignmentComponent
         // ----------------------------------------------------------
         public EnqueueSubmissionsThread()
         {
+            super("MassRegraderPage.EnqueueSubmissionsThread");
             submissions = new NSMutableArray<Submission>();
         }
 
@@ -379,35 +381,35 @@ public class MassRegraderPage extends GraderAssignmentComponent
         // ----------------------------------------------------------
         public void run()
         {
-            EOEditingContext ec = Application.newPeerEditingContext();
+            new ECAction() { public void action() {
+                int countForRecycling = 0;
+                clearEnqueuedSoFar();
 
-            int countForRecycling = 0;
-            clearEnqueuedSoFar();
-
-            while (hasMoreSubmissions())
-            {
-                popNextSubmission().requeueForGrading(ec);
-                incrementEnqueuedSoFar();
-
-                // Recycle the editing context every 100 submissions.
-
-                countForRecycling++;
-                if (countForRecycling == 100)
+                while (hasMoreSubmissions())
                 {
-                    ec.saveChanges();
-                    Application.releasePeerEditingContext(ec);
-                    ec = Application.newPeerEditingContext();
+                    popNextSubmission().requeueForGrading(ec);
+                    incrementEnqueuedSoFar();
 
-                    countForRecycling = 0;
+                    // Recycle the editing context every 100 submissions.
+
+                    countForRecycling++;
+                    if (countForRecycling == 100)
+                    {
+                        ec.saveChanges();
+                        ec.unlock();
+                        ec.dispose();
+                        ec = WCEC.newEditingContext();
+                        ec.lock();
+
+                        countForRecycling = 0;
+                    }
                 }
-            }
 
-            setIsDone(true);
+                setIsDone(true);
 
-            ec.saveChanges();
-            Grader.getInstance().graderQueue().enqueue( null );
-
-            Application.releasePeerEditingContext(ec);
+                ec.saveChanges();
+                Grader.getInstance().graderQueue().enqueue( null );
+            }}.run();
         }
 
 

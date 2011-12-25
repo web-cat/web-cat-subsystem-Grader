@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.webcat.grader.*;
+import org.webcat.woextensions.WCEC;
 
 //-------------------------------------------------------------------------
 /**
@@ -77,7 +78,7 @@ public class BlueJSubmitterDefinitions
         excludePatternsIndex = -1;
         requirePatternsIndex = -1;
         currentTime = new NSTimestamp();
-        EOEditingContext ec = Application.newPeerEditingContext();
+        EOEditingContext ec = WCEC.newEditingContext();
         try
         {
             ec.lock();
@@ -111,6 +112,7 @@ public class BlueJSubmitterDefinitions
         finally
         {
             ec.unlock();
+            ec.dispose();
         }
     }
 

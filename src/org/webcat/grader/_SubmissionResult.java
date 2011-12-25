@@ -1096,7 +1096,7 @@ public abstract class _SubmissionResult
         // we're already trying to migrate and this "awake" is coming from the
         // child migration context.
 
-        if (!(ec instanceof org.webcat.core.MigratingEditingContext))
+        if (!(ec instanceof org.webcat.woextensions.MigratingEditingContext))
         {
             migrateAttributeValuesIfNeeded();
         }
@@ -1114,14 +1114,23 @@ public abstract class _SubmissionResult
 
         if ( shouldMigrateIsMostRecent() )
         {
-            org.webcat.core.MigratingEditingContext mec =
-                org.webcat.core.Application.newMigratingEditingContext();
-            SubmissionResult migratingObject = localInstance(mec);
+            org.webcat.woextensions.MigratingEditingContext mec =
+                org.webcat.woextensions.MigratingEditingContext
+                    .newEditingContext();
+            try
+            {
+                mec.lock();
+                SubmissionResult migratingObject = localInstance(mec);
 
-            migrateAttributeValues(mec, migratingObject);
+                migrateAttributeValues(mec, migratingObject);
 
-            mec.saveChanges();
-            org.webcat.core.Application.releaseMigratingEditingContext(mec);
+                mec.saveChanges();
+            }
+            finally
+            {
+                mec.unlock();
+                mec.dispose();
+            }
         }
     }
 
@@ -1132,7 +1141,7 @@ public abstract class _SubmissionResult
      * object is retrieved.
      */
     protected void migrateAttributeValues(
-        org.webcat.core.MigratingEditingContext mec,
+        org.webcat.woextensions.MigratingEditingContext mec,
         SubmissionResult migratingObject
     )
     {
@@ -1159,7 +1168,7 @@ public abstract class _SubmissionResult
      * isMostRecent attribute.
      */
     protected abstract void migrateIsMostRecent(
-        org.webcat.core.MigratingEditingContext mec);
+        org.webcat.woextensions.MigratingEditingContext mec);
 
 
     // ----------------------------------------------------------

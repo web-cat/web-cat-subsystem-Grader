@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2010-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -33,11 +33,12 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * This is a separate subclass of UnexpectedExceptionMessage so that it can be
  * configured independently from other exception notifications if desired.
  *
- * @author Tony Allevato
- * @author  latest changes by: $Author$
+ * @author  Tony Allevato
+ * @author  Last changed by: $Author$
  * @version $Revision$ $Date$
  */
-public class GraderKilledMessage extends UnexpectedExceptionMessage
+public class GraderKilledMessage
+    extends UnexpectedExceptionMessage
 {
     //~ Constructors ..........................................................
 
@@ -56,10 +57,10 @@ public class GraderKilledMessage extends UnexpectedExceptionMessage
     public static void register()
     {
         Message.registerMessage(
-                GraderKilledMessage.class,
-                "Grader",
-                "Grader Killed",
-                false,
-                User.WEBCAT_RW_PRIVILEGES);
+            GraderKilledMessage.class,
+            "Grader",
+            "Grader Killed",
+            false,
+            User.WEBCAT_RW_PRIVILEGES);
     }
 }

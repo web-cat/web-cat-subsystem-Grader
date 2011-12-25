@@ -208,8 +208,9 @@ public class Step
     private class ExecThread
         extends Thread
     {
-        public ExecThread( Thread parent, String argList, File dir )
+        public ExecThread(Thread parent, String argList, File dir)
         {
+            super("Step.ExecThread");
             parentThread = parent;
             args         = argList;
             cwd          = dir;

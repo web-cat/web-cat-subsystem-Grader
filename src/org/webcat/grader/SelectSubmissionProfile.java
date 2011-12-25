@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -35,7 +35,7 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * are available for selection.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author$
+ * @author  Last changed by: $Author$
  * @version $Revision$, $Date$
  */
 public class SelectSubmissionProfile
@@ -112,7 +112,8 @@ public class SelectSubmissionProfile
             {
                 log.error( "2nd exception searching for sub profiles", e2 );
                 new UnexpectedExceptionMessage(e2, context(), null,
-                        "2nd exception searching for sub profiles").send();
+                    "2nd exception searching for sub profiles")
+                    .send();
                 // OK, just kill the second part of the qualifier to
                 // get only this user's stuff
                 gradingProfileDisplayGroup.setQualifier(

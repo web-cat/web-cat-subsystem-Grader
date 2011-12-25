@@ -41,6 +41,7 @@ import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
+import org.webcat.woextensions.WCEC;
 import com.webobjects.eocontrol.EOAndQualifier;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
@@ -77,8 +78,9 @@ public class GraderQueueProcessor
      *
      * @param queue the queue to operate on
      */
-    public GraderQueueProcessor( GraderQueue queue )
+    public GraderQueueProcessor(GraderQueue queue)
     {
+        super("GraderQueueProcessor");
         this.queue = queue;
     }
 
@@ -134,9 +136,9 @@ public class GraderQueueProcessor
                 if ( editingContext != null )
                 {
                     editingContext.unlock();
-                    Application.releasePeerEditingContext( editingContext );
+                    editingContext.dispose();
                 }
-                editingContext = Application.newPeerEditingContext();
+                editingContext = WCEC.newEditingContext();
                 editingContext.lock();
 
                 // Clear discarded jobs
@@ -293,8 +295,7 @@ public class GraderQueueProcessor
                                 try
                                 {
                                     editingContext.unlock();
-                                    Application.releasePeerEditingContext(
-                                        editingContext);
+                                    editingContext.dispose();
                                 }
                                 catch (Exception ee)
                                 {
@@ -912,12 +913,12 @@ public class GraderQueueProcessor
      * @param adminReports     the Vector where admin-targeted report files
      *                         are added (as string file names)
      */
-    void collectReports( EnqueuedJob                job,
-                         WCProperties               properties,
-                         SubmissionResult           submissionResult,
-                         NSMutableArray<InlineFile> inlineStudentReports,
-                         NSMutableArray<InlineFile> inlineStaffReports,
-                         List<String>               adminReports )
+    void collectReports(EnqueuedJob                job,
+                        WCProperties               properties,
+                        SubmissionResult           submissionResult,
+                        NSMutableArray<InlineFile> inlineStudentReports,
+                        NSMutableArray<InlineFile> inlineStaffReports,
+                        List<File>               adminReports)
     {
         File parentDir = new File( job.submission().resultDirName() );
 
@@ -1024,8 +1025,8 @@ public class GraderQueueProcessor
             }
             if ( toAdmin )
             {
-                adminReports.add( job.submission().resultDirName() +
-                                  "/" + fileName );
+                adminReports.add(new File(
+                    job.submission().resultDirName() + "/" + fileName));
             }
         }
 
@@ -1194,13 +1195,13 @@ public class GraderQueueProcessor
             new NSMutableArray<InlineFile>();
         NSMutableArray<InlineFile> inlineStaffReports =
             new NSMutableArray<InlineFile>();
-        List<String> adminReports  = new ArrayList<String>();
-        collectReports( job,
-                        properties,
-                        submissionResult,
-                        inlineStudentReports,
-                        inlineStaffReports,
-                        adminReports );
+        List<File> adminReports  = new ArrayList<File>();
+        collectReports(job,
+                       properties,
+                       submissionResult,
+                       inlineStudentReports,
+                       inlineStaffReports,
+                       adminReports);
 
         generateCompositeResultFile(
             new File( job.submission().resultDirName(),

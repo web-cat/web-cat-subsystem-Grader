@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -35,6 +35,8 @@ import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.GraderMarkupParseError;
 import org.webcat.grader.messaging.GradingResultsAvailableMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
+import org.webcat.woextensions.ECAction;
+import static org.webcat.woextensions.ECAction.run;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WORequest;
@@ -134,11 +136,7 @@ public class Grader
         {
             // Resume any enqueued jobs (if grader is coming back up
             // after an application restart)
-            EOEditingContext ec = Application.newPeerEditingContext();
-            try
-            {
-                ec.lock();
-
+            run(new ECAction() { public void action() {
                 for (EnqueuedJob job : EnqueuedJob.allObjects(ec))
                 {
                     if (!job.paused())
@@ -149,12 +147,7 @@ public class Grader
                         break;
                     }
                 }
-            }
-            finally
-            {
-                ec.unlock();
-                Application.releasePeerEditingContext( ec );
-            }
+            }});
         }
     }
 
@@ -601,7 +594,8 @@ public class Grader
         }
         catch (Exception e)
         {
-            new UnexpectedExceptionMessage(e, context, null, null).send();
+            new UnexpectedExceptionMessage(e, context, null, null)
+                .send();
             result.clearSubmission();
             result.submissionInProcess().clearUpload();
             result.cancelLocalChanges();

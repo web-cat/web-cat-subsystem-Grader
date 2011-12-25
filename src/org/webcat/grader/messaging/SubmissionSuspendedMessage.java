@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2010-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,54 +25,40 @@ import java.io.File;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
-import com.webobjects.eocontrol.EOEditingContext;
-import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSDictionary;
-import com.webobjects.foundation.NSMutableDictionary;
 
 //-------------------------------------------------------------------------
 /**
  * A message that is sent to course instructors when grading of a single
  * submission is suspended due to a technical fault.
  *
- * @author Tony Allevato
- * @author  latest changes by: $Author$
+ * @author  Tony Allevato
+ * @author  Last changed by: $Author$
  * @version $Revision$ $Date$
  */
-public class SubmissionSuspendedMessage extends Message
+public class SubmissionSuspendedMessage
+    extends SubmissionErrorMessage
 {
     //~ Constructors ..........................................................
 
-    public SubmissionSuspendedMessage(Submission submission, Exception e,
-            String stage, File attachmentsDir)
+    // ----------------------------------------------------------
+    /**
+     * Create a new message.
+     * @param submission The submission that caused the problem.
+     * @param e          The exception that occurred.
+     * @param stage      In what stage of the grading action did the exception
+     *                   occur.
+     * @param attachmentsDir A directory of files to attach to the message
+     *                       (normally the submission's result dir).
+     */
+    public SubmissionSuspendedMessage(
+        Submission submission,
+        Exception  e,
+        String     stage,
+        File       attachmentsDir)
     {
-        EOEditingContext ec = editingContext();
-        try
-        {
-            ec.lock();
-            this.submission = submission;
-        }
-        finally
-        {
-            ec.unlock();
-        }
+        super(submission, attachmentsDir);
         this.exception = e;
         this.stage = stage;
-
-        if (attachmentsDir != null && attachmentsDir.exists())
-        {
-            this.attachments = new NSMutableDictionary<String, String>();
-
-            File[] fileList = attachmentsDir.listFiles();
-
-            for (File file : fileList)
-            {
-                if (!file.isDirectory())
-                {
-                    attachments.setObjectForKey(file.getPath(), file.getName());
-                }
-            }
-        }
     }
 
 
@@ -85,19 +71,11 @@ public class SubmissionSuspendedMessage extends Message
     public static void register()
     {
         Message.registerMessage(
-                SubmissionSuspendedMessage.class,
-                "Grader",
-                "Submission Suspended",
-                false,
-                User.INSTRUCTOR_PRIVILEGES);
-    }
-
-
-    // ----------------------------------------------------------
-    @Override
-    public String fullBody()
-    {
-        return shortBody();
+            SubmissionSuspendedMessage.class,
+            "Grader",
+            "Submission Suspended",
+            false,
+            User.INSTRUCTOR_PRIVILEGES);
     }
 
 
@@ -106,7 +84,7 @@ public class SubmissionSuspendedMessage extends Message
     public String shortBody()
     {
         String errorMsg = "An " + ((exception == null) ? "error": "exception")
-                + " occurred " + stage;
+        + " occurred " + stage;
 
         if (exception != null)
         {
@@ -126,63 +104,25 @@ public class SubmissionSuspendedMessage extends Message
         String username = "<no user>";
         String submitNumber = "<no submit number>";
 
-        if (submission != null)
+        if (submission() != null)
         {
-            if (submission.user() != null)
+            if (submission().user() != null)
             {
-                username = submission.user().userName();
+                username = submission().user().userName();
             }
 
-            if (submission.submitNumberRaw() != null)
+            if (submission().submitNumberRaw() != null)
             {
-                submitNumber = Integer.toString(submission.submitNumber());
+                submitNumber = Integer.toString(submission().submitNumber());
             }
         }
 
-        return "[Grader] Grading error: "
-            + username + " #" + submitNumber;
-    }
-
-
-    // ----------------------------------------------------------
-    @Override
-    public synchronized NSArray<User> users()
-    {
-        EOEditingContext ec = editingContext();
-        try
-        {
-            ec.lock();
-            if (submission != null
-                && submission.assignmentOffering() != null
-                && submission.assignmentOffering().courseOffering() != null)
-            {
-                return submission.assignmentOffering().courseOffering()
-                    .instructors();
-            }
-            else
-            {
-                return new NSArray<User>();
-            }
-        }
-        finally
-        {
-            ec.unlock();
-        }
-    }
-
-
-    // ----------------------------------------------------------
-    @Override
-    public NSDictionary<String, String> attachments()
-    {
-        return attachments;
+        return "[Grader] Grading error: " + username + " #" + submitNumber;
     }
 
 
     //~ Static/instance variables .............................................
 
-    private Submission submission;
     private Exception exception;
     private String stage;
-    private NSMutableDictionary<String, String> attachments;
 }

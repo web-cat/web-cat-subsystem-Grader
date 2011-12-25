@@ -505,7 +505,7 @@ public abstract class _Submission
         // we're already trying to migrate and this "awake" is coming from the
         // child migration context.
 
-        if (!(ec instanceof org.webcat.core.MigratingEditingContext))
+        if (!(ec instanceof org.webcat.woextensions.MigratingEditingContext))
         {
             migrateAttributeValuesIfNeeded();
         }
@@ -524,14 +524,23 @@ public abstract class _Submission
         if ( shouldMigrateIsSubmissionForGrading()
             || shouldMigratePartnerLink() )
         {
-            org.webcat.core.MigratingEditingContext mec =
-                org.webcat.core.Application.newMigratingEditingContext();
-            Submission migratingObject = localInstance(mec);
+            org.webcat.woextensions.MigratingEditingContext mec =
+                org.webcat.woextensions.MigratingEditingContext
+                    .newEditingContext();
+            try
+            {
+                mec.lock();
+                Submission migratingObject = localInstance(mec);
 
-            migrateAttributeValues(mec, migratingObject);
+                migrateAttributeValues(mec, migratingObject);
 
-            mec.saveChanges();
-            org.webcat.core.Application.releaseMigratingEditingContext(mec);
+                mec.saveChanges();
+            }
+            finally
+            {
+                mec.unlock();
+                mec.dispose();
+            }
         }
     }
 
@@ -542,7 +551,7 @@ public abstract class _Submission
      * object is retrieved.
      */
     protected void migrateAttributeValues(
-        org.webcat.core.MigratingEditingContext mec,
+        org.webcat.woextensions.MigratingEditingContext mec,
         Submission migratingObject
     )
     {
@@ -573,7 +582,7 @@ public abstract class _Submission
      * isSubmissionForGrading attribute.
      */
     protected abstract void migrateIsSubmissionForGrading(
-        org.webcat.core.MigratingEditingContext mec);
+        org.webcat.woextensions.MigratingEditingContext mec);
 
 
     // ----------------------------------------------------------
@@ -590,7 +599,7 @@ public abstract class _Submission
      * partnerLink attribute.
      */
     protected abstract void migratePartnerLink(
-        org.webcat.core.MigratingEditingContext mec);
+        org.webcat.woextensions.MigratingEditingContext mec);
 
 
     // ----------------------------------------------------------

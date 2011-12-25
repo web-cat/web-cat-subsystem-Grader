@@ -28,6 +28,7 @@ import com.webobjects.foundation.*;
 import java.io.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.woextensions.WCEC;
 
 // -------------------------------------------------------------------------
 /**
@@ -107,16 +108,8 @@ public class AssignmentDataPage
         {
             // Create a local EC, transfer the result into it, and
             // store both locally
-            ec = Application.newPeerEditingContext();
-            try
-            {
-                ec.lock();
-                assignments = AssignmentOffering.allObjects(ec);
-            }
-            finally
-            {
-                ec.unlock();
-            }
+            ec = WCEC.newAutoLockingEditingContext();
+            assignments = AssignmentOffering.allObjects(ec);
             this.formatter = formatter;
         }
 
@@ -309,7 +302,7 @@ public class AssignmentDataPage
         {
             if ( ec != null )
             {
-                Application.releasePeerEditingContext( ec );
+                ec.dispose();
             }
             ec = null;
         }

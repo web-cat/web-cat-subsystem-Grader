@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2011 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -26,6 +26,7 @@ import com.webobjects.foundation.*;
 import java.io.File;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.woextensions.MigratingEditingContext;
 
 // -------------------------------------------------------------------------
 /**

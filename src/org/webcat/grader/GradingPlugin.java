@@ -31,6 +31,8 @@ import net.sf.webcat.FeatureProvider;
 import org.webcat.core.MutableDictionary;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
+import org.webcat.woextensions.ECAction;
+import static org.webcat.woextensions.ECAction.run;
 
 // -------------------------------------------------------------------------
 /**
@@ -531,17 +533,9 @@ public class GradingPlugin
      */
     public static void autoUpdateAndInstall()
     {
-        EOEditingContext ec = Application.newPeerEditingContext();
-        try
-        {
-            ec.lock();
-            autoInstallNewPlugins( ec, autoUpdatePlugins( ec ) );
-        }
-        finally
-        {
-            ec.unlock();
-            Application.releasePeerEditingContext( ec );
-        }
+        run(new ECAction() { public void action() {
+            autoInstallNewPlugins(ec, autoUpdatePlugins(ec));
+        }});
     }
 
 

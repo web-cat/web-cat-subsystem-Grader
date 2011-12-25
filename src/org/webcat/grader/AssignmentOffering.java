@@ -21,13 +21,10 @@
 
 package org.webcat.grader;
 
-import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.eof.ERXConstant;
 import er.extensions.eof.ERXKey;
 import er.extensions.eof.ERXQ;
-import er.extensions.eof.ERXSortOrdering;
 import er.extensions.eof.qualifiers.ERXInQualifier;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
@@ -36,8 +33,8 @@ import java.util.Map;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
-import org.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.webcat.grader.graphs.*;
+import org.webcat.woextensions.MigratingEditingContext;
 
 // -------------------------------------------------------------------------
 /**
@@ -530,7 +527,7 @@ public class AssignmentOffering
         // we're already trying to migrate and this "awake" is coming from the
         // child migration context.
 
-        if (!(ec instanceof org.webcat.core.MigratingEditingContext))
+        if (!(ec instanceof org.webcat.woextensions.MigratingEditingContext))
         {
             migrateAttributeValuesIfNeeded();
         }
@@ -555,7 +552,7 @@ public class AssignmentOffering
             else
             {
                 MigratingEditingContext mec =
-                    Application.newMigratingEditingContext();
+                    MigratingEditingContext.newEditingContext();
                 try
                 {
                     mec.lock();
@@ -568,8 +565,7 @@ public class AssignmentOffering
                 finally
                 {
                     mec.unlock();
-                    org.webcat.core.Application
-                        .releaseMigratingEditingContext(mec);
+                    mec.dispose();
                 }
             }
         }
