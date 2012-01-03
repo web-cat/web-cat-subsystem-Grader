@@ -731,7 +731,7 @@ public class EditAssignmentPage
 
         scriptDisplayGroup.fetch();
 
-        return new JavascriptGenerator().refresh("gradingSteps");
+        return null; //FIXME new JavascriptGenerator().refresh("gradingSteps");
     }
 
 
@@ -744,7 +744,7 @@ public class EditAssignmentPage
         }
 
         stepForAction = thisStep;
-        return new ConfirmingAction(this, true)
+        return new ConfirmingAction(this, false)
         {
             @Override
             protected String confirmationTitle()
