@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -184,7 +184,8 @@ public class GraderSubmissionUploadComponent
                 EnqueuedJob.objectsMatchingQualifier(localContext(),
                     EnqueuedJob.submission.dot(Submission.user).eq(user()).and(
                     EnqueuedJob.submission.dot(Submission.assignmentOffering)
-                        .eq(submission.assignmentOffering())));
+                        .eq(submission.assignmentOffering()))
+                    .and(EnqueuedJob.regrading.isFalse()));
             for (EnqueuedJob job : oldJobs)
             {
                 job.setDiscarded(true);
