@@ -50,8 +50,8 @@
               };
             };
           };
-          "Mass Regrade" = {
-            accessLevel = 90;
+          "Regrade Everyone" = {
+            accessLevel = 50;
             priority = 5;
             pageName = org.webcat.grader.MassRegraderPage;
           };
