@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -64,78 +64,10 @@ public class PartialInlineReport
     public boolean open;
     public int styleVersion;
     public boolean substituteOldCollapsingRegions = true;
+    public String baseUrl;
 
 
-    //~ Methods ...............................................................
-
-    // ----------------------------------------------------------
-    /**
-     * <p>
-     * Replaces variable URLs in the content of the report; this allows plug-in
-     * authors to embed or link to resources that are generated as part of the
-     * grading process.
-     * </p><p>
-     * Currently, two variables are supported:
-     * <dl>
-     * <dt>${submissionResultResource}</dt>
-     * <dd>Points to the <code>public</code> directory in the submission
-     * results folder.</dd>
-     * <dt>${pluginResource:NAME}</dt>
-     * <dd>Points to the <code>public</code> directory in the grading plug-in
-     * with the specified name, where NAME is the name of the plug-in given in
-     * its config.plist file.</dd>
-     * <dd></dd>
-     * </dl>
-     * </p>
-     * @param rawContent The component content to process
-     * @param context The current page request context
-     * @return The modified content with all required substitutions made.
-     *
-     */
-    private String replaceVariableURLs(String rawContent, WOContext context)
-    {
-        // Replace ${submissionResultResource}.
-
-        if (submissionResult != null)
-        {
-            String resultResourceURL = context.directActionURLForActionNamed(
-                "submissionResultResource",
-                new NSDictionary<String, Object>(submissionResult.id(), "id"))
-                + "&path=";
-
-            rawContent = rawContent.replaceAll("\\$\\{publicResourceURL\\}",
-                resultResourceURL);
-        }
-
-        // Replace ${pluginResource:NAME}.
-
-        Pattern regex = Pattern.compile("\\$\\{pluginResource:([^}]+)\\}");
-        Matcher matcher = regex.matcher(rawContent);
-
-        StringBuffer contentBuffer = new StringBuffer();
-        while (matcher.find())
-        {
-            String pluginName = matcher.group(1);
-
-            GradingPlugin plugin = GradingPlugin.firstObjectMatchingQualifier(
-                    localContext(),
-                    GradingPlugin.name.is(pluginName),
-                    GradingPlugin.lastModified.ascs());
-
-            String pluginResourceURL =
-                EntityResourceRequestHandler.urlForEntityResource(
-                        context, plugin, "");
-
-            matcher.appendReplacement(contentBuffer, pluginResourceURL);
-        }
-
-        matcher.appendTail(contentBuffer);
-
-        rawContent = contentBuffer.toString();
-
-        return rawContent;
-    }
-
+    //~ Public Methods ........................................................
 
     // ----------------------------------------------------------
     /**
@@ -160,93 +92,12 @@ public class PartialInlineReport
 
                     if (substituteOldCollapsingRegions)
                     {
-                    boolean nestedFound = false;
-
-                    // Try to substitute out old collapsing regions
-                    // First, tackle nested regions
-                    {
-                        Matcher m = NESTED_MODULE.matcher(content);
-                        StringBuffer translated =
-                            new StringBuffer(content.length());
-                        int pos = 0;
-                        while (m.find())
-                        {
-                            int start = m.start();
-                            if (start > pos)
-                            {
-                                translated.append(
-                                    content.substring(pos, start));
-                            }
-                            boolean sectionOpen = "expanded".equals(m.group(1));
-                            String sectionTitle = m.group(2);
-                            String body = m.group(4);
-                            translated.append("<nesteddiv "
-                                + "dojoType=\"webcat.TitlePane\" title=\"");
-                            translated.append(
-                                sectionTitle.replace("&", "&amp;")
-                                .replace("<", "&lt;")
-                                .replace(">", "&gt;")
-                                .replace("\"", "&quot;"));
-                            translated.append("\" open=\"");
-                            translated.append(sectionOpen);
-                            translated.append("\">\n");
-                            translated.append(body);
-                            translated.append("</nesteddiv>");
-                            pos = m.end();
-                        }
-                        if (pos > 0)
-                        {
-                            translated.append(content.substring(pos));
-                            content = translated.toString();
-                            nestedFound = true;
-                            useModule = false;
-                        }
+                        content = substituteCollapsingRegions(content);
                     }
 
-                    // Now handle outer regions
+                    if (baseUrl != null)
                     {
-                        Matcher m = MODULE.matcher(content);
-                        StringBuffer translated =
-                            new StringBuffer(content.length());
-                        int pos = 0;
-                        while (m.find())
-                        {
-                            int start = m.start();
-                            if (start > pos)
-                            {
-                                translated.append(
-                                    content.substring(pos, start));
-                            }
-                            boolean sectionOpen = "expanded".equals(m.group(1));
-                            String sectionTitle = m.group(2);
-                            String body = m.group(4);
-                            translated.append("<div class=\"module\"><div "
-                                + "dojoType=\"webcat.TitlePane\" title=\"");
-                            translated.append(
-                                sectionTitle.replace("&", "&amp;")
-                                .replace("<", "&lt;")
-                                .replace(">", "&gt;")
-                                .replace("\"", "&quot;"));
-                            translated.append("\" open=\"");
-                            translated.append(sectionOpen);
-                            translated.append("\">\n");
-                            translated.append(body);
-                            translated.append("</div></div>");
-                            pos = m.end();
-                        }
-                        if (pos > 0)
-                        {
-                            translated.append(content.substring(pos));
-                            content = translated.toString();
-                            useModule = false;
-                        }
-                    }
-
-                    if (nestedFound)
-                    {
-                        content =
-                            content.replaceAll("<(/?)nesteddiv", "<$1div");
-                    }
+                        content = substituteRelativeUrls(content, baseUrl);
                     }
                 }
                 catch ( Exception e )
@@ -329,6 +180,188 @@ public class PartialInlineReport
     public void setSubmissionResult( SubmissionResult value )
     {
         submissionResult = value;
+    }
+
+
+    //~ Private Methods .......................................................
+
+    // ----------------------------------------------------------
+    /**
+     * <p>
+     * Replaces variable URLs in the content of the report; this allows
+     * plug-in authors to embed or link to resources that are generated as
+     * part of the grading process.
+     * </p><p>
+     * Currently, two variables are supported:
+     * <dl>
+     * <dt>${submissionResultResource}</dt>
+     * <dd>Points to the <code>public</code> directory in the submission
+     * results folder.</dd>
+     * <dt>${pluginResource:NAME}</dt>
+     * <dd>Points to the <code>public</code> directory in the grading plug-in
+     * with the specified name, where NAME is the name of the plug-in given
+     * in its config.plist file.</dd>
+     * <dd></dd>
+     * </dl>
+     * </p>
+     * @param rawContent The component content to process
+     * @param context The current page request context
+     * @return The modified content with all required substitutions made.
+     *
+     */
+    private String replaceVariableURLs(String rawContent, WOContext context)
+    {
+        // Replace ${submissionResultResource}.
+
+        if (submissionResult != null)
+        {
+            String resultResourceURL = context.directActionURLForActionNamed(
+                "submissionResultResource",
+                new NSDictionary<String, Object>(submissionResult.id(), "id"))
+                + "&path=";
+
+            rawContent = rawContent.replaceAll("\\$\\{publicResourceURL\\}",
+                resultResourceURL);
+        }
+
+        // Replace ${pluginResource:NAME}.
+
+        Pattern regex = Pattern.compile("\\$\\{pluginResource:([^}]+)\\}");
+        Matcher matcher = regex.matcher(rawContent);
+
+        StringBuffer contentBuffer = new StringBuffer();
+        while (matcher.find())
+        {
+            String pluginName = matcher.group(1);
+
+            GradingPlugin plugin = GradingPlugin.firstObjectMatchingQualifier(
+                    localContext(),
+                    GradingPlugin.name.is(pluginName),
+                    GradingPlugin.lastModified.ascs());
+
+            String pluginResourceURL =
+                EntityResourceRequestHandler.urlForEntityResource(
+                        context, plugin, "");
+
+            matcher.appendReplacement(contentBuffer, pluginResourceURL);
+        }
+
+        matcher.appendTail(contentBuffer);
+
+        rawContent = contentBuffer.toString();
+
+        return rawContent;
+    }
+
+
+    // ----------------------------------------------------------
+    private String substituteCollapsingRegions(String rawContent)
+    {
+        boolean nestedFound = false;
+
+        // Try to substitute out old collapsing regions
+        // First, tackle nested regions
+        {
+            Matcher m = NESTED_MODULE.matcher(rawContent);
+            StringBuffer translated =
+                new StringBuffer(rawContent.length());
+            int pos = 0;
+            while (m.find())
+            {
+                int start = m.start();
+                if (start > pos)
+                {
+                    translated.append(
+                        rawContent.substring(pos, start));
+                }
+                boolean sectionOpen = "expanded".equals(m.group(1));
+                String sectionTitle = m.group(2);
+                String body = m.group(4);
+                translated.append("<nesteddiv "
+                    + "dojoType=\"webcat.TitlePane\" title=\"");
+                translated.append(
+                    sectionTitle.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;"));
+                translated.append("\" open=\"");
+                translated.append(sectionOpen);
+                translated.append("\">\n");
+                translated.append(body);
+                translated.append("</nesteddiv>");
+                pos = m.end();
+            }
+            if (pos > 0)
+            {
+                translated.append(rawContent.substring(pos));
+                rawContent = translated.toString();
+                nestedFound = true;
+                useModule = false;
+            }
+        }
+
+        // Now handle outer regions
+        {
+            Matcher m = MODULE.matcher(rawContent);
+            StringBuffer translated =
+                new StringBuffer(rawContent.length());
+            int pos = 0;
+            while (m.find())
+            {
+                int start = m.start();
+                if (start > pos)
+                {
+                    translated.append(
+                        rawContent.substring(pos, start));
+                }
+                boolean sectionOpen = "expanded".equals(m.group(1));
+                String sectionTitle = m.group(2);
+                String body = m.group(4);
+                translated.append("<div class=\"module\"><div "
+                    + "dojoType=\"webcat.TitlePane\" title=\"");
+                translated.append(
+                    sectionTitle.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;"));
+                translated.append("\" open=\"");
+                translated.append(sectionOpen);
+                translated.append("\">\n");
+                translated.append(body);
+                translated.append("</div></div>");
+                pos = m.end();
+            }
+            if (pos > 0)
+            {
+                translated.append(rawContent.substring(pos));
+                rawContent = translated.toString();
+                useModule = false;
+            }
+        }
+
+        if (nestedFound)
+        {
+            rawContent =
+                rawContent.replaceAll("<(/?)nesteddiv", "<$1div");
+        }
+        return rawContent;
+    }
+
+
+    // ----------------------------------------------------------
+    private String substituteRelativeUrls(String rawContent, String newBase)
+    {
+        if (!newBase.endsWith("/"))
+        {
+            newBase += "/";
+        }
+        rawContent = rawContent.replaceAll(
+            "(<a\\s([^<>]*\\s)?href\\s*=\\s*[\'\"])(?!(\\w+:)?/)",
+            "$1" + newBase);
+        rawContent = rawContent.replaceAll(
+            "(<img\\s([^<>]*\\s)?src\\s*=\\s*[\'\"])(?!(\\w+:)?/)",
+            "$1" + newBase);
+        return rawContent;
     }
 
 
