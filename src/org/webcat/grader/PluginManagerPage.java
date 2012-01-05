@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -462,13 +462,10 @@ extends WCComponent
 
     // ----------------------------------------------------------
     /**
-     * Calculate the current set of plugins that are available from
-     * all registered providers, but that are not yet installed.  This
-     * method assumes that the private <code>subsystems</code> data member
-     * has already been initialized with a list of currently installed
-     * subsystems.
+     * Calculate the current set of plug-ins that are available from
+     * all registered providers, but that are not yet installed.
      * @return an array of feature descriptors for available uninstalled
-     *         subsystems
+     *         grader plug-ins
      */
     public NSArray<FeatureDescriptor> newPlugins()
     {
@@ -478,7 +475,14 @@ extends WCComponent
         {
             if ( provider != null )
             {
-                availablePlugins.addAll( provider.plugins() );
+                for (FeatureDescriptor aPlugin : provider.plugins())
+                {
+                    // Screen out batch plug-ins
+                    if (aPlugin.getProperty("batchEntity") == null)
+                    {
+                        availablePlugins.add(aPlugin);
+                    }
+                }
             }
         }
         NSArray<GradingPlugin> exclude =
