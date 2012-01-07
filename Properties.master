@@ -1,24 +1,24 @@
 # ===================================================================
 # Grader subsystem characteristics
 # ===================================================================
-subsystem.Grader=org.webcat.grader.Grader
+subsystem.Grader = org.webcat.grader.Grader
 
-Grader.version.major=2
-Grader.version.minor=6
-Grader.version.revision=1
-Grader.requires=Core, EOJDBCPrototypes, DBUpdateEngine
-Grader.depends=env, pluginProperties
+Grader.version.major = 2
+Grader.version.minor = 6
+Grader.version.revision = 2
+Grader.requires = Core, EOJDBCPrototypes, DBUpdateEngine
+Grader.depends = env, pluginProperties
 
-Grader.copyright=(c) 2006-2011 Virginia Tech Department of Computer Science
-Grader.provider=Virginia Tech Computer Science
-Grader.provider.url=http\://web-cat.org/updates
-Grader.info.url=http\://web-cat.org/WCWiki/GraderSubsystem
-Grader.history.url=\
+Grader.copyright = (c) 2006-2012 Virginia Tech Department of Computer Science
+Grader.provider = Virginia Tech Computer Science
+Grader.provider.url = http\://web-cat.org/updates
+Grader.info.url = http\://web-cat.org/WCWiki/GraderSubsystem
+Grader.history.url =\
 	http\://web-cat.org/WCWiki/GraderSubsystem/ChangeHistory
-Grader.license=GNU Affero General Public License v.3
-Grader.license.url=http\://www.gnu.org/licenses/agpl.html
+Grader.license = GNU Affero General Public License v.3
+Grader.license.url = http\://www.gnu.org/licenses/agpl.html
 
-Grader.description=\
+Grader.description =\
     This subsystem provides all of Web-CAT's automated grading services.  \
     It manages all grading plug-ins as well.
 
@@ -28,13 +28,13 @@ Grader.description=\
 # -------------------------------------------------------------------
 # see config.plist for docs on each property
 
-grader.gracePeriod=15
-grader.mailResultNotificationAfterMinutes=15
-grader.timeout.max=600
-grader.timeout.default=60
-grader.maxFileUploadSize=1048576
-grader.defaultMaxFileUploadSize=204800
-grader.resumeSuspendedJobs=true
+grader.gracePeriod = 15
+grader.mailResultNotificationAfterMinutes = 15
+grader.timeout.max = 600
+grader.timeout.default = 60
+grader.maxFileUploadSize = 1048576
+grader.defaultMaxFileUploadSize = 204800
+grader.resumeSuspendedJobs = true
 
 
 # -------------------------------------------------------------------
