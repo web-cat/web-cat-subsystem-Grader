@@ -4,7 +4,7 @@
  |  Created by eogenerator
  |  DO NOT EDIT.  Make changes to Submission.java instead.
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -1497,7 +1497,21 @@ public abstract class _Submission
             objectsMatchingQualifier(context, qualifier);
         if (objects.size() > 1)
         {
-            throw new EOUtilities.MoreThanOneException(null);
+            String msg = "fetching Submission";
+            try
+            {
+                if (qualifier != null)
+                {
+                    msg += " where " + qualifier;
+                }
+                msg += ", result = " + objects;
+            }
+            catch (Exception e)
+            {
+                log.error("Exception building MoreThanOneException message, "
+                    + "contents so far: " + msg, e);
+            }
+            throw new EOUtilities.MoreThanOneException(msg);
         }
         return (objects.size() > 0)
             ? objects.get(0)
@@ -1521,8 +1535,9 @@ public abstract class _Submission
     {
         if (keysAndValues.length % 2 != 0)
         {
-            throw new IllegalArgumentException("There should a value " +
-                "corresponding to every key that was passed.");
+            throw new IllegalArgumentException("There should a value "
+                + "corresponding to every key that was passed. Args = "
+                + java.util.Arrays.toString(keysAndValues));
         }
 
         NSMutableDictionary<String, Object> valueDictionary =
@@ -1533,12 +1548,21 @@ public abstract class _Submission
             Object key = keysAndValues[i];
             Object value = keysAndValues[i + 1];
 
-            if (!(key instanceof String))
+            if (key == null)
             {
-                throw new IllegalArgumentException("Keys should be strings.");
+                throw new IllegalArgumentException(
+                    "Found null where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
+            }
+            else if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException(
+                    "Found a " + key.getClass().getName() + " [" + key + "]"
+                    + " where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, (String)key);
+            valueDictionary.setObjectForKey(value, key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1583,8 +1607,9 @@ public abstract class _Submission
     {
         if (keysAndValues.length % 2 != 0)
         {
-            throw new IllegalArgumentException("There should a value " +
-                "corresponding to every key that was passed.");
+            throw new IllegalArgumentException("There should a value "
+                + "corresponding to every key that was passed. Args = "
+                + java.util.Arrays.toString(keysAndValues));
         }
 
         NSMutableDictionary<String, Object> valueDictionary =
@@ -1595,12 +1620,21 @@ public abstract class _Submission
             Object key = keysAndValues[i];
             Object value = keysAndValues[i + 1];
 
-            if (!(key instanceof String))
+            if (key == null)
             {
-                throw new IllegalArgumentException("Keys should be strings.");
+                throw new IllegalArgumentException(
+                    "Found null where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
+            }
+            else if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException(
+                    "Found a " + key.getClass().getName() + " [" + key + "]"
+                    + " where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, (String)key);
+            valueDictionary.setObjectForKey(value, key);
         }
 
         return firstObjectMatchingValues(
@@ -1664,8 +1698,9 @@ public abstract class _Submission
     {
         if (keysAndValues.length % 2 != 0)
         {
-            throw new IllegalArgumentException("There should a value " +
-                "corresponding to every key that was passed.");
+            throw new IllegalArgumentException("There should a value "
+                + "corresponding to every key that was passed. Args = "
+                + java.util.Arrays.toString(keysAndValues));
         }
 
         NSMutableDictionary<String, Object> valueDictionary =
@@ -1676,12 +1711,21 @@ public abstract class _Submission
             Object key = keysAndValues[i];
             Object value = keysAndValues[i + 1];
 
-            if (!(key instanceof String))
+            if (key == null)
             {
-                throw new IllegalArgumentException("Keys should be strings.");
+                throw new IllegalArgumentException(
+                    "Found null where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
+            }
+            else if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException(
+                    "Found a " + key.getClass().getName() + " [" + key + "]"
+                    + " where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, (String)key);
+            valueDictionary.setObjectForKey(value, key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1764,8 +1808,9 @@ public abstract class _Submission
     {
         if (keysAndValues.length % 2 != 0)
         {
-            throw new IllegalArgumentException("There should a value " +
-                "corresponding to every key that was passed.");
+            throw new IllegalArgumentException("There should a value "
+                + "corresponding to every key that was passed. Args = "
+                + java.util.Arrays.toString(keysAndValues));
         }
 
         NSMutableDictionary<String, Object> valueDictionary =
@@ -1776,12 +1821,21 @@ public abstract class _Submission
             Object key = keysAndValues[i];
             Object value = keysAndValues[i + 1];
 
-            if (!(key instanceof String))
+            if (key == null)
             {
-                throw new IllegalArgumentException("Keys should be strings.");
+                throw new IllegalArgumentException(
+                    "Found null where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
+            }
+            else if (!(key instanceof String))
+            {
+                throw new IllegalArgumentException(
+                    "Found a " + key.getClass().getName() + " [" + key + "]"
+                    + " where a String key was expected, arguments = "
+                    + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, (String)key);
+            valueDictionary.setObjectForKey(value, key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);
@@ -1823,7 +1877,6 @@ public abstract class _Submission
             org.webcat.core.User userBinding
         )
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("earliestSubmissionForAssignmentOfferingAndUser", "Submission");
 
@@ -1877,7 +1930,6 @@ public abstract class _Submission
             org.webcat.core.CourseOffering courseOfferingBinding
         )
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("earliestSubmissionForCourseOffering", "Submission");
 
@@ -1927,7 +1979,6 @@ public abstract class _Submission
             org.webcat.core.User userBinding
         )
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("latestSubmissionForAssignmentAndUser", "Submission");
 
@@ -1983,7 +2034,6 @@ public abstract class _Submission
             org.webcat.core.User userBinding
         )
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("latestSubmissionForAssignmentOfferingAndUser", "Submission");
 
@@ -2037,7 +2087,6 @@ public abstract class _Submission
             org.webcat.core.CourseOffering courseOfferingBinding
         )
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("latestSubmissionForCourseOffering", "Submission");
 
@@ -2091,32 +2140,31 @@ public abstract class _Submission
             org.webcat.core.User userBinding
         ) throws EOUtilities.MoreThanOneException
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("specificSubmission", "Submission");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
-        if ( assignmentOfferingBinding != null )
+        if (assignmentOfferingBinding != null)
         {
-            bindings.setObjectForKey( assignmentOfferingBinding,
-                                      "assignmentOffering" );
+            bindings.setObjectForKey(assignmentOfferingBinding,
+                                     "assignmentOffering");
         }
-        if ( submitNumberBinding != null )
+        if (submitNumberBinding != null)
         {
-            bindings.setObjectForKey( submitNumberBinding,
-                                      "submitNumber" );
+            bindings.setObjectForKey(submitNumberBinding,
+                                     "submitNumber");
         }
-        if ( userBinding != null )
+        if (userBinding != null)
         {
-            bindings.setObjectForKey( userBinding,
-                                      "user" );
+            bindings.setObjectForKey(userBinding,
+                                     "user");
         }
-        spec = spec.fetchSpecificationWithQualifierBindings( bindings );
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
 
         NSArray<Submission> objects =
-            objectsWithFetchSpecification( context, spec );
+            objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
             log.debug( "specificSubmission(ec"
@@ -2132,9 +2180,21 @@ public abstract class _Submission
         }
         else if ( objects.count() > 1 )
         {
-            throw new EOUtilities.MoreThanOneException(
-                "Multiple objects were found when only one was expected."
-            );
+            String msg = "fetching Submission using specificSubmission";
+            try
+            {
+                if (bindings.size() != 0)
+                {
+                    msg += " where bindings = " + bindings;
+                }
+                msg += ", result = " + objects;
+            }
+            catch (Exception e)
+            {
+                log.error("Exception building MoreThanOneException message, "
+                    + "contents so far: " + msg, e);
+            }
+            throw new EOUtilities.MoreThanOneException(msg);
         }
         else
         {
@@ -2160,7 +2220,6 @@ public abstract class _Submission
             org.webcat.core.Semester semesterBinding,
             org.webcat.core.User userBinding)
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("submissionsForAssignmentAndUserDescending", "Submission");
 
@@ -2213,7 +2272,6 @@ public abstract class _Submission
             org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             org.webcat.core.User userBinding)
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("submissionsForAssignmentOfferingAndUser", "Submission");
 
@@ -2260,7 +2318,6 @@ public abstract class _Submission
             org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             org.webcat.core.User userBinding)
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("submissionsForAssignmentOfferingAndUserDescending", "Submission");
 
@@ -2307,7 +2364,6 @@ public abstract class _Submission
             org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             org.webcat.core.User userBinding)
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("submissionsForGrading", "Submission");
 
@@ -2354,7 +2410,6 @@ public abstract class _Submission
             org.webcat.grader.AssignmentOffering assignmentOfferingBinding,
             org.webcat.core.User userBinding)
     {
-        @SuppressWarnings("unchecked")
         EOFetchSpecification spec = WCFetchSpecification
             .fetchSpecificationNamed("submissionsWithFeedback", "Submission");
 
