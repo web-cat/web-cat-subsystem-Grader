@@ -103,7 +103,8 @@ public class NewCourseOfferingPage
             institution = user().authenticationDomain();
         }
 
-        if (coreSelections().courseOffering() != null)
+        if (coreSelections().courseOffering() != null
+            && coreSelections().courseOffering().editingContext() != null)
         {
             coreSelections().setCourseRelationship(
                 coreSelections().courseOffering().course());
@@ -167,9 +168,16 @@ public class NewCourseOfferingPage
         newOffering.setSemesterRelationship(semester);
         newOffering.addToInstructorsRelationship(user());
         newOffering.setCrn(crn);
-        setCourseOffering(newOffering);
-        coreSelections().setCourseOfferingRelationship(newOffering);
-        return super.next();
+        if (applyLocalChanges())
+        {
+            setCourseOffering(newOffering);
+            coreSelections().setCourseOfferingRelationship(newOffering);
+            return super.next();
+        }
+        else
+        {
+            return null;
+        }
     }
 
 
