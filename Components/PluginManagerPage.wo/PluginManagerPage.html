@@ -126,37 +126,33 @@ plug-in's capabilities and configuration scheme.</p>
 </wo:WCPageModule>
 
 <wo:if condition="$user.hasAdminPrivileges">
-<wo:WCPageModule title="Automatic Updates" open="false">
+<wo:WCPageModule title="Automatic Updates and Installation" open="false">
 <wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <webobject name="AutoUpdateEnabled"><b class="check">Enabled</b>
 <webobject name="DisableAutoUpdates"/></webobject>
 <webobject name="AutoUpdateNotEnabled"><b class="warn">Disabled</b>
 <webobject name="EnableAutoUpdates"/></webobject>
 <p>
-This application is capable of downloading and installing new updates to
+This application is capable of downloading and installing <b>new updates</b> to
 plug-ins that are currently installed.  When enabled, Web-CAT will check
 for newer versions of all installed plug-ins on each restart, and download
 any available updates at that time.  You can also <span class="hl">manually
-download</span> updates on demand using the download icons in the table.
+download</span> updates on demand using the download icons in the table(s)
+above showing existing published or personal plug-ins.
 Downloaded updates will <span class="hl">be applied immediately.</span>
 </p>
-</wo:WCForm>
-</wo:WCPageModule>
-
-<wo:WCPageModule title="Automatic Installation" open="false">
-<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
 <webobject name="AutoInstallEnabled"><b class="check">Enabled</b>
 <webobject name="DisableAutoInstalls"/></webobject>
 <webobject name="AutoInstallNotEnabled"><b class="warn">Disabled</b>
 <webobject name="EnableAutoInstalls"/></webobject>
 <p>
-This application is capable of automatically downloading and installing new
-plug-ins that are available from known providers.  When enabled, Web-CAT will
-check for brand new plug-ins on each restart, and automatically download
-and install any that are available at that time.  You can also
+This application is also capable of automatically downloading and installing
+<b>new plug-ins</b> that are available from known providers.  When enabled,
+Web-CAT will check for brand new plug-ins on each restart, and automatically
+download and install any that are available at that time.  You can also
 <span class="hl">manually install</span> new plug-ins available on the
-web using the download icons in the table.
-Downloaded plug-ins will <span class="hl">be installed immediately.</span>
+web using the download icons in the section above titled "Available for
+Web-based Installation."  Downloaded plug-ins become available immediately.
 </p>
 </wo:WCForm>
 </wo:WCPageModule>
