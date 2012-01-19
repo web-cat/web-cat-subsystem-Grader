@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -36,6 +36,7 @@ import org.webcat.core.Application;
 import org.webcat.core.FileUtilities;
 import org.webcat.core.MutableDictionary;
 import org.webcat.core.RepositoryEntryRef;
+import org.webcat.core.Status;
 import org.webcat.core.User;
 import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
@@ -1218,6 +1219,14 @@ public class GraderQueueProcessor
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
+
+        if (job.submission().assignmentOffering().assignment()
+                .submissionProfile().taPointsRaw() == null
+            || job.submission().assignmentOffering().assignment()
+                .submissionProfile().taPoints() == 0.0)
+        {
+            submissionResult.setStatus(Status.CHECK);
+        }
 
         if (job.submission().assignmentOffering().assignment()
                 .submissionProfile().allowPartners())
