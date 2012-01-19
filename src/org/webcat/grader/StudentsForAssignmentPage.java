@@ -363,7 +363,12 @@ public class StudentsForAssignmentPage
             {
                 Submission sub = pair.submission();
 
-                if (sub.result().status() == Status.UNFINISHED)
+                if (sub.result().status() == Status.UNFINISHED
+                    || (sub.result().status() != Status.CHECK
+                        && (sub.assignmentOffering().assignment()
+                                .submissionProfile().taPointsRaw() == null
+                            || sub.assignmentOffering().assignment()
+                                .submissionProfile().taPoints() == 0.0)))
                 {
                     sub.result().setStatus(Status.CHECK);
                     if (applyLocalChanges())
