@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -26,6 +26,7 @@ import java.util.Map;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.ui.WCTable;
@@ -139,13 +140,17 @@ public class StudentsForAssignmentPage
                         studentStats());
             userGroup().setObjectArray(subs);
 
+            @SuppressWarnings("unchecked")
+            NSArray<User> staff = ERXArrayUtilities
+                .arrayByAddingObjectsFromArrayWithoutDuplicates(
+                    ao.courseOffering().staff(),
+                    admins);
             staffSubs.addAll(extractSubmissions(
                     Submission.submissionsForGrading(
                             localContext(),
                             ao,
                             true,  // omitPartners
-                            ao.courseOffering().staff()
-                                .arrayByAddingObjectsFromArray(admins),
+                            staff,
                             null)));
         }
 
