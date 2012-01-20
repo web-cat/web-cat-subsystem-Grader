@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import org.apache.log4j.Logger;
 import org.webcat.core.WCComponent;
+import org.webcat.core.WCComponentWithErrorMessages;
 import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.foundation.NSArray;
@@ -37,7 +38,8 @@ import er.extensions.appserver.ERXDisplayGroup;
  * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
-public class PickSubmissionDialog extends GraderComponent
+public class PickSubmissionDialog
+	extends GraderComponent
 {
     //~ Constructors ..........................................................
 
@@ -146,6 +148,27 @@ public class PickSubmissionDialog extends GraderComponent
 
 
     // ----------------------------------------------------------
+    private WCComponentWithErrorMessages errorMessageOnParent(String message)
+    {
+        WCComponentWithErrorMessages owner = null;
+        WOComponent container = parent();
+        while (container != null)
+        {
+            if (container instanceof WCComponentWithErrorMessages)
+            {
+                owner = (WCComponentWithErrorMessages)container;
+            }
+            container = container.parent();
+        }
+        if (owner != null && message != null)
+        {
+            owner.error(message);
+        }
+        return owner;
+    }
+
+
+    // ----------------------------------------------------------
     public WOComponent viewSubmission()
     {
         Submission selectedSub = submissionDisplayGroup.selectedObject();
@@ -155,38 +178,49 @@ public class PickSubmissionDialog extends GraderComponent
             selectedSub = rootUserSubmission.submission();
         }
 
-        GraderComponent pageToReturn;
+        GraderComponent pageToReturn = null;
 
         prefs().setSubmissionRelationship(selectedSub);
 
-        if (sendsToGradingPage)
+        if (selectedSub == null)
         {
-            GradeStudentSubmissionPage page =
-                pageWithName(GradeStudentSubmissionPage.class);
-
-            if (allUserSubmissionsForNavigation == null)
-            {
-                page.availableSubmissions = null;
-                page.thisSubmissionIndex = 0;
-            }
-            else
-            {
-                page.availableSubmissions =
-                    allUserSubmissionsForNavigation.immutableClone();
-                page.thisSubmissionIndex =
-                    page.availableSubmissions.indexOf(rootUserSubmission);
-            }
-
-            page.nextPage = nextPageForResultsPage;
-
-            pageToReturn = page;
+            return errorMessageOnParent("Please choose a submission.");
+        }
+        else if (selectedSub.result() == null)
+        {
+            return errorMessageOnParent(
+                "Results for that submission are not available.");
         }
         else
         {
-            pageToReturn = pageWithName(FinalReportPage.class);
-        }
+            if (sendsToGradingPage)
+            {
+                GradeStudentSubmissionPage page =
+                    pageWithName(GradeStudentSubmissionPage.class);
 
-        pageToReturn.reloadGraderPrefs();
+                if (allUserSubmissionsForNavigation == null)
+                {
+                    page.availableSubmissions = null;
+                    page.thisSubmissionIndex = 0;
+                }
+                else
+                {
+                    page.availableSubmissions =
+                        allUserSubmissionsForNavigation.immutableClone();
+                    page.thisSubmissionIndex =
+                        page.availableSubmissions.indexOf(rootUserSubmission);
+                }
+
+                page.nextPage = nextPageForResultsPage;
+
+                pageToReturn = page;
+            }
+            else
+            {
+                pageToReturn = pageWithName(FinalReportPage.class);
+            }
+            pageToReturn.reloadGraderPrefs();
+        }
 
         return pageToReturn;
     }
