@@ -36,14 +36,13 @@ MostRecentSubmitNumber: WOString {
     value = mostRecentSubmissionNo;
 }
 
-Page : PageWithCourseNavigation {
+Page : PageWithAssignmentNavigation {
     title = "Past Results";
 }
 
 PickSubmissionDialog: PickSubmissionDialog {
     rootUserSubmission = selectedUserSubmissionForPickerDialog;
     nextPageForResultsPage = self;
-    sendsToGradingPage = isUserStaff;
 }
 
 PickSubmissionLink: WCLink {
@@ -76,6 +75,6 @@ SubmitTimeSpan: WOGenericContainer {
 }
 
 ViewSubmission: WCLink {
-    action = viewSubmission;
+    action = selectAssignment;
     title  = "View this submission";
 }

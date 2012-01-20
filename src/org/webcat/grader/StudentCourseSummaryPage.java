@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2011 Virginia Tech
+ |  Copyright (C) 2011-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -44,7 +44,8 @@ import er.extensions.appserver.ERXDisplayGroup;
  * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
-public class StudentCourseSummaryPage extends GraderCourseComponent
+public class StudentCourseSummaryPage
+    extends GraderAssignmentComponent
 {
     //~ Constructors ..........................................................
 
@@ -72,6 +73,10 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
     public boolean anyAssignmentUsesTAScore;
     public boolean anyAssignmentUsesBonusesOrPenalties;
     public boolean anyAssignmentUsesExtraColumns;
+
+    public AssignmentOffering          selectedAssignmentOffering;
+    public ERXDisplayGroup<Submission> submissionDisplayGroup;
+    public Submission                  aSubmission;
 
 
     //~ Methods ...............................................................
@@ -143,6 +148,7 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
         anyAssignmentUsesToolCheckScore = false;
         anyAssignmentUsesTAScore = false;
         anyAssignmentUsesBonusesOrPenalties = false;
+        selectedAssignmentOffering = prefs().assignmentOffering();
 
         for (Assignment assignment : assignments)
         {
@@ -156,6 +162,11 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
                 if (co.equals(homeOffering))
                 {
                     homeAssignmentOffering = ao;
+                    if (selectedAssignmentOffering == null
+                        && assignment == prefs().assignment())
+                    {
+                        selectedAssignmentOffering = ao;
+                    }
                 }
 
                 NSArray<Submission> subs =
@@ -215,7 +226,36 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
 
         submissionsByAssignmentOffering = submissions;
 
+        if (selectedAssignmentOffering != null)
+        {
+            submissionDisplayGroup.setObjectArray(
+                Submission.submissionsForAssignmentOfferingAndUser(
+                    localContext(),
+                    selectedAssignmentOffering,
+                    selectedStudent));
+        }
+        else
+        {
+            submissionDisplayGroup.setObjectArray(NSArray.EmptyArray);
+        }
+
         super.beforeAppendToResponse(response, context);
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean requiresAssignmentOffering()
+    {
+        return false;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public boolean allowsAllOfferingsForCourse()
+    {
+        return false;
     }
 
 
@@ -268,16 +308,16 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
     // ----------------------------------------------------------
     public boolean isMostRecentSubmission()
     {
-        Submission aSubmission = submissionForAssignmentOffering();
-        return aSubmission == aSubmission.latestSubmission();
+        Submission sub = submissionForAssignmentOffering();
+        return sub == sub.latestSubmission();
     }
 
 
     // ----------------------------------------------------------
     public int mostRecentSubmissionNo()
     {
-        Submission aSubmission = submissionForAssignmentOffering();
-        return aSubmission.latestSubmission().submitNumber();
+        return submissionForAssignmentOffering().latestSubmission()
+            .submitNumber();
     }
 
 
@@ -289,35 +329,62 @@ public class StudentCourseSummaryPage extends GraderCourseComponent
      */
     protected boolean saveSelectionCanContinue()
     {
-        Submission submission = submissionForAssignmentOffering();
+        Submission submission = aSubmission;
+        if (submission == null && assignmentOffering != null)
+        {
+            submission = submissionForAssignmentOffering();
+        }
 
         if (submission == null)
         {
             log.debug("saveSelectionCanContinue(): no selected "
                 + "submission, submission was null");
-
             error("Please choose a submission.");
+        }
+        else if (submission.result() == null)
+        {
+            error("Results for that submission are not available.");
         }
         else
         {
+            prefs().setAssignmentOfferingRelationship(
+                submission.assignmentOffering());
             prefs().setSubmissionRelationship(submission);
 
-            log.debug(
-                "Changing selection, sub #"
+            log.debug("Changing selection, sub #"
                 + prefs().submission().submitNumber());
         }
 
-        if (prefs().submission() == null)
-        {
-            log.warn("saveSelectionCanContinue(): null submission!");
-            error("Please choose a submission.");
-        }
-        else if (prefs().submission().result() == null)
-        {
-            error("Processing of that submission is not yet completed.");
-        }
-
         return !hasMessages();
+    }
+
+
+    // ----------------------------------------------------------
+    public String submissionStatus()
+    {
+        String result = "suspended";
+        EnqueuedJob job = aSubmission.enqueuedJob();
+        if (job == null)
+        {
+            result = "cancelled";
+        }
+        else if (!job.paused())
+        {
+            result = "queued for grading";
+        }
+        log.debug("submissionStatus() = " + result);
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults selectAssignment()
+    {
+        if (assignmentOffering != null)
+        {
+            prefs().setAssignmentOfferingRelationship(assignmentOffering);
+        }
+        return null;
     }
 
 

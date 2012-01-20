@@ -1,5 +1,5 @@
 <wo name="Page">
-<wo:org.webcat.core.WCPageModule title="Past Results">
+<wo:org.webcat.core.WCPageModule title="Past Results in Assignments for This Course">
 <wo name="PickSubmissionDialog"/>
 <wo:WCForm>
 <wo:if condition="$isUserStaff">
@@ -13,13 +13,13 @@
     <th>Sub #</th>
     <th>Submit Time</th>
     <th>Due Date</th>
+    <th>Score</th>
     <wo:if condition="$anyAssignmentUsesExtraColumns">
       <wo:if condition="$anyAssignmentUsesTestingScore"><th class="sm">Correctness/<br/>Testing</th></wo:if>
       <wo:if condition="$anyAssignmentUsesToolCheckScore"><th class="sm">Style/<br/>Coding</th></wo:if>
       <wo:if condition="$anyAssignmentUsesTAScore"><th class="sm">Design/<br/>Readability</th></wo:if>
       <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><th class="sm">Early/<br/>Late</th></wo:if>
     </wo:if>
-    <th>Score</th>
     <th>Score Distribution</th>
 </tr>
 </thead><tbody>
@@ -37,6 +37,7 @@
     </wo:else>
     <td class="sm"><wo name="DueDate"/></td>
     <wo:if condition="$submissionForAssignmentOffering">
+        <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || !submissionForAssignmentOffering.assignmentOffering.assignment.usesTAScore || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo></td>
         <wo:if condition="$anyAssignmentUsesExtraColumns">
           <wo:if condition="$anyAssignmentUsesTestingScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
           <wo:if condition="$anyAssignmentUsesToolCheckScore"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
@@ -55,16 +56,15 @@
           </wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></td></wo:if>
           <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><td class="n"><wo:str value="$submissionForAssignmentOffering.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
         </wo:if>
-        <td class="n"><wo name="ViewSubmission"><wo:if condition="~submissionForAssignmentOffering.result.status == @org.webcat.core.Status@CHECK || !submissionForAssignmentOffering.assignmentOffering.assignment.usesTAScore || submissionForAssignmentOffering.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo></td>
         <td><wo name="HistogramWithScore"/></td>
     </wo:if><wo:else>
+        <td></td>
         <wo:if condition="$anyAssignmentUsesExtraColumns">
           <wo:if condition="$anyAssignmentUsesTestingScore"><td></td></wo:if>
           <wo:if condition="$anyAssignmentUsesToolCheckScore"><td></td></wo:if>
           <wo:if condition="$anyAssignmentUsesTAScore"><td></td></wo:if>
           <wo:if condition="$anyAssignmentUsesBonusesOrPenalties"><td></td></wo:if>
         </wo:if>
-        <td></td>
         <td><wo name="HistogramWithoutScore"/></td>
     </wo:else>
 </wo:tr>
@@ -72,4 +72,57 @@
 </tbody>
 </table>
 </wo:org.webcat.core.WCPageModule>
+<wo:if condition="$submissionDisplayGroup.displayedObjects.count">
+<wo:org.webcat.core.WCPageModule title="~'Results for ' + selectedAssignmentOffering.assignment.titleString">
+<p>Submissions by <b><wo:str value="$selectedStudent"/>:</b></p>
+  <table><thead>
+    <tr><th>No.</th><th>Time</th>
+      <th>Score</th>
+      <wo:if condition="$selectedAssignmentOffering.assignment.usesTestingScore">
+      <th class="sm">Correctness/<br/>Testing</th></wo:if>
+      <wo:if condition="$selectedAssignmentOffering.assignment.usesToolCheckScore">
+      <th class="sm">Style/<br/>Coding</th></wo:if>
+      <wo:if condition="$selectedAssignmentOffering.assignment.usesTAScore">
+      <th class="sm">Design/<br/>Readability</th></wo:if>
+      <wo:if condition="$selectedAssignmentOffering.assignment.usesBonusesOrPenalties">
+      <th class="sm">Early/<br/>Late</th></wo:if>
+      <th>Student and Partners</th></tr></thead><tbody>
+    <wo:loop list="$submissionDisplayGroup.displayedObjects"
+        item="$aSubmission" index="$index">
+        <wo:TableRow index="$index">
+          <wo:if condition="$aSubmission.result">
+            <td class="n"><wo:link action="$viewSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
+            <td><wo:link action="$viewSubmission"><wo:str value="$aSubmission.submitTime" formatter="$session.timeFormatter"/></wo:link></td>
+            <td class="n"><wo:link action="$viewSubmission"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo:str value="$aSubmission.result.finalScore" numberformat="0.0"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo:link></td>
+            <wo:if condition="$selectedAssignmentOffering.assignment.usesTestingScore">
+              <td class="n"><wo:str value="$aSubmission.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
+            <wo:if condition="$selectedAssignmentOffering.assignment.usesToolCheckScore">
+              <td class="n"><wo:str value="$aSubmission.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>
+            <wo:if condition="$selectedAssignmentOffering.assignment.usesTAScore">
+              <td class="n"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || (aSubmission.assignmentOffering.courseOffering.isStaff(user) and aSubmission.result.taScoreRaw != null)"><wo:str value="$aSubmission.result.taScore" numberformat="0.0"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></td></wo:if>
+            <wo:if condition="$selectedAssignmentOffering.assignment.usesBonusesOrPenalties">
+              <td class="n"><wo:str value="$aSubmission.result.scoreAdjustment" numberformat="0.0"/></td></wo:if>
+      </wo:if><wo:else>
+        <td class="n"><wo:str value="$aSubmission.submitNumber"/></td>
+        <td><wo:str value="$aSubmission.submitTime" formatter="$session.timeFormatter"/></td>
+        <wo:WOGenericContainer elementName="td" style="color:red"
+            colspan="~1 + (selectedAssignmentOffering.assignment.usesTestingScore ? 1 : 0) + (selectedAssignmentOffering.assignment.usesToolCheckScore ? 1 : 0) + (selectedAssignmentOffering.assignment.usesTAScore ? 1 : 0) + (selectedAssignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0)">
+          &lt;<wo:str value="$submissionStatus"/>&gt;
+        </wo:WOGenericContainer>
+      </wo:else>
+      <td><wo:str value="$aSubmission.result.submission.namesOfAllUsers"/></td>
+        </wo:TableRow>
+    </wo:loop>
+</tbody></table>
+</wo:org.webcat.core.WCPageModule>
+</wo:if>
+<wo:else>
+<wo:org.webcat.core.WCPageModule title="No Submissions Available">
+<p><wo:if condition="prefs.assignment">
+There are no submissions for the selected assignment.
+</wo:if><wo:else>
+Please select an assignment to view its submissions.
+</wo:else></p>
+</wo:org.webcat.core.WCPageModule>
+</wo:else>
 </wo>
