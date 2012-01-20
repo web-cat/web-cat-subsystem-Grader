@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -194,6 +194,10 @@ public class GraderPrefsManager
     {
         addObjectToBothSidesOfRelationshipWithKey(
             value, GraderPrefs.SUBMISSION_KEY);
+        if (value != null && value.assignmentOffering() != assignmentOffering())
+        {
+            setAssignmentOfferingRelationship(value.assignmentOffering());
+        }
     }
 
 
