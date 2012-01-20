@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -163,6 +163,8 @@ public class NewCourseOfferingPage
                 + "course offering.");
             return null;
         }
+        coreSelections().setSemester(semester);
+
         CourseOffering newOffering = CourseOffering.create(localContext());
         newOffering.setCourseRelationship(coreSelections().course());
         newOffering.setSemesterRelationship(semester);
