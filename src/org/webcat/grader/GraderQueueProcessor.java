@@ -1220,10 +1220,7 @@ public class GraderQueueProcessor
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship( job.submission() );
 
-        if (job.submission().assignmentOffering().assignment()
-                .submissionProfile().taPointsRaw() == null
-            || job.submission().assignmentOffering().assignment()
-                .submissionProfile().taPoints() == 0.0)
+        if (!job.submission().assignmentOffering().assignment().usesTAScore())
         {
             submissionResult.setStatus(Status.CHECK);
         }

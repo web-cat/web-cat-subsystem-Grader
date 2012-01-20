@@ -365,10 +365,8 @@ public class StudentsForAssignmentPage
 
                 if (sub.result().status() == Status.UNFINISHED
                     || (sub.result().status() != Status.CHECK
-                        && (sub.assignmentOffering().assignment()
-                                .submissionProfile().taPointsRaw() == null
-                            || sub.assignmentOffering().assignment()
-                                .submissionProfile().taPoints() == 0.0)))
+                        && !sub.assignmentOffering().assignment()
+                            .usesTAScore()))
                 {
                     sub.result().setStatus(Status.CHECK);
                     if (applyLocalChanges())
