@@ -99,21 +99,35 @@
             priority = 2;
             children = {
                 "Edit Course Properties" = {
-                    pageName  = org.webcat.grader.EditCoursePage;
+                    pageName    = org.webcat.grader.EditCoursePage;
                     accessLevel = 50;
-                    priority  = 2;
-                    id      = EditCourseProperties;
+                    priority    = 2;
+                    id          = EditCourseProperties;
+                    wantsStart  = YES;
                 };
                 "Edit Student Roster" = {
-                    pageName = org.webcat.grader.CourseRosterPage;
+                    pageName    = org.webcat.grader.CourseRosterPage;
                     accessLevel = 50;
-                    priority = 3;
+                    priority    = 3;
+                };
+            };
+          };
+          Activity = {
+            accessLevel = 50;
+            priority = 3;
+            children = {
+                "Activity by Course Participants" = {
+                    pageName    = org.webcat.grader.CourseActivityPage;
+                    accessLevel = 50;
+                    priority    = 1;
+                    wantsStart  = YES;
+                    id          = CourseActivity;
                 };
             };
           };
           New = {
             accessLevel = 50;
-            priority = 3;
+            priority = 4;
             children = {
                 "Pick the Course" = {
                     pageName = org.webcat.grader.NewCourseOfferingPage;

@@ -1,0 +1,28 @@
+<wo name="Page">
+<wo:org.webcat.core.WCPageModule title="~'Activity  in ' + coreSelections.courseOffering.compactName">
+<wo:if condition="$participants.displayedObjects.count">
+<p>Displaying activity over the past six months (180 days), since:
+<wo:str value="$limitTime" formatter="$dateFormatter"/>.</p>
+<table>
+<thead><th>Name</th><th>Logins</th><th>Most Recent Session</th></thead>
+<tbody><wo:loop list="$participants.displayedObjects" item="$participant"
+    index="$index">
+  <wo:TableRow index="$index">
+    <td><wo:str value="$participant.nameAndUid"/></td>
+    <td class="n"><wo:str value="$periodCount"/></td>
+    <td><wo:if condition="$periodCount">
+        <wo:str value="$mostRecentPeriod.startTime" formatter="$session.timeFormatter"/>
+        -
+        <wo:str value="$mostRecentPeriod.endTime" formatter="$session.timeFormatter"/>
+        (<wo:str value="$duration"/><wo:if
+          condition="$mostRecentPeriod.isStillActive">, logged in now</wo:if>)
+    </wo:if></td>
+  </wo:TableRow>
+</wo:loop></tbody>
+</table>
+</wo:if><wo:else>
+No one is enrolled in this course offering.
+</wo:else>
+</wo:org.webcat.core.WCPageModule>
+
+</wo>

@@ -1,0 +1,4 @@
+Page : PageWithCourseNavigation {
+    title = "Activity by Course Participants";
+    allowsAllOfferingsForCourse = false;
+}
