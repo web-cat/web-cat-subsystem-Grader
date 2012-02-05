@@ -5,7 +5,7 @@ subsystem.Grader = org.webcat.grader.Grader
 
 Grader.version.major = 2
 Grader.version.minor = 6
-Grader.version.revision = 3
+Grader.version.revision = 4
 Grader.requires = Core, EOJDBCPrototypes, DBUpdateEngine
 Grader.depends = env, pluginProperties
 
