@@ -36,6 +36,7 @@ import org.webcat.grader.messaging.GraderMarkupParseError;
 import org.webcat.grader.messaging.GradingResultsAvailableMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.webcat.woextensions.ECAction;
+import org.webcat.woextensions.WCFetchSpecification;
 import static org.webcat.woextensions.ECAction.run;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
@@ -651,6 +652,46 @@ public class Grader
         }
         log.debug( "handleReport() returning" );
         return result;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    protected void performPeriodicMaintenance()
+    {
+        run(new ECAction() {
+            // ----------------------------------------------------------
+            @Override
+            public void action()
+            {
+                WCFetchSpecification<Submission> needsMigration =
+                    new WCFetchSpecification<Submission>(
+                        Submission.ENTITY_NAME,
+                        Submission.isSubmissionForGrading.isNull(),
+                        Submission.submitTime.descs());
+                needsMigration.setRefreshesRefetchedObjects(false);
+                needsMigration.setFetchLimit(500);
+
+                NSArray<Submission> migrated = Submission
+                    .objectsWithFetchSpecification(ec, needsMigration);
+                while (migrated.size() > 0)
+                {
+                    log.info("performPeriodicMaintenance(): migrated "
+                        + migrated.size() + " submissions");
+                    try
+                    {
+                        // Sleep for 2 seconds
+                        Thread.sleep(2000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // ignore
+                    }
+                    migrated = Submission
+                        .objectsWithFetchSpecification(ec, needsMigration);
+                }
+            }
+        });
     }
 
 
