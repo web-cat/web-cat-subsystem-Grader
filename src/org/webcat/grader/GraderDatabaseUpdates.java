@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -46,7 +46,7 @@ public class GraderDatabaseUpdates
      */
     public GraderDatabaseUpdates()
     {
-        super( "grader" );
+        super("grader");
     }
 
 
@@ -84,9 +84,9 @@ public class GraderDatabaseUpdates
     public void updateIncrement1() throws SQLException
     {
         database().executeSQL(
-            "alter table TSTEPCONFIG add CAUTHORID INTEGER" );
+            "alter table TSTEPCONFIG add CAUTHORID INTEGER");
         database().executeSQL(
-            "alter table TSTEPCONFIG add CNAME TINYTEXT" );
+            "alter table TSTEPCONFIG add CNAME TINYTEXT");
     }
 
 
@@ -100,11 +100,11 @@ public class GraderDatabaseUpdates
     public void updateIncrement2() throws SQLException
     {
         database().executeSQL(
-            "UPDATE TSTEP SET CUPDATEMUTABLEFIELDS = 0" );
+            "UPDATE TSTEP SET CUPDATEMUTABLEFIELDS = 0");
         database().executeSQL(
-            "UPDATE TSTEPCONFIG SET CUPDATEMUTABLEFIELDS = 0" );
+            "UPDATE TSTEPCONFIG SET CUPDATEMUTABLEFIELDS = 0");
         database().executeSQL(
-            "UPDATE TUPLOADEDSCRIPTFILES SET CUPDATEMUTABLEFIELDS = 0" );
+            "UPDATE TUPLOADEDSCRIPTFILES SET CUPDATEMUTABLEFIELDS = 0");
     }
 
 
@@ -117,10 +117,10 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING add "
-            + "CGRAPHSUMMARY BLOB" );
+            + "CGRAPHSUMMARY BLOB");
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING add "
-            + "CUPDATEMUTABLEFIELDS BIT NOT NULL" );
+            + "CUPDATEMUTABLEFIELDS BIT NOT NULL");
     }
 
 
@@ -134,16 +134,16 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TSUBMISSIONPROFILE add "
-            + "CINCLUDEDFILEPATTERNS TEXT" );
+            + "CINCLUDEDFILEPATTERNS TEXT");
         database().executeSQL(
             "alter table TSUBMISSIONPROFILE add "
-            + "CEXCLUDEDFILEPATTERNS TEXT" );
+            + "CEXCLUDEDFILEPATTERNS TEXT");
         database().executeSQL(
             "alter table TSUBMISSIONPROFILE add "
-            + "CREQUIREDFILEPATTERNS TEXT" );
+            + "CREQUIREDFILEPATTERNS TEXT");
         database().executeSQL(
             "alter table TSUBMISSIONPROFILE add "
-            + "CSUBMISSIONMETHOD TINYINT NOT NULL" );
+            + "CSUBMISSIONMETHOD TINYINT NOT NULL");
     }
 
 
@@ -156,7 +156,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TUPLOADEDSCRIPTFILES add "
-            + "CGLOBALCONFIGSETTINGS BLOB" );
+            + "CGLOBALCONFIGSETTINGS BLOB");
     }
 
 
@@ -169,7 +169,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING drop "
-            + "FHASSUSPENDEDSUBS" );
+            + "FHASSUSPENDEDSUBS");
     }
 
 
@@ -184,7 +184,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TGRADERPREFS drop "
-            + "CCOURSEOFFERINGID" );
+            + "CCOURSEOFFERINGID");
 
         database().executeSQL(
             "alter table TSUBMISSION add "
@@ -193,10 +193,6 @@ public class GraderDatabaseUpdates
         database().executeSQL(
                 "alter table TSUBMISSIONRESULT modify "
                 + "CISMOSTRECENT BIT");
-
-/*        database().executeSQL(
-                "alter table TSUBMISSIONRESULT add "
-                + "CFINALSCORE DOUBLE");*/
     }
 
 
@@ -207,16 +203,16 @@ public class GraderDatabaseUpdates
      */
     public void updateIncrement8() throws SQLException
     {
-        if ( !database().hasTable( "TRESULTOUTCOME" ) )
+        if (!database().hasTable("TRESULTOUTCOME"))
         {
-            log.info( "creating table TRESULTOUTCOME" );
+            log.info("creating table TRESULTOUTCOME");
             database().executeSQL(
                 "CREATE TABLE TRESULTOUTCOME "
                 + "(OID INTEGER NOT NULL , CRESULTID INTEGER , "
                 + "CSUBMISSIONID INTEGER , CINDEX INTEGER , CTAG TINYTEXT , "
-                + "CCONTENTS BLOB , CUPDATEMUTABLEFIELDS BIT NOT NULL )" );
+                + "CCONTENTS BLOB , CUPDATEMUTABLEFIELDS BIT NOT NULL )");
             database().executeSQL(
-                "ALTER TABLE TRESULTOUTCOME ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TRESULTOUTCOME ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -230,7 +226,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TGRADERPREFS add "
-            + "CASSIGNID INTEGER" );
+            + "CASSIGNID INTEGER");
     }
 
 
@@ -243,7 +239,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TSUBMISSIONFILESTATS add "
-            + "CTAGS TEXT" );
+            + "CTAGS TEXT");
     }
 
 
@@ -256,10 +252,10 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING add "
-            + "closedOnDate DATETIME" );
+            + "closedOnDate DATETIME");
         database().executeSQL(
             "alter table TASSIGNMENT add "
-            + "trackOpinions BIT NOT NULL" );
+            + "trackOpinions BIT NOT NULL");
     }
 
 
@@ -273,10 +269,10 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TSUBMISSIONRESULT add "
-            + "CUPDATEMUTABLEFIELDS BIT NOT NULL" );
+            + "CUPDATEMUTABLEFIELDS BIT NOT NULL");
         database().executeSQL(
             "alter table TSUBMISSIONRESULT add "
-            + "accumulatedSavedProperties BLOB" );
+            + "accumulatedSavedProperties BLOB");
     }
 
 
@@ -289,7 +285,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING add "
-            + "lastModified DATETIME" );
+            + "lastModified DATETIME");
     }
 
 
@@ -302,10 +298,10 @@ public class GraderDatabaseUpdates
     public void updateIncrement14() throws SQLException
     {
         database().executeSQL(
-            "alter table TSUBMISSION add primarySubmissionId INTEGER" );
+            "alter table TSUBMISSION add primarySubmissionId INTEGER");
         database().executeSQL(
                 "alter table TSUBMISSIONPROFILE add "
-                + "allowPartners BIT NOT NULL" );
+                + "allowPartners BIT NOT NULL");
     }
 
 
@@ -385,7 +381,7 @@ public class GraderDatabaseUpdates
     public void updateIncrement16() throws SQLException
     {
         database().executeSQL(
-            "alter table TSUBMISSIONRESULT add lastUpdated DATETIME" );
+            "alter table TSUBMISSIONRESULT add lastUpdated DATETIME");
     }
 
 
@@ -399,10 +395,10 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TSUBMISSIONRESULT add "
-                + "studentReportStyleVersion INTEGER" );
+                + "studentReportStyleVersion INTEGER");
         database().executeSQL(
             "alter table TSUBMISSIONRESULT add "
-                + "staffReportStyleVersion INTEGER" );
+                + "staffReportStyleVersion INTEGER");
     }
 
 
@@ -416,7 +412,7 @@ public class GraderDatabaseUpdates
     {
         database().executeSQL(
             "alter table TSUBMISSIONPROFILE modify "
-            + "CSUBMISSIONMETHOD TINYINT NOT NULL Default 0" );
+            + "CSUBMISSIONMETHOD TINYINT NOT NULL Default 0");
     }
 
 
@@ -439,10 +435,10 @@ public class GraderDatabaseUpdates
      * stuff will be migrated correctly.
      * @throws SQLException on error
      */
-    public void updateIncrement20dontuse() throws SQLException
+    public void updateIncrement20() throws SQLException
     {
         database().executeSQL(
-            "update table TSUBMISSION set CISSUBMISSIONFORGRADING NULL");
+            "update TSUBMISSION set CISSUBMISSIONFORGRADING = NULL");
     }
 
 
@@ -455,9 +451,9 @@ public class GraderDatabaseUpdates
      */
     private void createAssignmentTable() throws SQLException
     {
-        if ( !database().hasTable( "TASSIGNMENT" ) )
+        if (!database().hasTable("TASSIGNMENT"))
         {
-            log.info( "creating table TASSIGNMENT" );
+            log.info("creating table TASSIGNMENT");
             database().executeSQL(
                 "CREATE TABLE TASSIGNMENT "
                 + "(CAUTHORID INTEGER , CFILEUPLOADMESSAGE TEXT , "
@@ -465,9 +461,9 @@ public class GraderDatabaseUpdates
                 + "OID INTEGER NOT NULL, CMOODLEID INTEGER , "
                 + "CASSIGNMENTNAME TINYTEXT , CRUBRICID INTEGER , "
                 + "CASSIGNMENTDESCRIPTION TINYTEXT , "
-                + "CGRADINGPROFILEID INTEGER , CASSIGNMENTURL TINYTEXT )" );
+                + "CGRADINGPROFILEID INTEGER , CASSIGNMENTURL TINYTEXT )");
             database().executeSQL(
-                "ALTER TABLE TASSIGNMENT ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TASSIGNMENT ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -479,17 +475,17 @@ public class GraderDatabaseUpdates
      */
     private void createAssignmentOfferingTable() throws SQLException
     {
-        if ( !database().hasTable( "TASSIGNMENTOFFERING" ) )
+        if (!database().hasTable("TASSIGNMENTOFFERING"))
         {
-            log.info( "creating table TASSIGNMENTOFFERING" );
+            log.info("creating table TASSIGNMENTOFFERING");
             database().executeSQL(
                 "CREATE TABLE TASSIGNMENTOFFERING "
                 + "(CASSIGNMENTID INTEGER , CCOURSEOFFERINGID INTEGER , "
                 + "CDUEDATE DATETIME , FGRADINGSUSPENDED BIT NOT NULL, "
                 + "FHASSUSPENDEDSUBS BIT NOT NULL, OID INTEGER NOT NULL, "
-                + "CMOODLEID INTEGER , CPUBLISH BIT NOT NULL)" );
+                + "CMOODLEID INTEGER , CPUBLISH BIT NOT NULL)");
             database().executeSQL(
-                "ALTER TABLE TASSIGNMENTOFFERING ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TASSIGNMENTOFFERING ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -501,16 +497,16 @@ public class GraderDatabaseUpdates
      */
     private void createEnqueuedJobTable() throws SQLException
     {
-        if ( !database().hasTable( "TENQUEUEDJOB" ) )
+        if (!database().hasTable("TENQUEUEDJOB"))
         {
-            log.info( "creating table TENQUEUEDJOB" );
+            log.info("creating table TENQUEUEDJOB");
             database().executeSQL(
                 "CREATE TABLE TENQUEUEDJOB "
                 + "(CDISCARDED BIT NOT NULL, OID INTEGER NOT NULL, "
                 + "CPAUSED BIT NOT NULL, CQUEUETIME DATETIME , "
-                + "CREGRADING BIT NOT NULL, CSUBMISSIONID INTEGER )" );
+                + "CREGRADING BIT NOT NULL, CSUBMISSIONID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TENQUEUEDJOB ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TENQUEUEDJOB ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -522,17 +518,17 @@ public class GraderDatabaseUpdates
      */
     private void createGraderPrefsTable() throws SQLException
     {
-        if ( !database().hasTable( "TGRADERPREFS" ) )
+        if (!database().hasTable("TGRADERPREFS"))
         {
-            log.info( "creating table TGRADERPREFS" );
+            log.info("creating table TGRADERPREFS");
             database().executeSQL(
                 "CREATE TABLE TGRADERPREFS "
                 + "(CASSIGNMENTID INTEGER , CCOMMENTHISTORY MEDIUMTEXT , "
                 + "CCOURSEOFFERINGID INTEGER , OID INTEGER NOT NULL, "
                 + "CSTEPID INTEGER , CSUBMISSIONFILESTATSID INTEGER , "
-                + "CSUBMISSIONID INTEGER , CUSERID INTEGER )" );
+                + "CSUBMISSIONID INTEGER , CUSERID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TGRADERPREFS ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TGRADERPREFS ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -544,9 +540,9 @@ public class GraderDatabaseUpdates
      */
     private void createGradingCriteriaTable() throws SQLException
     {
-        if ( !database().hasTable( "TGRADINGCRITERIA" ) )
+        if (!database().hasTable("TGRADINGCRITERIA"))
         {
-            log.info( "creating table TGRADINGCRITERIA" );
+            log.info("creating table TGRADINGCRITERIA");
             database().executeSQL(
                 "CREATE TABLE TGRADINGCRITERIA "
                 + "(CBLANKLINEPT DOUBLE , CDEADTIMEDELTA BIGINT , "
@@ -561,9 +557,9 @@ public class GraderDatabaseUpdates
                 + "CPUNCTUATIONTOIGNORE MEDIUMTEXT , "
                 + "CSTRINGCOMPARSIONSTYLE INTEGER , "
                 + "CTOKENIZING_STYLE BIT NOT NULL, "
-                + "CTRIMWHITESPACE BIT NOT NULL, CUSERID INTEGER )" );
+                + "CTRIMWHITESPACE BIT NOT NULL, CUSERID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TGRADINGCRITERIA ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TGRADINGCRITERIA ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -575,15 +571,15 @@ public class GraderDatabaseUpdates
      */
     private void createResultFileTable() throws SQLException
     {
-        if ( !database().hasTable( "TRESULTFILE" ) )
+        if (!database().hasTable("TRESULTFILE"))
         {
-            log.info( "creating table TRESULTFILE" );
+            log.info("creating table TRESULTFILE");
             database().executeSQL(
                 "CREATE TABLE TRESULTFILE "
                 + "(CREPORT TINYTEXT , OID INTEGER NOT NULL, "
-                + "CLABEL TINYTEXT , TYPE TINYTEXT , CRESULTID INTEGER )" );
+                + "CLABEL TINYTEXT , TYPE TINYTEXT , CRESULTID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TRESULTFILE ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TRESULTFILE ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -595,9 +591,9 @@ public class GraderDatabaseUpdates
      */
     private void createUploadedScriptFilesTable() throws SQLException
     {
-        if ( !database().hasTable( "TUPLOADEDSCRIPTFILES" ) )
+        if (!database().hasTable("TUPLOADEDSCRIPTFILES"))
         {
-            log.info( "creating table TUPLOADEDSCRIPTFILES" );
+            log.info("creating table TUPLOADEDSCRIPTFILES");
             database().executeSQL(
                 "CREATE TABLE TUPLOADEDSCRIPTFILES "
                 + "(CAUTHORID INTEGER , CCONFIGDESCRIPTION BLOB , "
@@ -606,9 +602,9 @@ public class GraderDatabaseUpdates
                 + "CLANGUAGEID INTEGER , CLASTMODIFIEDTIME DATETIME , "
                 + "CMAINFILENAME TINYTEXT , CNAME TINYTEXT , "
                 + "CSUBDIRNAME TINYTEXT , CUPDATEMUTABLEFIELDS BIT NOT NULL, "
-                + "CUPLOADEDFILENAME TINYTEXT )" );
+                + "CUPLOADEDFILENAME TINYTEXT)");
             database().executeSQL(
-                "ALTER TABLE TUPLOADEDSCRIPTFILES ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TUPLOADEDSCRIPTFILES ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -620,17 +616,17 @@ public class GraderDatabaseUpdates
      */
     private void createStepTable() throws SQLException
     {
-        if ( !database().hasTable( "TSTEP" ) )
+        if (!database().hasTable("TSTEP"))
         {
-            log.info( "creating table TSTEP" );
+            log.info("creating table TSTEP");
             database().executeSQL(
                 "CREATE TABLE TSTEP "
                 + "(CASSIGNMENTID INTEGER , CCONFIGSETTINGS BLOB , "
                 + "OID INTEGER NOT NULL, CORDER INTEGER , CSCRIPTID INTEGER , "
                 + "CSTEPCONFIGID INTEGER , CTIMEOUT INTEGER , "
-                + "CUPDATEMUTABLEFIELDS BIT NOT NULL)" );
+                + "CUPDATEMUTABLEFIELDS BIT NOT NULL)");
             database().executeSQL(
-                "ALTER TABLE TSTEP ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSTEP ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -642,15 +638,15 @@ public class GraderDatabaseUpdates
      */
     private void createStepConfigTable() throws SQLException
     {
-        if ( !database().hasTable( "TSTEPCONFIG" ) )
+        if (!database().hasTable("TSTEPCONFIG"))
         {
-            log.info( "creating table TSTEPCONFIG" );
+            log.info("creating table TSTEPCONFIG");
             database().executeSQL(
                 "CREATE TABLE TSTEPCONFIG "
                 + "(CCONFIGSETTINGS BLOB , OID INTEGER NOT NULL, "
-                + "CUPDATEMUTABLEFIELDS BIT NOT NULL)" );
+                + "CUPDATEMUTABLEFIELDS BIT NOT NULL)");
             database().executeSQL(
-                "ALTER TABLE TSTEPCONFIG ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSTEPCONFIG ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -662,17 +658,17 @@ public class GraderDatabaseUpdates
      */
     private void createSubmissionTable() throws SQLException
     {
-        if ( !database().hasTable( "TSUBMISSION" ) )
+        if (!database().hasTable("TSUBMISSION"))
         {
-            log.info( "creating table TSUBMISSION" );
+            log.info("creating table TSUBMISSION");
             database().executeSQL(
                 "CREATE TABLE TSUBMISSION "
                 + "(CASSIGNMENTID INTEGER , CFILENAME TINYTEXT , "
                 + "OID INTEGER NOT NULL, CPARTNERLINK BIT NOT NULL, "
                 + "CRESULTID INTEGER , CSUBMITNUMBER INTEGER , "
-                + "CSUBMITTIME DATETIME , CUSERID INTEGER )" );
+                + "CSUBMITTIME DATETIME , CUSERID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TSUBMISSION ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSUBMISSION ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -684,9 +680,9 @@ public class GraderDatabaseUpdates
      */
     private void createSubmissionFileCommentTable() throws SQLException
     {
-        if ( !database().hasTable( "TSUBMISSIONFILECOMMENT" ) )
+        if (!database().hasTable("TSUBMISSIONFILECOMMENT"))
         {
-            log.info( "creating table TSUBMISSIONFILECOMMENT" );
+            log.info("creating table TSUBMISSIONFILECOMMENT");
             database().executeSQL(
                 "CREATE TABLE TSUBMISSIONFILECOMMENT "
                 + "(CAUTHORID INTEGER , CCATEGORYNO TINYINT , "
@@ -694,9 +690,9 @@ public class GraderDatabaseUpdates
                 + "CGROUPNAME TINYTEXT , OID INTEGER NOT NULL, "
                 + "CLIMITEXCEEDED BIT NOT NULL, CLINENO INTEGER , "
                 + "CMESSAGE TEXT , CSUBMISSIONFILESTATSID INTEGER , "
-                + "CTONO TINYINT )" );
+                + "CTONO TINYINT)");
             database().executeSQL(
-                "ALTER TABLE TSUBMISSIONFILECOMMENT ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSUBMISSIONFILECOMMENT ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -708,9 +704,9 @@ public class GraderDatabaseUpdates
      */
     private void createSubmissionFileStatsTable() throws SQLException
     {
-        if ( !database().hasTable( "TSUBMISSIONFILESTATS" ) )
+        if (!database().hasTable("TSUBMISSIONFILESTATS"))
         {
-            log.info( "creating table TSUBMISSIONFILESTATS" );
+            log.info("creating table TSUBMISSIONFILESTATS");
             database().executeSQL(
                 "CREATE TABLE TSUBMISSIONFILESTATS "
                 + "(CCLASSNAME TINYTEXT , CCONDITIONALS INTEGER , "
@@ -721,9 +717,9 @@ public class GraderDatabaseUpdates
                 + "CMETHODSCOVERED INTEGER , CNCCLOC INTEGER , "
                 + "CPKGNAME TINYTEXT , CREMARKS INTEGER , CRESULTID INTEGER , "
                 + "CSOURCEFILENAME TINYTEXT , CSTATEMENTS INTEGER , "
-                + "CSTATEMENTSCOVERED INTEGER , CSTATUS TINYINT )" );
+                + "CSTATEMENTSCOVERED INTEGER , CSTATUS TINYINT)");
             database().executeSQL(
-                "ALTER TABLE TSUBMISSIONFILESTATS ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSUBMISSIONFILESTATS ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -735,9 +731,9 @@ public class GraderDatabaseUpdates
      */
     private void createSubmissionProfileTable() throws SQLException
     {
-        if ( !database().hasTable( "TSUBMISSIONPROFILE" ) )
+        if (!database().hasTable("TSUBMISSIONPROFILE"))
         {
-            log.info( "creating table TSUBMISSIONPROFILE" );
+            log.info("creating table TSUBMISSIONPROFILE");
             database().executeSQL(
                 "CREATE TABLE TSUBMISSIONPROFILE "
                 + "(CAVAILABLEPOINTS DOUBLE , CAVAILABLETIMEDELTA BIGINT , "
@@ -749,9 +745,9 @@ public class GraderDatabaseUpdates
                 + "CLATEPENALTYUNITTIME BIGINT , CMAXFILEUPLOADSIZE BIGINT , "
                 + "CMAXSUBMITS INTEGER , FPROFILENAME TINYTEXT , "
                 + "CSCOREFORMAT TINYTEXT , CTAPOINTS DOUBLE , "
-                + "CTOOLPOINTS DOUBLE , CUSERID INTEGER )" );
+                + "CTOOLPOINTS DOUBLE , CUSERID INTEGER)");
             database().executeSQL(
-                "ALTER TABLE TSUBMISSIONPROFILE ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSUBMISSIONPROFILE ADD PRIMARY KEY (OID)");
         }
     }
 
@@ -763,17 +759,17 @@ public class GraderDatabaseUpdates
      */
     private void createSubmissionResultTable() throws SQLException
     {
-        if ( !database().hasTable( "TSUBMISSIONRESULT" ) )
+        if (!database().hasTable("TSUBMISSIONRESULT"))
         {
-            log.info( "creating table TSUBMISSIONRESULT" );
+            log.info("creating table TSUBMISSIONRESULT");
             database().executeSQL(
                 "CREATE TABLE TSUBMISSIONRESULT "
                 + "(CCOMMENTFORMAT TINYINT , CCOMMENTS MEDIUMTEXT , "
                 + "CCORRECTNESSSCORE DOUBLE , OID INTEGER NOT NULL, "
                 + "CISMOSTRECENT BIT NOT NULL, CSTATELEMENTSLABEL TINYTEXT , "
-                + "CSTATUS TINYINT , CTASCORE DOUBLE , CTOOLSCORE DOUBLE )" );
+                + "CSTATUS TINYINT , CTASCORE DOUBLE , CTOOLSCORE DOUBLE)");
             database().executeSQL(
-                "ALTER TABLE TSUBMISSIONRESULT ADD PRIMARY KEY (OID)" );
+                "ALTER TABLE TSUBMISSIONRESULT ADD PRIMARY KEY (OID)");
         }
     }
 }
