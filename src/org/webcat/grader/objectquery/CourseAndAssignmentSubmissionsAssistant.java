@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,8 +21,6 @@
 
 package org.webcat.grader.objectquery;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Department;
@@ -37,12 +35,10 @@ import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOGenericRecord;
-import com.webobjects.eocontrol.EOSortOrdering;
+import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSMutableArray;
 import er.extensions.eof.ERXQ;
 import er.extensions.eof.ERXS;
-import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
 
 //-------------------------------------------------------------------------
 /**
@@ -90,6 +86,7 @@ public class CourseAndAssignmentSubmissionsAssistant
         //~ Public Methods ....................................................
 
         // ----------------------------------------------------------
+        @SuppressWarnings("unchecked")
         public NSArray childrenOfObject(Object item)
         {
             NSArray children = null;
@@ -156,6 +153,7 @@ public class CourseAndAssignmentSubmissionsAssistant
         //~ Public Methods ....................................................
 
         // ----------------------------------------------------------
+        @SuppressWarnings("unchecked")
         public NSArray childrenOfObject(Object item)
         {
             NSArray children = null;
@@ -166,7 +164,10 @@ public class CourseAndAssignmentSubmissionsAssistant
             }
             else if (item instanceof Course)
             {
-                children = assignmentsForCourse((Course) item);
+                children = assignmentsForCourseOfferings(
+                    (Course)item,
+                    CourseOffering.course.is((Course)item)
+                    .filtered(model.selectedCourseOfferings()));
             }
 
             return children;
@@ -191,16 +192,34 @@ public class CourseAndAssignmentSubmissionsAssistant
 
 
         // ----------------------------------------------------------
-        private NSArray<Assignment> assignmentsForCourse(Course course)
+        private NSArray<Assignment> assignmentsForCourseOfferings(
+            Course course, NSArray<CourseOffering> courses)
         {
+            if (courses.size() == 0)
+            {
+                @SuppressWarnings("unchecked")
+                NSArray<Assignment> result = NSArray.EmptyArray;
+                return result;
+            }
+
             EOFetchSpecification fetchSpec = new EOFetchSpecification(
                     Assignment.ENTITY_NAME,
                     ERXQ.containsObject(Assignment.COURSES_KEY, course),
                     Assignment.name.ascInsensitives());
             fetchSpec.setUsesDistinct(true);
 
-            return Assignment.objectsWithFetchSpecification(
-                localContext(), fetchSpec);
+            EOQualifier qualifier = ERXQ.containsObject(
+                Assignment.COURSE_OFFERINGS_KEY, courses.get(0));
+            for (int i = 1; i < courses.size(); i++)
+            {
+                qualifier = ERXQ.and(qualifier, ERXQ.containsObject(
+                    Assignment.COURSE_OFFERINGS_KEY, courses.get(i)));
+            }
+
+            return EOQualifier.filteredArrayWithQualifier(
+                Assignment.objectsWithFetchSpecification(
+                    localContext(), fetchSpec),
+                qualifier);
         }
 
 
@@ -256,8 +275,8 @@ public class CourseAndAssignmentSubmissionsAssistant
         }
         else if (assignmentTreeItem instanceof Assignment)
         {
-            Assignment assignment = (Assignment) assignmentTreeItem;
-            return assignment.titleString();
+            Assignment thisAssignment = (Assignment) assignmentTreeItem;
+            return thisAssignment.titleString();
         }
         else
         {
