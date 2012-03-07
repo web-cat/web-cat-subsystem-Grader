@@ -46,7 +46,10 @@
 
 <wo:org.webcat.core.WCPageModule title="TA/Instructor Comments">
   <div><wo name="Comments"/></div>
-  <div>Format: <wo name="CommentFormat"/></div>
+  <div>Format: <wo name="CommentFormat"/>
+    <wo:if condition="$result.lastUpdated">feedback last updated:
+      <wo:str value="$result.lastUpdated"
+        formatter="$session.timeFormatter"/></wo:if></div>
 </wo:org.webcat.core.WCPageModule>
 
 <wo:org.webcat.grader.PartialInlineReport submissionResult="$result" file="$result.summaryFile" title="Summary of Automated Feedback" open="$true"/>
