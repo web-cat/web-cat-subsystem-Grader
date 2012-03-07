@@ -43,7 +43,7 @@ import org.webcat.woextensions.WCFetchSpecification;
  * @version version suppressed to control auto-generation
  */
 public abstract class _Assignment
-    extends er.extensions.eof.ERXGenericRecord
+    extends org.webcat.core.EOBase
 {
     //~ Constructors ..........................................................
 

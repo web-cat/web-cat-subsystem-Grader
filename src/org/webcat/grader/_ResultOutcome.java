@@ -43,7 +43,7 @@ import org.webcat.woextensions.WCFetchSpecification;
  * @version version suppressed to control auto-generation
  */
 public abstract class _ResultOutcome
-    extends er.extensions.eof.ERXGenericRecord
+    extends org.webcat.core.EOBase
     implements org.webcat.core.MutableContainer.MutableContainerOwner
 {
     //~ Constructors ..........................................................

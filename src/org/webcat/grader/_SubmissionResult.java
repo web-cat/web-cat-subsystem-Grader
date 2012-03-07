@@ -43,7 +43,7 @@ import org.webcat.woextensions.WCFetchSpecification;
  * @version version suppressed to control auto-generation
  */
 public abstract class _SubmissionResult
-    extends er.extensions.eof.ERXGenericRecord
+    extends org.webcat.core.EOBase
     implements org.webcat.core.MutableContainer.MutableContainerOwner
     , org.webcat.core.MigratoryAttributeOwner
 {
@@ -1114,23 +1114,18 @@ public abstract class _SubmissionResult
 
         if ( shouldMigrateIsMostRecent() )
         {
-            org.webcat.woextensions.MigratingEditingContext mec =
+            new org.webcat.woextensions.ECAction(
                 org.webcat.woextensions.MigratingEditingContext
-                    .newEditingContext();
-            try
+                    .newEditingContext())
             {
-                mec.lock();
-                SubmissionResult migratingObject = localInstance(mec);
-
-                migrateAttributeValues(mec, migratingObject);
-
-                mec.saveChanges();
-            }
-            finally
-            {
-                mec.unlock();
-                mec.dispose();
-            }
+                public void action()
+                {
+                    migrateAttributeValues(
+                        (org.webcat.woextensions.MigratingEditingContext)ec,
+                        localInstance(ec));
+                    ec.saveChanges();
+                }
+            }.run();
         }
     }
 

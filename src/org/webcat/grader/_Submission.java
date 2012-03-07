@@ -43,7 +43,7 @@ import org.webcat.woextensions.WCFetchSpecification;
  * @version version suppressed to control auto-generation
  */
 public abstract class _Submission
-    extends er.extensions.eof.ERXGenericRecord
+    extends org.webcat.core.EOBase
     implements org.webcat.core.MigratoryAttributeOwner
 {
     //~ Constructors ..........................................................
@@ -524,23 +524,18 @@ public abstract class _Submission
         if ( shouldMigrateIsSubmissionForGrading()
             || shouldMigratePartnerLink() )
         {
-            org.webcat.woextensions.MigratingEditingContext mec =
+            new org.webcat.woextensions.ECAction(
                 org.webcat.woextensions.MigratingEditingContext
-                    .newEditingContext();
-            try
+                    .newEditingContext())
             {
-                mec.lock();
-                Submission migratingObject = localInstance(mec);
-
-                migrateAttributeValues(mec, migratingObject);
-
-                mec.saveChanges();
-            }
-            finally
-            {
-                mec.unlock();
-                mec.dispose();
-            }
+                public void action()
+                {
+                    migrateAttributeValues(
+                        (org.webcat.woextensions.MigratingEditingContext)ec,
+                        localInstance(ec));
+                    ec.saveChanges();
+                }
+            }.run();
         }
     }
 
