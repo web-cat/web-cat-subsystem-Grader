@@ -38,6 +38,7 @@ import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
 import org.webcat.grader.messaging.GradingResultsAvailableMessage;
 import org.webcat.woextensions.ECAction;
+import org.webcat.woextensions.WCFetchSpecification;
 import static org.webcat.woextensions.ECAction.run;
 import org.webcat.woextensions.MigratingEditingContext;
 
@@ -618,16 +619,13 @@ public class Submission
      */
     private void deleteResultsForAllPartners()
     {
-        // TODO: This method is broken, since it is called only during
-        // regrades, and the old submissions will end up being orphaned,
-        // but there is no plan to "reattach" the new results to those.
-        //
         SubmissionResult myResult = result();
         if ( myResult != null )
         {
             log.debug( "removing SubmissionResult " + myResult );
             myResult.setIsMostRecent(false);
             setResultRelationship(null);
+            clearIsSubmissionForGrading();
 
             // Have to copy out the list of submissions, since inside
             // the loop, we'll be removing them one by one from the
@@ -638,6 +636,7 @@ public class Submission
             for (Submission s : partnerSubs)
             {
                 s.setResultRelationship(null);
+                s.clearIsSubmissionForGrading();
             }
             editingContext().deleteObject(myResult);
         }
@@ -737,28 +736,168 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    @Override
-    public void setIsSubmissionForGrading(boolean value)
+    /**
+     * Check to see whether this submission is a better choice as the
+     * submission for grading currently set for this student/assignment
+     * offering combination, and if so, set it as the submission for grading.
+     */
+    public void setIsSubmissionForGradingIfNecessary()
     {
-        super.setIsSubmissionForGrading(value);
-        if (!partnerLink())
+        if (isSubmissionForGrading())
         {
-            for (Submission sub : partneredSubmissions())
+            return;
+        }
+        Submission existingSubmissionForGrading = gradedSubmission();
+        if (existingSubmissionForGrading == null)
+        {
+            setIsSubmissionForGrading(true);
+        }
+        else
+        {
+            if (isBetterGradingChoiceThan(existingSubmissionForGrading))
             {
-                sub.setIsSubmissionForGrading(value);
+                setIsSubmissionForGrading(true);
+                existingSubmissionForGrading.setIsSubmissionForGrading(false);
+            }
+            else
+            {
+                setIsSubmissionForGrading(false);
+                existingSubmissionForGrading.setIsSubmissionForGrading(true);
             }
         }
     }
 
 
     // ----------------------------------------------------------
+    private void clearIsSubmissionForGrading()
+    {
+        if (isSubmissionForGrading())
+        {
+            setIsSubmissionForGrading(false);
+            System.out.println("removing submissionForGrading from " + this);
+            Submission existingSubmissionForGrading = gradedSubmission();
+            if (existingSubmissionForGrading != null)
+            {
+                existingSubmissionForGrading.setIsSubmissionForGrading(true);
+                System.out.println("setting submissionForGrading on "
+                    + existingSubmissionForGrading);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Determine whether this submission, or another it is compared against,
+     * is the preferable one to use as the submission for grading.  A
+     * submission is preferable for grading if it has any newer feedback,
+     * or if neither submission has any feedback, if it was made more
+     * recently.
+     * @param other The other submission to compare against.
+     * @return True if this submission should be used as the submission
+     * for grading instead of the other one.
+     */
+    public boolean isBetterGradingChoiceThan(Submission other)
+    {
+        if (result() == null)
+        {
+            if (other.result() == null)
+            {
+                // Neither has a result!
+                return submitTime().after(other.submitTime());
+            }
+            // Otherwise, go with the other one
+            return false;
+        }
+        else if (other.result() == null)
+        {
+            return true;
+        }
+        else if (result().lastUpdated() == null)
+        {
+            // We have no feedback, so check other
+            if (other.result().lastUpdated() != null)
+            {
+                // Other has feedback, so go with it
+                return false;
+            }
+            else if (result().status() != Status.TO_DO)
+            {
+                if (other.result().status() != Status.TO_DO)
+                {
+                    // Both have status change but no feedback timestamp,
+                    // so go with newest submission
+                    return submitTime().after(other.submitTime());
+                }
+                else
+                {
+                    // We have a status change but other does not
+                    return true;
+                }
+            }
+            else
+            {
+                // Neither has feedback, so go with newest submission
+                return submitTime().after(other.submitTime());
+            }
+        }
+        else if (other.result().lastUpdated() == null)
+        {
+            // We have feedback, but other doesn't
+            return true;
+        }
+        else
+        {
+            // Both have feedback, so go with most recent feedback
+            return result().lastUpdated().after(other.result().lastUpdated());
+        }
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected boolean shouldMigrateIsSubmissionForGrading()
     {
         return (isSubmissionForGradingRaw() == null);
     }
 
 
+
     // ----------------------------------------------------------
+    private void refreshIsSubmissionForGrading(NSArray<Submission> submissions)
+    {
+        Submission gradedSubmission = null;
+
+        // Iterate over the whole submission set and find the
+        // submission for grading (which is either the last submission
+        // is none are graded, or the latest of those that are graded).
+
+        for (Submission sub : submissions)
+        {
+            if (gradedSubmission == null
+                || sub.isBetterGradingChoiceThan(gradedSubmission))
+            {
+                gradedSubmission = sub;
+            }
+        }
+
+        // Now that the entire submission chain is fetched, update the
+        // isSubmissionForGrading property among all of them.
+
+        for (Submission sub : submissions)
+        {
+            sub.setIsSubmissionForGrading(sub == gradedSubmission);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void migrateIsSubmissionForGrading(MigratingEditingContext mec)
     {
         if (user() == null || assignmentOffering() == null)
@@ -767,57 +906,22 @@ public class Submission
             return;
         }
 
-        Submission latestSubmission = null;
-        Submission latestGradedSubmission = null;
-
-        NSArray<Submission> thisSubmissionSet = allSubmissions();
-
-        // Iterate over the whole submission set and find the
-        // submission for grading (which is either the last submission
-        // is none are graded, or the latest of those that are graded).
-
-        for (Submission sub : thisSubmissionSet)
-        {
-            if (latestSubmission == null)
-            {
-                latestSubmission = sub;
-            }
-            else if (sub.submitNumber()
-                     > latestSubmission.submitNumber())
-            {
-                latestSubmission = sub;
-            }
-
-            if (sub.result() != null && sub.result().status() != Status.TO_DO)
-            {
-                if (latestGradedSubmission == null)
-                {
-                    latestGradedSubmission = sub;
-                }
-                else if (sub.submitNumber() >
-                         latestGradedSubmission.submitNumber())
-                {
-                    latestGradedSubmission = sub;
-                }
-            }
-        }
-
-        if (latestGradedSubmission != null)
-        {
-            latestSubmission = latestGradedSubmission;
-        }
-
-        // Now that the entire submission chain is fetched, update the
-        // isSubmissionForGrading property among all of them.
-
-        for (Submission sub : thisSubmissionSet)
-        {
-            sub.setIsSubmissionForGrading(sub == latestSubmission);
-        }
+        WCFetchSpecification<Submission> candidates =
+            new WCFetchSpecification<Submission>(ENTITY_NAME,
+                Submission.assignmentOffering.eq(assignmentOffering()).and(
+                    Submission.user.eq(user())),
+                submitNumber.descs());
+        candidates.setRefreshesRefetchedObjects(false);
+        refreshIsSubmissionForGrading(
+            objectsWithFetchSpecification(mec, candidates));
     }
 
 
     // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected boolean shouldMigratePartnerLink()
     {
         // TODO: Fix the performance problems with auto-migration
@@ -834,6 +938,10 @@ public class Submission
 
 
     // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void migratePartnerLink(MigratingEditingContext mec)
     {
         // TODO: Fix the performance problems with auto-migration
@@ -1949,7 +2057,6 @@ public class Submission
                 }
             }
 
-            Submission mostRecent = null;
             Submission forGrading = null;
             for (Submission sub : candidates)
             {
@@ -1972,25 +2079,8 @@ public class Submission
                     }
                 }
                 sub.migratePartnerLink();
-                if (mostRecent == null
-                    || sub.submitNumber() > mostRecent.submitNumber())
-                {
-                    mostRecent = sub;
-                }
-
-                if (// If there is any feedback in sub
-                    sub.result().status() != Status.TO_DO
-                    && (// we haven't found one "for grading" yet
-                        forGrading == null
-                        // or sub has newer feedback
-                        || (forGrading.result().lastUpdated() != null
-                            && sub.result().lastUpdated() != null
-                            && sub.result().lastUpdated().after(
-                                forGrading.result().lastUpdated()))
-                        // or we can't compare times, but sub has higher number
-                        || (forGrading.result().lastUpdated() == null
-                            && sub.submitNumber()
-                                > forGrading.submitNumber())))
+                if (forGrading == null
+                    || sub.isBetterGradingChoiceThan(forGrading))
                 {
                     forGrading = sub;
                 }
@@ -2008,21 +2098,6 @@ public class Submission
                     if (accumulator != null)
                     {
                         accumulator.accumulate(forGrading);
-                    }
-                }
-            }
-            else if (mostRecent != null)
-            {
-                if (omitPartners && mostRecent.partnerLink())
-                {
-                    users.removeObject(student);
-                }
-                else
-                {
-                    submissions.setObjectForKey(mostRecent, student);
-                    if (accumulator != null)
-                    {
-                        accumulator.accumulate(mostRecent);
                     }
                 }
             }
@@ -2153,7 +2228,7 @@ public class Submission
         NSArray<Submission> subs = _Submission.submissionsForGrading(
             context, assignmentOfferingBinding, userBinding);
 
-        if (subs.size() == 0)
+        if (subs.size() == 0 || !subs.get(0).isSubmissionForGrading())
         {
             NSArray<UserSubmissionPair> subPairs = submissionsForGrading(
                 context,
