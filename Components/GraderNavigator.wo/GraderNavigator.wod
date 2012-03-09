@@ -12,6 +12,7 @@ AssignmentMenu: WCDropDownList {
 }
 
 AssignmentMenuItem: WCDropDownItem {
+    onClick = "var ul = new dijit.DialogUnderlay({}); ul.show();";
     action = okPressed;
 }
 
