@@ -1368,12 +1368,16 @@ public class GraderQueueProcessor
 
         for (String key : keys)
         {
+            key = key.replaceFirst("^(?:previous|mostRecent)\\.", "");
+
             Object value = accumulatedValues.objectForKey(key);
             gradingProperties.setObjectForKey(value, "mostRecent." + key);
         }
 
         for (String key : previousValues.allKeys())
         {
+            key = key.replaceFirst("^(?:previous|mostRecent)\\.", "");
+
             Object value = previousValues.objectForKey(key);
             gradingProperties.setObjectForKey(value, "previous." + key);
         }
