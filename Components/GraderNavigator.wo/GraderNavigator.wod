@@ -12,7 +12,7 @@ AssignmentMenu: WCDropDownList {
 }
 
 AssignmentMenuItem: WCDropDownItem {
-    onClick = "var ul = new dijit.DialogUnderlay({}); ul.show();";
+    onClick = "window.navUnderlay = new dijit.DialogUnderlay({}); window.navUnderlay.show();";
     action = okPressed;
 }
 
@@ -39,6 +39,7 @@ CourseMenu: WCDropDownList {
 }
 
 CourseMenuItem: WCDropDownItem {
+    onClick = "window.navUnderlay = new dijit.DialogUnderlay({}); window.navUnderlay.show();";
     action = updateAssignmentsAndClearSelection;
     remote = true;
 }
@@ -86,6 +87,7 @@ SemesterMenu: WCDropDownList {
 }
 
 SemesterMenuItem: WCDropDownItem {
+    onClick = "window.navUnderlay = new dijit.DialogUnderlay({}); window.navUnderlay.show();";
     action = updateCourseOfferingsAndClearSelection;
     remote = true;
 }

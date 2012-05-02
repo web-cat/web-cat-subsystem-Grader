@@ -373,7 +373,8 @@ public class GraderNavigator
     {
         log.debug("updateAssignments()");
         gatherAssignments();
-        return new JavascriptGenerator().refresh(idFor.get("assignmentPane"));
+        return new JavascriptGenerator().refresh(idFor.get("assignmentPane"))
+            .append("window.navUnderlay.hide(); window.navUnderlay.destroyRecursive()");
     }
 
 
@@ -382,7 +383,8 @@ public class GraderNavigator
     {
         log.debug("updateAssignmentsMenu()");
         gatherAssignments();
-        return new JavascriptGenerator().refresh(idFor.get("assignmentMenu"));
+        return new JavascriptGenerator().refresh(idFor.get("assignmentMenu"))
+            .append("window.navUnderlay.hide(); window.navUnderlay.destroyRecursive()");
     }
 
 
