@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -219,22 +219,7 @@ public class GradingPlugin
             command = command + " " + args;
         }
 
-        EOEditingContext ec = editingContext();
-        try
-        {
-            if (ec != null)
-            {
-//                ec.unlock();
-            }
-            Application.wcApplication().executeExternalCommand( command, cwd );
-        }
-        finally
-        {
-            if (ec != null)
-            {
-//                ec.lock();
-            }
-        }
+        Application.wcApplication().executeExternalCommand( command, cwd );
     }
 
 
