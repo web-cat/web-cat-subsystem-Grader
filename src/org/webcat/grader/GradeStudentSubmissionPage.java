@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -153,8 +153,10 @@ public class GradeStudentSubmissionPage
         {
             nextIndex++;
         } while (nextIndex < availableSubmissions.count()
-                && !availableSubmissions.objectAtIndex(
-                        nextIndex).userHasSubmission());
+                && (!availableSubmissions.objectAtIndex(
+                        nextIndex).userHasSubmission()
+                    || availableSubmissions.objectAtIndex(
+                        nextIndex).submission().result() == null));
 
         return nextIndex;
     }
@@ -163,8 +165,9 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent saveThenNextStudent()
     {
+        int nextSub = indexOfNextSubmission();
         if (availableSubmissions == null
-            || indexOfNextSubmission() >= availableSubmissions.count() - 1)
+            || nextSub >= availableSubmissions.count())
         {
             // If there's no place to go, then go back to the list
             return saveThenList();
@@ -172,14 +175,12 @@ public class GradeStudentSubmissionPage
 
         if (applyLocalChanges())
         {
-            thisSubmissionIndex = indexOfNextSubmission();
-
-            Submission target = availableSubmissions
-                .objectAtIndex(thisSubmissionIndex).submission();
-            prefs().setSubmissionRelationship(target);
+            thisSubmissionIndex = nextSub;
+            submission = availableSubmissions
+                .objectAtIndex(nextSub).submission();
+            prefs().setSubmissionRelationship(submission);
             prefs().setSubmissionFileStatsRelationship(null);
-            submission = target;
-            result = null;
+            result = submission.result();
         }
 
         return null;
@@ -189,8 +190,8 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent cancel()
     {
-        super.cancel();
-        return super.next();
+        return super.cancel();
+//        return super.next();
     }
 
 
