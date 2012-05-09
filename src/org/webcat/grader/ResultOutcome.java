@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2008-2009 Virginia Tech
+ |  Copyright (C) 2008-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -20,6 +20,8 @@
 \*==========================================================================*/
 
 package org.webcat.grader;
+
+import org.webcat.core.User;
 
 // -------------------------------------------------------------------------
 /**
@@ -41,5 +43,19 @@ public class ResultOutcome
     public ResultOutcome()
     {
         super();
+    }
+
+
+    //~ Public Methods ........................................................
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean accessibleByUser(User user)
+    {
+        return submissionResult() != null
+            && submissionResult().accessibleByUser(user);
     }
 }

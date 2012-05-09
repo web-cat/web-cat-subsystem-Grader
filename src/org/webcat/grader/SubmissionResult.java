@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -115,6 +115,24 @@ public class SubmissionResult
             }
         }
         return submission();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean accessibleByUser(User user)
+    {
+        for (Submission sub : submissions())
+        {
+            if (sub.accessibleByUser(user))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -322,6 +340,7 @@ public class SubmissionResult
      * @deprecated Resurrected for old reports, but should not be used by
      *             any new code.
      */
+    @Deprecated
     public boolean taGradingFinished()
     {
         return taScoreRaw() != null;

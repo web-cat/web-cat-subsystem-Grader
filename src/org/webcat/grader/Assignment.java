@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -28,6 +28,7 @@ import er.extensions.foundation.ERXArrayUtilities;
 import java.io.File;
 import java.util.*;
 import org.webcat.core.MutableDictionary;
+import org.webcat.core.User;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -251,6 +252,24 @@ public class Assignment
         SubmissionProfile profile = submissionProfile();
         return profile != null
             && ( profile.awardEarlyBonus() || profile.deductLatePenalty() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean accessibleByUser(User user)
+    {
+        for (AssignmentOffering offering : offerings())
+        {
+            if (offering.accessibleByUser(user))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 

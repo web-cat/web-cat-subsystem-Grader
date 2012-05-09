@@ -688,6 +688,19 @@ public class Submission
 
 
     // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean accessibleByUser(User aUser)
+    {
+        return aUser == user()
+            || (assignmentOffering() != null
+                && assignmentOffering().accessibleByUser(aUser));
+    }
+
+
+    // ----------------------------------------------------------
     public void emailNotificationToStudent( String message )
     {
         WCProperties properties =

@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -514,6 +514,18 @@ public class AssignmentOffering
         return ( dueDate() == null )
             ? false
             : dueDate().before( new NSTimestamp() );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean accessibleByUser(User user)
+    {
+        return courseOffering() != null
+            && courseOffering().accessibleByUser(user);
     }
 
 
