@@ -44,7 +44,6 @@ import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.webcat.woextensions.WCEC;
 import org.webcat.woextensions.WCFetchSpecification;
-import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSKeyValueCoding;
@@ -95,6 +94,7 @@ public class GraderQueueProcessor
             try
             {
                 editingContext = WCEC.newEditingContext();
+                editingContext.setSharedEditingContext(null);
                 editingContext.lock();
 
                 // Clear discarded jobs
@@ -276,20 +276,29 @@ public class GraderQueueProcessor
                             try
                             {
                                 editingContext.saveChanges();
-                                editingContext.refaultAllObjects();
                             }
                             catch (IllegalStateException e)
                             {
+                                log.error("Exception trying to save "
+                                    + "grading results", e);
                                 // Database inconsistency problem
                                 try
                                 {
                                     editingContext.unlock();
+                                }
+                                catch (Throwable ee)
+                                {
+                                    log.error("Exception trying to unlock "
+                                        + "context for disposal", ee);
+                                }
+                                try
+                                {
                                     editingContext.dispose();
                                 }
-                                catch (Exception ee)
+                                catch (Throwable ee)
                                 {
-                                    log.error("Exception trying to save "
-                                        + "grading results (retrying)", ee);
+                                    log.error("Exception trying to dispose "
+                                        + "context", ee);
                                 }
                                 editingContext = null;
                                 queue.enqueue(null);
@@ -316,36 +325,43 @@ public class GraderQueueProcessor
                     log.debug("token received.");
                 }
             }
-            catch (Exception e)
+            catch (Throwable e)
             {
-                log.fatal("Job queue processing interrupted by exception.\n"
-                    + "Exception processing student submission",
+                log.fatal("Job queue: Error processing student submission",
                     e);
 
-                new GraderKilledMessage(e).send();
+                try
+                {
+                    new GraderKilledMessage(e).send();
+                }
+                catch (Throwable t)
+                {
+                    log.fatal("Error sending GraderKilledMessage", t);
+                }
 
-                log.fatal("Aborting.  Now attempting to restart job queue "
-                    + "processing.");
-                // ERXApplication.erxApplication().killInstance();
-            }
-            catch (Error e)
-            {
-                log.fatal("Job queue processing interrupted by error.\n"
-                    + "Error processing student submission",
-                    e);
-
-                new GraderKilledMessage(e).send();
-
-                log.fatal("Aborting.  Now attempting to restart job queue "
-                    + "processing.");
+                log.fatal("Attempting to restart job queue processing.");
                 // ERXApplication.erxApplication().killInstance();
             }
             finally
             {
                 if (editingContext != null)
                 {
-                    editingContext.unlock();
-                    editingContext.dispose();
+                    try
+                    {
+                        editingContext.unlock();
+                    }
+                    catch (Throwable t)
+                    {
+                        log.fatal("Error unlocking editing context", t);
+                    }
+                    try
+                    {
+                        editingContext.dispose();
+                    }
+                    catch (Throwable t)
+                    {
+                        log.fatal("Error disposing editing context", t);
+                    }
                     editingContext = null;
                 }
             }
@@ -405,12 +421,10 @@ public class GraderQueueProcessor
             return;
         }
 
-        // Fetch all the steps in grading this assignment
-        NSArray<Step> steps = Step.objectsMatchingQualifier(
-            editingContext,
-            Step.assignment.eq(job.submission().assignmentOffering()
-                .assignment()),
-            Step.order.ascs());
+        // Get the steps in grading this assignment
+        NSArray<Step> steps = Step.order.asc().sorted(
+            job.submission().assignmentOffering().assignment().steps());
+
 
         // Set up the properties to pass to execution scripts
         WCProperties gradingProperties;
@@ -1368,18 +1382,20 @@ public class GraderQueueProcessor
 
         for (String key : keys)
         {
-            key = key.replaceFirst("^(?:previous|mostRecent)\\.", "");
-
-            Object value = accumulatedValues.objectForKey(key);
-            gradingProperties.setObjectForKey(value, "mostRecent." + key);
+            if (!key.matches("^(previous|mostRecent)\\..*\\.results$"))
+            {
+                Object value = accumulatedValues.objectForKey(key);
+                gradingProperties.setObjectForKey(value, "mostRecent." + key);
+            }
         }
 
         for (String key : previousValues.allKeys())
         {
-            key = key.replaceFirst("^(?:previous|mostRecent)\\.", "");
-
-            Object value = previousValues.objectForKey(key);
-            gradingProperties.setObjectForKey(value, "previous." + key);
+            if (!key.matches("^(previous|mostRecent)\\..*\\.results$"))
+            {
+                Object value = previousValues.objectForKey(key);
+                gradingProperties.setObjectForKey(value, "previous." + key);
+            }
         }
     }
 
@@ -1527,15 +1543,27 @@ public class GraderQueueProcessor
         // Pull any properties that are prefixed with "saved." into
         // ResultOutcome objects
         final String SAVED_PROPERTY_PREFIX = "saved.";
+        final String RESULT_PROPERTY_SUFFIX = ".results";
 
         for (Object propertyAsObj : properties.keySet())
         {
             String property = (String) propertyAsObj;
-
+            String actualName = null;
             if (property.startsWith(SAVED_PROPERTY_PREFIX))
             {
-                String actualName = property.substring(
-                        SAVED_PROPERTY_PREFIX.length());
+                actualName = property.substring(SAVED_PROPERTY_PREFIX.length());
+            }
+            else if (property.endsWith(RESULT_PROPERTY_SUFFIX)
+                && !property.startsWith("mostRecent.")
+                && !property.startsWith("previous."))
+            {
+                actualName = property;
+//                actualName = property.substring(
+//                    0, property.length() - RESULT_PROPERTY_SUFFIX.length());
+            }
+
+            if (actualName != null)
+            {
                 Object value = properties.valueForKey(property);
 
                 if (value != null)
@@ -1845,7 +1873,7 @@ public class GraderQueueProcessor
     private boolean faultOccurredInStep;
     private boolean timeoutOccurredInStep;
 
-    private EOEditingContext editingContext;
+    private WCEC editingContext;
 
     static Logger log = Logger.getLogger( GraderQueueProcessor.class );
 }
