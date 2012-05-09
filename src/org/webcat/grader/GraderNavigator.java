@@ -124,6 +124,7 @@ public class GraderNavigator
         graderParent = (GraderAssignmentComponent)selectionsParent;
 
         log.debug("selected assignment = " + selectedAssignment);
+        log.debug("graderParent = " + graderParent.getClass().getName());
         log.debug("leaving awake()");
     }
 
@@ -433,7 +434,7 @@ public class GraderNavigator
                     {
                         if (log.isDebugEnabled())
                         {
-                            log.debug("saving assignment offering selection ="
+                            log.debug("saving assignment offering selection = "
                                 + ao);
                         }
                         graderParent.prefs().setAssignmentOfferingRelationship(
