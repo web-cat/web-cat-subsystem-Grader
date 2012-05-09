@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -54,7 +54,8 @@ public class GraderSystemStatusRows
 
     //~ KVC Attributes (must be public) .......................................
 
-    public int     index;
+    public int                  index;
+    public Grader.StorageStatus storageStatus;
 
 
     //~ Methods ...............................................................
@@ -69,6 +70,7 @@ public class GraderSystemStatusRows
     public void appendToResponse(WOResponse response, WOContext context)
     {
         queuedJobs = -1;
+        storageStatus = Grader.StorageStatus.instance();
         super.appendToResponse(response, context);
     }
 

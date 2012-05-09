@@ -12,4 +12,33 @@
   <td>Halted assignments</td><td class="n"><webobject name="HaltedCount"/></td>
 </webobject><webobject name="TR">
   <td>Stalled jobs</td><td class="n"><webobject name="StalledJobCount"/></td>
-</webobject>
+</webobject><wo:if condition="$session.user.hasAdminPrivileges"><webobject name="TR">
+  <td>Space used on <wo:str value="$storageStatus.store"/>:</td><td>
+  <wo:if condition="$storageStatus.totalSpace">
+<table class="percentbar"><tr>
+<td class="minus">
+<wo:img filename="images/blank.gif" framework="Core" height="12"
+    width="$storageStatus.usedSpacePct" alt="used"/></td>
+<td class="plus"><wo:img filename="images/blank.gif" framework="Core"
+    height="12" width="$storageStatus.usableSpacePct" alt="available"/></td>
+<td style="padding-left:1em">
+<wo:if condition="$storageStatus.alert">
+<span class="warn">FREE SPACE WARNING:
+    <wo:str value="$storageStatus.usableSpace"
+      formatter="$application.fileSizeFormatter"/> free</span>
+</wo:if><wo:else>
+<wo:str value="$storageStatus.usableSpace"
+    formatter="$application.fileSizeFormatter"/> free
+</wo:else><br/>
+</td></table>
+Burning <wo:str value="$storageStatus.burnRatePerHour"
+  formatter="$application.fileSizeFormatter"/>/Hr =
+  <wo:str value="$storageStatus.predictedHoursRemaining" numberformat="0.0"/>
+  hours remaining
+</wo:if><wo:else>
+    <p class="warn">Unable to measure device space in Grader storage
+    area<wo:if condition="$application.properties.grader.submissiondir">
+    (<wo:str value="$application.properties.grader.submissiondir"/>)</wo:if>.</p>
+</wo:else>
+  </td>
+</webobject></wo:if>
