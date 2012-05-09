@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -21,23 +21,7 @@
 
 package org.webcat.grader.objectquery;
 
-import org.webcat.core.Course;
-import org.webcat.core.CourseOffering;
-import org.webcat.core.QualifierUtils;
-import org.webcat.grader.Assignment;
-import org.webcat.grader.AssignmentOffering;
 import com.webobjects.appserver.*;
-import com.webobjects.eocontrol.EOAndQualifier;
-import com.webobjects.eocontrol.EOFetchSpecification;
-import com.webobjects.eocontrol.EOKeyValueQualifier;
-import com.webobjects.eocontrol.EOQualifier;
-import com.webobjects.eocontrol.EOSortOrdering;
-import com.webobjects.foundation.NSArray;
-import com.webobjects.foundation.NSDictionary;
-import com.webobjects.foundation.NSMutableArray;
-import com.webobjects.foundation.NSMutableDictionary;
-import er.ajax.AjaxTreeModel;
-import er.extensions.eof.ERXEOControlUtilities;
 
 //-------------------------------------------------------------------------
 /**
@@ -52,8 +36,9 @@ import er.extensions.eof.ERXEOControlUtilities;
  * this reason, currently, this class merely subclasses
  * CourseAndAssignmentSubmissionsAssistant and adds nothing to it.
  *
- * @author aallowat
- * @version $Id$
+ * @author  Tony Allevato
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class CourseAndAssignmentResultOutcomesAssistant
     extends CourseAndAssignmentSubmissionsAssistant

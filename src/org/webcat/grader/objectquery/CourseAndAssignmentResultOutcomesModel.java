@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -43,8 +43,9 @@ import er.extensions.foundation.ERXArrayUtilities;
  * The model of the query built by a
  * {@link CourseAndAssignmentResultOutcomesAssistant}.
  *
- * @author aallowat
- * @version $Id$
+ * @author  Tony Allevato
+ * @author  Last changed by $Author$
+ * @version $Revision$, $Date$
  */
 public class CourseAndAssignmentResultOutcomesModel
     extends AbstractQueryAssistantModel
@@ -76,17 +77,17 @@ public class CourseAndAssignmentResultOutcomesModel
             NSMutableArray<EOQualifier> terms =
                 new NSMutableArray<EOQualifier>();
 
-            terms.addObject(QualifierUtils.qualifierForInCondition(
+            terms.add(QualifierUtils.qualifierForInCondition(
                 "submission.assignmentOffering.courseOffering",
                 selectedCourseOfferings()));
 
-            terms.addObject(QualifierUtils.qualifierForInCondition(
+            terms.add(QualifierUtils.qualifierForInCondition(
                 "submission.assignmentOffering.assignment",
                 selectedAssignments()));
 
             if (includeOnlySubmissionsForGrading)
             {
-                terms.addObject(ERXQ.isTrue("submission.submissionForGrading"));
+                terms.add(ERXQ.isTrue("submission.submissionForGrading"));
             }
 
             if (!includeCourseStaff)
@@ -94,20 +95,21 @@ public class CourseAndAssignmentResultOutcomesModel
                 EOQualifier q1 =
                     QualifierUtils.qualifierForKeyPathInRelationship(
                         "submission.user",
-                        "submission.assignmentOffering.courseOffering.instructors");
+                        "submission.assignmentOffering.courseOffering"
+                        + ".instructors");
 
                 EOQualifier q2 =
                     QualifierUtils.qualifierForKeyPathInRelationship(
                         "submission.user",
                         "submission.assignmentOffering.courseOffering.graders");
 
-                terms.addObject(ERXQ.not(q1));
-                terms.addObject(ERXQ.not(q2));
+                terms.add(ERXQ.not(q1));
+                terms.add(ERXQ.not(q2));
             }
 
             if (!tags.isEmpty())
             {
-                terms.addObject(ERXQ.in("tag", tags));
+                terms.add(ERXQ.in("tag", tags));
             }
 
             return new EOAndQualifier(terms);
@@ -143,20 +145,23 @@ public class CourseAndAssignmentResultOutcomesModel
                     String key = (String)info.objectForKey("key");
                     NSArray<?> values = (NSArray<?>)info.objectForKey("values");
 
-                    if ("submission.assignmentOffering.courseOffering".equals(key))
+                    if ("submission.assignmentOffering.courseOffering".equals(
+                        key))
                     {
                         selectedCourseModelItems =
                             new NSMutableArray<Object>(values);
                     }
-                    else if ("submission.assignmentOffering.assignment".equals(key))
+                    else if ("submission.assignmentOffering.assignment".equals(
+                        key))
                     {
                         selectedAssignmentModelItems =
                             new NSMutableArray<Object>(values);
                     }
                     else if ("tags".equals(key))
                     {
-                        tags = new NSMutableArray<String>(
-                                (NSArray<String>)values);
+                        @SuppressWarnings("unchecked")
+                        NSArray<String> stringValues = (NSArray<String>)values;
+                        tags = new NSMutableArray<String>(stringValues);
                     }
                 }
                 else if (q instanceof EOKeyValueQualifier)
@@ -164,8 +169,9 @@ public class CourseAndAssignmentResultOutcomesModel
                     EOKeyValueQualifier kvq = (EOKeyValueQualifier)q;
 
                     if ("submission.submissionForGrading".equals(kvq.key())
-                            && EOQualifier.QualifierOperatorEqual.equals(kvq.selector())
-                            && Boolean.TRUE.equals(kvq.value()))
+                        && EOQualifier.QualifierOperatorEqual.equals(
+                            kvq.selector())
+                        && Boolean.TRUE.equals(kvq.value()))
                     {
                         foundSubsForGradingQualifier = true;
                     }
@@ -178,19 +184,25 @@ public class CourseAndAssignmentResultOutcomesModel
                     {
                         QualifierInSubquery qis = (QualifierInSubquery) nq;
 
-                        if (qis.qualifier() instanceof EOKeyComparisonQualifier)
+                        if (qis.qualifier() instanceof
+                            EOKeyComparisonQualifier)
                         {
                             EOKeyComparisonQualifier kcq =
                                 (EOKeyComparisonQualifier) qis.qualifier();
 
                             if ("submission.user.id".equals(kcq.leftKey())
-                                    && EOQualifier.QualifierOperatorEqual.equals(kcq.selector()))
+                                && EOQualifier.QualifierOperatorEqual.equals(
+                                    kcq.selector()))
                             {
-                                if ("submission.assignmentOffering.courseOffering.instructors.id".equals(kcq.rightKey()))
+                                if (("submission.assignmentOffering"
+                                    + ".courseOffering.instructors.id").equals(
+                                        kcq.rightKey()))
                                 {
                                     excludeInstructors = true;
                                 }
-                                else if ("submission.assignmentOffering.courseOffering.graders.id".equals(kcq.rightKey()))
+                                else if (("submission.assignmentOffering"
+                                    + ".courseOffering.graders.id").equals(
+                                        kcq.rightKey()))
                                 {
                                     excludeGraders = true;
                                 }
@@ -263,6 +275,7 @@ public class CourseAndAssignmentResultOutcomesModel
             {
                 Assignment a = (Assignment) o;
 
+                @SuppressWarnings("unchecked")
                 NSArray<Course> assignmentCourses = (NSArray<Course>)
                     a.valueForKeyPath(Assignment.COURSES_KEY);
 

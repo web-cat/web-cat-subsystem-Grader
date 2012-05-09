@@ -76,15 +76,16 @@ public class CourseAndAssignmentSubmissionsModel
             NSMutableArray<EOQualifier> terms =
                 new NSMutableArray<EOQualifier>();
 
-            terms.addObject(QualifierUtils.qualifierForInCondition(
-                "assignmentOffering.courseOffering", selectedCourseOfferings()));
+            terms.add(QualifierUtils.qualifierForInCondition(
+                "assignmentOffering.courseOffering",
+                selectedCourseOfferings()));
 
-            terms.addObject(QualifierUtils.qualifierForInCondition(
+            terms.add(QualifierUtils.qualifierForInCondition(
                     "assignmentOffering.assignment", selectedAssignments()));
 
             if (includeOnlySubmissionsForGrading)
             {
-                terms.addObject(ERXQ.isTrue("isSubmissionForGrading"));
+                terms.add(ERXQ.isTrue("isSubmissionForGrading"));
             }
 
             if (!includeCourseStaff)
@@ -99,8 +100,8 @@ public class CourseAndAssignmentSubmissionsModel
                         "user",
                         "assignmentOffering.courseOffering.graders");
 
-                terms.addObject(ERXQ.not(q1));
-                terms.addObject(ERXQ.not(q2));
+                terms.add(ERXQ.not(q1));
+                terms.add(ERXQ.not(q2));
             }
 
             return new EOAndQualifier(terms);
@@ -134,7 +135,8 @@ public class CourseAndAssignmentSubmissionsModel
                 if (info != null)
                 {
                     String key = (String)info.objectForKey("key");
-                    NSArray<?> values = (NSArray<?>)info.objectForKey("values");
+                    NSArray<?> values =
+                        (NSArray<?>)info.objectForKey("values");
 
                     if ("assignmentOffering.courseOffering".equals(key))
                     {
@@ -152,8 +154,9 @@ public class CourseAndAssignmentSubmissionsModel
                     EOKeyValueQualifier kvq = (EOKeyValueQualifier)q;
 
                     if ("isSubmissionForGrading".equals(kvq.key())
-                            && EOQualifier.QualifierOperatorEqual.equals(kvq.selector())
-                            && Boolean.TRUE.equals(kvq.value()))
+                        && EOQualifier.QualifierOperatorEqual.equals(
+                            kvq.selector())
+                        && Boolean.TRUE.equals(kvq.value()))
                     {
                         foundSubsForGradingQualifier = true;
                     }
@@ -166,19 +169,23 @@ public class CourseAndAssignmentSubmissionsModel
                     {
                         QualifierInSubquery qis = (QualifierInSubquery) nq;
 
-                        if (qis.qualifier() instanceof EOKeyComparisonQualifier)
+                        if (qis.qualifier() instanceof
+                            EOKeyComparisonQualifier)
                         {
                             EOKeyComparisonQualifier kcq =
                                 (EOKeyComparisonQualifier) qis.qualifier();
 
                             if ("user.id".equals(kcq.leftKey())
-                                    && EOQualifier.QualifierOperatorEqual.equals(kcq.selector()))
+                                && EOQualifier.QualifierOperatorEqual.equals(
+                                    kcq.selector()))
                             {
-                                if ("assignmentOffering.courseOffering.instructors.id".equals(kcq.rightKey()))
+                                if (("assignmentOffering.courseOffering"
+                                    + ".instructors.id").equals(kcq.rightKey()))
                                 {
                                     excludeInstructors = true;
                                 }
-                                else if ("assignmentOffering.courseOffering.graders.id".equals(kcq.rightKey()))
+                                else if (("assignmentOffering.courseOffering"
+                                    + ".graders.id").equals(kcq.rightKey()))
                                 {
                                     excludeGraders = true;
                                 }
