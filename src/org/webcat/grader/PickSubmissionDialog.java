@@ -220,6 +220,11 @@ public class PickSubmissionDialog
                 pageToReturn = pageWithName(FinalReportPage.class);
             }
             pageToReturn.reloadGraderPrefs();
+            if (nextPageForResultsPage != null)
+            {
+                pageToReturn.setCurrentTab(
+                    nextPageForResultsPage.currentTab());
+            }
         }
 
         return pageToReturn;
