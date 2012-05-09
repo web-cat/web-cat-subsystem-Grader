@@ -108,10 +108,15 @@ public class GraderSubmissionUploadComponent
         String errorMessage = null;
         log.debug( "committing submission" );
 
+        String uploadedFileName = submissionInProcess().uploadedFileName();
+        if (uploadedFileName == null)
+        {
+            return "No file name provided for uploaded file!";
+        }
+
         Submission submission = Submission.create(localContext(), false);
         submission.setSubmitNumber(submissionInProcess().submitNumber());
         submission.setUserRelationship(submissionInProcess().user());
-        String uploadedFileName = submissionInProcess().uploadedFileName();
         submission.setSubmitTime( submitTime );
         submission.setFileName( uploadedFileName );
         // wcSession().localContext().insertObject( submission );
