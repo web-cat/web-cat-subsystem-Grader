@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2010 Virginia Tech
+ |  Copyright (C) 2010-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,6 +25,7 @@ import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Semester;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WORequest;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 
@@ -33,7 +34,7 @@ import com.webobjects.foundation.NSMutableArray;
  * A subclass of {@link GraderAssignmentComponent} that allows for
  * multi-offering course/assignment selections.
  *
- * @author Stephen Edwards
+ * @author  Stephen Edwards
  * @author  Last changed by $Author$
  * @version $Revision$, $Date$
  */
@@ -97,6 +98,15 @@ public class GraderAssignmentsComponent
             answer = willForceNavigatorSelection;
         }
         return answer;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void takeValuesFromRequest(WORequest request, WOContext context)
+    {
+        super.takeValuesFromRequest(request, context);
+        willForceNavigatorSelection = null;
     }
 
 
