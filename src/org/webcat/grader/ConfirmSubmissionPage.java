@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -87,9 +87,14 @@ public class ConfirmSubmissionPage
                 log.debug( "skipping to previous page" );
                 response.setContent(
                     prevPage.generateResponse().content() );
-                // skip calling super.appendToResponse
-                return;
             }
+            else
+            {
+                error("Your file is no longer available.  "
+                    + "Please upload it again.");
+            }
+            // skip calling super.beforeAppendToResponse()
+            return;
         }
         log.debug( "The submission number is "
             + submissionInProcess().submitNumber() );
