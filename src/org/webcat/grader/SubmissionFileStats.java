@@ -1,7 +1,7 @@
 /*==========================================================================*\
  |  $Id$
  |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2012 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -488,14 +488,6 @@ public class SubmissionFileStats
 
         //make the html file
         StringBuffer contents = new StringBuffer( (int)file.length() );
-//        contents.append( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 " );
-//        contents.append( "Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD" );
-//        contents.append( "/xhtml1-strict.dtd\">\n" );
-        contents.append(
-        "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
-        contents.append(WCResourceManager.versionlessResourceURLFor(
-            "wc-code.css", "Grader", null, request ));
-        contents.append( "\"/>\n" );
 
         //get the array of file comments from the database
         NSArray<SubmissionFileComment> myComments = comments()

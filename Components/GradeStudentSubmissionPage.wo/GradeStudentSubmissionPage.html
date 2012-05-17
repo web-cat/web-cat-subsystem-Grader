@@ -46,7 +46,7 @@
 
 <wo:org.webcat.core.WCPageModule title="TA/Instructor Comments">
   <div><wo name="Comments"/></div>
-  <div>Format: <wo name="CommentFormat"/>
+  <div class="belowInput">Format: <wo name="CommentFormat"/>
     <wo:if condition="$result.lastUpdated">feedback last updated:
       <wo:str value="$result.lastUpdated"
         formatter="$session.timeFormatter"/></wo:if></div>
