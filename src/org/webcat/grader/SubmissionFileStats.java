@@ -489,6 +489,12 @@ public class SubmissionFileStats
         //make the html file
         StringBuffer contents = new StringBuffer( (int)file.length() );
 
+        contents.append(
+            "<link rel=\"stylesheet\" type=\"text/css\" href=\"" );
+        contents.append(WCResourceManager.versionlessResourceURLFor(
+            "theme/base/code.css", "Core", null, request ));
+        contents.append( "\"/>\n" );
+
         //get the array of file comments from the database
         NSArray<SubmissionFileComment> myComments = comments()
             .sortedArrayUsingComparator(
