@@ -1969,7 +1969,7 @@ public class Submission
             NSArray<User> users, NSDictionary<User, Submission> submissions)
     {
         NSMutableArray<UserSubmissionPair> pairs =
-            new NSMutableArray<UserSubmissionPair>();
+            new NSMutableArray<UserSubmissionPair>(users.size());
 
         for (User aUser : users)
         {
@@ -1979,20 +1979,6 @@ public class Submission
 
         return pairs;
     }
-
-
-    // ----------------------------------------------------------
-/*    private static class Submissions
-    {
-        public NSArray<Submission> subs;
-        public NSArray<Submission> brokenPartners;
-        public Submissions(
-            NSArray<Submission> subs, NSArray<Submission> brokenPartners)
-        {
-            this.subs = subs;
-            this.brokenPartners = brokenPartners;
-        }
-    }*/
 
 
     // ----------------------------------------------------------
@@ -2021,8 +2007,6 @@ public class Submission
         NSMutableDictionary<User, Submission> submissions,
         CumulativeStats                       accumulator)
     {
-/*        NSMutableArray<Submission> subs =
-            new NSMutableArray<Submission>(users.count());*/
         final NSMutableArray<Submission> brokenPartners =
             new NSMutableArray<Submission>();
 

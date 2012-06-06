@@ -744,6 +744,24 @@ public class SubmissionResult
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lastUpdated</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    @Override
+    public void setLastUpdated(NSTimestamp value)
+    {
+        super.setLastUpdated(value);
+        for (Submission sub : submissions())
+        {
+            sub.setIsSubmissionForGradingIfNecessary();
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
     private File propertiesFile;
