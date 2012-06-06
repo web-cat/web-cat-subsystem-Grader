@@ -25,6 +25,8 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
+import er.extensions.eof.ERXEOAccessUtilities;
+import er.extensions.eof.ERXEOGlobalIDUtilities;
 import er.extensions.eof.ERXQ;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.BufferedOutputStream;
@@ -2262,6 +2264,65 @@ public class Submission
         }
 
         return subs;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Fetches the most recent submission by each user for a particular
+     * assignment.
+     *
+     * @param ec the editing context
+     * @param offering the assignment offering whose submissions should be
+     *     fetched
+     *
+     * @return a dictionary with users as keys and the most recent submission
+     *     by that user as the value; only users who have made a submission
+     *     will appear in this map
+     */
+    public static NSDictionary<User, Submission> latestSubmissionsForAssignment(
+            EOEditingContext ec,
+            AssignmentOffering offering)
+    {
+        EOModelGroup modelGroup = ERXEOAccessUtilities.modelGroup(ec);
+        EOEntity entity = modelGroup.entityNamed(ENTITY_NAME);
+        String modelName = entity.model().name();
+
+        String sql = "select OID as id, max(CSUBMITNUMBER) as csubmitnumber"
+            + " from TSUBMISSION where CASSIGNMENTID = "
+            + offering.id() + " group by CUSERID";
+
+        NSArray<NSDictionary> rawRows = EOUtilities.rawRowsForSQL(
+                ec, modelName, sql, null);
+
+        NSMutableArray<EOGlobalID> gids = new NSMutableArray<EOGlobalID>();
+        for (NSDictionary row : rawRows)
+        {
+            // This feels kind of like a hack; for globalIDForRow to work
+            // correctly, the object id must have the key "id".
+            ((NSMutableDictionary) row).setObjectForKey(
+                    row.objectForKey("OID"), "id");
+
+            EOGlobalID gid = entity.globalIDForRow(row);
+
+            if (gid != null)
+            {
+                gids.add(gid);
+            }
+        }
+
+        NSArray<Submission> submissions =
+            ERXEOGlobalIDUtilities.fetchObjectsWithGlobalIDs(ec, gids);
+
+        NSMutableDictionary<User, Submission> subMap =
+            new NSMutableDictionary<User, Submission>();
+
+        for (Submission sub : submissions)
+        {
+            subMap.setObjectForKey(sub, sub.user());
+        }
+
+        return subMap;
     }
 
 
