@@ -23,6 +23,7 @@ package org.webcat.grader;
 
 import com.webobjects.appserver.*;
 import org.apache.log4j.Logger;
+import org.webcat.woextensions.WCEC;
 
 //-------------------------------------------------------------------------
 /**
@@ -81,6 +82,70 @@ public class NavTestPage
     public int count()
     {
     	return ++count;
+    }
+
+
+    // ----------------------------------------------------------
+    public String testOutput;
+    public WOComponent testMap()
+    {
+        testOutput = "beginning test.\n";
+        WCEC ec1 = null;
+        WCEC ec2 = null;
+        try
+        {
+            ec1 = WCEC.newEditingContext();
+            ec1.lock();
+
+            StepConfig sc1 = StepConfig.create(ec1, false);
+            sc1.configSettings().takeValueForKey("Entry1", "key1");
+            log.debug("sc1 changed properties = " + sc1.changedProperties());
+            ec1.saveChanges();
+            log.debug("sc1 saved");
+            sc1.configSettings().takeValueForKey("Entry2", "key2");
+            log.debug("sc1 changed properties = " + sc1.changedProperties());
+            log.debug("sc1 changes = " + sc1.changesFromCommittedSnapshot());
+            log.debug("sc1 config settings = " + sc1.configSettings());
+            log.debug("sc1 changes UNSAVED");
+            int sc1Id = sc1.id().intValue();
+
+            ec2 = WCEC.newEditingContext();
+            ec2.lock();
+            StepConfig sc2 = StepConfig.forId(ec2, sc1Id);
+            log.debug("sc2 changed properties = " + sc2.changedProperties());
+            log.debug("sc2 changes = " + sc2.changesFromCommittedSnapshot());
+            log.debug("sc2 config settings = " + sc2.configSettings());
+            sc2.configSettings().takeValueForKey("Entry3", "key3");
+            log.debug("sc2 changed properties = " + sc2.changedProperties());
+            log.debug("sc2 changes = " + sc2.changesFromCommittedSnapshot());
+            log.debug("sc2 config settings = " + sc2.configSettings());
+            ec2.saveChanges();
+            log.debug("sc2 saved");
+
+            log.debug("sc1 changed properties = " + sc1.changedProperties());
+            log.debug("sc1 changes = " + sc1.changesFromCommittedSnapshot());
+            log.debug("sc1 config settings = " + sc1.configSettings());
+
+            sc2.delete();
+            ec2.saveChanges();
+            log.debug("sc1/sc2 deleted");
+        }
+        finally
+        {
+            if (ec1 != null)
+            {
+                ec1.unlock();
+                ec1.dispose();
+                ec1 = null;
+            }
+            if (ec2 != null)
+            {
+                ec2.unlock();
+                ec2.dispose();
+                ec2 = null;
+            }
+        }
+        return null;
     }
 
 

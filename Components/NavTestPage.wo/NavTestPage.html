@@ -14,4 +14,12 @@ Assignment: <span class="hl"><wo:str value="$prefs.assignment"/></span>
     <p>Access count for this object: <wo:str value="$count"/>.</p>
     <p><wo:link action="$refresh">Refresh</wo:link></p>
   </wo:org.webcat.core.WCPageModule>
+
+  <wo:org.webcat.core.WCPageModule title="Test Map">
+  <wo:WCForm>
+  <wo:WCButton label="Test Map" action="$testMap"/>
+  </wo:WCForm>
+  <pre><wo:str escapeHTML="true" value="$testOutput"/></pre>
+  </wo:org.webcat.core.WCPageModule>
+
 </webobject>
