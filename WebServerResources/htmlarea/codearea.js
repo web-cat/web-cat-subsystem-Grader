@@ -984,13 +984,13 @@ HTMLArea.prototype._insertComment = function(param) {
         + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/"
             + editor.getIcon(cat)
         + ".png\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
-        + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
+        + tar + "\"></option><b id=\"" + idTag + "\"><span id=\"" + idTag
         + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
         + ":N\">[" + editor.config.userName + "]"
             + ( ( pts == "" || pts == " " ) ? "" : " : " ) + "</span><span id=\""
         + idTag + ":P\" contentEditable=\"" + editor.config.viewPoints
         + "\">" + ( ( pts == "" || pts == " " ) ? "" : pts )
-            + "</span></b><br id=\"" + idTag + "\"><i id=\""
+            + "</span></b><br id=\"" + idTag + "\"/><i id=\""
         + idTag + "\"><div id=\"" + idTag
         + ":M\" contentEditable=\"true\">" + msg
         + "</div></i></td></tr></tbody></table>";
