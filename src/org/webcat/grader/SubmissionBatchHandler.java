@@ -81,6 +81,8 @@ public class SubmissionBatchHandler
                 propertiesFile.getAbsolutePath());
         properties.setProperty("submissionPath",
                 submission.file().getAbsolutePath());
+        properties.setProperty("submissionUserName",
+            submission.user().userName());
         properties.setProperty("isSubmissionForGrading",
                 Boolean.toString(submission.isSubmissionForGrading()));
         properties.setProperty("hasResults",
