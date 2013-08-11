@@ -125,7 +125,11 @@ public class UploadSubmissionPage
 
         if (previousPartners == null)
         {
-            if (submissionInProcess().partners() != null)
+            if (!offering.assignment().submissionProfile().allowPartners())
+            {
+                previousPartners = new NSMutableArray<User>();
+            }
+            else if (submissionInProcess().partners() != null)
             {
                 previousPartners =
                     submissionInProcess().partners().mutableClone();
@@ -148,6 +152,11 @@ public class UploadSubmissionPage
         if (partnersForEditing == null)
         {
             partnersForEditing = previousPartners.mutableClone();
+        }
+        if (!offering.assignment().submissionProfile().allowPartners()
+            && partnersForEditing.count() > 0)
+        {
+            partnersForEditing.clear();
         }
 
         Number maxSubmissions = offering
