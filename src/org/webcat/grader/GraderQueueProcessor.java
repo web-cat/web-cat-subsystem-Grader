@@ -808,6 +808,8 @@ public class GraderQueueProcessor
 
             properties.setProperty(
                 "userName", job.submission().user().userName());
+            properties.setProperty("userInstitution", job.submission().user()
+                .authenticationDomain().displayableName());
             properties.setProperty(
                 "workingDir", job.workingDirName());
             properties.setProperty(
@@ -1243,7 +1245,11 @@ public class GraderQueueProcessor
         boolean wasRegraded = job.regrading();
         submissionResult.addToSubmissionsRelationship(job.submission());
 
-        if (!job.submission().assignmentOffering().assignment().usesTAScore())
+        if (!job.submission().assignmentOffering().assignment().usesTAScore()
+            && (job.submission().assignmentOffering().assignment()
+                .usesTestingScore()
+                || job.submission().assignmentOffering().assignment()
+                    .usesToolCheckScore()))
         {
             submissionResult.setStatus(Status.CHECK);
         }
