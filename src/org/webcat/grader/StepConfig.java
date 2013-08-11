@@ -161,34 +161,36 @@ public class StepConfig
     }
 
 
+    // ----------------------------------------------------------
+    @SuppressWarnings("unchecked")
+    @Override
+    public NSDictionary changesFromSnapshot(NSDictionary snapshot)
+    {
+        NSMutableDictionary result =
+            super.changesFromSnapshot(snapshot).mutableClone();
+        if (result.containsKey(UPDATE_MUTABLE_FIELDS_KEY))
+        {
+            MutableDictionary myConfigSettings = configSettings();
+            Object snapshotConfigSettings =
+                snapshot.valueForKey(CONFIG_SETTINGS_KEY);
+            if ((myConfigSettings == null &&
+                 !MutableDictionary.NullValue.equals(snapshotConfigSettings))
+                || (myConfigSettings != null &&
+                    !myConfigSettings.equals(snapshotConfigSettings)))
+            {
+                result.takeValueForKey(myConfigSettings, CONFIG_SETTINGS_KEY);
+            }
+        }
+        return result;
+    }
 
 
-
-// If you add instance variables to store property values you
-// should add empty implementions of the Serialization methods
-// to avoid unnecessary overhead (the properties will be
-// serialized for you in the superclass).
-
-//    // ----------------------------------------------------------
-//    /**
-//     * Serialize this object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param out the stream to write to
-//     */
-//    private void writeObject( java.io.ObjectOutputStream out )
-//        throws java.io.IOException
-//    {
-//    }
-//
-//
-//    // ----------------------------------------------------------
-//    /**
-//     * Read in a serialized object (an empty implementation, since the
-//     * superclass handles this responsibility).
-//     * @param in the stream to read from
-//     */
-//    private void readObject( java.io.ObjectInputStream in )
-//        throws java.io.IOException, java.lang.ClassNotFoundException
-//    {
-//    }
+    // ----------------------------------------------------------
+    @Override
+    public void updateFromSnapshot(NSDictionary<String, Object> snapshot)
+    {
+        System.out.println(
+            "updating StepConfig " + this + " from snapshot " + snapshot);
+        super.updateFromSnapshot(snapshot);
+    }
 }
