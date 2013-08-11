@@ -253,7 +253,7 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public boolean useSecureSubmissionURLs()
     {
-        return false;
+        return true;
     }
 
 
