@@ -312,9 +312,9 @@ public class NewAssignmentPage
         // as a default
         {
             AssignmentOffering other = null;
-            System.out.println("ao = " + newOffering);
-            System.out.println("assignment = " + newOffering.assignment());
-            System.out.println("offerings = " + newOffering.assignment().offerings());
+//            System.out.println("ao = " + newOffering);
+//            System.out.println("assignment = " + newOffering.assignment());
+//            System.out.println("offerings = " + newOffering.assignment().offerings());
             NSArray<AssignmentOffering> others =
                 newOffering.assignment().offerings();
             for (AssignmentOffering ao : others)
