@@ -12,7 +12,7 @@
             sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };
         notStudentDisplayGroup = {
-            class = ERXDisplayGroup;
+            class = ERXBatchingDisplayGroup;
             dataSource = {
                 class = EODatabaseDataSource;
                 editingContext = localContext;
@@ -20,13 +20,13 @@
                     class = EOFetchSpecification;
                     entityName = User;
                     fetchLimit = 0;
-                    isDeep = YES;
+                    isDeep = NO;
                 };
             };
             fetchesOnLoad = NO;
             formatForLikeQualifier = "%@*";
             localKeys = ();
-            numberOfObjectsPerBatch = 20;
+            numberOfObjectsPerBatch = 50;
             selectsFirstObjectAfterFetch = YES;
             sortOrdering = ({class = EOSortOrdering; key = lastName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = firstName; selectorName = "compareCaseInsensitiveAscending:"; }, {class = EOSortOrdering; key = userName; selectorName = "compareCaseInsensitiveAscending:"; });
         };

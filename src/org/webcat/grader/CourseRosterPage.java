@@ -31,6 +31,7 @@ import com.webobjects.eocontrol.EONotQualifier;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSData;
 import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.batching.ERXBatchingDisplayGroup;
 
 // -------------------------------------------------------------------------
 /**
@@ -61,7 +62,7 @@ public class CourseRosterPage
     //~ KVC Attributes (must be public) .......................................
 
     public ERXDisplayGroup<User> studentDisplayGroup;
-    public ERXDisplayGroup<User> notStudentDisplayGroup;
+    public ERXBatchingDisplayGroup<User> notStudentDisplayGroup;
     /** student in the worepetition */
     public User           student;
     /** index in the worepetition */
@@ -87,16 +88,17 @@ public class CourseRosterPage
         // Set up student list filters
         studentDisplayGroup.setObjectArray( courseOffering().students() );
 
-        notStudentDisplayGroup.setQualifier( new EONotQualifier(
-            new EOKeyValueQualifier(
-                User.ENROLLED_IN_KEY,
-                EOQualifier.QualifierOperatorContains,
-                courseOffering()
-            ) ) );
         if ( firstLoad )
         {
+            notStudentDisplayGroup.setQualifier( new EONotQualifier(
+                new EOKeyValueQualifier(
+                    User.ENROLLED_IN_KEY,
+                    EOQualifier.QualifierOperatorContains,
+                    courseOffering()
+                ) ) );
             notStudentDisplayGroup.queryMatch().takeValueForKey(
-                user().authenticationDomain().propertyName(),
+                courseOffering().course().department().institution()
+                .propertyName(),
                 "authenticationDomain.propertyName" );
             firstLoad = false;
         }
