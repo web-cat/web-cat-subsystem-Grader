@@ -1111,12 +1111,12 @@ public class GraderQueueProcessor
             String attr = properties.getProperty(attributeBase + "loc");
             if (attr != null)
             {
-                stats.setLocRaw(ERXConstant.integerForString(attr));
+                stats.setLocRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "ncloc");
             if (attr != null)
             {
-                stats.setNclocRaw(ERXConstant.integerForString(attr));
+                stats.setNclocRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "deductions");
             if (attr != null)
@@ -1126,56 +1126,67 @@ public class GraderQueueProcessor
             attr = properties.getProperty(attributeBase + "remarks");
             if (attr != null)
             {
-                stats.setRemarksRaw(ERXConstant.integerForString(attr));
+                stats.setRemarksRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "conditionals");
             if (attr != null)
             {
-                stats.setConditionalsRaw(ERXConstant.integerForString(attr));
+                stats.setConditionalsRaw(integerForString(attr));
             }
             attr = properties.getProperty(
                 attributeBase + "conditionalsCovered");
             if (attr != null)
             {
-                stats.setConditionalsCoveredRaw(
-                    ERXConstant.integerForString(attr));
+                stats.setConditionalsCoveredRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "statements");
             if (attr != null)
             {
-                stats.setStatementsRaw(ERXConstant.integerForString(attr));
+                stats.setStatementsRaw(integerForString(attr));
             }
             attr = properties.getProperty(
                 attributeBase + "statementsCovered");
             if (attr != null)
             {
-                stats.setStatementsCoveredRaw(
-                    ERXConstant.integerForString(attr));
+                stats.setStatementsCoveredRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "methods");
             if (attr != null)
             {
-                stats.setMethodsRaw(ERXConstant.integerForString(attr));
+                stats.setMethodsRaw(integerForString(attr));
             }
             attr = properties.getProperty(
                 attributeBase + "methodsCovered");
             if (attr != null)
             {
-                stats.setMethodsCoveredRaw(
-                    ERXConstant.integerForString(attr));
+                stats.setMethodsCoveredRaw(integerForString(attr));
             }
             attr = properties.getProperty(attributeBase + "elements");
             if (attr != null)
             {
-                stats.setElementsRaw(ERXConstant.integerForString(attr));
+                stats.setElementsRaw(integerForString(attr));
             }
             attr = properties.getProperty(
                 attributeBase + "elementsCovered");
             if (attr != null)
             {
-                stats.setElementsCoveredRaw(ERXConstant.integerForString(attr));
+                stats.setElementsCoveredRaw(integerForString(attr));
             }
             stats.setSubmissionResultRelationship(submissionResult);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private static Integer integerForString(String value)
+    {
+        try
+        {
+            return ERXConstant.integerForString(value);
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
         }
     }
 
