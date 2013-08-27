@@ -106,7 +106,7 @@
   <wo:org.webcat.grader.PartialInlineReport submissionResult="$result" styleVersion="$result.studentReportStyleVersion" file="$result.resultFile" title="Automated Feedback" open="$true"/>
 </wo:else>
   <wo:if condition="$reportArray.count">
-    <wo:org.webcat.core.WCPageModule title="Downloadables" open="false">
+    <wo:org.webcat.core.WCPageModule title="Downloadables" open="true">
     <table><thead>
     <tr><th>File</th><th>Description</th></tr></thead><tbody>
     <wo:loop list="$reportArray" item="$report" index="$index">
