@@ -646,7 +646,8 @@ public class SubmissionFileStats
                                 + WCResourceManager.resourceURLFor(
                                     thisComment.categoryIcon(),
                                     "Core", null, null)
-                                + "\" border=\"0\"/><option id=\"" + idnum
+                                + "\" border=\"0\"/><input type=\"hidden\" "
+                                + "id=\"" + idnum
                                 + ":T\" value=\"" + thisComment.to()
                                 + "\"/><b id=\"" + idnum + "\"> <span id=\""
                                 + idnum + ":C\">" + thisComment.category()

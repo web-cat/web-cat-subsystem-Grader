@@ -926,7 +926,8 @@ HTMLArea.prototype._insertComment = function(param) {
         if ( editor._histlist.length >= 22 )
         editor._histlist.removeChild(editor._histlist.lastChild);
     }
-    var op = document.createElement( "option" );
+    var op = document.createElement( "input" );
+    op.type = "hidden";
     var idTag = "I" + box_number + ":" + parentid + ":" +reference;
     var shorty = "";
       shorty = msg.replace( /<(.|\n)+?>/g, "" ); // remove all tags
@@ -983,8 +984,8 @@ HTMLArea.prototype._insertComment = function(param) {
         + ":D\" class=\"messageBox\"><img id=\"" + idTag
         + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/"
             + editor.getIcon(cat)
-        + ".png\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
-        + tar + "\"></option><b id=\"" + idTag + "\"><span id=\"" + idTag
+        + ".png\" border=\"0\"/><input type=\"hidden\" id=\"" + idTag + ":T\" value=\""
+        + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
         + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
         + ":N\">[" + editor.config.userName + "]"
             + ( ( pts == "" || pts == " " ) ? "" : " : " ) + "</span><span id=\""
@@ -1723,7 +1724,7 @@ HTMLArea.prototype.updateHistory = function() {
                             + ":B\"><tr id=\"" + idTag + ":R\"><td id=\"" + idTag
                             + ":D\" class=\"messageBox\"><img id=\"" + idTag
                             + ":I\" src=\"" + editor.config.coreResourceURL + "/icons/" + editor.getIcon(cat)
-                            + ".png\" border=\"0\"/><option id=\"" + idTag + ":T\" value=\""
+                            + ".png\" border=\"0\"/><input type=\"hidden\" id=\"" + idTag + ":T\" value=\""
                             + tar + "\"/><b id=\"" + idTag + "\"><span id=\"" + idTag
                             + ":C\">&nbsp;" + cat + "&nbsp;</span><span id=\"" + idTag
                             + ":N\">[" + editor.config.userName + "]"
