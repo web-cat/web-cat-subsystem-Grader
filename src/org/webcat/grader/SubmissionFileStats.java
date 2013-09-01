@@ -142,8 +142,12 @@ public class SubmissionFileStats
         String result = sourceFileNameRaw();
         if ( result == null )
         {
-            result = fullyQualifiedClassName().replace( '.', '/' ) + ".java";
-            setSourceFileNameRaw( result );
+            result = fullyQualifiedClassName();
+            if (result != null)
+            {
+                result = result.replace( '.', '/' ) + ".java";
+                setSourceFileNameRaw( result );
+            }
         }
         return result;
     }
@@ -155,8 +159,11 @@ public class SubmissionFileStats
         String result = markupFileNameRaw();
         if ( result == null )
         {
-            result =  "clover/" + fullyQualifiedClassName().replace( '.', '/' )
-                + ".html";
+            result = fullyQualifiedClassName();
+            if (result != null)
+            {
+                result =  "clover/" + result.replace( '.', '/' ) + ".html";
+            }
         }
         return result;
     }
