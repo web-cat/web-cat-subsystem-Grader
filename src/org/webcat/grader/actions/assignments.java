@@ -44,9 +44,9 @@ public class assignments
      *
      * @param aRequest The request to respond to
      */
-    public assignments( WORequest aRequest )
+    public assignments(WORequest aRequest)
     {
-        super( aRequest );
+        super(aRequest);
     }
 
 
@@ -61,7 +61,7 @@ public class assignments
      */
     public WOActionResults bluejAction()
     {
-        return pageWithName( BlueJSubmitterDefinitions.class.getName() );
+        return pageWithName(BlueJSubmitterDefinitions.class.getName());
     }
 
 
@@ -74,7 +74,7 @@ public class assignments
      */
     public WOActionResults eclipseAction()
     {
-        return pageWithName( EclipseSubmitterDefinitions.class.getName() );
+        return pageWithName(EclipseSubmitterDefinitions.class.getName());
     }
 
 
@@ -87,7 +87,7 @@ public class assignments
      */
     public WOActionResults icalAction()
     {
-        return pageWithName( ICalView.class.getName() );
+        return pageWithName(ICalView.class.getName());
     }
 
 
@@ -109,12 +109,12 @@ public class assignments
      * @param actionName The name of the action to dispatch
      * @return the action's result
      */
-    public WOActionResults performActionNamed( String actionName )
+    public WOActionResults performActionNamed(String actionName)
     {
-        if ( "ical.ics".equals( actionName ) )
+        if ("ical.ics".equals(actionName))
         {
             actionName = "ical";
         }
-        return super.performActionNamed( actionName );
+        return super.performActionNamed(actionName);
     }
 }
