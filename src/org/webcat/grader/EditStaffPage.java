@@ -86,7 +86,7 @@ public class EditStaffPage
         if ( firstLoad )
         {
             potentialDisplayGroup.queryMatch().takeValueForKey(
-                user().authenticationDomain().propertyName(),
+                courseOffering().course().department().institution().propertyName(),
                 "authenticationDomain.propertyName" );
             firstLoad = false;
         }
