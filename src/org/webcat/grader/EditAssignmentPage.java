@@ -591,7 +591,7 @@ public class EditAssignmentPage
                 AssignmentOffering localAO = offering.localInstance(ec);
                 log.info(
                     "cancelling all paused assignments: "
-                    + coreSelections().courseOffering().course().deptNumber()
+                    + localAO.courseOffering().course().deptNumber()
                     + " "
                     + localAO.assignment().name());
                 NSArray<EnqueuedJob> jobList =
