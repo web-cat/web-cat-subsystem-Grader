@@ -144,20 +144,6 @@ public class UploadRosterPage
     }
 
 
-//    // ----------------------------------------------------------
-//    public WOComponent next()
-//    {
-//        if ( applyLocalChanges() )
-//        {
-//            return super.next();
-//        }
-//        else
-//        {
-//            return null;
-//        }
-//    }
-
-
     // ----------------------------------------------------------
     public boolean applyLocalChanges()
     {
@@ -901,7 +887,7 @@ public class UploadRosterPage
         Pattern.compile( "(?i)^\\s*first(\\b|\\s)" ),
         Pattern.compile( "(?i)^\\s*(last\\b|surname)" ),
         Pattern.compile( "(?i)^\\s*(name|((last\\b|surname).*,.*first))" ),
-        Pattern.compile( "(?i)\\be(-)?mail\\b" ),
+        Pattern.compile( "(?i)\\be(-)?mail\\b(?!\\s+confidential)" ),
         Pattern.compile( "(?i)^\\s*(user\\s*name?|uid|pid|user\\s*id|user)$" ),
         Pattern.compile( "(?i)^\\s*(pass(word)?|pw$)" ),
         Pattern.compile( "(?i)\\bid(\\s*(number|#|no|no\\.)?)\\b" ),
