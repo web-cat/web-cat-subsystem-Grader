@@ -90,7 +90,7 @@ NewerSubmitTimeSpan: WOGenericContainer {
 
 NoSubmissionsPlaceholder: WOGenericContainer {
     elementName = "td";
-    colSpan = "~ 5 + (assignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0) + (assignmentOffering.assignment.usesToolCheckScore ? 1 : 0)";
+    colSpan = "~ 4 + (assignmentOffering.assignment.usesTestingScore ? 1 : 0) + (assignmentOffering.assignment.usesToolCheckScore ? 1 : 0) + (assignmentOffering.assignment.usesBonusesOrPenalties ? 1 : 0)";
     class = "sm";
 }
 
