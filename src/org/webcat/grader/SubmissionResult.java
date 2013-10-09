@@ -206,7 +206,47 @@ public class SubmissionResult
             }
         }
         return latePenalty;
+    }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Computes the excess submission penalty for this submission.  The penalty
+     * is a positive amount subtracted from the raw score.
+     *
+     * @return the penalty amount, or 0.0 if none
+     */
+    public double excessSubmissionPenalty()
+    {
+        double penalty = 0.0;
+        Submission submission = submission();
+        int number = submission.submitNumber();
+        SubmissionProfile profile =
+            submission.assignmentOffering().assignment().submissionProfile();
+
+        if (profile.deductExcessSubmissionPenalty()
+            && profile.excessSubmissionsUnitPtsRaw() != null
+            && number > profile.excessSubmissionsThreshold())
+        {
+            int over = number - profile.excessSubmissionsThreshold();
+            int unitSize = profile.excessSubmissionsUnitSize();
+            if (unitSize == 0)
+            {
+                unitSize = 1;
+            }
+            int units = over / unitSize;
+            if (unitSize > 1 && over % unitSize > 0)
+            {
+                units++;
+            }
+            penalty = units * profile.excessSubmissionsUnitPts();
+            if (profile.excessSubmissionsMaxPtsRaw() != null
+                && penalty > profile.excessSubmissionsMaxPts())
+            {
+                penalty = profile.excessSubmissionsMaxPts();
+            }
+        }
+        return penalty;
     }
 
 
@@ -219,7 +259,7 @@ public class SubmissionResult
      */
     public double scoreAdjustment()
     {
-        return earlyBonus() - latePenalty();
+        return earlyBonus() - latePenalty() - excessSubmissionPenalty();
     }
 
 
@@ -289,7 +329,8 @@ public class SubmissionResult
      */
     public double finalScoreForStudent()
     {
-        double result = rawScoreForStudent() + earlyBonus() - latePenalty();
+        double result = rawScoreForStudent() + earlyBonus() - latePenalty()
+            - excessSubmissionPenalty();
         return ( result >= 0.0 ) ? result : 0.0;
     }
 
@@ -304,7 +345,8 @@ public class SubmissionResult
      */
     public double finalScore()
     {
-        double result = rawScore() + earlyBonus() - latePenalty();
+        double result = rawScore() + earlyBonus() - latePenalty()
+            - excessSubmissionPenalty();
         return ( result >= 0.0 ) ? result : 0.0;
     }
 
@@ -464,19 +506,31 @@ public class SubmissionResult
     {
         String result = null;
         double rawScore = finalScore();
+
         double earlyBonus = earlyBonus();
         if ( earlyBonus > 0.0 )
         {
             rawScore -= earlyBonus;
             result = " + " + earlyBonus + " early bonus";
         }
+
         double latePenalty = latePenalty();
-        if ( latePenalty < 0.0 )
+        if ( latePenalty > 0.0 )
         {
-            rawScore -= latePenalty;
+            rawScore += latePenalty;
             result = (result == null ? "" : result)
-                + " - " + (-latePenalty) + " late penalty";
+                + " - " + latePenalty + " late penalty";
         }
+
+        double excessSubmissionPenalty = excessSubmissionPenalty();
+        if ( excessSubmissionPenalty > 0.0 )
+        {
+            rawScore += excessSubmissionPenalty;
+            result = (result == null ? "" : result)
+                + " - " + excessSubmissionPenalty
+                + " excess submission penalty";
+        }
+
         if ( result != null )
         {
             result = "" + rawScore + result + " = ";

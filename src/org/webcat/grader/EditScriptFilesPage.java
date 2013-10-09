@@ -130,7 +130,7 @@ public class EditScriptFilesPage
             }
             else
             {
-                title += "Script ";
+                title += "Plug-in ";
             }
             if (base.isDirectory())
             {

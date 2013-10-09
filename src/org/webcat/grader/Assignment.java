@@ -251,7 +251,9 @@ public class Assignment
     {
         SubmissionProfile profile = submissionProfile();
         return profile != null
-            && ( profile.awardEarlyBonus() || profile.deductLatePenalty() );
+            && (profile.awardEarlyBonus()
+                || profile.deductLatePenalty()
+                || profile.deductExcessSubmissionPenalty());
     }
 
 

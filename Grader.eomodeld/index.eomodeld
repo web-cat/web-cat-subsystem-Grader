@@ -35,7 +35,6 @@
         {className = "org.webcat.grader.SubmissionResult"; name = SubmissionResult; }
     ); 
     internalInfo = {
-        "_deletedEntityNamesInObjectStore" = (SubmissionProfile); 
         "_schemaSynchronizationOptions" = {
             EOSchemaSynchronizationForeignKeyConstraintsKey = YES; 
             EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES; 

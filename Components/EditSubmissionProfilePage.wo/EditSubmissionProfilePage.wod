@@ -10,6 +10,10 @@ CheckBox2: WOCheckBox {
     checked = submissionProfile.deductLatePenalty;
 }
 
+CheckBox3: WOCheckBox {
+    checked = submissionProfile.deductExcessSubmissionPenalty;
+}
+
 ExcludedFilePatterns: WOTextField {
     size = 40;
     value = submissionProfile.excludedFilePatterns;
@@ -73,33 +77,6 @@ TextField2: WOTextField {
     name         = "total";
 }
 
-TextField14: WOTextField {
-    formatter    = doubleFormatter;
-    size         = 7;
-    value        = submissionProfile.taPointsRaw;
-    name         = "taPoints";
-    onFocus      = "startCalc();";
-    onBlur       = "stopCalc();";
-}
-
-TextField15: WOTextField {
-    formatter    = doubleFormatter;
-    size         = 7;
-    value        = submissionProfile.toolPointsRaw;
-    name         = "toolPoints";
-    onFocus      = "startCalc();";
-    onBlur       = "stopCalc();";
-}
-
-TextField16: WOTextField {
-    formatter    = doubleFormatter;
-    size         = 7;
-    value        = correctnessPoints;
-    name         = "correctnessPoints";
-    onFocus      = "startCalc();";
-    onBlur       = "stopCalc();";
-}
-
 TextField3: WOTextField {
     numberformat = "0";
     size = 7;
@@ -157,6 +134,57 @@ TextField12: WOTextField {
 TextField13: WOTextField {
     size = 7;
     value = maxFileUploadSize;
+}
+
+TextField14: WOTextField {
+    formatter    = doubleFormatter;
+    size         = 7;
+    value        = submissionProfile.taPointsRaw;
+    name         = "taPoints";
+    onFocus      = "startCalc();";
+    onBlur       = "stopCalc();";
+}
+
+TextField15: WOTextField {
+    formatter    = doubleFormatter;
+    size         = 7;
+    value        = submissionProfile.toolPointsRaw;
+    name         = "toolPoints";
+    onFocus      = "startCalc();";
+    onBlur       = "stopCalc();";
+}
+
+TextField16: WOTextField {
+    formatter    = doubleFormatter;
+    size         = 7;
+    value        = correctnessPoints;
+    name         = "correctnessPoints";
+    onFocus      = "startCalc();";
+    onBlur       = "stopCalc();";
+}
+
+TextField17: WOTextField {
+    formatter = doubleFormatter;
+    size      = 3;
+    value     = submissionProfile.excessSubmissionsMaxPtsRaw;
+}
+
+TextField18: WOTextField {
+    numberformat = "0";
+    size = 3;
+    value = submissionProfile.excessSubmissionsUnitPtsRaw;
+}
+
+TextField19: WOTextField {
+    formatter = doubleFormatter;
+    size      = 3;
+    value     = submissionProfile.excessSubmissionsUnitSizeRaw;
+}
+
+TextField20: WOTextField {
+    formatter = doubleFormatter;
+    size      = 3;
+    value     = submissionProfile.excessSubmissionsThresholdRaw;
 }
 
 MaxFileUploadSizeInfo: org.webcat.core.PopUpInfo {

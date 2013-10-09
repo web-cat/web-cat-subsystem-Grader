@@ -66,6 +66,7 @@ public abstract class _SubmissionProfile
      * inserted
      * @param allowPartnersValue
      * @param awardEarlyBonusValue
+     * @param deductExcessSubmissionPenaltyValue
      * @param deductLatePenaltyValue
      * @return The newly created object
      */
@@ -73,6 +74,7 @@ public abstract class _SubmissionProfile
         EOEditingContext editingContext,
         boolean allowPartnersValue,
         boolean awardEarlyBonusValue,
+        boolean deductExcessSubmissionPenaltyValue,
         boolean deductLatePenaltyValue
         )
     {
@@ -82,6 +84,7 @@ public abstract class _SubmissionProfile
                 _SubmissionProfile.ENTITY_NAME);
         eoObject.setAllowPartners(allowPartnersValue);
         eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
+        eoObject.setDeductExcessSubmissionPenalty(deductExcessSubmissionPenaltyValue);
         eoObject.setDeductLatePenalty(deductLatePenaltyValue);
         return eoObject;
     }
@@ -162,6 +165,9 @@ public abstract class _SubmissionProfile
     public static final String DEAD_TIME_DELTA_KEY = "deadTimeDelta";
     public static final ERXKey<Long> deadTimeDelta =
         new ERXKey<Long>(DEAD_TIME_DELTA_KEY);
+    public static final String DEDUCT_EXCESS_SUBMISSION_PENALTY_KEY = "deductExcessSubmissionPenalty";
+    public static final ERXKey<Integer> deductExcessSubmissionPenalty =
+        new ERXKey<Integer>(DEDUCT_EXCESS_SUBMISSION_PENALTY_KEY);
     public static final String DEDUCT_LATE_PENALTY_KEY = "deductLatePenalty";
     public static final ERXKey<Integer> deductLatePenalty =
         new ERXKey<Integer>(DEDUCT_LATE_PENALTY_KEY);
@@ -174,6 +180,18 @@ public abstract class _SubmissionProfile
     public static final String EARLY_BONUS_UNIT_TIME_KEY = "earlyBonusUnitTime";
     public static final ERXKey<Long> earlyBonusUnitTime =
         new ERXKey<Long>(EARLY_BONUS_UNIT_TIME_KEY);
+    public static final String EXCESS_SUBMISSIONS_MAX_PTS_KEY = "excessSubmissionsMaxPts";
+    public static final ERXKey<Double> excessSubmissionsMaxPts =
+        new ERXKey<Double>(EXCESS_SUBMISSIONS_MAX_PTS_KEY);
+    public static final String EXCESS_SUBMISSIONS_THRESHOLD_KEY = "excessSubmissionsThreshold";
+    public static final ERXKey<Integer> excessSubmissionsThreshold =
+        new ERXKey<Integer>(EXCESS_SUBMISSIONS_THRESHOLD_KEY);
+    public static final String EXCESS_SUBMISSIONS_UNIT_PTS_KEY = "excessSubmissionsUnitPts";
+    public static final ERXKey<Double> excessSubmissionsUnitPts =
+        new ERXKey<Double>(EXCESS_SUBMISSIONS_UNIT_PTS_KEY);
+    public static final String EXCESS_SUBMISSIONS_UNIT_SIZE_KEY = "excessSubmissionsUnitSize";
+    public static final ERXKey<Integer> excessSubmissionsUnitSize =
+        new ERXKey<Integer>(EXCESS_SUBMISSIONS_UNIT_SIZE_KEY);
     public static final String EXCLUDED_FILE_PATTERNS_KEY = "excludedFilePatterns";
     public static final ERXKey<String> excludedFilePatterns =
         new ERXKey<String>(EXCLUDED_FILE_PATTERNS_KEY);
@@ -599,6 +617,70 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>deductExcessSubmissionPenalty</code> value.
+     * @return the value of the attribute
+     */
+    public boolean deductExcessSubmissionPenalty()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "deductExcessSubmissionPenalty" );
+        return ( returnValue == null )
+            ? false
+            : ( returnValue.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>deductExcessSubmissionPenalty</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setDeductExcessSubmissionPenalty( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductExcessSubmissionPenalty("
+                + value + "): was " + deductExcessSubmissionPenalty() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setDeductExcessSubmissionPenaltyRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>deductExcessSubmissionPenalty</code> value.
+     * @return the value of the attribute
+     */
+    public Integer deductExcessSubmissionPenaltyRaw()
+    {
+        return (Integer)storedValueForKey( "deductExcessSubmissionPenalty" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>deductExcessSubmissionPenalty</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setDeductExcessSubmissionPenaltyRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setDeductExcessSubmissionPenaltyRaw("
+                + value + "): was " + deductExcessSubmissionPenaltyRaw() );
+        }
+        takeStoredValueForKey( value, "deductExcessSubmissionPenalty" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>deductLatePenalty</code> value.
      * @return the value of the attribute
      */
@@ -850,6 +932,262 @@ public abstract class _SubmissionProfile
                 + value + "): was " + earlyBonusUnitTimeRaw() );
         }
         takeStoredValueForKey( value, "earlyBonusUnitTime" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsMaxPts</code> value.
+     * @return the value of the attribute
+     */
+    public double excessSubmissionsMaxPts()
+    {
+        Double returnValue =
+            (Double)storedValueForKey( "excessSubmissionsMaxPts" );
+        return ( returnValue == null )
+            ? 0.0
+            : returnValue.doubleValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsMaxPts</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsMaxPts( double value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsMaxPts("
+                + value + "): was " + excessSubmissionsMaxPts() );
+        }
+        Double actual =
+            new Double( value );
+            setExcessSubmissionsMaxPtsRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsMaxPts</code> value.
+     * @return the value of the attribute
+     */
+    public Double excessSubmissionsMaxPtsRaw()
+    {
+        return (Double)storedValueForKey( "excessSubmissionsMaxPts" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsMaxPts</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsMaxPtsRaw( Double value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsMaxPtsRaw("
+                + value + "): was " + excessSubmissionsMaxPtsRaw() );
+        }
+        takeStoredValueForKey( value, "excessSubmissionsMaxPts" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsThreshold</code> value.
+     * @return the value of the attribute
+     */
+    public int excessSubmissionsThreshold()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "excessSubmissionsThreshold" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsThreshold</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsThreshold( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsThreshold("
+                + value + "): was " + excessSubmissionsThreshold() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setExcessSubmissionsThresholdRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsThreshold</code> value.
+     * @return the value of the attribute
+     */
+    public Integer excessSubmissionsThresholdRaw()
+    {
+        return (Integer)storedValueForKey( "excessSubmissionsThreshold" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsThreshold</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsThresholdRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsThresholdRaw("
+                + value + "): was " + excessSubmissionsThresholdRaw() );
+        }
+        takeStoredValueForKey( value, "excessSubmissionsThreshold" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsUnitPts</code> value.
+     * @return the value of the attribute
+     */
+    public double excessSubmissionsUnitPts()
+    {
+        Double returnValue =
+            (Double)storedValueForKey( "excessSubmissionsUnitPts" );
+        return ( returnValue == null )
+            ? 0.0
+            : returnValue.doubleValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsUnitPts</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsUnitPts( double value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsUnitPts("
+                + value + "): was " + excessSubmissionsUnitPts() );
+        }
+        Double actual =
+            new Double( value );
+            setExcessSubmissionsUnitPtsRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsUnitPts</code> value.
+     * @return the value of the attribute
+     */
+    public Double excessSubmissionsUnitPtsRaw()
+    {
+        return (Double)storedValueForKey( "excessSubmissionsUnitPts" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsUnitPts</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsUnitPtsRaw( Double value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsUnitPtsRaw("
+                + value + "): was " + excessSubmissionsUnitPtsRaw() );
+        }
+        takeStoredValueForKey( value, "excessSubmissionsUnitPts" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsUnitSize</code> value.
+     * @return the value of the attribute
+     */
+    public int excessSubmissionsUnitSize()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "excessSubmissionsUnitSize" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsUnitSize</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsUnitSize( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsUnitSize("
+                + value + "): was " + excessSubmissionsUnitSize() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setExcessSubmissionsUnitSizeRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>excessSubmissionsUnitSize</code> value.
+     * @return the value of the attribute
+     */
+    public Integer excessSubmissionsUnitSizeRaw()
+    {
+        return (Integer)storedValueForKey( "excessSubmissionsUnitSize" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>excessSubmissionsUnitSize</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setExcessSubmissionsUnitSizeRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setExcessSubmissionsUnitSizeRaw("
+                + value + "): was " + excessSubmissionsUnitSizeRaw() );
+        }
+        takeStoredValueForKey( value, "excessSubmissionsUnitSize" );
     }
 
 

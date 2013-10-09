@@ -469,6 +469,31 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Add support for excess submission penalties.
+     * @throws SQLException on error
+     */
+    public void updateIncrement23() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "deductExcessSubmissionPenalty BIT NOT NULL Default 0");
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "excessSubmissionsMaxPts DOUBLE");
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "excessSubmissionsThreshold INTEGER");
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "excessSubmissionsUnitPts DOUBLE");
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "excessSubmissionsUnitSize INTEGER");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
