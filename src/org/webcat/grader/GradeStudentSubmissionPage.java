@@ -101,6 +101,10 @@ public class GradeStudentSubmissionPage
             {
                 throw new RuntimeException( "null submission result" );
             }
+            if (submission.partnerLink())
+            {
+                submission = submission.primarySubmission();
+            }
             result = submission.result();
         }
         if (log.isDebugEnabled())
