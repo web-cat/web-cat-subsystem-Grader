@@ -46,9 +46,9 @@ public class EditSubmissionProfilePage
      *
      * @param context The page's context
      */
-    public EditSubmissionProfilePage( WOContext context )
+    public EditSubmissionProfilePage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -74,14 +74,25 @@ public class EditSubmissionProfilePage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "starting appendToResponse()" );
-        submissionProfile =
-            prefs().assignmentOffering().assignment().submissionProfile();
-        correctnessPoints = submissionProfile.availablePoints()
-            - submissionProfile.taPoints()
-            - submissionProfile.toolPoints();
+        log.debug("starting appendToResponse()");
+        if (submissionProfile == null)
+        {
+            if (prefs().assignment() != null)
+            {
+                submissionProfile =
+                    prefs().assignment().submissionProfile();
+            }
+            else
+            {
+                submissionProfile = prefs().assignmentOffering()
+                    .assignment().submissionProfile();
+            }
+            correctnessPoints = submissionProfile.availablePoints()
+                - submissionProfile.taPoints()
+                - submissionProfile.toolPoints();
+        }
         initializeTimeFields();
-        super.beforeAppendToResponse( response, context );
+        super.beforeAppendToResponse(response, context);
     }
 
 
@@ -89,93 +100,88 @@ public class EditSubmissionProfilePage
     public void initializeTimeFields()
     {
         // First, fill availableTimeDelta data members
-        if ( submissionProfile.availableTimeDeltaRaw() == null )
+        if (submissionProfile.availableTimeDeltaRaw() == null)
         {
             availableTimeDelta     = null;
-            availableTimeDeltaUnit = SubmissionProfile.timeUnits[ 2 ];  // Days
+            availableTimeDeltaUnit = SubmissionProfile.timeUnits[2];  // Days
         }
         else
         {
             long storedAvailableTimeDelta =
                 submissionProfile.availableTimeDelta();
-            for ( int i = SubmissionProfile.timeUnits.length - 1;
-                  i >= 0; i-- )
+            for (int i = SubmissionProfile.timeUnits.length - 1; i >= 0; i--)
             {
-                availableTimeDeltaUnit = SubmissionProfile.timeUnits[ i ];
-                if ( availableTimeDeltaUnit.isUnitFor(
-                         storedAvailableTimeDelta ) ||
-                     i == 0 )
+                availableTimeDeltaUnit = SubmissionProfile.timeUnits[i];
+                if (availableTimeDeltaUnit.isUnitFor(storedAvailableTimeDelta)
+                    || i == 0)
                 {
-                    availableTimeDelta = availableTimeDeltaUnit.unitsFromRaw(
-                        storedAvailableTimeDelta);
+                    availableTimeDelta = availableTimeDeltaUnit
+                        .unitsFromRaw(storedAvailableTimeDelta);
                     break;
                 }
             }
         }
         // Next, fill deadTimeDelta data members
-        if ( submissionProfile.deadTimeDeltaRaw() == null )
+        if (submissionProfile.deadTimeDeltaRaw() == null)
         {
-            deadTimeDelta     = new Long( 0L );
-            deadTimeDeltaUnit = SubmissionProfile.timeUnits[ 2 ];  // Days
+            deadTimeDelta     = 0L;
+            deadTimeDeltaUnit = SubmissionProfile.timeUnits[2];  // Days
         }
         else
         {
             long storedDeadTimeDelta = submissionProfile.deadTimeDelta();
-            for ( int i = SubmissionProfile.timeUnits.length - 1;
-                  i >= 0; i-- )
+            for (int i = SubmissionProfile.timeUnits.length - 1; i >= 0; i--)
             {
-                deadTimeDeltaUnit = SubmissionProfile.timeUnits[ i ];
-                if ( deadTimeDeltaUnit.isUnitFor( storedDeadTimeDelta ) ||
-                     i == 0 )
+                deadTimeDeltaUnit = SubmissionProfile.timeUnits[i];
+                if (deadTimeDeltaUnit.isUnitFor(storedDeadTimeDelta)
+                    || i == 0)
                 {
-                    deadTimeDelta = deadTimeDeltaUnit.unitsFromRaw(
-                        storedDeadTimeDelta );
+                    deadTimeDelta = deadTimeDeltaUnit
+                        .unitsFromRaw(storedDeadTimeDelta);
                     break;
                 }
             }
         }
         // Next, fill earlyBonusTimeUnit data members
-        if ( submissionProfile.earlyBonusUnitTimeRaw() == null )
+        if (submissionProfile.earlyBonusUnitTimeRaw() == null)
         {
             earlyBonusUnitTime = 0L;
-            earlyUnitTimeUnit  = SubmissionProfile.timeUnits[ 2 ];  // Days
+            earlyUnitTimeUnit  = SubmissionProfile.timeUnits[2];  // Days
         }
         else
         {
             long storedEarlyBonusUnitTime =
                 submissionProfile.earlyBonusUnitTime();
-            for ( int i = SubmissionProfile.timeUnits.length - 1;
-                  i >= 0; i-- )
+            for (int i = SubmissionProfile.timeUnits.length - 1; i >= 0; i--)
             {
-                earlyUnitTimeUnit = SubmissionProfile.timeUnits[ i ];
-                if ( earlyUnitTimeUnit.isUnitFor( storedEarlyBonusUnitTime ) ||
-                     i == 0 )
+                earlyUnitTimeUnit = SubmissionProfile.timeUnits[i];
+                if (earlyUnitTimeUnit.isUnitFor(storedEarlyBonusUnitTime)
+                    || i == 0)
                 {
-                    earlyBonusUnitTime = earlyUnitTimeUnit.unitsFromRaw(
-                        storedEarlyBonusUnitTime );
+                    earlyBonusUnitTime = earlyUnitTimeUnit
+                        .unitsFromRaw(storedEarlyBonusUnitTime);
                     break;
                 }
             }
         }
         // Finally, fill latePenaltyTimeUnit data members
-        if ( submissionProfile.latePenaltyUnitTimeRaw() == null )
+        if (submissionProfile.latePenaltyUnitTimeRaw() == null)
         {
             latePenaltyUnitTime = 0L;
-            lateUnitTimeUnit    = SubmissionProfile.timeUnits[ 2 ];  // Days
+            lateUnitTimeUnit    = SubmissionProfile.timeUnits[2];  // Days
         }
         else
         {
             long storedLatePenaltyUnitTime =
                 submissionProfile.latePenaltyUnitTime();
-            for ( int i = SubmissionProfile.timeUnits.length - 1;
-                  i >= 0; i-- )
+            for (int i = SubmissionProfile.timeUnits.length - 1; i >= 0; i--)
             {
-                lateUnitTimeUnit = SubmissionProfile.timeUnits[ i ];
-                if ( lateUnitTimeUnit.isUnitFor( storedLatePenaltyUnitTime ) ||
-                     i == 0 )
+                lateUnitTimeUnit = SubmissionProfile.timeUnits[i];
+                if (lateUnitTimeUnit.isUnitFor(storedLatePenaltyUnitTime)
+                    || i == 0)
                 {
-                    latePenaltyUnitTime = lateUnitTimeUnit.unitsFromRaw(
-                        storedLatePenaltyUnitTime );
+                    latePenaltyUnitTime = lateUnitTimeUnit
+                        .unitsFromRaw(storedLatePenaltyUnitTime);
                     break;
                 }
             }
@@ -187,13 +193,13 @@ public class EditSubmissionProfilePage
     public void saveTimeFields()
     {
         submissionProfile.setAvailableTimeDeltaRaw(
-            availableTimeDeltaUnit.rawFromUnits(availableTimeDelta) );
+            availableTimeDeltaUnit.rawFromUnits(availableTimeDelta));
         submissionProfile.setDeadTimeDeltaRaw(
-            deadTimeDeltaUnit.rawFromUnits(deadTimeDelta) );
+            deadTimeDeltaUnit.rawFromUnits(deadTimeDelta));
         submissionProfile.setEarlyBonusUnitTimeRaw(
-            earlyUnitTimeUnit.rawFromUnits(earlyBonusUnitTime) );
+            earlyUnitTimeUnit.rawFromUnits(earlyBonusUnitTime));
         submissionProfile.setLatePenaltyUnitTimeRaw(
-            lateUnitTimeUnit.rawFromUnits(latePenaltyUnitTime) );
+            lateUnitTimeUnit.rawFromUnits(latePenaltyUnitTime));
     }
 
 
@@ -246,7 +252,7 @@ public class EditSubmissionProfilePage
 
 
     // ----------------------------------------------------------
-    public void setMaxFileUploadSize( String valueAsString )
+    public void setMaxFileUploadSize(String valueAsString)
     {
         Long value = null;
         if (valueAsString != null)
@@ -259,26 +265,24 @@ public class EditSubmissionProfilePage
             catch (NumberFormatException e)
             {
                 // set error message if size is out of range
-                error(
-                    "Unable to interpret \"" + valueAsString + "\" as a "
+                error("Unable to interpret \"" + valueAsString + "\" as a "
                     + "number for the max upload size.",
-                    "formatMaxSize" );
+                    "formatMaxSize");
             }
         }
-        clearMessage( "formatMaxSize" );
-        if ( value != null
-             && value.longValue() > SubmissionProfile.maxMaxFileUploadSize() )
+        clearMessage("formatMaxSize");
+        if (value != null
+            && value.longValue() > SubmissionProfile.maxMaxFileUploadSize())
         {
             // set error message if size is out of range
-            error(
-                "The maximum upload size allowed is "
+            error("The maximum upload size allowed is "
                 + SubmissionProfile.maxMaxFileUploadSize()
                 + ".  Contact the administrator for higher limits.",
-                "tooLarge" );
+                "tooLarge");
         }
         else
         {
-            clearMessage( "tooLarge" );
+            clearMessage("tooLarge");
         }
         // This will automatically restrict to the max value anyway
         submissionProfile.setMaxFileUploadSizeRaw(value);
@@ -289,16 +293,16 @@ public class EditSubmissionProfilePage
     /* (non-Javadoc)
      * @see com.webobjects.appserver.WOComponent#takeValuesFromRequest(com.webobjects.appserver.WORequest, com.webobjects.appserver.WOContext)
      */
-    public void takeValuesFromRequest( WORequest arg0, WOContext arg1 )
+    public void takeValuesFromRequest(WORequest request, WOContext context)
     {
-        super.takeValuesFromRequest( arg0, arg1 );
-        log.debug( "taking values" );
-        if ( submissionProfile != null  )
+        super.takeValuesFromRequest(request, context);
+        log.debug("taking values");
+        if (submissionProfile != null)
         {
             submissionProfile.setAvailablePoints(
                 correctnessPoints
                 + submissionProfile.taPoints()
-                + submissionProfile.toolPoints() );
+                + submissionProfile.toolPoints());
         }
     }
 
@@ -338,5 +342,5 @@ public class EditSubmissionProfilePage
         + "</script>";
 
     private static final Format doubleFormatter = new DecimalFormat("0.######");
-    static Logger log = Logger.getLogger( EditSubmissionProfilePage.class );
+    static Logger log = Logger.getLogger(EditSubmissionProfilePage.class);
 }
