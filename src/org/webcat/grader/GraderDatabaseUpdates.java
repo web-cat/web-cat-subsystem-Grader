@@ -494,6 +494,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Extend result outcome contents column to "long" size.
+     * @throws SQLException on error
+     */
+    public void updateIncrement24() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TRESULTOUTCOME modify "
+            + "CCONTENTS LONGBLOB");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

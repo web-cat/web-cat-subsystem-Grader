@@ -4,6 +4,7 @@
             columnName = CCONTENTS;
             name = contents;
             prototypeName = mutableDictionary;
+            externalType = LONGBLOB;
             userInfo = {
                 adaptorValueConversionMethodName = archiveData;
                 isMutable = true;
