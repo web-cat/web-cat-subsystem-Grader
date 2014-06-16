@@ -742,7 +742,7 @@ public class GradingPlugin
         User                            installedBy,
         net.sf.webcat.FeatureDescriptor plugin,
         boolean                         overwrite,
-        GradingPlugin                      scriptFile )
+        GradingPlugin                   scriptFile )
     {
         if ( scriptFile != null && !scriptFile.hasSubdir() )
         {
@@ -964,7 +964,7 @@ public class GradingPlugin
             if (plugin.getProperty("batchEntity") == null)
             {
                 log.info("Installing new plug-in: \"" + plugin.name() + "\"");
-                String msg = installOrUpdate(admin, plugin, false, null);
+                String msg = installOrUpdate(admin, plugin, true, null);
                 if (msg != null)
                 {
                     log.error("Error installing new plug-in \""
