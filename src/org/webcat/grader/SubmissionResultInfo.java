@@ -88,16 +88,8 @@ public class SubmissionResultInfo
             // TODO: fix this with auto-migration
             submission.migratePartnerLink();
 
-            NSMutableArray<User> partners = new NSMutableArray<User>();
-
-            for (Submission partneredSubmission :
-                submission.partneredSubmissions())
-            {
-                partners.addObject(partneredSubmission.user());
-            }
-
-            originalPartners = partners;
-            partnersForEditing = partners.mutableClone();
+            originalPartners = submission.allUsers();
+            partnersForEditing = originalPartners.mutableClone();
         }
 
         super.beforeAppendToResponse( response, context );
@@ -108,20 +100,42 @@ public class SubmissionResultInfo
     public void setPartnersForEditing(NSArray<User> users)
     {
         partnersForEditing = users;
+        NSArray<User> partnersWithoutPrincipal = users;
+        if (!partnersForEditing.contains(submission.user()))
+        {
+            NSMutableArray<User> p = partnersForEditing.mutableClone();
+            p.addObject(submission.user());
+            partnersForEditing = p;
+        }
+        else
+        {
+            partnersForEditing = partnersForEditing.mutableClone();
+            NSMutableArray<User> p = partnersWithoutPrincipal.mutableClone();
+            p.removeObject(submission.user());
+            partnersWithoutPrincipal = p;
+        }
 
-        @SuppressWarnings("unchecked")
-        NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
-                originalPartners, partnersForEditing);
-        submission.unpartnerFrom(partnersToRemove);
+        // TODO: This now changes partnering for ALL submissions in a chain,
+        // but there should probably be an option in the partner editing
+        // dialog that allows the user to choose whether to change all, or
+        // just the current one.
+        for (Submission s : submission.allSubmissions())
+        {
+            NSArray<User> originals = s.allPartners();
+            @SuppressWarnings("unchecked")
+            NSArray<User> partnersToRemove = ERXArrayUtilities.arrayMinusArray(
+                originals, partnersWithoutPrincipal);
+            s.unpartnerFrom(partnersToRemove);
 
-        @SuppressWarnings("unchecked")
-        NSArray<User> partnersToAdd = ERXArrayUtilities.arrayMinusArray(
-                partnersForEditing, originalPartners);
-        submission.partnerWith(partnersToAdd);
+            @SuppressWarnings("unchecked")
+            NSArray<User> partnersToAdd = ERXArrayUtilities.arrayMinusArray(
+                partnersWithoutPrincipal, originals);
+            s.partnerWith(partnersToAdd);
+        }
 
         applyLocalChanges();
 
-        originalPartners = partnersForEditing.mutableClone();
+        originalPartners = partnersForEditing;
     }
 
 
