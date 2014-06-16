@@ -90,7 +90,7 @@
     <wo:loop list="$submissionDisplayGroup.displayedObjects"
         item="$aSubmission" index="$index">
         <wo:TableRow index="$index">
-          <wo:if condition="$aSubmission.result">
+          <wo:if condition="$aSubmission.resultIsReady">
             <td class="n"><wo:link action="$viewSubmission"><wo:str value="$aSubmission.submitNumber"/></wo:link></td>
             <td><wo:link action="$viewSubmission"><wo:str value="$aSubmission.submitTime" formatter="$session.timeFormatter"/></wo:link></td>
             <td class="n"><wo:link action="$viewSubmission"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo:str value="$aSubmission.result.finalScore" numberformat="0.0"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo:link></td>

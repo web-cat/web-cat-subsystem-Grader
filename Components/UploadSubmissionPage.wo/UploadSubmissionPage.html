@@ -56,7 +56,7 @@ to choose them.
   <webobject name="Repetition1"><webobject name="TR">
     <td><webobject name="String1"/></td>
     <td><webobject name="String2"/></td>
-              <wo:if condition="$aSubmission.result">
+              <wo:if condition="$aSubmission.resultIsReady">
     <wo:if condition="~extraColumnCount gt 1">
       <wo:if condition="$offering.assignment.usesTestingScore"><td class="n"><wo:str value="$aSubmission.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
       <wo:if condition="$offering.assignment.usesToolCheckScore"><td class="n"><wo:str value="$aSubmission.result.toolScoreRaw" numberformat="0.0"/></td></wo:if>

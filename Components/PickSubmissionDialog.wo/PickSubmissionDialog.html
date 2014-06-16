@@ -18,7 +18,7 @@
             <wo:WCTableRow>
                 <td class="n"><wo:str value="$aSubmission.submitNumber"/></td>
                 <td class="sm"><wo name="SubmitTimeSpan"><wo name="SubmitTime"/></wo></td>
-              <wo:if condition="$aSubmission.result">
+              <wo:if condition="$aSubmission.resultIsReady">
                 <td class="n"><wo:if condition="$aSubmission.isSubmissionForGrading"><wo:if condition="~aSubmission.result.status == @org.webcat.core.Status@CHECK || !aSubmission.assignmentOffering.assignment.usesTAScore || aSubmission.assignmentOffering.courseOffering.isStaff(user)"><wo name="FinalScore"/></wo:if><wo:else>&lt;Awaiting Staff&gt;</wo:else></wo:if></td>
     <wo:if condition="~extraColumnCount gt 1">
       <wo:if condition="$rootUserSubmission.submission.assignmentOffering.assignment.usesTestingScore"><td class="n"><wo:str value="$aSubmission.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>

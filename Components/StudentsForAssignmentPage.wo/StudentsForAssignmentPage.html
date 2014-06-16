@@ -43,7 +43,7 @@
                     <td><wo:tstr value="$aSubmission.result.submission.namesOfAllUsers_LF"/>
                       <wo:not condition="$isMostRecentSubmission">
                         <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
-                          <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                          <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.resultIsReady"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
                           <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
                           <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:&nbsp;<span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
                         </wo:loop>
@@ -96,7 +96,7 @@
         <td><wo:str value="$aSubmission.result.submission.namesOfAllUsers_LF"/>
               <wo:not condition="$isMostRecentSubmission">
                 <wo:loop list="$studentNewerSubmissions.filteredObjects" item="$aNewerSubmission">
-                  <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.result"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
+                  <br/>&nbsp;&nbsp;&nbsp;&nbsp;<wo:if condition="$aNewerSubmission.resultIsReady"><wo:link action="$editNewerSubmissionScore">try #<wo:str value="$aNewerSubmission.submitNumber"/>,
                   <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:link></wo:if><wo:else>try #<wo:str value="$aNewerSubmission.submitNumber"/>,
                   <wo name="NewerSubmitTimeSpan"><wo name="NewerSubmitTime"/></wo></wo:else>:
                   <span class="caution"><wo:str value="$newerSubmissionStatus"/></span>
