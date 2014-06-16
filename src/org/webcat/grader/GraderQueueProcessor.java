@@ -94,7 +94,6 @@ public class GraderQueueProcessor
             try
             {
                 editingContext = WCEC.newEditingContext();
-                editingContext.setSharedEditingContext(null);
                 editingContext.lock();
 
                 // Clear discarded jobs
@@ -953,6 +952,8 @@ public class GraderQueueProcessor
         List<File>                 adminReports)
     {
         File parentDir = new File(job.submission().resultDirName());
+        NSMutableArray<ResultFile> oldResultFiles =
+            submissionResult.resultFiles().mutableClone();
 
         // First, collect all the report fragments
         int numReports = properties.intForKey("numReports");
@@ -1012,13 +1013,27 @@ public class GraderQueueProcessor
                 }
                 else
                 {
-                    ResultFile thisFile = new ResultFile();
-                    editingContext.insertObject(thisFile);
-                    thisFile.setFileName(fileName);
+                    ResultFile thisFile = null;
+                    NSArray<ResultFile> files = ResultFile
+                        .objectsMatchingQualifier(editingContext,
+                            ResultFile.submissionResult.is(submissionResult)
+                                .and(ResultFile.fileName.eq(fileName)));
+                    if (files.size() > 0)
+                    {
+                        thisFile = files.get(0);
+                        oldResultFiles.remove(thisFile);
+                    }
+                    else
+                    {
+                        thisFile = new ResultFile();
+                        editingContext.insertObject(thisFile);
+                        thisFile.setFileName(fileName);
+                        thisFile.setSubmissionResultRelationship(
+                            submissionResult);
+                    }
                     thisFile.setLabel(
                         properties.getProperty(attributeBase + "label"));
                     thisFile.setMimeType(mimeType);
-                    thisFile.setSubmissionResultRelationship(submissionResult);
                 }
             }
             if (toStaff)
@@ -1058,8 +1073,14 @@ public class GraderQueueProcessor
                     job.submission().resultDirName() + "/" + fileName));
             }
         }
+        for (ResultFile thisFile : oldResultFiles)
+        {
+            thisFile.delete();
+        }
 
         // Second, collect all the stats markup files
+        NSMutableArray<SubmissionFileStats> oldStats =
+            submissionResult.submissionFileStats().mutableClone();
         String statElementsLabel = properties.getProperty("statElementsLabel");
         if (statElementsLabel != null)
         {
@@ -1069,16 +1090,33 @@ public class GraderQueueProcessor
         for (int i = 1; i <= numReports; i++)
         {
             String attributeBase = "codeMarkup" + i + ".";
-            SubmissionFileStats stats = new SubmissionFileStats();
-            editingContext.insertObject(stats);
+            SubmissionFileStats stats = null;
+
+            String markupFileName =
+                properties.getProperty(attributeBase + "markupFileName");
+            NSArray<SubmissionFileStats> matches =
+                SubmissionFileStats.objectsMatchingQualifier(editingContext,
+                    SubmissionFileStats.submissionResult.is(submissionResult)
+                        .and(SubmissionFileStats.markupFileNameRaw
+                            .eq(markupFileName)));
+            if (matches.size() > 0)
+            {
+                stats = matches.get(0);
+                oldStats.remove(stats);
+            }
+            else
+            {
+                stats = new SubmissionFileStats();
+                editingContext.insertObject(stats);
+                stats.setSubmissionResultRelationship(submissionResult);
+            }
             stats.setClassName(
                 properties.getProperty(attributeBase + "className"));
             stats.setPkgName(
                 properties.getProperty(attributeBase + "pkgName"));
             stats.setSourceFileNameRaw(
                 properties.getProperty(attributeBase + "sourceFileName"));
-            stats.setMarkupFileNameRaw(
-                properties.getProperty(attributeBase + "markupFileName"));
+            stats.setMarkupFileNameRaw(markupFileName);
 
             // The tags are zero or more space-delimited strings that describe
             // what this file's role is (such as if it is a test case). Note
@@ -1172,7 +1210,10 @@ public class GraderQueueProcessor
             {
                 stats.setElementsCoveredRaw(integerForString(attr));
             }
-            stats.setSubmissionResultRelationship(submissionResult);
+        }
+        for (SubmissionFileStats stats : oldStats)
+        {
+            stats.delete();
         }
     }
 
@@ -1221,11 +1262,16 @@ public class GraderQueueProcessor
         double       correctnessScore,
         double       toolScore)
     {
-        SubmissionResult submissionResult = new SubmissionResult();
+        SubmissionResult submissionResult = job.submission().result();
+        if (submissionResult == null)
+        {
+            submissionResult = new SubmissionResult();
+            editingContext.insertObject(submissionResult);
+            submissionResult.addToSubmissionsRelationship(job.submission());
+        }
 
         submissionResult.setCorrectnessScore(correctnessScore);
         submissionResult.setToolScore(toolScore);
-        editingContext.insertObject(submissionResult);
 
         NSMutableArray<InlineFile> inlineStudentReports =
             new NSMutableArray<InlineFile>();
@@ -1254,7 +1300,6 @@ public class GraderQueueProcessor
 
         editingContext.saveChanges();
         boolean wasRegraded = job.regrading();
-        submissionResult.addToSubmissionsRelationship(job.submission());
 
         if (!job.submission().assignmentOffering().assignment().usesTAScore()
             && (job.submission().assignmentOffering().assignment()
@@ -1266,7 +1311,9 @@ public class GraderQueueProcessor
         }
 
         if (job.submission().assignmentOffering().assignment()
-            .submissionProfile().allowPartners())
+            .submissionProfile().allowPartners()
+            && job.submission().assignmentOffering().assignment()
+            .submissionProfile().autoAssignPartners())
         {
             connectPartnersFromProperty(job, properties.getProperty(
                 "grader.potentialpartners"));
@@ -1514,7 +1561,7 @@ public class GraderQueueProcessor
         // Get the previous submission that has a result object so that we can
         // get the accumulated values dictionary from it.
         Submission prevSub = job.submission().previousSubmission();
-        while (prevSub != null && prevSub.result() == null)
+        while (prevSub != null && !prevSub.resultIsReady())
         {
             prevSub = prevSub.previousSubmission();
         }
