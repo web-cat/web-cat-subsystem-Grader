@@ -51,9 +51,9 @@ public class UploadRosterPage
      *
      * @param context The page's context
      */
-    public UploadRosterPage( WOContext context )
+    public UploadRosterPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -86,6 +86,8 @@ public class UploadRosterPage
     public String                 aColumn;
     public int                    colIndex;
 
+    public boolean                removeUnlisted;
+
 
     //~ Public Methods ........................................................
 
@@ -99,25 +101,25 @@ public class UploadRosterPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        if ( domain == null )
+        if (domain == null)
         {
-            domain = user().authenticationDomain();
+            domain = courseOffering().course().department().institution();
         }
         if (previewLines == null)
         {
             refresh(true, false);
         }
-        super.beforeAppendToResponse( response, context );
+        super.beforeAppendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
     public WOActionResults replace()
     {
-        if (  newFilePath != null
-           && !newFilePath.equals( "" )
+        if (newFilePath != null
+           && !newFilePath.equals("")
            && newData != null
-           && newData.length() > 0 )
+           && newData.length() > 0)
         {
             filePath = newFilePath;
             data = newData;
@@ -126,7 +128,7 @@ public class UploadRosterPage
         }
         else
         {
-            error( "Please select a (non-empty) CSV file to upload." );
+            error("Please select a (non-empty) CSV file to upload.");
         }
         return refresh();
     }
@@ -148,7 +150,7 @@ public class UploadRosterPage
     public boolean applyLocalChanges()
     {
         clearAllMessages();
-        if ( columnSelectionsAreOK() )
+        if (columnSelectionsAreOK())
         {
             readStudentList(true);
             return super.applyLocalChanges();
@@ -166,7 +168,7 @@ public class UploadRosterPage
         public char character;
         public String label;
 
-        public Delimiter( char c, String s )
+        public Delimiter(char c, String s)
         {
             character = c;
             label = s;
@@ -174,7 +176,7 @@ public class UploadRosterPage
 
         public String toString()
         {
-            return ( label == null ) ? Character.toString( character ) : label;
+            return (label == null) ? Character.toString(character) : label;
         }
     }
 
@@ -208,12 +210,12 @@ public class UploadRosterPage
         {
             guessColumns();
         }
-        if ( columnSelectionsAreOK() )
+        if (columnSelectionsAreOK())
         {
-            if ( showConfirmation )
+            if (showConfirmation)
             {
                 confirmationMessage(
-                    "No column labeling inconsistencies were detected." );
+                    "No column labeling inconsistencies were detected.");
             }
             readStudentList(false);
         }
@@ -231,26 +233,26 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     private void guessDelimiter()
     {
-        log.debug( "guessDelimiter()" );
+        log.debug("guessDelimiter()");
         // Default is a comma
-        selectedDelimiter = DELIMITERS.objectAtIndex( 0 );
+        selectedDelimiter = DELIMITERS.objectAtIndex(0);
         try
         {
             BufferedReader in = new BufferedReader(
-                new InputStreamReader( data.stream(), "UTF8" ) );
+                new InputStreamReader(data.stream(), "UTF8"));
 
             // Find first non-blank line
             String line = in.readLine();
-            while ( line != null && BLANK_LINE.matcher( line ).matches() )
+            while (line != null && BLANK_LINE.matcher(line).matches())
             {
                 line = in.readLine();
             }
 
-            if ( line != null )
+            if (line != null)
             {
                 // Find a second non-blank line to compare against
                 String line2 = in.readLine();
-                while ( line2 != null && BLANK_LINE.matcher( line2 ).matches() )
+                while (line2 != null && BLANK_LINE.matcher(line2).matches())
                 {
                     line2 = in.readLine();
                 }
@@ -266,18 +268,18 @@ public class UploadRosterPage
                 int bestDelimCount2 = 0;
                 for (Delimiter d : DELIMITERS)
                 {
-                    int count1 = countOccurrences( line, d.character );
-                    int count2 = countOccurrences( line2, d.character );
-                    if ( count1 == count2
-                         && count1 > bestDelimCount2
-                         && ( d.character != ' ' || bestDelimCount2 == 0 ) )
+                    int count1 = countOccurrences(line, d.character);
+                    int count2 = countOccurrences(line2, d.character);
+                    if (count1 == count2
+                        && count1 > bestDelimCount2
+                        && (d.character != ' ' || bestDelimCount2 == 0))
                     {
                         selectedDelimiter = d;
                         bestDelimCount2 = count1;
                     }
                     else if (bestDelimCount2 == 0
                              && count1 > bestDelimCount1
-                             && ( d.character != ' ' || bestDelimCount1 == 0 ) )
+                             && (d.character != ' ' || bestDelimCount1 == 0))
                     {
                         selectedDelimiter = d;
                         bestDelimCount1 = count1;
@@ -286,35 +288,41 @@ public class UploadRosterPage
             }
             in.close();
         }
-        catch ( UnsupportedEncodingException e )
+        catch (UnsupportedEncodingException e)
         {
-            log.error( "Error decoding UTF8 stream:", e );
-            throw new NSForwardException( e );
+            log.error("Error decoding UTF8 stream:", e);
+            throw new NSForwardException(e);
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
-            log.error( "Error reading from CSV stream:", e );
-            throw new NSForwardException( e );
+            log.error("Error reading from CSV stream:", e);
+            throw new NSForwardException(e);
         }
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug( "guessDelimiter() = " + selectedDelimiter );
+            log.debug("guessDelimiter() = " + selectedDelimiter);
         }
     }
 
 
     // ----------------------------------------------------------
-    private int countOccurrences( String s, char c )
+    private int countOccurrences(String s, char c)
     {
-        if ( s == null ) return 0;
+        if (s == null)
+        {
+            return 0;
+        }
         int count = 0;
-        int loc = s.indexOf( c );
-        while ( loc >= 0 )
+        int loc = s.indexOf(c);
+        while (loc >= 0)
         {
             count++;
             loc++;
-            if ( loc >= s.length() ) break;
-            loc = s.indexOf( c, loc );
+            if (loc >= s.length())
+            {
+                break;
+            }
+            loc = s.indexOf(c, loc);
         }
         return count;
     }
@@ -323,13 +331,13 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     private void extractPreviewLines()
     {
-        log.debug( "extractPreviewLines()" );
+        log.debug("extractPreviewLines()");
         try
         {
             InputStreamReader stream =
-                new InputStreamReader( data.stream(), "UTF8" );
-            CSVParser in = new CSVParser( stream );
-            in.changeDelimiter( selectedDelimiter.character );
+                new InputStreamReader(data.stream(), "UTF8");
+            CSVParser in = new CSVParser(stream);
+            in.changeDelimiter(selectedDelimiter.character);
 
             previewLines = new NSMutableArray<NSMutableArray<String>>();
             longPreviewLine = null;
@@ -338,17 +346,17 @@ public class UploadRosterPage
             gapBeforeLongLine = false;
             gapAfterLongLine = false;
 
-            String[] line = getNonBlankLine( in );
-            while ( line != null )
+            String[] line = getNonBlankLine(in);
+            while (line != null)
             {
                 numberOfRecords++;
-                if ( numberOfRecords <= NUM_PREVIEW_LINES )
+                if (numberOfRecords <= NUM_PREVIEW_LINES)
                 {
-                    previewLines.add( new NSMutableArray<String>(line) );
+                    previewLines.add(new NSMutableArray<String>(line));
                 }
                 else
                 {
-                    if ( line.length > maxRecordLength )
+                    if (line.length > maxRecordLength)
                     {
                         longPreviewLine = new NSMutableArray<String>(line);
                         gapBeforeLongLine =
@@ -356,7 +364,7 @@ public class UploadRosterPage
                     }
                     else
                     {
-                        if ( longPreviewLine == null )
+                        if (longPreviewLine == null)
                         {
                             gapBeforeLongLine = true;
                         }
@@ -366,36 +374,36 @@ public class UploadRosterPage
                         }
                     }
                 }
-                maxRecordLength = Math.max( maxRecordLength, line.length );
-                line = getNonBlankLine( in );
+                maxRecordLength = Math.max(maxRecordLength, line.length);
+                line = getNonBlankLine(in);
             }
 
             stream.close();
 
             for (NSMutableArray<String> thisLine : previewLines)
             {
-                while ( thisLine.count() < maxRecordLength )
+                while (thisLine.count() < maxRecordLength)
                 {
-                    thisLine.add( "" );
+                    thisLine.add("");
                 }
             }
-            if ( longPreviewLine != null )
+            if (longPreviewLine != null)
             {
-                while ( longPreviewLine.count() < maxRecordLength )
+                while (longPreviewLine.count() < maxRecordLength)
                 {
-                    longPreviewLine.add( "" );
+                    longPreviewLine.add("");
                 }
             }
         }
-        catch ( UnsupportedEncodingException e )
+        catch (UnsupportedEncodingException e)
         {
-            log.error( "Error decoding UTF8 stream:", e );
-            throw new NSForwardException( e );
+            log.error("Error decoding UTF8 stream:", e);
+            throw new NSForwardException(e);
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
-            log.error( "Error reading from CSV stream:", e );
-            throw new NSForwardException( e );
+            log.error("Error reading from CSV stream:", e);
+            throw new NSForwardException(e);
         }
     }
 
@@ -403,41 +411,44 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     private void guessColumns()
     {
-        log.debug( "guessColumns()" );
+        log.debug("guessColumns()");
         columns = new NSMutableArray<String>();
 
         // Default for all columns is "Unused"
-        for ( int i = 0; i < maxRecordLength; i++ )
+        for (int i = 0; i < maxRecordLength; i++)
         {
-            columns.add( COLUMNS.objectAtIndex( 0 ) );
+            columns.add(COLUMNS.objectAtIndex(0));
         }
 
         // Keep track of which columns we've found and where they are at
         int [] columnLocation = new int[COLUMNS.count()];
-        for ( int i = 0; i < columnLocation.length; i++ )
+        for (int i = 0; i < columnLocation.length; i++)
         {
             columnLocation[i] = -1;
         }
 
         // Check for potential column labels in first row
-        if ( previewLines.count() > 0 )
+        if (previewLines.count() > 0)
         {
-            NSArray<String> firstLine = previewLines.objectAtIndex( 0 );
+            NSArray<String> firstLine = previewLines.objectAtIndex(0);
             // boolean atSignFound = false;
-            for ( int i = 0; i < firstLine.count(); i++ )
+            for (int i = 0; i < firstLine.count(); i++)
             {
-                String heading = firstLine.objectAtIndex( i );
-                if ( heading == null ) continue;
-                heading = heading.trim();
-                // if ( cell.indexOf( '@' ) >= 0 ) { atSignFound = true; }
-
-                for ( int colId = 1; colId < COLUMN_PATTERNS.length; colId++ )
+                String heading = firstLine.objectAtIndex(i);
+                if (heading == null)
                 {
-                    if ( COLUMN_PATTERNS[colId].matcher( heading ).find()
-                         && columnLocation[colId] < 0 )
+                    continue;
+                }
+                heading = heading.trim();
+                // if (cell.indexOf('@') >= 0) { atSignFound = true; }
+
+                for (int colId = 1; colId < COLUMN_PATTERNS.length; colId++)
+                {
+                    if (COLUMN_PATTERNS[colId].matcher(heading).find()
+                        && columnLocation[colId] < 0)
                     {
                         columnLocation[colId] = i;
-                        columns.set( i, COLUMNS.objectAtIndex( colId ) );
+                        columns.set(i, COLUMNS.objectAtIndex(colId));
                         firstLineColumnHeadings = true;
                     }
                 }
@@ -446,28 +457,28 @@ public class UploadRosterPage
 
         // If no e-mail column was found, try to pick a line of data and
         // guess columns from that
-        if ( columnLocation[COL_EMAIL] < 0 )
+        if (columnLocation[COL_EMAIL] < 0)
         {
             NSArray<String> model = longPreviewLine;
-            if ( model == null && previewLines.count() > 0 )
+            if (model == null && previewLines.count() > 0)
             {
                 int modelLineNo =
-                    ( firstLineColumnHeadings && previewLines.count() > 1 )
+                    (firstLineColumnHeadings && previewLines.count() > 1)
                     ? 1
                     : 0;
-                model = previewLines.objectAtIndex( modelLineNo );
+                model = previewLines.objectAtIndex(modelLineNo);
             }
 
-            if ( model != null )
+            if (model != null)
             {
-                for ( int i = 0; i < model.count(); i++ )
+                for (int i = 0; i < model.count(); i++)
                 {
-                    String thisCell = model.objectAtIndex( i );
-                    if ( thisCell.indexOf( '@' ) >= 0 )
+                    String thisCell = model.objectAtIndex(i);
+                    if (thisCell.indexOf('@') >= 0)
                     {
                         columnLocation[COL_EMAIL] = i;
                         columns.set(
-                            i, COLUMNS.objectAtIndex( COL_EMAIL ) );
+                            i, COLUMNS.objectAtIndex(COL_EMAIL));
                         break;
                     }
                 }
@@ -479,15 +490,18 @@ public class UploadRosterPage
         if (!firstLineColumnHeadings)
         {
             int[] layout = GENERIC_COLUMNS;
-            if ( maxRecordLength > 7
-                 && columnLocation[COL_EMAIL] >= maxRecordLength - 3 )
+            if (maxRecordLength > 7
+                 && columnLocation[COL_EMAIL] >= maxRecordLength - 3)
             {
                 layout = BANNER_COLUMNS;
             }
-            for ( int i = 1; i < layout.length; i++ )
+            for (int i = 1; i < layout.length; i++)
             {
                 // Skip unused columns
-                if ( layout[i] < 0 ) continue;
+                if (layout[i] < 0)
+                {
+                    continue;
+                }
 
                 // i is the COL_FIRST_NAME .. COL_URL
                 // layout[i] is the pos where the given content is expected
@@ -495,13 +509,13 @@ public class UploadRosterPage
                 // if there is no known position for this content column
                 // and layout[i] is a position that exists
                 // and we don't know what is in that position yet
-                if ( columnLocation[i] < 0
-                     && layout[i] < columns.count()
-                     && COLUMNS.objectAtIndex( 0 ).equals(
-                         columns.objectAtIndex( layout[i] ) ) )
+                if (columnLocation[i] < 0
+                    && layout[i] < columns.count()
+                    && COLUMNS.objectAtIndex(0).equals(
+                        columns.objectAtIndex(layout[i])))
                 {
                     columnLocation[i] = layout[i];
-                    columns.set( layout[i], COLUMNS.objectAtIndex( i ) );
+                    columns.set(layout[i], COLUMNS.objectAtIndex(i));
                 }
             }
         }
@@ -509,22 +523,22 @@ public class UploadRosterPage
 
 
     // ----------------------------------------------------------
-    private boolean isBlank( String[] line )
+    private boolean isBlank(String[] line)
     {
         return line == null
             || line.length == 0
-            || ( line.length == 1
-                 && ( line[0] == null
-                      || line[0].trim().equals( "" ) ) );
+            || (line.length == 1
+                && (line[0] == null
+                    || line[0].trim().equals("")));
     }
 
 
     // ----------------------------------------------------------
-    private String[] getNonBlankLine( CSVParser in )
+    private String[] getNonBlankLine(CSVParser in)
         throws IOException
     {
         String[] line = in.getLine();
-        while ( line != null && isBlank( line ) )
+        while (line != null && isBlank(line))
         {
             line = in.getLine();
         }
@@ -533,11 +547,11 @@ public class UploadRosterPage
 
 
     // ----------------------------------------------------------
-    private String extractColumn( String[] line, int columnId )
+    private String extractColumn(String[] line, int columnId)
     {
         String result = null;
         int col = colLocation[columnId];
-        if ( col >= 0 && col < line.length )
+        if (col >= 0 && col < line.length)
         {
             result = line[col];
         }
@@ -547,14 +561,16 @@ public class UploadRosterPage
 
     // ----------------------------------------------------------
     private void setPropertyIfMissing(
-        User user, String property, String value )
+        User user, String property, String value)
     {
-        if ( value == null ) return;
-        if ( property == null ) return;
-        String old = (String)user.valueForKey( property );
-        if ( old == null || old.equals( "" ) )
+        if (value == null || property == null)
         {
-            user.takeValueForKey( value, property );
+            return;
+        }
+        String old = (String)user.valueForKey(property);
+        if (old == null || old.equals(""))
+        {
+            user.takeValueForKey(value, property);
         }
     }
 
@@ -565,7 +581,7 @@ public class UploadRosterPage
         public String first;
         public String last;
 
-        public Name( String firstName, String lastName, String lastFirst)
+        public Name(String firstName, String lastName, String lastFirst)
         {
             first = firstName;
             last = lastName;
@@ -577,7 +593,10 @@ public class UploadRosterPage
 
         private void extractFirstAndLast(String lastFirst)
         {
-            if (lastFirst == null) return;
+            if (lastFirst == null)
+            {
+                return;
+            }
             int commaPos = lastFirst.lastIndexOf(',');
             if (last == null && commaPos > 0)
             {
@@ -601,51 +620,50 @@ public class UploadRosterPage
         try
         {
             InputStreamReader stream =
-                new InputStreamReader( data.stream(), "UTF8" );
+                new InputStreamReader(data.stream(), "UTF8");
             String newUserNames = null;
             String existingUserNames = null;
-            CSVParser in = new CSVParser( stream );
-            in.changeDelimiter( selectedDelimiter.character );
+            CSVParser in = new CSVParser(stream);
+            in.changeDelimiter(selectedDelimiter.character);
 
             int row = 0;
             int numExistingAdded   = 0;
             int numNewCreated      = 0;
             int numAlreadyEnrolled = 0;
-            String[] line = getNonBlankLine( in );
-            if ( firstLineColumnHeadings && line != null )
+            String[] line = getNonBlankLine(in);
+            if (firstLineColumnHeadings && line != null)
             {
                 // skip the headings line
-                line = getNonBlankLine( in );
+                line = getNonBlankLine(in);
             }
-            while ( line != null )
+            while (line != null)
             {
                 row++;
                 User user = null;
                 Name name = new Name(
-                    extractColumn( line, COL_FIRST_NAME ),
-                    extractColumn( line, COL_LAST_NAME  ),
-                    extractColumn( line, COL_LAST_FIRST )
-                    );
-                String pid       = extractColumn( line, COL_USER_NAME  );
-                String email     = extractColumn( line, COL_EMAIL      );
-                String idNo      = extractColumn( line, COL_ID_NUMBER  );
-                String pw        = extractColumn( line, COL_PASSWORD   );
-                String url       = extractColumn( line, COL_URL        );
+                    extractColumn(line, COL_FIRST_NAME),
+                    extractColumn(line, COL_LAST_NAME ),
+                    extractColumn(line, COL_LAST_FIRST));
+                String pid       = extractColumn(line, COL_USER_NAME);
+                String email     = extractColumn(line, COL_EMAIL    );
+                String idNo      = extractColumn(line, COL_ID_NUMBER);
+                String pw        = extractColumn(line, COL_PASSWORD );
+                String url       = extractColumn(line, COL_URL      );
 
-                if ( pid == null && email != null )
+                if (pid == null && email != null)
                 {
-                    int pos = email.indexOf( '@' );
-                    if ( pos >= 0 )
+                    int pos = email.indexOf('@');
+                    if (pos >= 0)
                     {
-                        pid = email.substring( 0, pos );
+                        pid = email.substring(0, pos);
                     }
                 }
 
-                if ( pid == null )
+                if (pid == null)
                 {
-                    error( "cannot identify user name for line "
+                    error("cannot identify user name for line "
                         + in.lastLineNumber() + ": "
-                        + java.util.Arrays.toString( line ) + "." );
+                        + java.util.Arrays.toString(line) + ".");
                 }
                 else
                 {
@@ -655,30 +673,30 @@ public class UploadRosterPage
                         user = (User)EOUtilities.objectMatchingValues(
                             ec, User.ENTITY_NAME,
                             new NSDictionary<String, Object>(
-                                new Object[]{ pid  , domain                 },
+                                new Object[]{ pid  , domain                  },
                                 new String[]{ User.USER_NAME_KEY,
                                               User.AUTHENTICATION_DOMAIN_KEY }
-                            ) );
+                           ));
                         log.debug(
-                            "User " + pid + " already exists in database" );
+                            "User " + pid + " already exists in database");
                         numExistingAdded++;
                         isExistingUser = true;
                         if (execute)
                         {
-                            setPropertyIfMissing( user, User.FIRST_NAME_KEY,
-                                name.first );
-                            setPropertyIfMissing( user, User.LAST_NAME_KEY,
-                                name.last );
-                            setPropertyIfMissing( user,
-                                User.UNIVERSITY_ID_NO_KEY, idNo );
-                            setPropertyIfMissing( user, User.EMAIL_KEY,
-                                email );
-                            setPropertyIfMissing( user, User.URL_KEY, url );
+                            setPropertyIfMissing(user, User.FIRST_NAME_KEY,
+                                name.first);
+                            setPropertyIfMissing(user, User.LAST_NAME_KEY,
+                                name.last);
+                            setPropertyIfMissing(user,
+                                User.UNIVERSITY_ID_NO_KEY, idNo);
+                            setPropertyIfMissing(user, User.EMAIL_KEY,
+                                email);
+                            setPropertyIfMissing(user, User.URL_KEY, url);
                         }
                     }
-                    catch ( EOObjectNotAvailableException e )
+                    catch (EOObjectNotAvailableException e)
                     {
-                        log.info( "Creating new user " + pid );
+                        log.info("Creating new user " + pid);
                         numNewCreated++;
                         if (newUserNames == null)
                         {
@@ -690,19 +708,18 @@ public class UploadRosterPage
                         }
                         if (execute)
                         {
-                            user = User.createUser(
-                                pid, null, domain, User.STUDENT_PRIVILEGES,
-                                ec );
-                            user.setFirstName( name.first );
-                            user.setLastName( name.last );
-                            user.setUniversityIDNo( idNo );
-                            user.setEmail( email );
-                            user.setUrl( url );
-                            if ( user.canChangePassword() )
+                            user = User.createUser(pid, null, domain,
+                                User.STUDENT_PRIVILEGES, ec);
+                            user.setFirstName(name.first);
+                            user.setLastName(name.last);
+                            user.setUniversityIDNo(idNo);
+                            user.setEmail(email);
+                            user.setUrl(url);
+                            if (user.canChangePassword())
                             {
-                                if ( pw != null && !pw.equals( "" ) )
+                                if (pw != null && !pw.equals(""))
                                 {
-                                    user.changePassword( pw );
+                                    user.changePassword(pw);
                                 }
                                 else
                                 {
@@ -711,33 +728,33 @@ public class UploadRosterPage
                             }
                         }
                     }
-                    catch ( EOUtilities.MoreThanOneException e )
+                    catch (EOUtilities.MoreThanOneException e)
                     {
-                        log.error( "More than one user with same "
-                            + "pid exists in Database" );
-                        error( "Multiple users with username '"
+                        log.error("More than one user with same "
+                            + "pid exists in Database");
+                        error("Multiple users with username '"
                             + pid + "' exist; cannot add ambiguous user name "
-                            + "to course." );
+                            + "to course.");
                         user = null;
                     }
 
-                    if ( user != null )
+                    if (user != null)
                     {
                         NSArray<CourseOffering> enrolledIn = user.enrolledIn();
-                        if ( enrolledIn != null
-                             && enrolledIn.containsObject( courseOffering() ) )
+                        if (enrolledIn != null
+                             && enrolledIn.containsObject(courseOffering()))
                         {
-                            log.debug( "Relationship exists" );
+                            log.debug("Relationship exists");
                             numAlreadyEnrolled++;
                             numExistingAdded--;
                         }
                         else
                         {
-                            log.debug( "relationship does not exist" );
+                            log.debug("relationship does not exist");
                             if (execute)
                             {
                                 user.addToEnrolledInRelationship(
-                                    courseOffering() );
+                                    courseOffering());
                             }
                             if (isExistingUser)
                             {
@@ -757,57 +774,57 @@ public class UploadRosterPage
                 {
                     super.applyLocalChanges();
                 }
-                line = getNonBlankLine( in );
+                line = getNonBlankLine(in);
             }
             WCComponentWithErrorMessages recipient = this;
-            if ( !hasMessages() && execute )
+            if (!hasMessages() && execute)
             {
                 // If no problems, report confirmation
                 recipient = nextPage;
             }
-            if ( numNewCreated == 0
+            if (numNewCreated == 0
                  && numExistingAdded == 0
-                 && numAlreadyEnrolled == 0 )
+                 && numAlreadyEnrolled == 0)
             {
-                error( "No existing or new student accounts identified!" );
+                error("No existing or new student accounts identified!");
             }
-            if ( numNewCreated > 0 )
+            if (numNewCreated > 0)
             {
                 recipient.confirmationMessage(
                     numNewCreated + " new student account"
-                    + ( numNewCreated > 1 ? "s" : "" )
-                    + ( execute ? "" : " will be")
+                    + (numNewCreated > 1 ? "s" : "")
+                    + (execute ? "" : " will be")
                     + " created and added to course (" + newUserNames
-                    + ")." );
+                    + ").");
             }
-            if ( numExistingAdded > 0 )
+            if (numExistingAdded > 0)
             {
                 recipient.confirmationMessage(
                     numExistingAdded + " existing student account"
-                    + ( numExistingAdded > 1 ? "s" : "" )
-                    + ( execute ? "" : " will be")
-                    + " added to course (" + existingUserNames + ")." );
+                    + (numExistingAdded > 1 ? "s" : "")
+                    + (execute ? "" : " will be")
+                    + " added to course (" + existingUserNames + ").");
             }
-            if ( numAlreadyEnrolled > 0 )
+            if (numAlreadyEnrolled > 0)
             {
                 recipient.confirmationMessage(
                     numAlreadyEnrolled + " existing student account"
-                    + ( numAlreadyEnrolled > 1 ? "s" : "" )
-                    + ( execute ? " were" : " are")
-                    + " already enrolled in this course." );
+                    + (numAlreadyEnrolled > 1 ? "s" : "")
+                    + (execute ? " were" : " are")
+                    + " already enrolled in this course.");
             }
         }
-        catch ( UnsupportedEncodingException e )
+        catch (UnsupportedEncodingException e)
         {
-            log.error( "Error decoding UTF8 stream:", e );
-            error( "Error decoding UTF8 stream: " + e.getMessage() );
-            // throw new NSForwardException( e );
+            log.error("Error decoding UTF8 stream:", e);
+            error("Error decoding UTF8 stream: " + e.getMessage());
+            // throw new NSForwardException(e);
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
-            log.error( "Error reading from CSV stream:", e );
-            error( "Error reading from CSV stream: " + e.getMessage() );
-            // throw new NSForwardException( e );
+            log.error("Error reading from CSV stream:", e);
+            error("Error reading from CSV stream: " + e.getMessage());
+            // throw new NSForwardException(e);
         }
     }
 
@@ -816,26 +833,26 @@ public class UploadRosterPage
     private boolean columnSelectionsAreOK()
     {
         colLocation = new int[COLUMNS.count()];
-        for ( int i = 0; i < colLocation.length; i++ )
+        for (int i = 0; i < colLocation.length; i++)
         {
             colLocation[i] = -1;
         }
-        for ( int i = 0; i < columns.count(); i++ )
+        for (int i = 0; i < columns.count(); i++)
         {
-            String col = columns.objectAtIndex( i );
-            if ( col.equals( COLUMNS.objectAtIndex( 0 ) ) )
+            String col = columns.objectAtIndex(i);
+            if (col.equals(COLUMNS.objectAtIndex(0)))
             {
                 continue;
             }
-            for ( int j = 1; j < COLUMNS.count(); j++ )
+            for (int j = 1; j < COLUMNS.count(); j++)
             {
-                String possible = COLUMNS.objectAtIndex( j );
-                if ( possible.equals( col ) )
+                String possible = COLUMNS.objectAtIndex(j);
+                if (possible.equals(col))
                 {
-                    if ( colLocation[j] >= 0 )
+                    if (colLocation[j] >= 0)
                     {
-                        error( "Please choose a single column for \""
-                            + col + "\"." );
+                        error("Please choose a single column for \""
+                            + col + "\".");
                     }
                     else
                     {
@@ -845,12 +862,12 @@ public class UploadRosterPage
                 }
             }
         }
-        if ( colLocation[COL_EMAIL] < 0 && colLocation[COL_USER_NAME] < 0 )
+        if (colLocation[COL_EMAIL] < 0 && colLocation[COL_USER_NAME] < 0)
         {
-            error( "Please identify a column containing either user names "
-                + "or e-mail addresses." );
+            error("Please identify a column containing either user names "
+                + "or e-mail addresses.");
         }
-        log.debug( "columnSelectionsAreOK() = " + !hasMessages() );
+        log.debug("columnSelectionsAreOK() = " + !hasMessages());
         return !hasMessages();
     }
 
@@ -880,18 +897,18 @@ public class UploadRosterPage
         "Password",
         "ID No.",
         "URL"
-    } );
+    });
 
     private static final Pattern[] COLUMN_PATTERNS = new Pattern[]{
         null,
-        Pattern.compile( "(?i)^\\s*first(\\b|\\s)" ),
-        Pattern.compile( "(?i)^\\s*(last\\b|surname)" ),
-        Pattern.compile( "(?i)^\\s*(name|((last\\b|surname).*,.*first))" ),
-        Pattern.compile( "(?i)\\be(-)?mail\\b(?!\\s+confidential)" ),
-        Pattern.compile( "(?i)^\\s*(user\\s*name?|uid|pid|user\\s*id|user)$" ),
-        Pattern.compile( "(?i)^\\s*(pass(word)?|pw$)" ),
-        Pattern.compile( "(?i)\\bid(\\s*(number|#|no|no\\.)?)\\b" ),
-        Pattern.compile( "(?i)^\\s*(url|web(\\b|\\s*addr))" )
+        Pattern.compile("(?i)^\\s*first(\\b|\\s)"),
+        Pattern.compile("(?i)^\\s*(last\\b|surname)"),
+        Pattern.compile("(?i)^\\s*(name|((last\\b|surname).*,.*first))"),
+        Pattern.compile("(?i)\\be(-)?mail\\b(?!\\s+confidential)"),
+        Pattern.compile("(?i)^\\s*(user\\s*name?|uid|pid|user\\s*id|user)$"),
+        Pattern.compile("(?i)^\\s*(pass(word)?|pw$)"),
+        Pattern.compile("(?i)\\bid(\\s*(number|#|no|no\\.)?)\\b"),
+        Pattern.compile("(?i)^\\s*(url|web(\\b|\\s*addr))")
     };
 
     private static final int[] BANNER_COLUMNS = new int[]{
@@ -919,16 +936,16 @@ public class UploadRosterPage
     };
 
     public static final NSArray<Delimiter> DELIMITERS =
-        new NSArray<Delimiter>( new Delimiter[] {
-            new Delimiter( ',', ",  Comma"     ),
-            new Delimiter( '\t', "   Tab"      ),
-            new Delimiter( ':', ":  Colon"     ),
-            new Delimiter( ';', ";  Semicolon" ),
-            new Delimiter( ' ', "    Space"    )
-    } );
+        new NSArray<Delimiter>(new Delimiter[] {
+            new Delimiter(',', ",  Comma"    ),
+            new Delimiter('\t', "   Tab"     ),
+            new Delimiter(':', ":  Colon"    ),
+            new Delimiter(';', ";  Semicolon"),
+            new Delimiter(' ', "    Space"   )
+    });
 
     private static final int NUM_PREVIEW_LINES = 5;
-    private static final Pattern BLANK_LINE = Pattern.compile( "^\\s*$" );
+    private static final Pattern BLANK_LINE = Pattern.compile("^\\s*$");
 
-    static Logger log = Logger.getLogger( UploadRosterPage.class );
+    static Logger log = Logger.getLogger(UploadRosterPage.class);
 }
