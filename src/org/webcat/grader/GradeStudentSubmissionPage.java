@@ -97,7 +97,7 @@ public class GradeStudentSubmissionPage
                 }
                 submission = prefs().submission();
             }
-            if ( submission.result() == null )
+            if (!submission.resultIsReady())
             {
                 throw new RuntimeException( "null submission result" );
             }
@@ -159,8 +159,8 @@ public class GradeStudentSubmissionPage
         } while (nextIndex < availableSubmissions.count()
                 && (!availableSubmissions.objectAtIndex(
                         nextIndex).userHasSubmission()
-                    || availableSubmissions.objectAtIndex(
-                        nextIndex).submission().result() == null));
+                    || !availableSubmissions.objectAtIndex(
+                        nextIndex).submission().resultIsReady()));
 
         return nextIndex;
     }
@@ -246,11 +246,27 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent fileStatsDetails()
     {
+        if (!submission.resultIsReady())
+        {
+            return null;
+        }
+
         log.debug( "fileStatsDetails()" );
         prefs().setSubmissionFileStatsRelationship( stats );
         WCComponent statsPage = pageWithName(EditFileCommentsPage.class);
         statsPage.nextPage = this;
         return statsPage;
+    }
+
+
+    // ----------------------------------------------------------
+    public String viewSourceFile()
+    {
+        return context().directActionURLForActionNamed(
+            "submissionResultResource",
+            new NSDictionary<String, Object>(result.id(), "id"))
+            + "&path="
+            + stats.sourceFileName();
     }
 
 
@@ -384,6 +400,11 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent fullPrintableReport()
     {
+        if (!submission.resultIsReady())
+        {
+            return null;
+        }
+
         FullPrintableReport report =
             pageWithName(FullPrintableReport.class);
         report.result = result;

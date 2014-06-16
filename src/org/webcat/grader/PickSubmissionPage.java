@@ -46,9 +46,9 @@ public class PickSubmissionPage
      *
      * @param context The page's context
      */
-    public PickSubmissionPage( WOContext context )
+    public PickSubmissionPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -188,7 +188,7 @@ public class PickSubmissionPage
             log.warn("saveSelectionCanContinue(): null submission!");
             error("Please choose a submission.");
         }
-        else if (prefs().submission().result() == null)
+        else if (!prefs().submission().resultIsReady())
         {
             error("The Grader has not yet completed processing "
                 + "on that submission.");
@@ -200,7 +200,7 @@ public class PickSubmissionPage
     // ----------------------------------------------------------
     public boolean hasResult()
     {
-        boolean result = (aSubmission.result() != null);
+        boolean result = (aSubmission.resultIsReady());
         log.debug("hasResult() = " + result);
         return result;
     }

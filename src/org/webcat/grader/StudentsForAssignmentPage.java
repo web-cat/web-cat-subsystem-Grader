@@ -270,7 +270,7 @@ public class StudentsForAssignmentPage
             {
                 log.error("editSubmissionScore(): null submission!");
             }
-            else if (aSubmission.result() == null)
+            else if (!aSubmission.resultIsReady())
             {
                 log.error("editSubmissionScore(): null submission result!");
                 log.error("student = " + aSubmission.user().userName());
@@ -309,7 +309,7 @@ public class StudentsForAssignmentPage
             {
                 log.error("editNewerSubmissionScore(): null submission!");
             }
-            else if (aNewerSubmission.result() == null)
+            else if (!aNewerSubmission.resultIsReady())
             {
                 log.error("editNewerSubmissionScore(): null submission result!");
                 log.error("student = " + aNewerSubmission.user().userName());
@@ -536,7 +536,7 @@ public class StudentsForAssignmentPage
         {
             Submission sub = pair.submission();
 
-            if (sub != null && sub.result() != null)
+            if (sub != null && sub.resultIsReady())
             {
                 for (Submission psub : sub.result().submissions())
                 {
@@ -632,7 +632,7 @@ public class StudentsForAssignmentPage
     public String newerSubmissionStatus()
     {
         String result = "feedback entered on earlier submission";
-        if (aNewerSubmission.result() == null)
+        if (!aNewerSubmission.resultIsReady())
         {
             result = "suspended";
             EnqueuedJob job = aNewerSubmission.enqueuedJob();
@@ -646,7 +646,7 @@ public class StudentsForAssignmentPage
             }
         }
         // check date of submission against date of feedback
-        else if (aSubmission.result() != null
+        else if (aSubmission.resultIsReady()
                 && aSubmission.result().lastUpdated() != null
                 && aNewerSubmission.submitTime().after(
                     aSubmission.result().lastUpdated()))
@@ -658,7 +658,7 @@ public class StudentsForAssignmentPage
         {
             log.debug("newerSubmissionStatus() for " + aNewerSubmission
                 + " = " + result);
-            if (aSubmission.result() != null
+            if (aSubmission.resultIsReady()
                 && aSubmission.result().lastUpdated() != null)
             {
                 log.debug("    selected submission last updated: "

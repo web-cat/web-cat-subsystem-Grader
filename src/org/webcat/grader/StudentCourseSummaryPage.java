@@ -341,7 +341,7 @@ public class StudentCourseSummaryPage
                 + "submission, submission was null");
             error("Please choose a submission.");
         }
-        else if (submission.result() == null)
+        else if (!submission.resultIsReady())
         {
             error("Results for that submission are not available.");
         }

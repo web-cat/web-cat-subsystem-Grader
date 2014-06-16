@@ -186,7 +186,7 @@ public class PickSubmissionDialog
         {
             return errorMessageOnParent("Please choose a submission.");
         }
-        else if (selectedSub.result() == null)
+        else if (!selectedSub.resultIsReady())
         {
             return errorMessageOnParent(
                 "Results for that submission are not available.");
