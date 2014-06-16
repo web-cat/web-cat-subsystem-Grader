@@ -74,7 +74,8 @@
           <th class="sm left" colspan="2"><webobject name="StatsLabel"/><webobject name="WCSortOrder3"/></th>
         </wo:if></tr></thead><tbody>
       <webobject name="StatRepetition"><webobject name="TR">
-        <td><wo:link action="$fileStatsDetails"><wo:str value="$stats.sourceFileName"/></wo:link></td>
+        <td><wo:if condition="$stats.canMarkupFile"><wo:link action="$fileStatsDetails" string="$stats.sourceFileName"/></wo:if>
+          <wo:else><wo:link string="$stats.sourceFileName" href="$viewSourceFile" /></wo:else></td>
         <wo:if condition="~(result.status == @org.webcat.core.Status@CHECK)">
         <td class="n"><wo name="FileStaffRemarks"/></td>
         <td class="n"><wo name="FileStaffDeduction"/></td>

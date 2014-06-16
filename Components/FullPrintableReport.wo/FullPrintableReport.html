@@ -42,10 +42,12 @@
   <webobject name="PartialInlineReport"/>
 
   <webobject name="StatRepetition">
+  <wo:if condition="$stats.file.canMarkupFile">
   <h2 class="collapsible"><wo name="CollapsibleAnchor"><wo name="Expanded"/><wo:str value="$stats.file.sourceFileName"/></wo></h2>
   <wo name="CollapsibleDiv">
   <wo:str value="$stats.html" escapeHTML="$false"/>
-  </wo></webobject>
+  </wo>
+  </wo:if></webobject>
 
 <webobject name="Form"><p><webobject name="Return"/></p></webobject>
 </webobject></div></div></webobject>

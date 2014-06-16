@@ -27,7 +27,8 @@
         </wo>
       </tr></thead><tbody>
       <wo name="StatRepetition"><wo name="TR">
-        <td><wo name="FileName"/></td>
+        <td><wo:if condition="$stats.canMarkupFile"><wo name="FileName"/></wo:if>
+          <wo:else><wo:link string="$stats.sourceFileName" href="$viewSourceFile" /></wo:else></td>
         <td class="n"><wo name="FileStaffRemarks"/></td>
         <td class="n"><wo name="FileStaffDeduction"/></td>
         <wo:if condition="$showAutoGradedComments">
