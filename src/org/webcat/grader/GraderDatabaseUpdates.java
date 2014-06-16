@@ -507,6 +507,32 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds field for enabling auto-partnering behavior.
+     * @throws SQLException on error
+     */
+    public void updateIncrement25() throws SQLException
+    {
+        database().executeSQL(
+                "alter table TSUBMISSIONPROFILE add "
+                + "autoAssignPartners BIT NOT NULL DEFAULT 1");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds field for storing the processor id for each enqueued job.
+     * @throws SQLException on error
+     */
+    public void updateIncrement26() throws SQLException
+    {
+        database().executeSQL(
+                "alter table TENQUEUEDJOB add "
+                + "processor INTEGER");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
