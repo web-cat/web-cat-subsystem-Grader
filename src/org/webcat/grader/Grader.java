@@ -42,7 +42,6 @@ import static org.webcat.woextensions.ECAction.run;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WORequest;
-import com.webobjects.eoaccess.EOUtilities;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.eocontrol.EOSortOrdering;
@@ -126,15 +125,61 @@ public class Grader
      */
     public void start()
     {
+        // Remove stale paused jobs
+        new ECAction() { public void action() {
+            // First, attempt to force the initial JNDI exception because
+            // the name jdbc is not bound
+            try
+            {
+                EnqueuedJob.allObjects(ec);
+            }
+            catch (Exception e)
+            {
+                // Silently swallow it, then retry on the next line
+            }
+            try
+            {
+                for (EnqueuedJob job : EnqueuedJob.objectsMatchingQualifier(ec,
+                    EnqueuedJob.paused.isTrue().and(
+                        EnqueuedJob.queueTime.before(
+                            new NSTimestamp().timestampByAddingGregorianUnits(
+                                0, -3, 0, 0, 0, 0)
+                        ))))
+                {
+                    job.delete();
+                }
+            }
+            catch (Exception e)
+            {
+                log.error(
+                    "Unable to purge old stale paused jobs due to exception",
+                    e);
+            }
+            try
+            {
+                for (EnqueuedJob job : EnqueuedJob.objectsMatchingQualifier(ec,
+                    EnqueuedJob.processor.isNotNull()))
+                {
+                    job.setProcessorRaw(null);
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Unable to purge old job processor settings due "
+                    + "to exception", e);
+            }
+            ec.saveChanges();
+        }}.run();
+
         // Create the queue and the queueprocessor
         graderQueue          = new GraderQueue();
-        graderQueueProcessor = new GraderQueueProcessor( graderQueue );
+        graderQueueProcessor = new GraderQueueProcessor(graderQueue);
 
         // Kick off the processor thread
         graderQueueProcessor.start();
 
-        if ( Application.configurationProperties().booleanForKey(
-                "grader.resumeSuspendedJobs" ) )
+        if (Application.configurationProperties().booleanForKey(
+            "grader.resumeSuspendedJobs"))
         {
             // Resume any enqueued jobs (if grader is coming back up
             // after an application restart)
@@ -162,15 +207,14 @@ public class Grader
      *
      * @param s The new session object
      */
-    public void initializeSessionData( Session s )
+    public void initializeSessionData(Session s)
     {
         super.initializeSessionData(s);
         try
         {
-            EOUtilities.objectsForEntityNamed( s.sessionContext(),
-                                               Assignment.ENTITY_NAME );
+            Assignment.allObjects(s.sessionContext());
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             // Swallow the exception--we want to force a failure on
             // the first cross-model search in this session, so that
@@ -276,9 +320,9 @@ public class Grader
      * @return The response page or contents
      */
     public WOActionResults handleDirectAction(
-            WORequest request,
-            Session   session,
-            WOContext context )
+        WORequest request,
+        Session   session,
+        WOContext context)
     {
         // Wait until this subsystem has actually started
         while (!hasStarted())
@@ -297,37 +341,37 @@ public class Grader
 //      log.debug( "handleDirectAction(): session = " + session );
 //      log.debug( "handleDirectAction(): context = " + context );
         WOActionResults results = null;
-        log.debug( "path = " + request.requestHandlerPath() );
-        if ( "cmsRequest".equals( request.requestHandlerPath() ) )
+        log.debug("path = " + request.requestHandlerPath());
+        if ("cmsRequest".equals( request.requestHandlerPath()))
         {
-            return handleCmsRequest( request, session, context );
+            return handleCmsRequest(request, session, context);
         }
-        if ( session == null )
+        if (session == null)
         {
-            log.error( "handleDirectAction(): null session" );
-            log.error( Application.extraInfoForContext( context ) );
+            log.error("handleDirectAction(): null session");
+            log.error(Application.extraInfoForContext(context));
         }
-        else if ( !context.hasSession() )
+        else if (!context.hasSession())
         {
-            log.error( "handleDirectAction(): no session on context!" );
-            log.error( Application.extraInfoForContext( context ) );
+            log.error("handleDirectAction(): no session on context!");
+            log.error(Application.extraInfoForContext(context));
         }
-        else if ( session != context.session() )
+        else if (session != context.session())
         {
-            log.error( "handleDirectAction(): session mismatch with context!" );
-            log.error( "session = " + session );
-            log.error( "context session = " + context.session() );
-            log.error( Application.extraInfoForContext( context ) );
+            log.error("handleDirectAction(): session mismatch with context!");
+            log.error("session = " + session);
+            log.error("context session = " + context.session());
+            log.error(Application.extraInfoForContext(context));
         }
-        if ( "submit".equals( request.requestHandlerPath() ) )
+        if ("submit".equals(request.requestHandlerPath()))
         {
-            results = handleSubmission( request, session, context );
+            results = handleSubmission(request, session, context);
         }
         else
         {
-            results = handleReport( request, session, context );
+            results = handleReport(request, session, context);
         }
-//      log.debug( "handleDirectAction() returning" );
+//      log.debug("handleDirectAction() returning");
         return results;
     }
 
@@ -343,12 +387,12 @@ public class Grader
      * @return The response page or contents
      */
     public WOActionResults handleCmsRequest(
-            WORequest request,
-            Session   session,
-            WOContext context )
+        WORequest request,
+        Session   session,
+        WOContext context)
     {
-        CmsResponse result = (CmsResponse)Application.application()
-            .pageWithName( CmsResponse.class.getName(), context );
+        CmsResponse result = Application.wcApplication()
+            .pageWithName(CmsResponse.class, context);
         return result;
     }
 
@@ -364,9 +408,9 @@ public class Grader
      * @return The response page or contents
      */
     public WOActionResults handleSubmission(
-            WORequest request,
-            Session   session,
-            WOContext context )
+        WORequest request,
+        Session   session,
+        WOContext context)
     {
         log.debug("handleSubmission()");
         String scheme   = request.stringFormValueForKey("a");
@@ -627,17 +671,17 @@ public class Grader
      * @return The response page or contents
      */
     public WOActionResults handleReport(
-            WORequest request,
-            Session   session,
-            WOContext context )
+        WORequest request,
+        Session   session,
+        WOContext context)
     {
-        log.debug( "handleReport()" );
+        log.debug("handleReport()");
         WOActionResults result = null;
         GraderComponent genericGComp =
-            (GraderComponent)Application.application().pageWithName(
-                PickCourseEnrolledPage.class.getName(), context);
-        if ( genericGComp.wcSession().primeUser() == null
-             || genericGComp.prefs().submission() == null )
+            Application.wcApplication().pageWithName(
+                PickCourseEnrolledPage.class, context);
+        if (genericGComp.wcSession().primeUser() == null
+            || genericGComp.prefs().submission() == null)
         {
 
             result = Application.wcApplication().gotoLoginPage(context);
@@ -648,10 +692,10 @@ public class Grader
 //                session.tabs.selectById( "MostRecent" ).pageName(),
 //                context ).generateResponse();
             result = genericGComp.pageWithName(
-                session.tabs.selectById( "MostRecent" ).pageName())
+                session.tabs.selectById("MostRecent").pageName())
                 .generateResponse();
         }
-        log.debug( "handleReport() returning" );
+        log.debug("handleReport() returning");
         return result;
     }
 
@@ -739,7 +783,7 @@ public class Grader
             }
             nowRemaining = storageRoot.getUsableSpace();
             nowTime = new NSTimestamp();
-            long deltaSize = nowRemaining - firstRemaining;
+            long deltaSize = firstRemaining - nowRemaining;
             if (deltaSize < 0L)
             {
                 deltaSize = 0L;
