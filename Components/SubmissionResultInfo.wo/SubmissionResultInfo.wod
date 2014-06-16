@@ -36,7 +36,7 @@ PartnerRepetition: WORepetition {
 PartnerSelector: FilteringUserSelector {
     simpleLayout = true;
     actionTitle = "Edit Partners";
-    dialogMessage = "Please choose the students below who also worked on this submission.";
+    dialogMessage = "Which students worked on this submission?";
     hidesTableOnEmptySelection = true;
     selectedListTitle = "Current Partners on This Submission";
     availableListTitle = "Students Enrolled in Your Course";
