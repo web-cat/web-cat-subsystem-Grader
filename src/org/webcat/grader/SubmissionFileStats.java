@@ -154,6 +154,13 @@ public class SubmissionFileStats
 
 
     // ----------------------------------------------------------
+    public boolean canMarkupFile()
+    {
+        return !markupFileName().startsWith("public/");
+    }
+
+
+    // ----------------------------------------------------------
     public String markupFileName()
     {
         String result = markupFileNameRaw();
