@@ -97,6 +97,18 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Determine whether this submission result object is ready for
+     * viewing or not.
+     * @return True if this submission result is valid/finished.
+     */
+    public boolean isReady()
+    {
+        return submission().enqueuedJob() == null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrueve the submission associated with this result for the
      * given user.
      * @param partner The user whose submission should be retrieved--either
