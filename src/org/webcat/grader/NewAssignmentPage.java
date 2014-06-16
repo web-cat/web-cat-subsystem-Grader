@@ -434,11 +434,22 @@ public class NewAssignmentPage
     // ----------------------------------------------------------
     public boolean hasMultipleSections()
     {
-        Course course = coreSelections().courseOffering().course();
-        Semester semester = coreSelections().courseOffering().semester();
-        NSArray<CourseOffering> offerings =
-            CourseOffering.offeringsForSemesterAndCourse(
+        NSArray<CourseOffering> offerings = null;
+        Course course = coreSelections().course();
+        if (course == null && coreSelections().courseOffering() != null)
+        {
+            course = coreSelections().courseOffering().course();
+        }
+        Semester semester = coreSelections().semester();
+        if (semester == null && coreSelections().courseOffering() != null)
+        {
+            semester = coreSelections().courseOffering().semester();
+        }
+        if (course != null && semester != null)
+        {
+            offerings = CourseOffering.offeringsForSemesterAndCourse(
                 localContext(), course, semester);
+        }
         return offerings != null && offerings.count() > 1;
     }
 
