@@ -35,7 +35,6 @@ import org.webcat.woextensions.WCFetchSpecification;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
-import com.webobjects.eocontrol.EOGenericRecord;
 import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
 import er.extensions.eof.ERXQ;
@@ -107,23 +106,6 @@ public class CourseAndAssignmentSubmissionsAssistant
 
 
         // ----------------------------------------------------------
-        @Override
-        public String persistentIdOfObject(Object item)
-        {
-            if (item instanceof EOGenericRecord)
-            {
-                EOGenericRecord record = (EOGenericRecord) item;
-                return "id_" + record.entityName() + "_"
-                    + record.valueForKey("id");
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        // ----------------------------------------------------------
         private NSArray<Semester> allSemesters()
         {
             return Semester.objectsMatchingQualifier(localContext(), null,
@@ -174,23 +156,6 @@ public class CourseAndAssignmentSubmissionsAssistant
             }
 
             return children;
-        }
-
-
-        // ----------------------------------------------------------
-        @Override
-        public String persistentIdOfObject(Object item)
-        {
-            if (item instanceof EOGenericRecord)
-            {
-                EOGenericRecord record = (EOGenericRecord) item;
-                return "id_" + record.entityName() + "_"
-                    + record.valueForKey("id");
-            }
-            else
-            {
-                return null;
-            }
         }
 
 
