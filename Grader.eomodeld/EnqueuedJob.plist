@@ -1,41 +1,54 @@
 {
     attributes = (
         {
-            columnName = CDISCARDED; 
-            name = discarded; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
-        {name = id; prototypeName = id; }, 
+            columnName = CDISCARDED;
+            name = discarded;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
+        {name = id; prototypeName = id; },
         {
-            columnName = CPAUSED; 
-            name = paused; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
-        {columnName = CQUEUETIME; name = queueTime; prototypeName = dateTime; }, 
+            columnName = CPAUSED;
+            name = paused;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
         {
-            columnName = CREGRADING; 
-            name = regrading; 
-            prototypeName = boolean; 
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
-        }, 
+            columnName = processor;
+            name = processor;
+            prototypeName = integer;
+            userInfo =
+            {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        },
+        {columnName = CQUEUETIME; name = queueTime; prototypeName = dateTime; },
+        {
+            columnName = CREGRADING;
+            name = regrading;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
         {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }
-    ); 
-    attributesUsedForLocking = (discarded, paused, regrading, submissionId); 
-    className = "org.webcat.grader.EnqueuedJob"; 
-    classProperties = (discarded, paused, queueTime, regrading, submission); 
-    externalName = TENQUEUEDJOB; 
-    fetchSpecificationDictionary = {}; 
-    name = EnqueuedJob; 
-    primaryKeyAttributes = (id); 
+    );
+    attributesUsedForLocking = (discarded, paused, processor, regrading, submissionId);
+    className = "org.webcat.grader.EnqueuedJob";
+    classProperties = (discarded, paused, processor, queueTime, regrading, submission);
+    externalName = TENQUEUEDJOB;
+    fetchSpecificationDictionary = {};
+    name = EnqueuedJob;
+    primaryKeyAttributes = (id);
     relationships = (
         {
-            destination = Submission; 
-            isToMany = N; 
-            joinSemantic = EOInnerJoin; 
-            joins = ({destinationAttribute = id; sourceAttribute = submissionId; }); 
-            name = submission; 
+            destination = Submission;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = submissionId; });
+            name = submission;
         }
-    ); 
+    );
 }

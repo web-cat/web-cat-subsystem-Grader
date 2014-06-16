@@ -153,6 +153,9 @@ public abstract class _EnqueuedJob
     public static final String PAUSED_KEY = "paused";
     public static final ERXKey<Integer> paused =
         new ERXKey<Integer>(PAUSED_KEY);
+    public static final String PROCESSOR_KEY = "processor";
+    public static final ERXKey<Integer> processor =
+        new ERXKey<Integer>(PROCESSOR_KEY);
     public static final String QUEUE_TIME_KEY = "queueTime";
     public static final ERXKey<NSTimestamp> queueTime =
         new ERXKey<NSTimestamp>(QUEUE_TIME_KEY);
@@ -343,6 +346,70 @@ public abstract class _EnqueuedJob
                 + value + "): was " + pausedRaw() );
         }
         takeStoredValueForKey( value, "paused" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>processor</code> value.
+     * @return the value of the attribute
+     */
+    public int processor()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "processor" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>processor</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setProcessor( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setProcessor("
+                + value + "): was " + processor() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setProcessorRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>processor</code> value.
+     * @return the value of the attribute
+     */
+    public Integer processorRaw()
+    {
+        return (Integer)storedValueForKey( "processor" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>processor</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setProcessorRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setProcessorRaw("
+                + value + "): was " + processorRaw() );
+        }
+        takeStoredValueForKey( value, "processor" );
     }
 
 
