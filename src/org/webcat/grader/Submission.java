@@ -84,7 +84,7 @@ public class Submission
     @Override
     public String userPresentableDescription()
     {
-        if ( fileName() != null )
+        if (fileName() != null)
         {
             return file().getPath();
         }
@@ -102,30 +102,30 @@ public class Submission
      */
     public String dirName()
     {
-        if ( partnerLink() && result() != null )
+        if (partnerLink() && result() != null)
         {
             return result().submission().dirName();
         }
         else
         {
             StringBuffer dir =
-                ( user() == null )
+                (user() == null)
                 ? new StringBuffer("<null>")
                 : user().authenticationDomain().submissionBaseDirBuffer();
-            if ( assignmentOffering() != null )
+            if (assignmentOffering() != null)
             {
-                assignmentOffering().addSubdirTo( dir );
+                assignmentOffering().addSubdirTo(dir);
             }
             else
             {
-                dir.append( "/ASSIGNMENT" );
+                dir.append("/ASSIGNMENT");
             }
-            dir.append( '/' );
-            dir.append( ( user() == null )
+            dir.append('/');
+            dir.append( (user() == null)
                 ? new StringBuffer("<null>")
-                : user().userName() );
-            dir.append( '/' );
-            dir.append( submitNumber() );
+                : user().userName());
+            dir.append('/');
+            dir.append(submitNumber());
             return dir.toString();
         }
     }
@@ -138,7 +138,7 @@ public class Submission
      */
     public File file()
     {
-        return new File( dirName(), fileName() );
+        return new File(dirName(), fileName());
     }
 
 
@@ -152,7 +152,7 @@ public class Submission
         try
         {
             return (Number)EOUtilities.primaryKeyForObject(
-                editingContext() , this ).objectForKey( "id" );
+                editingContext() , this).objectForKey("id");
         }
         catch (Exception e)
         {
@@ -173,6 +173,18 @@ public class Submission
 
             return ERXConstant.ZeroInteger;
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Determine whether this submission's results are ready for
+     * viewing or not.
+     * @return True if this submission has a valid/finished result object.
+     */
+    public boolean resultIsReady()
+    {
+        return result() != null && result().isReady();
     }
 
 
@@ -255,7 +267,7 @@ public class Submission
      * @param time The time to convert
      * @return     A human-readable version of the time
      */
-    public static String getStringTimeRepresentation( long time )
+    public static String getStringTimeRepresentation(long time)
     {
         long days;
         long hours;
@@ -341,13 +353,13 @@ public class Submission
     public EnqueuedJob enqueuedJob()
     {
         NSArray<EnqueuedJob> jobs = enqueuedJobs();
-        if ( jobs != null  &&  jobs.count() > 0 )
+        if (jobs != null  &&  jobs.count() > 0)
         {
-            if ( jobs.count() > 1 )
+            if (jobs.count() > 1)
             {
-                log.error( "too many jobs for submission " + this );
+                log.error("too many jobs for submission " + this);
             }
-            return jobs.objectAtIndex( 0 );
+            return jobs.objectAtIndex(0);
         }
         else
         {
@@ -515,8 +527,22 @@ public class Submission
      */
     public NSArray<User> allUsers()
     {
-        NSMutableArray<User> users = new NSMutableArray<User>();
+        NSMutableArray<User> users = (NSMutableArray<User>)allPartners();
         users.addObject(user());
+        return users;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets an array containing all the partners associated with this
+     * submission, excluding the user who submitted it.
+     *
+     * @return the array of all partners associated with the submission
+     */
+    public NSArray<User> allPartners()
+    {
+        NSMutableArray<User> users = new NSMutableArray<User>();
 
         for (Submission partnerSub : partneredSubmissions())
         {
@@ -622,9 +648,9 @@ public class Submission
     private void deleteResultsForAllPartners()
     {
         SubmissionResult myResult = result();
-        if ( myResult != null )
+        if (myResult != null)
         {
-            log.debug( "removing SubmissionResult " + myResult );
+            log.debug("removing SubmissionResult " + myResult);
             myResult.setIsMostRecent(false);
             setResultRelationship(null);
             clearIsSubmissionForGrading();
@@ -655,22 +681,22 @@ public class Submission
      * @param ec the editing context in which to make the changes (can be
      * different than the editing context that owns this object)
      */
-    public void requeueForGrading( EOEditingContext ec )
+    public void requeueForGrading(EOEditingContext ec)
     {
-        if ( enqueuedJob() == null )
+        if (enqueuedJob() == null)
         {
             Submission me = this;
-            if ( ec != editingContext() )
+            if (ec != editingContext())
             {
-                me = localInstance( ec );
+                me = localInstance(ec);
             }
-            me.deleteResultsForAllPartners();
-            log.debug( "creating new job for Submission " + this );
+//            me.deleteResultsForAllPartners();
+            log.debug("creating new job for Submission " + this);
             EnqueuedJob job = new EnqueuedJob();
-            job.setQueueTime( new NSTimestamp() );
-            job.setRegrading( true );
-            ec.insertObject( job );
-            job.setSubmissionRelationship( me );
+            job.setQueueTime(new NSTimestamp());
+            job.setRegrading(true);
+            ec.insertObject(job);
+            job.setSubmissionRelationship(me);
         }
     }
 
@@ -678,10 +704,10 @@ public class Submission
     // ----------------------------------------------------------
     public String permalink()
     {
-        if ( cachedPermalink == null )
+        if (cachedPermalink == null)
         {
             cachedPermalink = Application.configurationProperties()
-                .getProperty( "base.url" )
+                .getProperty("base.url")
                 + "?page=MostRecent&"
                 + ID_FORM_KEY + "=" + id();
         }
@@ -970,7 +996,7 @@ public class Submission
     public void migratePartnerLink()
     {
         // guard from shouldMigratePartnerLink()
-        if (!(result() != null
+        if (!(resultIsReady()
               && ((partnerLink() && primarySubmission() == null)
                   || (!partnerLink()
                       && result().submissions().count() > 1
@@ -1360,7 +1386,7 @@ public class Submission
      */
     public boolean hasCoverage()
     {
-        if (result() == null)
+        if (!resultIsReady())
         {
             return false;
         }
@@ -1413,7 +1439,7 @@ public class Submission
      */
     public boolean hasLOC()
     {
-        if (result() == null)
+        if (!resultIsReady())
         {
             return false;
         }
@@ -1467,7 +1493,7 @@ public class Submission
      */
     public boolean hasCorrectnessScore()
     {
-        if (result() == null)
+        if (!resultIsReady())
         {
             return false;
         }
@@ -1607,10 +1633,9 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult thisResult = sub.result();
-            if (thisResult != null)
+            if (sub.resultIsReady())
             {
-                double score = thisResult.correctnessScore();
+                double score = sub.result().correctnessScore();
                 if (score > maxCorrectnessScore)
                 {
                     maxSubmission = sub;
@@ -1643,10 +1668,9 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult thisResult = sub.result();
-            if (thisResult != null)
+            if (sub.resultIsReady())
             {
-                double score = thisResult.toolScore();
+                double score = sub.result().toolScore();
                 if (score > maxToolScore)
                 {
                     maxSubmission = sub;
@@ -1679,10 +1703,9 @@ public class Submission
 
         for (Submission sub : subs)
         {
-            SubmissionResult thisResult = sub.result();
-            if (thisResult != null)
+            if (sub.resultIsReady())
             {
-                double score = thisResult.automatedScore();
+                double score = sub.result().automatedScore();
                 if (score > maxAutomatedScore)
                 {
                     maxSubmission = sub;
@@ -1716,7 +1739,7 @@ public class Submission
     public String status()
     {
         String status = null;
-        if (result() == null)
+        if (!resultIsReady())
         {
             status = "suspended";
             EnqueuedJob job = enqueuedJob();
@@ -2076,7 +2099,7 @@ public class Submission
             Submission bestPrimary = null;
             for (Submission sub : candidates)
             {
-                if (sub.result() == null)
+                if (!sub.resultIsReady())
                 {
                     continue;
                 }
@@ -2455,7 +2478,7 @@ public class Submission
          */
         public void accumulate(Submission submission)
         {
-            if (submission.result() != null)
+            if (submission.resultIsReady())
             {
                 accumulate(submission.result());
             }
