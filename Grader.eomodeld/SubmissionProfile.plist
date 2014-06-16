@@ -7,6 +7,12 @@
             userInfo = {isScalar = true; scalarDefault = true; type = boolean; };
         },
         {
+            columnName = autoAssignPartners;
+            name = autoAssignPartners;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = true; type = boolean; };
+        },
+        {
             columnName = CAVAILABLEPOINTS;
             name = availablePoints;
             prototypeName = double;
@@ -262,6 +268,7 @@
     );
     attributesUsedForLocking = (
         allowPartners,
+        autoAssignPartners,
         availableTimeDelta,
         awardEarlyBonus,
         deadTimeDelta,
@@ -284,6 +291,7 @@
     className = "org.webcat.grader.SubmissionProfile";
     classProperties = (
         allowPartners,
+        autoAssignPartners,
         assignment,
         author,
         availablePoints,

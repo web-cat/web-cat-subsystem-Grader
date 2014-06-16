@@ -65,6 +65,7 @@ public abstract class _SubmissionProfile
      * @param editingContext The context in which the new object will be
      * inserted
      * @param allowPartnersValue
+     * @param autoAssignPartnersValue
      * @param awardEarlyBonusValue
      * @param deductExcessSubmissionPenaltyValue
      * @param deductLatePenaltyValue
@@ -73,6 +74,7 @@ public abstract class _SubmissionProfile
     public static SubmissionProfile create(
         EOEditingContext editingContext,
         boolean allowPartnersValue,
+        boolean autoAssignPartnersValue,
         boolean awardEarlyBonusValue,
         boolean deductExcessSubmissionPenaltyValue,
         boolean deductLatePenaltyValue
@@ -83,6 +85,7 @@ public abstract class _SubmissionProfile
                 editingContext,
                 _SubmissionProfile.ENTITY_NAME);
         eoObject.setAllowPartners(allowPartnersValue);
+        eoObject.setAutoAssignPartners(autoAssignPartnersValue);
         eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
         eoObject.setDeductExcessSubmissionPenalty(deductExcessSubmissionPenaltyValue);
         eoObject.setDeductLatePenalty(deductLatePenaltyValue);
@@ -153,6 +156,9 @@ public abstract class _SubmissionProfile
     public static final String ALLOW_PARTNERS_KEY = "allowPartners";
     public static final ERXKey<Integer> allowPartners =
         new ERXKey<Integer>(ALLOW_PARTNERS_KEY);
+    public static final String AUTO_ASSIGN_PARTNERS_KEY = "autoAssignPartners";
+    public static final ERXKey<Integer> autoAssignPartners =
+        new ERXKey<Integer>(AUTO_ASSIGN_PARTNERS_KEY);
     public static final String AVAILABLE_POINTS_KEY = "availablePoints";
     public static final ERXKey<Double> availablePoints =
         new ERXKey<Double>(AVAILABLE_POINTS_KEY);
@@ -356,6 +362,70 @@ public abstract class _SubmissionProfile
                 + value + "): was " + allowPartnersRaw() );
         }
         takeStoredValueForKey( value, "allowPartners" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>autoAssignPartners</code> value.
+     * @return the value of the attribute
+     */
+    public boolean autoAssignPartners()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "autoAssignPartners" );
+        return ( returnValue == null )
+            ? true
+            : ( returnValue.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>autoAssignPartners</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setAutoAssignPartners( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAutoAssignPartners("
+                + value + "): was " + autoAssignPartners() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setAutoAssignPartnersRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>autoAssignPartners</code> value.
+     * @return the value of the attribute
+     */
+    public Integer autoAssignPartnersRaw()
+    {
+        return (Integer)storedValueForKey( "autoAssignPartners" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>autoAssignPartners</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setAutoAssignPartnersRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setAutoAssignPartnersRaw("
+                + value + "): was " + autoAssignPartnersRaw() );
+        }
+        takeStoredValueForKey( value, "autoAssignPartners" );
     }
 
 

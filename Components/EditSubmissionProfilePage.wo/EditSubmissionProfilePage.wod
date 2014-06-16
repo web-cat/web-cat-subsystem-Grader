@@ -2,6 +2,10 @@ AllowPartnersCheckbox: WOCheckBox {
     checked = submissionProfile.allowPartners;
 }
 
+AutoAssignPartnersCheckbox: WOCheckBox {
+    checked = submissionProfile.autoAssignPartners;
+}
+
 CheckBox1: WOCheckBox {
     checked = submissionProfile.awardEarlyBonus;
 }
