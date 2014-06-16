@@ -1,5 +1,6 @@
 <webobject name="TR">
-  <td>Queued jobs</td><td class="n"><webobject name="QueuedJobCount"/></td>
+  <td>Queued jobs</td><td class="n"><webobject name="QueuedJobCount"/><wo:if condition="$regradingJobCount">
+  (plus <wo:str value="$regradingJobCount"/> for regrading)</wo:if></td>
 </webobject><webobject name="TR">
   <td>Jobs processed</td><td class="n"><webobject name="ProcessedJobCount"/></td>
 </webobject><webobject name="TR">

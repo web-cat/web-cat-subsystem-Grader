@@ -24,6 +24,7 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
+import er.extensions.foundation.ERXArrayUtilities;
 import org.apache.log4j.*;
 import org.webcat.core.*;
 
@@ -70,6 +71,7 @@ public class GraderSystemStatusRows
     public void appendToResponse(WOResponse response, WOContext context)
     {
         queuedJobs = -1;
+        regradingJobs = -1;
         storageStatus = Grader.StorageStatus.instance();
         super.appendToResponse(response, context);
     }
@@ -124,18 +126,39 @@ public class GraderSystemStatusRows
             {
                 jobs = EnqueuedJob.objectsMatchingQualifier(
                     ((Session)session()).sessionContext(),
-                    EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
+                    EnqueuedJob.paused.isFalse().and(
+                        EnqueuedJob.discarded.isFalse()));
             }
             catch (Exception e)
             {
                 log.debug("Retrying queued job fetch");
                 jobs = EnqueuedJob.objectsMatchingQualifier(
                     ((Session)session()).sessionContext(),
-                    EnqueuedJob.paused.eq(ERXConstant.integerForInt(0)));
+                    EnqueuedJob.paused.isFalse().and(
+                        EnqueuedJob.discarded.isFalse()));
             }
-            queuedJobs = (jobs == null) ? 0 : jobs.count();
+            queuedJobs = (jobs == null)
+                ? 0
+                : ERXArrayUtilities.filteredArrayWithQualifierEvaluation(jobs,
+                    EnqueuedJob.regrading.isFalse()).count();
+            regradingJobs = (jobs == null) ? 0 : (jobs.count() - queuedJobs);
         }
         return queuedJobs;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the number of regraded jobs queued for grade processing
+     * @return the number of regraded jobs queued
+     */
+    public int regradingJobCount()
+    {
+        if (regradingJobs < 0)
+        {
+            queuedJobCount();
+        }
+        return regradingJobs;
     }
 
 
@@ -271,6 +294,7 @@ public class GraderSystemStatusRows
 
     private Grader grader;
     private int queuedJobs;
+    private int regradingJobs;
 
     static Logger log = Logger.getLogger(GraderSystemStatusRows.class);
 }
