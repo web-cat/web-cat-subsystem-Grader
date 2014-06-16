@@ -240,21 +240,24 @@ public class FullPrintableReport
         {
             if ( resultSoFar == null ) return resultSoFar;
             Pair[] pairs = (Pair[])resultSoFar;
-            try
+            if (pairs[stepNumber].file.canMarkupFile())
             {
-                ec.lock();
-                pairs[stepNumber].html = pairs[stepNumber].file
-                    .codeWithComments( user, false, context.request() );
-            }
-            catch ( Exception e )
-            {
-                pairs[stepNumber].html = "<p>Unexpected exception preparing "
-                    + "HTML view of file: <span class=\"warn\">"
-                    + e.getMessage() + "</span>.</p>";
-            }
-            finally
-            {
-                ec.unlock();
+                try
+                {
+                    ec.lock();
+                    pairs[stepNumber].html = pairs[stepNumber].file
+                        .codeWithComments( user, false, context.request() );
+                }
+                catch ( Exception e )
+                {
+                    pairs[stepNumber].html = "<p>Unexpected exception "
+                        + "preparing HTML view of file: <span class=\"warn\">"
+                        + e.getMessage() + "</span>.</p>";
+                }
+                finally
+                {
+                    ec.unlock();
+                }
             }
             return pairs;
         }
