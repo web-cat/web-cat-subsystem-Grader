@@ -953,7 +953,9 @@ public class GraderQueueProcessor
     {
         File parentDir = new File(job.submission().resultDirName());
         NSMutableArray<ResultFile> oldResultFiles =
-            submissionResult.resultFiles().mutableClone();
+            submissionResult.isNewObject()
+            ? new NSMutableArray<ResultFile>()
+            : submissionResult.resultFiles().mutableClone();
 
         // First, collect all the report fragments
         int numReports = properties.intForKey("numReports");
@@ -1014,10 +1016,13 @@ public class GraderQueueProcessor
                 else
                 {
                     ResultFile thisFile = null;
-                    NSArray<ResultFile> files = ResultFile
-                        .objectsMatchingQualifier(editingContext,
-                            ResultFile.submissionResult.is(submissionResult)
-                                .and(ResultFile.fileName.eq(fileName)));
+                    NSArray<ResultFile> files =
+                        submissionResult.isNewObject()
+                        ? new NSArray<ResultFile>()
+                        : ResultFile
+                            .objectsMatchingQualifier(editingContext,
+                                ResultFile.submissionResult.is(submissionResult)
+                                    .and(ResultFile.fileName.eq(fileName)));
                     if (files.size() > 0)
                     {
                         thisFile = files.get(0);
@@ -1080,7 +1085,9 @@ public class GraderQueueProcessor
 
         // Second, collect all the stats markup files
         NSMutableArray<SubmissionFileStats> oldStats =
-            submissionResult.submissionFileStats().mutableClone();
+            submissionResult.isNewObject()
+            ? new NSMutableArray<SubmissionFileStats>()
+            : submissionResult.submissionFileStats().mutableClone();
         String statElementsLabel = properties.getProperty("statElementsLabel");
         if (statElementsLabel != null)
         {
@@ -1094,11 +1101,25 @@ public class GraderQueueProcessor
 
             String markupFileName =
                 properties.getProperty(attributeBase + "markupFileName");
+            String className =
+                properties.getProperty(attributeBase + "className");
+            String pkgName =
+                properties.getProperty(attributeBase + "pkgName");
+
             NSArray<SubmissionFileStats> matches =
-                SubmissionFileStats.objectsMatchingQualifier(editingContext,
+                submissionResult.isNewObject()
+                ? new NSArray<SubmissionFileStats>()
+                : ((markupFileName != null && !markupFileName.isEmpty())
+                ? SubmissionFileStats.objectsMatchingQualifier(editingContext,
                     SubmissionFileStats.submissionResult.is(submissionResult)
                         .and(SubmissionFileStats.markupFileNameRaw
-                            .eq(markupFileName)));
+                            .eq(markupFileName)))
+                : SubmissionFileStats.objectsMatchingQualifier(editingContext,
+                    SubmissionFileStats.submissionResult.is(submissionResult)
+                        .and(SubmissionFileStats.className
+                            .eq(className))
+                        .and(SubmissionFileStats.pkgName.eq(pkgName))));
+
             if (matches.size() > 0)
             {
                 stats = matches.get(0);
@@ -1110,13 +1131,19 @@ public class GraderQueueProcessor
                 editingContext.insertObject(stats);
                 stats.setSubmissionResultRelationship(submissionResult);
             }
-            stats.setClassName(
-                properties.getProperty(attributeBase + "className"));
-            stats.setPkgName(
-                properties.getProperty(attributeBase + "pkgName"));
+            stats.setClassName(className);
+            stats.setPkgName(pkgName);
             stats.setSourceFileNameRaw(
                 properties.getProperty(attributeBase + "sourceFileName"));
-            stats.setMarkupFileNameRaw(markupFileName);
+            if (markupFileName != null && !markupFileName.isEmpty())
+            {
+                stats.setMarkupFileNameRaw(markupFileName);
+            }
+            else
+            {
+                // Force default generation of markup file name
+                stats.markupFileName();
+            }
 
             // The tags are zero or more space-delimited strings that describe
             // what this file's role is (such as if it is a test case). Note
