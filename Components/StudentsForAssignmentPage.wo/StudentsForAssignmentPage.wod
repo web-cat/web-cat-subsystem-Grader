@@ -4,7 +4,7 @@ BatchNavigatorStaff: org.webcat.core.WCBatchNavigator {
 }
 
 BoxAndWhiskerChart: BoxAndWhiskerChart {
-    assignmentOffering = assignmentOffering;
+    maxScale = assignmentOffering.assignment.submissionProfile.availablePoints;
     submissionStats = studentStats;
     style = "vertical-align: middle;";
 }

@@ -1924,7 +1924,8 @@ public abstract class _SubmissionProfile
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.Assignment> assignment()
     {
-        return (NSArray)storedValueForKey( "assignment" );
+        return (NSArray<org.webcat.grader.Assignment>)
+            storedValueForKey("assignment");
     }
 
 
@@ -1935,14 +1936,15 @@ public abstract class _SubmissionProfile
      *
      * @param value The new set of entities to relate to
      */
-    public void setAssignment( NSMutableArray<org.webcat.grader.Assignment>  value )
+    public void setAssignment(
+        NSMutableArray<org.webcat.grader.Assignment>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setAssignment("
-                + value + "): was " + assignment() );
+            log.debug("setAssignment("
+                + value + "): was " + assignment());
         }
-        takeStoredValueForKey( value, "assignment" );
+        takeStoredValueForKey(value, "assignment");
     }
 
 
@@ -2102,7 +2104,8 @@ public abstract class _SubmissionProfile
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.core.CourseOffering> courseOfferings()
     {
-        return (NSArray)storedValueForKey( "courseOfferings" );
+        return (NSArray<org.webcat.core.CourseOffering>)
+            storedValueForKey("courseOfferings");
     }
 
 
@@ -2113,14 +2116,15 @@ public abstract class _SubmissionProfile
      *
      * @param value The new set of entities to relate to
      */
-    public void setCourseOfferings( NSMutableArray<org.webcat.core.CourseOffering>  value )
+    public void setCourseOfferings(
+        NSMutableArray<org.webcat.core.CourseOffering>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setCourseOfferings("
-                + value + "): was " + courseOfferings() );
+            log.debug("setCourseOfferings("
+                + value + "): was " + courseOfferings());
         }
-        takeStoredValueForKey( value, "courseOfferings" );
+        takeStoredValueForKey(value, "courseOfferings");
     }
 
 
@@ -2336,8 +2340,8 @@ public abstract class _SubmissionProfile
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<SubmissionProfile> fspec =
+            new WCFetchSpecification<SubmissionProfile>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
@@ -2360,8 +2364,13 @@ public abstract class _SubmissionProfile
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
+        WCFetchSpecification<SubmissionProfile> fspec =
+            new WCFetchSpecification<SubmissionProfile>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
         NSArray<SubmissionProfile> objects =
-            objectsMatchingQualifier(context, qualifier, sortOrderings);
+            objectsWithFetchSpecification(context, fspec);
         return (objects.size() > 0)
             ? objects.get(0)
             : null;
@@ -2453,7 +2462,7 @@ public abstract class _SubmissionProfile
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -2525,7 +2534,7 @@ public abstract class _SubmissionProfile
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -2549,8 +2558,8 @@ public abstract class _SubmissionProfile
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<SubmissionProfile> fspec =
+            new WCFetchSpecification<SubmissionProfile>(
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
@@ -2616,7 +2625,7 @@ public abstract class _SubmissionProfile
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -2726,7 +2735,7 @@ public abstract class _SubmissionProfile
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);

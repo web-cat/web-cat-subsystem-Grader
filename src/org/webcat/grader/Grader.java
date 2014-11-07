@@ -171,31 +171,15 @@ public class Grader
             ec.saveChanges();
         }}.run();
 
-        // Create the queue and the queueprocessor
-        graderQueue          = new GraderQueue();
-        graderQueueProcessor = new GraderQueueProcessor(graderQueue);
-
-        // Kick off the processor thread
-        graderQueueProcessor.start();
-
-        if (Application.configurationProperties().booleanForKey(
-            "grader.resumeSuspendedJobs"))
-        {
-            // Resume any enqueued jobs (if grader is coming back up
-            // after an application restart)
-            run(new ECAction() { public void action() {
-                for (EnqueuedJob job : EnqueuedJob.allObjects(ec))
-                {
-                    if (!job.paused())
-                    {
-                        // Only need to trigger the queue processor once,
-                        // and it will slurp up all the jobs that are ready.
-                        graderQueue.enqueue(null);
-                        break;
-                    }
-                }
+        // Resume any enqueued jobs (if grader is coming back up
+        // after an application restart)
+        run(new ECAction() { public void action() {
+            GraderQueueProcessor.processJobs(
+                EnqueuedJob.objectsMatchingQualifier(ec,
+                    EnqueuedJob.paused.isFalse().or(
+                    EnqueuedJob.paused.isNull()),
+                    EnqueuedJob.queueTime.ascs()));
             }});
-        }
     }
 
 
@@ -263,25 +247,13 @@ public class Grader
 
     // ----------------------------------------------------------
     /**
-     * Access the grader job queue.
-     *
-     * @return the grader job queue associated with this subsystem
-     */
-    public GraderQueue graderQueue()
-    {
-        return graderQueue;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
      * Find out how many grading jobs have been processed so far.
      *
      * @return the number of jobs process so far
      */
     public int processedJobCount()
     {
-        return graderQueueProcessor.processedJobCount();
+        return GraderQueueProcessor.processedJobCount();
     }
 
 
@@ -293,7 +265,7 @@ public class Grader
      */
     public long mostRecentJobWait()
     {
-        return graderQueueProcessor.mostRecentJobWait();
+        return GraderQueueProcessor.mostRecentJobWait();
     }
 
 
@@ -305,7 +277,7 @@ public class Grader
      */
     public long estimatedJobTime()
     {
-        return graderQueueProcessor.estimatedJobTime();
+        return GraderQueueProcessor.estimatedJobTime();
     }
 
 
@@ -929,12 +901,6 @@ public class Grader
      * this subsystem.  It is initialized by the constructor.
      */
     private static Grader instance;
-
-    /** this is the main single grader queue */
-    private static GraderQueue graderQueue;
-
-    /** this is the queue processor for processing grader jobs */
-    private static GraderQueueProcessor graderQueueProcessor;
 
     static Logger log = Logger.getLogger( Grader.class );
 }

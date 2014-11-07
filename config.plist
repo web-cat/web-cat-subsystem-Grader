@@ -134,6 +134,32 @@
   upload and the availability of results is greater than what you set here.
   Changes to this setting take effect the next time Web-CAT restarts.";
     },
+    {
+        property    = "grader.multithreaded";
+        type        = boolean;
+        default     = true;
+        name        = "Grade Submissions in Parallel";
+        category    = "Timing";
+        description =
+  "If true, Web-CAT will process multiple program submissions in parallel,
+  based on the number of processing cores available.  If false, submissions
+  will be processed sequentially, one at a time.";
+    },
+    {
+        property    = "grader.usePluginInternalThreads";
+        type        = boolean;
+        default     = true;
+        name        = "Run Plug-ins with Multithreading";
+        category    = "Timing";
+        description =
+  "If true, Web-CAT will run some plug-ins (like the JavaTddPlugin)
+  multi-threaded, increasing the speed of processing a single submission--but
+  at the cost of reducing the number of submissions that can be graded in
+  parallel.  When there are lower volumes of submissions , this may increase
+  the speed with which individual students receive results.  When there are
+  high volumes of submissions, this will reduce the number that can be
+  processed in parallel, which may reduce overall throughput.";
+    },
 
 
     {

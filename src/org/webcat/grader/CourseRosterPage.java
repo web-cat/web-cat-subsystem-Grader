@@ -85,6 +85,12 @@ public class CourseRosterPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
+        if (log.isDebugEnabled())
+        {
+            log.debug("context = " + localContext().getClass().getName());
+            log.debug("shared context = "
+                + localContext().sharedEditingContext());
+        }
         // Set up student list filters
         studentDisplayGroup.setObjectArray( courseOffering().students() );
 

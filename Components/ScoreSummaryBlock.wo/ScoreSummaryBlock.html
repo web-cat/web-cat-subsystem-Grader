@@ -1,18 +1,18 @@
 <table class="floatLeft"><thead>
   <tr><th colspan="3">Score Summary</th></tr></thead><tbody>
   <webobject name="HasTAGrade"><webobject name="TR">
-    <td>Design/Readability:</td><td class="R"><webobject name="CanEditDeduction"><webobject name="EditDeduction"/></webobject><webobject name="CannotEditDeduction"><webobject name="Deduction"/></webobject>/<webobject name="TotalTAPoints"/></td>
+    <td><wo:str value="$taLabel"/></td><td class="R"><webobject name="CanEditDeduction"><webobject name="EditDeduction"/></webobject><webobject name="CannotEditDeduction"><webobject name="Deduction"/></webobject>/<webobject name="TotalTAPoints"/></td>
     <td><webobject name="TAMeter"/></td>
   </webobject></webobject>
   <webobject name="HasToolGrade"><webobject name="TR">
-    <td>Style/Coding:</td><td class="R"><webobject name="ToolScore"/>/<webobject name="ToolPossible"/></td>
+    <td><wo:str value="$toolLabel"/>:</td><td class="R"><webobject name="ToolScore"/>/<webobject name="ToolPossible"/></td>
     <td><webobject name="ToolMeter"/></td>
   </webobject></webobject>
-  <webobject name="HasTestingGrade"><webobject name="TR"><td>Correctness/Testing:</td><td class="R"><webobject name="TestingScore"/>/<webobject name="TestingPossible"/></td>
+  <webobject name="HasTestingGrade"><webobject name="TR"><td><wo:str value="$testingLabel"/>:</td><td class="R"><webobject name="TestingScore"/>/<webobject name="TestingPossible"/></td>
     <td><webobject name="TestingMeter"/></td></webobject></webobject>
   <webobject name="TR2"><td>Final score:</td><td class="R"><b><webobject name="FinalScore"/>/<webobject name="PossibleScore"/></b></td>
     <td><webobject name="FinalMeter"/></td></webobject>
 </tbody></table>
-<table class="layout clear"><tr>
+<wo:if condition="$includeGraph"><table class="layout clear"><tr>
  <td style="padding-left:0;">Position in class:</td><td><webobject name="Graph"/></td>
-</tr></table>
+</tr></table></wo:if>

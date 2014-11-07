@@ -633,7 +633,8 @@ public abstract class _Assignment
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.AssignmentOffering> offerings()
     {
-        return (NSArray)storedValueForKey( "offerings" );
+        return (NSArray<org.webcat.grader.AssignmentOffering>)
+            storedValueForKey("offerings");
     }
 
 
@@ -644,14 +645,15 @@ public abstract class _Assignment
      *
      * @param value The new set of entities to relate to
      */
-    public void setOfferings( NSMutableArray<org.webcat.grader.AssignmentOffering>  value )
+    public void setOfferings(
+        NSMutableArray<org.webcat.grader.AssignmentOffering>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setOfferings("
-                + value + "): was " + offerings() );
+            log.debug("setOfferings("
+                + value + "): was " + offerings());
         }
-        takeStoredValueForKey( value, "offerings" );
+        takeStoredValueForKey(value, "offerings");
     }
 
 
@@ -811,7 +813,8 @@ public abstract class _Assignment
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.Step> steps()
     {
-        return (NSArray)storedValueForKey( "steps" );
+        return (NSArray<org.webcat.grader.Step>)
+            storedValueForKey("steps");
     }
 
 
@@ -822,14 +825,15 @@ public abstract class _Assignment
      *
      * @param value The new set of entities to relate to
      */
-    public void setSteps( NSMutableArray<org.webcat.grader.Step>  value )
+    public void setSteps(
+        NSMutableArray<org.webcat.grader.Step>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setSteps("
-                + value + "): was " + steps() );
+            log.debug("setSteps("
+                + value + "): was " + steps());
         }
-        takeStoredValueForKey( value, "steps" );
+        takeStoredValueForKey(value, "steps");
     }
 
 
@@ -1045,8 +1049,8 @@ public abstract class _Assignment
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<Assignment> fspec =
+            new WCFetchSpecification<Assignment>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
@@ -1069,8 +1073,13 @@ public abstract class _Assignment
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
+        WCFetchSpecification<Assignment> fspec =
+            new WCFetchSpecification<Assignment>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
         NSArray<Assignment> objects =
-            objectsMatchingQualifier(context, qualifier, sortOrderings);
+            objectsWithFetchSpecification(context, fspec);
         return (objects.size() > 0)
             ? objects.get(0)
             : null;
@@ -1162,7 +1171,7 @@ public abstract class _Assignment
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1234,7 +1243,7 @@ public abstract class _Assignment
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1258,8 +1267,8 @@ public abstract class _Assignment
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<Assignment> fspec =
+            new WCFetchSpecification<Assignment>(
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
@@ -1325,7 +1334,7 @@ public abstract class _Assignment
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1435,7 +1444,7 @@ public abstract class _Assignment
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);

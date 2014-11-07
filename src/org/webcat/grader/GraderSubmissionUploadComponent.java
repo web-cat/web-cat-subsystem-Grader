@@ -209,8 +209,23 @@ public class GraderSubmissionUploadComponent
         job.setQueueTime( new NSTimestamp() );
         applyLocalChanges();
         prefs().setSubmissionRelationship(submission);
+        {
+            try
+            {
+                log.info("enqueued job " + job + ", queue size now = "
+                    + EnqueuedJob.countOfObjectsMatchingQualifier(
+                        localContext(),
+                        EnqueuedJob.paused.isFalse()
+                            .and(EnqueuedJob.regrading.isFalse())
+                            .and(EnqueuedJob.submission.isNotNull())));
+            }
+            catch (Exception e)
+            {
+                log.error("Unexpected exception", e);
+            }
+        }
 
-        Grader.getInstance().graderQueue().enqueue( null );
+        GraderQueueProcessor.processJob(job);
 
         // reset the submission in process so it is clear again
         submissionInProcess().cancelSubmission();

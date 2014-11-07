@@ -30,15 +30,13 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYBoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCalculator;
 import org.jfree.data.statistics.BoxAndWhiskerXYDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleInsets;
-import org.webcat.grader.AssignmentOffering;
-import org.webcat.grader.Submission;
+import static org.webcat.grader.Submission.CumulativeStats;
 import com.webobjects.appserver.WOContext;
 
 //-------------------------------------------------------------------------
@@ -70,8 +68,8 @@ public class BoxAndWhiskerChart extends JFreeChartComponent
 
     //~ KVC Attributes (must be public) .......................................
 
-    public AssignmentOffering assignmentOffering;
-    public Submission.CumulativeStats submissionStats;
+    public Double maxScale;
+    public CumulativeStats submissionStats;
 
 
     //~ Methods ...............................................................
@@ -101,7 +99,7 @@ public class BoxAndWhiskerChart extends JFreeChartComponent
 
 
     // ----------------------------------------------------------
-    public void setSubmissionStats(Submission.CumulativeStats stats)
+    public void setSubmissionStats(CumulativeStats stats)
     {
         submissionStats = stats;
 
@@ -115,7 +113,8 @@ public class BoxAndWhiskerChart extends JFreeChartComponent
     @Override
     public XYDataset dataset()
     {
-        BoxAndWhiskerXYDataset dataset = (BoxAndWhiskerXYDataset) super.dataset();
+        BoxAndWhiskerXYDataset dataset =
+            (BoxAndWhiskerXYDataset)super.dataset();
 
         if (dataset == null)
         {
@@ -125,8 +124,8 @@ public class BoxAndWhiskerChart extends JFreeChartComponent
             if (submissionStats.allScores().size() > 0)
             {
                 newDataset.add(new Date(),
-                        BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(
-                                submissionStats.allScores()));
+                    BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(
+                        submissionStats.allScores()));
             }
 
             dataset = newDataset;
@@ -152,20 +151,21 @@ public class BoxAndWhiskerChart extends JFreeChartComponent
         plot.setInsets(RectangleInsets.ZERO_INSETS);
         plot.setOutlineVisible(false);
         plot.setBackgroundPaint(new Color(0, 0, 0, 0));
-        XYBoxAndWhiskerRenderer renderer = (XYBoxAndWhiskerRenderer) plot.getRenderer();
+        XYBoxAndWhiskerRenderer renderer =
+            (XYBoxAndWhiskerRenderer)plot.getRenderer();
         renderer.setAutoPopulateSeriesOutlinePaint(true);
 
         ValueAxis domainAxis = plot.getDomainAxis();
         domainAxis.setVisible(false);
 
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setRange(-0.5, assignmentOffering.assignment()
-                .submissionProfile().availablePoints() + 0.5);
+        double max = (maxScale == null) ? submissionStats.max() : maxScale;
+        rangeAxis.setRange(-0.5, max + 0.5);
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         Font oldFont = rangeAxis.getTickLabelFont();
         rangeAxis.setTickLabelFont(oldFont.deriveFont(
-                oldFont.getSize2D() * 0.8f));
+            oldFont.getSize2D() * 0.8f));
 
         return chart;
     }

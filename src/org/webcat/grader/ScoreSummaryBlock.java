@@ -22,6 +22,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.NSKeyValueCodingAdditions;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -54,9 +55,14 @@ public class ScoreSummaryBlock
     //~ KVC Attributes (must be public) .......................................
 
     public boolean          allowScoreEdit   = false;
-    public Submission       submission;
-    public SubmissionResult result;
+    public NSKeyValueCodingAdditions submission;
+    public Scorable         result;
     public int              rowNumber;
+    public boolean          includeGraph = true;
+
+    public String taLabel = "Design/Readability";
+    public String toolLabel = "Style/Coding";
+    public String testingLabel = "Correctness/Testing";
 
 
     //~ Methods ...............................................................
@@ -68,8 +74,8 @@ public class ScoreSummaryBlock
         rowNumber = 0;
         if (submission != null)
         {
-            result = submission.result();
-            super.beforeAppendToResponse( response, context );
+            result = (Scorable)submission.valueForKey(Submission.RESULT_KEY);
+            super.beforeAppendToResponse(response, context);
         }
     }
 
@@ -77,11 +83,12 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public boolean hasTAGrade()
     {
-        return submission.assignmentOffering().assignment()
-            .submissionProfile().taPoints() > 0.0
+        return (Double)submission.valueForKeyPath(
+            "assignmentOffering.submissionProfile.taPoints") > 0.0
             || (result != null
-                && result.taScoreRaw() != null
-                && result.taScore() > 0.0)
+                && result.valueForKey("taScoreRaw") != null
+                && (Double)result.valueForKey(SubmissionResult.TA_SCORE_KEY)
+                    > 0.0)
             || allowScoreEdit;
     }
 
@@ -89,8 +96,9 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public Object taScore()
     {
-        return ( result.status() == Status.CHECK )
-            ? result.taScoreRaw()
+        return ((Byte)result.valueForKey(SubmissionResult.STATUS_KEY)
+            == Status.CHECK)
+            ? result.valueForKey("taScoreRaw")
             : null;
     }
 
@@ -98,13 +106,15 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String taMeter()
     {
-        Number taPossibleNum = submission.assignmentOffering()
-            .assignment().submissionProfile().taPointsRaw();
-        double taPossible = ( taPossibleNum == null )
+        Number taPossibleNum = (Number)submission.valueForKeyPath(
+            "assignmentOffering.submissionProfile.taPointsRaw");
+        double taPossible = (taPossibleNum == null)
             ? 1.0 : taPossibleNum.doubleValue();
-        Number taPtsNum = result.taScoreRaw();
-        if ( taPtsNum == null ||
-             ( !allowScoreEdit && result.status() != Status.CHECK ) )
+        Number taPtsNum = (Number)result.valueForKey("taScoreRaw");
+        if (taPtsNum == null
+            || (!allowScoreEdit
+                && (Byte)result.valueForKey(SubmissionResult.STATUS_KEY)
+                    != Status.CHECK))
         {
             return "&lt;Awaiting Staff&gt;";
         }
@@ -116,36 +126,38 @@ public class ScoreSummaryBlock
     // ----------------------------------------------------------
     public String toolMeter()
     {
-        Number toolPossibleNum = submission.assignmentOffering()
-            .assignment().submissionProfile().toolPointsRaw();
-        double toolPossible = ( toolPossibleNum == null )
+        Number toolPossibleNum = (Number)submission.valueForKeyPath(
+            "assignmentOffering.submissionProfile.toolPointsRaw");
+        double toolPossible = (toolPossibleNum == null)
             ? 1.0 : toolPossibleNum.doubleValue();
-        double toolPts = result.toolScore();
-        return FinalReportPage.meter( toolPts / toolPossible );
+        double toolPts =
+            (Double)result.valueForKey(SubmissionResult.TOOL_SCORE_KEY);
+        return FinalReportPage.meter(toolPts / toolPossible);
     }
 
 
     // ----------------------------------------------------------
     public String correctnessMeter()
     {
-        double possible = submission.assignmentOffering()
-            .assignment().submissionProfile().correctnessPoints();
-        double pts = result.correctnessScore();
-        return FinalReportPage.meter( pts / possible );
+        double possible = (Double)submission.valueForKeyPath(
+            "assignmentOffering.submissionProfile.correctnessPoints");
+        double pts = (Double)result.valueForKey(
+            SubmissionResult.CORRECTNESS_SCORE_KEY);
+        return FinalReportPage.meter(pts / possible);
     }
 
 
     // ----------------------------------------------------------
     public String finalMeter()
     {
-        double possible = submission.assignmentOffering()
-            .assignment().submissionProfile().availablePoints();
+        double possible = (Double)submission.valueForKeyPath(
+            "assignmentOffering.submissionProfile.availablePoints");
         double pts = result.finalScoreVisibleTo(user());
-        return FinalReportPage.meter( pts / possible );
+        return FinalReportPage.meter(pts / possible);
     }
 
 
     //~ Instance/static variables .............................................
 
-    static Logger log = Logger.getLogger( ScoreSummaryBlock.class );
+    static Logger log = Logger.getLogger(ScoreSummaryBlock.class);
 }

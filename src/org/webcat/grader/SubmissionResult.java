@@ -38,6 +38,7 @@ import org.webcat.woextensions.MigratingEditingContext;
  */
 public class SubmissionResult
     extends _SubmissionResult
+    implements Scorable
 {
     //~ Constructors ..........................................................
 
@@ -109,7 +110,7 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
-     * Retrueve the submission associated with this result for the
+     * Retrieve the submission associated with this result for the
      * given user.
      * @param partner The user whose submission should be retrieved--either
      *                the primary submitter or one of the partners.

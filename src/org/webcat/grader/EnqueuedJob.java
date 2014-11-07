@@ -78,13 +78,15 @@ public class EnqueuedJob
      */
     public String workingDirName()
     {
-        StringBuffer dir = new StringBuffer( 50 );
-        dir.append( org.webcat.core.Application
-            .configurationProperties().getProperty( "grader.workarea" ) );
-        dir.append( '/' );
-        dir.append( submission().user().authenticationDomain().subdirName() );
-        dir.append( '/' );
-        dir.append( submission().user().userName() );
+        StringBuffer dir = new StringBuffer(100);
+        dir.append(org.webcat.core.Application
+            .configurationProperties().getProperty("grader.workarea"));
+        dir.append('/');
+        dir.append(submission().user().authenticationDomain().subdirName());
+        dir.append('/');
+        dir.append(submission().user().userName());
+        dir.append('.');
+        dir.append(submission().id());
         return dir.toString();
     }
 

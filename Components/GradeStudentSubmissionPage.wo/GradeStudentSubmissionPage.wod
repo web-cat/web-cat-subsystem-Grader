@@ -29,6 +29,7 @@ CoverageMeter: WOString {
 Done: WCCheckBox {
     checked = gradingDone;
     alt = "Show grade to student and send e-mail";
+    id = "done";
 }
 
 FileBrowser: org.webcat.core.FileBrowser {

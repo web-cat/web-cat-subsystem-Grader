@@ -526,7 +526,7 @@ public abstract class _Submission
         {
             new org.webcat.woextensions.ECAction(
                 org.webcat.woextensions.MigratingEditingContext
-                    .newEditingContext())
+                    .newEditingContext(), true)
             {
                 public void action()
                 {
@@ -850,7 +850,8 @@ public abstract class _Submission
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.EnqueuedJob> enqueuedJobs()
     {
-        return (NSArray)storedValueForKey( "enqueuedJobs" );
+        return (NSArray<org.webcat.grader.EnqueuedJob>)
+            storedValueForKey("enqueuedJobs");
     }
 
 
@@ -861,14 +862,15 @@ public abstract class _Submission
      *
      * @param value The new set of entities to relate to
      */
-    public void setEnqueuedJobs( NSMutableArray<org.webcat.grader.EnqueuedJob>  value )
+    public void setEnqueuedJobs(
+        NSMutableArray<org.webcat.grader.EnqueuedJob>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setEnqueuedJobs("
-                + value + "): was " + enqueuedJobs() );
+            log.debug("setEnqueuedJobs("
+                + value + "): was " + enqueuedJobs());
         }
-        takeStoredValueForKey( value, "enqueuedJobs" );
+        takeStoredValueForKey(value, "enqueuedJobs");
     }
 
 
@@ -1028,7 +1030,8 @@ public abstract class _Submission
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.GraderPrefs> graderPrefs()
     {
-        return (NSArray)storedValueForKey( "graderPrefs" );
+        return (NSArray<org.webcat.grader.GraderPrefs>)
+            storedValueForKey("graderPrefs");
     }
 
 
@@ -1039,14 +1042,15 @@ public abstract class _Submission
      *
      * @param value The new set of entities to relate to
      */
-    public void setGraderPrefs( NSMutableArray<org.webcat.grader.GraderPrefs>  value )
+    public void setGraderPrefs(
+        NSMutableArray<org.webcat.grader.GraderPrefs>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setGraderPrefs("
-                + value + "): was " + graderPrefs() );
+            log.debug("setGraderPrefs("
+                + value + "): was " + graderPrefs());
         }
-        takeStoredValueForKey( value, "graderPrefs" );
+        takeStoredValueForKey(value, "graderPrefs");
     }
 
 
@@ -1206,7 +1210,8 @@ public abstract class _Submission
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.Submission> partneredSubmissions()
     {
-        return (NSArray)storedValueForKey( "partneredSubmissions" );
+        return (NSArray<org.webcat.grader.Submission>)
+            storedValueForKey("partneredSubmissions");
     }
 
 
@@ -1217,14 +1222,15 @@ public abstract class _Submission
      *
      * @param value The new set of entities to relate to
      */
-    public void setPartneredSubmissions( NSMutableArray<org.webcat.grader.Submission>  value )
+    public void setPartneredSubmissions(
+        NSMutableArray<org.webcat.grader.Submission>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setPartneredSubmissions("
-                + value + "): was " + partneredSubmissions() );
+            log.debug("setPartneredSubmissions("
+                + value + "): was " + partneredSubmissions());
         }
-        takeStoredValueForKey( value, "partneredSubmissions" );
+        takeStoredValueForKey(value, "partneredSubmissions");
     }
 
 
@@ -1440,8 +1446,8 @@ public abstract class _Submission
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<Submission> fspec =
+            new WCFetchSpecification<Submission>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
@@ -1464,8 +1470,13 @@ public abstract class _Submission
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
+        WCFetchSpecification<Submission> fspec =
+            new WCFetchSpecification<Submission>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
         NSArray<Submission> objects =
-            objectsMatchingQualifier(context, qualifier, sortOrderings);
+            objectsWithFetchSpecification(context, fspec);
         return (objects.size() > 0)
             ? objects.get(0)
             : null;
@@ -1557,7 +1568,7 @@ public abstract class _Submission
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1629,7 +1640,7 @@ public abstract class _Submission
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1653,8 +1664,8 @@ public abstract class _Submission
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<Submission> fspec =
+            new WCFetchSpecification<Submission>(
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
@@ -1720,7 +1731,7 @@ public abstract class _Submission
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1830,7 +1841,7 @@ public abstract class _Submission
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);

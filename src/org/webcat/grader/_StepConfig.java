@@ -547,7 +547,8 @@ public abstract class _StepConfig
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.Step> steps()
     {
-        return (NSArray)storedValueForKey( "steps" );
+        return (NSArray<org.webcat.grader.Step>)
+            storedValueForKey("steps");
     }
 
 
@@ -558,14 +559,15 @@ public abstract class _StepConfig
      *
      * @param value The new set of entities to relate to
      */
-    public void setSteps( NSMutableArray<org.webcat.grader.Step>  value )
+    public void setSteps(
+        NSMutableArray<org.webcat.grader.Step>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setSteps("
-                + value + "): was " + steps() );
+            log.debug("setSteps("
+                + value + "): was " + steps());
         }
-        takeStoredValueForKey( value, "steps" );
+        takeStoredValueForKey(value, "steps");
     }
 
 
@@ -781,8 +783,8 @@ public abstract class _StepConfig
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<StepConfig> fspec =
+            new WCFetchSpecification<StepConfig>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
@@ -805,8 +807,13 @@ public abstract class _StepConfig
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
+        WCFetchSpecification<StepConfig> fspec =
+            new WCFetchSpecification<StepConfig>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
         NSArray<StepConfig> objects =
-            objectsMatchingQualifier(context, qualifier, sortOrderings);
+            objectsWithFetchSpecification(context, fspec);
         return (objects.size() > 0)
             ? objects.get(0)
             : null;
@@ -898,7 +905,7 @@ public abstract class _StepConfig
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -970,7 +977,7 @@ public abstract class _StepConfig
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -994,8 +1001,8 @@ public abstract class _StepConfig
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<StepConfig> fspec =
+            new WCFetchSpecification<StepConfig>(
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
@@ -1061,7 +1068,7 @@ public abstract class _StepConfig
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -1171,7 +1178,7 @@ public abstract class _StepConfig
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);

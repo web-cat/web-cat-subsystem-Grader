@@ -35,7 +35,13 @@
         },
         {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }
     );
-    attributesUsedForLocking = (discarded, paused, processor, regrading, submissionId);
+    attributesUsedForLocking = (
+        discarded,
+        paused,
+        processor,
+        regrading,
+        submissionId
+    );
     className = "org.webcat.grader.EnqueuedJob";
     classProperties = (discarded, paused, processor, queueTime, regrading, submission);
     externalName = TENQUEUEDJOB;

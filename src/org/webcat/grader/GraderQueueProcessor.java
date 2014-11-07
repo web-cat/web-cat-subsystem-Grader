@@ -29,6 +29,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.webcat.archives.ArchiveManager;
 import org.webcat.archives.IWritableContainer;
@@ -40,10 +45,12 @@ import org.webcat.core.Status;
 import org.webcat.core.User;
 import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
-import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
-import org.webcat.woextensions.WCEC;
-import org.webcat.woextensions.WCFetchSpecification;
+import org.webcat.woextensions.ECAction;
+import com.webobjects.eoaccess.EOGeneralAdaptorException;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOGlobalID;
+import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSKeyValueCoding;
@@ -52,6 +59,7 @@ import com.webobjects.foundation.NSMutableDictionary;
 import com.webobjects.foundation.NSMutableSet;
 import com.webobjects.foundation.NSTimestamp;
 import er.extensions.eof.ERXConstant;
+import er.extensions.eof.ERXEOGlobalIDUtilities;
 
 // -------------------------------------------------------------------------
 /**
@@ -64,7 +72,8 @@ import er.extensions.eof.ERXConstant;
  * @version $Revision$, $Date$
  */
 public class GraderQueueProcessor
-    extends Thread
+    extends ECAction
+    implements Comparable<GraderQueueProcessor>
 {
     //~ Constructors ..........................................................
 
@@ -74,296 +83,174 @@ public class GraderQueueProcessor
      *
      * @param queue the queue to operate on
      */
-    public GraderQueueProcessor(GraderQueue queue)
+    private GraderQueueProcessor(
+        EOGlobalID jobId, long queueTime, boolean isRegrading)
     {
-        super("GraderQueueProcessor");
-        this.queue = queue;
+        this.jobId = jobId;
+        this.queueTime = queueTime;
+        this.isRegrading = isRegrading;
     }
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+    public int compareTo(GraderQueueProcessor other)
+    {
+        if (this.isRegrading == other.isRegrading)
+        {
+            long diff = this.queueTime - other.queueTime;
+            if (diff < 0)
+            {
+                return -1;
+            }
+            else if (diff == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        else if (this.isRegrading)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * The actual thread of execution
      */
-    public void run()
+    public void action()
     {
-        while (true)
+        // Clear discarded jobs
+        deleteJobsMatchingQualifier(
+            ec, EnqueuedJob.submission.isNull());
+        deleteJobsMatchingQualifier(
+            ec, EnqueuedJob.discarded.isTrue());
+
+        // Look for real jobs
+        EnqueuedJob job = (EnqueuedJob)ERXEOGlobalIDUtilities
+            .fetchObjectWithGlobalID(ec, jobId);
+        if (job == null)
+        {
+            return;
+        }
+
+        if (log.isDebugEnabled())
+        {
+            log.debug(getName() + ": received job: " + job.submission());
+        }
+
+        NSTimestamp startProcessing = new NSTimestamp();
+        Submission submission = job.submission();
+        if (submission == null)
+        {
+            log.error(getName()
+                + ": null submission in enqueued job: deleting");
+            job.delete();
+        }
+        else if (job.discarded())
+        {
+            log.debug(getName() + ": discarded job: deleting");
+            job.delete();
+        }
+        else if (submission.assignmentOffering() == null)
+        {
+            log.error(getName()
+                + ": submission with null assignment "
+                + "offering in enqueued job: deleting");
+            job.delete();
+        }
+        else
+        {
+            if (submission.assignmentOffering()
+                .gradingSuspended())
+            {
+                log.warn(getName() +
+                    ": suspending job " + submission.dirName());
+                job.setPaused(true);
+                job.setProcessorRaw(null);
+            }
+            else
+            {
+                log.info(getName()
+                    + ": processing submission " + submission);
+                processJobWithProtection(job);
+                NSTimestamp now = new NSTimestamp();
+                qstats.recordTimes(
+                    (job.queueTime() != null)
+                        ? now.getTime() - job.queueTime().getTime()
+                        : now.getTime() - submission.submitTime().getTime(),
+                    now.getTime() - startProcessing.getTime());
+            }
+        }
+
+        // Now save all the changes
+
+        // assignment offering could have changed because
+        // of a fault, so save any changes before
+        // forcing it out of editing context cache
+        try
+        {
+            ec.saveChanges();
+        }
+        catch (IllegalStateException e)
+        {
+            // Database inconsistency problem
+            log.error(getName() + ": exception trying to save "
+                + "grading results for " + job.submission(), e);
+            ec.revert();
+            // FIXME: retry?
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private EnqueuedJob jobMatching(
+        EOEditingContext context, EOQualifier qualifier)
+    {
+        return EnqueuedJob.firstObjectMatchingQualifier(
+            context, qualifier, EnqueuedJob.submitTime.ascs());
+    }
+
+
+    // ----------------------------------------------------------
+    private void deleteJobsMatchingQualifier(
+        EOEditingContext context, EOQualifier qualifier)
+    {
+        EnqueuedJob job = null;
+        try
+        {
+            job = jobMatching(context, qualifier);
+        }
+        catch (Exception e)
+        {
+            log.info(getName() + ": error fetching job: ", e);
+            job = jobMatching(context, qualifier);
+        }
+
+        while (job != null)
         {
             try
             {
-                editingContext = WCEC.newEditingContext();
-                editingContext.lock();
-
-                // Clear discarded jobs
-                NSArray<EnqueuedJob> jobList = null;
-                try
-                {
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.submission.isNull());
-                }
-                catch (Exception e)
-                {
-                    log.info("error fetching jobs: ", e);
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.submission.isNull());
-                }
-
-                if (jobList != null && jobList.size() > 0)
-                {
-                    // delete all the jobs without submissions
-                    for (EnqueuedJob job : jobList)
-                    {
-                        job.delete();
-                    }
-                    editingContext.saveChanges();
-                    log.debug(
-                        jobList.count() + " submissionless jobs retrieved");
-                }
-
-                try
-                {
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.discarded.isTrue());
-                }
-                catch (Exception e)
-                {
-                    log.info("error fetching jobs: ", e);
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.discarded.isTrue());
-                }
-
-                if (jobList != null && jobList.size() > 0)
-                {
-                    // delete all the discarded jobs
-                    for (EnqueuedJob job : jobList)
-                    {
-                        job.delete();
-                    }
-                    editingContext.saveChanges();
-                    log.debug(
-                        jobList.count() + " discarded jobs retrieved");
-                }
-
-                // Look for real jobs
-                jobList = null;
-                try
-                {
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.paused.isFalse().and(
-                            EnqueuedJob.regrading.isFalse()),
-                        EnqueuedJob.submission.dot(Submission.submitTime)
-                            .ascs());
-                }
-                catch (Exception e)
-                {
-                    log.info("error fetching jobs: ", e);
-                    jobList = EnqueuedJob.objectsMatchingQualifier(
-                        editingContext,
-                        EnqueuedJob.paused.isFalse().and(
-                            EnqueuedJob.regrading.isFalse()),
-                        EnqueuedJob.submission.dot(Submission.submitTime)
-                            .ascs());
-                }
-
-                if (log.isDebugEnabled())
-                {
-                    log.debug((jobList == null ? 0 : jobList.count())
-                        + " fresh jobs retrieved");
-                }
-
-                // If no real jobs, look for regrading jobs
-                if (jobList == null || jobList.size() == 0)
-                {
-                    // Just look for one regrading job, so we can then
-                    // try our hand at other jobs again.
-                    WCFetchSpecification<EnqueuedJob> regrading =
-                        new WCFetchSpecification<EnqueuedJob>(
-                            EnqueuedJob.ENTITY_NAME,
-                            EnqueuedJob.paused.isFalse().and(
-                                EnqueuedJob.regrading.isTrue()),
-                            EnqueuedJob.queueTime.ascs());
-                    regrading.setFetchLimit(1);
-                    try
-                    {
-                        jobList = EnqueuedJob.objectsWithFetchSpecification(
-                            editingContext, regrading);
-                    }
-                    catch (Exception e)
-                    {
-                        log.info("error fetching jobs: ", e);
-                        jobList = EnqueuedJob.objectsWithFetchSpecification(
-                            editingContext, regrading);
-                    }
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug((jobList == null ? 0 : jobList.count())
-                            + " regrading jobs retrieved");
-                    }
-                }
-
-                // This test is just to make sure the compiler knows it
-                // isn't null, even though the try/catch above ensures it
-                if (jobList != null && jobList.size() > 0)
-                {
-                    for (EnqueuedJob job : jobList)
-                    {
-                        NSTimestamp startProcessing = new NSTimestamp();
-                        Submission submission = job.submission();
-                        if (submission == null)
-                        {
-                            log.error("null submission in enqueued job: "
-                                + "deleting");
-                            editingContext.deleteObject(job);
-                        }
-                        else if (job.discarded())
-                        {
-                            log.debug("discarded job: deleting");
-                            editingContext.deleteObject(job);
-                        }
-                        else if (submission.assignmentOffering() == null)
-                        {
-                            log.error("submission with null assignment "
-                                + "offering in enqueued job: deleting");
-                            editingContext.deleteObject(job);
-                        }
-                        else
-                        {
-                            if (submission.assignmentOffering()
-                                .gradingSuspended())
-                            {
-                                log.warn(
-                                    "Suspending job " + submission.dirName());
-                                job.setPaused(true);
-                            }
-                            else
-                            {
-                                log.info("processing submission "
-                                    + submission.dirName());
-                                processJobWithProtection(job);
-                                NSTimestamp now = new NSTimestamp();
-                                if (job.queueTime() != null)
-                                {
-                                    mostRecentJobWait = now.getTime()
-                                        - job.queueTime().getTime();
-                                }
-                                else
-                                {
-                                    mostRecentJobWait = now.getTime()
-                                        - submission.submitTime().getTime();
-                                }
-                                {
-                                    long processingTime = now.getTime() -
-                                       startProcessing.getTime();
-                                    totalWaitForJobs += processingTime;
-                                    jobsCountedWithWaits++;
-                                }
-                            }
-                        }
-
-                        // Now save all the changes
-                        {
-                            // assignment offering could have changed because
-                            // of a fault, so save any changes before
-                            // forcing it out of editing context cache
-                            try
-                            {
-                                editingContext.saveChanges();
-                            }
-                            catch (IllegalStateException e)
-                            {
-                                log.error("Exception trying to save "
-                                    + "grading results", e);
-                                // Database inconsistency problem
-                                try
-                                {
-                                    editingContext.unlock();
-                                }
-                                catch (Throwable ee)
-                                {
-                                    log.error("Exception trying to unlock "
-                                        + "context for disposal", ee);
-                                }
-                                try
-                                {
-                                    editingContext.dispose();
-                                }
-                                catch (Throwable ee)
-                                {
-                                    log.error("Exception trying to dispose "
-                                        + "context", ee);
-                                }
-                                editingContext = null;
-                                queue.enqueue(null);
-                                break;
-                            }
-                        }
-                        // Only process one regrading job before looking for
-                        // more regular submissions.
-                        if (job.regrading())
-                        {
-                            queue.enqueue(null);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    // Wait for more jobs to show up
-                    log.debug("waiting for a token");
-                    // We don't need the return value, since it is just null:
-                    editingContext.unlock();
-                    queue.getJobToken();
-                    editingContext.lock();
-                    log.debug("token received.");
-                }
+                log.debug(getName()
+                    + ": attempting to delete stale job " + job);
+                job.delete();
+                context.saveChanges();
             }
-            catch (Throwable e)
+            catch (EOGeneralAdaptorException e)
             {
-                log.fatal("Job queue: Error processing student submission",
-                    e);
-
-                try
-                {
-                    new GraderKilledMessage(e).send();
-                }
-                catch (Throwable t)
-                {
-                    log.fatal("Error sending GraderKilledMessage", t);
-                }
-
-                log.fatal("Attempting to restart job queue processing.");
-                // ERXApplication.erxApplication().killInstance();
+                context.revert();
             }
-            finally
-            {
-                if (editingContext != null)
-                {
-                    try
-                    {
-                        editingContext.unlock();
-                    }
-                    catch (Throwable t)
-                    {
-                        log.fatal("Error unlocking editing context", t);
-                    }
-                    try
-                    {
-                        editingContext.dispose();
-                    }
-                    catch (Throwable t)
-                    {
-                        log.fatal("Error disposing editing context", t);
-                    }
-                    editingContext = null;
-                }
-            }
+            job = jobMatching(context, qualifier);
         }
     }
 
@@ -380,7 +267,7 @@ public class GraderQueueProcessor
     {
         try
         {
-            processJob(job);
+            internalProcessJob(job);
         }
         catch (Exception e)
         {
@@ -396,7 +283,7 @@ public class GraderQueueProcessor
      *
      * @param job the job to process
      */
-    void processJob(EnqueuedJob job)
+    void internalProcessJob(EnqueuedJob job)
     {
         // boolean status            = false;
         // String  extendedErrorInfo = null;
@@ -404,8 +291,8 @@ public class GraderQueueProcessor
         double correctnessScore = 0.0;
         double toolScore        = 0.0;
 
-        jobCount++;
-        log.info("Processing job " + jobCount + " for: "
+        int jobNo = qstats.nextJob();
+        log.info(getName() + ": Processing job " + jobNo + " for: "
             + job.submission().user().userName());
 
         // Set up the working directory first
@@ -495,7 +382,7 @@ public class GraderQueueProcessor
                 if (gradingProperties.booleanForKey("halt"))
                 {
                   gradingProperties.remove("halt");
-                  log.error("halt requested in step "
+                  log.error(getName() + ": halt requested in step "
                       + thisStep + "\n\tfor job " + job);
                   job.setPaused(true);
                   return;
@@ -513,7 +400,8 @@ public class GraderQueueProcessor
                 if (gradingProperties.booleanForKey("halt.all"))
                 {
                   gradingProperties.remove("halt.all");
-                  log.error("halt requested for all jobs in step "
+                  log.error(getName()
+                      + ": halt requested for all jobs in step "
                       + thisStep + "\n\tfor job " + job);
                   job.setPaused(true);
                   AssignmentOffering assignment =
@@ -541,18 +429,19 @@ public class GraderQueueProcessor
                             correctnessScore,
                             toolScore);
 
-        log.info("Finished job " + jobCount);
+        log.info(getName() + ": Finished job " + jobNo);
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Gets the location where checked out files should be stored, creating it
-     * if desired.
+     * Gets the location where checked out files should be stored, creating
+     * it if desired.
      *
      * @param job the grader job to associate the checkout with
-     * @param clean true to clean out the checkout location and create it fresh,
-     *     or false to just return the path (which may or may not exist)
+     * @param clean true to clean out the checkout location and create it
+     *              fresh, or false to just return the path (which may or
+     *              may not exist)
      * @return the path to the checkout location
      */
     private File repositoryCheckoutLocation(EnqueuedJob job, boolean clean)
@@ -613,13 +502,14 @@ public class GraderQueueProcessor
 
     // ----------------------------------------------------------
     /**
-     * Checks out the specified file into the temporary space used for grading.
+     * Checks out the specified file into the temporary space used for
+     * grading.
      *
-     * @param fileInfo a String representing an old-style absolute path to the
-     *     old script-data area, or a dictionary containing the repository info
-     *     for a file
+     * @param fileInfo a String representing an old-style absolute path to
+     *                 the old script-data area, or a dictionary containing
+     *                 the repository info for a file
      * @return a File object that points to the location of the checked out
-     *     file
+     *         file
      * @throws IOException if an I/O error occurred
      */
     private File checkOutRepositoryFiles(EnqueuedJob job, Object fileInfo)
@@ -641,14 +531,15 @@ public class GraderQueueProcessor
 
         if (entryRef != null)
         {
-            entryRef.resolve(editingContext);
+            entryRef.resolve(job.editingContext());
 
             File checkoutLocation = repositoryCheckoutLocation(job, false);
 
             File repoDir = new File(entryRef.repositoryName());
             File filePath = new File(repoDir, entryRef.path());
 
-            File containerPath = new File(checkoutLocation, filePath.getPath());
+            File containerPath =
+                new File(checkoutLocation, filePath.getPath());
             if (!entryRef.isDirectory())
             {
                 containerPath = containerPath.getParentFile();
@@ -674,17 +565,17 @@ public class GraderQueueProcessor
 
     // ----------------------------------------------------------
     /**
-     * Adds settings from a configuration settings dictionary to the properties
-     * file for grading, checking out any required files into temporary storage
-     * if necessary.
+     * Adds settings from a configuration settings dictionary to the
+     * properties file for grading, checking out any required files into
+     * temporary storage if necessary.
      *
      * @param job the job
      * @param config the configuration settings to add
      * @param properties the properties file to add the settings to
-     * @param fileSettings a dictionary whose keys represent settings that are
-     *     intended to be file paths
+     * @param fileSettings a dictionary whose keys represent settings that
+     *        are intended to be file paths
      * @param onlyIfNotDefined true to only add the property if it doesn't
-     *     already exist
+     *        already exist
      */
     private void addConfigSettingsToProperties(
         EnqueuedJob       job,
@@ -750,13 +641,13 @@ public class GraderQueueProcessor
     {
         faultOccurredInStep = false;
         timeoutOccurredInStep = false;
-        log.debug("step " + step.order() + ": "
+        log.debug(getName() + ": step " + step.order() + ": "
             + step.gradingPlugin().mainFilePath());
 
         try
         {
             step.gradingPlugin().reinitializeConfigAttributesIfNecessary();
-            log.debug("creating properties file");
+            log.debug(getName() + ": creating properties file");
 
             MutableDictionary fileProps =
                 step.gradingPlugin().fileConfigSettings();
@@ -860,6 +751,9 @@ public class GraderQueueProcessor
                 Integer.toString(job.submission().submitNumber()));
             properties.setProperty("frameworksBaseURL",
                 Application.application().frameworksBaseURL());
+            properties.setProperty(
+                usePluginInternalThreads ? "run.parallel" : "run.sequential",
+                "1");
 
             BufferedOutputStream out = new BufferedOutputStream(
                 new FileOutputStream(propertiesFile));
@@ -873,7 +767,7 @@ public class GraderQueueProcessor
                 "" + step.order() + "-stderr.txt");
 
             // execute the script
-            log.debug("executing script");
+            log.debug(getName() + ": executing script");
             timeoutOccurredInStep = step.execute(
                 propertiesFile.getPath(),
                 new File(job.workingDirName()),
@@ -896,12 +790,12 @@ public class GraderQueueProcessor
             }
             else
             {
-                log.warn(
-                    "Script produced stdout output in " + stdout.getPath());
+                log.warn(getName() + ": Script produced stdout output in "
+                    + stdout.getPath());
             }
 
             // Now reload the properties file
-            log.debug("re-loading properties from file");
+            log.debug(getName() + ": re-loading properties from file");
             BufferedInputStream in = new BufferedInputStream(
                 new FileInputStream(propertiesFile));
             properties.clear();
@@ -1020,7 +914,7 @@ public class GraderQueueProcessor
                         submissionResult.isNewObject()
                         ? new NSArray<ResultFile>()
                         : ResultFile
-                            .objectsMatchingQualifier(editingContext,
+                            .objectsMatchingQualifier(job.editingContext(),
                                 ResultFile.submissionResult.is(submissionResult)
                                     .and(ResultFile.fileName.eq(fileName)));
                     if (files.size() > 0)
@@ -1031,7 +925,7 @@ public class GraderQueueProcessor
                     else
                     {
                         thisFile = new ResultFile();
-                        editingContext.insertObject(thisFile);
+                        job.editingContext().insertObject(thisFile);
                         thisFile.setFileName(fileName);
                         thisFile.setSubmissionResultRelationship(
                             submissionResult);
@@ -1110,11 +1004,13 @@ public class GraderQueueProcessor
                 submissionResult.isNewObject()
                 ? new NSArray<SubmissionFileStats>()
                 : ((markupFileName != null && !markupFileName.isEmpty())
-                ? SubmissionFileStats.objectsMatchingQualifier(editingContext,
+                ? SubmissionFileStats.objectsMatchingQualifier(
+                    job.editingContext(),
                     SubmissionFileStats.submissionResult.is(submissionResult)
                         .and(SubmissionFileStats.markupFileNameRaw
                             .eq(markupFileName)))
-                : SubmissionFileStats.objectsMatchingQualifier(editingContext,
+                : SubmissionFileStats.objectsMatchingQualifier(
+                    job.editingContext(),
                     SubmissionFileStats.submissionResult.is(submissionResult)
                         .and(SubmissionFileStats.className
                             .eq(className))
@@ -1128,7 +1024,7 @@ public class GraderQueueProcessor
             else
             {
                 stats = new SubmissionFileStats();
-                editingContext.insertObject(stats);
+                job.editingContext().insertObject(stats);
                 stats.setSubmissionResultRelationship(submissionResult);
             }
             stats.setClassName(className);
@@ -1289,11 +1185,12 @@ public class GraderQueueProcessor
         double       correctnessScore,
         double       toolScore)
     {
+        EOEditingContext editingContext = job.editingContext();
         SubmissionResult submissionResult = job.submission().result();
         if (submissionResult == null)
         {
             submissionResult = new SubmissionResult();
-            editingContext.insertObject(submissionResult);
+            job.editingContext().insertObject(submissionResult);
             submissionResult.addToSubmissionsRelationship(job.submission());
         }
 
@@ -1305,13 +1202,8 @@ public class GraderQueueProcessor
         NSMutableArray<InlineFile> inlineStaffReports =
             new NSMutableArray<InlineFile>();
         List<File> adminReports  = new ArrayList<File>();
-        collectReports(
-            job,
-            properties,
-            submissionResult,
-            inlineStudentReports,
-            inlineStaffReports,
-            adminReports);
+        collectReports(job, properties, submissionResult,
+            inlineStudentReports, inlineStaffReports, adminReports);
 
         generateCompositeResultFile(
             new File(job.submission().resultDirName(),
@@ -1355,7 +1247,8 @@ public class GraderQueueProcessor
                 for (Submission partneredSubmission :
                     job.submission().partneredSubmissions())
                 {
-                    partneredSubmission.setResultRelationship(submissionResult);
+                    partneredSubmission.setResultRelationship(
+                        submissionResult);
                     // Force it to be marked as a partner submission as
                     // a stop-gap until we find the real problem.
                     partneredSubmission.setPartnerLink(true);
@@ -1366,7 +1259,7 @@ public class GraderQueueProcessor
         }
         catch (Exception e)
         {
-            log.error("Unable to link partner submisisons", e);
+            log.error(getName() + ": Unable to link partner submissions", e);
         }
 
         job.setSubmissionRelationship(null);
@@ -1419,8 +1312,8 @@ public class GraderQueueProcessor
      * @param job the job with the primary submission
      * @param candidateString the space-separated list of partner candidates
      */
-    private void connectPartnersFromProperty(EnqueuedJob job,
-            String candidateString)
+    private void connectPartnersFromProperty(
+        EnqueuedJob job, String candidateString)
     {
         NSMutableSet<User> potentialPartners = new NSMutableSet<User>();
 
@@ -1461,10 +1354,11 @@ public class GraderQueueProcessor
 
 
     // ----------------------------------------------------------
-    private void writeOutSavedGradingProperties(EnqueuedJob job,
-                                                WCProperties gradingProperties)
+    private void writeOutSavedGradingProperties(
+        EnqueuedJob job, WCProperties gradingProperties)
     {
-        MutableDictionary accumulatedValues = mostRecentAccumulatedValues(job);
+        MutableDictionary accumulatedValues =
+            mostRecentAccumulatedValues(job);
         NSDictionary<String, Object> previousValues =
             previousSubmissionSavedProperties(job);
 
@@ -1622,14 +1516,16 @@ public class GraderQueueProcessor
      * @param submissionResult
      * @param properties
      */
-    private void processSavedProperties( EnqueuedJob job,
-                                         SubmissionResult submissionResult,
-                                         WCProperties properties )
+    private void processSavedProperties(
+        EnqueuedJob job,
+        SubmissionResult submissionResult,
+        WCProperties properties)
     {
         // Get the previous result with any data so that we can merge in these
         // values with the accumulated values.
 
-        MutableDictionary accumulatedValues = mostRecentAccumulatedValues(job);
+        MutableDictionary accumulatedValues =
+            mostRecentAccumulatedValues(job);
 
         // Pull any properties that are prefixed with "saved." into
         // ResultOutcome objects
@@ -1642,7 +1538,8 @@ public class GraderQueueProcessor
             String actualName = null;
             if (property.startsWith(SAVED_PROPERTY_PREFIX))
             {
-                actualName = property.substring(SAVED_PROPERTY_PREFIX.length());
+                actualName =
+                    property.substring(SAVED_PROPERTY_PREFIX.length());
             }
             else if (property.endsWith(RESULT_PROPERTY_SUFFIX)
                 && !property.startsWith("mostRecent.")
@@ -1669,15 +1566,15 @@ public class GraderQueueProcessor
 
                         for (Object elem : array)
                         {
-                            createResultOutcome( job, submissionResult, index,
-                                    actualName, elem );
+                            createResultOutcome(job, submissionResult,
+                                index, actualName, elem);
                             index++;
                         }
                     }
                     else
                     {
-                        createResultOutcome( job, submissionResult, null,
-                                actualName, value );
+                        createResultOutcome(
+                            job, submissionResult, null, actualName, value);
                     }
                 }
             }
@@ -1703,11 +1600,12 @@ public class GraderQueueProcessor
      * @param tag
      * @param value
      */
-    private void createResultOutcome( EnqueuedJob job,
-                                      SubmissionResult submissionResult,
-                                      Integer index,
-                                      String tag,
-                                      Object value )
+    private void createResultOutcome(
+        EnqueuedJob job,
+        SubmissionResult submissionResult,
+        Integer index,
+        String tag,
+        Object value)
     {
         NSDictionary<String, Object> contents;
 
@@ -1733,7 +1631,7 @@ public class GraderQueueProcessor
             outcome.setIndex(index);
         }
 
-        editingContext.insertObject(outcome);
+        job.editingContext().insertObject(outcome);
 
         // TODO remove this when we fix the SubmissionResult.submission
         // relationship "problem"
@@ -1751,15 +1649,15 @@ public class GraderQueueProcessor
      * @param destination The output file to create and fill
      * @param inlineFragments The array of InlineFiles to fill it with
      */
-    void generateCompositeResultFile( File                destination,
-                                      NSArray<InlineFile> inlineFragments )
+    void generateCompositeResultFile(
+        File destination, NSArray<InlineFile> inlineFragments)
     {
-        if ( inlineFragments.count() > 0 )
+        if (inlineFragments.count() > 0)
         {
             try
             {
                 BufferedOutputStream out = new BufferedOutputStream(
-                    new FileOutputStream( destination ) );
+                    new FileOutputStream(destination));
                 final byte[] borderString =
                     "<hr size=\"1\" noshade />\n".getBytes();
 
@@ -1767,54 +1665,50 @@ public class GraderQueueProcessor
                 for (InlineFile thisFile: inlineFragments)
                 {
                     boolean isHTML = thisFile.mimeType != null &&
-                        ( thisFile.mimeType.equalsIgnoreCase( "text/html" ) ||
-                          thisFile.mimeType.equalsIgnoreCase( "html" ) );
+                        (thisFile.mimeType.equalsIgnoreCase("text/html") ||
+                        thisFile.mimeType.equalsIgnoreCase("html"));
                     try
                     {
                         BufferedInputStream in = new BufferedInputStream(
-                            new FileInputStream( thisFile ) );
-                        if ( lastNeedsBorder || thisFile.border )
+                            new FileInputStream(thisFile));
+                        if (lastNeedsBorder || thisFile.border)
                         {
-                            out.write( borderString );
+                            out.write(borderString);
                         }
                         lastNeedsBorder = thisFile.border;
-                        if ( !isHTML )
+                        if (!isHTML)
                         {
-                            out.write( "<pre>".getBytes() );
+                            out.write("<pre>".getBytes());
                         }
 
-                        FileUtilities.copyStream( in, out );
+                        FileUtilities.copyStream(in, out);
                         in.close();
 
-                        if ( !isHTML )
+                        if (!isHTML)
                         {
-                            out.write( "</pre>".getBytes() );
+                            out.write("</pre>".getBytes());
                         }
 
                     }
-                    catch ( Exception ex1 )
+                    catch (Exception ex1)
                     {
-                        log.error( "exception copying inline report "
-                                   + "fragment '"
-                                   + thisFile.getPath()
-                                   + "'",
-                                   ex1 );
+                        log.error(getName()
+                            + ": exception copying inline report fragment '"
+                            + thisFile.getPath() + "'", ex1);
                         continue;
                     }
                 }
-                if ( lastNeedsBorder )
+                if (lastNeedsBorder)
                 {
-                    out.write( borderString );
+                    out.write(borderString);
                 }
                 out.flush();
                 out.close();
             }
-            catch ( Exception ex2 )
+            catch (Exception ex2)
             {
-                log.error( "exception generating final report '"
-                           + destination
-                           + "'",
-                           ex2 );
+                log.error(getName() + ": exception generating final report '"
+                    + destination + "'", ex2);
             }
         }
     }
@@ -1827,12 +1721,14 @@ public class GraderQueueProcessor
      *
      * @param job the job which faulted
      */
-    void technicalFault( EnqueuedJob job,
-                         String      stage,
-                         Exception   e,
-                         File        attachmentsDir )
+    void technicalFault(
+        EnqueuedJob job,
+        String      stage,
+        Exception   e,
+        File        attachmentsDir)
     {
-        job.setPaused( true );
+        job.setPaused(true);
+        job.setProcessorRaw(null);
         faultOccurredInStep = true;
 
         try
@@ -1840,15 +1736,16 @@ public class GraderQueueProcessor
             SubmissionSuspendedMessage msg = new SubmissionSuspendedMessage(
                 job.submission(), e, stage, attachmentsDir);
 
-            log.info("technicalFault(): " + msg.title());
-            log.info(msg.shortBody(), e);
+            log.info(getName() + ": technicalFault(): " + msg.title());
+            log.info(getName() + ": " + msg.shortBody(), e);
 
             msg.send();
         }
         catch (Exception ee)
         {
-            log.error("Exception sending message to student", ee);
-            log.error("Cause:", e);
+            log.error(
+                getName() + ": Exception sending message to student", ee);
+            log.error(getName() + ": Cause:", e);
         }
 
 /*        Vector<String> attachments = null;
@@ -1895,9 +1792,9 @@ public class GraderQueueProcessor
      *
      * @return the number of jobs process so far
      */
-    public int processedJobCount()
+    public static int processedJobCount()
     {
-        return jobCount;
+        return qstats.jobCount();
     }
 
 
@@ -1907,9 +1804,9 @@ public class GraderQueueProcessor
      *
      * @return the time in milliseconds
      */
-    public long mostRecentJobWait()
+    public static long mostRecentJobWait()
     {
-        return mostRecentJobWait;
+        return qstats.mostRecentJobWait();
     }
 
 
@@ -1919,16 +1816,207 @@ public class GraderQueueProcessor
      *
      * @return the time in milliseconds
      */
-    public long estimatedJobTime()
+    public static long estimatedJobTime()
     {
-        if ( jobsCountedWithWaits > 0 )
+        return qstats.estimatedJobTime();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Indicate that a job is available for grading.
+     * @param job The job.
+     */
+    public static void processJob(EnqueuedJob job)
+    {
+        if (pool == null)
         {
-            return totalWaitForJobs / jobsCountedWithWaits;
+            pool = newFixedThreadPool();
         }
-        else
+        pool.execute(new GraderQueueProcessor(
+            job.permanentGlobalID(false),
+            job.queueTime().getTime(),
+            job.regrading()));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Indicate that a job is available for grading.
+     * @param submission The submission corresponding to the queued job.
+     */
+    public static void processSubmission(Submission submission)
+    {
+        if (submission.enqueuedJob() == null)
         {
-            return DEFAULT_JOB_WAIT;
+            log.error("submission " + submission
+                + " not requeued for grading properly!");
+            submission.requeueForGrading(submission.editingContext());
+            submission.editingContext().saveChanges();
         }
+        processJob(submission.enqueuedJob());
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Indicate that multiple jobs are available for grading.
+     * @param jobs An array of the available jobs.
+     */
+    public static void processJobs(NSArray<EnqueuedJob> jobs)
+    {
+        for (EnqueuedJob job : jobs)
+        {
+            processJob(job);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Indicate that multiple jobs are available for grading.
+     * @param submissions An array of the submissions corresponding to the
+     *                    enqueued jobs.
+     */
+    public static void processSubmissions(NSArray<Submission> submissions)
+    {
+        for (Submission sub : submissions)
+        {
+            processSubmission(sub);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private static class QueueStats
+    {
+        // ----------------------------------------------------------
+        public QueueStats()
+        {
+            // fields initialized in declarations
+        }
+
+
+        // ----------------------------------------------------------
+        public synchronized int nextJob()
+        {
+            return ++jobCount;
+        }
+
+
+        // ----------------------------------------------------------
+        public synchronized void recordTimes(
+            long thisWait, long processingTime)
+        {
+            mostRecentJobWait = thisWait;
+            totalWaitForJobs += processingTime;
+            jobsCountedWithWaits++;
+
+            long wait = thisWait - processingTime;
+            log.info("job completed, wait = "
+                + ((wait + 500.0)/1000.0)
+                + "s, processing time = "
+                + ((processingTime + 500.0)/1000.0)
+                + "s");
+        }
+
+
+        // ----------------------------------------------------------
+        public synchronized int jobCount()
+        {
+            return jobCount;
+        }
+
+
+        // ----------------------------------------------------------
+        public synchronized long mostRecentJobWait()
+        {
+            return mostRecentJobWait;
+        }
+
+
+        // ----------------------------------------------------------
+        public synchronized long estimatedJobTime()
+        {
+            if (jobsCountedWithWaits > 0)
+            {
+                return totalWaitForJobs / jobsCountedWithWaits;
+            }
+            else
+            {
+                return DEFAULT_JOB_WAIT;
+            }
+        }
+
+
+        private int  jobCount = 0;
+        private int  jobsCountedWithWaits = 0;
+        private long mostRecentJobWait = 0;
+        private long totalWaitForJobs = 0;
+        private static final long DEFAULT_JOB_WAIT = 30000;
+    }
+
+
+    // ----------------------------------------------------------
+    private String getName()
+    {
+        return Thread.currentThread().getName();
+    }
+
+
+    // ----------------------------------------------------------
+    private static int threadPoolSize()
+    {
+        // Calculate the number of grader threads
+        int cores = Runtime.getRuntime().availableProcessors();
+        if (!Application.configurationProperties()
+            .booleanForKeyWithDefault("grader.multithreaded", true))
+        {
+            cores = 1;
+        }
+        log.info("Configuring for " + cores + " core"
+            + (cores > 1 ? "s" : ""));
+        int threads = (cores / 2) - 1;
+        usePluginInternalThreads = Application.configurationProperties()
+            .booleanForKeyWithDefault("grader.usePluginInternalThreads", true);
+        if (usePluginInternalThreads)
+        {
+            threads /= 3;
+        }
+        if (threads <= 2)
+        {
+            usePluginInternalThreads = false;
+            threads = (cores / 2) - 1;
+            if (threads < 1)
+            {
+                threads = 1;
+            }
+        }
+        log.info("Multi-threaded execution of plug-ins is "
+            + (usePluginInternalThreads ? "ON" : "OFF"));
+        return threads;
+    }
+
+
+    // ----------------------------------------------------------
+    private static ExecutorService newFixedThreadPool()
+    {
+        int nThreads = threadPoolSize();
+        log.info("Creating pool of " + nThreads
+            + " submission processing thread(s)");
+
+        return new ThreadPoolExecutor(
+            nThreads, nThreads,
+            0L, TimeUnit.MILLISECONDS,
+            new PriorityBlockingQueue<Runnable>(),
+            new ThreadFactory() {
+                // ----------------------------------------------------------
+                public Thread newThread(Runnable r)
+                {
+                    return new Thread(r,
+                        "GraderQueueProcessor" + ++nextProcessor);
+                }
+            });
     }
 
 
@@ -1938,8 +2026,8 @@ public class GraderQueueProcessor
      * The grace period is added to the timeout limits for the various
      * scripts.  The value comes from the application property file.
      */
-    static final int gracePeriod =
-        Application.configurationProperties().intForKey( "grader.gracePeriod" );
+    static final int gracePeriod = Application.configurationProperties()
+        .intForKey("grader.gracePeriod");
 
     /**
      * The grace period is added to the timeout limits for the various
@@ -1947,24 +2035,19 @@ public class GraderQueueProcessor
      */
     static final int emailWaitMinutes =
         Application.configurationProperties().intForKeyWithDefault(
-            "grader.mailResultNotificationAfterMinutes", 15 );
+            "grader.mailResultNotificationAfterMinutes", 15);
 
-    /** The queue to receive processing tokens. */
-    private GraderQueue queue;
-    /** Number of jobs processed so far, to report administrative status. */
-    private int  jobCount = 0;
-    private int  jobsCountedWithWaits = 0;
-
-    /** Time between submission and grading completion for more recent job. */
-    private long mostRecentJobWait = 0;
-    private long totalWaitForJobs = 0;
-    private static final long DEFAULT_JOB_WAIT = 30000;
+    private static int nextProcessor = 0;
+    private static boolean usePluginInternalThreads = false;
+    private static final QueueStats qstats = new QueueStats();
+    private static ExecutorService pool = null;
 
     // State for the current step being executed
     private boolean faultOccurredInStep;
     private boolean timeoutOccurredInStep;
+    private EOGlobalID jobId;
+    private long queueTime;
+    private boolean isRegrading;
 
-    private WCEC editingContext;
-
-    static Logger log = Logger.getLogger( GraderQueueProcessor.class );
+    static Logger log = Logger.getLogger(GraderQueueProcessor.class);
 }

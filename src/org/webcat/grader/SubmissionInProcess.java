@@ -114,6 +114,11 @@ public class SubmissionInProcess
         {
             uploadedFileName = uploadedFileName.substring(pos + 1);
         }
+        pos = uploadedFileName.indexOf(";*");
+        if (pos > 0)
+        {
+            uploadedFileName = uploadedFileName.substring(0, pos);
+        }
         if ("".equals(uploadedFileName))
         {
             // Give it a default, if trimming the dir eliminated everything

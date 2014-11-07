@@ -318,12 +318,15 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public WOComponent regradeActionOk()
     {
-        if (!applyLocalChanges()) return null;
+        if (!applyLocalChanges())
+        {
+            return null;
+        }
         Submission sub = prefs().submission();
-        sub.requeueForGrading( localContext() );
-        prefs().setSubmissionRelationship( null );
+        sub.requeueForGrading(localContext());
+        prefs().setSubmissionRelationship(null);
         applyLocalChanges();
-        Grader.getInstance().graderQueue().enqueue( null );
+        GraderQueueProcessor.processSubmission(sub);
         return back();
     }
 

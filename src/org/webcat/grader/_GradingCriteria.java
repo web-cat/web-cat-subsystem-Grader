@@ -1436,7 +1436,8 @@ public abstract class _GradingCriteria
     @SuppressWarnings("unchecked")
     public NSArray<org.webcat.grader.Assignment> assignment()
     {
-        return (NSArray)storedValueForKey( "assignment" );
+        return (NSArray<org.webcat.grader.Assignment>)
+            storedValueForKey("assignment");
     }
 
 
@@ -1447,14 +1448,15 @@ public abstract class _GradingCriteria
      *
      * @param value The new set of entities to relate to
      */
-    public void setAssignment( NSMutableArray<org.webcat.grader.Assignment>  value )
+    public void setAssignment(
+        NSMutableArray<org.webcat.grader.Assignment>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setAssignment("
-                + value + "): was " + assignment() );
+            log.debug("setAssignment("
+                + value + "): was " + assignment());
         }
-        takeStoredValueForKey( value, "assignment" );
+        takeStoredValueForKey(value, "assignment");
     }
 
 
@@ -1670,8 +1672,8 @@ public abstract class _GradingCriteria
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<GradingCriteria> fspec =
+            new WCFetchSpecification<GradingCriteria>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
         return objectsWithFetchSpecification(context, fspec);
@@ -1694,8 +1696,13 @@ public abstract class _GradingCriteria
         EOQualifier qualifier,
         NSArray<EOSortOrdering> sortOrderings)
     {
+        WCFetchSpecification<GradingCriteria> fspec =
+            new WCFetchSpecification<GradingCriteria>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
         NSArray<GradingCriteria> objects =
-            objectsMatchingQualifier(context, qualifier, sortOrderings);
+            objectsWithFetchSpecification(context, fspec);
         return (objects.size() > 0)
             ? objects.get(0)
             : null;
@@ -1787,7 +1794,7 @@ public abstract class _GradingCriteria
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return objectsMatchingValues(context, valueDictionary);
@@ -1859,7 +1866,7 @@ public abstract class _GradingCriteria
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return firstObjectMatchingValues(
@@ -1883,8 +1890,8 @@ public abstract class _GradingCriteria
         NSArray<EOSortOrdering> sortOrderings,
         NSDictionary<String, Object> keysAndValues)
     {
-        @SuppressWarnings("unchecked")
-        EOFetchSpecification fspec = new WCFetchSpecification(
+        WCFetchSpecification<GradingCriteria> fspec =
+            new WCFetchSpecification<GradingCriteria>(
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
@@ -1950,7 +1957,7 @@ public abstract class _GradingCriteria
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return uniqueObjectMatchingValues(context, valueDictionary);
@@ -2060,7 +2067,7 @@ public abstract class _GradingCriteria
                     + java.util.Arrays.toString(keysAndValues));
             }
 
-            valueDictionary.setObjectForKey(value, key);
+            valueDictionary.setObjectForKey(value, (String)key);
         }
 
         return countOfObjectsMatchingValues(context, valueDictionary);

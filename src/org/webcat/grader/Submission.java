@@ -352,6 +352,7 @@ public class Submission
     // ----------------------------------------------------------
     public EnqueuedJob enqueuedJob()
     {
+        EnqueuedJob job = null;
         NSArray<EnqueuedJob> jobs = enqueuedJobs();
         if (jobs != null  &&  jobs.count() > 0)
         {
@@ -359,12 +360,22 @@ public class Submission
             {
                 log.error("too many jobs for submission " + this);
             }
-            return jobs.objectAtIndex(0);
+            job = jobs.objectAtIndex(0);
+            if (job.isFault())
+            {
+                try
+                {
+                    // Force fault to be resolved
+                    job.paused();
+                }
+                catch (EOObjectNotAvailableException e)
+                {
+                    // fault for object that no longer exists!
+                    job = null;
+                }
+            }
         }
-        else
-        {
-            return null;
-        }
+        return job;
     }
 
 
@@ -645,30 +656,30 @@ public class Submission
      * changes to the database (the caller must use
      * <code>saveChanges()</code>).
      */
-    private void deleteResultsForAllPartners()
-    {
-        SubmissionResult myResult = result();
-        if (myResult != null)
-        {
-            log.debug("removing SubmissionResult " + myResult);
-            myResult.setIsMostRecent(false);
-            setResultRelationship(null);
-            clearIsSubmissionForGrading();
-
-            // Have to copy out the list of submissions, since inside
-            // the loop, we'll be removing them one by one from the
-            // relationship.
-            @SuppressWarnings("unchecked")
-            NSArray<Submission> partnerSubs =
-                (NSArray<Submission>)myResult.submissions().clone();
-            for (Submission s : partnerSubs)
-            {
-                s.setResultRelationship(null);
-                s.clearIsSubmissionForGrading();
-            }
-            editingContext().deleteObject(myResult);
-        }
-    }
+//    private void deleteResultsForAllPartners()
+//    {
+//        SubmissionResult myResult = result();
+//        if (myResult != null)
+//        {
+//            log.debug("removing SubmissionResult " + myResult);
+//            myResult.setIsMostRecent(false);
+//            setResultRelationship(null);
+//            clearIsSubmissionForGrading();
+//
+//            // Have to copy out the list of submissions, since inside
+//            // the loop, we'll be removing them one by one from the
+//            // relationship.
+//            @SuppressWarnings("unchecked")
+//            NSArray<Submission> partnerSubs =
+//                (NSArray<Submission>)myResult.submissions().clone();
+//            for (Submission s : partnerSubs)
+//            {
+//                s.setResultRelationship(null);
+//                s.clearIsSubmissionForGrading();
+//            }
+//            editingContext().deleteObject(myResult);
+//        }
+//    }
 
 
     // ----------------------------------------------------------
@@ -759,20 +770,6 @@ public class Submission
         {
             log.error("Unable to notify student of grading results", e);
         }
-
-/*        org.webcat.core.Application.sendSimpleEmail(
-            user().email(),
-            properties.stringForKeyWithDefault(
-                "submission.email.title",
-                "[Grader] results available: #${submission.number}, "
-                + "${assignment.title}" ),
-            properties.stringForKeyWithDefault(
-                "submission.email.body",
-                "The feedback report for ${assignment.title}\n"
-                + "submission number ${submission.number} ${message}.\n\n"
-                + "Log in to Web-CAT to view the report:\n\n"
-                + "${submission.result.link}\n" )
-            );*/
     }
 
 
@@ -810,21 +807,21 @@ public class Submission
 
 
     // ----------------------------------------------------------
-    private void clearIsSubmissionForGrading()
-    {
-        if (isSubmissionForGrading())
-        {
-            setIsSubmissionForGrading(false);
-//            System.out.println("removing submissionForGrading from " + this);
-            Submission existingSubmissionForGrading = gradedSubmission();
-            if (existingSubmissionForGrading != null)
-            {
-                existingSubmissionForGrading.setIsSubmissionForGrading(true);
-//                System.out.println("setting submissionForGrading on "
-//                    + existingSubmissionForGrading);
-            }
-        }
-    }
+//    private void clearIsSubmissionForGrading()
+//    {
+//        if (isSubmissionForGrading())
+//        {
+//            setIsSubmissionForGrading(false);
+////            System.out.println("removing submissionForGrading from " + this);
+//            Submission existingSubmissionForGrading = gradedSubmission();
+//            if (existingSubmissionForGrading != null)
+//            {
+//                existingSubmissionForGrading.setIsSubmissionForGrading(true);
+////                System.out.println("setting submissionForGrading on "
+////                    + existingSubmissionForGrading);
+//            }
+//        }
+//    }
 
 
     // ----------------------------------------------------------
@@ -893,6 +890,7 @@ public class Submission
             return result().lastUpdated().after(other.result().lastUpdated());
         }
     }
+
 
     // ----------------------------------------------------------
     /**
@@ -1738,16 +1736,20 @@ public class Submission
      */
     public String status()
     {
+        // Force job to be retrieved first, to avoid races
+        EnqueuedJob job = enqueuedJob();
         String status = null;
-        if (!resultIsReady())
+        if (result() == null || job != null)
         {
-            status = "suspended";
-            EnqueuedJob job = enqueuedJob();
             if (job == null)
             {
                 status = "cancelled";
             }
-            else if (!job.paused())
+            else if (job.paused())
+            {
+                status = "suspended";
+            }
+            else
             {
                 status = "queued for grading";
             }
@@ -2421,6 +2423,7 @@ public class Submission
         private double            total;
         private ArrayList<Double> allScores;
         private Double            cachedMedian;
+        private final String      scoreKeyPath;
 
 
         //~ Constructors ......................................................
@@ -2428,13 +2431,26 @@ public class Submission
         // ----------------------------------------------------------
         /**
          * Create a new, empty object.
+         * @param scoreKeyPath The key path in the scorables to use to
+         *                     extract the base stat to be accumulated.
          */
-        public CumulativeStats()
+        public CumulativeStats(String scoreKeyPath)
         {
+            this.scoreKeyPath = scoreKeyPath;
             min = 0.0;
             max = 0.0;
             total = 0.0;
             allScores = new ArrayList<Double>();
+        }
+
+
+        // ----------------------------------------------------------
+        /**
+         * Create a new, empty object.
+         */
+        public CumulativeStats()
+        {
+            this("finalScore");
         }
 
 
@@ -2445,9 +2461,10 @@ public class Submission
          * Accumulate data about the given submission result.
          * @param subResult The submission result to add
          */
-        public void accumulate(SubmissionResult subResult)
+        public void accumulate(Scorable subResult)
         {
-            double score = subResult.finalScore();
+            double score = ((Number)subResult.valueForKeyPath(scoreKeyPath))
+                .doubleValue();
             if (allScores.size() == 0)
             {
                 min = score;

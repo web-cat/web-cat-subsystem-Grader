@@ -557,25 +557,32 @@ public class EditAssignmentPage
         log.info("releasing all paused assignments: "
               + assignment.titleString());
 
-        run(new ECAction() { public void action() {
-            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        run(new ECAction() {
+            public void action()
             {
-                AssignmentOffering localAO = offering.localInstance(ec);
-                NSArray<EnqueuedJob> jobList =
-                    localAO.suspendedSubmissionsInQueue();
-                for (EnqueuedJob job : jobList)
+                NSMutableArray<EnqueuedJob> jobs =
+                    new NSMutableArray<EnqueuedJob>();
+                for (AssignmentOffering offering :
+                    offeringGroup.displayedObjects())
                 {
-                    job.setPaused(false);
-                    job.setQueueTime(new NSTimestamp());
+                    AssignmentOffering localAO = offering.localInstance(ec);
+                    NSArray<EnqueuedJob> jobList =
+                        localAO.suspendedSubmissionsInQueue();
+                    for (EnqueuedJob job : jobList)
+                    {
+                        job.setPaused(false);
+                        job.setQueueTime(new NSTimestamp());
+                    }
+                    jobs.addAll(jobList);
+                    log.info("released " + jobList.count() + " jobs");
                 }
-                log.info("released " + jobList.count() + " jobs");
-            }
 
-            ec.saveChanges();
-        }});
+                ec.saveChanges();
+                GraderQueueProcessor.processJobs(jobs);
+            }
+        });
 
         // trigger the grading queue to read the released jobs
-        Grader.getInstance().graderQueue().enqueue(null);
 
         return new JavascriptGenerator().refresh(
                 "allOfferings", "allOfferingsActions", "error-panel");

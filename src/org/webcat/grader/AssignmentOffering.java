@@ -450,7 +450,8 @@ public class AssignmentOffering
      */
     public void regradeMostRecentSubsForAll(EOEditingContext ec)
     {
-        for (Submission sub : mostRecentSubsForAll())
+        NSArray<Submission> subs = mostRecentSubsForAll();
+        for (Submission sub : subs)
         {
             // A fake partnered submission will have a non-null
             // primarySubmission attribute. We only want to regrade the actual
@@ -463,7 +464,7 @@ public class AssignmentOffering
             }
         }
         ec.saveChanges();
-        Grader.getInstance().graderQueue().enqueue(null);
+        GraderQueueProcessor.processSubmissions(subs);
     }
 
 
@@ -478,11 +479,11 @@ public class AssignmentOffering
      *        (a / is added to this buffer, followed by the subdirectory name
      *        generated here)
      */
-    public void addSubdirTo( StringBuffer dir )
+    public void addSubdirTo(StringBuffer dir)
     {
-        courseOffering().addSubdirTo( dir );
-        dir.append( '/' );
-        dir.append( assignment().subdirName() );
+        courseOffering().addSubdirTo(dir);
+        dir.append('/');
+        dir.append(assignment().subdirName());
     }
 
 
@@ -494,7 +495,7 @@ public class AssignmentOffering
     public Long moodleId()
     {
         Long result = super.moodleId();
-        if ( result == null && assignment() != null )
+        if (result == null && assignment() != null)
         {
             result = assignment().moodleId();
         }
@@ -1001,6 +1002,13 @@ public class AssignmentOffering
             }
         }
         return results;
+    }
+
+
+    // ----------------------------------------------------------
+    public SubmissionProfile submissionProfile()
+    {
+        return assignment().submissionProfile();
     }
 
 
