@@ -90,72 +90,74 @@ public class GraderHomeStatus
 //            Application.enableSQLLogging();
         }
 
-        enqueuedJobGroup.queryBindings().setObjectForKey(
-                user(),
-                "user"
-            );
-        enqueuedJobGroup.fetch();
-
-        currentTime = new NSTimestamp();
-        // First, grab all this student can see
-        @SuppressWarnings("unchecked")
-        NSMutableArray<AssignmentOffering> interesting =
-            new NSMutableArray<AssignmentOffering>(
-                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                    AssignmentOffering.objectsMatchingQualifier(localContext(),
-                        AssignmentOffering.publish.isTrue().and(
-                        AssignmentOffering.courseOffering
-                        .dot(CourseOffering.students).is(user()))),
-                    AssignmentOffering.availableFrom.lessThan(currentTime)));
-
-        // Now, add any user has instructor access to:
-        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
-            AssignmentOffering.objectsMatchingQualifier(localContext(),
-                AssignmentOffering.courseOffering
-                .dot(CourseOffering.instructors).is(user())));
-
-        // Now, add any user has grader access to:
-        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
-            AssignmentOffering.objectsMatchingQualifier(localContext(),
-                AssignmentOffering.courseOffering
-                .dot(CourseOffering.graders).is(user())));
-
-        @SuppressWarnings("unchecked")
-        NSArray<AssignmentOffering> open = ERXArrayUtilities
-            .filteredArrayWithQualifierEvaluation(interesting,
-                AssignmentOffering.lateDeadline.greaterThan(currentTime));
-
-        currentAssignments = organizeAssignments(open);
-        courses.setObjectArray(
-            new NSArray<Course>(currentAssignments.keySet()));
-        if (log.isDebugEnabled())
+        if (user() != null)
         {
-            log.debug("organized = " + currentAssignments);
-        }
+            enqueuedJobGroup.queryBindings().setObjectForKey(user(), "user");
+            enqueuedJobGroup.fetch();
 
-        Semester currentSemester = null;
-        NSArray<Semester> semesters =
-            Semester.allObjectsOrderedByStartDate(localContext());
-        if (semesters.count() > 0)
-        {
-            currentSemester = semesters.get(0);
-        }
-        @SuppressWarnings("unchecked")
-        NSArray<AssignmentOffering> old = ERXArrayUtilities
-            .filteredArrayWithQualifierEvaluation(interesting,
-                currentSemester == null
-                ? ERXQ.not(AssignmentOffering.lateDeadline
+            currentTime = new NSTimestamp();
+            // First, grab all this student can see
+            @SuppressWarnings("unchecked")
+            NSMutableArray<AssignmentOffering> interesting =
+                new NSMutableArray<AssignmentOffering>(
+                    ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
+                        AssignmentOffering.objectsMatchingQualifier(
+                            localContext(),
+                            AssignmentOffering.publish.isTrue().and(
+                                AssignmentOffering.courseOffering
+                                .dot(CourseOffering.students).is(user()))),
+                                AssignmentOffering.availableFrom.lessThan(
+                                    currentTime)));
+
+            // Now, add any user has instructor access to:
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
+                AssignmentOffering.objectsMatchingQualifier(localContext(),
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.instructors).is(user())));
+
+            // Now, add any user has grader access to:
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
+                AssignmentOffering.objectsMatchingQualifier(localContext(),
+                    AssignmentOffering.courseOffering
+                    .dot(CourseOffering.graders).is(user())));
+
+            @SuppressWarnings("unchecked")
+            NSArray<AssignmentOffering> open = ERXArrayUtilities
+                .filteredArrayWithQualifierEvaluation(interesting,
+                    AssignmentOffering.lateDeadline.greaterThan(currentTime));
+
+            currentAssignments = organizeAssignments(open);
+            courses.setObjectArray(
+                new NSArray<Course>(currentAssignments.keySet()));
+            if (log.isDebugEnabled())
+            {
+                log.debug("organized = " + currentAssignments);
+            }
+
+            Semester currentSemester = null;
+            NSArray<Semester> semesters =
+                Semester.allObjectsOrderedByStartDate(localContext());
+            if (semesters.count() > 0)
+            {
+                currentSemester = semesters.get(0);
+            }
+            @SuppressWarnings("unchecked")
+            NSArray<AssignmentOffering> old = ERXArrayUtilities
+                .filteredArrayWithQualifierEvaluation(interesting,
+                    currentSemester == null
+                    ? ERXQ.not(AssignmentOffering.lateDeadline
                         .greaterThan(currentTime))
-                : ERXQ.and(
-                    ERXQ.not(AssignmentOffering.lateDeadline
-                        .greaterThan(currentTime)),
-                    AssignmentOffering.courseOffering.dot(
-                        CourseOffering.semester).is(currentSemester)));
-        oldAssignments = organizeAssignments(old);
-        coursesForOld.setObjectArray(
-            new NSArray<Course>(oldAssignments.keySet()));
-        // FIXME: remove
-        oldAssignmentGroup.setObjectArray(old);
+                    : ERXQ.and(
+                        ERXQ.not(AssignmentOffering.lateDeadline
+                            .greaterThan(currentTime)),
+                            AssignmentOffering.courseOffering.dot(
+                                CourseOffering.semester).is(currentSemester)));
+            oldAssignments = organizeAssignments(old);
+            coursesForOld.setObjectArray(
+                new NSArray<Course>(oldAssignments.keySet()));
+            // FIXME: remove
+            oldAssignmentGroup.setObjectArray(old);
+        }
 
         if (log.isDebugEnabled())
         {

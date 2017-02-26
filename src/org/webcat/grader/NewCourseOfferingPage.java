@@ -376,8 +376,7 @@ public class NewCourseOfferingPage
                 Course.department.is(department)));
         if (old.size() > 0)
         {
-            error("Course " + department.abbreviation() + " " + newCourseNumber
-                + " already exists.");
+            error("Course " + old.get(0).deptNumber() + " already exists.");
             return page;
         }
 

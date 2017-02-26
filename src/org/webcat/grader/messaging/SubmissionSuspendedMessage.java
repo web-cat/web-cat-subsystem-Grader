@@ -25,6 +25,7 @@ import java.io.File;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
+import com.webobjects.foundation.NSArray;
 
 //-------------------------------------------------------------------------
 /**
@@ -74,7 +75,7 @@ public class SubmissionSuspendedMessage
             SubmissionSuspendedMessage.class,
             "Grader",
             "Submission Suspended",
-            false,
+            true,
             User.INSTRUCTOR_PRIVILEGES);
     }
 
@@ -103,6 +104,10 @@ public class SubmissionSuspendedMessage
     {
         String username = "<no user>";
         String submitNumber = "<no submit number>";
+        String course = "";
+        String crn = "";
+        String assignment = "";
+        String semester = "";
 
         if (submission() != null)
         {
@@ -115,9 +120,53 @@ public class SubmissionSuspendedMessage
             {
                 submitNumber = Integer.toString(submission().submitNumber());
             }
+
+            if (submission().assignmentOffering() != null)
+            {
+                assignment = submission().assignmentOffering().assignment()
+                    .subdirName() + "/";
+                if (submission().assignmentOffering().courseOffering() != null)
+                {
+                    crn = submission().assignmentOffering().courseOffering()
+                        .crn() + "/";
+                    semester = submission().assignmentOffering()
+                        .courseOffering().semester().dirName() + "/";
+                    if (submission().assignmentOffering().courseOffering()
+                        .course() != null)
+                    {
+                        course = submission().assignmentOffering()
+                            .courseOffering().course().deptNumber() + ": ";
+                    }
+                }
+            }
+            else
+            {
+                submitNumber = "submission #" + submitNumber;
+            }
         }
 
-        return "[Grader] Grading error: " + username + " #" + submitNumber;
+        return "[Grader] Grading error: " + username
+            + " on "
+            + course
+            + semester
+            + crn
+            + assignment
+            + submitNumber;
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public synchronized NSArray<User> users()
+    {
+        if (exception == null)
+        {
+            return super.users();
+        }
+        else
+        {
+            return new NSArray<User>();
+        }
     }
 
 

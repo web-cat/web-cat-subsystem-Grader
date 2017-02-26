@@ -156,7 +156,8 @@ public class SubmissionFileStats
     // ----------------------------------------------------------
     public boolean canMarkupFile()
     {
-        return !markupFileName().startsWith("public/");
+        return markupFileName() != null
+            && !markupFileName().startsWith("public/");
     }
 
 
@@ -169,7 +170,20 @@ public class SubmissionFileStats
             result = fullyQualifiedClassName();
             if (result != null)
             {
-                result =  "clover/" + result.replace( '.', '/' ) + ".html";
+                result =  result.replace( '.', '/' ) + ".html";
+                java.io.File dir = new java.io.File(
+                    submissionResult().submission().resultDirName());
+                String[] places = {"html/", "html/src/", "clover/"};
+                for (String place : places)
+                {
+                    String name = place + result;
+                    java.io.File candidate = new java.io.File(dir, name);
+                    if (candidate.exists())
+                    {
+                        result = name;
+                        break;
+                    }
+                }
             }
         }
         return result;

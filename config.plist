@@ -146,6 +146,18 @@
   will be processed sequentially, one at a time.";
     },
     {
+        property    = "grader.maxGraderThreads";
+        type        = integer;
+        name        = "Maximum Parallel Grading Threads";
+        category    = "Timing";
+        description =
+  "If set to grade submissions in parallel, this number is used as the upper
+  limit for the number of concurrent grading jobs to process in parallel.  If
+  unset, the system computes a default that is slightly under one half of
+  the available processor cores.  Depending on available system memory, use
+  this setting to force a lower limit to avoid memory overload.";
+    },
+    {
         property    = "grader.usePluginInternalThreads";
         type        = boolean;
         default     = true;
@@ -173,6 +185,21 @@
   Web-CAT server currently has the following languages installed:\".  You
   can use it to advertize which programming languages are supported on
   your server.  HTML markup is allowed.";
+    },
+    {
+        property    = "grader.preserveScratchFiles";
+        type        = boolean;
+        default     = false;
+        name        = "Preserve Scratch Files on Plug-in Failure";
+        category    = "Other Settings";
+        description =
+  "If true, Web-CAT will preserve (not delete) files from the scratch work
+  area when a plug-in crashes or produces error output, so that the
+  work files can be used for debugging.  If false, these files are
+  cleaned up just as when plug-ins complete normally, so that scratch
+  work space is available for new jobs.  This option should only be
+  enabled when necessary to debug failing plug-ins, but should normally
+  be kept off.";
     },
     {
         property    = "grader.maxFileUploadSize";

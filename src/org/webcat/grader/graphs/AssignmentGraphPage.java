@@ -91,7 +91,6 @@ public class AssignmentGraphPage
         CourseOffering course = prefs().assignmentOffering().courseOffering();
         boolean result = course.isInstructor( user() )
             || course.isGrader( user() );
-        System.out.println( "isStaff = " + result );
         return result;
     }
 

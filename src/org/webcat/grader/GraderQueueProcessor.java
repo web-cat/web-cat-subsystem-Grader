@@ -29,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -183,9 +182,11 @@ public class GraderQueueProcessor
             {
                 log.info(getName()
                     + ": processing submission " + submission);
+                String msg = job.userPresentableDescription();
                 processJobWithProtection(job);
                 NSTimestamp now = new NSTimestamp();
                 qstats.recordTimes(
+                    msg,
                     (job.queueTime() != null)
                         ? now.getTime() - job.queueTime().getTime()
                         : now.getTime() - submission.submitTime().getTime(),
@@ -358,6 +359,13 @@ public class GraderQueueProcessor
                 // technicalFault was already called by executeStep()
                 // to pause the assignment and send e-mail to admins,
                 // so just bail
+                if (!Application.configurationProperties()
+                    .booleanForKeyWithDefault("grader.preserveScratchFiles",
+                    false))
+                {
+                    // duplicates the line at the end of the loop :-(
+                    FileUtilities.deleteDirectory(job.workingDirName());
+                }
                 return;
             }
 
@@ -1730,6 +1738,10 @@ public class GraderQueueProcessor
         job.setPaused(true);
         job.setProcessorRaw(null);
         faultOccurredInStep = true;
+        if (attachmentsDir == null && job.submission() != null)
+        {
+            attachmentsDir = job.submission().resultDir();
+        }
 
         try
         {
@@ -1745,6 +1757,26 @@ public class GraderQueueProcessor
         {
             log.error(
                 getName() + ": Exception sending message to student", ee);
+            log.error(getName() + ": Cause:", e);
+        }
+        try
+        {
+            // If less than approx 2GB of space
+            if (Grader.workAreaTracker().isTrackingStore()
+                && Grader.workAreaTracker().usableSpace() < 2000000000)
+            {
+                // Clean up the working directory to keep work area from
+                // clogging
+                FileUtilities.deleteDirectory(job.workingDirName());
+                // Normally, the working directory would be left for
+                // a while, in case the admin needed to check it to
+                // determine why the failure occurred
+            }
+        }
+        catch (Exception ee)
+        {
+            log.error(getName() +
+                ": Exception attempting to purge working directory", ee);
             log.error(getName() + ": Cause:", e);
         }
 
@@ -1906,14 +1938,14 @@ public class GraderQueueProcessor
 
         // ----------------------------------------------------------
         public synchronized void recordTimes(
-            long thisWait, long processingTime)
+            String msg, long thisWait, long processingTime)
         {
             mostRecentJobWait = thisWait;
             totalWaitForJobs += processingTime;
             jobsCountedWithWaits++;
 
             long wait = thisWait - processingTime;
-            log.info("job completed, wait = "
+            log.info("completed job [" + msg + "], wait = "
                 + ((wait + 500.0)/1000.0)
                 + "s, processing time = "
                 + ((processingTime + 500.0)/1000.0)
@@ -1983,6 +2015,7 @@ public class GraderQueueProcessor
         {
             threads /= 3;
         }
+
         if (threads <= 2)
         {
             usePluginInternalThreads = false;
@@ -1992,6 +2025,14 @@ public class GraderQueueProcessor
                 threads = 1;
             }
         }
+
+        int maxThreads = Application.configurationProperties()
+            .intForKeyWithDefault("grader.maxGraderThreads", 0);
+        if (maxThreads > 0 && maxThreads < threads)
+        {
+            threads = maxThreads;
+        }
+
         log.info("Multi-threaded execution of plug-ins is "
             + (usePluginInternalThreads ? "ON" : "OFF"));
         return threads;
@@ -1999,7 +2040,7 @@ public class GraderQueueProcessor
 
 
     // ----------------------------------------------------------
-    private static ExecutorService newFixedThreadPool()
+    private static ThreadPoolExecutor newFixedThreadPool()
     {
         int nThreads = threadPoolSize();
         log.info("Creating pool of " + nThreads
@@ -2040,7 +2081,7 @@ public class GraderQueueProcessor
     private static int nextProcessor = 0;
     private static boolean usePluginInternalThreads = false;
     private static final QueueStats qstats = new QueueStats();
-    private static ExecutorService pool = null;
+    private static ThreadPoolExecutor pool = null;
 
     // State for the current step being executed
     private boolean faultOccurredInStep;

@@ -167,7 +167,7 @@ public class SubmissionResult
 
         if ( profile.awardEarlyBonus()
              && dueTime > submitTime
-             && profile.earlyBonusUnitTimeRaw() != null)
+             && profile.earlyBonusUnitTime() > 0L)
         {
             // Early bonus
             //
@@ -203,7 +203,7 @@ public class SubmissionResult
 
         if ( profile.deductLatePenalty()
              && dueTime < submitTime
-             && profile.latePenaltyUnitTimeRaw() != null)
+             && profile.latePenaltyUnitTime() > 0L)
         {
             // Late penalty
             //

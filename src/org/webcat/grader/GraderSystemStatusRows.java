@@ -56,7 +56,7 @@ public class GraderSystemStatusRows
     //~ KVC Attributes (must be public) .......................................
 
     public int                  index;
-    public Grader.StorageStatus storageStatus;
+    public StorageStatusTracker storageStatus;
 
 
     //~ Methods ...............................................................
@@ -72,7 +72,7 @@ public class GraderSystemStatusRows
     {
         queuedJobs = -1;
         regradingJobs = -1;
-        storageStatus = Grader.StorageStatus.instance();
+        storageStatus = Grader.storageTracker();
         super.appendToResponse(response, context);
     }
 
