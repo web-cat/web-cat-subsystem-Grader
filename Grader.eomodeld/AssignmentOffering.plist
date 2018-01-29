@@ -9,12 +9,6 @@
         },
         {columnName = CDUEDATE; name = dueDate; prototypeName = dateTime; },
         {
-            allowsNull = Y;
-            columnName = energyBarConfigId;
-            name = energyBarConfigId;
-            prototypeName = foreignId;
-        },
-        {
             columnName = FGRADINGSUSPENDED;
             name = gradingSuspended;
             prototypeName = boolean;
@@ -51,7 +45,6 @@
     attributesUsedForLocking = (
         assignmentId,
         courseOfferingId,
-        energyBarConfigId,
         gradingSuspended,
         moodleId,
         publish,
@@ -63,7 +56,6 @@
         closedOnDate,
         courseOffering,
         dueDate,
-        energyBarConfig,
         energyBars,
         graderPrefs,
         gradingSuspended,
@@ -91,13 +83,6 @@
             joinSemantic = EOInnerJoin;
             joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; });
             name = courseOffering;
-        },
-        {
-            destination = EnergyBarConfig;
-            isToMany = N;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = id; sourceAttribute = energyBarConfigId; });
-            name = energyBarConfig;
         },
         {
             destination = EnergyBar;

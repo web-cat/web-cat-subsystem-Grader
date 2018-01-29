@@ -1013,10 +1013,9 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
-    @Override
     public EnergyBarConfig energyBarConfig()
     {
-        EnergyBarConfig cfg = super.energyBarConfig();
+        EnergyBarConfig cfg = null;
         if (cfg == null
             && assignment() != null
             && assignment().submissionProfile() != null)

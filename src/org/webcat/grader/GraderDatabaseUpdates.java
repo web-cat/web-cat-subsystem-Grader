@@ -606,12 +606,12 @@ public class GraderDatabaseUpdates
      * Drop the unused energyBarConfigId attribute from AssignmentOffering.
      * @throws SQLException on error
      */
-//    public void updateIncremen31() throws SQLException
-//    {
-//        database().executeSQL(
-//            "alter table TASSIGNMENTOFFERING drop "
-//            + "energyBarConfigId");
-//    }
+    public void updateIncremen31() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING drop "
+            + "energyBarConfigId");
+    }
 
 
     //~ Private Methods .......................................................
