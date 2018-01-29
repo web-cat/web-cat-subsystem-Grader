@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: ResultOutcome.java,v 1.3 2012/05/09 16:21:27 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2008-2012 Virginia Tech
  |
@@ -28,8 +28,8 @@ import org.webcat.core.User;
  * TODO: place a real description here.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.3 $, $Date: 2012/05/09 16:21:27 $
  */
 public class ResultOutcome
     extends _ResultOutcome

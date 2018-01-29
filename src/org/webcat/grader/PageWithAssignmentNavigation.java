@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PageWithAssignmentNavigation.java,v 1.1 2011/05/02 19:37:34 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2011 Virginia Tech
  |
@@ -33,8 +33,8 @@ import com.webobjects.appserver.WOContext;
  * lists to change the assignment selection.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: aallowat $
+ * @version $Revision: 1.1 $, $Date: 2011/05/02 19:37:34 $
  */
 public class PageWithAssignmentNavigation extends PageWithCourseNavigation
 {

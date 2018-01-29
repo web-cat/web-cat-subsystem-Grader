@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderNavigator.java,v 1.7 2012/05/09 16:31:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -81,8 +81,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  * </dl>
  *
  * @author  Tony Allevato
- * @author  latest changes by: $Author$
- * @version $Revision$ $Date$
+ * @author  latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.7 $ $Date: 2012/05/09 16:31:03 $
  */
 public class GraderNavigator
     extends CoreNavigator

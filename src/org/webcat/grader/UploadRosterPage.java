@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: UploadRosterPage.java,v 1.4 2014/06/16 17:26:24 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * This class allows a CSV file of new users to be added to a course.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  Latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2014/06/16 17:26:24 $
  */
 public class UploadRosterPage
     extends GraderCourseEditComponent

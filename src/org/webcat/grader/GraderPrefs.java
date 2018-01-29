@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderPrefs.java,v 1.3 2010/09/27 04:21:37 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2009 Virginia Tech
  |
@@ -29,8 +29,8 @@ import org.apache.log4j.Level;
  * so on used in navigation.
  *
  * @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$ $Date$
+ * @author  latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.3 $ $Date: 2010/09/27 04:21:37 $
  */
 public class GraderPrefs
     extends _GraderPrefs

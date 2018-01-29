@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GradeStudentSubmissionPage.java,v 1.14 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -33,8 +33,8 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * Allow the user to enter/edit "TA" comments for a submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.14 $, $Date: 2014/11/07 13:55:03 $
  */
 public class GradeStudentSubmissionPage
     extends GraderComponent

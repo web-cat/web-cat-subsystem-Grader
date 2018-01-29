@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditScriptFilesPage.java,v 1.6 2013/10/09 00:04:21 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -36,8 +36,8 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * are available for selection.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  Latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.6 $, $Date: 2013/10/09 00:04:21 $
  */
 public class EditScriptFilesPage
     extends GraderComponent

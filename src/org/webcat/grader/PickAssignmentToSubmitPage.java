@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PickAssignmentToSubmitPage.java,v 1.3 2011/03/23 15:10:56 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -35,8 +35,8 @@ import org.webcat.core.*;
  *  to choose from.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: aallowat $
+ *  @version $Revision: 1.3 $, $Date: 2011/03/23 15:10:56 $
  */
 public class PickAssignmentToSubmitPage
     extends GraderCourseComponent

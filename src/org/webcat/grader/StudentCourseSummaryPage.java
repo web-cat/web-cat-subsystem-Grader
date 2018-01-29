@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: StudentCourseSummaryPage.java,v 1.7 2014/06/16 17:27:58 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2011-2012 Virginia Tech
  |
@@ -41,8 +41,8 @@ import er.extensions.appserver.ERXDisplayGroup;
  * TODO real description
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.7 $, $Date: 2014/06/16 17:27:58 $
  */
 public class StudentCourseSummaryPage
     extends GraderAssignmentComponent

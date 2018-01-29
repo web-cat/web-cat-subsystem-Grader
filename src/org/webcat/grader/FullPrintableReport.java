@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: FullPrintableReport.java,v 1.5 2014/06/16 17:31:07 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.woextensions.WCEC;
  * Present a complete, printable view of all feedback about this submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2014/06/16 17:31:07 $
  */
 public class FullPrintableReport
     extends GraderComponent

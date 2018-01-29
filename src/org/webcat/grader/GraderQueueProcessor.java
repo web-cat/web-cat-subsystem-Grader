@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderQueueProcessor.java,v 1.24 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -46,6 +46,8 @@ import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.webcat.woextensions.ECAction;
+import org.webcat.woextensions.WCEC;
+import org.webcat.woextensions.WCFetchSpecification;
 import com.webobjects.eoaccess.EOGeneralAdaptorException;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOGlobalID;
@@ -67,8 +69,8 @@ import er.extensions.eof.ERXEOGlobalIDUtilities;
  * job.
  *
  * @author  Amit Kulkarni
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.24 $, $Date: 2014/11/07 13:55:03 $
  */
 public class GraderQueueProcessor
     extends ECAction
@@ -130,10 +132,8 @@ public class GraderQueueProcessor
     public void action()
     {
         // Clear discarded jobs
-        deleteJobsMatchingQualifier(
-            ec, EnqueuedJob.submission.isNull());
-        deleteJobsMatchingQualifier(
-            ec, EnqueuedJob.discarded.isTrue());
+        deleteJobsMatchingQualifier(EnqueuedJob.submission.isNull());
+        deleteJobsMatchingQualifier(EnqueuedJob.discarded.isTrue());
 
         // Look for real jobs
         EnqueuedJob job = (EnqueuedJob)ERXEOGlobalIDUtilities
@@ -218,40 +218,47 @@ public class GraderQueueProcessor
     private EnqueuedJob jobMatching(
         EOEditingContext context, EOQualifier qualifier)
     {
-        return EnqueuedJob.firstObjectMatchingQualifier(
-            context, qualifier, EnqueuedJob.submitTime.ascs());
+        // Repeat this here to force any objects to be refreshed
+        WCFetchSpecification<EnqueuedJob> fspec =
+            new WCFetchSpecification<EnqueuedJob>(
+            EnqueuedJob.ENTITY_NAME, qualifier, EnqueuedJob.submitTime.ascs());
+        fspec.setUsesDistinct(true);
+        fspec.setFetchLimit(1);
+        fspec.setRefreshesRefetchedObjects(true);
+        NSArray<EnqueuedJob> objects =
+            EnqueuedJob.objectsWithFetchSpecification(context, fspec);
+        return (objects.size() > 0)
+            ? objects.get(0)
+            : null;
     }
 
 
     // ----------------------------------------------------------
-    private void deleteJobsMatchingQualifier(
-        EOEditingContext context, EOQualifier qualifier)
+    private void deleteJobsMatchingQualifier(EOQualifier qualifier)
     {
         EnqueuedJob job = null;
         try
         {
-            job = jobMatching(context, qualifier);
-        }
-        catch (Exception e)
-        {
-            log.info(getName() + ": error fetching job: ", e);
-            job = jobMatching(context, qualifier);
-        }
-
-        while (job != null)
-        {
-            try
+            job = jobMatching(ec, qualifier);
+            while (job != null)
             {
                 log.debug(getName()
                     + ": attempting to delete stale job " + job);
                 job.delete();
-                context.saveChanges();
+                ec.saveChanges();
+                job = jobMatching(ec, qualifier);
             }
-            catch (EOGeneralAdaptorException e)
+        }
+        catch (Exception e)
+        {
+            ec.reset();
+            ec.unlock();
+            if (ownsEC)
             {
-                context.revert();
+                ec.dispose();
             }
-            job = jobMatching(context, qualifier);
+            ec = WCEC.newEditingContext();
+            ec.lock();
         }
     }
 
@@ -421,6 +428,12 @@ public class GraderQueueProcessor
 
             if (timeoutOccurredInStep)
             {
+                if (!Application.configurationProperties()
+                    .booleanForKeyWithDefault("grader.preserveScratchFiles",
+                    false))
+                {
+                    FileUtilities.deleteDirectory(job.workingDirName());
+                }
                 technicalFault(job,
                     "script time limit exceeded in stage " + (stepNo + 1),
                     null,

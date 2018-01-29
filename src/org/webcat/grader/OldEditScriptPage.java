@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: OldEditScriptPage.java,v 1.3 2011/05/13 19:50:19 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.core.FileUtilities;
  * are available for selection.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  Latest changes by: $Author: aallowat $
+ * @version $Revision: 1.3 $, $Date: 2011/05/13 19:50:19 $
  */
 public class OldEditScriptPage
     extends GraderComponent

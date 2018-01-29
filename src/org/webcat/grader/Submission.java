@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: Submission.java,v 1.30 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -49,8 +49,8 @@ import org.webcat.woextensions.MigratingEditingContext;
  *  Represents a single student assignment submission.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.30 $, $Date: 2014/11/07 13:55:03 $
  */
 public class Submission
     extends _Submission
@@ -2374,16 +2374,15 @@ public class Submission
             + offering.id() + " group by CUSERID";
 
         @SuppressWarnings("unchecked")
-        NSArray<NSDictionary> rawRows = EOUtilities.rawRowsForSQL(
-                ec, modelName, sql, null);
+        NSArray<NSMutableDictionary<String, Object>> rawRows =
+            EOUtilities.rawRowsForSQL(ec, modelName, sql, null);
 
         NSMutableArray<EOGlobalID> gids = new NSMutableArray<EOGlobalID>();
-        for (NSDictionary<?, ?> row : rawRows)
+        for (NSMutableDictionary<String, Object> row : rawRows)
         {
             // This feels kind of like a hack; for globalIDForRow to work
             // correctly, the object id must have the key "id".
-            ((NSMutableDictionary<?, ?>) row).setObjectForKey(
-                    row.objectForKey("OID"), "id");
+            row.setObjectForKey(row.objectForKey("OID"), "id");
 
             EOGlobalID gid = entity.globalIDForRow(row);
 

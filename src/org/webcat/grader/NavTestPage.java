@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: NavTestPage.java,v 1.3 2013/08/11 02:10:10 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -31,8 +31,8 @@ import org.webcat.woextensions.WCEC;
 * (is "to be defined").
 *
 *  @author  Stephen Edwards
- * @author  Latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  Latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.3 $, $Date: 2013/08/11 02:10:10 $
 */
 public class NavTestPage
     extends GraderAssignmentComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseAndAssignmentResultOutcomesModel.java,v 1.2 2012/05/09 16:24:11 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -44,8 +44,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  * {@link CourseAndAssignmentResultOutcomesAssistant}.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.2 $, $Date: 2012/05/09 16:24:11 $
  */
 public class CourseAndAssignmentResultOutcomesModel
     extends AbstractQueryAssistantModel
@@ -335,7 +335,7 @@ public class CourseAndAssignmentResultOutcomesModel
         {
             if (obj instanceof CourseOffering)
             {
-                array.addObject(obj);
+                array.addObject((CourseOffering)obj);
             }
         }
 
@@ -376,7 +376,7 @@ public class CourseAndAssignmentResultOutcomesModel
         {
             if (obj instanceof Assignment)
             {
-                array.addObject(obj);
+                array.addObject((Assignment)obj);
             }
         }
 

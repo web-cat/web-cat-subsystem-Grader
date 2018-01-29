@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionFileComment.java,v 1.5 2011/05/19 16:53:20 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -30,8 +30,8 @@ import org.webcat.core.*;
  * Represents one TA comment on one source file in a submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2011/05/19 16:53:20 $
  */
 public class SubmissionFileComment
     extends _SubmissionFileComment

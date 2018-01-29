@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderCourseEditComponent.java,v 1.2 2010/09/27 04:20:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -34,8 +34,8 @@ import com.webobjects.appserver.*;
  *  not yet be stored in the user's {@link CoreSelections}.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.2 $, $Date: 2010/09/27 04:20:41 $
  */
 public class GraderCourseEditComponent
     extends GraderComponent

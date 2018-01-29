@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditStaffPage.java,v 1.4 2013/09/16 13:26:08 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -33,8 +33,8 @@ import org.webcat.core.*;
  * results).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2013/09/16 13:26:08 $
  */
 public class EditStaffPage
     extends GraderCourseEditComponent

@@ -14,6 +14,9 @@
             className = "org.webcat.grader.AssignmentOffering"; 
             name = AssignmentOffering; 
         }, 
+        {className = "org.webcat.grader.EnergyBar"; name = EnergyBar; }, 
+        {className = "org.webcat.grader.EnergyBarConfig"; name = EnergyBarConfig; }, 
+        {className = "org.webcat.grader.EnergyBarEvent"; name = EnergyBarEvent; }, 
         {className = "org.webcat.grader.EnqueuedJob"; name = EnqueuedJob; }, 
         {className = "org.webcat.grader.GraderPrefs"; name = GraderPrefs; }, 
         {className = "org.webcat.grader.GradingCriteria"; name = GradingCriteria; }, 

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: Step.java,v 1.5 2011/12/25 21:11:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
  * processing sequence for handling a given assignment.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2011/12/25 21:11:41 $
  */
 public class Step
     extends _Step

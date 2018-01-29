@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseAndAssignmentResultOutcomesAssistant.java,v 1.2 2012/05/09 16:22:44 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -37,8 +37,8 @@ import com.webobjects.appserver.*;
  * CourseAndAssignmentSubmissionsAssistant and adds nothing to it.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.2 $, $Date: 2012/05/09 16:22:44 $
  */
 public class CourseAndAssignmentResultOutcomesAssistant
     extends CourseAndAssignmentSubmissionsAssistant

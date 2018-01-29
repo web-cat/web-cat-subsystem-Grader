@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: BlueJSubmitterDefinitions.java,v 1.5 2013/08/11 02:09:46 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.woextensions.WCEC;
  * the BlueJ submitter extension.
  *
  * @author Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2013/08/11 02:09:46 $
  */
 public class BlueJSubmitterDefinitions
     extends WOComponent

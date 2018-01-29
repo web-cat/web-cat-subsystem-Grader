@@ -74,3 +74,83 @@ function unhideReport(reportID)
             ? 'Hide report' : 'Display report';
     }
 }
+
+
+function SubmissionEnergyBar(domSelector) {
+    var element = document.querySelector(domSelector);
+    if (element == null)
+        throw new Error("Unable to find submission energy bar with selector: " + domSelector);
+    if (element.dataset.serverTime == undefined)
+        throw new Error("Unable to find server time (used for calculations) for bar with selector: " + domSelector);
+
+    var timeRemainingElement = element.querySelector(".time-remaining");
+    if (timeRemainingElement == null)
+        throw new Error("Unable to find the element to output time remaining for energy bar with selector: " + domSelector);
+
+    var slots = [];
+    var nextRechargedSlot = null;
+    var interval = null;
+    var now = element.dataset.serverTime;
+
+    // If server epoch time is more than five minutes off from local epoch time...
+    if (Math.abs(now - new Date().getTime()) > 5 * 60000) {
+        notifyUserOfTimeMisconfiguration();
+    }
+
+    function start() {
+        element.querySelectorAll(".energy-slot")
+            .forEach(function(slot) {
+                var expiration = (slot.dataset.expiration == 0) ? 0 : slot.dataset.expiration - now;
+                expiration = Math.round(expiration / 1000);
+                var slot = { element : slot, expiration : expiration };
+                if (expiration > 0 && nextRechargedSlot == null)
+                    nextRechargedSlot = slot;
+
+                if (expiration > 0)
+                    slot.element.classList.add("empty");
+                slots.push(slot);
+            });
+
+        updateTimeRemaining();
+        setInterval(function() { updateTimeRemaining(); }, 1000);
+    };
+
+    function updateTimeRemaining() {
+        slots.forEach(function(slot) { slot.expiration--; });
+        if (nextRechargedSlot != null && nextRechargedSlot.expiration == 0) {
+            nextRechargedSlot.element.classList.remove("empty");
+            nextRechargedSlot = null;
+            for (var i = 0; i < slots.length; i++) {
+                if (slots[i].expiration > 0) {
+                    nextRechargedSlot = slots[i];
+                    break;
+                }
+            }
+        }
+
+        if (nextRechargedSlot == null) {
+            return;
+        }
+        var numMinutes = Math.floor(nextRechargedSlot.expiration  / 60);
+        var numSeconds = nextRechargedSlot.expiration % 60;
+        if (numSeconds < 10) numSeconds = "0" + numSeconds;
+        timeRemainingElement.innerText = numMinutes + ":" + numSeconds;
+    }
+
+    function notifyUserOfTimeMisconfiguration() {
+        if (localStorage.getItem("user-time-misconfiguration-notification") != null)
+            return;
+        localStorage.setItem("user-time-misconfiguration-notification", "performed");
+        alert(
+            "It appears that there is a misconfiguration between your machine's configured time and timezone.\n\n" +
+            "This often appears when your machine is configured for one timezone, but then the clock is adjusted to appear as in another.  For example, the machine may be configured to use PST, but the clock was adjusted three hours ahead to align with EST.\n\n" +
+            "To fix this issue, we recommend realigning your machine's clock with the configured timezone (or enable syncing with a time server). Then, adjust the timezone as desired.\n\n" +
+            "If you need additional assistance, please contact your instructor."
+        );
+    }
+
+    this.getSlots = function() { return slots; };
+
+    start();
+}
+

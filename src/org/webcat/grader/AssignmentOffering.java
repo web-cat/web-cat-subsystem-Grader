@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: AssignmentOffering.java,v 1.14 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -42,8 +42,8 @@ import org.webcat.woextensions.MigratingEditingContext;
  * (i.e., giving a specific assignment in a given section of a course).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.14 $, $Date: 2014/11/07 13:55:03 $
  */
 public class AssignmentOffering
     extends _AssignmentOffering
@@ -1009,6 +1009,29 @@ public class AssignmentOffering
     public SubmissionProfile submissionProfile()
     {
         return assignment().submissionProfile();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public EnergyBarConfig energyBarConfig()
+    {
+        EnergyBarConfig cfg = super.energyBarConfig();
+        if (cfg == null
+            && assignment() != null
+            && assignment().submissionProfile() != null)
+        {
+            cfg = assignment().submissionProfile().energyBarConfig();
+        }
+        return cfg;
+    }
+
+
+    // ----------------------------------------------------------
+    public EnergyBar energyBarForUser(User user)
+    {
+        return EnergyBar.forAssignmentAndUser(
+            editingContext(), this, user);
     }
 
 

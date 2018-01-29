@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionResultInfo.java,v 1.7 2014/06/16 17:21:53 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -39,8 +39,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  *  if present, will be used to present file-specific data.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: stedwar2 $
+ *  @version $Revision: 1.7 $, $Date: 2014/06/16 17:21:53 $
  */
 public class SubmissionResultInfo
     extends GraderComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PluginManagerPage.java,v 1.6 2012/01/05 19:51:44 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -36,8 +36,8 @@ import org.webcat.core.*;
  *  tab.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.6 $, $Date: 2012/01/05 19:51:44 $
  */
 public class PluginManagerPage
 extends WCComponent

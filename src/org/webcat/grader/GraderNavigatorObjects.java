@@ -10,8 +10,8 @@ import com.webobjects.foundation.NSMutableArray;
  * the Web-CAT grader navigator component.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: aallowat $
+ * @version $Revision: 1.4 $, $Date: 2011/05/02 19:37:34 $
  */
 public class GraderNavigatorObjects
 {

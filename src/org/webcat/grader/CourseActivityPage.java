@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseActivityPage.java,v 1.1 2012/01/29 00:29:01 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2012 Virginia Tech
  |
@@ -36,8 +36,8 @@ import er.extensions.appserver.ERXDisplayGroup;
  * (is "to be defined").
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.1 $, $Date: 2012/01/29 00:29:01 $
  */
 public class CourseActivityPage
     extends GraderCourseComponent

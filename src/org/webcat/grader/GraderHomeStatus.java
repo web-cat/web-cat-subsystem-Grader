@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderHomeStatus.java,v 1.11 2011/10/25 15:30:34 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.core.Semester;
  *  Generates the grader subsystem's page sections for the home->status page.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.11 $, $Date: 2011/10/25 15:30:34 $
  */
 public class GraderHomeStatus
     extends GraderComponent

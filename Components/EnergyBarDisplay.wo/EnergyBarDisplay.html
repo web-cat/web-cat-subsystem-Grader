@@ -1,0 +1,12 @@
+<wo:if condition="$bar"><wo:div class="$cssClass">
+  <div class="title">Submission Energy</div>
+  <wo:div id="energy-bar" class="energy-bar" data-server-time="$now">
+    <wo:loop index="$slotNo"
+      count="$bar.assignmentOffering.energyBarConfig.numSlots">
+      <wo:div class="$slotCssClass" data-expiration="$slotExpiration"></wo:div>
+    </wo:loop>
+  <wo:if condition="$isCloseToDeadline">
+  <div class="time-free">OK to submit!</div></wo:if><wo:else>
+  <div class="time-remaining"></div></wo:else>
+  </wo:div>
+</wo:div><script type="text/javascript">SubmissionEnergyBar("#energy-bar")</script></wo:if>

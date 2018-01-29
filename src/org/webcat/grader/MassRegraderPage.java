@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: MassRegraderPage.java,v 1.4 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -41,8 +41,8 @@ import er.extensions.eof.ERXSortOrdering.ERXSortOrderings;
  * plug-in).
  *
  * @author  Tony Allevato
- * @author  Last changed by: $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by: $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2014/11/07 13:55:03 $
  */
 public class MassRegraderPage
     extends GraderAssignmentComponent

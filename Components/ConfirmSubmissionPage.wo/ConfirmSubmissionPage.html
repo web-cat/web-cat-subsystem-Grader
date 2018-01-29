@@ -1,5 +1,6 @@
 <wo name="Page"><wo:if negate="true" condition="~hasMessages and missingRequiredFiles.count == 0">
 <wo:org.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
+<wo:org.webcat.grader.EnergyBarDisplay bar="$bar" cssClass="floatRight"/>
 For: <span class="hl"><wo:str value="$prefs.assignmentOffering.titleString"/></span>
 <wo:if condition="$session.impersonatingAnotherUser"><p>Submitting as: <span class="hl"><wo:str value="$user.nameAndUid"/></span></p></wo:if>
 <p>Please make sure that

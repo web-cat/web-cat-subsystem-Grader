@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderPrefsManager.java,v 1.3 2012/01/20 21:21:44 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -30,8 +30,8 @@ import er.extensions.foundation.ERXValueUtilities;
  *  {@link GraderPrefs} object.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.3 $, $Date: 2012/01/20 21:21:44 $
  */
 public class GraderPrefsManager
     extends CachingEOManager

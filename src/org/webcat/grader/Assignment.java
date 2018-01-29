@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: Assignment.java,v 1.7 2013/10/09 00:04:21 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.core.*;
  * An assignment that can be given in one or more classes.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.7 $, $Date: 2013/10/09 00:04:21 $
  */
 public class Assignment
     extends _Assignment

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderDatabaseUpdates.java,v 1.16 2014/06/16 17:13:28 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -31,8 +31,8 @@ import org.webcat.dbupdate.UpdateSet;
  * for this class uses its parent class' logger.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.16 $, $Date: 2014/06/16 17:13:28 $
  */
 public class GraderDatabaseUpdates
     extends UpdateSet
@@ -533,6 +533,87 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Adds energy bar, config, and event tables.
+     * @throws SQLException on error
+     */
+    public void updateIncrement27()
+        throws SQLException
+    {
+        createEnergyBarConfigTable();
+        database().executeSQL(
+            "ALTER TABLE TASSIGNMENTOFFERING "
+            + "ADD energyBarConfigId INTEGER");
+        createEnergyBarTable();
+        createEnergyBarEventTable();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds field for storing the processor id for each enqueued job.
+     * @throws SQLException on error
+     */
+    public void updateIncrement28()
+        throws SQLException
+    {
+        database().executeSQL(
+            "ALTER TABLE EnergyBarEvent "
+            + "ADD charge INTEGER NOT NULL");
+        database().executeSQL(
+            "ALTER TABLE EnergyBarEvent "
+            + "ADD submissionId INTEGER");
+        database().executeSQL(
+            "ALTER TABLE EnergyBarEvent "
+            + "ADD timeOfNextCharge DATETIME");
+        database().executeSQL(
+            "ALTER TABLE EnergyBarEvent "
+            + "MODIFY type INTEGER NOT NULL");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds field for storing the processor id for each enqueued job.
+     * @throws SQLException on error
+     */
+    public void updateIncrement29()
+        throws SQLException
+    {
+        database().executeSQL(
+            "ALTER TABLE EnergyBarEvent "
+            + "ADD assignmentOfferingId INTEGER");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Adds energy bar config to assignment submission profile.
+     * @throws SQLException on error
+     */
+    public void updateIncrement30()
+        throws SQLException
+    {
+        database().executeSQL(
+            "ALTER TABLE TSUBMISSIONPROFILE "
+            + "ADD energyBarConfigId INTEGER");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Drop the unused energyBarConfigId attribute from AssignmentOffering.
+     * @throws SQLException on error
+     */
+//    public void updateIncremen31() throws SQLException
+//    {
+//        database().executeSQL(
+//            "alter table TASSIGNMENTOFFERING drop "
+//            + "energyBarConfigId");
+//    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
@@ -861,6 +942,81 @@ public class GraderDatabaseUpdates
                 + "CSTATUS TINYINT , CTASCORE DOUBLE , CTOOLSCORE DOUBLE)");
             database().executeSQL(
                 "ALTER TABLE TSUBMISSIONRESULT ADD PRIMARY KEY (OID)");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the EnergyBarConfig table, if needed.
+     * @throws SQLException on error
+     */
+    private void createEnergyBarConfigTable()
+        throws SQLException
+    {
+        if (!database().hasTable("EnergyBarConfig"))
+        {
+            log.info("creating table EnergyBarConfig");
+            database().executeSQL(
+                "CREATE TABLE EnergyBarConfig "
+                + "(OID INTEGER NOT NULL , "
+                + "numSlots INTEGER NOT NULL, "
+                + "rechargeTime INTEGER , "
+                + "enabled BIT NOT NULL)");
+            database().executeSQL(
+                "ALTER TABLE EnergyBarConfig ADD PRIMARY KEY (OID)");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the EnergyBar table, if needed.
+     * @throws SQLException on error
+     */
+    private void createEnergyBarTable()
+        throws SQLException
+    {
+        if (!database().hasTable("EnergyBar"))
+        {
+            log.info("creating table EnergyBar");
+            database().executeSQL(
+                "CREATE TABLE EnergyBar "
+                + "(OID INTEGER NOT NULL, "
+                + "assignmentOfferingId INTEGER NOT NULL, "
+                + "charge INTEGER NOT NULL, "
+                + "rate INTEGER, "
+                + "rateExpiration DATETIME, "
+                + "rechargeStart DATETIME, "
+                + "userId INTEGER NOT NULL)");
+            database().executeSQL(
+                "ALTER TABLE EnergyBar ADD PRIMARY KEY (OID)");
+            createIndexFor("EnergyBar", "assignmentOfferingId");
+            createIndexFor("EnergyBar", "userId");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the TSUBMISSIONRESULT table, if needed.
+     * @throws SQLException on error
+     */
+    private void createEnergyBarEventTable()
+        throws SQLException
+    {
+        if (!database().hasTable("EnergyBarEvent"))
+        {
+            log.info("creating table EnergyBarEvent");
+            database().executeSQL(
+                "CREATE TABLE EnergyBarEvent "
+                + "(OID INTEGER NOT NULL , "
+                + "energyBarId INTEGER NOT NULL , "
+                + "time DATETIME NOT NULL , "
+                + "type TINYTEXT NOT NULL )");
+            database().executeSQL(
+                "ALTER TABLE EnergyBarEvent ADD PRIMARY KEY (OID)");
+            createIndexFor("EnergyBarEvent", "energyBarId");
         }
     }
 }

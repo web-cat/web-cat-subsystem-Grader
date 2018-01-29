@@ -44,11 +44,19 @@ body {
         once the results for this submission are available.</p>
       </wo:if>
       <wo:else>
+        <wo:if condition="$noEnergy">
+        <p>You are out of submission energy, but submission energy is
+        required to submit to this assignment.  Wait for your submission energy
+        to recharge.  Your next charge will regenerate at
+        <strong><wo:str value="$timeOfNextCharge" formatter="$session.timeFormatter"/></strong>.</p>
+        </wo:if>
+        <wo:else>
         <p>Your submission has been received by the Web-CAT Grader
         and is being processed.  If you are not automatically redirected
         to your graded results,
         <wo:link href="$resultsURL">click here to view them.</wo:link>
         </p>
+        </wo:else>
       </wo:else>
     </wo:else>
   </wo:else>

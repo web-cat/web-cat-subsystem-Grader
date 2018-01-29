@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: ResultFile.java,v 1.2 2010/09/27 04:23:20 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2009 Virginia Tech
  |
@@ -27,8 +27,8 @@ package org.webcat.grader;
  * the user as part of grading results (often for download).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.2 $, $Date: 2010/09/27 04:23:20 $
  */
 public class ResultFile
     extends _ResultFile

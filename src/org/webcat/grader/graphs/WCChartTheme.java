@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: WCChartTheme.java,v 1.3 2010/09/26 16:24:50 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010 Virginia Tech
  |
@@ -36,7 +36,7 @@ import org.webcat.core.Theme;
  * Web-CAT theme.
  *
  * @author Tony Allevato
- * @version $Id$
+ * @version $Id: WCChartTheme.java,v 1.3 2010/09/26 16:24:50 stedwar2 Exp $
  */
 public class WCChartTheme extends StandardChartTheme
 {

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionProfile.java,v 1.3 2011/02/22 03:08:58 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2009 Virginia Tech
  |
@@ -32,8 +32,8 @@ import org.webcat.core.User;
  * Contains all the submission options for an assignment.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author$
- * @version $Revision$ $Date$
+ * @author  Latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.3 $ $Date: 2011/02/22 03:08:58 $
  */
 public class SubmissionProfile
     extends _SubmissionProfile

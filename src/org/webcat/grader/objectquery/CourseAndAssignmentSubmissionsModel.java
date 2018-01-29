@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseAndAssignmentSubmissionsModel.java,v 1.3 2012/05/09 16:24:56 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -44,8 +44,8 @@ import er.extensions.foundation.ERXArrayUtilities;
  * {@link CourseAndAssignmentSubmissionsAssistant}.
  *
  * @author Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.3 $, $Date: 2012/05/09 16:24:56 $
  */
 public class CourseAndAssignmentSubmissionsModel
     extends AbstractQueryAssistantModel
@@ -282,7 +282,7 @@ public class CourseAndAssignmentSubmissionsModel
         {
             if (obj instanceof CourseOffering)
             {
-                array.addObject(obj);
+                array.addObject((CourseOffering)obj);
             }
         }
 
@@ -323,7 +323,7 @@ public class CourseAndAssignmentSubmissionsModel
         {
             if (obj instanceof Assignment)
             {
-                array.addObject(obj);
+                array.addObject((Assignment)obj);
             }
         }
 

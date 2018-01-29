@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: Scorable.java,v 1.1 2014/11/07 13:55:02 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2014 Virginia Tech
  |
@@ -30,8 +30,8 @@ import com.webobjects.foundation.NSKeyValueCodingAdditions;
  * Represents the scorable result of a student submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.1 $, $Date: 2014/11/07 13:55:02 $
  */
 public interface Scorable
     extends NSKeyValueCodingAdditions

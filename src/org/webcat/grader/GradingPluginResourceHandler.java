@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GradingPluginResourceHandler.java,v 1.3 2012/01/05 19:53:00 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2011-2012 Virginia Tech
  |
@@ -31,8 +31,8 @@ import com.webobjects.eocontrol.EOFetchSpecification;
  * BatchResult entities through direct URLs.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.3 $, $Date: 2012/01/05 19:53:00 $
  */
 public class GradingPluginResourceHandler
     extends EntityResourceHandler<GradingPlugin>

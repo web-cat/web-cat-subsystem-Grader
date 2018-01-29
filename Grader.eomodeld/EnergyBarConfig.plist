@@ -1,0 +1,59 @@
+{
+    attributes = (
+        {
+            allowsNull = N;
+            columnName = enabled;
+            name = enabled;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        },
+        {allowsNull = N; name = id; prototypeName = id; },
+        {
+            allowsNull = N;
+            columnName = numSlots;
+            name = numSlots;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+                "_EntityModeler" = {
+                    documentation = "Defines the number of energy bar slots available for this assignment";
+                };
+            };
+        },
+        {
+            columnName = rechargeTime;
+            name = rechargeTime;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+                "_EntityModeler" = {
+                    documentation = "Amount of time (in seconds) that it takes to recharge a single submission energy bar slot";
+                };
+            };
+        }
+    );
+    attributesUsedForLocking = (enabled, id, numSlots, rechargeTime);
+    className = "org.webcat.grader.EnergyBarConfig";
+    classProperties = (assignmentOfferings, enabled, numSlots, rechargeTime);
+    externalName = EnergyBarConfig;
+    fetchSpecificationDictionary = {};
+    name = EnergyBarConfig;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = AssignmentOffering;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = energyBarConfigId; sourceAttribute = id; });
+            name = assignmentOfferings;
+        }
+    );
+}

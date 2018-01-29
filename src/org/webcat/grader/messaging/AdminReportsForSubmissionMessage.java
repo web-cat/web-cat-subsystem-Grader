@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: AdminReportsForSubmissionMessage.java,v 1.4 2011/12/25 21:11:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010-2011 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.grader.Submission;
  * admin-directed reports.
  *
  * @author  Tony Allevato
- * @author  Last changed by: $Author$
- * @version $Revision$ $Date$
+ * @author  Last changed by: $Author: stedwar2 $
+ * @version $Revision: 1.4 $ $Date: 2011/12/25 21:11:41 $
  */
 public class AdminReportsForSubmissionMessage
     extends SubmissionErrorMessage

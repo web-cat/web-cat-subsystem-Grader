@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: StudentsForAssignmentPage.java,v 1.23 2014/06/16 17:27:47 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -40,8 +40,8 @@ import org.webcat.ui.util.ComponentIDGenerator;
  * to download them in spreadsheet form or edit them one at a time.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.23 $, $Date: 2014/06/16 17:27:47 $
  */
 public class StudentsForAssignmentPage
     extends GraderAssignmentsComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: Grader.java,v 1.14 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -21,7 +21,6 @@
 
 package org.webcat.grader;
 
-import java.io.File;
 import org.apache.log4j.Logger;
 import org.webcat.core.Application;
 import org.webcat.core.Course;
@@ -57,8 +56,8 @@ import er.extensions.qualifiers.ERXKeyValueQualifier;
  *  The subsystem defining Web-CAT administrative tasks.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.14 $, $Date: 2014/11/07 13:55:03 $
  */
 public class Grader
    extends Subsystem
@@ -117,6 +116,8 @@ public class Grader
         // Install or update any plug-ins that need it
 
         GradingPlugin.autoUpdateAndInstall();
+
+        EnergyBarConfig.ensureDefaultConfig();
     }
 
     // ----------------------------------------------------------
@@ -494,6 +495,17 @@ public class Grader
             result.assignmentClosed = true;
             log.warn(msg + "  User = " + session.user() + ", a = " + scheme
                 + ", crn = " + crn + ", courseNo = " + courseNo);
+            return result.generateResponse();
+        }
+
+        EnergyBar bar = assignment.energyBarForUser(localizedUser);
+        if ((bar != null) &&
+            (!bar.hasEnergy()) &&
+            (!bar.isCloseToDeadline(currentTime)))
+        {
+            bar.logEvent(EnergyBar.SUBMISSION_DENIED, assignment);
+            log.debug("no submission energy for " + bar);
+            result.noEnergy = true;
             return result.generateResponse();
         }
 

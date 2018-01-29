@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditPartnersPage.java,v 1.4 2010/09/27 04:19:54 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -32,8 +32,8 @@ import org.webcat.core.*;
  * results).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2010/09/27 04:19:54 $
  */
 public class EditPartnersPage
     extends GraderComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderKilledMessage.java,v 1.3 2011/12/25 21:11:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010-2011 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * configured independently from other exception notifications if desired.
  *
  * @author  Tony Allevato
- * @author  Last changed by: $Author$
- * @version $Revision$ $Date$
+ * @author  Last changed by: $Author: stedwar2 $
+ * @version $Revision: 1.3 $ $Date: 2011/12/25 21:11:41 $
  */
 public class GraderKilledMessage
     extends UnexpectedExceptionMessage

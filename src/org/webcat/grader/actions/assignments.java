@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: assignments.java,v 1.2 2013/09/01 01:30:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -31,7 +31,7 @@ import er.extensions.appserver.ERXDirectAction;
  * definitions published for the BlueJ submitter extension.
  *
  * @author Stephen Edwards
- * @version $Id$
+ * @version $Id: assignments.java,v 1.2 2013/09/01 01:30:41 stedwar2 Exp $
  */
 public class assignments
     extends ERXDirectAction

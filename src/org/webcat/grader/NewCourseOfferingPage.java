@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: NewCourseOfferingPage.java,v 1.5 2012/01/20 02:54:08 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -36,8 +36,8 @@ import er.extensions.eof.ERXQ;
  * Allows the user to create a new course offering.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2012/01/20 02:54:08 $
  */
 public class NewCourseOfferingPage
     extends GraderCourseEditComponent

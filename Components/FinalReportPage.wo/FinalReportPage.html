@@ -5,6 +5,7 @@
   </wo:org.webcat.core.WCPageModule>
 </wo:not><wo:else>
   <wo:org.webcat.core.WCPageModule title="Result Summary">
+  <wo:org.webcat.grader.EnergyBarDisplay bar="$bar" cssClass="floatRight"/>
   <wo:if condition="$reportIsReady"><wo:WCForm multipleSubmit="true" style="margin-bottom: 0.5em;">
     <wo:if condition="$showReturnToGrading"><wo name="ReturnToGrading"/></wo:if>
     <wo:if condition="$canSubmitAgain"><wo name="SubmitAgain"/></wo:if>

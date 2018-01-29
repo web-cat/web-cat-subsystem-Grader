@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderSubmissionUploadComponent.java,v 1.9 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  *  {@link SubmissionInProcess} state object.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.9 $, $Date: 2014/11/07 13:55:03 $
  */
 public class GraderSubmissionUploadComponent
     extends GraderAssignmentComponent
@@ -108,6 +108,31 @@ public class GraderSubmissionUploadComponent
         String errorMessage = null;
         log.debug( "committing submission" );
 
+        EnergyBar bar = null;
+        if (wcSession().primeUser() == null)
+        {
+            log.error(new Exception(
+                "null primeUser in session for submission by " +
+                submissionInProcess().user()));
+        }
+        if (prefs().assignmentOffering() != null
+            && (wcSession().primeUser() == null
+                || submissionInProcess().user().id()
+                    == wcSession().primeUser().id()))
+        {
+            bar = prefs().assignmentOffering().energyBarForUser(
+                submissionInProcess().user());
+            if (bar != null
+                && !bar.hasEnergy()
+                && !bar.isCloseToDeadline(submitTime))
+            {
+                bar.logEvent(
+                    EnergyBar.SUBMISSION_DENIED, prefs().assignmentOffering());
+                return "You are out of submission energy, but submission "
+                    + "energy is required to submit to this assignment. Wait "
+                    + "for your submission energy to recharge.";
+            }
+        }
         String uploadedFileName = submissionInProcess().uploadedFileName();
         if (uploadedFileName == null)
         {
@@ -207,6 +232,23 @@ public class GraderSubmissionUploadComponent
         localContext().insertObject( job );
         job.setSubmissionRelationship( submission );
         job.setQueueTime( new NSTimestamp() );
+        if (bar != null)
+        {
+            if (bar.consumeEnergyIfPossible(submitTime))
+            {
+                bar.logEvent(EnergyBar.CHARGE_CONSUMED, submission);
+            }
+            else if (bar.isCloseToDeadline(submitTime))
+            {
+              bar.logEvent(EnergyBar.SUBMISSION_CLOSE_TO_DEADLINE, submission);
+            }
+            else
+            {
+                bar.logEvent(EnergyBar.SUBMISSION_DENY_FAILED, submission);
+                log.error("submission " + submission +
+                    "committed without energy! bar = " + bar);
+            }
+        }
         applyLocalChanges();
         prefs().setSubmissionRelationship(submission);
         {

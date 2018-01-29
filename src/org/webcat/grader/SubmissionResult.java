@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionResult.java,v 1.17 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -33,8 +33,8 @@ import org.webcat.woextensions.MigratingEditingContext;
  *  Represents the results for a student submission.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.17 $, $Date: 2014/11/07 13:55:03 $
  */
 public class SubmissionResult
     extends _SubmissionResult
@@ -167,7 +167,7 @@ public class SubmissionResult
 
         if ( profile.awardEarlyBonus()
              && dueTime > submitTime
-             && profile.earlyBonusUnitTime() > 0L)
+             && profile.earlyBonusUnitTime() > 0)
         {
             // Early bonus
             //
@@ -203,7 +203,7 @@ public class SubmissionResult
 
         if ( profile.deductLatePenalty()
              && dueTime < submitTime
-             && profile.latePenaltyUnitTime() > 0L)
+             && profile.latePenaltyUnitTime() > 0)
         {
             // Late penalty
             //

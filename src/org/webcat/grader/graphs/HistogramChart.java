@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: HistogramChart.java,v 1.1 2010/05/11 14:51:40 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -37,7 +37,7 @@ import com.webobjects.appserver.WOContext;
  * A histogram component, implemented using JFreeChart.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @version $Id: HistogramChart.java,v 1.1 2010/05/11 14:51:40 aallowat Exp $
  */
 public class HistogramChart extends JFreeChartComponent
 {

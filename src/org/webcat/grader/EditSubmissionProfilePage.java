@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditSubmissionProfilePage.java,v 1.3 2013/12/11 14:43:17 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -32,8 +32,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$ $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.3 $ $Date: 2013/12/11 14:43:17 $
  */
 public class EditSubmissionProfilePage
     extends GraderComponent

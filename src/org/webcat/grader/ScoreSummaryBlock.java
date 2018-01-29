@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: ScoreSummaryBlock.java,v 1.6 2014/11/07 13:55:02 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -33,8 +33,8 @@ import org.webcat.core.*;
  *  if present, will be used to present file-specific data.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: stedwar2 $
+ *  @version $Revision: 1.6 $, $Date: 2014/11/07 13:55:02 $
  */
 public class ScoreSummaryBlock
     extends GraderComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: JFreeChartComponent.java,v 1.3 2010/10/19 18:37:37 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010 Virginia Tech
  |
@@ -41,7 +41,7 @@ import com.webobjects.foundation.NSData;
  * images (StackedAreaChart and HistogramChart).
  *
  * @author Tony Allevato
- * @version $Id$
+ * @version $Id: JFreeChartComponent.java,v 1.3 2010/10/19 18:37:37 aallowat Exp $
  */
 public abstract class JFreeChartComponent extends WCComponent
 {

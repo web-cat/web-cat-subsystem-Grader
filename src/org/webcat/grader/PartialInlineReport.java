@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PartialInlineReport.java,v 1.7 2012/01/05 19:52:27 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -38,8 +38,8 @@ import org.webcat.core.WCComponent;
  * fragment to include.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.7 $, $Date: 2012/01/05 19:52:27 $
  */
 public class PartialInlineReport
     extends WCComponent

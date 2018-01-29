@@ -103,6 +103,12 @@
             };
         },
         {
+            allowsNull = Y;
+            columnName = energyBarConfigId;
+            name = energyBarConfigId;
+            prototypeName = foreignId;
+        },
+        {
             columnName = excessSubmissionsMaxPts;
             name = excessSubmissionsMaxPts;
             prototypeName = double;
@@ -275,6 +281,7 @@
         deductExcessSubmissionPenalty,
         deductLatePenalty,
         earlyBonusUnitTime,
+        energyBarConfigId,
         excessSubmissionsThreshold,
         excessSubmissionsUnitSize,
         excludedFilePatterns,
@@ -304,6 +311,7 @@
         earlyBonusMaxPts,
         earlyBonusUnitPts,
         earlyBonusUnitTime,
+        energyBarConfig,
         excessSubmissionsMaxPts,
         excessSubmissionsThreshold,
         excessSubmissionsUnitPts,
@@ -331,6 +339,13 @@
             joinSemantic = EOInnerJoin;
             joins = ({destinationAttribute = submissionProfileId; sourceAttribute = id; });
             name = assignment;
+        },
+        {
+            destination = EnergyBarConfig;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = energyBarConfigId; });
+            name = energyBarConfig;
         },
         {
             destination = User;

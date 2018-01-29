@@ -1,0 +1,107 @@
+{
+    attributes = (
+        {
+            allowsNull = Y;
+            columnName = assignmentOfferingId;
+            name = assignmentOfferingId;
+            prototypeName = foreignId;
+        },
+        {
+            allowsNull = N;
+            columnName = charge;
+            name = charge;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        },
+        {
+            allowsNull = N;
+            columnName = energyBarId;
+            name = energyBarId;
+            prototypeName = id;
+        },
+        {allowsNull = N; name = id; prototypeName = id; },
+        {
+            allowsNull = Y;
+            columnName = submissionId;
+            name = submissionId;
+            prototypeName = foreignId;
+        },
+        {
+            allowsNull = N;
+            columnName = time;
+            name = time;
+            prototypeName = dateTime;
+        },
+        {
+            columnName = timeOfNextCharge;
+            name = timeOfNextCharge;
+            prototypeName = dateTime; },
+        {
+            allowsNull = N;
+            columnName = type;
+            name = type;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        }
+    );
+    attributesUsedForLocking = (
+        assignmentOfferingId,
+        charge,
+        energyBarId,
+        id,
+        submissionId,
+        type
+    );
+    className = "org.webcat.grader.EnergyBarEvent";
+    classProperties = (
+        assignmentOffering,
+        charge,
+        energyBar,
+        time,
+        timeOfNextCharge,
+        submission,
+        type
+    );
+    externalName = EnergyBarEvent;
+    fetchSpecificationDictionary = {};
+    name = EnergyBarEvent;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = EnergyBar;
+            isMandatory = Y;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = energyBarId; });
+            name = energyBar;
+        },
+        {
+            destination = Submission;
+            isMandatory = N;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = submissionId; });
+            name = submission;
+        },
+        {
+            destination = AssignmentOffering;
+            isMandatory = N;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; });
+            name = assignmentOffering;
+        }
+    );
+}

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CreateAssignmentPage.java,v 1.2 2010/09/27 04:18:14 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -38,8 +38,8 @@ import org.webcat.core.*;
  *  to choose from.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: stedwar2 $
+ *  @version $Revision: 1.2 $, $Date: 2010/09/27 04:18:14 $
  */
 public class CreateAssignmentPage
     extends GraderComponent

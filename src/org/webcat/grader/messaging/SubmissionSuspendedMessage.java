@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionSuspendedMessage.java,v 1.6 2011/12/25 21:11:41 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010-2011 Virginia Tech
  |
@@ -33,8 +33,8 @@ import com.webobjects.foundation.NSArray;
  * submission is suspended due to a technical fault.
  *
  * @author  Tony Allevato
- * @author  Last changed by: $Author$
- * @version $Revision$ $Date$
+ * @author  Last changed by: $Author: stedwar2 $
+ * @version $Revision: 1.6 $ $Date: 2011/12/25 21:11:41 $
  */
 public class SubmissionSuspendedMessage
     extends SubmissionErrorMessage

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PluginDescriptor.java,v 1.3 2010/09/27 04:23:20 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
  *  can be obtained on the web.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.3 $, $Date: 2010/09/27 04:23:20 $
  */
 public class PluginDescriptor
     extends FeatureDescriptor

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EnqueuedJob.java,v 1.4 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2009 Virginia Tech
  |
@@ -31,8 +31,8 @@ import er.extensions.eof.ERXKey;
  * enqueued for compilation/processing but not yet handled.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2014/11/07 13:55:03 $
  */
 public class EnqueuedJob
     extends _EnqueuedJob

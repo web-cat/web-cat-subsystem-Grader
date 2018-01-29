@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseRosterPage.java,v 1.5 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -39,8 +39,8 @@ import er.extensions.batching.ERXBatchingDisplayGroup;
  * allows new users to be added.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.5 $, $Date: 2014/11/07 13:55:03 $
  */
 public class CourseRosterPage
     extends GraderCourseEditComponent

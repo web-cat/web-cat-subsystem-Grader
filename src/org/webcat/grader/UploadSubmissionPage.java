@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: UploadSubmissionPage.java,v 1.10 2013/08/11 02:04:18 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * to upload a program file for the current (new) submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.10 $, $Date: 2013/08/11 02:04:18 $
  */
 public class UploadSubmissionPage
     extends GraderSubmissionUploadComponent
@@ -77,6 +77,7 @@ public class UploadSubmissionPage
     public User                  aPartner;
     public int                   partnerIndex;
     public int                   extraColumnCount;
+    public EnergyBar             bar;
 
 
     //~ Methods ...............................................................
@@ -123,6 +124,10 @@ public class UploadSubmissionPage
             Submission.latestSubmissionForAssignmentOfferingAndUser(
                     localContext(), offering, user());
 
+        if (this.offering != null)
+        {
+            this.bar = this.offering.energyBarForUser(user());
+        }
         if (previousPartners == null)
         {
             if (!offering.assignment().submissionProfile().allowPartners())
@@ -307,17 +312,27 @@ public class UploadSubmissionPage
             error("Please select a student for this submission.");
             return null;
         }
+        NSTimestamp now = new NSTimestamp();
+        if (this.bar != null
+            && !this.bar.hasEnergy()
+            && !this.bar.isCloseToDeadline(now))
+        {
+            this.bar.logEvent(EnergyBar.SUBMISSION_DENIED, this.offering);
+            error("Your submission energy is depleted.  Wait until your "
+                + "energy regenerates before submitting.");
+            return null;
+        }
         if (okayToSubmit)
         {
             NSTimestamp deadline = new NSTimestamp(
                 offering.dueDate().getTime()
                 + offering.assignment().submissionProfile().deadTimeDelta());
             log.debug("deadline = " + deadline);
-            log.debug("now = " + new NSTimestamp());
+            log.debug("now = " + now);
             CourseOffering course = offering.courseOffering();
             User primeUser =
                 wcSession().primeUser().localInstance(localContext());
-            if (deadline.before(new NSTimestamp())
+            if (deadline.before(now)
                  && !course.isInstructor(primeUser)
                  && !course.isGrader(primeUser))
             {

@@ -238,6 +238,9 @@ public abstract class _SubmissionProfile
     public static final String AUTHOR_KEY = "author";
     public static final ERXKey<org.webcat.core.User> author =
         new ERXKey<org.webcat.core.User>(AUTHOR_KEY);
+    public static final String ENERGY_BAR_CONFIG_KEY = "energyBarConfig";
+    public static final ERXKey<org.webcat.grader.EnergyBarConfig> energyBarConfig =
+        new ERXKey<org.webcat.grader.EnergyBarConfig>(ENERGY_BAR_CONFIG_KEY);
     // To-many relationships ---
     public static final String ASSIGNMENT_KEY = "assignment";
     public static final ERXKey<org.webcat.grader.Assignment> assignment =
@@ -1911,6 +1914,67 @@ public abstract class _SubmissionProfile
         else
         {
             addObjectToBothSidesOfRelationshipWithKey( value, "author" );
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entity pointed to by the <code>energyBarConfig</code>
+     * relationship.
+     * @return the entity in the relationship
+     */
+    public org.webcat.grader.EnergyBarConfig energyBarConfig()
+    {
+        return (org.webcat.grader.EnergyBarConfig)storedValueForKey( "energyBarConfig" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>energyBarConfig</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>setEnergyBarConfigRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setEnergyBarConfig( org.webcat.grader.EnergyBarConfig value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEnergyBarConfig("
+                + value + "): was " + energyBarConfig() );
+        }
+        takeStoredValueForKey( value, "energyBarConfig" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Set the entity pointed to by the <code>energyBarConfig</code>
+     * relationship.  This method is a type-safe version of
+     * <code>addObjectToBothSidesOfRelationshipWithKey()</code>.
+     *
+     * @param value The new entity to relate to
+     */
+    public void setEnergyBarConfigRelationship(
+        org.webcat.grader.EnergyBarConfig value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setEnergyBarConfigRelationship("
+                + value + "): was " + energyBarConfig() );
+        }
+        if ( value == null )
+        {
+            org.webcat.grader.EnergyBarConfig object = energyBarConfig();
+            if ( object != null )
+                removeObjectFromBothSidesOfRelationshipWithKey( object, "energyBarConfig" );
+        }
+        else
+        {
+            addObjectToBothSidesOfRelationshipWithKey( value, "energyBarConfig" );
         }
     }
 

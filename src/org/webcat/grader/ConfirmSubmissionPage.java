@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: ConfirmSubmissionPage.java,v 1.9 2014/11/07 13:55:03 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -37,8 +37,8 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * confirmation before making it "official".
  *
  * @author  Amit Kulkarni
- * @author  Latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  Latest changes by: $Author: stedwar2 $
+ * @version $Revision: 1.9 $, $Date: 2014/11/07 13:55:03 $
  */
 public class ConfirmSubmissionPage
     extends GraderSubmissionUploadComponent
@@ -65,6 +65,7 @@ public class ConfirmSubmissionPage
     public User partnerInRepetition;
     /** index of the file in the repetition table */
     public int index;
+    public EnergyBar bar;
 
 
     //~ Methods ...............................................................
@@ -97,6 +98,11 @@ public class ConfirmSubmissionPage
             }
             // skip calling super.beforeAppendToResponse()
             return;
+        }
+        if ((prefs().assignmentOffering() != null) &&
+            (prefs().assignmentOffering().energyBarConfig() != null))
+        {
+            this.bar = prefs().assignmentOffering().energyBarForUser(user());
         }
         log.debug( "The submission number is "
             + submissionInProcess().submitNumber() );
@@ -210,6 +216,16 @@ public class ConfirmSubmissionPage
     public WOComponent next()
     {
         NSTimestamp submitTime = new NSTimestamp();
+        if ((bar != null) &&
+            (!bar.hasEnergy()) &&
+            (!bar.isCloseToDeadline(submitTime)))
+        {
+            bar.logEvent(
+                EnergyBar.SUBMISSION_DENIED, prefs().assignmentOffering());
+            error("Your submission energy is depleted.  Wait until your "
+                + "energy regenerates before submitting.");
+            return null;
+          }
         NSTimestamp deadline = new NSTimestamp(
             prefs().assignmentOffering().dueDate().getTime()
             + prefs().assignmentOffering().assignment()

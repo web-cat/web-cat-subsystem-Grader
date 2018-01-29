@@ -1,5 +1,5 @@
 /*==========================================================================*\
-|  $Id$
+|  $Id: submissionResultResource.java,v 1.2 2011/05/19 16:47:53 stedwar2 Exp $
 |*-------------------------------------------------------------------------*|
 |  Copyright (C) 2006-2008 Virginia Tech
 |
@@ -50,7 +50,7 @@ import org.webcat.grader.SubmissionResult;
 * location.
 *
 * @author Tony Allevato
-* @version $Id$
+* @version $Id: submissionResultResource.java,v 1.2 2011/05/19 16:47:53 stedwar2 Exp $
 */
 public class submissionResultResource
    extends DirectAction

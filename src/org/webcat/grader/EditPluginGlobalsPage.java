@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditPluginGlobalsPage.java,v 1.2 2010/09/27 04:19:54 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -30,8 +30,8 @@ import com.webobjects.appserver.*;
  *  rendering the page.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: stedwar2 $
+ *  @version $Revision: 1.2 $, $Date: 2010/09/27 04:19:54 $
  */
 public class EditPluginGlobalsPage
     extends GraderComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: FinalReportPage.java,v 1.7 2014/06/16 17:16:17 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -40,8 +40,8 @@ import org.webcat.woextensions.WCResourceManager;
  * Otherwise, the final grading report is presented.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.7 $, $Date: 2014/06/16 17:16:17 $
  */
 public class FinalReportPage
     extends GraderSubmissionComponent
@@ -83,6 +83,7 @@ public class FinalReportPage
     public NSMutableArray<ResultFile> reportArray;
 
     public boolean showReturnToGrading = false;
+    public EnergyBar bar;
 
 
     //~ Methods ...............................................................
@@ -144,6 +145,8 @@ public class FinalReportPage
             userSubmission.setMimeType("application/octet-stream");
             userSubmission.setLabel("Your original submission");
             reportArray.addObject(userSubmission);
+            bar = submission.assignmentOffering().energyBarForUser(
+                submission.user());
         }
         showCoverageData = null;
         super.beforeAppendToResponse(response, context);

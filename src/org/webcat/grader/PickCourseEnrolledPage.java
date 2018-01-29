@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: PickCourseEnrolledPage.java,v 1.2 2010/09/27 04:23:20 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.core.*;
  *  This page presents a list of courses for a student to choose from.
  *
  *  @author  Stephen Edwards
- *  @author  Latest changes by: $Author$
- *  @version $Revision$, $Date$
+ *  @author  Latest changes by: $Author: stedwar2 $
+ *  @version $Revision: 1.2 $, $Date: 2010/09/27 04:23:20 $
  */
 public class PickCourseEnrolledPage
     extends GraderComponent

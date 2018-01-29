@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionResultDataset.java,v 1.2 2011/03/07 18:57:09 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -32,8 +32,8 @@ import org.webcat.grader.*;
  * results.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.2 $, $Date: 2011/03/07 18:57:09 $
  */
 @SuppressWarnings("unchecked")
 public class SubmissionResultDataset

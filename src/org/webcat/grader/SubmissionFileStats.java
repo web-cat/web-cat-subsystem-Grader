@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmissionFileStats.java,v 1.12 2014/06/16 17:27:25 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -42,8 +42,8 @@ import org.webcat.woextensions.WCResourceManager;
  *  Represents test coverage metrics for one file/class in a submission.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.12 $, $Date: 2014/06/16 17:27:25 $
  */
 public class SubmissionFileStats
     extends _SubmissionFileStats
@@ -165,19 +165,23 @@ public class SubmissionFileStats
     public String markupFileName()
     {
         String result = markupFileNameRaw();
-        if ( result == null )
+        if (result == null)
         {
             result = fullyQualifiedClassName();
             if (result != null)
             {
-                result =  result.replace( '.', '/' ) + ".html";
-                java.io.File dir = new java.io.File(
+                result = result.replace('.', '/') + ".html";
+                File dir = new File(
                     submissionResult().submission().resultDirName());
-                String[] places = {"html/", "html/src/", "clover/"};
-                for (String place : places)
+                String[] places = { "html/", "html/src/", "clover/" };
+                String[] arrayOfString1;
+                int j = (arrayOfString1 = places).length;
+                for (int i = 0; i < j; i++)
                 {
+                    String place = arrayOfString1[i];
+
                     String name = place + result;
-                    java.io.File candidate = new java.io.File(dir, name);
+                    File candidate = new File(dir, name);
                     if (candidate.exists())
                     {
                         result = name;

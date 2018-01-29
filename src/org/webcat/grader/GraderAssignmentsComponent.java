@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderAssignmentsComponent.java,v 1.4 2012/05/09 16:29:12 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010-2012 Virginia Tech
  |
@@ -35,8 +35,8 @@ import com.webobjects.foundation.NSMutableArray;
  * multi-offering course/assignment selections.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2012/05/09 16:29:12 $
  */
 public class GraderAssignmentsComponent
     extends GraderAssignmentComponent

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: MiniBarGraph.java,v 1.4 2011/10/25 15:32:06 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2011 Virginia Tech
  |
@@ -34,8 +34,8 @@ import org.webcat.woextensions.WCResourceManager;
  * A dynamic element used to generate tiny bar graphs.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.4 $, $Date: 2011/10/25 15:32:06 $
  */
 public class MiniBarGraph
     extends DynamicElement

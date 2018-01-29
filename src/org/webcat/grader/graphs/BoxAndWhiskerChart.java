@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: BoxAndWhiskerChart.java,v 1.2 2014/11/07 13:55:04 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2010 Virginia Tech
  |
@@ -49,7 +49,7 @@ import com.webobjects.appserver.WOContext;
  * class
  *
  * @author Tony Allevato
- * @version $Id$
+ * @version $Id: BoxAndWhiskerChart.java,v 1.2 2014/11/07 13:55:04 stedwar2 Exp $
  */
 public class BoxAndWhiskerChart extends JFreeChartComponent
 {

@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: AssignmentGraphPage.java,v 1.1 2010/05/11 14:51:40 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -31,8 +31,8 @@ import com.webobjects.foundation.*;
  * Presents graphs of this assignment's data.
  *
  * @author  Stephen Edwards
- * @author  latest changes by: $Author$
- * @version $Revision$, $Date$
+ * @author  latest changes by: $Author: aallowat $
+ * @version $Revision: 1.1 $, $Date: 2010/05/11 14:51:40 $
  */
 public class AssignmentGraphPage
     extends GraderAssignmentComponent

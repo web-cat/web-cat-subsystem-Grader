@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: CourseAndAssignmentSubmissionsAssistant.java,v 1.7 2014/06/16 17:24:13 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -47,8 +47,8 @@ import er.extensions.eof.ERXS;
  * a specified set of course offerings.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.7 $, $Date: 2014/06/16 17:24:13 $
  */
 public class CourseAndAssignmentSubmissionsAssistant
     extends WCComponent

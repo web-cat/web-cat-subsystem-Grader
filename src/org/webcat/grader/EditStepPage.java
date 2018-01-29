@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: EditStepPage.java,v 1.3 2011/06/08 02:21:32 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
  * are available for selection.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: stedwar2 $
+ * @version $Revision: 1.3 $, $Date: 2011/06/08 02:21:32 $
  */
 public class EditStepPage
     extends GraderComponent

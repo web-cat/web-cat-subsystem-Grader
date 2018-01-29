@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: SubmitResponse.java,v 1.5 2011/01/20 18:43:10 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -24,6 +24,7 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSTimestamp;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 
@@ -34,8 +35,8 @@ import org.webcat.core.*;
  *  in response to a BlueJ submitter direct action transaction.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.5 $, $Date: 2011/01/20 18:43:10 $
  */
 public class SubmitResponse
     extends GraderSubmissionUploadComponent
@@ -60,6 +61,7 @@ public class SubmitResponse
     public String  sessionID;
     public boolean criticalError = false;
     public boolean assignmentClosed = false;
+    public boolean noEnergy = false;
     public NSArray<String> partnersNotFound;
     public NSMutableArray<String> errorMessages = new NSMutableArray<String>();
     public String aMessage;
@@ -111,6 +113,38 @@ public class SubmitResponse
             if (error())
             {
                 errorMessages.add("This assignment is not open for submission.");
+            }
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    public NSTimestamp timeOfNextCharge()
+    {
+        try
+        {
+            return prefs().assignmentOffering()
+                .energyBarForUser(user()).timeOfNextCharge();
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean noEnergy()
+    {
+        boolean result = this.noEnergy;
+        if (result)
+        {
+            if (error())
+            {
+                errorMessages.add("You do not have any submission energy.  "
+                    + "Wait for it to regenerate.");
             }
         }
         return result;

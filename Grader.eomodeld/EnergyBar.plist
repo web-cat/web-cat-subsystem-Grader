@@ -1,0 +1,86 @@
+{
+    attributes = (
+        {
+            allowsNull = N;
+            columnName = assignmentOfferingId;
+            name = assignmentOfferingId;
+            prototypeName = foreignId;
+        },
+        {
+            allowsNull = N;
+            columnName = charge;
+            name = charge;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        },
+        {allowsNull = N; name = id; prototypeName = id; },
+        {
+            columnName = rate;
+            name = rate;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+                "_EntityModeler" = {
+                    documentation = "The amount of time (in seconds) that it takes for a single recharge slot to refill. If null, uses the config for the assignment offering.  Allows for overriding from boosters, etc.";
+                };
+            };
+        },
+        {
+            columnName = rateExpiration;
+            name = rateExpiration;
+            prototypeName = dateTime;
+        },
+        {columnName = rechargeStart; name = rechargeStart; prototypeName = dateTime; },
+        {allowsNull = N; columnName = userId; name = userId; prototypeName = id; }
+    );
+    attributesUsedForLocking = (charge, id, rate);
+    className = "org.webcat.grader.EnergyBar";
+    classProperties = (
+        assignmentOffering,
+        charge,
+        energyBarEvents,
+        rate,
+        rateExpiration,
+        rechargeStart,
+        user
+    );
+    externalName = EnergyBar;
+    fetchSpecificationDictionary = {};
+    name = EnergyBar;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = AssignmentOffering;
+            isMandatory = Y;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; });
+            name = assignmentOffering;
+        },
+        {
+            destination = EnergyBarEvent;
+            isToMany = Y;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = energyBarId; sourceAttribute = id; });
+            name = energyBarEvents;
+        },
+        {
+            destination = User;
+            isMandatory = Y;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = userId; });
+            name = user;
+        }
+    );
+}

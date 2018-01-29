@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GraderSystemStatusRows.java,v 1.5 2014/06/16 17:20:26 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -33,8 +33,8 @@ import org.webcat.core.*;
  *  Generates the grader subsystem's rows in the system status block.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.5 $, $Date: 2014/06/16 17:20:26 $
  */
 public class GraderSystemStatusRows
     extends WOComponent

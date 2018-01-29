@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: GradingPlugin.java,v 1.15 2014/06/16 17:30:30 stedwar2 Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2012 Virginia Tech
  |
@@ -39,8 +39,8 @@ import static org.webcat.woextensions.ECAction.run;
  *  Represents an uploaded grading plug-in.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author$
- *  @version $Revision$, $Date$
+ *  @author  Last changed by $Author: stedwar2 $
+ *  @version $Revision: 1.15 $, $Date: 2014/06/16 17:30:30 $
  */
 public class GradingPlugin
     extends _GradingPlugin

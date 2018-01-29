@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: DownloadScoresDialog.java,v 1.2 2010/10/19 18:37:37 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2010 Virginia Tech
  |
@@ -46,8 +46,8 @@ import com.webobjects.foundation.NSTimestamp;
  * as a CSV file.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author$
- * @version $Revision$, $Date$
+ * @author  Last changed by $Author: aallowat $
+ * @version $Revision: 1.2 $, $Date: 2010/10/19 18:37:37 $
  */
 public class DownloadScoresDialog extends WCComponent
 {

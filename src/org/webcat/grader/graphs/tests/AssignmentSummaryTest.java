@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  $Id$
+ |  $Id: AssignmentSummaryTest.java,v 1.1 2010/05/11 14:51:40 aallowat Exp $
  |*-------------------------------------------------------------------------*|
  |  Copyright (C) 2006-2008 Virginia Tech
  |
@@ -28,7 +28,7 @@ import org.webcat.grader.graphs.*;
  * A set of test cases for assignment summaries.
  *
  * @author  Stephen Edwards
- * @version $Id$
+ * @version $Id: AssignmentSummaryTest.java,v 1.1 2010/05/11 14:51:40 aallowat Exp $
  */
 public class AssignmentSummaryTest
     extends junit.framework.TestCase
