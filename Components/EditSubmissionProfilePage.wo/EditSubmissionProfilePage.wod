@@ -18,6 +18,14 @@ CheckBox3: WOCheckBox {
     checked = submissionProfile.deductExcessSubmissionPenalty;
 }
 
+EnergyBarCfg: WOPopUpButton {
+    list = energyBarConfigs;
+    selection = submissionProfile.energyBarConfig;
+    displayString = cfg.toString;
+    item = cfg;
+    noSelectionString = "not used";
+}
+
 ExcludedFilePatterns: WOTextField {
     size = 40;
     value = submissionProfile.excludedFilePatterns;

@@ -155,9 +155,9 @@ public abstract class _EnergyBarConfig
         new ERXKey<Integer>(RECHARGE_TIME_KEY);
     // To-one relationships ---
     // To-many relationships ---
-    public static final String ASSIGNMENT_OFFERINGS_KEY = "assignmentOfferings";
-    public static final ERXKey<org.webcat.grader.AssignmentOffering> assignmentOfferings =
-        new ERXKey<org.webcat.grader.AssignmentOffering>(ASSIGNMENT_OFFERINGS_KEY);
+    public static final String SUBMISSION_PROFILES_KEY = "submissionProfiles";
+    public static final ERXKey<org.webcat.grader.SubmissionProfile> submissionProfiles =
+        new ERXKey<org.webcat.grader.SubmissionProfile>(SUBMISSION_PROFILES_KEY);
     // Fetch specifications ---
     public static final String ENTITY_NAME = "EnergyBarConfig";
 
@@ -406,55 +406,55 @@ public abstract class _EnergyBarConfig
 
     // ----------------------------------------------------------
     /**
-     * Retrieve the entities pointed to by the <code>assignmentOfferings</code>
+     * Retrieve the entities pointed to by the <code>submissionProfiles</code>
      * relationship.
      * @return an NSArray of the entities in the relationship
      */
     @SuppressWarnings("unchecked")
-    public NSArray<org.webcat.grader.AssignmentOffering> assignmentOfferings()
+    public NSArray<org.webcat.grader.SubmissionProfile> submissionProfiles()
     {
-        return (NSArray<org.webcat.grader.AssignmentOffering>)
-            storedValueForKey("assignmentOfferings");
+        return (NSArray<org.webcat.grader.SubmissionProfile>)
+            storedValueForKey("submissionProfiles");
     }
 
 
     // ----------------------------------------------------------
     /**
      * Replace the list of entities pointed to by the
-     * <code>assignmentOfferings</code> relationship.
+     * <code>submissionProfiles</code> relationship.
      *
      * @param value The new set of entities to relate to
      */
-    public void setAssignmentOfferings(
-        NSMutableArray<org.webcat.grader.AssignmentOffering>  value)
+    public void setSubmissionProfiles(
+        NSMutableArray<org.webcat.grader.SubmissionProfile>  value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug("setAssignmentOfferings("
-                + value + "): was " + assignmentOfferings());
+            log.debug("setSubmissionProfiles("
+                + value + "): was " + submissionProfiles());
         }
-        takeStoredValueForKey(value, "assignmentOfferings");
+        takeStoredValueForKey(value, "submissionProfiles");
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Add a new entity to the <code>assignmentOfferings</code>
+     * Add a new entity to the <code>submissionProfiles</code>
      * relationship (DO NOT USE--instead, use
-     * <code>addToAssignmentOfferingsRelationship()</code>.
+     * <code>addToSubmissionProfilesRelationship()</code>.
      * This method is provided for WebObjects use.
      *
      * @param value The new entity to relate to
      */
-    public void addToAssignmentOfferings( org.webcat.grader.AssignmentOffering value )
+    public void addToSubmissionProfiles( org.webcat.grader.SubmissionProfile value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "addToAssignmentOfferings("
-                + value + "): was " + assignmentOfferings() );
+            log.debug( "addToSubmissionProfiles("
+                + value + "): was " + submissionProfiles() );
         }
-        NSMutableArray<org.webcat.grader.AssignmentOffering> array =
-            (NSMutableArray<org.webcat.grader.AssignmentOffering>)assignmentOfferings();
+        NSMutableArray<org.webcat.grader.SubmissionProfile> array =
+            (NSMutableArray<org.webcat.grader.SubmissionProfile>)submissionProfiles();
         willChange();
         array.addObject( value );
     }
@@ -462,22 +462,22 @@ public abstract class _EnergyBarConfig
 
     // ----------------------------------------------------------
     /**
-     * Remove a specific entity from the <code>assignmentOfferings</code>
+     * Remove a specific entity from the <code>submissionProfiles</code>
      * relationship (DO NOT USE--instead, use
-     * <code>removeFromAssignmentOfferingsRelationship()</code>.
+     * <code>removeFromSubmissionProfilesRelationship()</code>.
      * This method is provided for WebObjects use.
      *
      * @param value The entity to remove from the relationship
      */
-    public void removeFromAssignmentOfferings( org.webcat.grader.AssignmentOffering value )
+    public void removeFromSubmissionProfiles( org.webcat.grader.SubmissionProfile value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "RemoveFromAssignmentOfferings("
-                + value + "): was " + assignmentOfferings() );
+            log.debug( "RemoveFromSubmissionProfiles("
+                + value + "): was " + submissionProfiles() );
         }
-        NSMutableArray<org.webcat.grader.AssignmentOffering> array =
-            (NSMutableArray<org.webcat.grader.AssignmentOffering>)assignmentOfferings();
+        NSMutableArray<org.webcat.grader.SubmissionProfile> array =
+            (NSMutableArray<org.webcat.grader.SubmissionProfile>)submissionProfiles();
         willChange();
         array.removeObject( value );
     }
@@ -485,82 +485,82 @@ public abstract class _EnergyBarConfig
 
     // ----------------------------------------------------------
     /**
-     * Add a new entity to the <code>assignmentOfferings</code>
+     * Add a new entity to the <code>submissionProfiles</code>
      * relationship.
      *
      * @param value The new entity to relate to
      */
-    public void addToAssignmentOfferingsRelationship( org.webcat.grader.AssignmentOffering value )
+    public void addToSubmissionProfilesRelationship( org.webcat.grader.SubmissionProfile value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "addToAssignmentOfferingsRelationship("
-                + value + "): was " + assignmentOfferings() );
+            log.debug( "addToSubmissionProfilesRelationship("
+                + value + "): was " + submissionProfiles() );
         }
         addObjectToBothSidesOfRelationshipWithKey(
-            value, "assignmentOfferings" );
+            value, "submissionProfiles" );
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Remove a specific entity from the <code>assignmentOfferings</code>
+     * Remove a specific entity from the <code>submissionProfiles</code>
      * relationship.
      *
      * @param value The entity to remove from the relationship
      */
-    public void removeFromAssignmentOfferingsRelationship( org.webcat.grader.AssignmentOffering value )
+    public void removeFromSubmissionProfilesRelationship( org.webcat.grader.SubmissionProfile value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "removeFromAssignmentOfferingsRelationship("
-                + value + "): was " + assignmentOfferings() );
+            log.debug( "removeFromSubmissionProfilesRelationship("
+                + value + "): was " + submissionProfiles() );
         }
         removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "assignmentOfferings" );
+            value, "submissionProfiles" );
     }
 
 
     // ----------------------------------------------------------
     /**
      * Create a brand new object that is a member of the
-     * <code>assignmentOfferings</code> relationship.
+     * <code>submissionProfiles</code> relationship.
      *
      * @return The new entity
      */
-    public org.webcat.grader.AssignmentOffering createAssignmentOfferingsRelationship()
+    public org.webcat.grader.SubmissionProfile createSubmissionProfilesRelationship()
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "createAssignmentOfferingsRelationship()" );
+            log.debug( "createSubmissionProfilesRelationship()" );
         }
         EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "AssignmentOffering" );
+            .classDescriptionForEntityName( "SubmissionProfile" );
         EOEnterpriseObject eoObject = eoClassDesc
             .createInstanceWithEditingContext( editingContext(), null );
         editingContext().insertObject( eoObject );
         addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "assignmentOfferings" );
-        return (org.webcat.grader.AssignmentOffering)eoObject;
+            eoObject, "submissionProfiles" );
+        return (org.webcat.grader.SubmissionProfile)eoObject;
     }
 
 
     // ----------------------------------------------------------
     /**
      * Remove and then delete a specific entity that is a member of the
-     * <code>assignmentOfferings</code> relationship.
+     * <code>submissionProfiles</code> relationship.
      *
      * @param value The entity to remove from the relationship and then delete
      */
-    public void deleteAssignmentOfferingsRelationship( org.webcat.grader.AssignmentOffering value )
+    public void deleteSubmissionProfilesRelationship( org.webcat.grader.SubmissionProfile value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "deleteAssignmentOfferingsRelationship("
-                + value + "): was " + assignmentOfferings() );
+            log.debug( "deleteSubmissionProfilesRelationship("
+                + value + "): was " + submissionProfiles() );
         }
         removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "assignmentOfferings" );
+            value, "submissionProfiles" );
         editingContext().deleteObject( value );
     }
 
@@ -568,18 +568,18 @@ public abstract class _EnergyBarConfig
     // ----------------------------------------------------------
     /**
      * Remove (and then delete, if owned) all entities that are members of the
-     * <code>assignmentOfferings</code> relationship.
+     * <code>submissionProfiles</code> relationship.
      */
-    public void deleteAllAssignmentOfferingsRelationships()
+    public void deleteAllSubmissionProfilesRelationships()
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "deleteAllAssignmentOfferingsRelationships(): was "
-                + assignmentOfferings() );
+            log.debug( "deleteAllSubmissionProfilesRelationships(): was "
+                + submissionProfiles() );
         }
-        for (org.webcat.grader.AssignmentOffering object : assignmentOfferings())
+        for (org.webcat.grader.SubmissionProfile object : submissionProfiles())
         {
-            deleteAssignmentOfferingsRelationship(object);
+            deleteSubmissionProfilesRelationship(object);
         }
     }
 

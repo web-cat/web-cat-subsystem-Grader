@@ -24,6 +24,7 @@ package org.webcat.grader;
 import java.text.DecimalFormat;
 import java.text.Format;
 import com.webobjects.appserver.*;
+import com.webobjects.foundation.NSArray;
 import org.apache.log4j.Logger;
 
 // -------------------------------------------------------------------------
@@ -67,6 +68,8 @@ public class EditSubmissionProfilePage
     public double correctnessPoints;
     public String submissionMethod;
 
+    public NSArray<EnergyBarConfig> energyBarConfigs;
+    public EnergyBarConfig cfg;
 
     //~ Methods ...............................................................
 
@@ -90,6 +93,11 @@ public class EditSubmissionProfilePage
             correctnessPoints = submissionProfile.availablePoints()
                 - submissionProfile.taPoints()
                 - submissionProfile.toolPoints();
+        }
+        if (energyBarConfigs == null)
+        {
+            energyBarConfigs = EnergyBarConfig.allConfigs(
+                submissionProfile.editingContext());
         }
         initializeTimeFields();
         super.beforeAppendToResponse(response, context);

@@ -42,18 +42,18 @@
     );
     attributesUsedForLocking = (enabled, id, numSlots, rechargeTime);
     className = "org.webcat.grader.EnergyBarConfig";
-    classProperties = (assignmentOfferings, enabled, numSlots, rechargeTime);
+    classProperties = (enabled, numSlots, rechargeTime, submissionProfiles);
     externalName = EnergyBarConfig;
     fetchSpecificationDictionary = {};
     name = EnergyBarConfig;
     primaryKeyAttributes = (id);
     relationships = (
         {
-            destination = AssignmentOffering;
+            destination = SubmissionProfile;
             isToMany = Y;
             joinSemantic = EOInnerJoin;
             joins = ({destinationAttribute = energyBarConfigId; sourceAttribute = id; });
-            name = assignmentOfferings;
+            name = submissionProfiles;
         }
     );
 }
