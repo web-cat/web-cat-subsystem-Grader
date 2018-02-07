@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderCourseComponent.java,v 1.2 2010/09/27 04:20:41 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,8 +29,6 @@ import com.webobjects.foundation.*;
  *  selections from login parameters.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.2 $, $Date: 2010/09/27 04:20:41 $
  */
 public class GraderCourseComponent
     extends GraderComponent
@@ -60,14 +56,14 @@ public class GraderCourseComponent
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
-    public boolean startWith( NSDictionary<String, Object> params )
+    public boolean startWith(NSDictionary<String, NSArray<Object>> params)
     {
         boolean result = false;
-        String crn = stringValueForKey( params, CourseOffering.CRN_KEY );
-        if ( crn != null )
+        String crn = stringValueForKey(params, CourseOffering.CRN_KEY);
+        if (crn != null)
         {
-            result = startWith( CourseOffering
-                .offeringForCrn( localContext(), crn ) );
+            result = startWith(
+                CourseOffering.offeringForCrn(localContext(), crn));
         }
         return result;
     }

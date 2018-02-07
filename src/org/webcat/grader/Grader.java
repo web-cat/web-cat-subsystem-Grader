@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: Grader.java,v 1.14 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -56,8 +54,6 @@ import er.extensions.qualifiers.ERXKeyValueQualifier;
  *  The subsystem defining Web-CAT administrative tasks.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.14 $, $Date: 2014/11/07 13:55:03 $
  */
 public class Grader
    extends Subsystem

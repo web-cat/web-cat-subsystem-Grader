@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: EditCoursePage.java,v 1.2 2010/09/27 04:19:54 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -32,8 +30,6 @@ import org.webcat.core.*;
  * (is "to be defined").
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.2 $, $Date: 2010/09/27 04:19:54 $
  */
 public class EditCoursePage
     extends GraderCourseEditComponent
@@ -269,7 +265,7 @@ public class EditCoursePage
      * @param params A dictionary of form values to decode
      * @return True if successful, false if the parameter is missing
      */
-    public boolean startWith(NSDictionary<String, Object> params)
+    public boolean startWith(NSDictionary<String, NSArray<Object>> params)
     {
         boolean result = false;
         String crn = stringValueForKey(params, CourseOffering.CRN_KEY);

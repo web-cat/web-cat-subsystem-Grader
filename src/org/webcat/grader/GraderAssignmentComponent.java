@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderAssignmentComponent.java,v 1.3 2010/10/12 02:39:56 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,8 +29,6 @@ import com.webobjects.foundation.*;
  *  assignment selections from login parameters.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.3 $, $Date: 2010/10/12 02:39:56 $
  */
 public class GraderAssignmentComponent
     extends GraderCourseComponent
@@ -118,7 +114,7 @@ public class GraderAssignmentComponent
      * @return True if successful, false if the parameter is missing
      */
     @Override
-    public boolean startWith( NSDictionary<String, Object> params )
+    public boolean startWith(NSDictionary<String, NSArray<Object>> params )
     {
         boolean result = false;
         String aoid =
