@@ -104,6 +104,10 @@ LastTR: org.webcat.core.TableRow {
     index = index;
 }
 
+LmsId: WCTextBox {
+     value = lmsId;
+}
+
 LockDueDates: WCImageButton {
     filename  = "icons/lock-unlock.png";
     framework = "Core";
@@ -111,6 +115,15 @@ LockDueDates: WCImageButton {
     remote    = true;
     title     = "Force all due dates to be the same";
     alt       = "Force all due dates to be the same";
+}
+
+LockLmsIds: WCImageButton {
+    filename  = "icons/lock-unlock.png";
+    framework = "Core";
+    action    = lockLmsIds;
+    remote    = true;
+    title     = "Force all LTI IDs to be the same";
+    alt       = "Force all LTI IDs to be the same";
 }
 
 Name: WCTextBox {
@@ -249,6 +262,15 @@ UnlockDueDates: WCImageButton {
     alt       = "Allow offerings to have different due dates";
 }
 
+UnlockLmsIds: WCImageButton {
+    filename  = "icons/lock.png";
+    framework = "Core";
+    action    = unlockLmsIds;
+    remote    = true;
+    title     = "Allow offerings to have different LTI IDs";
+    alt       = "Allow offerings to have different LTI IDs";
+}
+
 UpcomingAssignmentName: WOHyperlink {
     string = upcomingOffering.titleString;
     href   = upcomingOffering.assignment.url;
@@ -285,7 +307,7 @@ UploadInstructionsInfo: org.webcat.core.PopUpInfo {
 
 URL: WCTextBox {
     style = "width: 40em;";
-    value = assignment.url;
+    value = assignmentUrl;
     id    = "URL";
 }
 

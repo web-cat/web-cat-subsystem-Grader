@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: BlueJSubmitterDefinitions.java,v 1.5 2013/08/11 02:09:46 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -37,8 +35,6 @@ import org.webcat.woextensions.WCEC;
  * the BlueJ submitter extension.
  *
  * @author Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.5 $, $Date: 2013/08/11 02:09:46 $
  */
 public class BlueJSubmitterDefinitions
     extends WOComponent
@@ -209,6 +205,15 @@ public class BlueJSubmitterDefinitions
             name += " (closed)"; // " (by permission only)";
         }
         return escapeBareName( name );
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean includeUserAndPwd()
+    {
+        return !(anAssignmentOffering.courseOffering().course().department()
+            .institution().authenticator()
+            instanceof org.webcat.core.CasAuthenticator);
     }
 
 

@@ -65,6 +65,7 @@
     <thead><tr>
         <th class="sm">Course Offering</th>
         <th>Due Date <wo:if condition="$areDueDatesLocked"><wo name="UnlockDueDates"/></wo:if><wo:else><wo name="LockDueDates"/></wo:else></th>
+        <th>LTI ID <wo:if condition="$areLmsIdsLocked"><wo name="UnlockLmsIds"/></wo:if><wo:else><wo name="LockLmsIds"/></wo:else></th>
         <th>Score Summary <wo name="RefreshScoreSummaries"/></th>
         <th>Queue Status</th>
         <wo:if condition="$canDeleteAnyOffering"><th class="sm">Delete? <wo name="DeletePopupInfo"/></th></wo:if>
@@ -74,6 +75,7 @@
         <wo:tr index="$thisOfferingIndex">
             <td><strong><wo:str value="$thisOffering.courseOffering.compactName"/></strong></td>
             <td><wo:if condition="$shouldShowDueDatePicker"><wo name="DueDate"/></wo></td>
+            <td><wo:if condition="$shouldShowLmsIdField"><wo name="LmsId"/></wo></td>
             <td><wo:WCContentSpan id="~'scoreHistogram' + thisOffering.id"><wo name="Graph"/></wo></td>
             <td>
                 <wo:str value="$descriptionOfEnqueuedSubmissions" escapeHTML="false"/>

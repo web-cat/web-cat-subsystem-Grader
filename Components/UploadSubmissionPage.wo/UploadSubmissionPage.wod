@@ -1,11 +1,3 @@
-AssignmentName: WOString {
-    value = prefs.assignmentOffering.titleString;
-}
-
-DifferentStudent: WOConditional {
-    condition = session.impersonatingAnotherUser;
-}
-
 PartnerSelector: FilteringUserSelector {
     actionTitle = "Choose Partners";
     dialogMessage = "Which students also worked on this submission?";
@@ -14,27 +6,6 @@ PartnerSelector: FilteringUserSelector {
     availableListTitle = "Students Enrolled in Your Course";
     selectedUsers = partnersForEditing;
     qualifier = qualifierForStudentsInCourse;
-}
-
-HasPreviousSubmissions: WOConditional {
-    condition = hasPreviousSubmissions;
-}
-
-HasNoPreviousSubmissions: WOConditional {
-    condition = hasPreviousSubmissions;
-    negate    = true;
-}
-
-HasInstructions: WOConditional {
-    condition = hasInstructions;
-}
-
-OkayToSubmit: WOConditional {
-    condition = okayToSubmit;
-}
-
-HasValidFileUpload: WOConditional {
-    condition = submissionInProcess.hasValidFileUpload;
 }
 
 FileUpload1: WOFileUpload {
@@ -55,15 +26,6 @@ Instructions: WOString {
     escapeHTML = false;
 }
 
-String1: WOString {
-    value = aSubmission.submitNumber;
-}
-
-String2: WOString {
-    value     = aSubmission.submitTime;
-    formatter = session.timeFormatter;
-}
-
 FinalScore: WOString {
     numberformat = "0.0";
     value        = aSubmission.result.finalScore;
@@ -75,10 +37,6 @@ StudentList: WCFilteringSelect {
     selection = submitAsStudent;
     autoComplete = true;
     invalidMessage = "Invalid student selection";
-}
-
-StudentName: WOString {
-    value = user.nameAndUid;
 }
 
 TR: org.webcat.core.TableRow {

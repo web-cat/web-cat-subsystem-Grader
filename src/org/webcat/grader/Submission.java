@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: Submission.java,v 1.30 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -38,6 +36,7 @@ import java.util.Collections;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
+import org.webcat.grader.lti.LISResultId;
 import org.webcat.grader.messaging.GradingResultsAvailableMessage;
 import org.webcat.woextensions.ECAction;
 import org.webcat.woextensions.WCFetchSpecification;
@@ -49,8 +48,6 @@ import org.webcat.woextensions.MigratingEditingContext;
  *  Represents a single student assignment submission.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.30 $, $Date: 2014/11/07 13:55:03 $
  */
 public class Submission
     extends _Submission
@@ -1948,6 +1945,33 @@ public class Submission
                 }
             }
         }
+    }
+
+
+    // ----------------------------------------------------------
+    public void sendScoreToLTIConsumerIfNecessary()
+    {
+        if (isSubmissionForGrading())
+        {
+            SubmissionResult r = result();
+            if (r != null && r.status() == Status.CHECK)
+            {
+                LISResultId.sendScoreToLTIConsumer(this);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willUpdate()
+    {
+        if (isSubmissionForGrading()
+            && changedProperties().containsKey(IS_SUBMISSION_FOR_GRADING_KEY))
+        {
+            sendScoreToLTIConsumerIfNecessary();
+        }
+        super.willUpdate();
     }
 
 

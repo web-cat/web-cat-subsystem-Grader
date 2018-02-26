@@ -1,16 +1,26 @@
 <wo name="Page">
 <wo:org.webcat.core.WCPageModule title="Upload Your File(s)">
 <wo:org.webcat.grader.EnergyBarDisplay bar="$bar" cssClass="floatRight"/>
-For: <span class="hl"><webobject name="AssignmentName"/></span>
-<webobject name="DifferentStudent"><p>Submitting as: <span class="hl"><webobject name="StudentName"/></span></p></webobject>
-<webobject name="HasInstructions">
+For: <span class="hl"><wo:str value="$prefs.assignmentOffering.titleString"/></span>
+<wo:if condition="$session.impersonatingAnotherUser"><p>Submitting as: <span class="hl"><wo:str value="$user.nameAndUid"/></span></p></wo:if>
+<wo:if condition="$hasInstructions">
   <p><webobject name="Instructions"/></p>
-</webobject><webobject name="HasValidFileUpload">
+</wo:if><wo:if condition="$submissionInProcess.hasValidFileUpload">
     <p>So far, you have uploaded the file
     <b><wo:str value="$submissionInProcess.uploadedFileName"/></b>
     (<wo:str value="$uploadedFileSize" formatter="$application.fileSizeFormatter"/>) for submission.  You can
     replace this with a different file, or choose to continue.</p>
-</webobject><webobject name="OkayToSubmit">
+</wo:if><wo:if condition="$okayToSubmit"><wo:if condition="$needsLTIClickthrough">
+<p>Before you submit to this assignment for the first time, please
+<wo:if condition="$prefs.assignmentOffering.lmsAssignmentUrl">
+<wo:link href="$prefs.assignmentOffering.lmsAssignmentUrl">visit this
+assignment's page</wo:link></wo:if><wo:else>visit this assignment's
+page</wo:else>
+on your
+<wo:str value="$pref.assignmentOffering.courseOffering.lmsName"/>'s
+site, and enter Web-CAT from that page. Thank you.
+</p>
+</wo:if><wo:else>
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <wo:if condition="$showStudentSelector">
     <p>Submit for student: <wo name="StudentList"/></p>
@@ -37,11 +47,11 @@ to choose them.
 </wo:if>
 
 <p><wo:org.webcat.ui.WCButton action="$next" label="Upload Submission"/></p>
-</wo:WOForm></webobject></wo:org.webcat.core.WCPageModule>
+</wo:WOForm></wo:else></wo:if></wo:org.webcat.core.WCPageModule>
 
 <wo:not condition="$showStudentSelector">
 <wo:org.webcat.core.WCPageModule title="Previous Submissions" open="false">
-<webobject name="HasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
+<wo:if condition="$hasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
 <table><thead>
   <tr><wo:WOGenericContainer elementName="td" colspan="~4 + ((extraColumnCount gt 1) ? extraColumnCount : 0)" class="batchnav"><wo:WCForm multipleSumbit="true"><webobject name="BatchNavigator"/></wo:WCForm></wo:WOGenericContainer></tr>
   <tr><th>No.<webobject name="WCSortOrder3"/></th>
@@ -55,8 +65,8 @@ to choose them.
     <th>Score<webobject name="WCSortOrder2"/></th>
     <th>Student and Partners</th></tr></thead><tbody>
   <webobject name="Repetition1"><webobject name="TR">
-    <td><webobject name="String1"/></td>
-    <td><webobject name="String2"/></td>
+    <td><wo:str value="$aSubmission.submitNumber"/></td>
+    <td><wo:str value="$aSubmission.submitTime" formatter="$session.timeFormatter"/></td>
               <wo:if condition="$aSubmission.resultIsReady">
     <wo:if condition="~extraColumnCount gt 1">
       <wo:if condition="$offering.assignment.usesTestingScore"><td class="n"><wo:str value="$aSubmission.result.correctnessScoreRaw" numberformat="0.0"/></td></wo:if>
@@ -87,7 +97,7 @@ to choose them.
     <wo:str value="$aSubmission.isSubmissionForGrading"/>
     <wo:str value="$aSubmission.result.submission.namesOfAllUsers"/></td>
   </webobject></webobject></tbody></table>
-</webobject><webobject name="HasNoPreviousSubmissions"><p>This is your first submission for this assignment.</p>
-</webobject></wo:org.webcat.core.WCPageModule>
+</wo:if><wo:else><p>This is your first submission for this assignment.</p>
+</wo:else></wo:org.webcat.core.WCPageModule>
 </wo:not>
 </wo>

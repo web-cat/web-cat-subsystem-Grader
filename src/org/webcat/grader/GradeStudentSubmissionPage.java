@@ -306,11 +306,8 @@ public class GradeStudentSubmissionPage
         if (done)
         {
             result.setStatus(Status.CHECK);
-            for (Submission sub : result.submissions())
-            {
-                sub.emailNotificationToStudent(
-                    "has been updated by the course staff");
-            }
+            result.emailNotificationToStudent(
+                "has been updated by the course staff");
         }
     }
 

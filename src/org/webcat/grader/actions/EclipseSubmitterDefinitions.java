@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: EclipseSubmitterDefinitions.java,v 1.2 2011/02/22 03:08:58 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-20011 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -29,8 +27,6 @@ import com.webobjects.appserver.*;
  * the Eclipse submitter plugin.
  *
  * @author Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.2 $, $Date: 2011/02/22 03:08:58 $
  */
 public class EclipseSubmitterDefinitions
     extends BlueJSubmitterDefinitions

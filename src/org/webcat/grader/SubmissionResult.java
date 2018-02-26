@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: SubmissionResult.java,v 1.17 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -33,8 +31,6 @@ import org.webcat.woextensions.MigratingEditingContext;
  *  Represents the results for a student submission.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.17 $, $Date: 2014/11/07 13:55:03 $
  */
 public class SubmissionResult
     extends _SubmissionResult
@@ -826,6 +822,36 @@ public class SubmissionResult
         {
             sub.setIsSubmissionForGradingIfNecessary();
         }
+    }
+
+
+    // ----------------------------------------------------------
+    public void emailNotificationToStudent(String message)
+    {
+        for (Submission sub : submissions())
+        {
+            sub.emailNotificationToStudent(message);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willUpdate()
+    {
+        NSDictionary<String, Object> changes = changedProperties();
+        if (status() == Status.CHECK
+            && (changes.containsKey(STATUS_KEY)
+            || changes.containsKey(CORRECTNESS_SCORE_KEY)
+            || changes.containsKey(TOOL_SCORE_KEY)
+            || changes.containsKey(TA_SCORE_KEY)))
+        {
+            for (Submission sub : submissions())
+            {
+                sub.sendScoreToLTIConsumerIfNecessary();
+            }
+        }
+        super.willUpdate();
     }
 
 

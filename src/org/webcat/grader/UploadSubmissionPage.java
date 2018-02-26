@@ -297,6 +297,14 @@ public class UploadSubmissionPage
 
 
     // ----------------------------------------------------------
+    public boolean needsLTIClickthrough()
+    {
+        return prefs().assignmentOffering() != null
+        && prefs().assignmentOffering().needsLTIClickthrough(user());
+    }
+
+
+    // ----------------------------------------------------------
     public WOComponent next()
     {
         if (log.isDebugEnabled())

@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderDatabaseUpdates.java,v 1.16 2014/06/16 17:13:28 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,8 +29,6 @@ import org.webcat.dbupdate.UpdateSet;
  * for this class uses its parent class' logger.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.16 $, $Date: 2014/06/16 17:13:28 $
  */
 public class GraderDatabaseUpdates
     extends UpdateSet
@@ -606,11 +602,55 @@ public class GraderDatabaseUpdates
      * Drop the unused energyBarConfigId attribute from AssignmentOffering.
      * @throws SQLException on error
      */
-    public void updateIncremen31() throws SQLException
+    public void updateIncrement31() throws SQLException
     {
         database().executeSQL(
             "alter table TASSIGNMENTOFFERING drop "
             + "energyBarConfigId");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add columns for LTI support.
+     * @throws SQLException on error
+     */
+    public void updateIncrement32() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING ADD "
+            + "lisOutcomeServiceUrl TINYTEXT");
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING ADD "
+            + "lmsAssignmentId TINYTEXT");
+        createIndexFor("TASSIGNMENTOFFERING", "lmsAssignmentId(10)");
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING ADD "
+            + "lmsAssignmentUrl TINYTEXT");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add LISResultId table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement33() throws SQLException
+    {
+        createLISResultIdTable();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add lmsInstanceId field to LISResultId table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement34() throws SQLException
+    {
+        database().executeSQL(
+            "alter table LISResultId ADD "
+            + "lmsInstanceId INTEGER NOT NULL");
     }
 
 
@@ -1017,6 +1057,32 @@ public class GraderDatabaseUpdates
             database().executeSQL(
                 "ALTER TABLE EnergyBarEvent ADD PRIMARY KEY (OID)");
             createIndexFor("EnergyBarEvent", "energyBarId");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the TSUBMISSIONRESULT table, if needed.
+     * @throws SQLException on error
+     */
+    private void createLISResultIdTable()
+        throws SQLException
+    {
+        if (!database().hasTable("LISResultId"))
+        {
+            log.info("creating table LISResultId");
+            database().executeSQL(
+                "CREATE TABLE LISResultId "
+                + "(OID INTEGER NOT NULL , "
+                + "assignmentOfferingId INTEGER NOT NULL , "
+                + "userId INTEGER NOT NULL , "
+                + "lisResultSourcedId TINYTEXT NOT NULL )");
+            database().executeSQL(
+                "ALTER TABLE LISResultId ADD PRIMARY KEY (OID)");
+            createIndexFor("LISResultId", "userId");
+            createIndexFor("LISResultId", "assignmentOfferingId");
+            createIndexFor("LISResultId", "lisResultSourcedId(10)");
         }
     }
 }

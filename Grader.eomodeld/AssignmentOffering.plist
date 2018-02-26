@@ -1,110 +1,139 @@
 {
     attributes = (
-        {columnName = CASSIGNMENTID; name = assignmentId; prototypeName = foreignId; },
-        {columnName = closedOnDate; name = closedOnDate; prototypeName = dateTime; },
+        {columnName = CASSIGNMENTID; name = assignmentId; prototypeName = foreignId; }, 
+        {columnName = closedOnDate; name = closedOnDate; prototypeName = dateTime; }, 
         {
-            columnName = CCOURSEOFFERINGID;
-            name = courseOfferingId;
-            prototypeName = foreignId;
-        },
-        {columnName = CDUEDATE; name = dueDate; prototypeName = dateTime; },
+            columnName = CCOURSEOFFERINGID; 
+            name = courseOfferingId; 
+            prototypeName = foreignId; 
+        }, 
+        {columnName = CDUEDATE; name = dueDate; prototypeName = dateTime; }, 
         {
-            columnName = FGRADINGSUSPENDED;
-            name = gradingSuspended;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
-        },
+            columnName = FGRADINGSUSPENDED; 
+            name = gradingSuspended; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
         {
-            allowsNull = Y;
-            columnName = CGRAPHSUMMARY;
-            externalType = BLOB;
-            name = graphSummary;
+            allowsNull = Y; 
+            columnName = CGRAPHSUMMARY; 
+            externalType = BLOB; 
+            name = graphSummary; 
             userInfo = {
-                adaptorValueConversionMethodName = archiveData;
-                isMutable = true;
-                valueClassName = "org.webcat.grader.graphs.AssignmentSummary";
-                valueFactoryMethodName = objectWithArchiveData;
-            };
-            valueClassName = NSData;
-        },
-        {name = id; prototypeName = id; },
-        {columnName = lastModified; name = lastModified; prototypeName = dateTime; },
-        {columnName = CMOODLEID; name = moodleId; prototypeName = foreignId; },
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.grader.graphs.AssignmentSummary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+            valueClassName = NSData; 
+        }, 
+        {name = id; prototypeName = id; }, 
+        {columnName = lastModified; name = lastModified; prototypeName = dateTime; }, 
         {
-            columnName = CPUBLISH;
-            name = publish;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
-        },
+            columnName = lisOutcomeServiceUrl; 
+            name = lisOutcomeServiceUrl; 
+            prototypeName = tinyText; 
+        }, 
         {
-            name = updateMutableFields;
-            prototypeName = updateMutableFields;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+            columnName = lmsAssignmentId; 
+            name = lmsAssignmentId; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            columnName = lmsAssignmentUrl; 
+            name = lmsAssignmentUrl; 
+            prototypeName = tinyText; 
+        }, 
+        {columnName = CMOODLEID; name = moodleId; prototypeName = foreignId; }, 
+        {
+            columnName = CPUBLISH; 
+            name = publish; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
         }
-    );
+    ); 
     attributesUsedForLocking = (
-        assignmentId,
-        courseOfferingId,
-        gradingSuspended,
-        moodleId,
-        publish,
+        assignmentId, 
+        courseOfferingId, 
+        gradingSuspended, 
+        lisOutcomeServiceUrl, 
+        lmsAssignmentId, 
+        lmsAssignmentUrl, 
+        moodleId, 
+        publish, 
         updateMutableFields
-    );
-    className = "org.webcat.grader.AssignmentOffering";
+    ); 
+    className = "org.webcat.grader.AssignmentOffering"; 
     classProperties = (
-        assignment,
-        closedOnDate,
-        courseOffering,
-        dueDate,
-        energyBars,
-        graderPrefs,
-        gradingSuspended,
-        graphSummary,
-        lastModified,
-        moodleId,
-        publish,
-        submissions,
+        assignment, 
+        closedOnDate, 
+        courseOffering, 
+        dueDate, 
+        energyBars, 
+        graderPrefs, 
+        gradingSuspended, 
+        graphSummary, 
+        lastModified, 
+        lisOutcomeServiceUrl, 
+        lisResultIds, 
+        lmsAssignmentId, 
+        lmsAssignmentUrl, 
+        moodleId, 
+        publish, 
+        submissions, 
         updateMutableFields
-    );
-    externalName = TASSIGNMENTOFFERING;
-    name = AssignmentOffering;
-    primaryKeyAttributes = (id);
+    ); 
+    externalName = TASSIGNMENTOFFERING; 
+    name = AssignmentOffering; 
+    primaryKeyAttributes = (id); 
     relationships = (
         {
-            destination = Assignment;
-            isToMany = N;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = id; sourceAttribute = assignmentId; });
-            name = assignment;
-        },
+            destination = Assignment; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentId; }); 
+            name = assignment; 
+        }, 
         {
-            destination = CourseOffering;
-            isToMany = N;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; });
-            name = courseOffering;
-        },
+            destination = CourseOffering; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; }); 
+            name = courseOffering; 
+        }, 
         {
-            destination = EnergyBar;
-            isToMany = Y;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; });
-            name = energyBars;
-        },
+            destination = EnergyBar; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; }); 
+            name = energyBars; 
+        }, 
         {
-            destination = GraderPrefs;
-            isToMany = Y;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; });
-            name = graderPrefs;
-        },
+            destination = GraderPrefs; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; }); 
+            name = graderPrefs; 
+        }, 
         {
-            deleteRule = EODeleteRuleCascade;
-            destination = Submission;
-            isToMany = Y;
-            joinSemantic = EOInnerJoin;
-            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; });
-            name = submissions;
+            destination = LISResultId; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; }); 
+            name = lisResultIds; 
+        }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = Submission; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = assignmentOfferingId; sourceAttribute = id; }); 
+            name = submissions; 
         }
-    );
+    ); 
 }

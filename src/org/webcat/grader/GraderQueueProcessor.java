@@ -1309,7 +1309,7 @@ public class GraderQueueProcessor
                 msg += ".\nA course staff member requested that it be "
                     + "regraded";
             }
-            submissionResult.submission().emailNotificationToStudent(msg);
+            submissionResult.emailNotificationToStudent(msg);
         }
 
         // Send out admin reports, if any

@@ -21,6 +21,7 @@
         {className = "org.webcat.grader.GraderPrefs"; name = GraderPrefs; }, 
         {className = "org.webcat.grader.GradingCriteria"; name = GradingCriteria; }, 
         {className = "org.webcat.grader.GradingPlugin"; name = GradingPlugin; }, 
+        {className = "org.webcat.grader.lti.LISResultId"; name = LISResultId; }, 
         {className = "org.webcat.grader.ResultFile"; name = ResultFile; }, 
         {className = "org.webcat.grader.ResultOutcome"; name = ResultOutcome; }, 
         {className = "org.webcat.grader.Step"; name = Step; }, 

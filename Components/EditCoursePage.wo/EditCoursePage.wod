@@ -81,6 +81,16 @@ LastTATR: org.webcat.core.TableRow {
     index = TADisplayGroup.displayedObjects.count;
 }
 
+LtiId: WCTextBox {
+    value = courseOffering.lmsContextId;
+    id    = "lti_id";
+}
+
+LtiIdInfo: org.webcat.core.PopUpInfo {
+    title   = "LTI ID";
+    message = "The ID for this course's site in your LTI-enabled Course Management System (such as Canvas). If blank, Web-CAT will try to deduce the value from the URL setting, if the URL is a canvas-style course URL.";
+}
+
 //MoodleGroupId: WOTextField {
 //	size = 8;
 //	numberformat = "0";

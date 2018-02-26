@@ -163,6 +163,15 @@ public abstract class _AssignmentOffering
     public static final String LAST_MODIFIED_KEY = "lastModified";
     public static final ERXKey<NSTimestamp> lastModified =
         new ERXKey<NSTimestamp>(LAST_MODIFIED_KEY);
+    public static final String LIS_OUTCOME_SERVICE_URL_KEY = "lisOutcomeServiceUrl";
+    public static final ERXKey<String> lisOutcomeServiceUrl =
+        new ERXKey<String>(LIS_OUTCOME_SERVICE_URL_KEY);
+    public static final String LMS_ASSIGNMENT_ID_KEY = "lmsAssignmentId";
+    public static final ERXKey<String> lmsAssignmentId =
+        new ERXKey<String>(LMS_ASSIGNMENT_ID_KEY);
+    public static final String LMS_ASSIGNMENT_URL_KEY = "lmsAssignmentUrl";
+    public static final ERXKey<String> lmsAssignmentUrl =
+        new ERXKey<String>(LMS_ASSIGNMENT_URL_KEY);
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final ERXKey<Long> moodleId =
         new ERXKey<Long>(MOODLE_ID_KEY);
@@ -186,6 +195,9 @@ public abstract class _AssignmentOffering
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     public static final ERXKey<org.webcat.grader.GraderPrefs> graderPrefs =
         new ERXKey<org.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
+    public static final String LIS_RESULT_IDS_KEY = "lisResultIds";
+    public static final ERXKey<org.webcat.grader.lti.LISResultId> lisResultIds =
+        new ERXKey<org.webcat.grader.lti.LISResultId>(LIS_RESULT_IDS_KEY);
     public static final String SUBMISSIONS_KEY = "submissions";
     public static final ERXKey<org.webcat.grader.Submission> submissions =
         new ERXKey<org.webcat.grader.Submission>(SUBMISSIONS_KEY);
@@ -499,6 +511,93 @@ public abstract class _AssignmentOffering
                 + value + "): was " + lastModified() );
         }
         takeStoredValueForKey( value, "lastModified" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>lisOutcomeServiceUrl</code> value.
+     * @return the value of the attribute
+     */
+    public String lisOutcomeServiceUrl()
+    {
+        return (String)storedValueForKey( "lisOutcomeServiceUrl" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lisOutcomeServiceUrl</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setLisOutcomeServiceUrl( String value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLisOutcomeServiceUrl("
+                + value + "): was " + lisOutcomeServiceUrl() );
+        }
+        takeStoredValueForKey( value, "lisOutcomeServiceUrl" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>lmsAssignmentId</code> value.
+     * @return the value of the attribute
+     */
+    public String lmsAssignmentId()
+    {
+        return (String)storedValueForKey( "lmsAssignmentId" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lmsAssignmentId</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setLmsAssignmentId( String value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLmsAssignmentId("
+                + value + "): was " + lmsAssignmentId() );
+        }
+        takeStoredValueForKey( value, "lmsAssignmentId" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>lmsAssignmentUrl</code> value.
+     * @return the value of the attribute
+     */
+    public String lmsAssignmentUrl()
+    {
+        return (String)storedValueForKey( "lmsAssignmentUrl" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>lmsAssignmentUrl</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setLmsAssignmentUrl( String value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setLmsAssignmentUrl("
+                + value + "): was " + lmsAssignmentUrl() );
+        }
+        takeStoredValueForKey( value, "lmsAssignmentUrl" );
     }
 
 
@@ -1203,6 +1302,186 @@ public abstract class _AssignmentOffering
         for (org.webcat.grader.GraderPrefs object : graderPrefs())
         {
             deleteGraderPrefsRelationship(object);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the entities pointed to by the <code>lisResultIds</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    @SuppressWarnings("unchecked")
+    public NSArray<org.webcat.grader.lti.LISResultId> lisResultIds()
+    {
+        return (NSArray<org.webcat.grader.lti.LISResultId>)
+            storedValueForKey("lisResultIds");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>lisResultIds</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setLisResultIds(
+        NSMutableArray<org.webcat.grader.lti.LISResultId>  value)
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug("setLisResultIds("
+                + value + "): was " + lisResultIds());
+        }
+        takeStoredValueForKey(value, "lisResultIds");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>lisResultIds</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToLisResultIdsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToLisResultIds( org.webcat.grader.lti.LISResultId value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToLisResultIds("
+                + value + "): was " + lisResultIds() );
+        }
+        NSMutableArray<org.webcat.grader.lti.LISResultId> array =
+            (NSMutableArray<org.webcat.grader.lti.LISResultId>)lisResultIds();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>lisResultIds</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromLisResultIdsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromLisResultIds( org.webcat.grader.lti.LISResultId value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromLisResultIds("
+                + value + "): was " + lisResultIds() );
+        }
+        NSMutableArray<org.webcat.grader.lti.LISResultId> array =
+            (NSMutableArray<org.webcat.grader.lti.LISResultId>)lisResultIds();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>lisResultIds</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToLisResultIdsRelationship( org.webcat.grader.lti.LISResultId value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToLisResultIdsRelationship("
+                + value + "): was " + lisResultIds() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "lisResultIds" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>lisResultIds</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromLisResultIdsRelationship( org.webcat.grader.lti.LISResultId value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromLisResultIdsRelationship("
+                + value + "): was " + lisResultIds() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "lisResultIds" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>lisResultIds</code> relationship.
+     *
+     * @return The new entity
+     */
+    public org.webcat.grader.lti.LISResultId createLisResultIdsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createLisResultIdsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "LISResultId" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "lisResultIds" );
+        return (org.webcat.grader.lti.LISResultId)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>lisResultIds</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deleteLisResultIdsRelationship( org.webcat.grader.lti.LISResultId value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteLisResultIdsRelationship("
+                + value + "): was " + lisResultIds() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "lisResultIds" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>lisResultIds</code> relationship.
+     */
+    public void deleteAllLisResultIdsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllLisResultIdsRelationships(): was "
+                + lisResultIds() );
+        }
+        for (org.webcat.grader.lti.LISResultId object : lisResultIds())
+        {
+            deleteLisResultIdsRelationship(object);
         }
     }
 

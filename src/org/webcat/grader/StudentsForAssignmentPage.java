@@ -372,7 +372,7 @@ public class StudentsForAssignmentPage
                     if (applyLocalChanges())
                     {
                         numberNotified++;
-                        sub.emailNotificationToStudent(
+                        sub.result().emailNotificationToStudent(
                             "has been updated by the course staff");
                     }
                 }

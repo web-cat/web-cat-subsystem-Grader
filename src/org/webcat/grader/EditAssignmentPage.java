@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: EditAssignmentPage.java,v 1.15 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2011 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -40,8 +38,6 @@ import static org.webcat.woextensions.ECAction.run;
  *  This class presents an assignment's properties so they can be edited.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.15 $, $Date: 2014/11/07 13:55:03 $
  */
 public class EditAssignmentPage
     extends GraderAssignmentsComponent
@@ -54,9 +50,9 @@ public class EditAssignmentPage
      *
      * @param context The page's context
      */
-    public EditAssignmentPage( WOContext context )
+    public EditAssignmentPage(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -126,20 +122,22 @@ public class EditAssignmentPage
                     assignment.submissionProfile() )
                  );
         }
-        log.debug("starting super.appendToResponse()");
 
         areDueDatesLocked = areDueDatesSame();
+        areLmsIdsLocked = areLmsIdsSame();
 
+        log.debug("starting super.appendToResponse()");
         super.beforeAppendToResponse(response, context);
     }
 
 
     // ----------------------------------------------------------
-    protected void afterAppendToResponse(WOResponse response, WOContext context)
+    protected void afterAppendToResponse(
+        WOResponse response, WOContext context)
     {
         super.afterAppendToResponse(response, context);
-        log.debug( "finishing super.appendToResponse()" );
-        log.debug( "finishing appendToResponse()" );
+        log.debug("finishing super.appendToResponse()");
+        log.debug("finishing appendToResponse()");
 
         long timeTaken = System.currentTimeMillis() - timeStart;
         log.debug("Time in appendToResponse(): " + timeTaken + " ms");
@@ -147,24 +145,24 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
-    public boolean validateURL( String assignUrl )
+    public boolean validateURL(String assignUrl)
     {
-        boolean result = ( assignUrl == null );
-        if ( assignUrl != null )
+        boolean result = (assignUrl == null);
+        if (assignUrl != null)
         {
             try
             {
                 // Try to create an instance of URL, which will
                 // throw an exception if the name isn't valid
-                result = ( new URL( assignUrl ) != null );
+                result = (new URL( assignUrl ) != null);
             }
-            catch ( MalformedURLException e )
+            catch (MalformedURLException e)
             {
-                error( "The specified URL is not valid." );
-                log.error( "Error in validateURL()", e );
+                error("The specified URL is not valid.");
+                log.error("Error in validateURL()", e);
             }
         }
-        log.debug( "url validation = " + result );
+        log.debug("url validation = " + result);
         return result;
     }
 
@@ -266,7 +264,7 @@ public class EditAssignmentPage
     public WOComponent editSubmissionProfile()
     {
         WCComponent result = null;
-        if ( saveAndCanProceed() )
+        if (saveAndCanProceed())
         {
 //            result = (WCComponent)pageWithName(
 //                SelectSubmissionProfile.class.getName());
@@ -325,12 +323,144 @@ public class EditAssignmentPage
 
 
     // ----------------------------------------------------------
+    public boolean shouldShowLmsIdField()
+    {
+        return !areLmsIdsLocked
+            || (offeringGroup.displayedObjects().count() > 0
+                && thisOffering.equals(
+                    offeringGroup.displayedObjects().objectAtIndex(0)));
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean areLmsIdsLocked()
+    {
+        return areLmsIdsLocked;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean areLmsIdsSame()
+    {
+        String exemplar = null;
+
+        for (AssignmentOffering offering : offeringGroup.displayedObjects())
+        {
+            if (exemplar == null)
+            {
+                exemplar = offering.lmsAssignmentId();
+            }
+            else
+            {
+                if (offering.lmsAssignmentId() == null
+                    || !exemplar.equals(offering.lmsAssignmentId()))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults lockLmsIds()
+    {
+        if (saveAndCanProceed())
+        {
+            areLmsIdsLocked = true;
+
+            String exemplar = null;
+
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                if (exemplar == null)
+                {
+                    exemplar = offering.lmsAssignmentId();
+                }
+                else
+                {
+                    offering.setLmsAssignmentId(exemplar);
+                }
+            }
+
+            applyLocalChanges();
+        }
+
+        return new JavascriptGenerator()
+            .refresh("allOfferings", "error-panel");
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults unlockLmsIds()
+    {
+        if (saveAndCanProceed())
+        {
+            areLmsIdsLocked = false;
+            applyLocalChanges();
+        }
+
+        return new JavascriptGenerator()
+            .refresh("allOfferings", "error-panel");
+    }
+
+
+    // ----------------------------------------------------------
+    public String lmsId()
+    {
+        return thisOffering.lmsAssignmentId();
+    }
+
+
+    // ----------------------------------------------------------
+    public String assignmentUrl()
+    {
+        return assignment.url();
+    }
+
+
+    // ----------------------------------------------------------
+    public void setAssignmentUrl(String value)
+    {
+        assignment.setUrl(value);
+        if (offeringGroup.displayedObjects().count() > 0
+            && value != null
+            && !value.isEmpty())
+        {
+            for (AssignmentOffering ao : offeringGroup.displayedObjects())
+            {
+                ao.setLmsAssignmentUrl(value);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public void setLmsId(String value)
+    {
+        if (areLmsIdsLocked)
+        {
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                offering.setLmsAssignmentId(value);
+            }
+        }
+        else
+        {
+            thisOffering.setLmsAssignmentId(value);
+        }
+    }
+
+
+    // ----------------------------------------------------------
     public boolean shouldShowDueDatePicker()
     {
         return !areDueDatesLocked
             || (offeringGroup.displayedObjects().count() > 0
                 && thisOffering.equals(
-                        offeringGroup.displayedObjects().objectAtIndex(0)));
+                    offeringGroup.displayedObjects().objectAtIndex(0)));
     }
 
 
@@ -355,7 +485,7 @@ public class EditAssignmentPage
             else
             {
                 if (offering.dueDate() == null
-                        || !exemplar.equals(offering.dueDate()))
+                    || !exemplar.equals(offering.dueDate()))
                 {
                     return false;
                 }
@@ -768,11 +898,11 @@ public class EditAssignmentPage
     public WOComponent editStep()
     {
         WCComponent result = null;
-        if ( saveAndCanProceed() )
+        if (saveAndCanProceed())
         {
-            log.debug( "step = " + thisStep );
+            log.debug("step = " + thisStep);
             prefs().setAssignmentOfferingRelationship(selectedOffering);
-            prefs().setStepRelationship( thisStep );
+            prefs().setStepRelationship(thisStep);
             result = pageWithName(EditStepPage.class);
             result.nextPage = this;
         }
@@ -822,26 +952,25 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public Integer stepTimeout()
     {
-        log.debug( "step = " + thisStep );
-        log.debug( "num steps = "
-                   + scriptDisplayGroup.displayedObjects().count() );
+        log.debug("step = " + thisStep);
+        log.debug("num steps = "
+            + scriptDisplayGroup.displayedObjects().count());
         return thisStep.timeoutRaw();
     }
 
 
     // ----------------------------------------------------------
-    public void setStepTimeout( Integer value )
+    public void setStepTimeout(Integer value)
     {
-        if ( value != null && !Step.timeoutIsWithinLimits( value ) )
+        if (value != null && !Step.timeoutIsWithinLimits(value))
         {
             // set error message if timeout is out of range
-            error(
-                "The maximum timeout allowed is "
+            error("The maximum timeout allowed is "
                 + Step.maxTimeout()
-                + ".  Contact the administrator for higher limits." );
+                + ".  Contact the administrator for higher limits.");
         }
         // This will automatically restrict to the max value anyway
-        thisStep.setTimeoutRaw( value );
+        thisStep.setTimeoutRaw(value);
     }
 
 
@@ -874,15 +1003,12 @@ public class EditAssignmentPage
         {
             log.debug("looking for similar submission profile by name");
             String name = assignment.name();
-            if ( assignment.submissionProfile() == null
-                 && name != null )
+            if (assignment.submissionProfile() == null
+                && name != null)
             {
                 NSArray<AssignmentOffering> similar = AssignmentOffering
-                    .offeringsWithSimilarNames(
-                        localContext(),
-                        name,
-                        selectedOffering.courseOffering(),
-                        1);
+                    .offeringsWithSimilarNames(localContext(),
+                        name, selectedOffering.courseOffering(), 1);
                 if (similar.count() > 0)
                 {
                     AssignmentOffering ao = similar.objectAtIndex(0);
@@ -1041,6 +1167,7 @@ public class EditAssignmentPage
     private AssignmentOffering offeringForAction;
     private Step           stepForAction;
     private boolean        areDueDatesLocked;
+    private boolean        areLmsIdsLocked;
 
     private long timeStart;
 

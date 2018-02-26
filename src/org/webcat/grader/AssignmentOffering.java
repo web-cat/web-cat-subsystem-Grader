@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: AssignmentOffering.java,v 1.14 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -31,9 +29,12 @@ import er.extensions.foundation.ERXValueUtilities;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.grader.graphs.*;
+import org.webcat.grader.lti.LISResultId;
 import org.webcat.woextensions.MigratingEditingContext;
 
 // -------------------------------------------------------------------------
@@ -42,8 +43,6 @@ import org.webcat.woextensions.MigratingEditingContext;
  * (i.e., giving a specific assignment in a given section of a course).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.14 $, $Date: 2014/11/07 13:55:03 $
  */
 public class AssignmentOffering
     extends _AssignmentOffering
@@ -1035,6 +1034,29 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
+    public LISResultId lisResultIdFor(User user)
+    {
+        String lmsId = lmsAssignmentId();
+        LISResultId result = null;
+        if (lmsId != null)
+        {
+            result = LISResultId.uniqueObjectMatchingQualifier(
+                editingContext(),
+                LISResultId.assignmentOffering.is(this).and(
+                LISResultId.user.is(user)));
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean needsLTIClickthrough(User user)
+    {
+        return lmsAssignmentId() != null && lisResultIdFor(user) == null;
+    }
+
+
+    // ----------------------------------------------------------
     @Override
     public void willInsert()
     {
@@ -1048,7 +1070,24 @@ public class AssignmentOffering
     public void willUpdate()
     {
         setLastModified(new NSTimestamp());
-        super.willInsert();
+
+        String urlValue = lmsAssignmentUrl();
+        if (urlValue != null && !urlValue.isEmpty())
+        {
+            String id = lmsAssignmentId();
+            if (id == null || id.isEmpty())
+            {
+                // Attempt to guess canvas id from url
+                Matcher m = CANVAS_URL.matcher(urlValue);
+                if (m.find())
+                {
+                    setLmsAssignmentId(m.group(1));
+                }
+            }
+            super.willUpdate();
+        }
+
+        super.willUpdate();
     }
 
 
@@ -1195,6 +1234,9 @@ public class AssignmentOffering
     .then(courseOffering.dot(CourseOffering.crn).asc())
     .then(dueDate.asc())
     .then(assignment.dot(Assignment.name).ascInsensitive());
+
+    private static final Pattern CANVAS_URL =
+        Pattern.compile("/([0-9]+)(/?)$");
 
     static Logger log = Logger.getLogger( AssignmentOffering.class );
 }

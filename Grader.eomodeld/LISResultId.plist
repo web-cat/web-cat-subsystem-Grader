@@ -1,0 +1,62 @@
+{
+    attributes = (
+        {
+            allowsNull = N; 
+            columnName = assignmentOfferingId; 
+            name = assignmentOfferingId; 
+            prototypeName = foreignId; 
+        }, 
+        {name = id; prototypeName = id; }, 
+        {
+            allowsNull = N; 
+            columnName = lisResultSourcedId; 
+            name = lisResultSourcedId; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            allowsNull = N; 
+            columnName = lmsInstanceId; 
+            name = lmsInstanceId; 
+            prototypeName = foreignId; 
+        }, 
+        {
+            allowsNull = N; 
+            columnName = userId; 
+            name = userId; 
+            prototypeName = foreignId; 
+        }
+    ); 
+    attributesUsedForLocking = (assignmentOfferingId, lisResultSourcedId, lmsInstanceId, userId); 
+    className = "org.webcat.grader.lti.LISResultId"; 
+    classProperties = (assignmentOffering, lisResultSourcedId, lmsInstance, user); 
+    externalName = LISResultId; 
+    fetchSpecificationDictionary = {}; 
+    name = LISResultId; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = AssignmentOffering; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; }); 
+            name = assignmentOffering; 
+        }, 
+        {
+            destination = LMSInstance; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = lmsInstanceId; }); 
+            name = lmsInstance; 
+        }, 
+        {
+            destination = User; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = user; 
+        }
+    ); 
+}

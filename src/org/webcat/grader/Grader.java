@@ -26,8 +26,12 @@ import org.webcat.core.CourseOffering;
 import org.webcat.core.EntityResourceRequestHandler;
 import org.webcat.core.Session;
 import org.webcat.core.Subsystem;
+import org.webcat.core.TabDescriptor;
 import org.webcat.core.User;
+import org.webcat.core.lti.LTIMessagePage;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
+import org.webcat.grader.lti.GraderLTILaunchRequest;
+import org.webcat.grader.lti.LISResultId;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.GraderKilledMessage;
 import org.webcat.grader.messaging.GraderMarkupParseError;
@@ -44,6 +48,7 @@ import com.webobjects.eocontrol.EOQualifier;
 import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSData;
+import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSNumberFormatter;
 import com.webobjects.foundation.NSTimestamp;
@@ -292,6 +297,26 @@ public class Grader
         Session   session,
         WOContext context)
     {
+        return handleDirectAction(request, session, context, null);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Handle a direct action request.  The user's login session will be
+     * passed in as well.
+     *
+     * @param request the request to respond to
+     * @param session the user's session
+     * @param context the context for the request
+     * @return The response page or contents
+     */
+    public WOActionResults handleDirectAction(
+        WORequest request,
+        Session   session,
+        WOContext context,
+        NSDictionary<String, NSData> files)
+    {
         // Wait until this subsystem has actually started
         while (!hasStarted())
         {
@@ -333,7 +358,11 @@ public class Grader
         }
         if ("submit".equals(request.requestHandlerPath()))
         {
-            results = handleSubmission(request, session, context);
+            results = handleSubmission(request, session, context, files);
+        }
+        else if ("ltiLaunch".equals(request.requestHandlerPath()))
+        {
+            results = handleLTILaunch(request, session, context);
         }
         else
         {
@@ -378,7 +407,8 @@ public class Grader
     public WOActionResults handleSubmission(
         WORequest request,
         Session   session,
-        WOContext context)
+        WOContext context,
+        NSDictionary <String, NSData> files)
     {
         log.debug("handleSubmission()");
         String scheme   = request.stringFormValueForKey("a");
@@ -402,6 +432,10 @@ public class Grader
         String partnerList = request.stringFormValueForKey("partners");
         log.debug("partners = " + partnerList);
         NSData file = (NSData)request.formValueForKey("file1");
+        if (files != null && files.containsKey("file1"))
+        {
+            file = files.get("file1");
+        }
         String fileName = request.stringFormValueForKey("file1.filename");
         log.debug("fileName = " + fileName);
 
@@ -636,6 +670,191 @@ public class Grader
 
         log.debug("handleSubmission() returning");
         return result.generateResponse();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Handle a direct action request.  The user's login session will be
+     * passed in as well.
+     *
+     * @param request the request to respond to
+     * @param session the user's session
+     * @param context the context for the request
+     * @return The response page or contents
+     */
+    public WOActionResults handleLTILaunch(
+        WORequest request,
+        Session   session,
+        WOContext context)
+    {
+        // LTI request has already been checked for validity
+        GraderLTILaunchRequest lti = new GraderLTILaunchRequest(
+            context, session.defaultEditingContext());
+        NSArray<CourseOffering> courses = lti.courseOfferings();
+        NSArray<CourseOffering> userCourses =
+            lti.filterCoursesForUser(session.user(), courses);
+        log.debug("user courses = " + userCourses);
+        if (userCourses.count() == 0)
+        {
+            if (courses.count() == 1)
+            {
+                // Auto-enroll user in course!
+                CourseOffering co = courses.get(0);
+                log.debug("enrolling user " + session.user() + " in " + co);
+                session.user().addToEnrolledInRelationship(co);
+                session.defaultEditingContext().saveChanges();
+                userCourses = courses;
+            }
+            else if (courses.count() > 1)
+            {
+                LTIMessagePage page = Application.wcApplication()
+                    .pageWithName(LTIMessagePage.class);
+                page.ltiRequest = lti;
+                page.message = "You have not been enrolled in any of the "
+                    + "corresponding course offerings on Web-CAT yet. "
+                    + "Your instructor needs to enroll you in the correct "
+                    + "course section for you to proceed.";
+                return page;
+            }
+            // FIXME: test response page first
+//            if (lti.isInstructor() && false)
+//            {
+//                courses = lti.suggestedCourseOfferings(session.user());
+//                LTICourseChoicePage page = Application.wcApplication()
+//                    .pageWithName(LTICourseChoicePage.class);
+//                page.ltiRequest = lti;
+//                page.courseOfferings = courses;
+//                return page;
+//            }
+            else
+            {
+                LTIMessagePage page = Application.wcApplication()
+                    .pageWithName(LTIMessagePage.class);
+                page.ltiRequest = lti;
+                page.message = "This course has not been set up on "
+                    + "Web-CAT yet. Your instructor needs to complete the "
+                    + "set up before you can access this course's activities.";
+                return page;
+            }
+        }
+        // If a course navigation launch
+        GraderComponent genericGComp =
+            Application.wcApplication().pageWithName(
+                PickCourseEnrolledPage.class, context);
+        if (!lti.hasAssignmentId())
+        {
+            if (userCourses.count() > 0)
+            {
+                CourseOffering co = userCourses.get(0);
+                genericGComp.coreSelections().setSemester(co.semester());
+                genericGComp.coreSelections().setCourseRelationship(
+                    co.course());
+                if (userCourses.count() == 1)
+                {
+                    genericGComp.coreSelections()
+                        .setCourseOfferingRelationship(co);
+                }
+            }
+
+            TabDescriptor previousPage = session.tabs.selectedDescendant();
+            previousPage.select();
+            return genericGComp.pageWithName(session.currentPageName())
+                .generateResponse();
+        }
+
+        // Find list of matching assignments
+        NSArray<AssignmentOffering> assignments = lti.assignmentOfferings();
+        // Find matching assignment for this user
+        NSArray<AssignmentOffering> courseAssignments =
+            lti.filterAssignmentsForCourses(userCourses, assignments);
+        log.debug("course assignments = " + courseAssignments);
+        if (courseAssignments.count() == 0)
+        {
+            // If no matching assignments
+            // If user is instructor, create assignment
+            // find list of course offerings
+                // redirect to new assignment page with reasonable defaults
+            // if no matching course offerings
+                // redirect to new course offering page with reasonable defaults
+          if (lti.isInstructor())
+          {
+//            courses = lti.suggestedCourseOfferings(session.user());
+//            LTICourseChoicePage page = Application.wcApplication()
+//                .pageWithName(LTICourseChoicePage.class);
+//            page.ltiRequest = lti;
+//            page.courseOfferings = courses;
+//            return page;
+              LTIMessagePage page = Application.wcApplication()
+                  .pageWithName(LTIMessagePage.class);
+              page.ltiRequest = lti;
+              page.message = "There isn't an assignment associated with this "
+                  + "LTI activity yet. We're working on allowing you to set "
+                  + "up your assignment here, but for now, please go back to "
+                  + "Canvas and copy the direct URL to the assignment, then "
+                  + "go to Web-CAT and edit your assignment's properties, and "
+                  + "paste the URL from Canvas into the assignment's URL "
+                  + "field, so we know which assignment matches.";
+              return page;
+          }
+          else
+          {
+              // else if user is not an instructor, error page
+              LTIMessagePage page = Application.wcApplication()
+                  .pageWithName(LTIMessagePage.class);
+              page.ltiRequest = lti;
+              page.message = "This assignment has not been set up on "
+                  + "Web-CAT yet. Your instructor needs to complete the "
+                  + "set up before you can access this assignment.";
+              return page;
+          }
+        }
+
+        if (courseAssignments.count() > 1 && !lti.isInstructor())
+        {
+            log.error("Multiple assignments found for user " + session.user()
+                + " in lti launch: " + assignments);
+        }
+        AssignmentOffering assignment = courseAssignments.get(0);
+        if (assignment.lisOutcomeServiceUrl() == null
+            && lti.lisOutcomeServiceUrl() != null)
+        {
+            assignment.setLisOutcomeServiceUrl(lti.lisOutcomeServiceUrl());
+            assignment.editingContext().saveChanges();
+        }
+        if (lti.lisResultSourcedId() != null)
+        {
+            LISResultId.ensureExists(session.defaultEditingContext(),
+                session.user(), assignment,
+                lti.lmsInstance(), lti.lisResultSourcedId());
+        }
+
+        genericGComp.coreSelections().setSemester(
+            assignment.courseOffering().semester());
+        genericGComp.coreSelections().setCourseOfferingRelationship(
+            assignment.courseOffering());
+        genericGComp.coreSelections().setCourseRelationship(
+            assignment.courseOffering().course());
+        genericGComp.prefs().setAssignmentOfferingRelationship(assignment);
+        genericGComp.changeWorkflow();
+        // if any submissions
+            // redirect to results page for that assignment
+        // else
+            // redirect to submit page for that assignment
+        if (Submission.submissionsForAssignmentOfferingAndUser(
+            session.defaultEditingContext(), assignment, session.user())
+            .count() > 0)
+        {
+            return genericGComp.pageWithName(
+                session.tabs.selectById("MostRecent").pageName())
+                .generateResponse();
+        }
+        else
+        {
+            return genericGComp.pageWithName(
+                session.tabs.selectById("UploadSubmission").pageName())
+            .generateResponse();
+        }
     }
 
 
