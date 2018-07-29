@@ -1058,6 +1058,34 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     @Override
+    public void setLmsAssignmentUrl(String value)
+    {
+        super.setLmsAssignmentUrl(value);
+        if (value != null && !value.isEmpty())
+        {
+            if (courseOffering() != null)
+            {
+                String courseUrl = courseOffering().url();
+                if (courseUrl == null || courseUrl.isEmpty())
+                {
+                    int pos = value.indexOf("?");
+                    if (pos > 0)
+                    {
+                        value = value.substring(0, pos);
+                    }
+                    Matcher m = CANVAS_URL_INCLUDING_COURSE.matcher(value);
+                    if (m.find())
+                    {
+                        courseOffering().setUrl(m.group(1));
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
     public void willInsert()
     {
         setLastModified(new NSTimestamp());
@@ -1077,6 +1105,11 @@ public class AssignmentOffering
             String id = lmsAssignmentId();
             if (id == null || id.isEmpty())
             {
+                int pos = urlValue.indexOf("?");
+                if (pos > 0)
+                {
+                    urlValue = urlValue.substring(0, pos);
+                }
                 // Attempt to guess canvas id from url
                 Matcher m = CANVAS_URL.matcher(urlValue);
                 if (m.find())
@@ -1236,7 +1269,9 @@ public class AssignmentOffering
     .then(assignment.dot(Assignment.name).ascInsensitive());
 
     private static final Pattern CANVAS_URL =
-        Pattern.compile("/([0-9]+)(/?)$");
+        Pattern.compile("/([0-9]+)(/?)(\\?.*)?$");
+    private static final Pattern CANVAS_URL_INCLUDING_COURSE =
+        Pattern.compile("^(.*/[0-9]+)/([^0-9]+/)*([0-9]+)(/?)(\\?.*)?$");
 
     static Logger log = Logger.getLogger( AssignmentOffering.class );
 }

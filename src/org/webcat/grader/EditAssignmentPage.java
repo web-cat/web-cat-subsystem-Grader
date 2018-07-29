@@ -645,7 +645,7 @@ public class EditAssignmentPage
 
         if (active == 0 && suspended == 0)
         {
-            return "No submissions in queue";
+            return "0 submissions";
         }
         else
         {
@@ -674,8 +674,6 @@ public class EditAssignmentPage
         {
             buffer.append('s');
         }
-
-        buffer.append(" in queue");
 
         return buffer.toString();
     }

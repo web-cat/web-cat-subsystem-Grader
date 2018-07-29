@@ -300,6 +300,8 @@ public class UploadSubmissionPage
     public boolean needsLTIClickthrough()
     {
         return prefs().assignmentOffering() != null
+        && prefs().assignmentOffering().courseOffering()
+        .isStudent(wcSession().primeUser())
         && prefs().assignmentOffering().needsLTIClickthrough(user());
     }
 
