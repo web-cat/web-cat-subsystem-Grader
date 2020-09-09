@@ -562,6 +562,24 @@ public class SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Get the corresponding icon URL for this file's grading status.
+     *
+     * @return The image URL as a string
+     */
+    public boolean hasMissionContent()
+    {
+        boolean result = accumulatedSavedProperties()
+            .containsKey("dailyMissions.results");
+//        System.out.println("  hasMissionContent: " + result
+//            + ", accumulated = "
+//            + accumulatedSavedProperties() //.get("dailyMissions.results")
+//            );
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the score for this result that is used in graphs.  The score
      * for graphing includes the raw correctness score plus the raw static
      * analysis score, without any late penalty or TA manual grading
@@ -839,12 +857,12 @@ public class SubmissionResult
     @Override
     public void willUpdate()
     {
-        NSDictionary<String, Object> changes = changedProperties();
-        if (status() == Status.CHECK
-            && (changes.containsKey(STATUS_KEY)
-            || changes.containsKey(CORRECTNESS_SCORE_KEY)
-            || changes.containsKey(TOOL_SCORE_KEY)
-            || changes.containsKey(TA_SCORE_KEY)))
+//        NSDictionary<String, Object> changes = changedProperties();
+//        if (status() == Status.CHECK
+//            && (changes.containsKey(STATUS_KEY)
+//            || changes.containsKey(CORRECTNESS_SCORE_KEY)
+//            || changes.containsKey(TOOL_SCORE_KEY)
+//            || changes.containsKey(TA_SCORE_KEY)))
         {
             for (Submission sub : submissions())
             {

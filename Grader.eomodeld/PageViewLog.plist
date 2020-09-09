@@ -1,0 +1,51 @@
+{
+    attributes = (
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {columnName = info; name = info; prototypeName = mediumText; }, 
+        {allowsNull = N; columnName = page; name = page; prototypeName = tinyText; }, 
+        {columnName = submissionId; name = submissionId; prototypeName = foreignId; }, 
+        {
+            columnName = submissionResultId; 
+            name = submissionResultId; 
+            prototypeName = foreignId; 
+        }, 
+        {allowsNull = N; columnName = time; name = time; prototypeName = dateTime; }, 
+        {
+            allowsNull = N; 
+            columnName = userId; 
+            name = userId; 
+            prototypeName = foreignId; 
+        }
+    ); 
+    attributesUsedForLocking = (info, page, submissionId, submissionResultId, userId); 
+    className = "org.webcat.grader.PageViewLog"; 
+    classProperties = (info, page, submission, submissionResult, time, user); 
+    externalName = PageViewLog; 
+    fetchSpecificationDictionary = {}; 
+    name = PageViewLog; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = Submission; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = submissionId; }); 
+            name = submission; 
+        }, 
+        {
+            destination = SubmissionResult; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = submissionResultId; }); 
+            name = submissionResult; 
+        }, 
+        {
+            destination = User; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = user; 
+        }
+    ); 
+}

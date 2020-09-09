@@ -73,27 +73,39 @@ public class GraderLTILaunchRequest
         NSArray<AssignmentOffering> result = AssignmentOffering
             .objectsMatchingQualifier(ec,
             AssignmentOffering.lmsAssignmentId.is(primaryId));
-        if (result.count() == 0)
         {
             String customId = get(CUSTOM_CANVAS_ASSIGNMENT_ID);
+            NSArray<AssignmentOffering> customResult = null;
             if (customId != null)
             {
-                result = AssignmentOffering.objectsMatchingQualifier(ec,
+                customResult = AssignmentOffering.objectsMatchingQualifier(ec,
                     AssignmentOffering.lmsAssignmentId.is(customId));
+            }
+            else
+            {
+                customResult = new NSArray<AssignmentOffering>();
             }
             customId = get(RESOURCE_LINK_ID);
-            if (result.count() == 0
-                && customId != null
-                && !primaryId.equals(customId))
+            NSArray<AssignmentOffering> resourceResult = null;
+            if (customId != null && !primaryId.equals(customId))
             {
-                result = AssignmentOffering.objectsMatchingQualifier(ec,
+                resourceResult = AssignmentOffering.objectsMatchingQualifier(ec,
                     AssignmentOffering.lmsAssignmentId.is(customId));
             }
-            if (result.count() > 0)
+            else
             {
+                resourceResult = new NSArray<AssignmentOffering>();
+            }
+            if (customResult.count() > 0 || resourceResult.count() > 0)
+            {
+                NSMutableArray<AssignmentOffering> newResults =
+                    new NSMutableArray<AssignmentOffering>();
+                newResults.addAll(customResult);
+                newResults.addAll(resourceResult);
+
                 // Update all matching assignment ids to the proper value
                 boolean needsSave = false;
-                for (AssignmentOffering ao : result)
+                for (AssignmentOffering ao : newResults)
                 {
                     if (!primaryId.equals(ao.lmsAssignmentId()))
                     {
@@ -105,6 +117,8 @@ public class GraderLTILaunchRequest
                 {
                     ec.saveChanges();
                 }
+                newResults.addAll(result);
+                result = newResults;
             }
         }
         log.debug("assignmentOfferings() = " + result);

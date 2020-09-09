@@ -654,6 +654,17 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Add PageViewLog table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement35() throws SQLException
+    {
+        createPageViewLogTable();
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
@@ -1083,6 +1094,34 @@ public class GraderDatabaseUpdates
             createIndexFor("LISResultId", "userId");
             createIndexFor("LISResultId", "assignmentOfferingId");
             createIndexFor("LISResultId", "lisResultSourcedId(10)");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the PageViewLog table, if needed.
+     * @throws SQLException on error
+     */
+    private void createPageViewLogTable()
+        throws SQLException
+    {
+        if (!database().hasTable("PageViewLog"))
+        {
+            log.info("creating table PageViewLog");
+            database().executeSQL(
+                "CREATE TABLE PageViewLog "
+                + "(OID INTEGER NOT NULL , "
+                + "info MEDIUMTEXT , "
+                + "page TINYTEXT NOT NULL , "
+                + "submissionId INTEGER , "
+                + "submissionResultId INTEGER , "
+                + "time DATETIME NOT NULL , "
+                + "userId INTEGER NOT NULL )");
+            database().executeSQL(
+                "ALTER TABLE PageViewLog ADD PRIMARY KEY (OID)");
+            createIndexFor("PageViewLog", "userId");
+            createIndexFor("PageViewLog", "page");
         }
     }
 }

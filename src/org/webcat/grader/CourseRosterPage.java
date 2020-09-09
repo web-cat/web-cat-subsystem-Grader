@@ -61,6 +61,8 @@ public class CourseRosterPage
 
     //~ KVC Attributes (must be public) .......................................
 
+    public String role = "Student";
+
     public ERXDisplayGroup<User> studentDisplayGroup;
     public ERXBatchingDisplayGroup<User> notStudentDisplayGroup;
     /** student in the worepetition */
@@ -71,6 +73,7 @@ public class CourseRosterPage
     public String         filePath;
     public NSData         data;
     public boolean        manuallyAdding = false;
+    public String         emailAddresses;
 
 
     //~ Methods ...............................................................
@@ -92,27 +95,45 @@ public class CourseRosterPage
                 + localContext().sharedEditingContext());
         }
         // Set up student list filters
-        studentDisplayGroup.setObjectArray( courseOffering().students() );
-
-        if ( firstLoad )
+        if ("Instructor".equals(role))
         {
-            notStudentDisplayGroup.setQualifier( new EONotQualifier(
+            studentDisplayGroup.setObjectArray(courseOffering().instructors());
+        }
+        else if ("Grader".equals(role))
+        {
+            studentDisplayGroup.setObjectArray(courseOffering().graders());
+        }
+        else
+        {
+            studentDisplayGroup.setObjectArray(courseOffering().students());
+        }
+
+        if (firstLoad)
+        {
+            if ("Student".equals(role))
+            {
+            notStudentDisplayGroup.setQualifier(new EONotQualifier(
                 new EOKeyValueQualifier(
-                    User.ENROLLED_IN_KEY,
+                    ("Instructor".equals(role)
+                        ? User.TEACHING_KEY
+                        : ("Grader".equals(role)
+                            ? User.GRADER_FOR_KEY
+                            : User.ENROLLED_IN_KEY)),
                     EOQualifier.QualifierOperatorContains,
                     courseOffering()
-                ) ) );
+                )));
+            }
             notStudentDisplayGroup.queryMatch().takeValueForKey(
                 courseOffering().course().department().institution()
                 .propertyName(),
-                "authenticationDomain.propertyName" );
+                "authenticationDomain.propertyName");
             firstLoad = false;
         }
 //        if (manuallyAdding)
 //        {
             notStudentDisplayGroup.fetch();
 //        }
-            super.beforeAppendToResponse( response, context );
+        super.beforeAppendToResponse(response, context);
     }
 
 
@@ -124,10 +145,10 @@ public class CourseRosterPage
         oldBatchIndex1 = studentDisplayGroup.currentBatchIndex();
         oldBatchSize2  = notStudentDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex2 = notStudentDisplayGroup.currentBatchIndex();
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug( "unenrolled student filters = "
-                + notStudentDisplayGroup.queryMatch() );
+            log.debug("unenrolled student filters = "
+                + notStudentDisplayGroup.queryMatch());
         }
     }
 
@@ -135,13 +156,14 @@ public class CourseRosterPage
     // ----------------------------------------------------------
     public WOComponent upload()
     {
-        if (  filePath != null
-           && !filePath.equals( "" )
+        if (filePath != null
+           && !filePath.equals("")
            && data != null
-           && data.length() > 0 )
+           && data.length() > 0)
         {
             UploadRosterPage page = (UploadRosterPage)pageWithName(
-                UploadRosterPage.class.getName() );
+                UploadRosterPage.class.getName());
+            page.role = role;
             page.nextPage = this;
             page.filePath = filePath;
             page.data     = data;
@@ -149,7 +171,43 @@ public class CourseRosterPage
         }
         else
         {
-            error( "Please select a (non-empty) CSV file to upload." );
+            error("Please select a (non-empty) CSV file to upload.");
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent uploadTextbox()
+    {
+        log.debug("emailAddresses before = '" + emailAddresses + "'");
+        if (emailAddresses != null && !emailAddresses.isEmpty())
+        {
+            emailAddresses =
+                "email\n"
+                + emailAddresses.trim()
+                .replaceAll(",", " ")
+                .replaceAll("\\s+", " ")
+                .replaceAll(" ", "\n")
+                + "\n";
+        }
+
+        // Prepare/clean the textbox data
+        if (emailAddresses != null && !emailAddresses.isEmpty())
+        {
+            log.debug("emailAddresses after = '" + emailAddresses + "'");
+
+            UploadRosterPage page = (UploadRosterPage)pageWithName(
+                UploadRosterPage.class.getName());
+            page.role = role;
+            page.nextPage = this;
+            page.data     = new NSData(emailAddresses);
+            return page;
+        }
+        else
+        {
+            error("Please enter the email addresses of accounts "
+                + "into the textbox.");
             return null;
         }
     }
@@ -158,18 +216,18 @@ public class CourseRosterPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
-        log.debug( "defaultAction()" );
+        log.debug("defaultAction()");
         if (  filePath != null
-           && !filePath.equals( "" )
+           && !filePath.equals("")
            && data != null
-           && data.length() > 0 )
+           && data.length() > 0)
         {
             return upload();
         }
-        if (    oldBatchSize1  != studentDisplayGroup.numberOfObjectsPerBatch()
-             || oldBatchIndex1 != studentDisplayGroup.currentBatchIndex()
-             || oldBatchSize2  != notStudentDisplayGroup.numberOfObjectsPerBatch()
-             || oldBatchIndex2 != notStudentDisplayGroup.currentBatchIndex() )
+        if (oldBatchSize1  != studentDisplayGroup.numberOfObjectsPerBatch()
+            || oldBatchIndex1 != studentDisplayGroup.currentBatchIndex()
+            || oldBatchSize2  != notStudentDisplayGroup.numberOfObjectsPerBatch()
+            || oldBatchIndex2 != notStudentDisplayGroup.currentBatchIndex())
         {
             return null;
         }
@@ -205,7 +263,18 @@ public class CourseRosterPage
      */
     public WOComponent removeStudent()
     {
-        courseOffering().removeFromStudentsRelationship(student);
+        if ("Instructor".equals(role))
+        {
+            courseOffering().removeFromInstructorsRelationship(student);
+        }
+        else if ("Grader".equals(role))
+        {
+            courseOffering().removeFromGradersRelationship(student);
+        }
+        else
+        {
+            courseOffering().removeFromStudentsRelationship(student);
+        }
         return null;
     }
 
@@ -217,7 +286,35 @@ public class CourseRosterPage
      */
     public WOComponent addStudent()
     {
-        courseOffering().addToStudentsRelationship( student );
+        if ("Instructor".equals(role))
+        {
+            if (!courseOffering().instructors().containsObject(student))
+            {
+                if (student.accessLevel() < User.INSTRUCTOR_PRIVILEGES)
+                {
+                    student.setAccessLevel(User.INSTRUCTOR_PRIVILEGES);
+                }
+                courseOffering().addToInstructorsRelationship(student);
+            }
+        }
+        if ("Grader".equals(role))
+        {
+            if (!courseOffering().graders().containsObject(student))
+            {
+                if (student.accessLevel() < User.GTA_PRIVILEGES)
+                {
+                    student.setAccessLevel(User.GTA_PRIVILEGES);
+                }
+                courseOffering().addToGradersRelationship(student);
+            }
+        }
+        else
+        {
+            if (!courseOffering().students().containsObject(student))
+            {
+                courseOffering().addToStudentsRelationship(student);
+            }
+        }
         manuallyAdding = true;
         return null;
     }
@@ -260,5 +357,5 @@ public class CourseRosterPage
 
     private boolean firstLoad = true;
 
-    static Logger log = Logger.getLogger( CourseRosterPage.class );
+    static Logger log = Logger.getLogger(CourseRosterPage.class);
 }

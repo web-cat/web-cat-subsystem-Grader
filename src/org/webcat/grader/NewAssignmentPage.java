@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: NewAssignmentPage.java,v 1.4 2014/06/16 17:30:02 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -42,8 +40,6 @@ import er.extensions.foundation.ERXArrayUtilities;
  * Allows the user to create a new assignment + offering.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.4 $, $Date: 2014/06/16 17:30:02 $
  */
 public class NewAssignmentPage
     extends GraderCourseComponent
@@ -216,7 +212,7 @@ public class NewAssignmentPage
                 offerings = fullOfferings;
             }
         }
-        else
+        else if (coreSelections().courseOffering() != null)
         {
             offerings = new NSArray<CourseOffering>(
                 coreSelections().courseOffering());

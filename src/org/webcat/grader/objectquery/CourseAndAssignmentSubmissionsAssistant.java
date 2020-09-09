@@ -109,7 +109,7 @@ public class CourseAndAssignmentSubmissionsAssistant
         private NSArray<Semester> allSemesters()
         {
             return Semester.objectsMatchingQualifier(localContext(), null,
-                    Semester.year.asc().then(Semester.season.asc()));
+                    Semester.year.desc().then(Semester.season.desc()));
         }
 
 

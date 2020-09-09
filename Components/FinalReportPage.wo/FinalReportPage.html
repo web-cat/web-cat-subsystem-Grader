@@ -4,8 +4,21 @@
     a submission under <webobject name="PastResults"/> to see your feedback.</p>
   </wo:org.webcat.core.WCPageModule>
 </wo:not><wo:else>
+<wo:if condition="$needsLTIClickthrough">
+<wo:org.webcat.core.WCPageModule title="Visit your LMS Before Viewing Feedback">
+<p>Before you view your feedback, please
+<wo:if condition="$prefs.assignmentOffering.lmsAssignmentUrl">
+<wo:link href="$prefs.assignmentOffering.lmsAssignmentUrl">visit this
+assignment's page</wo:link></wo:if><wo:else>visit this assignment's
+page</wo:else>
+on your
+<wo:str value="$prefs.assignmentOffering.courseOffering.lmsName"/>
+site, and enter Web-CAT from that page. Thank you.
+</p>
+</wo:org.webcat.core.WCPageModule>
+</wo:if><wo:else>
   <wo:org.webcat.core.WCPageModule title="Result Summary">
-  <wo:org.webcat.grader.EnergyBarDisplay bar="$bar" cssClass="floatRight"/>
+  <wo:org.webcat.grader.EnergyBarDisplay bar="$bar" hasMissionContent="$result.hasMissionContent" cssClass="floatRight"/>
   <wo:if condition="$reportIsReady"><wo:WCForm multipleSubmit="true" style="margin-bottom: 0.5em;">
     <wo:if condition="$showReturnToGrading"><wo name="ReturnToGrading"/></wo:if>
     <wo:if condition="$canSubmitAgain"><wo name="SubmitAgain"/></wo:if>
@@ -56,6 +69,15 @@
     </wo:else>
   </webobject>
 </wo:not><wo:else>
+<wo:hidden id="userName" name="userName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.user.userName)"/>
+<wo:hidden id="userFirstName" name="userFirstName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.user.firstName)"/>
+<wo:hidden id="userLastName" name="userLastName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.user.lastName)"/>
+<wo:hidden id="courseId" name="courseId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars((submission.assignmentOffering.courseOffering.course.department.abbreviation + submission.assignmentOffering.courseOffering.course.number).replaceAll('[^A-Z0-9]', ''))"/>
+<wo:hidden id="sectionId" name="sectionId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.courseOffering.crnSubdirName)"/>
+<wo:hidden id="assignmentId" name="assignmentId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.assignment.subdirName)"/>
+<wo:hidden id="assignmentName" name="assignmentName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.assignment.name)"/>
+<wo:hidden id="submissionNumber" name="submissionNumber" value="$submission.submitNumber"/>
+<input type="hidden" id="userRole" name="userRole" value="student"/>
   <wo:if condition="$hasNonZeroScore">
     <wo:org.webcat.grader.ScoreGraphsBlock submission="$submission"/>
   </wo:if>
@@ -117,4 +139,4 @@
     </tbody></table>
     </wo:org.webcat.core.WCPageModule>
   </wo:if>
-</wo:else></wo>
+</wo:else></wo:else></wo>

@@ -58,6 +58,7 @@ public class EnergyBar
     public static final int SUBMISSION_CLOSE_TO_DEADLINE = 3;
     public static final int FORCE_RECHARGE = 4;
     public static final int SUBMISSION_DENY_FAILED = 5;
+    public static final int FULL_RECHARGE_BONUS = 6;
 
 
     //~ Methods ...............................................................
@@ -170,9 +171,14 @@ public class EnergyBar
         return chargeRate;
     }
 
+    public int maxCharge()
+    {
+        return assignmentOffering().energyBarConfig().numSlots();
+    }
+
     public void reevaluateCharge()
     {
-        int maxCharge = assignmentOffering().energyBarConfig().numSlots();
+        int maxCharge = maxCharge();
         if (charge() == maxCharge)
         {
             setRechargeStart(null);

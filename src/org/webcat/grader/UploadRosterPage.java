@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: UploadRosterPage.java,v 1.4 2014/06/16 17:26:24 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2019 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -37,8 +35,6 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * This class allows a CSV file of new users to be added to a course.
  *
  * @author  Stephen Edwards
- * @author  Latest changes by: $Author: stedwar2 $
- * @version $Revision: 1.4 $, $Date: 2014/06/16 17:26:24 $
  */
 public class UploadRosterPage
     extends GraderCourseEditComponent
@@ -58,6 +54,8 @@ public class UploadRosterPage
 
 
     //~ KVC Attributes (must be public) .......................................
+
+    public String role = "Student";
 
     public String               filePath;
     public NSData               data;
@@ -740,7 +738,12 @@ public class UploadRosterPage
 
                     if (user != null)
                     {
-                        NSArray<CourseOffering> enrolledIn = user.enrolledIn();
+                        NSArray<CourseOffering> enrolledIn =
+                            "Instructor".equals(role)
+                                ? user.teaching()
+                                : ("Grader".equals(role)
+                                    ? user.graderFor()
+                                    : user.enrolledIn());
                         if (enrolledIn != null
                              && enrolledIn.containsObject(courseOffering()))
                         {
@@ -753,8 +756,33 @@ public class UploadRosterPage
                             log.debug("relationship does not exist");
                             if (execute)
                             {
-                                user.addToEnrolledInRelationship(
-                                    courseOffering());
+                                if ("Instructor".equals(role))
+                                {
+                                    if (user.accessLevel()
+                                        < User.INSTRUCTOR_PRIVILEGES)
+                                    {
+                                        user.setAccessLevel(
+                                            User.INSTRUCTOR_PRIVILEGES);
+                                    }
+                                    courseOffering()
+                                        .addToInstructorsRelationship(user);
+                                }
+                                else if ("Grader".equals(role))
+                                {
+                                    if (user.accessLevel()
+                                        < User.GTA_PRIVILEGES)
+                                    {
+                                        user.setAccessLevel(
+                                            User.GTA_PRIVILEGES);
+                                    }
+                                    courseOffering()
+                                        .addToGradersRelationship(user);
+                                }
+                                else
+                                {
+                                    courseOffering()
+                                        .addToStudentsRelationship(user);
+                                }
                             }
                             if (isExistingUser)
                             {

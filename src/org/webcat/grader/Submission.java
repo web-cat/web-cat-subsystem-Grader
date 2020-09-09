@@ -1951,11 +1951,14 @@ public class Submission
     // ----------------------------------------------------------
     public void sendScoreToLTIConsumerIfNecessary()
     {
+        log.debug("sendScoreToLTIConsumerIfNecessary(): checking " + this);
         if (isSubmissionForGrading())
         {
             SubmissionResult r = result();
             if (r != null && r.status() == Status.CHECK)
             {
+                log.debug("sendScoreToLTIConsumerIfNecessary(): "
+                    + "attempting to send score");
                 LISResultId.sendScoreToLTIConsumer(this);
             }
         }
@@ -1966,8 +1969,8 @@ public class Submission
     @Override
     public void willUpdate()
     {
-        if (isSubmissionForGrading()
-            && changedProperties().containsKey(IS_SUBMISSION_FOR_GRADING_KEY))
+//        if (isSubmissionForGrading()
+//            && changedProperties().containsKey(IS_SUBMISSION_FOR_GRADING_KEY))
         {
             sendScoreToLTIConsumerIfNecessary();
         }

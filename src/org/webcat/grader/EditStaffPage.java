@@ -73,7 +73,7 @@ public class EditStaffPage
                     ? "Instructor"
                     : "TA" )
             + " List";
-        staffDisplayGroup.setMasterObject( courseOffering() );
+        staffDisplayGroup.setMasterObject(courseOffering());
         staffDisplayGroup.setDetailKey( editInstructors
                         ? CourseOffering.INSTRUCTORS_KEY
                         : CourseOffering.GRADERS_KEY );
@@ -83,18 +83,19 @@ public class EditStaffPage
             + " current index = " + potentialDisplayGroup.currentBatchIndex() );
         oldBatchSize  = potentialDisplayGroup.numberOfObjectsPerBatch();
         oldBatchIndex = potentialDisplayGroup.currentBatchIndex();
-        if ( firstLoad )
+        if (firstLoad)
         {
             potentialDisplayGroup.queryMatch().takeValueForKey(
-                courseOffering().course().department().institution().propertyName(),
-                "authenticationDomain.propertyName" );
+                courseOffering().course().department().institution()
+                    .propertyName(),
+                "authenticationDomain.propertyName");
             firstLoad = false;
         }
         potentialDisplayGroup.qualifyDataSource();
         potentialDisplayGroup.fetch();
-        potentialDisplayGroup.setNumberOfObjectsPerBatch( oldBatchSize );
-        potentialDisplayGroup.setCurrentBatchIndex( oldBatchIndex );
-        super.beforeAppendToResponse( response, context );
+        potentialDisplayGroup.setNumberOfObjectsPerBatch(oldBatchSize);
+        potentialDisplayGroup.setCurrentBatchIndex(oldBatchIndex);
+        super.beforeAppendToResponse(response, context);
     }
 
 
@@ -102,15 +103,15 @@ public class EditStaffPage
     protected void afterAppendToResponse(WOResponse response, WOContext context)
     {
         super.afterAppendToResponse(response, context);
-        log.debug( "old size = " + oldBatchSize
-                   + " old index = " + oldBatchIndex );
+        log.debug("old size = " + oldBatchSize
+            + " old index = " + oldBatchIndex);
     }
 
 
     // ----------------------------------------------------------
     public boolean isStaff()
     {
-        return staffDisplayGroup.allObjects().containsObject( aUser );
+        return staffDisplayGroup.allObjects().containsObject(aUser);
     }
 
 
@@ -162,13 +163,14 @@ public class EditStaffPage
     // ----------------------------------------------------------
     public WOComponent defaultAction()
     {
-        log.debug( "defaultAction()" );
-        log.debug( "old size = " + oldBatchSize
-                   + " old index = " + oldBatchIndex );
-        log.debug( "new size = " + potentialDisplayGroup.numberOfObjectsPerBatch()
-                   + " new index = " + potentialDisplayGroup.currentBatchIndex() );
-        if ( oldBatchSize != potentialDisplayGroup.numberOfObjectsPerBatch()
-             || oldBatchIndex != potentialDisplayGroup.currentBatchIndex() )
+        log.debug("defaultAction()");
+        log.debug("old size = " + oldBatchSize
+            + " old index = " + oldBatchIndex);
+        log.debug(
+            "new size = " + potentialDisplayGroup.numberOfObjectsPerBatch()
+            + " new index = " + potentialDisplayGroup.currentBatchIndex());
+        if (oldBatchSize != potentialDisplayGroup.numberOfObjectsPerBatch()
+            || oldBatchIndex != potentialDisplayGroup.currentBatchIndex())
         {
             return null;
         }
@@ -185,5 +187,5 @@ public class EditStaffPage
     protected int oldBatchIndex;
     protected boolean firstLoad = true;
 
-    static Logger log = Logger.getLogger( EditStaffPage.class );
+    static Logger log = Logger.getLogger(EditStaffPage.class);
 }

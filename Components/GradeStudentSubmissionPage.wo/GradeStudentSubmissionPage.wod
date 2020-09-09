@@ -93,6 +93,7 @@ NextStudentButton: WCButton {
 
 Page: org.webcat.core.WCPageWithNavigation {
     title = "Grade One Submission";
+    extraBodyCssClass = "GradeStudentSubmissionPage";
 }
 
 PickSubmissionDialog: PickSubmissionDialog {

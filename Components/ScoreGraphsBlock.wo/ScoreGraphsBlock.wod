@@ -1,5 +1,5 @@
 Chart1: org.webcat.grader.graphs.HistogramChart {
-    dataset    = submission.assignmentOffering.graphSummary.frequencyDataset;
+    dataset    = ^submission.assignmentOffering.graphSummary.frequencyDataset;
     title      = "Score Distribution for the Class";
     xAxisLabel = "Score";
     yAxisLabel = "Students";

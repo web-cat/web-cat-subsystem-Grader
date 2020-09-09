@@ -137,9 +137,12 @@ public class EditCoursePage
      */
     public WOComponent addInstructor()
     {
-        EditStaffPage addPage = (EditStaffPage)pageWithName(
-            EditStaffPage.class.getName());
-        addPage.editInstructors = true;
+//        EditStaffPage addPage = (EditStaffPage)pageWithName(
+//            EditStaffPage.class.getName());
+//        addPage.editInstructors = true;
+        CourseRosterPage addPage = (CourseRosterPage)pageWithName(
+            CourseRosterPage.class.getName());
+        addPage.role = "Instructor";
         addPage.nextPage = this;
         return addPage;
     }
@@ -152,9 +155,12 @@ public class EditCoursePage
      */
     public WOComponent addTA()
     {
-        EditStaffPage addPage = (EditStaffPage)pageWithName(
-            EditStaffPage.class.getName());
-        addPage.editInstructors = false;
+//        EditStaffPage addPage = (EditStaffPage)pageWithName(
+//            EditStaffPage.class.getName());
+//        addPage.editInstructors = false;
+        CourseRosterPage addPage = (CourseRosterPage)pageWithName(
+            CourseRosterPage.class.getName());
+        addPage.role = "Grader";
         addPage.nextPage = this;
         return addPage;
     }
@@ -169,6 +175,7 @@ public class EditCoursePage
     {
         CourseRosterPage page = (CourseRosterPage)pageWithName(
             CourseRosterPage.class.getName());
+        page.role = "Student";
         page.nextPage = this;
         return page;
     }

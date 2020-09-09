@@ -59,6 +59,7 @@ public class EnergyBarDisplay
     public EnergyBar bar;
     public String cssClass;
     public int slotNo;
+    public Boolean hasMissionContent;
 
 
     //~ Methods ...............................................................

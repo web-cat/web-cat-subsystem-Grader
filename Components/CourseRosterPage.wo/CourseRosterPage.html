@@ -1,13 +1,14 @@
 <webobject name="Page">
-<wo:org.webcat.core.WCPageModule title="Students Enrolled in This Course">
-For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
+<wo:org.webcat.core.WCPageModule title="~role + \"(s) for \" + courseOffering.compactName + \" \" + courseOffering.course.name">
 <table><thead>
   <tr><td colspan="4" class="batchnav"><webobject name="BatchNavigator"/></td></tr>
   <tr><th>User ID<webobject name="WCSortOrder2"/></th>
     <th>Name<webobject name="WCSortOrder1"/></th><th>E-Mail</th><th>Action</th></tr></thead><tbody>
   <webobject name="StudentRepetition"><webobject name="TR">
-    <td><wo:str value="$student.userName"/></td><td><wo:if condition="$student.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$student.name_LF"/></wo:else></td>
-    <td><webobject name="Email"/></td><td><webobject name="RemoveStudent"/></td>
+    <td><wo:str value="$student.userName"/></td>
+    <td><wo:if condition="$student.url"><webobject name="Name"/></wo:if><wo:else><wo:str value="$student.name_LF"/></wo:else></td>
+    <td><webobject name="Email"/></td>
+    <td><webobject name="RemoveStudent"/></td>
   </webobject></webobject>
   <wo:not condition="$studentDisplayGroup.allObjects.count">
   <webobject name="TR"><td colspan="4">No students are enrolled.</td></webobject>
@@ -15,8 +16,14 @@ For: <span class="hl"><wo:str value="$courseOffering.deptNumberAndName"/></span>
 </tbody></table>
 </wo:org.webcat.core.WCPageModule>
 
+<wo:org.webcat.core.WCPageModule title="Enter E-Mail Addresses">
+<p>Add more <wo:str value="~role.toLowerCase"/>s to your roster by entering a list of e-mail addresses (separated by commas, spaces, or newlines):</p>
+<wo:WCSimpleTextArea rows="8" cols="40" value="$emailAddresses" style="width: 40em;"/>
+<p><wo:WCButton action="$uploadTextbox" label="Add Accounts"/><wo name="UploadTextboxInfo"/></p>
+</wo:org.webcat.core.WCPageModule>
+
 <wo:org.webcat.core.WCPageModule title="Upload a CSV Roster">
-<p>Add more students to your roster using a comma-delimited text file:</p>
+<p>Add more <wo:str value="~role.toLowerCase"/>s to your roster using a comma-delimited text file:</p>
 <p>CSV File: <wo:upload data="$data" filePath="$filePath" size="60" id="theDiv" style="display:inline; vertical-align: middle;" dojoType="dojox.form.FileInput"/>
 <wo:WCButton action="$upload" label="Upload"/><wo name="UploadInfo"/></p>
 <script type="text/javascript">
@@ -32,7 +39,7 @@ dojo.ready(function() {
 </script>
 </wo:org.webcat.core.WCPageModule>
 
-<wo:org.webcat.core.WCPageModule title="Manually Add Existing Student Accounts" open="$manuallyAdding">
+<wo:org.webcat.core.WCPageModule title="Manually Add Existing Accounts" open="$manuallyAdding">
 <wo:str value="$forceManuallyAdding"/>
 <wo:WCTable id="unenrolledStudents" displayGroup="$notStudentDisplayGroup" searchOnKeyPaths="userName,firstName,lastName">
     <wo:WCTableHeadings>
@@ -44,8 +51,8 @@ dojo.ready(function() {
     <wo:WCTableRows item="$student" noRowsMessage="The search returned zero students.">
         <wo:WCTableRow>
             <td><wo:tstr value="$student.userName"/></td>
-            <td><wo name="Name"><wo:tstr value="$student.name_LF"/></wo></td>
-            <td><wo name="Email"><wo:tstr value="$student.email"/></wo></td>
+            <td><wo name="Name"><wo:str value="$student.name_LF"/></wo></td>
+            <td><wo name="Email"></wo></td>
             <td><wo name="AddStudent"/></td>
         </wo:WCTableRow>
     </wo:WCTableRows>

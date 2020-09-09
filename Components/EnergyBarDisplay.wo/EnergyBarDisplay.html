@@ -9,4 +9,9 @@
   <div class="time-free">OK to submit!</div></wo:if><wo:else>
   <div class="time-remaining"></div></wo:else>
   </wo:div>
+  <wo:if condition="$hasMissionContent">
+  <div class="title">Need more energy?</div>
+  <div><wo:WCButton label="Daily Missions">
+  <script type="dojo/connect" event="onClick">dijit.byId('dailyMissionsDialog').show();</script>
+  </wo:WCButton></div></wo:if>
 </wo:div><script type="text/javascript">SubmissionEnergyBar("#energy-bar")</script></wo:if>

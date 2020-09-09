@@ -183,6 +183,12 @@ public class FullPrintableReport
                 ec.lock();
                 submissionResult = theResult.localInstance( ec );
                 user = viewer.localInstance( ec );
+                PageViewLog.log(ec,
+                    "FullPrintableReport",
+                    user,
+                    submissionResult.submission(),
+                    submissionResult,
+                    null);
             }
             finally
             {

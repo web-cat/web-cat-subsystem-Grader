@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: ConfirmSubmissionPage.java,v 1.9 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -37,8 +35,7 @@ import org.webcat.core.messaging.UnexpectedExceptionMessage;
  * confirmation before making it "official".
  *
  * @author  Amit Kulkarni
- * @author  Latest changes by: $Author: stedwar2 $
- * @version $Revision: 1.9 $, $Date: 2014/11/07 13:55:03 $
+ * @author  Latest changes by: Stephen Edwards
  */
 public class ConfirmSubmissionPage
     extends GraderSubmissionUploadComponent
@@ -215,6 +212,11 @@ public class ConfirmSubmissionPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
+        if (!submissionInProcess().submissionInProcess())
+        {
+            return pageWithName(
+                wcSession().tabs.selectById("UploadSubmission").pageName());
+        }
         NSTimestamp submitTime = new NSTimestamp();
         if ((bar != null) &&
             (!bar.hasEnergy()) &&

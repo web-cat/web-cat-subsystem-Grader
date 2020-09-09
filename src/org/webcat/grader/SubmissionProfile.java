@@ -71,6 +71,30 @@ public class SubmissionProfile
 
 
     // ----------------------------------------------------------
+    @Override
+    public void willInsert()
+    {
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        super.willInsert();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willUpdate()
+    {
+        NSDictionary<String, Object> changes = changedProperties();
+        // Flush assignment definitions, if needed
+        if (changes.containsKey(AVAILABLE_TIME_DELTA_KEY)
+            || changes.containsKey(DEAD_TIME_DELTA_KEY))
+        {
+            org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        }
+        super.willUpdate();
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Format a long value as a string, using "k" or "m" for suffixes
      * if the value is evenly divisible by 1024 or 1024*1024.

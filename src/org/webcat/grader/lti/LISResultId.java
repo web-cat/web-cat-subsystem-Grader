@@ -29,6 +29,7 @@ import net.oauth.OAuthMessage;
 import net.oauth.ParameterStyle;
 import net.oauth.client.OAuthClient;
 import net.oauth.client.httpclient4.HttpClient4;
+import org.apache.log4j.Logger;
 import org.webcat.core.User;
 import org.webcat.core.lti.LMSInstance;
 import org.webcat.grader.AssignmentOffering;
@@ -114,6 +115,8 @@ public class LISResultId
                 assignmentOffering.is(submission.assignmentOffering())));
             String url =
                 submission.assignmentOffering().lisOutcomeServiceUrl();
+            log.debug("sendScoreToLTIConsumer(" + submission + "): id = "
+                + id + ", url = " + url);
             if (id != null && url != null && !url.isEmpty())
             {
                 LMSInstance lms = id.lmsInstance();

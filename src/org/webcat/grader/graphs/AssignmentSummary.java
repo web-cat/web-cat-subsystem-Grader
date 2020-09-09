@@ -151,6 +151,32 @@ public class AssignmentSummary
 
     //----------------------------------------------------------
     /**
+     * Non-functional setter just to prevent certain KVC errors when
+     * this component is used in a form, for example.
+     * @param dataset unused
+     */
+    public void setFrequencyDataSet(IntervalXYDataset dataset)
+    {
+        // Nothing to do
+    }
+
+
+    //----------------------------------------------------------
+    /**
+     * This attribute is read-only, but there are one or two places where
+     * it is assumed to be bidirectional, so this setter prevents errors
+     * in those situations. However, this method does nothing, since the
+     * dataset value is generated, not a settable property.
+     * @param value a JFreeChart category dataset that is ignored (can be null)
+     */
+    public void setFrequencyDataset(IntervalXYDataset value)
+    {
+        // ignore
+    }
+
+
+    //----------------------------------------------------------
+    /**
      * Generate a small, human-readable representation.
      * @return A printable summary
      */

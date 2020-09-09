@@ -131,6 +131,13 @@ public class FinalReportPage
                 result = submission.result();
                 statsDisplayGroup.setObjectArray(result.submissionFileStats());
                 reportArray = result.resultFiles().mutableClone();
+                
+                PageViewLog.log(localContext(),
+                    "FinalReportPage",
+                    wcSession().primeUser(),
+                    submission,
+                    result,
+                    null);
             }
             else
             {
@@ -232,8 +239,7 @@ public class FinalReportPage
 
         log.debug("fileStatsDetails()");
         prefs().setSubmissionFileStatsRelationship(stats);
-        WCComponent statsPage = (WCComponent)pageWithName(
-                        SubmissionFileDetailsPage.class.getName());
+        WCComponent statsPage = pageWithName(SubmissionFileDetailsPage.class);
         statsPage.nextPage = this;
         return statsPage;
     }

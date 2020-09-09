@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderPrefs.java,v 1.3 2010/09/27 04:21:37 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2009 Virginia Tech
+ |  Copyright (C) 2006-2018 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -29,8 +27,6 @@ import org.apache.log4j.Level;
  * so on used in navigation.
  *
  * @author  Stephen Edwards
- * @author  latest changes by: $Author: stedwar2 $
- * @version $Revision: 1.3 $ $Date: 2010/09/27 04:21:37 $
  */
 public class GraderPrefs
     extends _GraderPrefs
@@ -60,11 +56,13 @@ public class GraderPrefs
         try
         {
             AssignmentOffering result =  super.assignmentOffering();
-            if ( result != null )
+            if (result != null)
+            {
                 result.dueDate();  // Force access of this object
+            }
             return result;
         }
-        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        catch (Exception e)
         {
             log.debug("assignmentOffering(): attempting to force null after "
                 + e);
@@ -75,21 +73,21 @@ public class GraderPrefs
                 Level oldLevel = log.getLevel();
                 try
                 {
-                    log.setLevel( Level.OFF );
+                    log.setLevel(Level.OFF);
                     // Do NOT call setAssignmentOfferingRelationship, since
                     // it in turn calls assignmentOffering()!
-                    super.setAssignmentOffering( null );
+                    super.setAssignmentOffering(null);
                 }
                 finally
                 {
-                    log.setLevel( oldLevel );
+                    log.setLevel(oldLevel);
                 }
             }
             else
             {
                 // Do NOT call setAssignmentOfferingRelationship, since it in
                 // turn calls assignmentOffering()!
-                super.setAssignmentOffering( null );
+                super.setAssignmentOffering(null);
             }
             return super.assignmentOffering();
         }
@@ -123,11 +121,13 @@ public class GraderPrefs
         try
         {
             Step result =  super.step();
-            if ( result != null )
+            if (result != null)
+            {
                 result.order();  // Force access of this object
+            }
             return result;
         }
-        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        catch (Exception e)
         {
             log.debug("step(): attempting to force null after " + e);
             if (log.isDebugEnabled())
@@ -137,21 +137,21 @@ public class GraderPrefs
                 Level oldLevel = log.getLevel();
                 try
                 {
-                    log.setLevel( Level.OFF );
+                    log.setLevel(Level.OFF);
                     // Do NOT call setStepRelationship, since it in
                     // turn calls step()!
-                    super.setStep( null );
+                    super.setStep(null);
                 }
                 finally
                 {
-                    log.setLevel( oldLevel );
+                    log.setLevel(oldLevel);
                 }
             }
             else
             {
                 // Do NOT call setStepRelationship, since it in
                 // turn calls step()!
-                super.setStep( null );
+                super.setStep(null);
             }
             return super.step();
         }
@@ -169,11 +169,13 @@ public class GraderPrefs
         try
         {
             Submission result =  super.submission();
-            if ( result != null )
+            if (result != null)
+            {
                 result.submitNumber();  // Force access of this object
+            }
             return result;
         }
-        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        catch (Exception e)
         {
             log.debug("submission(): attempting to force null after " + e);
             if (log.isDebugEnabled())
@@ -183,21 +185,21 @@ public class GraderPrefs
                 Level oldLevel = log.getLevel();
                 try
                 {
-                    log.setLevel( Level.OFF );
+                    log.setLevel(Level.OFF);
                     // Do NOT call setSubmissionRelationship, since it in
                     // turn calls submission()!
-                    super.setSubmission( null );
+                    super.setSubmission(null);
                 }
                 finally
                 {
-                    log.setLevel( oldLevel );
+                    log.setLevel(oldLevel);
                 }
             }
             else
             {
                 // Do NOT call setSubmissionRelationship, since it in
                 // turn calls submission()!
-                super.setSubmission( null );
+                super.setSubmission(null);
             }
             return super.submission();
         }
@@ -215,11 +217,13 @@ public class GraderPrefs
         try
         {
             SubmissionFileStats result =  super.submissionFileStats();
-            if ( result != null )
+            if (result != null)
+            {
                 result.loc();  // Force access of this object
+            }
             return result;
         }
-        catch ( com.webobjects.eoaccess.EOObjectNotAvailableException e )
+        catch (Exception e)
         {
             log.debug("submissionFileStats(): attempting to force null after "
                 + e);
@@ -230,23 +234,38 @@ public class GraderPrefs
                 Level oldLevel = log.getLevel();
                 try
                 {
-                    log.setLevel( Level.OFF );
+                    log.setLevel(Level.OFF);
                     // Do NOT call setSubmissionFileStatsRelationship, since
                     // it in turn calls submissionFileStats()!
-                    super.setSubmissionFileStats( null );
+                    super.setSubmissionFileStats(null);
                 }
                 finally
                 {
-                    log.setLevel( oldLevel );
+                    log.setLevel(oldLevel);
                 }
             }
             else
             {
                 // Do NOT call setSubmissionFileStatsRelationship, since it in
                 // turn calls submissionFileStats()!
-                super.setSubmissionFileStats( null );
+                super.setSubmissionFileStats(null);
             }
             return super.submissionFileStats();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public Object storedValueForKey(String key)
+    {
+        try
+        {
+            return super.storedValueForKey(key);
+        }
+        catch (IllegalStateException e)
+        {
+            return null;
         }
     }
 }

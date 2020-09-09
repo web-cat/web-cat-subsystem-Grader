@@ -19,6 +19,8 @@
 
 package org.webcat.grader.actions;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
@@ -60,6 +62,7 @@ public class BlueJSubmitterDefinitions
     public boolean                     groupByInstitution = false;
     public boolean                     groupByCRN         = false;
     public int                         index;
+    public NSTimestamp                 expires;
 
 
     //~ Methods ...............................................................
@@ -67,7 +70,35 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public void appendToResponse( WOResponse response, WOContext context )
     {
+        // System.out.println("query string = " + context.request().queryString());
+        // System.out.println("handler = " + context.request().requestHandlerKey());
+        // System.out.println("handler path = " + context.request().requestHandlerPath());
+        // System.out.println("uri = " + context.request().uri());
         log.debug( "appendToResponse()" );
+        NSDictionary<String, NSArray<Object>> formValues =
+            context.request().formValues();
+        if (formValues.containsKey("flush"))
+        {
+            flushCache();
+        }
+        if (formValues.containsKey("useCache"))
+        {
+            USE_CACHE = ERXValueUtilities.booleanValueWithDefault(
+                context.request().formValueForKey("useCache"), true);
+        }
+        if (useCache())
+        {
+            NSData cachedResponse = getCachedResponse(
+                context.request().requestHandlerPath(),
+                context.request().queryString());
+            if (cachedResponse != null)
+            {
+                log.debug( "appendToResponse(): returning cached response" );
+                response.setHeader(mimeType(), "content-type");
+                response.appendContentData(cachedResponse);
+                return;
+            }
+        }
         groupByInstitution = false;
         groupByCRN = false;
         includePatternsIndex = -1;
@@ -81,7 +112,7 @@ public class BlueJSubmitterDefinitions
             groupByCRN = ERXValueUtilities.booleanValue(
                 context().request().formValueForKey( "groupByCRN" ) )
                 || ( context().request().formValueForKey( "crns" ) != null );
-            assignmentsToDisplay =
+            AssignmentOffering.SubmitterOfferings offerings =
                 AssignmentOffering.objectsForSubmitterEngine(
                     ec,
                     context().request().formValues(),
@@ -90,6 +121,8 @@ public class BlueJSubmitterDefinitions
                     showAll(),
                     preserveDateDifferences()
                     );
+            expires = offerings.expires;
+            assignmentsToDisplay = offerings.offerings;
             if ( assignmentsToDisplay != null &&
                  assignmentsToDisplay.count() > 1 )
             {
@@ -104,6 +137,21 @@ public class BlueJSubmitterDefinitions
             }
             response.setHeader( mimeType(), "content-type" );
             super.appendToResponse( response, context );
+            // System.out.println("content = " + response.contentString() );
+            if (useCache())
+            {
+                log.debug("caching response for: "
+                    + context.request().requestHandlerPath()
+                    + ", "
+                    + context.request().queryString()
+                    + ", "
+                    + expires);
+                cacheResponse(
+                    context.request().requestHandlerPath(),
+                    context.request().queryString(),
+                    expires,
+                    response.content());
+            }
         }
         finally
         {
@@ -396,8 +444,122 @@ public class BlueJSubmitterDefinitions
     }
 
 
+    // ----------------------------------------------------------
+    public static void cacheResponse(
+        String handler,
+        String params,
+        NSTimestamp expires,
+        NSData response)
+    {
+        if (!useCache())
+        {
+            return;
+        }
+        log.debug("cacheResponse: " + handler + ", " + params + ", " + expires);
+        synchronized (responseCache)
+        {
+            Map<String, CachedResponse> submap = responseCache.get(handler);
+            if (submap == null)
+            {
+                submap = new HashMap<String, CachedResponse>();
+                responseCache.put(handler, submap);
+            }
+            submap.put(params, new CachedResponse(expires, response));
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public static NSData getCachedResponse(
+        String handler,
+        String params)
+    {
+        if (!useCache())
+        {
+            return null;
+        }
+        NSTimestamp now = new NSTimestamp();
+        synchronized (responseCache)
+        {
+            Map<String, CachedResponse> submap = responseCache.get(handler);
+            if (submap != null)
+            {
+                CachedResponse response = submap.get(params);
+                if (response != null)
+                {
+                    if (response.expires == null
+                        || response.expires.after(now))
+                    {
+                        log.debug("getCachedResponse: " + handler + ", "
+                            + params + ": cache hit: " + response.expires);
+                        return response.response;
+                    }
+                    else
+                    {
+                        // expired, so remove it
+                        log.debug("getCachedResponse: " + handler + ", " + params
+                            + ": removing expired value: " + response.expires);
+                        submap.remove(params);
+                    }
+                }
+            }
+        }
+        log.debug("getCachedResponse: " + handler + ", " + params
+            + ": no cache found");
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public static void flushCache()
+    {
+        if (!useCache())
+        {
+            return;
+        }
+        log.debug("flushCache()");
+        synchronized (responseCache)
+        {
+            for (Map<String, CachedResponse> submap: responseCache.values())
+            {
+                submap.clear();
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    public static boolean useCache()
+    {
+        if (USE_CACHE == null)
+        {
+            USE_CACHE = Application.wcApplication().properties()
+                .booleanForKeyWithDefault(
+                    BlueJSubmitterDefinitions.class.getName() + ".useCache",
+                    true);
+        }
+        return USE_CACHE.booleanValue();
+    }
+
+
+    // ----------------------------------------------------------
+    public static class CachedResponse
+    {
+        public NSTimestamp expires;
+        public NSData response;
+
+        public CachedResponse(NSTimestamp expires, NSData response)
+        {
+            this.expires = expires;
+            this.response = response;
+        }
+    }
+
+
     //~ Instance/static variables .............................................
 
+    private static Map<String, Map<String, CachedResponse>> responseCache =
+        new HashMap<String, Map<String, CachedResponse>>();
     private NSTimestamp currentTime;
     private String[]     includePatterns = null;
     private int          includePatternsIndex;
@@ -407,4 +569,5 @@ public class BlueJSubmitterDefinitions
     private int          requirePatternsIndex;
     private String       thisPattern;
     static Logger log = Logger.getLogger( BlueJSubmitterDefinitions.class );
+    private static Boolean USE_CACHE = null;
 }

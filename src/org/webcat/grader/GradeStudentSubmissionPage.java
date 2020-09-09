@@ -27,6 +27,8 @@ import er.extensions.appserver.ERXDisplayGroup;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.ui.generators.JavascriptGenerator;
+import static er.extensions.foundation.ERXStringUtilities.escapeNonXMLChars;
+
 
 // -------------------------------------------------------------------------
 /**
@@ -81,6 +83,18 @@ public class GradeStudentSubmissionPage
     public NSArray<UserSubmissionPair> availableSubmissions;
     public int                         thisSubmissionIndex;
 
+    // Hidden form fields for Maria support
+    public String userName;
+    public String studentUserName;
+    public String userFirstName;
+    public String userLastName;
+    public String courseId;
+    public String sectionId;
+    public String assignmentId;
+    public String assignmentName;
+    public int submissionNumber;
+
+
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
@@ -121,6 +135,31 @@ public class GradeStudentSubmissionPage
         statsDisplayGroup.setObjectArray( result.submissionFileStats() );
         showCoverageData = null;
         priorComments = result.comments();
+
+        // Initialize fields representing hidden form content
+        if (user() != null)
+        {
+            userName = escapeNonXMLChars(user().userName());
+            userFirstName = escapeNonXMLChars(user().firstName());
+            userLastName = escapeNonXMLChars(user().lastName());
+        }
+        if (submission != null)
+        {
+            studentUserName = escapeNonXMLChars(submission.user().userName());
+            courseId = escapeNonXMLChars((submission.assignmentOffering()
+                .courseOffering().course().department().abbreviation()
+                + Integer.toString(submission.assignmentOffering()
+                .courseOffering().course().number())
+                .replaceAll("[^A-Z0-9]", "")));
+            sectionId = escapeNonXMLChars(submission.assignmentOffering()
+                .courseOffering().crnSubdirName());
+            assignmentId = escapeNonXMLChars(submission.assignmentOffering()
+                .assignment().subdirName());
+            assignmentName = escapeNonXMLChars(submission.assignmentOffering()
+                .assignment().name());
+            submissionNumber = submission.submitNumber();
+        }
+
         super.beforeAppendToResponse( response, context );
     }
 

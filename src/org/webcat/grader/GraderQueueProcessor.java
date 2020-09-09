@@ -48,7 +48,6 @@ import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.webcat.woextensions.ECAction;
 import org.webcat.woextensions.WCEC;
 import org.webcat.woextensions.WCFetchSpecification;
-import com.webobjects.eoaccess.EOGeneralAdaptorException;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOGlobalID;
 import com.webobjects.eocontrol.EOQualifier;
@@ -107,7 +106,7 @@ public class GraderQueueProcessor
             }
             else if (diff == 0)
             {
-                return 0;
+                return this.jobId.toString().compareTo(other.jobId.toString());
             }
             else
             {
@@ -719,6 +718,9 @@ public class GraderQueueProcessor
 
             properties.setProperty(
                 "userName", job.submission().user().userName());
+            properties.setProperty("user.isStaff", Boolean.toString(
+                job.submission().assignmentOffering().courseOffering()
+                .isStaff(job.submission().user())));
             properties.setProperty("userInstitution", job.submission().user()
                 .authenticationDomain().displayableName());
             properties.setProperty(
@@ -739,6 +741,12 @@ public class GraderQueueProcessor
             properties.setProperty("course",
                 job.submission().assignmentOffering().courseOffering()
                 .course().deptNumber());
+            properties.setProperty("course.number", Integer.toString(
+                job.submission().assignmentOffering().courseOffering()
+                .course().number()));
+            properties.setProperty("institution",
+                job.submission().assignmentOffering().courseOffering()
+                .course().department().institution().name());
             {
                 String crn = job.submission().assignmentOffering()
                     .courseOffering().crn();
@@ -1550,7 +1558,7 @@ public class GraderQueueProcessor
 
         // Pull any properties that are prefixed with "saved." into
         // ResultOutcome objects
-        final String SAVED_PROPERTY_PREFIX = "saved.";
+        final String SAVED_PROPERTY_PREFIX = "save.";
         final String RESULT_PROPERTY_SUFFIX = ".results";
 
         for (Object propertyAsObj : properties.keySet())
@@ -1604,6 +1612,34 @@ public class GraderQueueProcessor
         // Save the new accumulated saved properties into this submission
         // result.
         submissionResult.setAccumulatedSavedProperties(accumulatedValues);
+
+        String recharge =
+            properties.getProperty("submission.energy.recharge", "0");
+        try
+        {
+            int rc =
+                er.extensions.foundation.ERXValueUtilities.intValue(recharge);
+            if (rc > 0)
+            {
+                Submission sub = submissionResult.submission();
+                EnergyBar bar = sub.assignmentOffering().energyBarForUser(
+                    sub.user());
+                if (bar != null)
+                {
+                    int max = bar.maxCharge();
+                    if (bar.charge() < max)
+                    {
+                        bar.setCharge(max);
+                    }
+                    bar.reevaluateCharge();
+                    bar.logEvent(EnergyBar.FULL_RECHARGE_BONUS, sub);
+                }
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            // ignore, nothing to see here
+        }
     }
 
 

@@ -376,6 +376,11 @@ public class StudentsForAssignmentPage
                             "has been updated by the course staff");
                     }
                 }
+                else
+                {
+                    // Send score to LTI consumer, if score is ready/visible
+                    sub.sendScoreToLTIConsumerIfNecessary();
+                }
             }
         }
 

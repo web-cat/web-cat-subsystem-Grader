@@ -36,6 +36,7 @@ import org.webcat.core.*;
 import org.webcat.grader.graphs.*;
 import org.webcat.grader.lti.LISResultId;
 import org.webcat.woextensions.MigratingEditingContext;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -830,6 +831,22 @@ public class AssignmentOffering
 
 
     // ----------------------------------------------------------
+    public static class SubmitterOfferings
+    {
+        public NSTimestamp expires;
+        public NSArray<AssignmentOffering> offerings;
+
+        public SubmitterOfferings(
+            NSTimestamp expires,
+            NSArray<AssignmentOffering> offerings)
+        {
+            this.expires = expires;
+            this.offerings = offerings;
+        }
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * Retrieves a sorted set of assignment offerings that are available for
      * submission via an external submitter engine.  The set of assignments
@@ -872,7 +889,7 @@ public class AssignmentOffering
      *                   relevant if groupByCRN is false).
      * @return an array of the given assignment offerings
      */
-    public static NSArray<AssignmentOffering> objectsForSubmitterEngine(
+    public static SubmitterOfferings objectsForSubmitterEngine(
         EOEditingContext        context,
         NSDictionary<String, ?> formValues,
         NSTimestamp             currentTime,
@@ -909,10 +926,10 @@ public class AssignmentOffering
             formValueForKey(formValues, "staff"));
         showAll = ERXValueUtilities.booleanValueWithDefault(
             formValueForKey(formValues, "showAll"), showAll || forStaff);
-        if (!forStaff)
-        {
-            qualifier = and(qualifier, publish.isTrue());
-        }
+//        if (!forStaff)
+//        {
+//            qualifier = and(qualifier, publish.isTrue());
+//        }
 
         if (qualifier == null)
         {
@@ -926,8 +943,15 @@ public class AssignmentOffering
         NSArray<EOSortOrdering> orderings = groupByCRN
             ? SUBMISSION_CRN_ORDERINGS
             : SUBMISSION_ORDERINGS;
+        WCFetchSpecification<AssignmentOffering> fspec =
+            new WCFetchSpecification<AssignmentOffering>(
+                AssignmentOffering.ENTITY_NAME, qualifier, orderings);
+        fspec.setUsesDistinct(true);
+        // FIXME: Not isDeep, but need to use prefetching instead
+        fspec.setIsDeep(true);
+//        fspec.setPrefetchingRelationshipKeyPaths(null);
         NSArray<AssignmentOffering> results =
-            objectsMatchingQualifier(context, qualifier, orderings);
+            objectsWithFetchSpecification(context, fspec);
         valueObj = formValueForKey(formValues, "courses");
         if (valueObj != null)
         {
@@ -954,6 +978,32 @@ public class AssignmentOffering
                 ));
             log.debug("after crns filter: " + results);
         }
+
+        // Find query expiration time
+        NSTimestamp expires = null;
+        for (AssignmentOffering offering : results)
+        {
+            NSTimestamp deadline = offering.lateDeadline();
+            if (deadline != null
+                && deadline.after(currentTime)
+                && (expires == null || expires.after(deadline)))
+            {
+                expires = deadline;
+            }
+            deadline = offering.availableFrom();
+            if (deadline != null
+                && deadline.after(currentTime)
+                && (expires == null || expires.after(deadline)))
+            {
+                expires = deadline;
+            }
+            offering.lateDeadline();
+        }
+        if (expires == null)
+        {
+            expires = currentTime;
+        }
+
         qualifier = null;
         if (showAll)
         {
@@ -964,6 +1014,10 @@ public class AssignmentOffering
         {
             qualifier = availableFrom.lessThan(currentTime).and(
                 lateDeadline.greaterThan(currentTime));
+        }
+        if (!forStaff)
+        {
+            qualifier = and(qualifier, publish.isTrue());
         }
         {
             @SuppressWarnings("unchecked")
@@ -1000,7 +1054,7 @@ public class AssignmentOffering
                     + ao.courseOffering().semester());
             }
         }
-        return results;
+        return new SubmitterOfferings(expires, results);
     }
 
 
@@ -1089,6 +1143,7 @@ public class AssignmentOffering
     public void willInsert()
     {
         setLastModified(new NSTimestamp());
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         super.willInsert();
     }
 
@@ -1098,6 +1153,15 @@ public class AssignmentOffering
     public void willUpdate()
     {
         setLastModified(new NSTimestamp());
+        NSDictionary<String, Object> changes = changedProperties();
+
+        // Flush assignment definitions, if needed
+        if (changes.containsKey(DUE_DATE_KEY)
+            || changes.containsKey(CLOSED_ON_DATE_KEY)
+            || changes.containsKey(PUBLISH_KEY))
+        {
+            org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        }
 
         String urlValue = lmsAssignmentUrl();
         if (urlValue != null && !urlValue.isEmpty())

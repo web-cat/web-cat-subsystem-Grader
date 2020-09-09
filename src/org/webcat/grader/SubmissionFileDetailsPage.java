@@ -88,6 +88,12 @@ public class SubmissionFileDetailsPage
     protected void afterAppendToResponse(WOResponse response, WOContext context)
     {
         super.afterAppendToResponse(response, context);
+        PageViewLog.log(localContext(),
+            "SubmissionFileDetailsPage",
+            wcSession().primeUser(),
+            thisFile.submissionResult().submission(),
+            thisFile.submissionResult(),
+            thisFile.fullyQualifiedClassName());
         codeWithComments = null;
         log.debug( "ending appendToResponse()" );
     }

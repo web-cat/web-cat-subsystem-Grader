@@ -21,6 +21,7 @@ BatchNavigator2: org.webcat.core.WCBatchNavigator {
 
 Email: WOHyperlink {
     href = student.emailHref;
+    string = student.email;
 }
 
 Name: WOHyperlink {
@@ -62,6 +63,11 @@ TR: org.webcat.core.TableRow {
 UploadInfo: org.webcat.core.PopUpInfo {
     title   = "Upload a CSV Roster";
     message = "Select the text file you want to upload and click \'Upload\'.  On the next page, you will see a preview of your data and be able to specify the meaning of your columns.  Use UTF-8 encoding for uploaded files that contain extended characters.";
+}
+
+UploadTextboxInfo: org.webcat.core.PopUpInfo {
+    title   = "Upload a CSV Roster";
+    message = "Enter the email addresses of the accounts you wish to enroll, separated by spaces, commas, or newlines.  On the next page, you will see a preview of your data and be able to specify the meaning of your columns.  Use UTF-8 encoding for uploaded files that contain extended characters.";
 }
 
 WCSortOrder1: org.webcat.woextensions.WCSortOrder {
