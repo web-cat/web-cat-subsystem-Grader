@@ -33,6 +33,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
@@ -834,6 +838,10 @@ public class Submission
      */
     public boolean isBetterGradingChoiceThan(Submission other)
     {
+        if (other == null)
+        {
+            return true;
+        }
         if (result() == null)
         {
             if (other.result() == null)
@@ -2073,212 +2081,276 @@ public class Submission
         NSMutableDictionary<User, Submission> submissions,
         CumulativeStats                       accumulator)
     {
-        final NSMutableArray<Submission> brokenPartners =
-            new NSMutableArray<Submission>();
-//        final Set<Submission> partnerSubsForGrading =
-//            new HashSet<Submission>();
-//        final NSMutableDictionary<User, Submission> alternatePrimarySubs =
-//            new NSMutableDictionary<User, Submission>();
+//        final NSMutableArray<Submission> brokenPartners =
+//            new NSMutableArray<Submission>();
+        final Set<User> keepUsers = new HashSet<User>();
 
-        for (User student : users.immutableClone())
+        for (User u : users)
         {
-            log.debug("Scanning submissions for " + student);
-            NSArray<Submission> candidates =
-                Submission.objectsMatchingQualifier(
-                    ec,
-                    Submission.assignmentOffering.eq(anAssignmentOffering).and(
-//                        Submission.result.isNotNull()).and(
-                            Submission.user.eq(student)));
+            keepUsers.add(u);
+        }
 
-            if (log.isDebugEnabled())
+        WCFetchSpecification<Submission> fspec =
+            new WCFetchSpecification<Submission>(
+            Submission.ENTITY_NAME,
+            Submission.assignmentOffering.eq(anAssignmentOffering),
+            Submission.isSubmissionForGrading.descs()
+            .then(Submission.result.dot(SubmissionResult.lastUpdated).desc())
+            .then(Submission.result.dot(SubmissionResult.status).desc())
+            .then(Submission.submitTime.desc())
+            .then(Submission.submitNumber.desc()));
+        fspec.setUsesDistinct(true);
+        fspec.setPrefetchingRelationshipKeyPaths(
+            new NSArray<String>("result"));
+        NSArray<Submission> candidates =
+            objectsWithFetchSpecification(ec, fspec);
+        for (Submission sub : candidates)
+        {
+            if (keepUsers.contains(sub.user()))
             {
-                log.debug("candidates using old fetch = ");
-                for (Submission s : candidates)
+                Submission forGrading = submissions.get(sub.user());
+                if (sub.isBetterGradingChoiceThan(forGrading))
                 {
-                    System.out.println("\t" + s);
+                    submissions.put(sub.user(), sub);
                 }
-
-                NSArray<Submission> newCandidates =
-                    Submission.objectsMatchingQualifier(
-                        ec,
-                        Submission.assignmentOffering.eq(anAssignmentOffering)
-                            .and(Submission.user.eq(student)),
-                        Submission.isSubmissionForGrading
-                            .descs().then(
-                        Submission.result.dot(SubmissionResult.lastUpdated)
-                            .desc()).then(
-                        Submission.result.dot(SubmissionResult.status)
-                            .desc()).then(
-                        Submission.submitNumber.desc()));
-                System.out.println();
-                log.debug("candidates using new fetch = ");
-                for (Submission s : newCandidates)
-                {
-                    System.out.println("\t" + s);
-                    System.out.println("\t\tnumber = " + s.submitNumber());
-                    System.out.println("\t\tlast updated = "
-                        + s.result().lastUpdated());
-                    System.out.println("\t\tstatus = " + s.result().status());
-                    System.out.println("\t\tfor grading = "
-                        + s.isSubmissionForGrading());
-                }
-            }
-
-            Submission forGrading = null;
-            Submission bestPrimary = null;
-            for (Submission sub : candidates)
-            {
-                if (!sub.resultIsReady())
-                {
-                    continue;
-                }
-                // Check to see if any partners are accidentally broken,
-                // and point to the wrong assignment due to an earlier bug
-                // in partnerWith()
-                for (Submission psub : sub.result().submissions())
-                {
-                    if (psub != sub
-                        && psub.assignmentOffering() != null
-                        && sub.assignmentOffering() != null
-                        && psub.assignmentOffering().assignment() !=
-                            sub.assignmentOffering().assignment())
-                    {
-                        brokenPartners.add(psub);
-                    }
-                }
-                sub.migratePartnerLink();
-                if (forGrading == null
-                    || sub.isBetterGradingChoiceThan(forGrading))
-                {
-                    forGrading = sub;
-                }
-                if (!sub.partnerLink()
-                    && (bestPrimary == null
-                        || sub.isBetterGradingChoiceThan(bestPrimary)))
-                {
-                    bestPrimary = sub;
-                }
-            }
-
-            if (forGrading != null)
-            {
-                if (omitPartners && forGrading.partnerLink())
-                {
-//                    if (bestPrimary == null)
-//                    {
-//                        users.removeObject(student);
-//                    }
-//                    else
-//                    {
-//                        partnerSubsForGrading.add(forGrading);
-//                        alternatePrimarySubs.put(student, bestPrimary);
-//                    }
-                    users.removeObject(student);
-                }
-                else
-                {
-                    submissions.setObjectForKey(forGrading, student);
-                    if (accumulator != null)
-                    {
-                        accumulator.accumulate(forGrading);
-                    }
-                }
-            }
-
-            // If any partner submissions that were incorrectly hooked to
-            // the wrong assignment were found, patch them now.
-            if (brokenPartners.count() > 0)
-            {
-                run(new ECAction() { public void action() {
-                    try
-                    {
-                        AssignmentOffering offering =
-                            anAssignmentOffering.localInstance(ec);
-                        for (Submission sub : brokenPartners)
-                        {
-                            Submission psub = sub.localInstance(ec);
-                            log.warn("found partner submission "
-                                + psub.user() + " #" + psub.submitNumber()
-                                + "\non incorrect assignment offering "
-                                + psub.assignmentOffering());
-
-                            NSArray<AssignmentOffering> partnerOfferings =
-                                AssignmentOffering.objectsMatchingQualifier(
-                                    ec,
-                                    AssignmentOffering.courseOffering
-                                        .dot(CourseOffering.course).eq(
-                                            offering.courseOffering().course())
-                                    .and(AssignmentOffering.courseOffering
-                                        .dot(CourseOffering.students).eq(
-                                            psub.user()))
-                                    .and(AssignmentOffering.assignment
-                                    .eq(offering.assignment())));
-                            if (partnerOfferings.count() == 0)
-                            {
-                                log.error("Cannot locate correct assignment "
-                                    + "offering for partner"
-                                    + psub.user() + " #" + psub.submitNumber()
-                                    + "\non incorrect assignment offering "
-                                    + psub.assignmentOffering());
-                            }
-                            else
-                            {
-                                if (partnerOfferings.count() > 1)
-                                {
-                                    log.warn("Multiple possible offerings for "
-                                        + "partner "
-                                        + psub.user() + " #"
-                                        + psub.submitNumber()
-                                        + "\non incorrect assignment offering "
-                                        + psub.assignmentOffering());
-                                    for (AssignmentOffering ao :
-                                        partnerOfferings)
-                                    {
-                                        log.warn("\t" + ao);
-                                    }
-                                }
-
-                                psub.setAssignmentOfferingRelationship(
-                                    partnerOfferings.get(0));
-                            }
-                        }
-                        ec.saveChanges();
-                    }
-                    catch (Exception e)
-                    {
-                        log.error(
-                            "Cannot update broken partner submissions", e);
-                    }
-                }});
             }
         }
 
-        // Add any potential partner subs back
-//        Set<Submission> primarySubmissionsShown =
-//            new HashSet<Submission>(submissions.values());
-//        for (Submission partnered : partnerSubsForGrading)
+        // Accumulate stats, including partners here
+        if (accumulator != null)
+        {
+            for (Submission sub : submissions.values())
+            {
+                accumulator.accumulate(sub);
+            }
+        }
+
+        // Filter partners if necessary
+        if (omitPartners)
+        {
+            NSMutableArray<User> toRemove = new NSMutableArray<User>();
+            for (Submission sub : submissions.values())
+            {
+                if (sub.partnerLink())
+                {
+                    Submission primary = sub.primarySubmission();
+                    Submission primaryForGrading =
+                        submissions.get(primary.user());
+                    if (primaryForGrading != null
+                        && primaryForGrading == primary)
+                    {
+                        users.remove(sub.user());
+                        toRemove.add(sub.user());
+                    }
+                }
+            }
+            for (User u : toRemove)
+            {
+                submissions.remove(u);
+            }
+        }
+
+        return false;
+
+//        for (User student : users.immutableClone())
 //        {
-//            User student = partnered.user();
-//            if (primarySubmissionsShown.contains(partnered.primarySubmission())
-//                || primarySubmissionsShown.contains(
-//                    alternatePrimarySubs.get(student)))
+//            log.debug("Scanning submissions for " + student);
+//            NSArray<Submission> candidates =
+//                Submission.objectsMatchingQualifier(
+//                    ec,
+//                    Submission.assignmentOffering.eq(anAssignmentOffering).and(
+////                        Submission.result.isNotNull()).and(
+//                            Submission.user.eq(student)));
+//
+//            if (log.isDebugEnabled())
 //            {
-//                users.removeObject(student);
-//            }
-//            else
-//            {
-//                Submission forGrading = alternatePrimarySubs.get(student);
-//                primarySubmissionsShown.add(forGrading);
-//                submissions.setObjectForKey(forGrading, student);
-//                if (accumulator != null)
+//                log.debug("candidates using old fetch = ");
+//                for (Submission s : candidates)
 //                {
-//                    accumulator.accumulate(forGrading);
+//                    System.out.println("\t" + s);
+//                }
+//
+//                NSArray<Submission> newCandidates =
+//                    Submission.objectsMatchingQualifier(
+//                        ec,
+//                        Submission.assignmentOffering.eq(anAssignmentOffering)
+//                            .and(Submission.user.eq(student)),
+//                        Submission.isSubmissionForGrading
+//                            .descs().then(
+//                        Submission.result.dot(SubmissionResult.lastUpdated)
+//                            .desc()).then(
+//                        Submission.result.dot(SubmissionResult.status)
+//                            .desc()).then(
+//                        Submission.submitNumber.desc()));
+//                System.out.println();
+//                log.debug("candidates using new fetch = ");
+//                for (Submission s : newCandidates)
+//                {
+//                    System.out.println("\t" + s);
+//                    System.out.println("\t\tnumber = " + s.submitNumber());
+//                    System.out.println("\t\tlast updated = "
+//                        + s.result().lastUpdated());
+//                    System.out.println("\t\tstatus = " + s.result().status());
+//                    System.out.println("\t\tfor grading = "
+//                        + s.isSubmissionForGrading());
 //                }
 //            }
+//
+//            Submission forGrading = null;
+//            Submission bestPrimary = null;
+//            for (Submission sub : candidates)
+//            {
+//                if (!sub.resultIsReady())
+//                {
+//                    continue;
+//                }
+//                // Check to see if any partners are accidentally broken,
+//                // and point to the wrong assignment due to an earlier bug
+//                // in partnerWith()
+//                for (Submission psub : sub.result().submissions())
+//                {
+//                    if (psub != sub
+//                        && psub.assignmentOffering() != null
+//                        && sub.assignmentOffering() != null
+//                        && psub.assignmentOffering().assignment() !=
+//                            sub.assignmentOffering().assignment())
+//                    {
+//                        brokenPartners.add(psub);
+//                    }
+//                }
+//                sub.migratePartnerLink();
+//                if (forGrading == null
+//                    || sub.isBetterGradingChoiceThan(forGrading))
+//                {
+//                    forGrading = sub;
+//                }
+//                if (!sub.partnerLink()
+//                    && (bestPrimary == null
+//                        || sub.isBetterGradingChoiceThan(bestPrimary)))
+//                {
+//                    bestPrimary = sub;
+//                }
+//            }
+//
+//            if (forGrading != null)
+//            {
+//                if (omitPartners && forGrading.partnerLink())
+//                {
+////                    if (bestPrimary == null)
+////                    {
+////                        users.removeObject(student);
+////                    }
+////                    else
+////                    {
+////                        partnerSubsForGrading.add(forGrading);
+////                        alternatePrimarySubs.put(student, bestPrimary);
+////                    }
+//                    users.removeObject(student);
+//                }
+//                else
+//                {
+//                    submissions.setObjectForKey(forGrading, student);
+//                    if (accumulator != null)
+//                    {
+//                        accumulator.accumulate(forGrading);
+//                    }
+//                }
+//            }
+//
+//            // If any partner submissions that were incorrectly hooked to
+//            // the wrong assignment were found, patch them now.
+//            if (brokenPartners.count() > 0)
+//            {
+//                run(new ECAction() { public void action() {
+//                    try
+//                    {
+//                        AssignmentOffering offering =
+//                            anAssignmentOffering.localInstance(ec);
+//                        for (Submission sub : brokenPartners)
+//                        {
+//                            Submission psub = sub.localInstance(ec);
+//                            log.warn("found partner submission "
+//                                + psub.user() + " #" + psub.submitNumber()
+//                                + "\non incorrect assignment offering "
+//                                + psub.assignmentOffering());
+//
+//                            NSArray<AssignmentOffering> partnerOfferings =
+//                                AssignmentOffering.objectsMatchingQualifier(
+//                                    ec,
+//                                    AssignmentOffering.courseOffering
+//                                        .dot(CourseOffering.course).eq(
+//                                            offering.courseOffering().course())
+//                                    .and(AssignmentOffering.courseOffering
+//                                        .dot(CourseOffering.students).eq(
+//                                            psub.user()))
+//                                    .and(AssignmentOffering.assignment
+//                                    .eq(offering.assignment())));
+//                            if (partnerOfferings.count() == 0)
+//                            {
+//                                log.error("Cannot locate correct assignment "
+//                                    + "offering for partner"
+//                                    + psub.user() + " #" + psub.submitNumber()
+//                                    + "\non incorrect assignment offering "
+//                                    + psub.assignmentOffering());
+//                            }
+//                            else
+//                            {
+//                                if (partnerOfferings.count() > 1)
+//                                {
+//                                    log.warn("Multiple possible offerings for "
+//                                        + "partner "
+//                                        + psub.user() + " #"
+//                                        + psub.submitNumber()
+//                                        + "\non incorrect assignment offering "
+//                                        + psub.assignmentOffering());
+//                                    for (AssignmentOffering ao :
+//                                        partnerOfferings)
+//                                    {
+//                                        log.warn("\t" + ao);
+//                                    }
+//                                }
+//
+//                                psub.setAssignmentOfferingRelationship(
+//                                    partnerOfferings.get(0));
+//                            }
+//                        }
+//                        ec.saveChanges();
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        log.error(
+//                            "Cannot update broken partner submissions", e);
+//                    }
+//                }});
+//            }
 //        }
-
-        //return new Submissions(subs, brokenPartners);
-        return brokenPartners.count() > 0;
+//
+//        // Add any potential partner subs back
+////        Set<Submission> primarySubmissionsShown =
+////            new HashSet<Submission>(submissions.values());
+////        for (Submission partnered : partnerSubsForGrading)
+////        {
+////            User student = partnered.user();
+////            if (primarySubmissionsShown.contains(partnered.primarySubmission())
+////                || primarySubmissionsShown.contains(
+////                    alternatePrimarySubs.get(student)))
+////            {
+////                users.removeObject(student);
+////            }
+////            else
+////            {
+////                Submission forGrading = alternatePrimarySubs.get(student);
+////                primarySubmissionsShown.add(forGrading);
+////                submissions.setObjectForKey(forGrading, student);
+////                if (accumulator != null)
+////                {
+////                    accumulator.accumulate(forGrading);
+////                }
+////            }
+////        }
+//
+//        //return new Submissions(subs, brokenPartners);
+//        return brokenPartners.count() > 0;
     }
 
 
