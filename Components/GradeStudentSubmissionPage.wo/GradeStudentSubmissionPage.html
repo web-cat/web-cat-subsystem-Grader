@@ -1,14 +1,14 @@
 <wo name="Page"><wo name="WizardForm">
 <wo name="PickSubmissionDialog"/>
-<wo:hidden id="userName" name="userName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(user.userName)"/>
-<wo:hidden id="studentUserName" name="studentUserName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.user.userName)"/>
-<wo:hidden id="userFirstName" name="userFirstName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(user.firstName)"/>
-<wo:hidden id="userLastName" name="userLastName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(user.lastName)"/>
-<wo:hidden id="courseId" name="courseId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars((submission.assignmentOffering.courseOffering.course.department.abbreviation + submission.assignmentOffering.courseOffering.course.number).replaceAll('[^A-Z0-9]', ''))"/>
-<wo:hidden id="sectionId" name="sectionId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.courseOffering.crnSubdirName)"/>
-<wo:hidden id="assignmentId" name="assignmentId" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.assignment.subdirName)"/>
-<wo:hidden id="assignmentName" name="assignmentName" value="~@er.extensions.foundation.ERXStringUtilities@escapeNonXMLChars(submission.assignmentOffering.assignment.name)"/>
-<wo:hidden id="submissionNumber" name="submissionNumber" value="$submission.submitNumber"/>
+<wo:hidden id="userName" name="userName" value="$userName"/>
+<wo:hidden id="studentUserName" name="studentUserName" value="$studentUserName"/>
+<wo:hidden id="userFirstName" name="userFirstName" value="$userFirstName"/>
+<wo:hidden id="userLastName" name="userLastName" value="$userLastName"/>
+<wo:hidden id="courseId" name="courseId" value="$courseId"/>
+<wo:hidden id="sectionId" name="sectionId" value="$sectionId"/>
+<wo:hidden id="assignmentId" name="assignmentId" value="$assignmentId"/>
+<wo:hidden id="assignmentName" name="assignmentName" value="$assignmentName"/>
+<wo:hidden id="submissionNumber" name="submissionNumber" value="$submissionNumber"/>
 <wo:if condition="~submission.assignmentOffering.courseOffering.isInstructor(user)">
 <input type="hidden" id="userRole" name="userRole" value="instructor"/>
 </wo:if>
