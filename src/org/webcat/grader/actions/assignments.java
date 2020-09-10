@@ -21,9 +21,8 @@
 
 package org.webcat.grader.actions;
 
+import org.webcat.core.actions.WCDirectAction;
 import com.webobjects.appserver.*;
-
-import er.extensions.appserver.ERXDirectAction;
 
 // -------------------------------------------------------------------------
 /**
@@ -34,7 +33,7 @@ import er.extensions.appserver.ERXDirectAction;
  * @version $Id: assignments.java,v 1.2 2013/09/01 01:30:41 stedwar2 Exp $
  */
 public class assignments
-    extends ERXDirectAction
+    extends WCDirectAction
 {
     //~ Constructors ..........................................................
 
