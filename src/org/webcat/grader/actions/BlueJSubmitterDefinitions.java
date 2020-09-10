@@ -68,7 +68,7 @@ public class BlueJSubmitterDefinitions
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void appendToResponse( WOResponse response, WOContext context )
+    public void appendToResponse(WOResponse response, WOContext context)
     {
         // System.out.println("query string = " + context.request().queryString());
         // System.out.println("handler = " + context.request().requestHandlerKey());
@@ -105,6 +105,7 @@ public class BlueJSubmitterDefinitions
         excludePatternsIndex = -1;
         requirePatternsIndex = -1;
         currentTime = new NSTimestamp();
+
         EOEditingContext ec = WCEC.newEditingContext();
         try
         {
