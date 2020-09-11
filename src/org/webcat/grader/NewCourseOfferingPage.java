@@ -99,7 +99,7 @@ public class NewCourseOfferingPage
         }
         if (institutions == null)
         {
-            institutions = AuthenticationDomain.authDomains();
+            institutions = AuthenticationDomain.authDomains(localContext());
             institution = user().authenticationDomain();
         }
 

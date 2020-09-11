@@ -25,20 +25,17 @@ import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WORequest;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOEditingContext;
-import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.webcat.core.Application;
 import org.webcat.core.CourseOffering;
-import org.webcat.core.DirectAction;
-import org.webcat.core.FilePattern;
 import org.webcat.core.FileUtilities;
 import org.webcat.core.Session;
 import org.webcat.core.User;
+import org.webcat.core.actions.WCDirectActionWithSession;
 import org.webcat.grader.Submission;
 import org.webcat.grader.SubmissionResult;
 
@@ -53,7 +50,7 @@ import org.webcat.grader.SubmissionResult;
 * @version $Id: submissionResultResource.java,v 1.2 2011/05/19 16:47:53 stedwar2 Exp $
 */
 public class submissionResultResource
-   extends DirectAction
+   extends WCDirectActionWithSession
 {
    //~ Constructor ...........................................................
 

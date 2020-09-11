@@ -92,7 +92,7 @@ public class GradeStudentSubmissionPage
     public String sectionId;
     public String assignmentId;
     public String assignmentName;
-    public int submissionNumber;
+    public String submissionNumber;
 
 
     //~ Methods ...............................................................
@@ -157,7 +157,7 @@ public class GradeStudentSubmissionPage
                 .assignment().subdirName());
             assignmentName = escapeNonXMLChars(submission.assignmentOffering()
                 .assignment().name());
-            submissionNumber = submission.submitNumber();
+            submissionNumber = Integer.toString(submission.submitNumber());
         }
 
         super.beforeAppendToResponse( response, context );

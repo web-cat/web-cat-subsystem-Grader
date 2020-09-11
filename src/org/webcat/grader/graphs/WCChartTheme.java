@@ -54,14 +54,7 @@ public class WCChartTheme extends StandardChartTheme
     {
         super("Web-CAT");
 
-        if (theme != null)
-        {
-            this.theme = theme;
-        }
-        else
-        {
-            this.theme = Theme.defaultTheme();
-        }
+        this.theme = theme;
 
         // Use the font that we currently have as the default Web-CAT font.
 

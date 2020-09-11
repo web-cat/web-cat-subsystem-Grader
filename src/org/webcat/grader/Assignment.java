@@ -516,10 +516,10 @@ public class Assignment
 
 
     // ----------------------------------------------------------
-    private void renameSubdirs( String oldSubdir, String newSubdir )
+    private void renameSubdirs(String oldSubdir, String newSubdir)
     {
         NSArray<AuthenticationDomain> domains =
-            AuthenticationDomain.authDomains();
+            AuthenticationDomain.authDomains(editingContext());
         for (AuthenticationDomain domain : domains)
         {
             NSArray<AssignmentOffering> myOfferings = offerings();

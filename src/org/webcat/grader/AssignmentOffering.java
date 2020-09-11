@@ -635,7 +635,7 @@ public class AssignmentOffering
             {
                 log.debug("deleting subdir suffix " + subdirToDelete);
                 for (AuthenticationDomain domain :
-                    AuthenticationDomain.authDomains())
+                    AuthenticationDomain.authDomains(context))
                 {
                     StringBuffer dir = domain.submissionBaseDirBuffer();
                     dir.append(subdirToDelete);
