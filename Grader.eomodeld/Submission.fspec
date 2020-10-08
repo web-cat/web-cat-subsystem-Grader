@@ -20,6 +20,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -38,6 +39,7 @@
             selectorName = "isEqualTo:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -67,6 +69,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -96,6 +99,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -114,6 +118,7 @@
             selectorName = "isEqualTo:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -148,6 +153,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         userInfo = {ensureUnique = true; };
     };
     submissionsForAssignmentAndUserDescending = {
@@ -176,6 +182,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -204,6 +211,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -232,6 +240,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -266,6 +275,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -300,6 +310,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;

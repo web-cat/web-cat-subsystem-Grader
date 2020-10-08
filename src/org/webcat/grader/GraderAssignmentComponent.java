@@ -114,21 +114,21 @@ public class GraderAssignmentComponent
      * @return True if successful, false if the parameter is missing
      */
     @Override
-    public boolean startWith(NSDictionary<String, NSArray<Object>> params )
+    public boolean startWith(NSDictionary<String, NSArray<Object>> params)
     {
         boolean result = false;
         String aoid =
-            stringValueForKey( params, AssignmentOffering.ID_FORM_KEY );
-        if ( aoid != null )
+            stringValueForKey(params, AssignmentOffering.ID_FORM_KEY);
+        if (aoid != null)
         {
-            result = startWith( AssignmentOffering
-                .forId( localContext(), aoid ) );
+            result = startWith(AssignmentOffering
+                .forId(localContext(), aoid));
         }
         else
         {
-            String aid = stringValueForKey( params, Assignment.ID_FORM_KEY );
-            result = startWith( Assignment
-                .forId( localContext(), aid ) );
+            String aid = stringValueForKey(params, Assignment.ID_FORM_KEY);
+            result = startWith(Assignment
+                .forId(localContext(), aid));
         }
         return result;
     }

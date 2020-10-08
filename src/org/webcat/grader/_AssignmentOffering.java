@@ -139,6 +139,21 @@ public abstract class _AssignmentOffering
      * @return The object, or null if no such id exists
      */
     public static AssignmentOffering forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (AssignmentOffering)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static AssignmentOffering forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -230,6 +245,19 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public AssignmentOffering refetch(EOEditingContext editingContext)
+    {
+        return (AssignmentOffering)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -259,6 +287,7 @@ public abstract class _AssignmentOffering
             return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
+
 
     // ----------------------------------------------------------
     /**
@@ -410,26 +439,26 @@ public abstract class _AssignmentOffering
                 graphSummaryRawCache = dbValue;
                 org.webcat.grader.graphs.AssignmentSummary newValue =
                     org.webcat.grader.graphs.AssignmentSummary
-                    .objectWithArchiveData( dbValue );
-                if ( graphSummaryCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (graphSummaryCache != null)
                 {
-                    graphSummaryCache.copyFrom( newValue );
+                    graphSummaryCache.copyFrom(newValue);
                 }
                 else
                 {
                     graphSummaryCache = newValue;
                 }
-                graphSummaryCache.setOwner( this );
-                setUpdateMutableFields( true );
+                graphSummaryCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && graphSummaryCache == null )
+        else if (dbValue == null && graphSummaryCache == null)
         {
             graphSummaryCache =
                 org.webcat.grader.graphs.AssignmentSummary
-                .objectWithArchiveData( dbValue );
-             graphSummaryCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             graphSummaryCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return graphSummaryCache;
     }
@@ -442,26 +471,26 @@ public abstract class _AssignmentOffering
      *
      * @param value The new value for this property
      */
-    public void setGraphSummary( org.webcat.grader.graphs.AssignmentSummary value )
+    public void setGraphSummary(org.webcat.grader.graphs.AssignmentSummary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setGraphSummary("
-                + value + ")" );
+            log.debug("setGraphSummary("
+                + value + ")");
         }
-        if ( graphSummaryCache == null )
+        if (graphSummaryCache == null)
         {
             graphSummaryCache = value;
             value.setHasChanged( false );
             graphSummaryRawCache = value.archiveData();
-            takeStoredValueForKey( graphSummaryRawCache, "graphSummary" );
+            takeStoredValueForKey(graphSummaryRawCache, "graphSummary");
         }
-        else if ( graphSummaryCache != value )  // ( graphSummaryCache != null )
+        else if (graphSummaryCache != value)  // ( graphSummaryCache != null )
         {
-            graphSummaryCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            graphSummaryCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( graphSummaryCache == non-null value )
+        else  // (graphSummaryCache == non-null value)
         {
             // no nothing
         }
@@ -477,9 +506,9 @@ public abstract class _AssignmentOffering
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearGraphSummary()" );
+            log.debug("clearGraphSummary()");
         }
-        takeStoredValueForKey( null, "graphSummary" );
+        takeStoredValueForKey(null, "graphSummary");
         graphSummaryRawCache = null;
         graphSummaryCache = null;
     }
@@ -1735,6 +1764,7 @@ public abstract class _AssignmentOffering
             new WCFetchSpecification<AssignmentOffering>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1759,6 +1789,7 @@ public abstract class _AssignmentOffering
             new WCFetchSpecification<AssignmentOffering>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<AssignmentOffering> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1954,6 +1985,8 @@ public abstract class _AssignmentOffering
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<AssignmentOffering> objects =
@@ -2342,6 +2375,33 @@ public abstract class _AssignmentOffering
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

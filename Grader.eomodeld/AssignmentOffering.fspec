@@ -3,20 +3,20 @@
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        isDeep = YES;
+        refreshesRefetchedObjects = YES;
         sortOrderings = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; });
     };
     offeringsForCourseOffering = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOKeyValueQualifier;
             key = courseOffering;
             selectorName = "isEqualTo:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -25,13 +25,13 @@
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOKeyValueQualifier;
             key = "courseOffering.course";
             selectorName = "isEqualTo:";
             value = {"_key" = course; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -40,7 +40,6 @@
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOOrQualifier;
             qualifiers = (
@@ -58,6 +57,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -66,13 +66,13 @@
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOKeyValueQualifier;
             key = "courseOffering.students";
             selectorName = "doesContain:";
             value = {"_key" = user; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );

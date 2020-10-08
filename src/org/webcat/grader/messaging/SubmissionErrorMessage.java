@@ -26,6 +26,7 @@ import java.util.List;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
+import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
 
 //-------------------------------------------------------------------------
@@ -53,10 +54,33 @@ public abstract class SubmissionErrorMessage
      * @param attachments A list of files to attach, or null if none.
      */
     public SubmissionErrorMessage(
-        Submission submission, List<File> attachments)
+        EOEditingContext ec,
+        Submission submission,
+        List<File> attachments)
     {
-        this.submission = submission.localInstance(editingContext());
-        this.attachments = attachments;
+//        this.submission = submission.localInstance(editingContext());
+        attachments = attachments;
+        submitNumber = submission.submitNumber();
+        userName = submission.user().userName();
+        assignmentName =
+            submission.assignmentOffering().assignment().name();
+        course = submission.assignmentOffering().courseOffering().course()
+            .deptNumber();
+        courseOffering = submission.assignmentOffering().courseOffering()
+            .compactName();
+        submissionPath =
+            submission.user().authenticationDomain().subdirName()
+            + "/" + submission.assignmentOffering().courseOffering()
+            .semester().dirName()
+            + "/" + submission.assignmentOffering().courseOffering()
+            .crnSubdirName()
+            + "/" + submission.assignmentOffering().assignment().subdirName()
+            + "/" + userName
+            + "/" + submitNumber;
+        NSArray<User> instructors = submission.assignmentOffering()
+            .courseOffering().instructors();
+        setUserEmails(extractEmails(ec, instructors));
+        setUserIds(extractIds(ec, instructors));
     }
 
 
@@ -74,33 +98,15 @@ public abstract class SubmissionErrorMessage
      *        in which case it alone will be attached.
      */
     public SubmissionErrorMessage(
-        Submission submission, File attachmentFileOrDir)
+        EOEditingContext ec,
+        Submission submission,
+        File attachmentFileOrDir)
     {
-        this(submission, listFromFile(attachmentFileOrDir));
+        this(ec, submission, listFromFile(attachmentFileOrDir));
     }
 
 
     //~ public Methods ........................................................
-
-    // ----------------------------------------------------------
-    @Override
-    public synchronized NSArray<User> users()
-    {
-        if (submission != null
-            && submission.assignmentOffering() != null
-            && submission.assignmentOffering().courseOffering() != null)
-        {
-            return submission.assignmentOffering().courseOffering()
-                .instructors();
-        }
-        else
-        {
-            @SuppressWarnings("unchecked")
-            NSArray<User> result = NSArray.EmptyArray;
-            return result;
-        }
-    }
-
 
     // ----------------------------------------------------------
     @Override
@@ -111,13 +117,6 @@ public abstract class SubmissionErrorMessage
 
 
     //~ private Methods .......................................................
-
-    // ----------------------------------------------------------
-    protected Submission submission()
-    {
-        return submission;
-    }
-
 
     // ----------------------------------------------------------
     private static List<File> listFromFile(File attachmentFileOrDir)
@@ -152,6 +151,11 @@ public abstract class SubmissionErrorMessage
 
     //~ Static/instance variables .............................................
 
-    private Submission submission;
+    protected final int submitNumber;
+    protected final String userName;
+    protected final String assignmentName;
+    protected final String submissionPath;
+    protected final String course;
+    protected final String courseOffering;
     private List<File> attachments;
 }

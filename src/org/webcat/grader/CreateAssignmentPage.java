@@ -88,7 +88,7 @@ public class CreateAssignmentPage
         if ( semesters == null )
         {
             semesters =
-                Semester.allObjectsOrderedByStartDate( localContext() );
+                Semester.allObjectsOrderedByStartDate(localContext());
             Object semesterPref = user.preferences()
                 .valueForKey( SEMESTER_PREF_KEY );
             if (semesterPref == null && semesters.count() > 0)
@@ -98,14 +98,14 @@ public class CreateAssignmentPage
             }
             else
             {
-                semester = Semester.forId( localContext(),
-                    ERXValueUtilities.intValue( semesterPref ) );
+                semester = Semester.forId(localContext(),
+                    ERXValueUtilities.intValue(semesterPref));
             }
         }
         // Save selected semester
         user.preferences().takeValueForKey(
             semester == null ? ERXConstant.ZeroInteger : semester.id(),
-            SEMESTER_PREF_KEY );
+            SEMESTER_PREF_KEY);
         user.savePreferences();
 
         // Second, make sure list of reusable assignments is set
@@ -178,30 +178,30 @@ public class CreateAssignmentPage
     // ----------------------------------------------------------
     public void reuseExistingAssignment()
     {
-        log.debug( "reuseExistingAssignment()" );
+        log.debug("reuseExistingAssignment()");
         Assignment selected = assignmentDisplayGroup.displayedObjects()
-            .objectAtIndex( selectedIndex );
+            .objectAtIndex(selectedIndex);
         NSTimestamp common = selected.commonOfferingsDueDate();
         AssignmentOffering newOffering = new AssignmentOffering();
-        localContext().insertObject( newOffering );
-        newOffering.setAssignmentRelationship( selected );
-        prefs().setAssignmentOfferingRelationship( newOffering );
-        configureNewAssignmentOffering( common );
+        localContext().insertObject(newOffering);
+        newOffering.setAssignmentRelationship(selected);
+        prefs().setAssignmentOfferingRelationship(newOffering);
+        configureNewAssignmentOffering(common);
     }
 
 
     // ----------------------------------------------------------
     public void createNewAssignment()
     {
-        log.debug( "createNewAssignment()" );
+        log.debug("createNewAssignment()");
         Assignment newAssignment = new Assignment();
-        localContext().insertObject( newAssignment );
+        localContext().insertObject(newAssignment);
         AssignmentOffering newOffering = new AssignmentOffering();
-        localContext().insertObject( newOffering );
-        newOffering.setAssignmentRelationship( newAssignment );
-        prefs().setAssignmentOfferingRelationship( newOffering );
-        newAssignment.setAuthorRelationship( user() );
-        configureNewAssignmentOffering( null );
+        localContext().insertObject(newOffering);
+        newOffering.setAssignmentRelationship(newAssignment);
+        prefs().setAssignmentOfferingRelationship(newOffering);
+        newAssignment.setAuthorRelationship(user());
+        configureNewAssignmentOffering(null);
     }
 
 
@@ -254,13 +254,13 @@ public class CreateAssignmentPage
         // Next, look for assignments for this course with similar names,
         // and try to spot a trend
         String name1 = newOffering.assignment().name();
-        if ( name1 != null )
+        if (name1 != null)
         {
             NSMutableArray<AssignmentOffering> others =
                 AssignmentOffering.offeringsWithSimilarNames(
                     localContext(), name1,
-                    coreSelections().courseOffering(), 2 );
-            if ( others.count() > 1 )
+                    coreSelections().courseOffering(), 2);
+            if (others.count() > 1)
             {
                 AssignmentOffering ao1 = others.objectAtIndex( 0 );
                 GregorianCalendar ao1DateTime = new GregorianCalendar();

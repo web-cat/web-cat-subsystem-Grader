@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2006-2019 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,13 +22,13 @@ package org.webcat.grader;
 import com.Ostermiller.util.*;
 import com.webobjects.appserver.*;
 import com.webobjects.eoaccess.*;
-import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.*;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.ui.generators.JavascriptGenerator;
+import org.webcat.woextensions.WCEC;
 
 //-------------------------------------------------------------------------
 /**
@@ -613,7 +613,7 @@ public class UploadRosterPage
     // ----------------------------------------------------------
     private void readStudentList(boolean execute)
     {
-        EOEditingContext ec = localContext();
+        WCEC ec = localContext();
 
         try
         {

@@ -25,8 +25,8 @@ import java.io.File;
 import java.util.List;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
-import org.webcat.grader.AssignmentOffering;
 import org.webcat.grader.Submission;
+import com.webobjects.eocontrol.EOEditingContext;
 
 //-------------------------------------------------------------------------
 /**
@@ -44,9 +44,11 @@ public class AdminReportsForSubmissionMessage
 
     // ----------------------------------------------------------
     public AdminReportsForSubmissionMessage(
-        Submission submission, List<File> attachments)
+        EOEditingContext ec,
+        Submission submission,
+        List<File> attachments)
     {
-        super(submission, attachments);
+        super(ec, submission, attachments);
     }
 
 
@@ -79,12 +81,10 @@ public class AdminReportsForSubmissionMessage
     @Override
     public String title()
     {
-        AssignmentOffering assignment = submission().assignmentOffering();
-
         return "[Grader] reports: "
-            + submission().user().email() + " #"
-            + submission().submitNumber()
-            + (assignment == null ? "" : (", " + assignment.titleString()));
+            + assignmentName
+            + ": "
+            + submissionPath;
     }
 
 

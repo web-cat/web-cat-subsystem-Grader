@@ -112,10 +112,11 @@ public class GraderNavigator
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
-    public void awake()
+    @Override
+    public void lateAwake()
     {
         log.debug("entering awake()");
-        super.awake();
+        super.lateAwake();
         if (!(selectionsParent instanceof GraderAssignmentComponent))
         {
             throw new IllegalStateException("GraderNavigator can only be "

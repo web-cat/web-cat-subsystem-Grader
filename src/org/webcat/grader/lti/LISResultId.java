@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2018 Virginia Tech
+ |  Copyright (C) 2018-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -29,12 +29,13 @@ import net.oauth.OAuthMessage;
 import net.oauth.ParameterStyle;
 import net.oauth.client.OAuthClient;
 import net.oauth.client.httpclient4.HttpClient4;
-import org.apache.log4j.Logger;
 import org.webcat.core.User;
 import org.webcat.core.lti.LMSInstance;
 import org.webcat.grader.AssignmentOffering;
 import org.webcat.grader.Submission;
+import org.webcat.woextensions.ECAction;
 import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
 
 // -------------------------------------------------------------------------
 /**
@@ -61,6 +62,36 @@ public class LISResultId
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+    public static LISResultId forAssignmentAndUser(
+        final EOEditingContext context,
+        final AssignmentOffering anAssignmentOffering,
+        final User aUser)
+    {
+        LISResultId result = null;
+        final NSArray<LISResultId> ids = objectsMatchingQualifier(
+            context,
+            user.is(aUser).and(
+            assignmentOffering.is(anAssignmentOffering)));
+        if (ids != null && ids.size() > 0)
+        {
+            result = ids.get(0);
+            if (ids.size() > 1)
+            {
+                // If multiple bars, clean them up!
+                new ECAction() { public void action() {
+                    for (int i = 1; i < ids.size(); i++)
+                    {
+                        ids.get(i).localInstance(ec).delete();
+                    }
+                    ec.saveChanges();
+                }}.run();
+            }
+        }
+        return result;
+    }
+
+
+    // ----------------------------------------------------------
     public static LISResultId ensureExists(
         EOEditingContext editingContext,
         User userValue,
@@ -68,13 +99,15 @@ public class LISResultId
         LMSInstance lms,
         String lisResultSourcedIdValue)
     {
-        LISResultId result = uniqueObjectMatchingQualifier(editingContext,
-            user.is(userValue).and(
-            assignmentOffering.is(assignmentOfferingValue)));
+        LISResultId result = forAssignmentAndUser(
+            editingContext, assignmentOfferingValue, userValue);
         if (result == null)
         {
             result = create(editingContext, lisResultSourcedIdValue,
                 assignmentOfferingValue, lms, userValue);
+            // FIXME: find exception thrown if index is used and duplicate
+            // is accidentally attempted, and recover from that exception
+            // here
             editingContext.saveChanges();
         }
         else
@@ -109,10 +142,14 @@ public class LISResultId
         if (submission.assignmentOffering() == null) return;
         if (submission.isSubmissionForGrading())
         {
-            LISResultId id = uniqueObjectMatchingQualifier(
+            // Was "unique" instead of "first", but concurrent insertions
+            // need to be fixed before we can use unique, and this variant
+            // will work in the meantime ... and will continue working once
+            // the fix is in place
+            LISResultId id = firstObjectMatchingQualifier(
                 submission.editingContext(),
                 user.is(submission.user()).and(
-                assignmentOffering.is(submission.assignmentOffering())));
+                assignmentOffering.is(submission.assignmentOffering())), null);
             String url =
                 submission.assignmentOffering().lisOutcomeServiceUrl();
             log.debug("sendScoreToLTIConsumer(" + submission + "): id = "

@@ -72,7 +72,7 @@ public class submissionResultResource
    {
        WOResponse response = new WOResponse();
 
-       Session session = (Session) session();
+       Session session = (Session)session();
 
        if (session == null || session.user() == null)
        {
@@ -89,8 +89,14 @@ public class submissionResultResource
            path = path.substring(1);
        }
 
-       EOEditingContext ec = session.sessionContext();
+       EOEditingContext ec = session.defaultEditingContext();
        SubmissionResult result = SubmissionResult.forId(ec, resultId);
+
+       if (result == null)
+       {
+           response.setStatus(WOResponse.HTTP_STATUS_FORBIDDEN);
+           return response;
+       }
 
        File requestedFile =
            result.submission().fileForPublicResourceAtPath(path);

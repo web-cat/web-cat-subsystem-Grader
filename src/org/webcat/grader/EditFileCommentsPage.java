@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: EditFileCommentsPage.java,v 1.7 2011/10/25 15:32:06 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -22,7 +20,6 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
-import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import java.io.*;
 import java.util.*;
@@ -32,6 +29,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.webcat.core.*;
 import org.webcat.grader.messaging.GraderMarkupParseError;
+import org.webcat.woextensions.WCEC;
 import org.webcat.woextensions.WCResourceManager;
 import com.webobjects.appserver.WODisplayGroup;
 
@@ -42,8 +40,6 @@ import com.webobjects.appserver.WODisplayGroup;
  * of the source code.
  *
  * @author  Stephen Edwards, Hussein Vastani
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.7 $, $Date: 2011/10/25 15:32:06 $
  */
 public class EditFileCommentsPage
     extends GraderComponent
@@ -238,7 +234,7 @@ public class EditFileCommentsPage
     {
         boolean commentsModified = false;
         double taPts = 0.0;
-        EOEditingContext ec = localContext();
+        WCEC ec = localContext();
         if (codeWithCommentsToStore == null)
         {
             return taPts;
@@ -418,6 +414,7 @@ public class EditFileCommentsPage
                 + fileStats.markupFile().getPath(), e);
 
             new GraderMarkupParseError(
+                fileStats.editingContext(),
                 fileStats.submissionResult().submission(),
                 GraderMarkupParseError.LOCATION_EDIT_FILE_COMMENTS,
                 e,

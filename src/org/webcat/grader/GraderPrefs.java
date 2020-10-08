@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2006-2018 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -45,12 +45,60 @@ public class GraderPrefs
 
     //~ Methods ...............................................................
 
+    // FIXME: Code here should now be redundant, since it is fixed in
+    // CachingEOManager base class permanently for all keys
+    // ----------------------------------------------------------
+    @Override
+    public Assignment assignment()
+    {
+        try
+        {
+            Assignment result =  super.assignment();
+            if (result != null)
+            {
+                result.name();  // Force access of this object
+            }
+            return result;
+        }
+        catch (Exception e)
+        {
+            log.debug("assignment(): attempting to force null after "
+                + e);
+            if (log.isDebugEnabled())
+            {
+                // cut off debugging in base class to avoid recursive
+                // calls to this method!
+                Level oldLevel = log.getLevel();
+                try
+                {
+                    log.setLevel(Level.OFF);
+                    // Do NOT call setAssignmentOfferingRelationship, since
+                    // it in turn calls assignmentOffering()!
+                    super.setAssignment(null);
+                }
+                finally
+                {
+                    log.setLevel(oldLevel);
+                }
+            }
+            else
+            {
+                // Do NOT call setAssignmentOfferingRelationship, since it in
+                // turn calls assignmentOffering()!
+                super.setAssignment(null);
+            }
+            return super.assignment();
+        }
+     }
+
+
     // ----------------------------------------------------------
     /**
      * Retrieve the entity pointed to by the <code>assignmentOffering</code>
      * relationship.
      * @return the entity in the relationship
      */
+    @Override
     public AssignmentOffering assignmentOffering()
     {
         try

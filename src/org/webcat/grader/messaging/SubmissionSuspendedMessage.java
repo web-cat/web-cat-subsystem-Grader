@@ -25,7 +25,7 @@ import java.io.File;
 import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
-import com.webobjects.foundation.NSArray;
+import com.webobjects.eocontrol.EOEditingContext;
 
 //-------------------------------------------------------------------------
 /**
@@ -52,12 +52,13 @@ public class SubmissionSuspendedMessage
      *                       (normally the submission's result dir).
      */
     public SubmissionSuspendedMessage(
+        EOEditingContext ec,
         Submission submission,
         Exception  e,
         String     stage,
         File       attachmentsDir)
     {
-        super(submission, attachmentsDir);
+        super(ec, submission, attachmentsDir);
         this.exception = e;
         this.stage = stage;
     }
@@ -102,71 +103,7 @@ public class SubmissionSuspendedMessage
     @Override
     public String title()
     {
-        String username = "<no user>";
-        String submitNumber = "<no submit number>";
-        String course = "";
-        String crn = "";
-        String assignment = "";
-        String semester = "";
-
-        if (submission() != null)
-        {
-            if (submission().user() != null)
-            {
-                username = submission().user().userName();
-            }
-
-            if (submission().submitNumberRaw() != null)
-            {
-                submitNumber = Integer.toString(submission().submitNumber());
-            }
-
-            if (submission().assignmentOffering() != null)
-            {
-                assignment = submission().assignmentOffering().assignment()
-                    .subdirName() + "/";
-                if (submission().assignmentOffering().courseOffering() != null)
-                {
-                    crn = submission().assignmentOffering().courseOffering()
-                        .crn() + "/";
-                    semester = submission().assignmentOffering()
-                        .courseOffering().semester().dirName() + "/";
-                    if (submission().assignmentOffering().courseOffering()
-                        .course() != null)
-                    {
-                        course = submission().assignmentOffering()
-                            .courseOffering().course().deptNumber() + ": ";
-                    }
-                }
-            }
-            else
-            {
-                submitNumber = "submission #" + submitNumber;
-            }
-        }
-
-        return "[Grader] Grading error: " + username
-            + " on "
-            + course
-            + semester
-            + crn
-            + assignment
-            + submitNumber;
-    }
-
-
-    // ----------------------------------------------------------
-    @Override
-    public synchronized NSArray<User> users()
-    {
-        if (exception == null)
-        {
-            return super.users();
-        }
-        else
-        {
-            return new NSArray<User>();
-        }
+        return "[Grader] Grading error: " + submissionPath;
     }
 
 

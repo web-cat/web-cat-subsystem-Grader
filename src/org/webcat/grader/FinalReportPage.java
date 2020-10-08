@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: FinalReportPage.java,v 1.7 2014/06/16 17:16:17 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -24,7 +22,6 @@ package org.webcat.grader;
 import com.webobjects.appserver.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
-import er.extensions.eof.ERXConstant;
 import java.io.*;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
@@ -40,8 +37,6 @@ import org.webcat.woextensions.WCResourceManager;
  * Otherwise, the final grading report is presented.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.7 $, $Date: 2014/06/16 17:16:17 $
  */
 public class FinalReportPage
     extends GraderSubmissionComponent
@@ -125,13 +120,17 @@ public class FinalReportPage
         }
         if (submission != null)
         {
+            submission = submission.refetch(localContext());
+        }
+        if (submission != null)
+        {
             reportIsReady   = submission.resultIsReady();
             if (reportIsReady)
             {
                 result = submission.result();
                 statsDisplayGroup.setObjectArray(result.submissionFileStats());
                 reportArray = result.resultFiles().mutableClone();
-                
+
                 PageViewLog.log(localContext(),
                     "FinalReportPage",
                     wcSession().primeUser(),

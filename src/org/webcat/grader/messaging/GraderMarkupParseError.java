@@ -27,6 +27,7 @@ import org.webcat.core.User;
 import org.webcat.core.messaging.Message;
 import org.webcat.grader.Submission;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.eocontrol.EOEditingContext;
 
 //-------------------------------------------------------------------------
 /**
@@ -44,6 +45,7 @@ public class GraderMarkupParseError
 
     // ----------------------------------------------------------
     public GraderMarkupParseError(
+        EOEditingContext ec,
         Submission submission,
         int location,
         Exception exception,
@@ -51,7 +53,7 @@ public class GraderMarkupParseError
         File markupFile,
         String detail)
     {
-        super(submission, markupFile);
+        super(ec, submission, markupFile);
         this.location = location;
         this.exception = exception;
         this.context = context;
@@ -88,7 +90,7 @@ public class GraderMarkupParseError
         if (exception != null)
         {
             body.append("Exception details:\n\n");
-            body.append(Application.wcApplication()
+            body.append(Application
                 .informationForExceptionInContext(exception, null, context));
             body.append("\n\n");
         }
@@ -143,6 +145,14 @@ public class GraderMarkupParseError
             default:
                 return "";
         }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void overrideSend()
+    {
+        log.error(title(), exception);
     }
 
 

@@ -32,6 +32,7 @@ import org.webcat.core.MutableDictionary;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.woextensions.ECAction;
+import org.webcat.woextensions.WCEC;
 import static org.webcat.woextensions.ECAction.run;
 
 // -------------------------------------------------------------------------

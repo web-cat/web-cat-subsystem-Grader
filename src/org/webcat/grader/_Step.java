@@ -133,6 +133,21 @@ public abstract class _Step
      * @return The object, or null if no such id exists
      */
     public static Step forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (Step)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static Step forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -192,6 +207,19 @@ public abstract class _Step
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public Step refetch(EOEditingContext editingContext)
+    {
+        return (Step)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -222,6 +250,7 @@ public abstract class _Step
         }
     }
 
+
     //-- Local mutable cache --
     private org.webcat.core.MutableDictionary configSettingsCache;
     private NSData configSettingsRawCache;
@@ -250,26 +279,26 @@ public abstract class _Step
                 configSettingsRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( configSettingsCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (configSettingsCache != null)
                 {
-                    configSettingsCache.copyFrom( newValue );
+                    configSettingsCache.copyFrom(newValue);
                 }
                 else
                 {
                     configSettingsCache = newValue;
                 }
-                configSettingsCache.setOwner( this );
-                setUpdateMutableFields( true );
+                configSettingsCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && configSettingsCache == null )
+        else if (dbValue == null && configSettingsCache == null)
         {
             configSettingsCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             configSettingsCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             configSettingsCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return configSettingsCache;
     }
@@ -282,26 +311,26 @@ public abstract class _Step
      *
      * @param value The new value for this property
      */
-    public void setConfigSettings( org.webcat.core.MutableDictionary value )
+    public void setConfigSettings(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setConfigSettings("
-                + value + ")" );
+            log.debug("setConfigSettings("
+                + value + ")");
         }
-        if ( configSettingsCache == null )
+        if (configSettingsCache == null)
         {
             configSettingsCache = value;
             value.setHasChanged( false );
             configSettingsRawCache = value.archiveData();
-            takeStoredValueForKey( configSettingsRawCache, "configSettings" );
+            takeStoredValueForKey(configSettingsRawCache, "configSettings");
         }
-        else if ( configSettingsCache != value )  // ( configSettingsCache != null )
+        else if (configSettingsCache != value)  // ( configSettingsCache != null )
         {
-            configSettingsCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            configSettingsCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( configSettingsCache == non-null value )
+        else  // (configSettingsCache == non-null value)
         {
             // no nothing
         }
@@ -317,9 +346,9 @@ public abstract class _Step
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearConfigSettings()" );
+            log.debug("clearConfigSettings()");
         }
-        takeStoredValueForKey( null, "configSettings" );
+        takeStoredValueForKey(null, "configSettings");
         configSettingsRawCache = null;
         configSettingsCache = null;
     }
@@ -1015,6 +1044,7 @@ public abstract class _Step
             new WCFetchSpecification<Step>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1039,6 +1069,7 @@ public abstract class _Step
             new WCFetchSpecification<Step>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<Step> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1234,6 +1265,8 @@ public abstract class _Step
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<Step> objects =
@@ -1445,6 +1478,33 @@ public abstract class _Step
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

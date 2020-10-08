@@ -126,13 +126,13 @@ public class EditPartnersPage
     // ----------------------------------------------------------
     public WOComponent removePartner()
     {
-        log.debug( "selected submission = "
-                   + result.submission().submitNumber()
-                   + " for " + result.submission().user().userName() );
-        log.debug( "removing submission " + partnerSubmission.submitNumber()
-                   + " for " + partnerSubmission.user().userName() );
-        partnerSubmission.setResultRelationship( null );
-        localContext().deleteObject( partnerSubmission );
+        log.debug("selected submission = "
+            + result.submission().submitNumber()
+            + " for " + result.submission().user().userName());
+        log.debug("removing submission " + partnerSubmission.submitNumber()
+            + " for " + partnerSubmission.user().userName());
+        partnerSubmission.setResultRelationship(null);
+        localContext().deleteObject(partnerSubmission);
         applyLocalChanges();
         return null;
     }

@@ -67,14 +67,14 @@ public class GraderComponent
      * Grab user's current selections when waking, if necessary.
      */
     @Override
-    public void awake()
+    public void lateAwake()
     {
         if (log.isDebugEnabled())
         {
             log.debug("awake(): begin " + getClass().getName());
         }
-        super.awake();
-        prefs();
+        super.lateAwake();
+//        prefs();
         if (log.isDebugEnabled())
         {
             log.debug("awake(): end " + getClass().getName());
@@ -102,16 +102,16 @@ public class GraderComponent
     {
         if (prefs == null)
         {
-            Object inheritedPrefs = transientState().valueForKey( GP_KEY );
-            if (inheritedPrefs == null)
-            {
+//            Object inheritedPrefs = transientState().valueForKey( GP_KEY );
+//            if (inheritedPrefs == null)
+//            {
                 reloadGraderPrefs();
-            }
-            else
-            {
-                prefs = (GraderPrefsManager)
-                    ((GraderPrefsManager)inheritedPrefs).clone();
-            }
+//            }
+//            else
+//            {
+//                prefs = (GraderPrefsManager)
+//                    ((GraderPrefsManager)inheritedPrefs).clone();
+//            }
         }
         return prefs;
     }
@@ -148,7 +148,7 @@ public class GraderComponent
     protected void reloadGraderPrefs()
     {
         prefs = new GraderPrefsManager(
-            getGraderPrefs(), ecManager());
+            getGraderPrefs(), localContext());
     }
 
 
@@ -182,19 +182,19 @@ public class GraderComponent
         {
             results = GraderPrefs.objectsForUser(localContext(), user());
         }
-        catch ( java.lang.IllegalStateException e )
+        catch (IllegalStateException e)
         {
             // Just try again, in case this is a failure due to the
             // use of shared contexts under Win2K
             results = GraderPrefs.objectsForUser(localContext(), user());
         }
-        if ( results.count() > 0 )
+        if (results.count() > 0)
         {
             return results.objectAtIndex(0);
         }
         else
         {
-            EOEditingContext ec = WCEC.newEditingContext();
+            WCEC ec = WCEC.newEditingContext();
             GraderPrefs newPrefs = null;
             try
             {

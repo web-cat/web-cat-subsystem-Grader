@@ -133,6 +133,21 @@ public abstract class _ResultOutcome
      * @return The object, or null if no such id exists
      */
     public static ResultOutcome forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (ResultOutcome)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static ResultOutcome forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -186,6 +201,19 @@ public abstract class _ResultOutcome
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public ResultOutcome refetch(EOEditingContext editingContext)
+    {
+        return (ResultOutcome)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -216,6 +244,7 @@ public abstract class _ResultOutcome
         }
     }
 
+
     //-- Local mutable cache --
     private org.webcat.core.MutableDictionary contentsCache;
     private NSData contentsRawCache;
@@ -244,26 +273,26 @@ public abstract class _ResultOutcome
                 contentsRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( contentsCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (contentsCache != null)
                 {
-                    contentsCache.copyFrom( newValue );
+                    contentsCache.copyFrom(newValue);
                 }
                 else
                 {
                     contentsCache = newValue;
                 }
-                contentsCache.setOwner( this );
-                setUpdateMutableFields( true );
+                contentsCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && contentsCache == null )
+        else if (dbValue == null && contentsCache == null)
         {
             contentsCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             contentsCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             contentsCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return contentsCache;
     }
@@ -276,26 +305,26 @@ public abstract class _ResultOutcome
      *
      * @param value The new value for this property
      */
-    public void setContents( org.webcat.core.MutableDictionary value )
+    public void setContents(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setContents("
-                + value + ")" );
+            log.debug("setContents("
+                + value + ")");
         }
-        if ( contentsCache == null )
+        if (contentsCache == null)
         {
             contentsCache = value;
             value.setHasChanged( false );
             contentsRawCache = value.archiveData();
-            takeStoredValueForKey( contentsRawCache, "contents" );
+            takeStoredValueForKey(contentsRawCache, "contents");
         }
-        else if ( contentsCache != value )  // ( contentsCache != null )
+        else if (contentsCache != value)  // ( contentsCache != null )
         {
-            contentsCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            contentsCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( contentsCache == non-null value )
+        else  // (contentsCache == non-null value)
         {
             // no nothing
         }
@@ -311,9 +340,9 @@ public abstract class _ResultOutcome
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearContents()" );
+            log.debug("clearContents()");
         }
-        takeStoredValueForKey( null, "contents" );
+        takeStoredValueForKey(null, "contents");
         contentsRawCache = null;
         contentsCache = null;
     }
@@ -698,6 +727,7 @@ public abstract class _ResultOutcome
             new WCFetchSpecification<ResultOutcome>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -722,6 +752,7 @@ public abstract class _ResultOutcome
             new WCFetchSpecification<ResultOutcome>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<ResultOutcome> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -917,6 +948,8 @@ public abstract class _ResultOutcome
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<ResultOutcome> objects =
@@ -1128,6 +1161,33 @@ public abstract class _ResultOutcome
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

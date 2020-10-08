@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2006-2018 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -1094,10 +1094,8 @@ public class AssignmentOffering
         LISResultId result = null;
         if (lmsId != null)
         {
-            result = LISResultId.uniqueObjectMatchingQualifier(
-                editingContext(),
-                LISResultId.assignmentOffering.is(this).and(
-                LISResultId.user.is(user)));
+            result = LISResultId.forAssignmentAndUser(
+                editingContext(), this, user);
         }
         return result;
     }

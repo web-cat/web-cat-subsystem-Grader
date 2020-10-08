@@ -3,7 +3,6 @@
         class = WCFetchSpecification;
         entityName = StepConfig;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -21,17 +20,18 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
     };
     stepConfigsForUser = {
         class = WCFetchSpecification;
         entityName = StepConfig;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOKeyValueQualifier;
             key = author;
             selectorName = "isEqualTo:";
             value = {"_key" = user; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES; 
     };
 }

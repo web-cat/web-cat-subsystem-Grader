@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id$
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2018 Virginia Tech
+ |  Copyright (C) 2018-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -27,8 +25,8 @@ import org.webcat.core.CourseOffering;
 import org.webcat.core.User;
 import org.webcat.core.lti.LTILaunchRequest;
 import org.webcat.grader.AssignmentOffering;
+import org.webcat.woextensions.WCEC;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSMutableArray;
 
@@ -44,7 +42,7 @@ public class GraderLTILaunchRequest
     //~ Constructors ..........................................................
 
     // ----------------------------------------------------------
-    public GraderLTILaunchRequest(WOContext context, EOEditingContext ec)
+    public GraderLTILaunchRequest(WOContext context, WCEC ec)
     {
         super(context, ec);
     }

@@ -141,6 +141,21 @@ public abstract class _EnergyBarEvent
      * @return The object, or null if no such id exists
      */
     public static EnergyBarEvent forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (EnergyBarEvent)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static EnergyBarEvent forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -197,6 +212,19 @@ public abstract class _EnergyBarEvent
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public EnergyBarEvent refetch(EOEditingContext editingContext)
+    {
+        return (EnergyBarEvent)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -226,6 +254,7 @@ public abstract class _EnergyBarEvent
             return er.extensions.eof.ERXConstant.ZeroInteger;
         }
     }
+
 
     // ----------------------------------------------------------
     /**
@@ -665,6 +694,7 @@ public abstract class _EnergyBarEvent
             new WCFetchSpecification<EnergyBarEvent>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -689,6 +719,7 @@ public abstract class _EnergyBarEvent
             new WCFetchSpecification<EnergyBarEvent>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<EnergyBarEvent> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -884,6 +915,8 @@ public abstract class _EnergyBarEvent
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<EnergyBarEvent> objects =
@@ -1095,6 +1128,33 @@ public abstract class _EnergyBarEvent
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

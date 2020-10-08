@@ -49,9 +49,9 @@ public class BlueJSubmitterDefinitions
      *
      * @param context The context for this page
      */
-    public BlueJSubmitterDefinitions( WOContext context )
+    public BlueJSubmitterDefinitions(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -74,7 +74,7 @@ public class BlueJSubmitterDefinitions
         // System.out.println("handler = " + context.request().requestHandlerKey());
         // System.out.println("handler path = " + context.request().requestHandlerPath());
         // System.out.println("uri = " + context.request().uri());
-        log.debug( "appendToResponse()" );
+        log.debug("appendToResponse()");
         NSDictionary<String, NSArray<Object>> formValues =
             context.request().formValues();
         if (formValues.containsKey("flush"))
@@ -83,7 +83,7 @@ public class BlueJSubmitterDefinitions
         }
         if (formValues.containsKey("useCache"))
         {
-            USE_CACHE = ERXValueUtilities.booleanValueWithDefault(
+            useCache = ERXValueUtilities.booleanValueWithDefault(
                 context.request().formValueForKey("useCache"), true);
         }
         if (useCache())
@@ -93,7 +93,7 @@ public class BlueJSubmitterDefinitions
                 context.request().queryString());
             if (cachedResponse != null)
             {
-                log.debug( "appendToResponse(): returning cached response" );
+                log.debug("appendToResponse(): returning cached response");
                 response.setHeader(mimeType(), "content-type");
                 response.appendContentData(cachedResponse);
                 return;
@@ -106,13 +106,13 @@ public class BlueJSubmitterDefinitions
         requirePatternsIndex = -1;
         currentTime = new NSTimestamp();
 
-        EOEditingContext ec = WCEC.newEditingContext();
+        EOEditingContext ec = WCEC.factoryWithToolOSC()._newEditingContext();
         try
         {
             ec.lock();
             groupByCRN = ERXValueUtilities.booleanValue(
-                context().request().formValueForKey( "groupByCRN" ) )
-                || ( context().request().formValueForKey( "crns" ) != null );
+                context().request().formValueForKey("groupByCRN"))
+                || (context().request().formValueForKey("crns") != null);
             AssignmentOffering.SubmitterOfferings offerings =
                 AssignmentOffering.objectsForSubmitterEngine(
                     ec,
@@ -120,24 +120,23 @@ public class BlueJSubmitterDefinitions
                     currentTime,
                     groupByCRN,
                     showAll(),
-                    preserveDateDifferences()
-                    );
+                    preserveDateDifferences());
             expires = offerings.expires;
             assignmentsToDisplay = offerings.offerings;
-            if ( assignmentsToDisplay != null &&
-                 assignmentsToDisplay.count() > 1 )
+            if (assignmentsToDisplay != null &&
+                assignmentsToDisplay.count() > 1)
             {
                 AssignmentOffering first =
-                    assignmentsToDisplay.objectAtIndex( 0 );
+                    assignmentsToDisplay.objectAtIndex(0);
                 AssignmentOffering last =
                     assignmentsToDisplay.objectAtIndex(
-                        assignmentsToDisplay.count() - 1 );
+                        assignmentsToDisplay.count() - 1);
                 groupByInstitution =
                     first.courseOffering().course().department().institution()
                   != last.courseOffering().course().department().institution();
             }
-            response.setHeader( mimeType(), "content-type" );
-            super.appendToResponse( response, context );
+            response.setHeader(mimeType(), "content-type");
+            super.appendToResponse(response, context);
             // System.out.println("content = " + response.contentString() );
             if (useCache())
             {
@@ -160,7 +159,6 @@ public class BlueJSubmitterDefinitions
             ec.dispose();
         }
     }
-
 
     // ----------------------------------------------------------
     /* (non-Javadoc)
@@ -190,7 +188,7 @@ public class BlueJSubmitterDefinitions
     public boolean startNewInstitution()
     {
         boolean result = index == 0;
-        if ( !result )
+        if (!result)
         {
             AssignmentOffering prev =
                 assignmentsToDisplay.objectAtIndex(index - 1);
@@ -206,15 +204,15 @@ public class BlueJSubmitterDefinitions
     public boolean startNewCourse()
     {
         boolean result = index == 0;
-        if ( !result )
+        if (!result)
         {
             AssignmentOffering prev =
                 assignmentsToDisplay.objectAtIndex(index - 1);
             result = groupByCRN
-                ? ( prev.courseOffering()
-                    != anAssignmentOffering.courseOffering() )
-                : ( prev.courseOffering().course()
-                    != anAssignmentOffering.courseOffering().course() );
+                ? (prev.courseOffering()
+                    != anAssignmentOffering.courseOffering())
+                : (prev.courseOffering().course()
+                    != anAssignmentOffering.courseOffering().course());
         }
         return result;
     }
@@ -224,7 +222,7 @@ public class BlueJSubmitterDefinitions
     public String courseName()
     {
         String name;
-        if ( groupByCRN )
+        if (groupByCRN)
         {
             name = anAssignmentOffering.courseOffering().compactName();
         }
@@ -233,7 +231,7 @@ public class BlueJSubmitterDefinitions
             name =
                 anAssignmentOffering.courseOffering().course().deptNumber();
         }
-        return escapeBareName( name );
+        return escapeBareName(name);
     }
 
 
@@ -241,19 +239,19 @@ public class BlueJSubmitterDefinitions
     public String assignmentName()
     {
         String name = anAssignmentOffering.assignment().titleString();
-        if ( name == null )
+        if (name == null)
         {
             name = "(missing name)";
         }
-        if ( !anAssignmentOffering.publish() )
+        if (!anAssignmentOffering.publish())
         {
             name += " (not published)";
         }
-        if ( currentTime.after( anAssignmentOffering.lateDeadline() ) )
+        if ( currentTime.after(anAssignmentOffering.lateDeadline()))
         {
             name += " (closed)"; // " (by permission only)";
         }
-        return escapeBareName( name );
+        return escapeBareName(name);
     }
 
 
@@ -269,7 +267,7 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public String assignmentNameParameter()
     {
-        return escapeURLParameter( anAssignmentOffering.assignment().name() );
+        return escapeURLParameter(anAssignmentOffering.assignment().name());
     }
 
 
@@ -278,12 +276,12 @@ public class BlueJSubmitterDefinitions
     {
         String base = anAssignmentOffering.courseOffering().course()
             .department().institution().propertyName();
-        int pos = base.indexOf( '.' );
-        if ( pos > 0 )
+        int pos = base.indexOf('.');
+        if (pos > 0)
         {
-            base = base.substring( pos + 1 );
+            base = base.substring(pos + 1);
         }
-        return escapeURLParameter( base );
+        return escapeURLParameter(base);
     }
 
 
@@ -297,8 +295,7 @@ public class BlueJSubmitterDefinitions
             null,
             useSecureSubmissionURLs(),
             0,
-            !useSecureSubmissionURLs()
-            );
+            !useSecureSubmissionURLs());
         // unfortunately, we can't force HTTPS here, since not all
         // installations will necessarily support SSL
     }
@@ -319,21 +316,24 @@ public class BlueJSubmitterDefinitions
 
 
     // ----------------------------------------------------------
-    public String escapeBareName( String name )
+    public String escapeBareName(String name)
     {
         return name;
     }
 
 
     // ----------------------------------------------------------
-    public String escapeURLParameter( String name )
+    public String escapeURLParameter(String name)
     {
-        if ( name == null ) return name;
+        if (name == null)
+        {
+            return name;
+        }
         try
         {
-            return java.net.URLEncoder.encode( name, "UTF-8" );
+            return java.net.URLEncoder.encode(name, "UTF-8");
         }
-        catch ( java.io.UnsupportedEncodingException e )
+        catch (java.io.UnsupportedEncodingException e)
         {
             new UnexpectedExceptionMessage(e, context(), null,
                 "For url parameter: '" + name + "'").send();
@@ -345,9 +345,12 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public boolean isNotFirstInCourse()
     {
-        if ( index == 0 ) return false;
+        if (index == 0)
+        {
+            return false;
+        }
         AssignmentOffering prev =
-            assignmentsToDisplay.objectAtIndex( index - 1 );
+            assignmentsToDisplay.objectAtIndex(index - 1);
         return prev.courseOffering().course()
             == anAssignmentOffering.courseOffering().course();
     }
@@ -356,29 +359,32 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public boolean isNotFirstInInstitution()
     {
-        if ( index == 0 ) return false;
+        if (index == 0)
+        {
+            return false;
+        }
         AssignmentOffering prev =
-            assignmentsToDisplay.objectAtIndex( index - 1 );
+            assignmentsToDisplay.objectAtIndex(index - 1);
         return prev.courseOffering().course().department().institution()
             == anAssignmentOffering.courseOffering().course().department()
-                .institution();
+            .institution();
     }
 
 
     // ----------------------------------------------------------
     public String[] includePatterns()
     {
-        if ( index != includePatternsIndex )
+        if (index != includePatternsIndex)
         {
             includePatterns = null;
             SubmissionProfile profile = anAssignmentOffering.assignment()
                 .submissionProfile();
-            if ( profile != null )
+            if (profile != null)
             {
                 String patterns = profile.includedFilePatterns();
-                if ( patterns != null && !patterns.equals( "" ) )
+                if (patterns != null && !patterns.equals(""))
                 {
-                    includePatterns = patterns.split( "\\s*,\\s*" );
+                    includePatterns = patterns.split("\\s*,\\s*");
                 }
             }
             includePatternsIndex = index;
@@ -390,17 +396,17 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public String[] excludePatterns()
     {
-        if ( index != excludePatternsIndex )
+        if (index != excludePatternsIndex)
         {
             excludePatterns = null;
             SubmissionProfile profile = anAssignmentOffering.assignment()
                 .submissionProfile();
-            if ( profile != null )
+            if (profile != null)
             {
                 String patterns = profile.excludedFilePatterns();
-                if ( patterns != null && !patterns.equals( "" ) )
+                if (patterns != null && !patterns.equals(""))
                 {
-                    excludePatterns = patterns.split( "\\s*,\\s*" );
+                    excludePatterns = patterns.split("\\s*,\\s*");
                 }
             }
             excludePatternsIndex = index;
@@ -412,17 +418,17 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public String[] requirePatterns()
     {
-        if ( index != requirePatternsIndex )
+        if (index != requirePatternsIndex)
         {
             requirePatterns = null;
             SubmissionProfile profile = anAssignmentOffering.assignment()
                 .submissionProfile();
-            if ( profile != null )
+            if (profile != null)
             {
                 String patterns = profile.requiredFilePatterns();
-                if ( patterns != null && !patterns.equals( "" ) )
+                if (patterns != null && !patterns.equals(""))
                 {
-                    requirePatterns = patterns.split( "\\s*,\\s*" );
+                    requirePatterns = patterns.split("\\s*,\\s*");
                 }
             }
             requirePatternsIndex = index;
@@ -439,7 +445,7 @@ public class BlueJSubmitterDefinitions
 
 
     // ----------------------------------------------------------
-    public void setThisPattern( String value )
+    public void setThisPattern(String value)
     {
         thisPattern = value;
     }
@@ -532,14 +538,14 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public static boolean useCache()
     {
-        if (USE_CACHE == null)
+        if (useCache == null)
         {
-            USE_CACHE = Application.wcApplication().properties()
+            useCache = Application.wcApplication().properties()
                 .booleanForKeyWithDefault(
                     BlueJSubmitterDefinitions.class.getName() + ".useCache",
                     true);
         }
-        return USE_CACHE.booleanValue();
+        return useCache.booleanValue();
     }
 
 
@@ -569,6 +575,6 @@ public class BlueJSubmitterDefinitions
     private String[]     requirePatterns = null;
     private int          requirePatternsIndex;
     private String       thisPattern;
-    static Logger log = Logger.getLogger( BlueJSubmitterDefinitions.class );
-    private static Boolean USE_CACHE = null;
+    static Logger log = Logger.getLogger(BlueJSubmitterDefinitions.class);
+    private static Boolean useCache = null;
 }

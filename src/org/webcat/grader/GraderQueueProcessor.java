@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderQueueProcessor.java,v 1.24 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2012 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -25,6 +23,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ import org.webcat.core.WCProperties;
 import org.webcat.grader.messaging.AdminReportsForSubmissionMessage;
 import org.webcat.grader.messaging.SubmissionSuspendedMessage;
 import org.webcat.woextensions.ECAction;
-import org.webcat.woextensions.WCEC;
+import org.webcat.woextensions.WCEC.WCECFactoryWithOSC;
 import org.webcat.woextensions.WCFetchSpecification;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOGlobalID;
@@ -68,8 +67,6 @@ import er.extensions.eof.ERXEOGlobalIDUtilities;
  * job.
  *
  * @author  Amit Kulkarni
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.24 $, $Date: 2014/11/07 13:55:03 $
  */
 public class GraderQueueProcessor
     extends ECAction
@@ -86,6 +83,7 @@ public class GraderQueueProcessor
     private GraderQueueProcessor(
         EOGlobalID jobId, long queueTime, boolean isRegrading)
     {
+        super(ecFactory._newEditingContext(), true);
         this.jobId = jobId;
         this.queueTime = queueTime;
         this.isRegrading = isRegrading;
@@ -256,7 +254,7 @@ public class GraderQueueProcessor
             {
                 ec.dispose();
             }
-            ec = WCEC.newEditingContext();
+            ec = ecFactory._newEditingContext();
             ec.lock();
         }
     }
@@ -1326,8 +1324,8 @@ public class GraderQueueProcessor
         {
             Submission submission = submissionResult.submission();
 
-            new AdminReportsForSubmissionMessage(submission, adminReports)
-                .send();
+            new AdminReportsForSubmissionMessage(
+                submission.editingContext(), submission, adminReports).send();
         }
     }
 
@@ -1747,10 +1745,14 @@ public class GraderQueueProcessor
                         }
 
                     }
+                    catch (FileNotFoundException ex1)
+                    {
+                        log.error("Unable to read inline report fragment: "
+                            + ex1.getMessage());
+                    }
                     catch (Exception ex1)
                     {
-                        log.error(getName()
-                            + ": exception copying inline report fragment '"
+                        log.error("exception copying inline report fragment '"
                             + thisFile.getPath() + "'", ex1);
                         continue;
                     }
@@ -1795,7 +1797,11 @@ public class GraderQueueProcessor
         try
         {
             SubmissionSuspendedMessage msg = new SubmissionSuspendedMessage(
-                job.submission(), e, stage, attachmentsDir);
+                job.editingContext(),
+                job.submission(),
+                e,
+                stage,
+                attachmentsDir);
 
             log.info(getName() + ": technicalFault(): " + msg.title());
             log.info(getName() + ": " + msg.shortBody(), e);
@@ -1933,7 +1939,7 @@ public class GraderQueueProcessor
             log.error("submission " + submission
                 + " not requeued for grading properly!");
             submission.requeueForGrading(submission.editingContext());
-            submission.editingContext().saveChanges();
+            submission.wcEditingContext().saveChanges();
         }
         processJob(submission.enqueuedJob());
     }
@@ -2131,6 +2137,7 @@ public class GraderQueueProcessor
     private static boolean usePluginInternalThreads = false;
     private static final QueueStats qstats = new QueueStats();
     private static ThreadPoolExecutor pool = null;
+    private static WCECFactoryWithOSC ecFactory = new WCECFactoryWithOSC();
 
     // State for the current step being executed
     private boolean faultOccurredInStep;

@@ -773,9 +773,11 @@ public class SubmissionFileStats
                        + markupFile().getPath(),
                        e );
 
-            new GraderMarkupParseError(submissionResult().submission(),
-                    GraderMarkupParseError.LOCATION_SUBMISSION_FILE_STATS,
-                    e, null, markupFile(), null).send();
+            new GraderMarkupParseError(
+                submissionResult().editingContext(),
+                submissionResult().submission(),
+                GraderMarkupParseError.LOCATION_SUBMISSION_FILE_STATS,
+                e, null, markupFile(), null).send();
 
 /*            Application.sendAdminEmail(
                 null,

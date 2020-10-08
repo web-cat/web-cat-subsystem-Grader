@@ -665,6 +665,19 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Add unique index for energy bars on user and assignment.
+     * @throws SQLException on error
+     */
+//    public void updateIncrement36() throws SQLException
+//    {
+//        database().executeSQL(
+//            "create unique index EnergyBar_AssignmentOffering_User "
+//            + "on EnergyBar (assignmentOfferingId, userId)");
+//    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

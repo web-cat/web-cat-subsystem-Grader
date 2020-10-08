@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GraderHomeStatus.java,v 1.11 2011/10/25 15:30:34 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -37,8 +35,6 @@ import org.webcat.core.Semester;
  *  Generates the grader subsystem's page sections for the home->status page.
  *
  *  @author  Stephen Edwards
- *  @author  Last changed by $Author: stedwar2 $
- *  @version $Revision: 1.11 $, $Date: 2011/10/25 15:30:34 $
  */
 public class GraderHomeStatus
     extends GraderComponent
@@ -290,9 +286,19 @@ public class GraderHomeStatus
      */
     public WOComponent editAssignment()
     {
+        editLog.debug("editAssignment() -> before selection, assignment = "
+            + prefs().assignment());
+        editLog.debug("editAssignment() -> before selection, offering = "
+            + prefs().assignmentOffering());
         assignmentOffering =
             currentAssignments.get(course()).get(anAssignment()).get(0);
+        editLog.debug("editAssignment() -> selectAssignment("
+            + assignmentOffering + ")");
         selectAssignment(assignmentOffering);
+        editLog.debug("editAssignment() -> selected assignment = "
+            + prefs().assignment());
+        editLog.debug("editAssignment() -> selected offering = "
+            + prefs().assignmentOffering());
         return pageWithName(
             wcSession().tabs.selectById("AssignmentProperties").pageName());
     }
@@ -306,9 +312,19 @@ public class GraderHomeStatus
      */
     public WOComponent editOldAssignment()
     {
+        editLog.debug("editOldAssignment() -> before selection, assignment = "
+            + prefs().assignment());
+        editLog.debug("editOldAssignment() -> before selection, offering = "
+            + prefs().assignmentOffering());
         assignmentOffering =
             oldAssignments.get(courseForOld()).get(anOldAssignment()).get(0);
+        editLog.debug("editOldAssignment() -> selectAssignment("
+            + assignmentOffering + ")");
         selectAssignment(assignmentOffering);
+        editLog.debug("editOldAssignment() -> selected assignment = "
+            + prefs().assignment());
+        editLog.debug("editOldAssignment() -> selected offering = "
+            + prefs().assignmentOffering());
         return pageWithName(
             wcSession().tabs.selectById("AssignmentProperties").pageName());
     }
@@ -322,9 +338,19 @@ public class GraderHomeStatus
      */
     public WOComponent viewOrGrade()
     {
+        editLog.debug("viewOrGrade() -> before selection, assignment = "
+            + prefs().assignment());
+        editLog.debug("viewOrGrade() -> before selection, offering = "
+            + prefs().assignmentOffering());
         assignmentOffering =
             currentAssignments.get(course()).get(anAssignment()).get(0);
+        editLog.debug("viewOrGrade() -> selectAssignment("
+            + assignmentOffering + ")");
         selectAssignment(assignmentOffering);
+        editLog.debug("viewOrGrade() -> selected assignment = "
+            + prefs().assignment());
+        editLog.debug("viewOrGrade() -> selected offering = "
+            + prefs().assignmentOffering());
         return pageWithName(
             wcSession().tabs.selectById("EnterGrades").pageName());
     }
@@ -338,9 +364,19 @@ public class GraderHomeStatus
      */
     public WOComponent viewOrGradeOld()
     {
+        editLog.debug("viewOrGradeOld() -> before selection, assignment = "
+            + prefs().assignment());
+        editLog.debug("viewOrGradeOld() -> before selection, offering = "
+            + prefs().assignmentOffering());
         assignmentOffering =
             oldAssignments.get(courseForOld()).get(anOldAssignment()).get(0);
+        editLog.debug("viewOrGradeOld() -> selectAssignment("
+            + assignmentOffering + ")");
         selectAssignment(assignmentOffering);
+        editLog.debug("viewOrGradeOld() -> selected assignment = "
+            + prefs().assignment());
+        editLog.debug("viewOrGradeOld() -> selected offering = "
+            + prefs().assignmentOffering());
         return pageWithName(
             wcSession().tabs.selectById("EnterGrades").pageName());
     }
@@ -349,6 +385,7 @@ public class GraderHomeStatus
     // ----------------------------------------------------------
     private void selectAssignment(AssignmentOffering offering)
     {
+        editLog.debug("selectAssignment(" + offering + ")");
         coreSelections().setSemester(offering.courseOffering().semester());
         coreSelections().setCourseOfferingRelationship(
             offering.courseOffering());
@@ -369,6 +406,9 @@ public class GraderHomeStatus
         {
             prefs().setShowClosedAssignments(true);
         }
+        editLog.debug("selectAssignment() => " + user().coreSelections());
+        editLog.debug("selectAssignment() => "
+            + GraderPrefs.objectsForUser(localContext(), user()));
     }
 
 
@@ -642,5 +682,7 @@ public class GraderHomeStatus
     private Course courseForOld;
     private Assignment anOldAssignment;
 
-    static Logger log = Logger.getLogger( GraderHomeStatus.class );
+    static Logger log = Logger.getLogger(GraderHomeStatus.class);
+    static Logger editLog = Logger.getLogger(
+        GraderHomeStatus.class.getName() + ".edit");
 }

@@ -134,6 +134,21 @@ public abstract class _SubmissionResult
      * @return The object, or null if no such id exists
      */
     public static SubmissionResult forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (SubmissionResult)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static SubmissionResult forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -224,6 +239,19 @@ public abstract class _SubmissionResult
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public SubmissionResult refetch(EOEditingContext editingContext)
+    {
+        return (SubmissionResult)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -254,6 +282,7 @@ public abstract class _SubmissionResult
         }
     }
 
+
     //-- Local mutable cache --
     private org.webcat.core.MutableDictionary accumulatedSavedPropertiesCache;
     private NSData accumulatedSavedPropertiesRawCache;
@@ -282,26 +311,26 @@ public abstract class _SubmissionResult
                 accumulatedSavedPropertiesRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( accumulatedSavedPropertiesCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (accumulatedSavedPropertiesCache != null)
                 {
-                    accumulatedSavedPropertiesCache.copyFrom( newValue );
+                    accumulatedSavedPropertiesCache.copyFrom(newValue);
                 }
                 else
                 {
                     accumulatedSavedPropertiesCache = newValue;
                 }
-                accumulatedSavedPropertiesCache.setOwner( this );
-                setUpdateMutableFields( true );
+                accumulatedSavedPropertiesCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && accumulatedSavedPropertiesCache == null )
+        else if (dbValue == null && accumulatedSavedPropertiesCache == null)
         {
             accumulatedSavedPropertiesCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             accumulatedSavedPropertiesCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             accumulatedSavedPropertiesCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return accumulatedSavedPropertiesCache;
     }
@@ -314,26 +343,26 @@ public abstract class _SubmissionResult
      *
      * @param value The new value for this property
      */
-    public void setAccumulatedSavedProperties( org.webcat.core.MutableDictionary value )
+    public void setAccumulatedSavedProperties(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setAccumulatedSavedProperties("
-                + value + ")" );
+            log.debug("setAccumulatedSavedProperties("
+                + value + ")");
         }
-        if ( accumulatedSavedPropertiesCache == null )
+        if (accumulatedSavedPropertiesCache == null)
         {
             accumulatedSavedPropertiesCache = value;
             value.setHasChanged( false );
             accumulatedSavedPropertiesRawCache = value.archiveData();
-            takeStoredValueForKey( accumulatedSavedPropertiesRawCache, "accumulatedSavedProperties" );
+            takeStoredValueForKey(accumulatedSavedPropertiesRawCache, "accumulatedSavedProperties");
         }
-        else if ( accumulatedSavedPropertiesCache != value )  // ( accumulatedSavedPropertiesCache != null )
+        else if (accumulatedSavedPropertiesCache != value)  // ( accumulatedSavedPropertiesCache != null )
         {
-            accumulatedSavedPropertiesCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            accumulatedSavedPropertiesCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( accumulatedSavedPropertiesCache == non-null value )
+        else  // (accumulatedSavedPropertiesCache == non-null value)
         {
             // no nothing
         }
@@ -349,9 +378,9 @@ public abstract class _SubmissionResult
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearAccumulatedSavedProperties()" );
+            log.debug("clearAccumulatedSavedProperties()");
         }
-        takeStoredValueForKey( null, "accumulatedSavedProperties" );
+        takeStoredValueForKey(null, "accumulatedSavedProperties");
         accumulatedSavedPropertiesRawCache = null;
         accumulatedSavedPropertiesCache = null;
     }
@@ -1952,6 +1981,7 @@ public abstract class _SubmissionResult
             new WCFetchSpecification<SubmissionResult>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1976,6 +2006,7 @@ public abstract class _SubmissionResult
             new WCFetchSpecification<SubmissionResult>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<SubmissionResult> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -2171,6 +2202,8 @@ public abstract class _SubmissionResult
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<SubmissionResult> objects =
@@ -2550,6 +2583,33 @@ public abstract class _SubmissionResult
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

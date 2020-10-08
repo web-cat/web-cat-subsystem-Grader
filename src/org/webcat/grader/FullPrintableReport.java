@@ -284,7 +284,7 @@ public class FullPrintableReport
 
         //~ Instance/static variables .........................................
 
-        private EOEditingContext ec;
+        private WCEC             ec;
         private SubmissionResult submissionResult;
         private User             user;
         private WOContext        context;

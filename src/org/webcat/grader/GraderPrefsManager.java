@@ -22,6 +22,8 @@
 package org.webcat.grader;
 
 import org.webcat.core.*;
+import org.webcat.woextensions.CachingEOManager;
+import org.webcat.woextensions.WCEC;
 import er.extensions.foundation.ERXValueUtilities;
 
 //-------------------------------------------------------------------------
@@ -46,9 +48,9 @@ public class GraderPrefsManager
      * @param manager the (probably shared) editing context manager to use
      * for independent saving of the given eo
      */
-    public GraderPrefsManager(GraderPrefs prefs, ECManager manager)
+    public GraderPrefsManager(GraderPrefs prefs, WCEC context)
     {
-        super(prefs, manager);
+        super(prefs, context);
     }
 
 

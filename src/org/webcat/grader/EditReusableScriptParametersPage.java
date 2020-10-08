@@ -65,28 +65,29 @@ public class EditReusableScriptParametersPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "appendToResponse()" );
+        log.debug("appendToResponse()");
         step = prefs().step();
-        if ( baseDir == null )
+        if (baseDir == null)
         {
-            baseDir = new java.io.File ( GradingPlugin.userScriptDirName(
-                user(), true ).toString() );
+            baseDir = new java.io.File (GradingPlugin.userScriptDirName(
+                user(), true).toString());
         }
-        if ( step.config() == null )
+        if (step.config() == null)
         {
             log.debug( "null config detected, populating it" );
             StepConfig newConfig = new StepConfig();
-            localContext().insertObject( newConfig );
-            step.setConfigRelationship( newConfig );
-            newConfig.setAuthor( user() );
+            localContext().insertObject(newConfig);
+            step.setConfigRelationship(newConfig);
+            newConfig.setAuthor(user());
         }
-        assignmentStepGroup.setObjectArray( step.config().steps() );
-        if ( log.isDebugEnabled() )
+        assignmentStepGroup.setObjectArray(step.config().steps());
+        if (log.isDebugEnabled())
         {
-            log.debug( "assignment option values =\n" + step.configSettings() );
-            log.debug( "shared option values =\n" + step.config().configSettings() );
+            log.debug("assignment option values =\n" + step.configSettings());
+            log.debug("shared option values =\n"
+                + step.config().configSettings());
         }
-        super.beforeAppendToResponse( response, context );
+        super.beforeAppendToResponse(response, context);
     }
 
 

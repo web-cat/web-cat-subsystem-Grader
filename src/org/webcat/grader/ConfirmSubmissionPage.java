@@ -234,9 +234,9 @@ public class ConfirmSubmissionPage
                   .submissionProfile().deadTimeDelta() );
         CourseOffering course = prefs().assignmentOffering().courseOffering();
         User primeUser = wcSession().primeUser().localInstance(localContext());
-        if ( deadline.before( submitTime )
-             && !course.isInstructor( primeUser )
-             && !course.isGrader( primeUser ) )
+        if (deadline.before(submitTime)
+             && !course.isInstructor(primeUser)
+             && !course.isGrader(primeUser))
         {
             error(
                 "Unfortunately, the final deadline for this assignment "

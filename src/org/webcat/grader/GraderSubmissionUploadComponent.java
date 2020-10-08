@@ -142,14 +142,14 @@ public class GraderSubmissionUploadComponent
         Submission submission = Submission.create(localContext(), false);
         submission.setSubmitNumber(submissionInProcess().submitNumber());
         submission.setUserRelationship(submissionInProcess().user());
-        submission.setSubmitTime( submitTime );
-        submission.setFileName( uploadedFileName );
-        // wcSession().localContext().insertObject( submission );
+        submission.setSubmitTime(submitTime);
+        submission.setFileName(uploadedFileName);
+        // wcSession().localContext().insertObject(submission);
         //      ec.saveChanges();
         submission.setAssignmentOfferingRelationship(
             prefs().assignmentOffering() );
-        prefs().assignmentOffering().addToSubmissionsRelationship( submission );
-        log.debug( "Uploaded file name: " + uploadedFileName );
+        prefs().assignmentOffering().addToSubmissionsRelationship(submission);
+        log.debug("Uploaded file name: " + uploadedFileName);
 
         // Do the actual partnering of the users (this will create the dummy
         // Submission objects for the other partners).
@@ -163,16 +163,16 @@ public class GraderSubmissionUploadComponent
 
         try
         {
-            File dirFile = new File( submission.dirName() );
+            File dirFile = new File(submission.dirName());
             dirFile.mkdirs();
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             // Security exception
             new UnexpectedExceptionMessage(e, context, null,
                     "Exception creating submission directory").send();
-            localContext().deleteObject( submission );
-            prefs().setSubmissionRelationship( null );
+            localContext().deleteObject(submission);
+            prefs().setSubmissionRelationship(null);
             submissionInProcess().cancelSubmission();
             applyLocalChanges();
             return "A file error occurred while saving your "
@@ -186,12 +186,12 @@ public class GraderSubmissionUploadComponent
         try
         {
             File outFile = submission.file();
-            log.debug( "Local file name: " + outFile.getPath() );
-            FileOutputStream out = new FileOutputStream( outFile );
-            submissionInProcess().uploadedFile().writeToStream( out );
+            log.debug("Local file name: " + outFile.getPath());
+            FileOutputStream out = new FileOutputStream(outFile);
+            submissionInProcess().uploadedFile().writeToStream(out);
             out.close();
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             // Do something with the exception
             new UnexpectedExceptionMessage(e, context, null,
@@ -226,12 +226,18 @@ public class GraderSubmissionUploadComponent
             // ignore it
         }
 
+        // commit changes before creating enqueued job, since we don't
+        // want job created before all submission data has been stored
+        // to db, and we can't control the order in which the changes
+        // will be applied (possible concurrency race condition)
+        applyLocalChanges();
+
         // Queue it up for the grader
         EnqueuedJob job = new EnqueuedJob();
-//      job.setSubmission( submission );
-        localContext().insertObject( job );
-        job.setSubmissionRelationship( submission );
-        job.setQueueTime( new NSTimestamp() );
+//      job.setSubmission(submission);
+        localContext().insertObject(job);
+        job.setSubmissionRelationship(submission);
+        job.setQueueTime(new NSTimestamp());
         if (bar != null)
         {
             if (bar.consumeEnergyIfPossible(submitTime))

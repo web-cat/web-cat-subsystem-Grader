@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id$
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2012 Virginia Tech
+ |  Copyright (C) 2020-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -30,8 +28,6 @@ import com.webobjects.foundation.NSTimestamp;
  * TODO: place a real description here.
  *
  * @author
- * @author  Last changed by: $Author$
- * @version $Revision$, $Date$
  */
 public class PageViewLog
     extends _PageViewLog

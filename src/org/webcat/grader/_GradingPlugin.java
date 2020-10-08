@@ -139,6 +139,21 @@ public abstract class _GradingPlugin
      * @return The object, or null if no such id exists
      */
     public static GradingPlugin forId(
+        EOEditingContext ec, EOGlobalID id)
+    {
+        return (GradingPlugin)ec.faultForGlobalID(id, ec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Look up an object by id number.  Assumes the editing
+     * context is appropriately locked.
+     * @param ec The editing context to use
+     * @param id The id to look up
+     * @return The object, or null if no such id exists
+     */
+    public static GradingPlugin forId(
         EOEditingContext ec, String id)
     {
         return forId(ec, er.extensions.foundation.ERXValueUtilities.intValue(id));
@@ -223,6 +238,19 @@ public abstract class _GradingPlugin
 
     // ----------------------------------------------------------
     /**
+     * Refetch this object from the database.
+     * @param editingContext The target editing context
+     * @return An instance of this object in the target editing context
+     */
+    public GradingPlugin refetch(EOEditingContext editingContext)
+    {
+        return (GradingPlugin)refetchObjectFromDBinEditingContext(
+            editingContext);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Get a list of changes between this object's current state and the
      * last committed version.
      * @return a dictionary of the changes that have not yet been committed
@@ -253,6 +281,7 @@ public abstract class _GradingPlugin
         }
     }
 
+
     //-- Local mutable cache --
     private org.webcat.core.MutableDictionary configDescriptionCache;
     private NSData configDescriptionRawCache;
@@ -281,26 +310,26 @@ public abstract class _GradingPlugin
                 configDescriptionRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( configDescriptionCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (configDescriptionCache != null)
                 {
-                    configDescriptionCache.copyFrom( newValue );
+                    configDescriptionCache.copyFrom(newValue);
                 }
                 else
                 {
                     configDescriptionCache = newValue;
                 }
-                configDescriptionCache.setOwner( this );
-                setUpdateMutableFields( true );
+                configDescriptionCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && configDescriptionCache == null )
+        else if (dbValue == null && configDescriptionCache == null)
         {
             configDescriptionCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             configDescriptionCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             configDescriptionCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return configDescriptionCache;
     }
@@ -313,26 +342,26 @@ public abstract class _GradingPlugin
      *
      * @param value The new value for this property
      */
-    public void setConfigDescription( org.webcat.core.MutableDictionary value )
+    public void setConfigDescription(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setConfigDescription("
-                + value + ")" );
+            log.debug("setConfigDescription("
+                + value + ")");
         }
-        if ( configDescriptionCache == null )
+        if (configDescriptionCache == null)
         {
             configDescriptionCache = value;
             value.setHasChanged( false );
             configDescriptionRawCache = value.archiveData();
-            takeStoredValueForKey( configDescriptionRawCache, "configDescription" );
+            takeStoredValueForKey(configDescriptionRawCache, "configDescription");
         }
-        else if ( configDescriptionCache != value )  // ( configDescriptionCache != null )
+        else if (configDescriptionCache != value)  // ( configDescriptionCache != null )
         {
-            configDescriptionCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            configDescriptionCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( configDescriptionCache == non-null value )
+        else  // (configDescriptionCache == non-null value)
         {
             // no nothing
         }
@@ -348,9 +377,9 @@ public abstract class _GradingPlugin
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearConfigDescription()" );
+            log.debug("clearConfigDescription()");
         }
-        takeStoredValueForKey( null, "configDescription" );
+        takeStoredValueForKey(null, "configDescription");
         configDescriptionRawCache = null;
         configDescriptionCache = null;
     }
@@ -384,26 +413,26 @@ public abstract class _GradingPlugin
                 defaultConfigSettingsRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( defaultConfigSettingsCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (defaultConfigSettingsCache != null)
                 {
-                    defaultConfigSettingsCache.copyFrom( newValue );
+                    defaultConfigSettingsCache.copyFrom(newValue);
                 }
                 else
                 {
                     defaultConfigSettingsCache = newValue;
                 }
-                defaultConfigSettingsCache.setOwner( this );
-                setUpdateMutableFields( true );
+                defaultConfigSettingsCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && defaultConfigSettingsCache == null )
+        else if (dbValue == null && defaultConfigSettingsCache == null)
         {
             defaultConfigSettingsCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             defaultConfigSettingsCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             defaultConfigSettingsCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return defaultConfigSettingsCache;
     }
@@ -416,26 +445,26 @@ public abstract class _GradingPlugin
      *
      * @param value The new value for this property
      */
-    public void setDefaultConfigSettings( org.webcat.core.MutableDictionary value )
+    public void setDefaultConfigSettings(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setDefaultConfigSettings("
-                + value + ")" );
+            log.debug("setDefaultConfigSettings("
+                + value + ")");
         }
-        if ( defaultConfigSettingsCache == null )
+        if (defaultConfigSettingsCache == null)
         {
             defaultConfigSettingsCache = value;
             value.setHasChanged( false );
             defaultConfigSettingsRawCache = value.archiveData();
-            takeStoredValueForKey( defaultConfigSettingsRawCache, "defaultConfigSettings" );
+            takeStoredValueForKey(defaultConfigSettingsRawCache, "defaultConfigSettings");
         }
-        else if ( defaultConfigSettingsCache != value )  // ( defaultConfigSettingsCache != null )
+        else if (defaultConfigSettingsCache != value)  // ( defaultConfigSettingsCache != null )
         {
-            defaultConfigSettingsCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            defaultConfigSettingsCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( defaultConfigSettingsCache == non-null value )
+        else  // (defaultConfigSettingsCache == non-null value)
         {
             // no nothing
         }
@@ -451,9 +480,9 @@ public abstract class _GradingPlugin
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearDefaultConfigSettings()" );
+            log.debug("clearDefaultConfigSettings()");
         }
-        takeStoredValueForKey( null, "defaultConfigSettings" );
+        takeStoredValueForKey(null, "defaultConfigSettings");
         defaultConfigSettingsRawCache = null;
         defaultConfigSettingsCache = null;
     }
@@ -487,26 +516,26 @@ public abstract class _GradingPlugin
                 fileConfigSettingsRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( fileConfigSettingsCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (fileConfigSettingsCache != null)
                 {
-                    fileConfigSettingsCache.copyFrom( newValue );
+                    fileConfigSettingsCache.copyFrom(newValue);
                 }
                 else
                 {
                     fileConfigSettingsCache = newValue;
                 }
-                fileConfigSettingsCache.setOwner( this );
-                setUpdateMutableFields( true );
+                fileConfigSettingsCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && fileConfigSettingsCache == null )
+        else if (dbValue == null && fileConfigSettingsCache == null)
         {
             fileConfigSettingsCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             fileConfigSettingsCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             fileConfigSettingsCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return fileConfigSettingsCache;
     }
@@ -519,26 +548,26 @@ public abstract class _GradingPlugin
      *
      * @param value The new value for this property
      */
-    public void setFileConfigSettings( org.webcat.core.MutableDictionary value )
+    public void setFileConfigSettings(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setFileConfigSettings("
-                + value + ")" );
+            log.debug("setFileConfigSettings("
+                + value + ")");
         }
-        if ( fileConfigSettingsCache == null )
+        if (fileConfigSettingsCache == null)
         {
             fileConfigSettingsCache = value;
             value.setHasChanged( false );
             fileConfigSettingsRawCache = value.archiveData();
-            takeStoredValueForKey( fileConfigSettingsRawCache, "fileConfigSettings" );
+            takeStoredValueForKey(fileConfigSettingsRawCache, "fileConfigSettings");
         }
-        else if ( fileConfigSettingsCache != value )  // ( fileConfigSettingsCache != null )
+        else if (fileConfigSettingsCache != value)  // ( fileConfigSettingsCache != null )
         {
-            fileConfigSettingsCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            fileConfigSettingsCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( fileConfigSettingsCache == non-null value )
+        else  // (fileConfigSettingsCache == non-null value)
         {
             // no nothing
         }
@@ -554,9 +583,9 @@ public abstract class _GradingPlugin
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearFileConfigSettings()" );
+            log.debug("clearFileConfigSettings()");
         }
-        takeStoredValueForKey( null, "fileConfigSettings" );
+        takeStoredValueForKey(null, "fileConfigSettings");
         fileConfigSettingsRawCache = null;
         fileConfigSettingsCache = null;
     }
@@ -590,26 +619,26 @@ public abstract class _GradingPlugin
                 globalConfigSettingsRawCache = dbValue;
                 org.webcat.core.MutableDictionary newValue =
                     org.webcat.core.MutableDictionary
-                    .objectWithArchiveData( dbValue );
-                if ( globalConfigSettingsCache != null )
+                    .objectWithArchiveData(dbValue);
+                if (globalConfigSettingsCache != null)
                 {
-                    globalConfigSettingsCache.copyFrom( newValue );
+                    globalConfigSettingsCache.copyFrom(newValue);
                 }
                 else
                 {
                     globalConfigSettingsCache = newValue;
                 }
-                globalConfigSettingsCache.setOwner( this );
-                setUpdateMutableFields( true );
+                globalConfigSettingsCache.setOwner(this);
+                setUpdateMutableFields(true);
             }
         }
-        else if ( dbValue == null && globalConfigSettingsCache == null )
+        else if (dbValue == null && globalConfigSettingsCache == null)
         {
             globalConfigSettingsCache =
                 org.webcat.core.MutableDictionary
-                .objectWithArchiveData( dbValue );
-             globalConfigSettingsCache.setOwner( this );
-             setUpdateMutableFields( true );
+                .objectWithArchiveData(dbValue);
+             globalConfigSettingsCache.setOwner(this);
+             setUpdateMutableFields(true);
         }
         return globalConfigSettingsCache;
     }
@@ -622,26 +651,26 @@ public abstract class _GradingPlugin
      *
      * @param value The new value for this property
      */
-    public void setGlobalConfigSettings( org.webcat.core.MutableDictionary value )
+    public void setGlobalConfigSettings(org.webcat.core.MutableDictionary value)
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setGlobalConfigSettings("
-                + value + ")" );
+            log.debug("setGlobalConfigSettings("
+                + value + ")");
         }
-        if ( globalConfigSettingsCache == null )
+        if (globalConfigSettingsCache == null)
         {
             globalConfigSettingsCache = value;
             value.setHasChanged( false );
             globalConfigSettingsRawCache = value.archiveData();
-            takeStoredValueForKey( globalConfigSettingsRawCache, "globalConfigSettings" );
+            takeStoredValueForKey(globalConfigSettingsRawCache, "globalConfigSettings");
         }
-        else if ( globalConfigSettingsCache != value )  // ( globalConfigSettingsCache != null )
+        else if (globalConfigSettingsCache != value)  // ( globalConfigSettingsCache != null )
         {
-            globalConfigSettingsCache.copyFrom( value );
-            setUpdateMutableFields( true );
+            globalConfigSettingsCache.copyFrom(value);
+            setUpdateMutableFields(true);
         }
-        else  // ( globalConfigSettingsCache == non-null value )
+        else  // (globalConfigSettingsCache == non-null value)
         {
             // no nothing
         }
@@ -657,9 +686,9 @@ public abstract class _GradingPlugin
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "clearGlobalConfigSettings()" );
+            log.debug("clearGlobalConfigSettings()");
         }
-        takeStoredValueForKey( null, "globalConfigSettings" );
+        takeStoredValueForKey(null, "globalConfigSettings");
         globalConfigSettingsRawCache = null;
         globalConfigSettingsCache = null;
     }
@@ -1646,6 +1675,7 @@ public abstract class _GradingPlugin
             new WCFetchSpecification<GradingPlugin>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1670,6 +1700,7 @@ public abstract class _GradingPlugin
             new WCFetchSpecification<GradingPlugin>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<GradingPlugin> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1865,6 +1896,8 @@ public abstract class _GradingPlugin
                 ENTITY_NAME,
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
+        fspec.setUsesDistinct(true);
+        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<GradingPlugin> objects =
@@ -2114,6 +2147,33 @@ public abstract class _GradingPlugin
     public String toString()
     {
         return userPresentableDescription();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Hack to workaround bugs in ERXEOAccessUtilities.reapplyChanges().
+     *
+     * @param value the new value of the key
+     * @param key the key to access
+     */
+    public void takeValueForKey(Object value, String key)
+    {
+        // if (ERXValueUtilities.isNull(value))
+        if (value == NSKeyValueCoding.NullValue
+            || value instanceof NSKeyValueCoding.Null)
+        {
+            value = null;
+        }
+
+        if (value instanceof NSData)
+        {
+            super.takeStoredValueForKey(value, key);
+        }
+        else
+        {
+            super.takeValueForKey(value, key);
+        }
     }
 
 

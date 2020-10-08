@@ -3,7 +3,6 @@
         class = WCFetchSpecification;
         entityName = SubmissionResult;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -21,11 +20,11 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
     };
     mostRecentResultsForAssignmentAndUser = {
         class = WCFetchSpecification;
         entityName = SubmissionResult;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -49,6 +48,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -61,7 +61,6 @@
         class = WCFetchSpecification;
         entityName = SubmissionResult;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -79,6 +78,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -91,7 +91,6 @@
         class = WCFetchSpecification;
         entityName = SubmissionResult;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -109,6 +108,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;

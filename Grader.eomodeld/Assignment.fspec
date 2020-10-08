@@ -3,7 +3,6 @@
         class = WCFetchSpecification;
         entityName = Assignment;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOAndQualifier;
             qualifiers = (
@@ -24,6 +23,7 @@
                 }
             );
         };
+        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -37,13 +37,13 @@
         class = WCFetchSpecification;
         entityName = Assignment;
         fetchLimit = 0;
-        isDeep = YES;
         qualifier = {
             class = EOKeyValueQualifier;
             key = "offerings.courseOffering";
             selectorName = "doesContain:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
+        refreshesRefetchedObjects = YES;
         usesDistinct = YES;
     };
 }
