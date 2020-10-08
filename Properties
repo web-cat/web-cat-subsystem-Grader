@@ -1,5 +1,5 @@
 #This file is automatically rewritten by ANT, so all formatting will be trashed.
-#Wed Oct 07 20:10:02 GMT-05:00 2020
+#Wed Oct 07 21:58:02 GMT-05:00 2020
 Grader.version.revision=1
 Grader.license.url=http\://www.gnu.org/licenses/agpl.html
 Grader.description=This subsystem provides all of Web-CAT's automated grading services.  It manages all grading plug-ins as well.

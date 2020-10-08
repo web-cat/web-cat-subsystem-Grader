@@ -128,10 +128,10 @@ function showDetailPanel(event)
   window.scrollTo(0, document.getElementById(section + 'Panel').offsetTop);
 
   var details = document.getElementsByClassName("detail visible");
-  while (details.length > 0)
+  for (var i = 0; i < details.length; i++)
   {
     // Note: changing classes removes items from collection, making it shorter
-    var detail = details[0];
+    var detail = details[i];
     if (!detail.classList.contains(section))
     {
       detail.classList.remove('visible');
@@ -142,7 +142,11 @@ function showDetailPanel(event)
   for (var i = 0; i < details.length; i++)
   {
     var detail = details[i];
-    if (detail.classList.contains('visible')) { continue; }
+    if (detail.classList.contains('visible'))
+    {
+      detail.classList.remove('visible');
+      continue;
+    }
     if (detail.classList.contains('more-info'))
     {
       detail.style.display = 'block'; // Make it visible
@@ -212,13 +216,20 @@ document.addEventListener('click', function (event)
      }
 
      // Toggle the content
-     if (element != null && !element.classList.contains('visible'))
+     if (element != null)
      {
+       if (element.classList.contains('visible'))
+       {
+    	 hide();
+       }
+       else
+       {
          toggle(element);
+       }
      }
      else
      {
-         event.preventDefault();
+       event.preventDefault();
      }
  }
 }, false);
