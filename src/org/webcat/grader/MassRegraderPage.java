@@ -25,6 +25,7 @@ import org.webcat.core.User;
 import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.woextensions.ECAction;
 import org.webcat.woextensions.WCEC;
+import org.webcat.woextensions.WCFetchSpecification;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOResponse;
 import com.webobjects.eocontrol.EOFetchSpecification;
@@ -349,7 +350,7 @@ public class MassRegraderPage
 
         ERXSortOrderings sortOrderings = EnqueuedJob.queueTime.ascs();
 
-        EOFetchSpecification fspec = new EOFetchSpecification(
+        EOFetchSpecification fspec = new WCFetchSpecification<EnqueuedJob>(
                 EnqueuedJob.ENTITY_NAME, qualifier, sortOrderings);
         fspec.setFetchLimit(10);
 

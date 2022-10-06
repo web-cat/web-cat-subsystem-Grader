@@ -85,10 +85,12 @@ public class GraderSubmissionUploadComponent
      * @param partners an array of partners to be associated with the
      *     submission
      */
-    public void startSubmission(int submitNumber, User user)
+    public void startSubmission(
+        int submitNumber, User user, AssignmentOffering assignmentOffering)
     {
         log.debug("startSubmission( " + submitNumber + ", " + user + " )");
-        submissionInProcess().startSubmission(user, submitNumber);
+        submissionInProcess().startSubmission(
+            user, assignmentOffering, submitNumber);
     }
 
 
@@ -102,11 +104,10 @@ public class GraderSubmissionUploadComponent
      * @param  submitTime the time to record for this submission
      * @return a string error message, or null if there were no errors
      */
-    public String commitSubmission( WOContext context,
-                                    NSTimestamp submitTime )
+    public String commitSubmission(WOContext context, NSTimestamp submitTime)
     {
         String errorMessage = null;
-        log.debug( "committing submission" );
+        log.debug("committing submission");
 
         EnergyBar bar = null;
         if (wcSession().primeUser() == null)
@@ -115,19 +116,19 @@ public class GraderSubmissionUploadComponent
                 "null primeUser in session for submission by " +
                 submissionInProcess().user()));
         }
-        if (prefs().assignmentOffering() != null
+        if (submissionInProcess().assignmentOffering() != null
             && (wcSession().primeUser() == null
                 || submissionInProcess().user().id()
                     == wcSession().primeUser().id()))
         {
-            bar = prefs().assignmentOffering().energyBarForUser(
+            bar = submissionInProcess().assignmentOffering().energyBarForUser(
                 submissionInProcess().user());
             if (bar != null
                 && !bar.hasEnergy()
                 && !bar.isCloseToDeadline(submitTime))
             {
-                bar.logEvent(
-                    EnergyBar.SUBMISSION_DENIED, prefs().assignmentOffering());
+                bar.logEvent(EnergyBar.SUBMISSION_DENIED,
+                    submissionInProcess().assignmentOffering());
                 return "You are out of submission energy, but submission "
                     + "energy is required to submit to this assignment. Wait "
                     + "for your submission energy to recharge.";
@@ -147,8 +148,9 @@ public class GraderSubmissionUploadComponent
         // wcSession().localContext().insertObject(submission);
         //      ec.saveChanges();
         submission.setAssignmentOfferingRelationship(
-            prefs().assignmentOffering() );
-        prefs().assignmentOffering().addToSubmissionsRelationship(submission);
+            submissionInProcess().assignmentOffering());
+        submissionInProcess().assignmentOffering()
+            .addToSubmissionsRelationship(submission);
         log.debug("Uploaded file name: " + uploadedFileName);
 
         // Do the actual partnering of the users (this will create the dummy
@@ -176,10 +178,10 @@ public class GraderSubmissionUploadComponent
             submissionInProcess().cancelSubmission();
             applyLocalChanges();
             return "A file error occurred while saving your "
-                   + "submission.  The error has been reported "
-                   + "to the administrator.  Please try your "
-                   + "submission again later once the problem "
-                   + "has been corrected.";
+                + "submission.  The error has been reported "
+                + "to the administrator.  Please try your "
+                + "submission again later once the problem "
+                + "has been corrected.";
         }
 
         // Next, write out the file
@@ -196,15 +198,15 @@ public class GraderSubmissionUploadComponent
             // Do something with the exception
             new UnexpectedExceptionMessage(e, context, null,
                     "Exception uploading submission file").send();
-            localContext().deleteObject( submission );
-            prefs().setSubmissionRelationship( null );
+            localContext().deleteObject(submission);
+            prefs().setSubmissionRelationship(null);
             submissionInProcess().cancelSubmission();
             applyLocalChanges();
             return "A file error occurred while saving your "
-                   + "submission.  The error has been reported "
-                   + "to the administrator.  Please try your "
-                   + "submission again later once the problem "
-                   + "has been corrected.";
+                + "submission.  The error has been reported "
+                + "to the administrator.  Please try your "
+                + "submission again later once the problem "
+                + "has been corrected.";
         }
 
         // Clear out older jobs
@@ -212,7 +214,9 @@ public class GraderSubmissionUploadComponent
         {
             NSArray<EnqueuedJob> oldJobs =
                 EnqueuedJob.objectsMatchingQualifier(localContext(),
-                    EnqueuedJob.submission.dot(Submission.user).eq(user()).and(
+                    EnqueuedJob.submission.dot(Submission.user).eq(
+                        submission.user())
+                    .and(
                     EnqueuedJob.submission.dot(Submission.assignmentOffering)
                         .eq(submission.assignmentOffering()))
                     .and(EnqueuedJob.regrading.isFalse()));

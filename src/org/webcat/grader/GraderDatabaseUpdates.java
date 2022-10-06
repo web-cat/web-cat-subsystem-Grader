@@ -667,15 +667,31 @@ public class GraderDatabaseUpdates
 
     // ----------------------------------------------------------
     /**
-     * Add unique index for energy bars on user and assignment.
+     * Add forceLTIClickthrough to SubmissionProfile table.
      * @throws SQLException on error
      */
-//    public void updateIncrement36() throws SQLException
-//    {
-//        database().executeSQL(
-//            "create unique index EnergyBar_AssignmentOffering_User "
-//            + "on EnergyBar (assignmentOfferingId, userId)");
-//    }
+    public void updateIncrement36() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "(forceLTIClickthrough BIT NOT NULL)");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add time bank fields to SubmissionProfile table.
+     * @throws SQLException on error
+     */
+    public void updateIncrement37() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TSUBMISSIONPROFILE add "
+            + "(useTimeBankDays BIT NOT NULL, "
+            + "timeBankName TINYTEXT, "
+            + "timeBankSize INTEGER)");
+        createTimeBankTable();
+    }
 
 
     //~ Private Methods .......................................................
@@ -1135,6 +1151,35 @@ public class GraderDatabaseUpdates
                 "ALTER TABLE PageViewLog ADD PRIMARY KEY (OID)");
             createIndexFor("PageViewLog", "userId");
             createIndexFor("PageViewLog", "page");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the TimeBank table, if needed.
+     * @throws SQLException on error
+     */
+    private void createTimeBankTable()
+        throws SQLException
+    {
+        if (!database().hasTable("TimeBank"))
+        {
+            log.info("creating table TimeBank");
+            database().executeSQL(
+                "CREATE TABLE PageViewLog "
+                + "(OID INTEGER NOT NULL, "
+                + "available INTEGER NOT NULL, "
+                + "courseOfferingId INTEGER NOT NULL, "
+                + "name TINYTEXT NOT NULL, "
+                + "submissionProfileId INTEGER NOT NULL, "
+                + "userId INTEGER NOT NULL )");
+            database().executeSQL(
+                "ALTER TABLE TimeBank ADD PRIMARY KEY (OID)");
+            createIndexFor("TimeBank", "userId");
+            createIndexFor("TimeBank", "courseOfferingId");
+            createIndexFor("TimeBank", "submissionProfileId");
+            createIndexFor("TimeBank", "name");
         }
     }
 }

@@ -37,7 +37,14 @@ FullFormat: WCRadioButton {
     checked = useFullFormat;
 }
 
-OmitStaff: WCCheckBox {
-    id = idFor.omitStaff;
-    checked = omitStaff;
+FullAllFormat: WCRadioButton {
+    id = idFor.fullAllFormat;
+    name = "scoreFormat";
+    checked = useFullAllFormat;
+}
+
+FullAllDetailedFormat: WCRadioButton {
+    id = idFor.fullAllDetailedFormat;
+    name = "scoreFormat";
+    checked = useFullAllDetailedFormat;
 }

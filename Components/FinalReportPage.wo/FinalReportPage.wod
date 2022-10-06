@@ -33,9 +33,11 @@ FileStaffRemarks: WOString {
     value        = stats.staffRemarks;
 }
 
-FullPrintableReport: WCButton {
+FullPrintableReport: WCLink {
     action = fullPrintableReport;
-    label  = "Full Printable Report";
+    string  = "Full Printable Report";
+    target = "~ isInIFrame ? 'wcfeedback' : '_self'";
+    class = "btn btn-primary";
 }
 
 GradingHalted: WOConditional {
@@ -68,6 +70,7 @@ Page: PageWithAssignmentNavigation {
     title     = "Your Assignment Submission Results";
     permalink = submission.permalink;
     allowsAllOfferingsForCourse = false;
+    isInIFrame = isInIFrame;
 }
 
 PastResults: WOHyperlink {
@@ -75,9 +78,11 @@ PastResults: WOHyperlink {
     string = "Past Results";
 }
 
-ReturnToGrading: WCButton {
-    label  = "< Return to Grading";
+ReturnToGrading: WCLink {
+    string  = "< Return to Grading";
     action = next;
+    target = "~ isInIFrame ? 'wcfeedback' : '_self'";
+    class = "btn btn-primary";
 }
 
 ScoreSummary: org.webcat.grader.ScoreSummaryBlock {
@@ -95,9 +100,11 @@ StatRepetition: WORepetition {
     index = index;
 }
 
-SubmitAgain: WCButton {
-    label  = "Submit Again";
+SubmitAgain: WCLink {
+    string  = "Submit Again";
     action = submitAgain;
+    target = "~ isInIFrame ? 'wcfeedback' : '_self'";
+    class = "btn btn-primary";
 }
 
 TAComments: org.webcat.core.FormattedString {

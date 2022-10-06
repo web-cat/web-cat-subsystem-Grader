@@ -349,7 +349,10 @@ public class Submission
     public EnqueuedJob enqueuedJob()
     {
         EnqueuedJob job = null;
-        NSArray<EnqueuedJob> jobs = enqueuedJobs();
+        // NSArray<EnqueuedJob> jobs = enqueuedJobs();
+        // Force fresh fetch to ensure data is not stale
+        NSArray<EnqueuedJob> jobs = EnqueuedJob.objectsMatchingQualifier(
+            editingContext(), EnqueuedJob.submission.is(this));
         if (jobs != null  &&  jobs.count() > 0)
         {
             if (jobs.count() > 1)

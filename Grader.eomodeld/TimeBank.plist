@@ -1,0 +1,55 @@
+{
+    attributes = (
+        {
+            allowsNull = N;
+            columnName = available;
+            name = available;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+                "_EntityModeler" = {
+                    documentation = "The number of days (or units) available for this time bank";
+                };
+            };
+        },
+        {allowsNull = N; columnName = courseOfferingId; name = courseOfferingId; prototypeName = foreignId; },
+        {allowsNull = N; name = id; prototypeName = id; },
+        {allowsNull = N; columnName = name; name = name; prototypeName = tinyText; },
+        {allowsNull = N; columnName = submissionProfileId; name = submissionProfileId; prototypeName = foreignId; },
+        {allowsNull = N; columnName = userId; name = userId; prototypeName = foreignId; }
+    );
+    attributesUsedForLocking = (available, courseOfferingId, id, name, submissionProfileId, userId);
+    className = "org.webcat.grader.TimeBank";
+    classProperties = (available, courseOffering, name, submissionProfile, user);
+    externalName = TimeBank;
+    fetchSpecificationDictionary = {};
+    name = TimeBank;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = CourseOffering;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = courseOfferingId; });
+            name = courseOffering;
+        },
+        {
+            destination = SubmissionProfile;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = submissionProfileId; });
+            name = submissionProfile;
+        },
+        {
+            destination = User;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = userId; });
+            name = user;
+        }
+    );
+}

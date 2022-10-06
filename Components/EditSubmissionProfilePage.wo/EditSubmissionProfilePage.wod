@@ -1,11 +1,3 @@
-AllowPartnersCheckbox: WOCheckBox {
-    checked = submissionProfile.allowPartners;
-}
-
-AutoAssignPartnersCheckbox: WOCheckBox {
-    checked = submissionProfile.autoAssignPartners;
-}
-
 CheckBox1: WOCheckBox {
     checked = submissionProfile.awardEarlyBonus;
 }
@@ -29,6 +21,11 @@ EnergyBarCfg: WOPopUpButton {
 ExcludedFilePatterns: WOTextField {
     size = 40;
     value = submissionProfile.excludedFilePatterns;
+}
+
+ForceLTIGradePassbackInfo: org.webcat.core.PopUpInfo {
+    title   = "Require LTI Grade Passback";
+    message = "If this assignment has an LTI ID, require students to visit the assignment's page in the learning management system at least once to ensure Web-CAT receives the necessary information to send grades back to the learning management system's gradebook. Use this option if you have configured Web-CAT as an external submission tool in your learning management system for this assignment, but not all students are receiving scores in the gradebook..";
 }
 
 IncludedFilePatterns: WOTextField {

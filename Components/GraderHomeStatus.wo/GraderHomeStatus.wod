@@ -8,12 +8,12 @@ AssignmentIsUnpublished: WOConditional {
 }
 
 AssignmentLink: WOHyperlink {
-    string = "~assignmentOffering.titleString(coreSelections.semester)";
+    string = "~assignmentOffering.titleString";
     href   = assignmentOffering.assignment.url;
 }
 
 AssignmentName: WOString {
-    value = "~assignmentOffering.titleString(coreSelections.semester)";
+    value = "~assignmentOffering.titleString";
 }
 
 DueDate: WOString {
@@ -43,7 +43,7 @@ IsAdminUser: WOConditional {
 }
 
 JobAssignmentName: WOHyperlink {
-    string = "~job.submission.assignmentOffering.titleString(coreSelections.semester)";
+    string = "~job.submission.assignmentOffering.titleString";
     href   = job.submission.assignmentOffering.assignment.url;
     target = "_new";
 }

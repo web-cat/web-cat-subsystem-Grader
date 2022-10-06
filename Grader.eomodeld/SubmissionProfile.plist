@@ -7,6 +7,12 @@
             userInfo = {isScalar = true; scalarDefault = true; type = boolean; };
         },
         {
+            columnName = forceLTIClickthrough;
+            name = forceLTIClickthrough;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = true; type = boolean; };
+        },
+        {
             columnName = autoAssignPartners;
             name = autoAssignPartners;
             prototypeName = boolean;
@@ -258,6 +264,19 @@
                 valueClassName = Double;
             };
         },
+        {columnName = timeBankName; name = timeBankName; prototypeName = tinyText; },
+        {
+            columnName = timeBankSize;
+            name = timeBankSize;
+            prototypeName = integer;
+            userInfo = {
+                isScalar = true;
+                scalarConversionMethodName = intValue;
+                scalarDefault = 0;
+                type = int;
+                valueClassName = Integer;
+            };
+        },
         {
             columnName = CTOOLPOINTS;
             name = toolPoints;
@@ -270,7 +289,13 @@
                 valueClassName = Double;
             };
         },
-        {columnName = CUSERID; name = userId; prototypeName = foreignId; }
+        {columnName = CUSERID; name = userId; prototypeName = foreignId; },
+        {
+            columnName = useTimeBankDays;
+            name = useTimeBankDays;
+            prototypeName = boolean;
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+        }
     );
     attributesUsedForLocking = (
         allowPartners,
@@ -285,6 +310,7 @@
         excessSubmissionsThreshold,
         excessSubmissionsUnitSize,
         excludedFilePatterns,
+        forceLTIClickthrough,
         includedFilePatterns,
         latePenaltyUnitTime,
         maxFileUploadSize,
@@ -293,7 +319,10 @@
         requiredFilePatterns,
         scoreFormat,
         submissionMethod,
-        userId
+        timeBankName,
+        timeBankSize,
+        userId,
+        useTimeBankDays
     );
     className = "org.webcat.grader.SubmissionProfile";
     classProperties = (
@@ -317,6 +346,7 @@
         excessSubmissionsUnitPts,
         excessSubmissionsUnitSize,
         excludedFilePatterns,
+        forceLTIClickthrough,
         includedFilePatterns,
         latePenaltyMaxPts,
         latePenaltyUnitPts,
@@ -327,7 +357,10 @@
         requiredFilePatterns,
         scoreFormat,
         taPoints,
-        toolPoints
+        timeBankName,
+        timeBankSize,
+        toolPoints,
+        useTimeBankDays
     );
     externalName = TSUBMISSIONPROFILE;
     name = SubmissionProfile;

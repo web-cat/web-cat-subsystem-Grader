@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: UploadSubmissionPage.java,v 1.10 2013/08/11 02:04:18 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -37,8 +35,6 @@ import org.webcat.ui.generators.JavascriptGenerator;
  * to upload a program file for the current (new) submission.
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.10 $, $Date: 2013/08/11 02:04:18 $
  */
 public class UploadSubmissionPage
     extends GraderSubmissionUploadComponent
@@ -124,9 +120,9 @@ public class UploadSubmissionPage
             Submission.latestSubmissionForAssignmentOfferingAndUser(
                     localContext(), offering, user());
 
-        if (this.offering != null)
+        if (offering != null)
         {
-            this.bar = this.offering.energyBarForUser(user());
+            bar = offering.energyBarForUser(user());
         }
         if (previousPartners == null)
         {
@@ -164,14 +160,14 @@ public class UploadSubmissionPage
             partnersForEditing.clear();
         }
 
-        Number maxSubmissions = offering
-            .assignment().submissionProfile().maxSubmissionsRaw();
+        Number maxSubmissions = offering.assignment().submissionProfile()
+            .maxSubmissionsRaw();
         okayToSubmit = (maxSubmissions == null
                         || currentSubNo <= maxSubmissions.intValue());
 
         if (okayToSubmit)
         {
-            startSubmission(currentSubNo, user());
+            startSubmission(currentSubNo, user(), offering);
         }
 
         if (offering.dueDate() != null)
@@ -299,6 +295,7 @@ public class UploadSubmissionPage
     // ----------------------------------------------------------
     public WOComponent next()
     {
+        offering = prefs().assignmentOffering();
         if (log.isDebugEnabled())
         {
             log.debug("next():");
@@ -310,6 +307,11 @@ public class UploadSubmissionPage
         if (showStudentSelector && submitAsStudent == null)
         {
             error("Please select a student for this submission.");
+            return null;
+        }
+        if (offering == null)
+        {
+            error("Please select an assignment for this submission.");
             return null;
         }
         NSTimestamp now = new NSTimestamp();
@@ -375,7 +377,13 @@ public class UploadSubmissionPage
                 setLocalUser(submitAsStudent);
                 int currentSubNo = fillDisplayGroup(user());
                 // restart the submission with a new user/number
-                submissionInProcess().startSubmission(user(), currentSubNo);
+                submissionInProcess().startSubmission(
+                    user(), offering, currentSubNo);
+            }
+            else
+            {
+                submissionInProcess().startSubmission(
+                    user(), offering, submissionInProcess().submitNumber());
             }
 
             submissionInProcess().setPartners(partnersForEditing);

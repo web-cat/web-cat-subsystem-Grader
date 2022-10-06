@@ -21,6 +21,11 @@ on your
 site, and enter Web-CAT from that page. Thank you.
 </p>
 </wo:if><wo:else>
+<wo:if condition="$isInIFrame">
+<div class="clear" style="margin-top:0.5em;">
+<wo:WCLink class="btn btn-primary" target="wcfeedback" action="$refreshNoIFrame">Upload Submission</wo:WCLink>
+</div>
+</wo:if><wo:else>
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <wo:if condition="$showStudentSelector">
     <p>Submit for student: <wo name="StudentList"/></p>
@@ -47,13 +52,16 @@ to choose them.
 </wo:if>
 
 <p><wo:org.webcat.ui.WCButton action="$next" label="Upload Submission"/></p>
-</wo:WOForm></wo:else></wo:if></wo:org.webcat.core.WCPageModule>
+</wo:WOForm>
+</wo:else>
+</wo:else></wo:if></wo:org.webcat.core.WCPageModule>
 
+<wo:not condition="$isInIFrame">
 <wo:not condition="$showStudentSelector">
 <wo:org.webcat.core.WCPageModule title="Previous Submissions" open="false">
 <wo:if condition="$hasPreviousSubmissions"><p>Your previous submissions for this assignment:</p>
 <table><thead>
-  <tr><wo:WOGenericContainer elementName="td" colspan="~4 + ((extraColumnCount gt 1) ? extraColumnCount : 0)" class="batchnav"><wo:WCForm multipleSumbit="true"><webobject name="BatchNavigator"/></wo:WCForm></wo:WOGenericContainer></tr>
+  <tr><wo:WOGenericContainer elementName="td" colspan="~4 + ((extraColumnCount gt 1) ? extraColumnCount : 0)" class="batchnav"><wo:WCForm multipleSubmit="true" enctype="multipart/form-data"><webobject name="BatchNavigator"/></wo:WCForm></wo:WOGenericContainer></tr>
   <tr><th>No.<webobject name="WCSortOrder3"/></th>
     <th>Time<webobject name="WCSortOrder1"/></th>
     <wo:if condition="~extraColumnCount gt 1">
@@ -99,5 +107,6 @@ to choose them.
   </webobject></webobject></tbody></table>
 </wo:if><wo:else><p>This is your first submission for this assignment.</p>
 </wo:else></wo:org.webcat.core.WCPageModule>
+</wo:not>
 </wo:not>
 </wo>

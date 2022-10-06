@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: DownloadScoresDialog.java,v 1.2 2010/10/19 18:37:37 aallowat Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2010 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -46,8 +44,6 @@ import com.webobjects.foundation.NSTimestamp;
  * as a CSV file.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author: aallowat $
- * @version $Revision: 1.2 $, $Date: 2010/10/19 18:37:37 $
  */
 public class DownloadScoresDialog extends WCComponent
 {
@@ -65,7 +61,10 @@ public class DownloadScoresDialog extends WCComponent
     public boolean useBlackboardFormat;
     public boolean useMoodleFormat = true;
     public boolean useFullFormat;
-    public boolean omitStaff = true;
+    public boolean useFullAllFormat;
+    public boolean useFullAllDetailedFormat;
+    public boolean includeStaff = false;
+    public boolean includeIds = false;
 
     public NSArray<AssignmentOffering> assignmentOfferings;
     public NSArray<CourseOffering> courseOfferings;
@@ -124,13 +123,13 @@ public class DownloadScoresDialog extends WCComponent
         collectSubmissionsToExport();
 
         byte[] rawData;
-        if (useFullFormat)
+        if (useMoodleFormat || useBlackboardFormat)
         {
-            rawData = exportAsWebCATCSV();
+            rawData = exportAsBlackboardCSV(useMoodleFormat);
         }
         else
         {
-            rawData = exportAsBlackboardCSV(useMoodleFormat);
+            rawData = exportAsWebCATCSV();
         }
 
         String filename;
@@ -163,11 +162,30 @@ public class DownloadScoresDialog extends WCComponent
 
         for (AssignmentOffering ao : assignmentOfferings)
         {
-            NSArray<User> students = omitStaff
-                ? ao.courseOffering().studentsWithoutStaff()
-                : ao.courseOffering().studentsAndStaff();
-            submissions.addObjectsFromArray(Submission.submissionsForGrading(
-                localContext(), ao, false, students, null));
+            if (useFullAllFormat || useFullAllDetailedFormat)
+            {
+                NSArray<Submission> subs = Submission.objectsMatchingQualifier(
+                    localContext(),
+                    Submission.assignmentOffering.is(ao),
+                    Submission.user.dot(User.userName).asc().then(
+                        Submission.submitNumber.asc()));
+                for (Submission s : subs)
+                {
+                    if (includeStaff || !ao.courseOffering().isStaff(s.user()))
+                    {
+                        submissions.add(new UserSubmissionPair(s.user(), s));
+                    }
+                }
+            }
+            else
+            {
+                NSArray<User> students = includeStaff
+                    ? ao.courseOffering().studentsAndStaff()
+                    : ao.courseOffering().studentsWithoutStaff();
+                submissions.addObjectsFromArray(
+                    Submission.submissionsForGrading(
+                    localContext(), ao, false, students, null));
+            }
         }
 
         submissionsToExport = submissions;
@@ -191,7 +209,9 @@ public class DownloadScoresDialog extends WCComponent
     // ----------------------------------------------------------
     private void print(ExcelCSVPrinter out, Number field)
     {
-        if (field == null)
+        if (field == null
+            || (field instanceof Double && ((Double)field).isNaN())
+            || (field instanceof Float && ((Float)field).isNaN()))
         {
             out.print("");
         }
@@ -208,33 +228,48 @@ public class DownloadScoresDialog extends WCComponent
         ByteArrayOutputStream outBytes = new ByteArrayOutputStream(4096);
         ExcelCSVPrinter out = new ExcelCSVPrinter(outBytes);
 
-        // Basic header information
-        out.print("Course");
-        out.print("");
-        out.println(course.deptNumber());
-        out.print("Semester");
-        out.print("");
-        out.println(semester.name());
-        out.print("Assignment");
-        out.print("");
-        out.println(assignment.name());
-        out.print("Generated on");
-        out.print("");
-        out.println(wcSession().timeFormatter().format(new NSTimestamp()));
-        out.println("");
-
         // Column titles
-        out.print("ID No.");
+        out.print("Course");
+        String courseVal = course.deptNumber();
+        out.print("CRN");
+        out.print("Semester");
+        String semesterVal = useFullAllDetailedFormat
+            ? semester.dirName()
+            : semester.name();
+        out.print("Assignment");
+        String asgnVal = useFullAllDetailedFormat
+            ? assignment.subdirName()
+            : assignment.name();
+        if (includeIds)
+        {
+            out.print("ID No.");
+        }
         out.print("User");
+        out.print("Email");
         out.print("Last Name");
         out.print("First Name");
+        if (assignment.submissionProfile().allowPartners())
+        {
+            out.print("Partners");
+        }
         out.print("Sub No.");
         out.print("Time");
-        out.print("Correctness");
-        out.print("Style");
+        out.print("Timestamp");
+        if (useFullAllDetailedFormat)
+        {
+            out.print("Student Test %");
+            out.print("Student Coverage %");
+            out.print("Ref Test %");
+        }
+        out.print("Correctness/Testing Score");
+        out.print("Correctness/Testing %");
+        out.print("Style Score");
+        out.print("Style %");
         out.print("Design");
+        out.print("Design %");
         out.print("Penalty/Bonus");
-        out.println("Total");
+        out.print("Total Score");
+        out.println("Total %");
 
         for (UserSubmissionPair pair : submissionsToExport)
         {
@@ -243,22 +278,111 @@ public class DownloadScoresDialog extends WCComponent
                 User student = pair.user();
                 Submission submission = pair.submission();
 
-                print(out, student.universityIDNo());
+                print(out, courseVal);
+                print(out,
+                    useFullAllDetailedFormat
+                    ? submission.assignmentOffering().courseOffering()
+                        .crnSubdirName()
+                    : submission.assignmentOffering().courseOffering()
+                        .crn());
+                print(out, semesterVal);
+                print(out, asgnVal);
+                if (includeIds)
+                {
+                    print(out, student.universityIDNo());
+                }
                 print(out, student.userName());
+                print(out, student.email());
                 print(out, student.lastName());
                 print(out, student.firstName());
+                SubmissionResult result = submission.result();
+                if (assignment.submissionProfile().allowPartners())
+                {
+                    String partners = "";
+                    boolean first = true;
+                    if (result != null)
+                    {
+                        for (Submission psub : result.submissions())
+                        {
+                            if (!first)
+                            {
+                                partners += ";";
+                            }
+                            partners += psub.user().email();
+                            first = false;
+                        }
+                    }
+                    print(out, partners);
+                }
 
                 log.debug("submission found = "
                     + submission.submitNumber());
                 print(out, submission.submitNumberRaw());
                 print(out, submission.submitTime().toString());
-                SubmissionResult result = pair.submission().result();
-                print(out, result.correctnessScoreRaw());
-                print(out, result.toolScoreRaw());
-                print(out, result.taScoreRaw());
-                print(out, Double.toString(
-                    result.earlyBonus() - result.latePenalty()));
-                out.println(Double.toString(result.finalScore()));
+                out.print(Long.toString(submission.submitTime().getTime()));
+                if (result == null)
+                {
+                    if (useFullAllDetailedFormat)
+                    {
+                       print(out, "");
+                       print(out, "");
+                       print(out, "");
+                    }
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    print(out, "");
+                    out.println();
+                }
+                else
+                {
+                    SubmissionProfile sp = submission.assignmentOffering()
+                        .assignment().submissionProfile();
+
+                    if (useFullAllDetailedFormat)
+                    {
+                        print(out, result.properties()
+                            .getProperty("student.test.passRate"));
+                        {
+                            int elements = 0;
+                            int elementsCovered = 0;
+                        
+                            for (SubmissionFileStats f : result.submissionFileStats())
+                            {
+                                elements += f.elements();
+                                elementsCovered += f.elementsCovered();
+                            }
+                            print(out, elementsCovered / (1.0 * elements));
+                        }
+                        print(out, result.properties()
+                            .getProperty("instructor.test.passRate"));
+                    }
+                    print(out, result.correctnessScoreRaw());
+                    print(out, result.correctnessScore()
+                        / sp.correctnessPoints());
+                    print(out, result.toolScoreRaw());
+                    print(out, result.toolScore()
+                        / sp.toolPoints());
+                    print(out, result.taScoreRaw());
+                    print(out, result.taScore()
+                        / sp.taPoints());
+                    if (sp.earlyBonusMaxPts() + sp.latePenaltyMaxPts() > 0.00001)
+                    {
+                        print(out, result.earlyBonus() - result.latePenalty());
+                    }
+                    else
+                    {
+                        print(out, "");
+                    }
+                    print(out, result.finalScore());
+                    print(out, result.finalScore() / sp.availablePoints());
+                    out.println();
+                }
             }
         }
 
@@ -291,7 +415,7 @@ public class DownloadScoresDialog extends WCComponent
 
         for (UserSubmissionPair pair : submissionsToExport)
         {
-            if (pair.userHasSubmission())
+            if (pair.userHasSubmission() && pair.submission().result() != null)
             {
                 print(out, pair.user().userName());
                 out.println(Double.toString(

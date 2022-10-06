@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2006-2018 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -154,7 +154,7 @@ public class EditAssignmentPage
             {
                 // Try to create an instance of URL, which will
                 // throw an exception if the name isn't valid
-                result = (new URL( assignUrl ) != null);
+                result = (new URL(assignUrl) != null);
             }
             catch (MalformedURLException e)
             {
@@ -197,7 +197,7 @@ public class EditAssignmentPage
      */
     protected boolean saveAndCanProceed()
     {
-        return saveAndCanProceed( true );
+        return saveAndCanProceed(true);
     }
 
 
@@ -425,13 +425,30 @@ public class EditAssignmentPage
     public void setAssignmentUrl(String value)
     {
         assignment.setUrl(value);
-        if (offeringGroup.displayedObjects().count() > 0
-            && value != null
-            && !value.isEmpty())
+        if (offeringGroup.displayedObjects().count() > 0)
         {
-            for (AssignmentOffering ao : offeringGroup.displayedObjects())
+            // if non-empty value is set
+            if (value != null && !value.isEmpty())
             {
-                ao.setLmsAssignmentUrl(value);
+                for (AssignmentOffering ao : offeringGroup.displayedObjects())
+                {
+                    ao.setLmsAssignmentUrl(value);
+                }
+            }
+            else
+            {
+                // URL is being cleared
+                for (AssignmentOffering ao : offeringGroup.displayedObjects())
+                {
+                    ao.setLmsAssignmentUrl(null);
+                    // Only clear LTI ID if no LTI launches been received
+                    // for this offering
+                    if (ao.lisOutcomeServiceUrl() == null
+                        || ao.lisOutcomeServiceUrl().isEmpty())
+                    {
+                        ao.setLmsAssignmentId(null);
+                    }
+                }
             }
         }
     }
@@ -685,35 +702,32 @@ public class EditAssignmentPage
         log.info("releasing all paused assignments: "
               + assignment.titleString());
 
-        run(new ECAction() {
-            public void action()
+        run(new ECAction() { public void action() {
+            NSMutableArray<EnqueuedJob> jobs =
+                new NSMutableArray<EnqueuedJob>();
+            for (AssignmentOffering offering :
+                offeringGroup.displayedObjects())
             {
-                NSMutableArray<EnqueuedJob> jobs =
-                    new NSMutableArray<EnqueuedJob>();
-                for (AssignmentOffering offering :
-                    offeringGroup.displayedObjects())
+                AssignmentOffering localAO = offering.localInstance(ec);
+                NSArray<EnqueuedJob> jobList =
+                    localAO.suspendedSubmissionsInQueue();
+                for (EnqueuedJob job : jobList)
                 {
-                    AssignmentOffering localAO = offering.localInstance(ec);
-                    NSArray<EnqueuedJob> jobList =
-                        localAO.suspendedSubmissionsInQueue();
-                    for (EnqueuedJob job : jobList)
-                    {
-                        job.setPaused(false);
-                        job.setQueueTime(new NSTimestamp());
-                    }
-                    jobs.addAll(jobList);
-                    log.info("released " + jobList.count() + " jobs");
+                    job.setPaused(false);
+                    job.setQueueTime(new NSTimestamp());
                 }
-
-                ec.saveChanges();
-                GraderQueueProcessor.processJobs(jobs);
+                jobs.addAll(jobList);
+                log.info("released " + jobList.count() + " jobs");
             }
-        });
+
+            ec.saveChanges();
+            GraderQueueProcessor.processJobs(jobs);
+        }});
 
         // trigger the grading queue to read the released jobs
 
         return new JavascriptGenerator().refresh(
-                "allOfferings", "allOfferingsActions", "error-panel");
+            "allOfferings", "allOfferingsActions", "error-panel");
     }
 
 
@@ -770,7 +784,7 @@ public class EditAssignmentPage
         }
 
         return new JavascriptGenerator().refresh(
-                "allOfferings", "allOfferingsActions", "error-panel");
+            "allOfferings", "allOfferingsActions", "error-panel");
     }
 
 
@@ -802,15 +816,11 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public JavascriptGenerator addStep()
     {
-        if (gradingPluginToAdd != null)
+        if (gradingPluginToAdd != null && saveAndCanProceed())
         {
-            if (saveAndCanProceed())
-            {
-                assignment.addNewStep(gradingPluginToAdd);
-                applyLocalChanges();
-
-                scriptDisplayGroup.fetch();
-            }
+            assignment.addNewStep(gradingPluginToAdd);
+            applyLocalChanges();
+            scriptDisplayGroup.fetch();
         }
 
         return new JavascriptGenerator()
@@ -1033,14 +1043,14 @@ public class EditAssignmentPage
     private WOComponent deleteOfferingActionOk()
     {
         prefs().setAssignmentOfferingRelationship(null);
-        for (AssignmentOffering ao : offeringGroup.displayedObjects())
-        {
-            if (ao != offeringForAction)
-            {
-                prefs().setAssignmentOfferingRelationship(ao);
-                break;
-            }
-        }
+//        for (AssignmentOffering ao : offeringGroup.displayedObjects())
+//        {
+//            if (ao != offeringForAction)
+//            {
+//                prefs().setAssignmentOfferingRelationship(ao);
+//                break;
+//            }
+//        }
         if (!applyLocalChanges()) return flush(null);
         localContext().deleteObject(offeringForAction);
         if (!applyLocalChanges()) return flush(null);
@@ -1171,5 +1181,5 @@ public class EditAssignmentPage
 
     private static Boolean surveysSupported;
 
-    static Logger log = Logger.getLogger( EditAssignmentPage.class );
+    static Logger log = Logger.getLogger(EditAssignmentPage.class);
 }

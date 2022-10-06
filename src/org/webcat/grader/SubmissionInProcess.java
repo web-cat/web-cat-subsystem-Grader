@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: SubmissionInProcess.java,v 1.7 2014/11/07 13:55:03 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2006-2008 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -24,6 +22,7 @@ package org.webcat.grader;
 import com.webobjects.foundation.*;
 import java.io.*;
 import org.webcat.archives.IArchiveEntry;
+import org.webcat.core.Disposable;
 import org.webcat.core.PathMatcher;
 import org.webcat.core.User;
 
@@ -33,10 +32,9 @@ import org.webcat.core.User;
  * that has been started (but not yet completed).
  *
  * @author  Stephen Edwards
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.7 $, $Date: 2014/11/07 13:55:03 $
  */
 public class SubmissionInProcess
+    implements Disposable
 {
     //~ Constructors ..........................................................
 
@@ -68,7 +66,7 @@ public class SubmissionInProcess
      * Set the current uploaded file's data.
      * @param data The file's data
      */
-    public void setUploadedFile( NSData data )
+    public void setUploadedFile(NSData data)
     {
         uploadedFile = data;
     }
@@ -90,10 +88,13 @@ public class SubmissionInProcess
      * Set the current uploaded file's name.
      * @param name The file's name
      */
-    public void setUploadedFileName( String name )
+    public void setUploadedFileName(String name)
     {
         uploadedFileName = name;
-        if (uploadedFileName == null) return;
+        if (uploadedFileName == null)
+        {
+            return;
+        }
 
         // Depending on the client's browser and OS, the file name
         // might be a relative or absolute path, rather than just
@@ -144,7 +145,7 @@ public class SubmissionInProcess
      * Set the current uploaded file's list of internal contents.
      * @param list An array of files contained within this zip or jar
      */
-    public void setUploadedFileList( NSArray<IArchiveEntry> list )
+    public void setUploadedFileList(NSArray<IArchiveEntry> list)
     {
         uploadedFileList = list;
     }
@@ -168,9 +169,11 @@ public class SubmissionInProcess
      * @param forUser The user making the submission
      * @param subNumber The number of the user's submission
      */
-    public void startSubmission(User forUser, int subNumber)
+    public void startSubmission(
+        User forUser, AssignmentOffering assignmentOffering, int subNumber)
     {
         user = forUser;
+        offering = assignmentOffering;
         submitNumber = subNumber;
     }
 
@@ -183,6 +186,17 @@ public class SubmissionInProcess
     public User user()
     {
         return user;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Get the assignment offering for this submission.
+     * @return The assignment offering, or null if none is in process
+     */
+    public AssignmentOffering assignmentOffering()
+    {
+        return offering;
     }
 
 
@@ -213,7 +227,7 @@ public class SubmissionInProcess
      * Set the current partners for this submission.
      * @param somePartners The partners
      */
-    public void setPartners( NSArray<User> somePartners )
+    public void setPartners(NSArray<User> somePartners)
     {
         partners = somePartners;
     }
@@ -228,14 +242,14 @@ public class SubmissionInProcess
      */
     public boolean hasValidFileUpload()
     {
-        if ( uploadedFileName != null )
+        if (uploadedFileName != null)
         {
-            uploadedFileName = ( new File( uploadedFileName ) ).getName();
+            uploadedFileName = (new File(uploadedFileName)).getName();
         }
-        return (    uploadedFile          != null
-                 && uploadedFile.length() != 0
-                 && uploadedFileName      != null
-                 && !uploadedFileName.equals( "" ) );
+        return uploadedFile          != null
+            && uploadedFile.length() != 0
+            && uploadedFileName      != null
+            && !uploadedFileName.isEmpty();
     }
 
 
@@ -304,6 +318,13 @@ public class SubmissionInProcess
 
 
     // ----------------------------------------------------------
+    public void dispose()
+    {
+        cancelSubmission();
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * End the current submission in process, if there is one, and clear
      * any upload file data.
@@ -311,7 +332,9 @@ public class SubmissionInProcess
     public void cancelSubmission()
     {
         user = null;
+        offering = null;
         submitNumber = -1;
+        partners = null;
         clearUpload();
     }
 
@@ -334,6 +357,7 @@ public class SubmissionInProcess
     private String                 uploadedFileName;
     private NSArray<IArchiveEntry> uploadedFileList;
     private User                   user;
+    private AssignmentOffering     offering;
     private int                    submitNumber = -1;
     private NSArray<User>          partners;
 }

@@ -1,7 +1,5 @@
 /*==========================================================================*\
- |  $Id: GradingPluginResourceHandler.java,v 1.3 2012/01/05 19:53:00 stedwar2 Exp $
- |*-------------------------------------------------------------------------*|
- |  Copyright (C) 2011-2012 Virginia Tech
+ |  Copyright (C) 2011-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -23,7 +21,7 @@ package org.webcat.grader;
 
 import java.io.File;
 import org.webcat.core.EntityResourceHandler;
-import com.webobjects.eocontrol.EOFetchSpecification;
+import org.webcat.woextensions.WCFetchSpecification;
 
 //-------------------------------------------------------------------------
 /**
@@ -31,8 +29,6 @@ import com.webobjects.eocontrol.EOFetchSpecification;
  * BatchResult entities through direct URLs.
  *
  * @author  Tony Allevato
- * @author  Last changed by $Author: stedwar2 $
- * @version $Revision: 1.3 $, $Date: 2012/01/05 19:53:00 $
  */
 public class GradingPluginResourceHandler
     extends EntityResourceHandler<GradingPlugin>
@@ -49,9 +45,10 @@ public class GradingPluginResourceHandler
 
     // ----------------------------------------------------------
     @Override
-    public EOFetchSpecification fetchSpecificationForFriendlyName(String name)
+    public WCFetchSpecification<GradingPlugin>
+        fetchSpecificationForFriendlyName(String name)
     {
-        return new EOFetchSpecification(
+        return new WCFetchSpecification<GradingPlugin>(
                 GradingPlugin.ENTITY_NAME,
                 GradingPlugin.name.is(name),
                 GradingPlugin.lastModified.ascs());

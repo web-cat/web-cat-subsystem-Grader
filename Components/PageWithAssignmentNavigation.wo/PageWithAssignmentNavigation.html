@@ -1,5 +1,5 @@
 <wo name="BasePage"><div id="content">
-<wo:if condition="$includePageWrapping"><div id="header">
+<wo:if condition="$includeHeaderFooter"><div id="header">
   <div class="title width25 floatLeft">
     <h1>Web-CAT</h1>
     <h2>Automatic grading<br/>using student-written tests</h2>
@@ -42,15 +42,17 @@
   </div>
 </div>
 </wo:if><div id="page"><div class="width100 floatRight">
+<wo:if condition="$includeHeaderFooter">
 <wo:if condition="$hasTitle"><div class="module title">
   <div class="floatLeft"><h1><wo:str value="$title"/></h1></div>
   <wo:if condition="$permalink"><wo:link href="$permalink" class="permalink floatRight">Permalink</wo:link></wo:if>
   <div class="floatRight"><wo name="Navigator"/></div>
   <div style="clear:both;"></div>
 </div></wo:if>
+</wo:if><wo:else><div style="padding-bottom: 1.5em;"></div></wo:else>
 <webobject name="Errors"/>
 <wo name="ForceNavigation">
 <div class="module">
 <p>Please select a course and assignment above to continue.</p>
 </div></wo><wo name="DoNotForceNavigation"><wo:content/></wo>
-</div></div></div><wo:if condition="$includePageWrapping"><wo:org.webcat.core.Footer/></wo:if></wo>
+</div></div></div><wo:if condition="$includeHeaderFooter"><wo:org.webcat.core.Footer/></wo:if></wo>

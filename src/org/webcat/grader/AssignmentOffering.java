@@ -707,7 +707,7 @@ public class AssignmentOffering
                 }
             }
         }
-        EOFetchSpecification spec = new EOFetchSpecification(
+        EOFetchSpecification spec = new WCFetchSpecification<Submission>(
             Submission.ENTITY_NAME, new EOAndQualifier(qualifiers), null);
         // Only need to return 1, since we're just trying to find out if
         // there are any at all
@@ -1069,8 +1069,7 @@ public class AssignmentOffering
     public EnergyBarConfig energyBarConfig()
     {
         EnergyBarConfig cfg = null;
-        if (cfg == null
-            && assignment() != null
+        if (assignment() != null
             && assignment().submissionProfile() != null)
         {
             cfg = assignment().submissionProfile().energyBarConfig();
@@ -1104,7 +1103,11 @@ public class AssignmentOffering
     // ----------------------------------------------------------
     public boolean needsLTIClickthrough(User user)
     {
-        return lmsAssignmentId() != null && lisResultIdFor(user) == null;
+        return lmsAssignmentId() != null
+            && lisResultIdFor(user) == null
+            && assignment() != null
+            && assignment().submissionProfile() != null
+            && assignment().submissionProfile().forceLTIClickthrough();
     }
 
 
@@ -1133,6 +1136,17 @@ public class AssignmentOffering
                 }
             }
         }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void setLisOutcomeServiceUrl(String value)
+    {
+        value = value.replace("/canvas.vt.edu/", "/vt.instructure.com/");
+        value = value.replace(
+            "/profdev-lms.tlos.vt.edu/", "/vtprofdev.instructure.com/");
+        super.setLisOutcomeServiceUrl(value);
     }
 
 

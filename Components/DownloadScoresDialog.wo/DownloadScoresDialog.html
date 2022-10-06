@@ -7,10 +7,15 @@
     <li><wo name="BlackboardFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.blackboardFormat" class="trailing">Blackboard-compatible CSV</wo:WOGenericContainer></li>
     <li><wo name="MoodleFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.moodleFormat" class="trailing">Moodle-compatible CSV</wo:WOGenericContainer></li>
     <li><wo name="FullFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.fullFormat" class="trailing">Fully-detailed Web-CAT CSV</wo:WOGenericContainer></li>
+    <li><wo name="FullAllFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.fullAllFormat" class="trailing">Fully-detailed Web-CAT CSV including all submissions</wo:WOGenericContainer></li>
+    <li><wo name="FullAllDetailedFormat"/> <wo:WOGenericContainer elementName="label" for="$idFor.fullAllDetailedFormat" class="trailing">Fully-detailed Web-CAT CSV including all submissions plus raw coverage/correctness info (takes longer to generate)</wo:WOGenericContainer></li>
     </ol>
     </fieldset>
     <p>
-    <wo name="OmitStaff"/> <wo:WOGenericContainer elementName="label" for="$idFor.omitStaff" class="trailing">Omit course staff</wo:WOGenericContainer>
+    <wo:checkbox id="$idFor.includeStaff" checked="$includeStaff"/> <wo:WOGenericContainer elementName="label" for="$idFor.includeStaff" class="trailing">Include course staff</wo:WOGenericContainer>
+    </p>
+    <p>
+    <wo:checkbox id="$idFor.includeIds" checked="$includeIds"/> <wo:WOGenericContainer elementName="label" for="$idFor.includeIds" class="trailing">Include student ID numbers</wo:WOGenericContainer>
     </p>
 </div>
 <div style="text-align: center">

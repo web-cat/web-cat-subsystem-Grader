@@ -2000,7 +2000,7 @@ public class GraderQueueProcessor
             jobsCountedWithWaits++;
 
             long wait = thisWait - processingTime;
-            log.info("completed job [" + msg + "], wait = "
+            jobLog.info("completed job [" + msg + "], wait = "
                 + ((wait + 500.0)/1000.0)
                 + "s, processing time = "
                 + ((processingTime + 500.0)/1000.0)
@@ -2147,4 +2147,6 @@ public class GraderQueueProcessor
     private boolean isRegrading;
 
     static Logger log = Logger.getLogger(GraderQueueProcessor.class);
+    static Logger jobLog = Logger.getLogger(
+        GraderQueueProcessor.class.getName() + ".jobs");
 }

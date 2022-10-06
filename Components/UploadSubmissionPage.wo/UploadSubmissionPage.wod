@@ -64,6 +64,7 @@ WCSortOrder3: org.webcat.woextensions.WCSortOrder {
 Page: PageWithAssignmentNavigation {
     permalink = permalink;
     hideClosedAssignmentsFromStudents = true;
+    isInIFrame = isInIFrame;
 }
 
 BatchNavigator: org.webcat.core.WCBatchNavigator {

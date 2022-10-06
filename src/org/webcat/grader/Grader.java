@@ -601,7 +601,7 @@ public class Grader
         }
 
         result.partnersNotFound = partnersNotFound;
-        result.startSubmission(currentSubNo, result.user());
+        result.startSubmission(currentSubNo, result.user(), assignment);
         result.submissionInProcess().setPartners(partners);
         result.submissionInProcess().setUploadedFile(file);
         result.submissionInProcess().setUploadedFileName(fileName);
@@ -841,20 +841,18 @@ public class Grader
             // redirect to results page for that assignment
         // else
             // redirect to submit page for that assignment
+        String tabName = "UploadSubmission";
         if (Submission.submissionsForAssignmentOfferingAndUser(
             session.defaultEditingContext(), assignment, session.user())
             .count() > 0)
         {
-            return genericGComp.pageWithName(
-                session.tabs.selectById("MostRecent").pageName())
-                .generateResponse();
+            tabName = "MostRecent";
         }
-        else
-        {
-            return genericGComp.pageWithName(
-                session.tabs.selectById("UploadSubmission").pageName())
-            .generateResponse();
-        }
+        GraderAssignmentComponent gac =
+            (GraderAssignmentComponent)genericGComp.pageWithName(
+            session.tabs.selectById(tabName).pageName());
+        gac.startInIFrame(lti.isInIFrame());
+        return gac.generateResponse();
     }
 
 

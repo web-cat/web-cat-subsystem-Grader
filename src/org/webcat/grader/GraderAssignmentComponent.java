@@ -41,9 +41,9 @@ public class GraderAssignmentComponent
      *
      * @param context The context to use
      */
-    public GraderAssignmentComponent( WOContext context )
+    public GraderAssignmentComponent(WOContext context)
     {
-        super( context );
+        super(context);
     }
 
 
@@ -141,10 +141,10 @@ public class GraderAssignmentComponent
      * @param assignment the assignment to use for generating settings
      * @return True if successful, false if the offering is not valid
      */
-    protected boolean startWith( Assignment assignment )
+    protected boolean startWith(Assignment assignment)
     {
-        return assignment != null && startWith( assignment.offeringForUser(
-            user() ) );
+        return assignment != null
+            && startWith(assignment.offeringForUser(user()));
     }
 
 
@@ -155,12 +155,12 @@ public class GraderAssignmentComponent
      * @param offering the assignment offering to use for generating settings
      * @return True if successful, false if the offering is not valid
      */
-    protected boolean startWith( AssignmentOffering offering )
+    protected boolean startWith(AssignmentOffering offering)
     {
         boolean result = false;
-        if ( offering != null && startWith( offering.courseOffering() ) )
+        if (offering != null && startWith(offering.courseOffering()))
         {
-            prefs().setAssignmentOfferingRelationship( offering );
+            prefs().setAssignmentOfferingRelationship(offering);
             result = true;
         }
         return result;
@@ -171,9 +171,44 @@ public class GraderAssignmentComponent
     public boolean needsLTIClickthrough()
     {
         return prefs().assignmentOffering() != null
-        && prefs().assignmentOffering().courseOffering()
-        .isStudent(wcSession().primeUser())
-        && prefs().assignmentOffering().needsLTIClickthrough(user());
+            && prefs().assignmentOffering().courseOffering() != null
+            && prefs().assignmentOffering().courseOffering().isStudent(user())
+            && prefs().assignmentOffering().needsLTIClickthrough(user());
     }
 
+
+
+    // ----------------------------------------------------------
+    public void startInIFrame(boolean value)
+    {
+        isInIFrame = value;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setIsInIFrame(boolean value)
+    {
+        // ignore, to disable synchronization with child
+        // components!
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean isInIFrame()
+    {
+        return isInIFrame;
+    }
+
+
+    // ----------------------------------------------------------
+    public WOComponent refreshNoIFrame()
+    {
+        isInIFrame = false;
+        return this;
+    }
+
+
+    //~ Instance/static variables .............................................
+
+    private boolean isInIFrame = false;
 }

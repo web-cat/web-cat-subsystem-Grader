@@ -30,6 +30,7 @@ import org.webcat.core.CourseOffering;
 import org.webcat.core.EntityUtils;
 import org.webcat.core.INavigatorObject;
 import org.webcat.ui.generators.JavascriptGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.eocontrol.EOFetchSpecification;
 import com.webobjects.eocontrol.EOQualifier;
@@ -231,7 +232,8 @@ public class GraderNavigator
             unpublishedQual = ERXQ.isTrue("publish");
         }
 
-        EOFetchSpecification fspec = new EOFetchSpecification(
+        EOFetchSpecification fspec =
+            new WCFetchSpecification<AssignmentOffering>(
                 AssignmentOffering.ENTITY_NAME,
                 ERXQ.and(
                         ERXQ.in("courseOffering", offerings),

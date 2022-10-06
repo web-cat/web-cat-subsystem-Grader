@@ -80,7 +80,6 @@ public class FinalReportPage
     public boolean showReturnToGrading = false;
     public EnergyBar bar;
 
-
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
@@ -120,11 +119,28 @@ public class FinalReportPage
         }
         if (submission != null)
         {
-            submission = submission.refetch(localContext());
+//            submission = submission.refetch(localContext());
+//            if (submission.result() != null)
+//            {
+//                submission.result().refetch();
+//            }
+            // Use this fetch specification, which will refresh and also
+            // prefetches results, enqueued jobs, etc., which are then also
+            // refreshed at the same time
+            NSArray<Submission> refreshed = Submission.refreshById(
+                localContext(), submission.id().longValue());
+            if (refreshed != null && refreshed.size() > 0)
+            {
+                submission = refreshed.get(0);
+            }
         }
         if (submission != null)
         {
-            reportIsReady   = submission.resultIsReady();
+            if (submission != prefs().submission())
+            {
+                prefs().setSubmissionRelationship(submission);
+            }
+            reportIsReady = submission.resultIsReady();
             if (reportIsReady)
             {
                 result = submission.result();
@@ -591,14 +607,12 @@ public class FinalReportPage
         if (jobData == null)
         {
             jobData = new JobData();
-            jobData.jobs = EnqueuedJob.objectsWithFetchSpecification(
+            jobData.jobs = EnqueuedJob.objectsMatchingQualifier(
                 localContext(),
-                new EOFetchSpecification(
-                    EnqueuedJob.ENTITY_NAME,
-                    EnqueuedJob.discarded.isFalse().and(
-                        EnqueuedJob.paused.isFalse()).and(
-                            EnqueuedJob.regrading.isFalse()),
-                    EnqueuedJob.submitTime.ascs()));
+                EnqueuedJob.discarded.isFalse().and(
+                    EnqueuedJob.paused.isFalse()).and(
+                        EnqueuedJob.regrading.isFalse()),
+                EnqueuedJob.submitTime.ascs());
             jobData.queueSize = jobData.jobs.count();
             if (oldQueuePos < 0
                 || oldQueuePos >= jobData.queueSize)

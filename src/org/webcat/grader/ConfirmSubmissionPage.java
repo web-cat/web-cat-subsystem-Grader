@@ -96,10 +96,12 @@ public class ConfirmSubmissionPage
             // skip calling super.beforeAppendToResponse()
             return;
         }
-        if ((prefs().assignmentOffering() != null) &&
-            (prefs().assignmentOffering().energyBarConfig() != null))
+        if ((submissionInProcess().assignmentOffering() != null) &&
+            (submissionInProcess().assignmentOffering().energyBarConfig() != null)
+            && user() == submissionInProcess().user())
         {
-            this.bar = prefs().assignmentOffering().energyBarForUser(user());
+            this.bar = submissionInProcess().assignmentOffering()
+                .energyBarForUser(submissionInProcess().user());
         }
         log.debug( "The submission number is "
             + submissionInProcess().submitNumber() );
@@ -140,7 +142,6 @@ public class ConfirmSubmissionPage
                 {
                     // ignore
                 }
-                String dest = null;
                 boolean saved = false;
                 try
                 {
@@ -222,17 +223,18 @@ public class ConfirmSubmissionPage
             (!bar.hasEnergy()) &&
             (!bar.isCloseToDeadline(submitTime)))
         {
-            bar.logEvent(
-                EnergyBar.SUBMISSION_DENIED, prefs().assignmentOffering());
+            bar.logEvent(EnergyBar.SUBMISSION_DENIED,
+                submissionInProcess().assignmentOffering());
             error("Your submission energy is depleted.  Wait until your "
                 + "energy regenerates before submitting.");
             return null;
           }
         NSTimestamp deadline = new NSTimestamp(
-            prefs().assignmentOffering().dueDate().getTime()
-            + prefs().assignmentOffering().assignment()
+            submissionInProcess().assignmentOffering().dueDate().getTime()
+            + submissionInProcess().assignmentOffering().assignment()
                   .submissionProfile().deadTimeDelta() );
-        CourseOffering course = prefs().assignmentOffering().courseOffering();
+        CourseOffering course =
+            submissionInProcess().assignmentOffering().courseOffering();
         User primeUser = wcSession().primeUser().localInstance(localContext());
         if (deadline.before(submitTime)
              && !course.isInstructor(primeUser)
@@ -240,19 +242,19 @@ public class ConfirmSubmissionPage
         {
             error(
                 "Unfortunately, the final deadline for this assignment "
-                + "has passed.  No more submissions are being accepted." );
+                + "has passed.  No more submissions are being accepted.");
         }
         else
         {
-            String msg = commitSubmission( context(), submitTime );
-            if ( msg != null )
+            String msg = commitSubmission(context(), submitTime);
+            if (msg != null)
             {
-                log.debug( "Submission error = " + msg );
-                error( msg );
+                log.debug("Submission error = " + msg);
+                error(msg);
             }
         }
 
-        if ( hasMessages() )
+        if (hasMessages())
         {
             return null;
         }
@@ -282,7 +284,7 @@ public class ConfirmSubmissionPage
     {
         missingRequiredFiles =
             submissionInProcess().findMissingRequiredFiles(
-                prefs().assignmentOffering().assignment()
+                submissionInProcess().assignmentOffering().assignment()
                 .submissionProfile());
 
         if (missingRequiredFiles.count() > 0)
@@ -315,5 +317,5 @@ public class ConfirmSubmissionPage
 
     private NSArray<String> missingRequiredFiles;
 
-    static Logger log = Logger.getLogger( ConfirmSubmissionPage.class );
+    static Logger log = Logger.getLogger(ConfirmSubmissionPage.class);
 }

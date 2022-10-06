@@ -186,9 +186,6 @@ public abstract class _Submission
     public static final ERXKey<org.webcat.core.User> user =
         new ERXKey<org.webcat.core.User>(USER_KEY);
     // To-many relationships ---
-    public static final String ENQUEUED_JOBS_KEY = "enqueuedJobs";
-    public static final ERXKey<org.webcat.grader.EnqueuedJob> enqueuedJobs =
-        new ERXKey<org.webcat.grader.EnqueuedJob>(ENQUEUED_JOBS_KEY);
     public static final String GRADER_PREFS_KEY = "graderPrefs";
     public static final ERXKey<org.webcat.grader.GraderPrefs> graderPrefs =
         new ERXKey<org.webcat.grader.GraderPrefs>(GRADER_PREFS_KEY);
@@ -201,6 +198,7 @@ public abstract class _Submission
     public static final String LATEST_SUBMISSION_FOR_ASSIGNMENT_AND_USER_FSPEC = "latestSubmissionForAssignmentAndUser";
     public static final String LATEST_SUBMISSION_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "latestSubmissionForAssignmentOfferingAndUser";
     public static final String LATEST_SUBMISSION_FOR_COURSE_OFFERING_FSPEC = "latestSubmissionForCourseOffering";
+    public static final String REFRESH_BY_ID_FSPEC = "refreshById";
     public static final String SPECIFIC_SUBMISSION_FSPEC = "specificSubmission";
     public static final String SUBMISSIONS_FOR_ASSIGNMENT_AND_USER_DESCENDING_FSPEC = "submissionsForAssignmentAndUserDescending";
     public static final String SUBMISSIONS_FOR_ASSIGNMENT_OFFERING_AND_USER_FSPEC = "submissionsForAssignmentOfferingAndUser";
@@ -866,186 +864,6 @@ public abstract class _Submission
         else
         {
             addObjectToBothSidesOfRelationshipWithKey( value, "user" );
-        }
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve the entities pointed to by the <code>enqueuedJobs</code>
-     * relationship.
-     * @return an NSArray of the entities in the relationship
-     */
-    @SuppressWarnings("unchecked")
-    public NSArray<org.webcat.grader.EnqueuedJob> enqueuedJobs()
-    {
-        return (NSArray<org.webcat.grader.EnqueuedJob>)
-            storedValueForKey("enqueuedJobs");
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Replace the list of entities pointed to by the
-     * <code>enqueuedJobs</code> relationship.
-     *
-     * @param value The new set of entities to relate to
-     */
-    public void setEnqueuedJobs(
-        NSMutableArray<org.webcat.grader.EnqueuedJob>  value)
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug("setEnqueuedJobs("
-                + value + "): was " + enqueuedJobs());
-        }
-        takeStoredValueForKey(value, "enqueuedJobs");
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>enqueuedJobs</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>addToEnqueuedJobsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToEnqueuedJobs( org.webcat.grader.EnqueuedJob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "addToEnqueuedJobs("
-                + value + "): was " + enqueuedJobs() );
-        }
-        NSMutableArray<org.webcat.grader.EnqueuedJob> array =
-            (NSMutableArray<org.webcat.grader.EnqueuedJob>)enqueuedJobs();
-        willChange();
-        array.addObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>enqueuedJobs</code>
-     * relationship (DO NOT USE--instead, use
-     * <code>removeFromEnqueuedJobsRelationship()</code>.
-     * This method is provided for WebObjects use.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromEnqueuedJobs( org.webcat.grader.EnqueuedJob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "RemoveFromEnqueuedJobs("
-                + value + "): was " + enqueuedJobs() );
-        }
-        NSMutableArray<org.webcat.grader.EnqueuedJob> array =
-            (NSMutableArray<org.webcat.grader.EnqueuedJob>)enqueuedJobs();
-        willChange();
-        array.removeObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Add a new entity to the <code>enqueuedJobs</code>
-     * relationship.
-     *
-     * @param value The new entity to relate to
-     */
-    public void addToEnqueuedJobsRelationship( org.webcat.grader.EnqueuedJob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "addToEnqueuedJobsRelationship("
-                + value + "): was " + enqueuedJobs() );
-        }
-        addObjectToBothSidesOfRelationshipWithKey(
-            value, "enqueuedJobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove a specific entity from the <code>enqueuedJobs</code>
-     * relationship.
-     *
-     * @param value The entity to remove from the relationship
-     */
-    public void removeFromEnqueuedJobsRelationship( org.webcat.grader.EnqueuedJob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "removeFromEnqueuedJobsRelationship("
-                + value + "): was " + enqueuedJobs() );
-        }
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "enqueuedJobs" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Create a brand new object that is a member of the
-     * <code>enqueuedJobs</code> relationship.
-     *
-     * @return The new entity
-     */
-    public org.webcat.grader.EnqueuedJob createEnqueuedJobsRelationship()
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "createEnqueuedJobsRelationship()" );
-        }
-        EOClassDescription eoClassDesc = EOClassDescription
-            .classDescriptionForEntityName( "EnqueuedJob" );
-        EOEnterpriseObject eoObject = eoClassDesc
-            .createInstanceWithEditingContext( editingContext(), null );
-        editingContext().insertObject( eoObject );
-        addObjectToBothSidesOfRelationshipWithKey(
-            eoObject, "enqueuedJobs" );
-        return (org.webcat.grader.EnqueuedJob)eoObject;
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove and then delete a specific entity that is a member of the
-     * <code>enqueuedJobs</code> relationship.
-     *
-     * @param value The entity to remove from the relationship and then delete
-     */
-    public void deleteEnqueuedJobsRelationship( org.webcat.grader.EnqueuedJob value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "deleteEnqueuedJobsRelationship("
-                + value + "): was " + enqueuedJobs() );
-        }
-        removeObjectFromBothSidesOfRelationshipWithKey(
-            value, "enqueuedJobs" );
-        editingContext().deleteObject( value );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Remove (and then delete, if owned) all entities that are members of the
-     * <code>enqueuedJobs</code> relationship.
-     */
-    public void deleteAllEnqueuedJobsRelationships()
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "deleteAllEnqueuedJobsRelationships(): was "
-                + enqueuedJobs() );
-        }
-        for (org.webcat.grader.EnqueuedJob object : enqueuedJobs())
-        {
-            deleteEnqueuedJobsRelationship(object);
         }
     }
 
@@ -2156,6 +1974,44 @@ public abstract class _Submission
         {
             return objects.objectAtIndex(0);
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>refreshById</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param idBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<Submission> refreshById(
+            EOEditingContext context,
+            Long idBinding)
+    {
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("refreshById", "Submission");
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if (idBinding != null)
+        {
+            bindings.setObjectForKey(idBinding,
+                                     "id");
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
+
+        NSArray<Submission> objects =
+            objectsWithFetchSpecification(context, spec);
+        if (log.isDebugEnabled())
+        {
+            log.debug("refreshById(ec"
+                + ", " + idBinding
+                + "): " + objects);
+        }
+        return objects;
     }
 
 

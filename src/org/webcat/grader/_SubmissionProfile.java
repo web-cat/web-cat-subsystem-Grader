@@ -69,6 +69,8 @@ public abstract class _SubmissionProfile
      * @param awardEarlyBonusValue
      * @param deductExcessSubmissionPenaltyValue
      * @param deductLatePenaltyValue
+     * @param forceLTIClickthroughValue
+     * @param useTimeBankDaysValue
      * @return The newly created object
      */
     public static SubmissionProfile create(
@@ -77,7 +79,9 @@ public abstract class _SubmissionProfile
         boolean autoAssignPartnersValue,
         boolean awardEarlyBonusValue,
         boolean deductExcessSubmissionPenaltyValue,
-        boolean deductLatePenaltyValue
+        boolean deductLatePenaltyValue,
+        boolean forceLTIClickthroughValue,
+        boolean useTimeBankDaysValue
         )
     {
         SubmissionProfile eoObject = (SubmissionProfile)
@@ -89,6 +93,8 @@ public abstract class _SubmissionProfile
         eoObject.setAwardEarlyBonus(awardEarlyBonusValue);
         eoObject.setDeductExcessSubmissionPenalty(deductExcessSubmissionPenaltyValue);
         eoObject.setDeductLatePenalty(deductLatePenaltyValue);
+        eoObject.setForceLTIClickthrough(forceLTIClickthroughValue);
+        eoObject.setUseTimeBankDays(useTimeBankDaysValue);
         return eoObject;
     }
 
@@ -216,6 +222,9 @@ public abstract class _SubmissionProfile
     public static final String EXCLUDED_FILE_PATTERNS_KEY = "excludedFilePatterns";
     public static final ERXKey<String> excludedFilePatterns =
         new ERXKey<String>(EXCLUDED_FILE_PATTERNS_KEY);
+    public static final String FORCE_LTI_CLICKTHROUGH_KEY = "forceLTIClickthrough";
+    public static final ERXKey<Integer> forceLTIClickthrough =
+        new ERXKey<Integer>(FORCE_LTI_CLICKTHROUGH_KEY);
     public static final String INCLUDED_FILE_PATTERNS_KEY = "includedFilePatterns";
     public static final ERXKey<String> includedFilePatterns =
         new ERXKey<String>(INCLUDED_FILE_PATTERNS_KEY);
@@ -246,9 +255,18 @@ public abstract class _SubmissionProfile
     public static final String TA_POINTS_KEY = "taPoints";
     public static final ERXKey<Double> taPoints =
         new ERXKey<Double>(TA_POINTS_KEY);
+    public static final String TIME_BANK_NAME_KEY = "timeBankName";
+    public static final ERXKey<String> timeBankName =
+        new ERXKey<String>(TIME_BANK_NAME_KEY);
+    public static final String TIME_BANK_SIZE_KEY = "timeBankSize";
+    public static final ERXKey<Integer> timeBankSize =
+        new ERXKey<Integer>(TIME_BANK_SIZE_KEY);
     public static final String TOOL_POINTS_KEY = "toolPoints";
     public static final ERXKey<Double> toolPoints =
         new ERXKey<Double>(TOOL_POINTS_KEY);
+    public static final String USE_TIME_BANK_DAYS_KEY = "useTimeBankDays";
+    public static final ERXKey<Integer> useTimeBankDays =
+        new ERXKey<Integer>(USE_TIME_BANK_DAYS_KEY);
     // To-one relationships ---
     public static final String AUTHOR_KEY = "author";
     public static final ERXKey<org.webcat.core.User> author =
@@ -1324,6 +1342,70 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>forceLTIClickthrough</code> value.
+     * @return the value of the attribute
+     */
+    public boolean forceLTIClickthrough()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "forceLTIClickthrough" );
+        return ( returnValue == null )
+            ? true
+            : ( returnValue.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>forceLTIClickthrough</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setForceLTIClickthrough( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setForceLTIClickthrough("
+                + value + "): was " + forceLTIClickthrough() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setForceLTIClickthroughRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>forceLTIClickthrough</code> value.
+     * @return the value of the attribute
+     */
+    public Integer forceLTIClickthroughRaw()
+    {
+        return (Integer)storedValueForKey( "forceLTIClickthrough" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>forceLTIClickthrough</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setForceLTIClickthroughRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setForceLTIClickthroughRaw("
+                + value + "): was " + forceLTIClickthroughRaw() );
+        }
+        takeStoredValueForKey( value, "forceLTIClickthrough" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>includedFilePatterns</code> value.
      * @return the value of the attribute
      */
@@ -1824,6 +1906,99 @@ public abstract class _SubmissionProfile
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>timeBankName</code> value.
+     * @return the value of the attribute
+     */
+    public String timeBankName()
+    {
+        return (String)storedValueForKey( "timeBankName" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>timeBankName</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTimeBankName( String value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTimeBankName("
+                + value + "): was " + timeBankName() );
+        }
+        takeStoredValueForKey( value, "timeBankName" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>timeBankSize</code> value.
+     * @return the value of the attribute
+     */
+    public int timeBankSize()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "timeBankSize" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.intValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>timeBankSize</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTimeBankSize( int value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTimeBankSize("
+                + value + "): was " + timeBankSize() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setTimeBankSizeRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>timeBankSize</code> value.
+     * @return the value of the attribute
+     */
+    public Integer timeBankSizeRaw()
+    {
+        return (Integer)storedValueForKey( "timeBankSize" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>timeBankSize</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setTimeBankSizeRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setTimeBankSizeRaw("
+                + value + "): was " + timeBankSizeRaw() );
+        }
+        takeStoredValueForKey( value, "timeBankSize" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>toolPoints</code> value.
      * @return the value of the attribute
      */
@@ -1883,6 +2058,70 @@ public abstract class _SubmissionProfile
                 + value + "): was " + toolPointsRaw() );
         }
         takeStoredValueForKey( value, "toolPoints" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>useTimeBankDays</code> value.
+     * @return the value of the attribute
+     */
+    public boolean useTimeBankDays()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "useTimeBankDays" );
+        return ( returnValue == null )
+            ? false
+            : ( returnValue.intValue() > 0 );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>useTimeBankDays</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setUseTimeBankDays( boolean value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUseTimeBankDays("
+                + value + "): was " + useTimeBankDays() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
+            setUseTimeBankDaysRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>useTimeBankDays</code> value.
+     * @return the value of the attribute
+     */
+    public Integer useTimeBankDaysRaw()
+    {
+        return (Integer)storedValueForKey( "useTimeBankDays" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>useTimeBankDays</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setUseTimeBankDaysRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setUseTimeBankDaysRaw("
+                + value + "): was " + useTimeBankDaysRaw() );
+        }
+        takeStoredValueForKey( value, "useTimeBankDays" );
     }
 
 

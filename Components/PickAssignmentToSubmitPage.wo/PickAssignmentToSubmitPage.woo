@@ -12,6 +12,7 @@
                     entityName = AssignmentOffering;
                     fetchLimit = 0;
                     isDeep = YES;
+                    refreshesRefetchedObjects = YES;
                 };
             };
 //            fetchesOnLoad = YES;

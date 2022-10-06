@@ -20,7 +20,11 @@
 package org.webcat.grader;
 
 import org.webcat.core.User;
+import com.webobjects.eoaccess.EOAdaptorChannel;
+import com.webobjects.eoaccess.EOAdaptorOperation;
+import com.webobjects.eoaccess.EOGeneralAdaptorException;
 import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSTimestamp;
 
 // -------------------------------------------------------------------------
@@ -80,30 +84,68 @@ public class PageViewLog
         {
             viewer = viewer.localInstance(ec);
         }
-        PageViewLog view = create(ec, pageName, new NSTimestamp(), viewer);
-
-        if (sub != null)
+        int tries = 3;
+        PageViewLog view = null;
+        while (tries-- > 0)
         {
-            if (sub.editingContext() != ec)
+            try
             {
-                sub = sub.localInstance(ec);
-            }
-            view.setSubmissionRelationship(sub);
-        }
-        if (result != null)
-        {
-            if (result.editingContext() != ec)
-            {
-                result = result.localInstance(ec);
-            }
-            view.setSubmissionResultRelationship(result);
-        }
-        if (extra != null && !extra.isEmpty())
-        {
-            view.setInfo(extra);
-        }
+                view = create(ec, pageName, new NSTimestamp(), viewer);
+                if (sub != null)
+                {
+                    if (sub.editingContext() != ec)
+                    {
+                        sub = sub.localInstance(ec);
+                    }
+                    view.setSubmissionRelationship(sub);
+                }
+                if (result != null)
+                {
+                    if (result.editingContext() != ec)
+                    {
+                        result = result.localInstance(ec);
+                    }
+                    view.setSubmissionResultRelationship(result);
+                }
+                if (extra != null && !extra.isEmpty())
+                {
+                    view.setInfo(extra);
+                }
 
-        ec.saveChanges();
+                ec.saveChanges();
+            }
+            catch (EOGeneralAdaptorException e)
+            {
+                view = null;
+                NSDictionary<?, ?> userInfo = e.userInfo();
+                if (userInfo != null)
+                {
+                    EOAdaptorOperation op =
+                        (EOAdaptorOperation)userInfo.objectForKey(
+                            EOAdaptorChannel.FailedAdaptorOperationKey);
+
+                    if (op.entity() != null
+                        && ENTITY_NAME.equals(op.entity().name()))
+                    {
+                        // then retry, assuming this is an insert failure
+                        // due to a duplicate key race condition
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+        }
+        if (view == null)
+        {
+            log.error("Unable to insert PageViewLog for " + pageName
+                + ", "+ viewer + ", " + sub + ", " + extra);
+        }
         return view;
     }
 }

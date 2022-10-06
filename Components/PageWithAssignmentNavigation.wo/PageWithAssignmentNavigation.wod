@@ -4,7 +4,6 @@ BasePage: org.webcat.ui.WCBasePage {
     extraRequires        = extraRequires;
     extraCssFiles        = extraCssFiles;
     pageScriptName       = pageScriptName;
-    includePageWrapping  = includePageWrapping;
     inlineHeaderContents = inlineHeaderContents;
 }
 

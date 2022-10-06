@@ -1,5 +1,5 @@
 /*==========================================================================*\
- |  Copyright (C) 2006-2018 Virginia Tech
+ |  Copyright (C) 2006-2021 Virginia Tech
  |
  |  This file is part of Web-CAT.
  |
@@ -81,12 +81,18 @@ public class BlueJSubmitterDefinitions
         {
             flushCache();
         }
-        if (formValues.containsKey("useCache"))
+        if (formValues.containsKey("enableCache"))
         {
             useCache = ERXValueUtilities.booleanValueWithDefault(
+                context.request().formValueForKey("enableCache"), true);
+        }
+        boolean useCacheNow = useCache();
+        if (formValues.containsKey("useCache"))
+        {
+            useCacheNow = ERXValueUtilities.booleanValueWithDefault(
                 context.request().formValueForKey("useCache"), true);
         }
-        if (useCache())
+        if (useCacheNow)
         {
             NSData cachedResponse = getCachedResponse(
                 context.request().requestHandlerPath(),

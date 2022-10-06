@@ -1,322 +1,340 @@
 {
     earliestSubmissionForAssignmentOfferingAndUser = {
-        class = WCFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareAscending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
             }
-        );
-    };
+        ); 
+    }; 
     earliestSubmissionForCourseOffering = {
-        class = WCFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOKeyValueQualifier;
-            key = "assignmentOffering.courseOffering";
-            selectorName = "isEqualTo:";
-            value = {"_key" = courseOffering; class = EOQualifierVariable; };
-        };
+            class = EOKeyValueQualifier; 
+            key = "assignmentOffering.courseOffering"; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareAscending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
             }
-        );
-    };
-    latestSubmissionForAssignmentOfferingAndUser = {
-        class = WCFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
-        qualifier = {
-            class = EOAndQualifier;
-            qualifiers = (
-                {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
-                {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
-                }
-            );
-        };
-        refreshesRefetchedObjects = YES; 
-        sortOrderings = (
-            {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
-            }
-        );
-    };
+        ); 
+    }; 
     latestSubmissionForAssignmentAndUser = {
-        class = WCFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering.assignment;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignment; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = "assignmentOffering.assignment"; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignment; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
+    latestSubmissionForAssignmentOfferingAndUser = {
+        class = WCFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
+        qualifier = {
+            class = EOAndQualifier; 
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
+                {
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }
+            ); 
+        }; 
+        refreshesRefetchedObjects = YES; 
+        sortOrderings = (
+            {
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
+            }
+        ); 
+    }; 
     latestSubmissionForCourseOffering = {
-        class = WCFetchSpecification;
-        entityName = Submission;
-        fetchLimit = 1;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
+        fetchLimit = 1; 
         qualifier = {
-            class = EOKeyValueQualifier;
-            key = "assignmentOffering.courseOffering";
-            selectorName = "isEqualTo:";
-            value = {"_key" = courseOffering; class = EOQualifierVariable; };
-        };
+            class = EOKeyValueQualifier; 
+            key = "assignmentOffering.courseOffering"; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = courseOffering; class = EOQualifierVariable; }; 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
+    refreshById = {
+        class = EOFetchSpecification; 
+        entityName = Submission; 
+        prefetchingRelationshipKeyPaths = (
+            enqueuedJobs, 
+            partneredSubmissions, 
+            primarySubmission, 
+            result, 
+            "result.submissions"
+        ); 
+        qualifier = {
+            class = EOKeyValueQualifier; 
+            key = id; 
+            selectorName = "isEqualTo:"; 
+            value = {"_key" = id; class = EOQualifierVariable; }; 
+        }; 
+        refreshesRefetchedObjects = YES; 
+    }; 
     specificSubmission = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = submitNumber;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = submitNumber; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = submitNumber; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = submitNumber; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
-        userInfo = {ensureUnique = true; };
-    };
+        userInfo = {ensureUnique = true; }; 
+    }; 
     submissionsForAssignmentAndUserDescending = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = "assignmentOffering.assignment";
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignment; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = "assignmentOffering.assignment"; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignment; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = "assignmentOffering.courseOffering.semester";
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = semester; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = "assignmentOffering.courseOffering.semester"; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = semester; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
     submissionsForAssignmentOfferingAndUser = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareAscending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareAscending:"; 
             }
-        );
-    };
+        ); 
+    }; 
     submissionsForAssignmentOfferingAndUserDescending = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
     submissionsForGrading = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = isSubmissionForGrading;
-                    selectorName = "isEqualTo:";
-                    value = {class = NSNumber; value = 1; };
+                    class = EOKeyValueQualifier; 
+                    key = isSubmissionForGrading; 
+                    selectorName = "isEqualTo:"; 
+                    value = {class = NSNumber; value = 1; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
     submissionsWithFeedback = {
-        class = WCFetchSpecification;
-        entityName = Submission;
+        class = WCFetchSpecification; 
+        entityName = Submission; 
         qualifier = {
-            class = EOAndQualifier;
+            class = EOAndQualifier; 
             qualifiers = (
                 {
-                    class = EOKeyValueQualifier;
-                    key = assignmentOffering;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = assignmentOffering; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = assignmentOffering; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = user;
-                    selectorName = "isEqualTo:";
-                    value = {"_key" = user; class = EOQualifierVariable; };
-                },
+                    class = EOKeyValueQualifier; 
+                    key = user; 
+                    selectorName = "isEqualTo:"; 
+                    value = {"_key" = user; class = EOQualifierVariable; }; 
+                }, 
                 {
-                    class = EOKeyValueQualifier;
-                    key = result.status;
-                    selectorName = "isNotEqualTo:";
-                    value = {class = NSNumber; value = 3; };
+                    class = EOKeyValueQualifier; 
+                    key = "result.status"; 
+                    selectorName = "isNotEqualTo:"; 
+                    value = {class = NSNumber; value = 3; }; 
                 }
-            );
-        };
+            ); 
+        }; 
         refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
-                class = EOSortOrdering;
-                key = submitTime;
-                selectorName = "compareDescending:";
+                class = EOSortOrdering; 
+                key = submitTime; 
+                selectorName = "compareDescending:"; 
             }
-        );
-    };
+        ); 
+    }; 
 }

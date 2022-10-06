@@ -1,7 +1,7 @@
 <wo name="Page"><wo:if negate="true" condition="~hasMessages and missingRequiredFiles.count == 0">
 <wo:org.webcat.core.WCPageModule title="$session.tabs.selectedDescendant.label">
 <wo:org.webcat.grader.EnergyBarDisplay bar="$bar" cssClass="floatRight"/>
-For: <span class="hl"><wo:str value="$prefs.assignmentOffering.titleString"/></span>
+For: <span class="hl"><wo:str value="$submissionInProcess.assignmentOffering.titleString"/></span>
 <wo:if condition="$session.impersonatingAnotherUser"><p>Submitting as: <span class="hl"><wo:str value="$user.nameAndUid"/></span></p></wo:if>
 <p>Please make sure that
 <wo:if condition="$singleFile">this file constitutes</wo:if>
@@ -15,7 +15,7 @@ an incorrect file.</p>
   </wo></wo>
 </tbody></table>
 
-<wo:if condition="$prefs.assignmentOffering.assignment.submissionProfile.allowPartners">
+<wo:if condition="$submissionInProcess.assignmentOffering.assignment.submissionProfile.allowPartners">
 <wo:if condition="$submissionInProcess.partners.count">
 <p>Please make sure that the following users are the correct ones that you wish
 to be listed as partners on this submission.</p>
@@ -33,7 +33,7 @@ to be listed as partners on this submission.</p>
 <wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
 <p>
 <wo:org.webcat.ui.WCButton action="$back">Change File
-<wo:if condition="$prefs.assignmentOffering.assignment.submissionProfile.allowPartners">or Partners</wo:if></wo:org.webcat.ui.WCButton>
+<wo:if condition="$submissionInProcess.assignmentOffering.assignment.submissionProfile.allowPartners">or Partners</wo:if></wo:org.webcat.ui.WCButton>
 <wo:not condition="$missingRequiredFiles.count">
 <wo:org.webcat.ui.WCButton action="$next" label="Confirm"/>
 </wo:not>

@@ -20,6 +20,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.eoaccess.EOObjectNotAvailableException;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
@@ -90,6 +91,32 @@ public class GraderHomeStatus
         {
             enqueuedJobGroup.queryBindings().setObjectForKey(user(), "user");
             enqueuedJobGroup.fetch();
+            {
+                // resolve faults from fetch immediately to prevent
+                // problems if jobs get deleted before page generation is
+                // complete
+                NSMutableArray<EnqueuedJob> jobs =
+                    enqueuedJobGroup.allObjects().mutableClone();
+                boolean anyPaused = false;
+                int oldSize = jobs.size();
+                for (int i = 0; i < jobs.size(); i++)
+                {
+                    try
+                    {
+                        // force resolving fault
+                        anyPaused = jobs.get(i).paused() || anyPaused;
+                    }
+                    catch (EOObjectNotAvailableException e)
+                    {
+                        jobs.remove(i);
+                        i--;
+                    }
+                }
+                if (oldSize != jobs.size())
+                {
+                    enqueuedJobGroup.setObjectArray(jobs);
+                }
+            }
 
             currentTime = new NSTimestamp();
             // First, grab all this student can see

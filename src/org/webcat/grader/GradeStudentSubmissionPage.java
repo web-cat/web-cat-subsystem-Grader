@@ -254,10 +254,10 @@ public class GradeStudentSubmissionPage
         saveGrading();
         if (result.status() == Status.TO_DO)
         {
-            if (result.taScoreRaw() != null
-                && result.taScore() != submission
-                    .assignmentOffering().assignment()
-                    .submissionProfile().taPoints())
+            if (result.taScoreRaw() != null)
+//                && result.taScore() != submission
+//                    .assignmentOffering().assignment()
+//                    .submissionProfile().taPoints())
             {
                 result.setStatus(Status.UNFINISHED);
             }
