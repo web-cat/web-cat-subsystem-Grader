@@ -1082,7 +1082,6 @@ public abstract class _Assignment
             new WCFetchSpecification<Assignment>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1107,7 +1106,6 @@ public abstract class _Assignment
             new WCFetchSpecification<Assignment>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<Assignment> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1304,7 +1302,6 @@ public abstract class _Assignment
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<Assignment> objects =

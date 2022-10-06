@@ -1044,7 +1044,6 @@ public abstract class _Step
             new WCFetchSpecification<Step>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1069,7 +1068,6 @@ public abstract class _Step
             new WCFetchSpecification<Step>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<Step> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1266,7 +1264,6 @@ public abstract class _Step
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<Step> objects =

@@ -20,7 +20,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
     };
     mostRecentResultsForAssignmentAndUser = {
         class = WCFetchSpecification;
@@ -48,7 +47,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -78,7 +76,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -108,7 +105,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;

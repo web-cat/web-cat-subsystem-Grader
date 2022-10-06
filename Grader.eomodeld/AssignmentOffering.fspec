@@ -3,7 +3,6 @@
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        refreshesRefetchedObjects = YES;
         sortOrderings = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; });
     };
     offeringsForCourseOffering = {
@@ -16,7 +15,6 @@
             selectorName = "isEqualTo:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
-        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -31,7 +29,6 @@
             selectorName = "isEqualTo:";
             value = {"_key" = course; class = EOQualifierVariable; };
         };
-        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -57,7 +54,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
@@ -72,7 +68,6 @@
             selectorName = "doesContain:";
             value = {"_key" = user; class = EOQualifierVariable; };
         };
-        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );

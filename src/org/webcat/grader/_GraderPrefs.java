@@ -709,7 +709,6 @@ public abstract class _GraderPrefs
             new WCFetchSpecification<GraderPrefs>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -734,7 +733,6 @@ public abstract class _GraderPrefs
             new WCFetchSpecification<GraderPrefs>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<GraderPrefs> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -931,7 +929,6 @@ public abstract class _GraderPrefs
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<GraderPrefs> objects =

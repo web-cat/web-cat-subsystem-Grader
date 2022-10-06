@@ -1675,7 +1675,6 @@ public abstract class _GradingPlugin
             new WCFetchSpecification<GradingPlugin>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1700,7 +1699,6 @@ public abstract class _GradingPlugin
             new WCFetchSpecification<GradingPlugin>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<GradingPlugin> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1897,7 +1895,6 @@ public abstract class _GradingPlugin
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<GradingPlugin> objects =

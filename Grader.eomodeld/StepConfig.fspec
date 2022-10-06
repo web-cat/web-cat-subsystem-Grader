@@ -20,7 +20,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
     };
     stepConfigsForUser = {
         class = WCFetchSpecification;
@@ -32,6 +31,5 @@
             selectorName = "isEqualTo:";
             value = {"_key" = user; class = EOQualifierVariable; };
         };
-        refreshesRefetchedObjects = YES; 
     };
 }

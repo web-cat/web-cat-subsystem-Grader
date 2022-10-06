@@ -20,7 +20,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES; 
         sortOrderings = (
             {
                 class = EOSortOrdering;

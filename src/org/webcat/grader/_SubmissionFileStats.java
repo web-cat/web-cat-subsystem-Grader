@@ -1752,7 +1752,6 @@ public abstract class _SubmissionFileStats
             new WCFetchSpecification<SubmissionFileStats>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -1777,7 +1776,6 @@ public abstract class _SubmissionFileStats
             new WCFetchSpecification<SubmissionFileStats>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<SubmissionFileStats> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1974,7 +1972,6 @@ public abstract class _SubmissionFileStats
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<SubmissionFileStats> objects =

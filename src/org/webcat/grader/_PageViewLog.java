@@ -589,7 +589,6 @@ public abstract class _PageViewLog
             new WCFetchSpecification<PageViewLog>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -614,7 +613,6 @@ public abstract class _PageViewLog
             new WCFetchSpecification<PageViewLog>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<PageViewLog> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -811,7 +809,6 @@ public abstract class _PageViewLog
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<PageViewLog> objects =

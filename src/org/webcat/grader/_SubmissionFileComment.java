@@ -854,7 +854,6 @@ public abstract class _SubmissionFileComment
             new WCFetchSpecification<SubmissionFileComment>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         return objectsWithFetchSpecification(context, fspec);
     }
 
@@ -879,7 +878,6 @@ public abstract class _SubmissionFileComment
             new WCFetchSpecification<SubmissionFileComment>(
                 ENTITY_NAME, qualifier, sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
         NSArray<SubmissionFileComment> objects =
             objectsWithFetchSpecification(context, fspec);
@@ -1076,7 +1074,6 @@ public abstract class _SubmissionFileComment
                 EOQualifier.qualifierToMatchAllValues(keysAndValues),
                 sortOrderings);
         fspec.setUsesDistinct(true);
-        fspec.setRefreshesRefetchedObjects(true);
         fspec.setFetchLimit(1);
 
         NSArray<SubmissionFileComment> objects =

@@ -23,7 +23,6 @@
                 }
             );
         };
-        refreshesRefetchedObjects = YES;
         sortOrderings = (
             {
                 class = EOSortOrdering;
@@ -43,7 +42,6 @@
             selectorName = "doesContain:";
             value = {"_key" = courseOffering; class = EOQualifierVariable; };
         };
-        refreshesRefetchedObjects = YES;
         usesDistinct = YES;
     };
 }
