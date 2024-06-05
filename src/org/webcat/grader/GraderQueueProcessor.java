@@ -1911,6 +1911,20 @@ public class GraderQueueProcessor
 
     // ----------------------------------------------------------
     /**
+     * Find out the estimated total wait for any job, given its position
+     * in the queue.
+     * @param queuePosition The current position of the job in the queue.
+     *
+     * @return the time in milliseconds
+     */
+    public static long estimatedJobWait(int queuePosition)
+    {
+        return qstats.estimatedJobWait(queuePosition);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Indicate that a job is available for grading.
      * @param job The job.
      */
@@ -1980,7 +1994,7 @@ public class GraderQueueProcessor
         // ----------------------------------------------------------
         public QueueStats()
         {
-            // fields initialized in declarations
+            // fields are initialized in their declarations
         }
 
 
@@ -1996,10 +2010,19 @@ public class GraderQueueProcessor
             String msg, long thisWait, long processingTime)
         {
             mostRecentJobWait = thisWait;
-            totalWaitForJobs += processingTime;
+            totalProcessingTimeForJobs += processingTime;
             jobsCountedWithWaits++;
+            if (jobProcessingEMA < 1.0)
+            {
+                jobProcessingEMA = processingTime;                
+            }
+            else
+            {
+                jobProcessingEMA = EMA_NEW_MULT * processingTime
+                    + EMA_DECAY_MULT * jobProcessingEMA;
+            }
 
-            long wait = thisWait - processingTime;
+            long wait = Math.max(0, thisWait - processingTime);
             jobLog.info("completed job [" + msg + "], wait = "
                 + ((wait + 500.0)/1000.0)
                 + "s, processing time = "
@@ -2023,11 +2046,21 @@ public class GraderQueueProcessor
 
 
         // ----------------------------------------------------------
+        public synchronized long estimatedJobWait(int queueSize)
+        {
+            return Math.max(
+                (long)jobProcessingEMA,
+                (long)(jobProcessingEMA
+                    * queueSize / threads() * CONCURRENCY_SCALE_FACTOR));
+        }
+
+
+        // ----------------------------------------------------------
         public synchronized long estimatedJobTime()
         {
             if (jobsCountedWithWaits > 0)
             {
-                return totalWaitForJobs / jobsCountedWithWaits;
+                return totalProcessingTimeForJobs / jobsCountedWithWaits;
             }
             else
             {
@@ -2036,11 +2069,27 @@ public class GraderQueueProcessor
         }
 
 
+        // ----------------------------------------------------------
+        private int threads()
+        {
+            if (_threadPoolSize == 0)
+            {
+                _threadPoolSize = GraderQueueProcessor.threadPoolSize();
+            }
+            return _threadPoolSize;
+        }
+
+
+        private int _threadPoolSize = 0;
         private int  jobCount = 0;
         private int  jobsCountedWithWaits = 0;
         private long mostRecentJobWait = 0;
-        private long totalWaitForJobs = 0;
-        private static final long DEFAULT_JOB_WAIT = 30000;
+        private long totalProcessingTimeForJobs = 0;
+        private double jobProcessingEMA = 0.0;
+        private static final long DEFAULT_JOB_WAIT = 11000;
+        private static final double EMA_NEW_MULT = 0.0952;
+        private static final double EMA_DECAY_MULT = 1.0 - EMA_NEW_MULT;
+        private static final double CONCURRENCY_SCALE_FACTOR = 1.7;
     }
 
 
@@ -2054,6 +2103,8 @@ public class GraderQueueProcessor
     // ----------------------------------------------------------
     private static int threadPoolSize()
     {
+        if (threadPoolSize == 0)
+        {
         // Calculate the number of grader threads
         int cores = Runtime.getRuntime().availableProcessors();
         if (!Application.configurationProperties()
@@ -2090,7 +2141,9 @@ public class GraderQueueProcessor
 
         log.info("Multi-threaded execution of plug-ins is "
             + (usePluginInternalThreads ? "ON" : "OFF"));
-        return threads;
+        threadPoolSize = threads;
+        }
+        return threadPoolSize;
     }
 
 
@@ -2138,6 +2191,7 @@ public class GraderQueueProcessor
     private static final QueueStats qstats = new QueueStats();
     private static ThreadPoolExecutor pool = null;
     private static WCECFactoryWithOSC ecFactory = new WCECFactoryWithOSC();
+    private static int threadPoolSize = 0;
 
     // State for the current step being executed
     private boolean faultOccurredInStep;

@@ -81,12 +81,21 @@ public class SubmissionProfile
 
     // ----------------------------------------------------------
     @Override
+    public void willDelete()
+    {
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        super.willDelete();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
     public void willUpdate()
     {
         NSDictionary<String, Object> changes = changedProperties();
         // Flush assignment definitions, if needed
-        if (changes.containsKey(AVAILABLE_TIME_DELTA_KEY)
-            || changes.containsKey(DEAD_TIME_DELTA_KEY))
+//        if (changes.containsKey(AVAILABLE_TIME_DELTA_KEY)
+//            || changes.containsKey(DEAD_TIME_DELTA_KEY))
         {
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         }

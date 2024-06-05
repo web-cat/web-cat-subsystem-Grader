@@ -26,7 +26,7 @@ site, and enter Web-CAT from that page. Thank you.
 <wo:WCLink class="btn btn-primary" target="wcfeedback" action="$refreshNoIFrame">Upload Submission</wo:WCLink>
 </div>
 </wo:if><wo:else>
-<wo:WOForm multipleSubmit="true" enctype="multipart/form-data" action="$next">
+<wo name="Form">
 <wo:if condition="$showStudentSelector">
     <p>Submit for student: <wo name="StudentList"/></p>
 </wo:if>
@@ -52,7 +52,7 @@ to choose them.
 </wo:if>
 
 <p><wo:org.webcat.ui.WCButton action="$next" label="Upload Submission"/></p>
-</wo:WOForm>
+</wo>
 </wo:else>
 </wo:else></wo:if></wo:org.webcat.core.WCPageModule>
 

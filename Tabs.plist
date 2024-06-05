@@ -142,6 +142,19 @@
                 };
             };
           };
+          "Move Student" = {
+            accessLevel = 100;
+            priority = 5;
+            children = {
+                "Move Student" = {
+                    pageName    = org.webcat.grader.MoveStudentPage;
+                    accessLevel = 100;
+                    priority    = 1;
+                    wantsStart  = YES;
+                    id          = MoveStudent;
+                };
+            };
+          };
         };
       };
     };

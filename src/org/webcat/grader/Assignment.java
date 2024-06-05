@@ -27,6 +27,7 @@ import er.extensions.eof.ERXKey;
 import er.extensions.foundation.ERXArrayUtilities;
 import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
 import org.webcat.core.MutableDictionary;
 import org.webcat.core.User;
 import org.apache.log4j.Logger;
@@ -173,6 +174,40 @@ public class Assignment
             renameSubdirs( dirNeedingRenaming, subdirName() );
             dirNeedingRenaming = null;
         }
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willInsert()
+    {
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        super.willInsert();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willDelete()
+    {
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        super.willDelete();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
+    public void willUpdate()
+    {
+//        NSDictionary<String, Object> changes = changedProperties();
+
+        // Flush assignment definitions, if needed
+//        if (changes.containsKey(NAME_KEY)
+//            || changes.containsKey(SHORT_DESCRIPTION_KEY))
+        {
+            org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        }
+        super.willUpdate();
     }
 
 

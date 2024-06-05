@@ -899,7 +899,9 @@ public class AssignmentOffering
         )
     {
         // Set up the qualifier
-        EOQualifier qualifier = null;
+        NSTimestamp oneYearAgo = new NSTimestamp()
+            .timestampByAddingGregorianUnits(-1, 0, 0, 0, 0, 0);
+        EOQualifier qualifier = dueDate.after(oneYearAgo);
         Object valueObj = formValueForKey( formValues, "institution" );
         if ( valueObj != null )
         {
@@ -1162,15 +1164,24 @@ public class AssignmentOffering
 
     // ----------------------------------------------------------
     @Override
+    public void willDelete()
+    {
+        org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
+        super.willDelete();
+    }
+
+
+    // ----------------------------------------------------------
+    @Override
     public void willUpdate()
     {
         setLastModified(new NSTimestamp());
-        NSDictionary<String, Object> changes = changedProperties();
+//        NSDictionary<String, Object> changes = changedProperties();
 
         // Flush assignment definitions, if needed
-        if (changes.containsKey(DUE_DATE_KEY)
-            || changes.containsKey(CLOSED_ON_DATE_KEY)
-            || changes.containsKey(PUBLISH_KEY))
+//        if (changes.containsKey(DUE_DATE_KEY)
+//            || changes.containsKey(CLOSED_ON_DATE_KEY)
+//            || changes.containsKey(PUBLISH_KEY))
         {
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         }
@@ -1193,7 +1204,6 @@ public class AssignmentOffering
                     setLmsAssignmentId(m.group(1));
                 }
             }
-            super.willUpdate();
         }
 
         super.willUpdate();
