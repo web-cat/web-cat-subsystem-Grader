@@ -28,22 +28,29 @@
         },
         {columnName = CQUEUETIME; name = queueTime; prototypeName = dateTime; },
         {
-            columnName = CREGRADING;
-            name = regrading;
-            prototypeName = boolean;
-            userInfo = {isScalar = true; scalarDefault = false; type = boolean; };
+            columnName = priority;
+            name = priority;
+            prototypeName = tinyInteger;
+            userInfo =
+            {
+                isScalar = true;
+                scalarConversionMethodName = byteValue;
+                scalarDefault = 0;
+                type = byte;
+                valueClassName = Byte;
+            };
         },
         {columnName = CSUBMISSIONID; name = submissionId; prototypeName = foreignId; }
     );
     attributesUsedForLocking = (
         discarded,
         paused,
+        priority,
         processor,
-        regrading,
         submissionId
     );
     className = "org.webcat.grader.EnqueuedJob";
-    classProperties = (discarded, paused, processor, queueTime, regrading, submission);
+    classProperties = (discarded, paused, priority, processor, queueTime, submission);
     externalName = TENQUEUEDJOB;
     fetchSpecificationDictionary = {};
     name = EnqueuedJob;

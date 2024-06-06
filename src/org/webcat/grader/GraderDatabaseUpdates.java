@@ -694,6 +694,27 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Remove "regrading" column from EnqueuedJob and replace with
+     * "priority" column, including active data migration.
+     * @throws SQLException on error
+     */
+    public void updateIncrement38() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TENQUEUEDJOB add "
+            + "(priority TINYINT)");
+        database().executeSQL(
+            "update TENQUEUEDJOB set priority = 4");
+        database().executeSQL(
+            "update TENQUEUEDJOB set priority = 64 where CREGRADING");
+        database().executeSQL(
+            "alter table TENQUEUEDJOB drop "
+            + "CREGRADING");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

@@ -68,8 +68,33 @@ public class EnqueuedJob
         + "." + Submission.USER_KEY;
     public static final ERXKey<User> user = new ERXKey<User>(USER_KEY);
 
+    public static final byte PRIORITY_NORMAL = 4;
+    public static final byte PRIORITY_DEFERRED = 16;
+    public static final byte PRIORITY_REGRADING = 64;
+
 
     //~ Methods ...............................................................
+
+    // ----------------------------------------------------------
+    public boolean regrading()
+    {
+        return priority() == PRIORITY_REGRADING;
+    }
+
+
+    // ----------------------------------------------------------
+    public void setRegrading(boolean value)
+    {
+        if (value)
+        {
+            setPriority(PRIORITY_REGRADING);
+        }
+        else if (priority() == PRIORITY_REGRADING)
+        {
+            setPriority(PRIORITY_NORMAL);
+        }
+    }
+
 
     // ----------------------------------------------------------
     /**

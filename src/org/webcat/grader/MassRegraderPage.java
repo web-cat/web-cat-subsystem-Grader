@@ -322,7 +322,7 @@ public class MassRegraderPage
     {
         cachedCountOfRegradingJobsInQueue =
             EnqueuedJob.countOfObjectsMatchingQualifier(localContext(),
-                    EnqueuedJob.regrading.isTrue().and(
+                    EnqueuedJob.priority.is((int)EnqueuedJob.PRIORITY_REGRADING).and(
                     EnqueuedJob.paused.isFalse()));
 
         return cachedCountOfRegradingJobsInQueue;
@@ -334,7 +334,7 @@ public class MassRegraderPage
     {
         cachedCountOfSuspendedJobsInQueue =
             EnqueuedJob.countOfObjectsMatchingQualifier(localContext(),
-                    EnqueuedJob.regrading.isTrue().and(
+                    EnqueuedJob.priority.is((int)EnqueuedJob.PRIORITY_REGRADING).and(
                     EnqueuedJob.paused.isTrue()));
 
         return cachedCountOfSuspendedJobsInQueue;
@@ -345,7 +345,7 @@ public class MassRegraderPage
     public NSArray<EnqueuedJob> nextSetOfJobsInQueue()
     {
         EOQualifier qualifier =
-            EnqueuedJob.regrading.isTrue().and(
+            EnqueuedJob.priority.is((int)EnqueuedJob.PRIORITY_REGRADING).and(
             EnqueuedJob.paused.isFalse());
 
         ERXSortOrderings sortOrderings = EnqueuedJob.queueTime.ascs();

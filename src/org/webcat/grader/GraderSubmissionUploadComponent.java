@@ -219,7 +219,7 @@ public class GraderSubmissionUploadComponent
                     .and(
                     EnqueuedJob.submission.dot(Submission.assignmentOffering)
                         .eq(submission.assignmentOffering()))
-                    .and(EnqueuedJob.regrading.isFalse()));
+                    .and(EnqueuedJob.priority.isNot((int)EnqueuedJob.PRIORITY_REGRADING)));
             for (EnqueuedJob job : oldJobs)
             {
                 job.setDiscarded(true);
@@ -268,7 +268,7 @@ public class GraderSubmissionUploadComponent
                     + EnqueuedJob.countOfObjectsMatchingQualifier(
                         localContext(),
                         EnqueuedJob.paused.isFalse()
-                            .and(EnqueuedJob.regrading.isFalse())
+                            .and(EnqueuedJob.priority.isNot((int)EnqueuedJob.PRIORITY_REGRADING))
                             .and(EnqueuedJob.submission.isNotNull())));
             }
             catch (Exception e)
