@@ -255,6 +255,9 @@ public class DownloadScoresDialog extends WCComponent
         out.print("Sub No.");
         out.print("Time");
         out.print("Timestamp");
+        out.print("Due");
+        out.print("Due Timestamp");
+        out.print("time until due");
         if (useFullAllDetailedFormat)
         {
             out.print("Student Test %");
@@ -320,6 +323,10 @@ public class DownloadScoresDialog extends WCComponent
                 print(out, submission.submitNumberRaw());
                 print(out, submission.submitTime().toString());
                 out.print(Long.toString(submission.submitTime().getTime()));
+                print(out, submission.assignmentOffering().dueDate().toString());
+                print(out, submission.assignmentOffering().dueDate().getTime());
+                print(out, submission.assignmentOffering().dueDate().getTime()
+                    - submission.submitTime().getTime());
                 if (result == null)
                 {
                     if (useFullAllDetailedFormat)

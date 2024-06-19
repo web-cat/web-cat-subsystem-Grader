@@ -15,6 +15,14 @@ FileUpload1: WOFileUpload {
     dojoType = "dojox.form.FileInput";
 }
 
+Form: WOForm {
+    multipleSubmit = true;
+    enctype        = "multipart/form-data";
+    action         = next;
+//    otherTagString = "enctype=\"multipart/form-data\" name=\"WizardForm\"";
+}
+
+
 Repetition1: WORepetition {
     item = aSubmission;
     list = submissionDisplayGroup.displayedObjects;

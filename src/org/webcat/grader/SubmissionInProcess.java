@@ -120,7 +120,23 @@ public class SubmissionInProcess
         {
             uploadedFileName = uploadedFileName.substring(0, pos);
         }
-        if ("".equals(uploadedFileName))
+
+        // If file name starts with dot, add user name as a prefix
+        if (uploadedFileName.startsWith("."))
+        {
+            String userName = null;
+            if (user != null)
+            {
+                userName = user.userName();
+            }
+            if (userName == null || userName.isEmpty())
+            {
+                userName = "sub";
+            }
+            uploadedFileName = userName + uploadedFileName;
+        }
+
+        if (uploadedFileName.isEmpty())
         {
             // Give it a default, if trimming the dir eliminated everything
             uploadedFileName = "file";

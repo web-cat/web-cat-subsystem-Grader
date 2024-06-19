@@ -210,7 +210,7 @@ public class GraderSystemStatusRows
         NSTimestamp result =  new NSTimestamp(
             (grader == null)
                 ? 0
-                : (grader.estimatedJobTime() * (queuedJobCount() + 1)));
+                : (grader.estimatedJobWait(queuedJobCount())));
         return result;
     }
 
@@ -226,7 +226,7 @@ public class GraderSystemStatusRows
         return FinalReportPage.formatForSmallTime(
             (grader == null)
                 ? 0
-                : (grader.estimatedJobTime() * (queuedJobCount() + 1)));
+                : (grader.estimatedJobWait(queuedJobCount())));
     }
 
 

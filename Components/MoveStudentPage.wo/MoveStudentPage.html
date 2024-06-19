@@ -1,0 +1,14 @@
+<wo:org.webcat.core.WCPageWithNavigation title="Merge User Accounts">
+
+<wo:org.webcat.core.WCPageModule title="Move Student Enrollment">
+<p>You probably don't want to use this page!</p>
+<wo:WOForm enctype="multipart/form-data" action="$move">
+<p>User id to move: <wo:textfield numberformat="0" size="10" value="$student_id"/></p>
+<p>Course Offering CRN to move from: <wo:textfield value="$from_co_id"/></p>
+<p>Course Offering CRN to move to: <wo:textfield value="$to_co_id"/></p>
+
+<p><wo:org.webcat.ui.WCButton action="$move" label="Move Student"/></p>
+</wo:WOForm>
+</wo:org.webcat.core.WCPageModule>
+
+</wo:org.webcat.core.WCPageWithNavigation>

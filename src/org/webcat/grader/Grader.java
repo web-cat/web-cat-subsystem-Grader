@@ -284,6 +284,20 @@ public class Grader
 
     // ----------------------------------------------------------
     /**
+     * Find out the estimated total wait for any job, given its position
+     * in the queue.
+     * @param queuePosition The current position of the job in the queue.
+     *
+     * @return the time in milliseconds
+     */
+    public long estimatedJobWait(int queuePosition)
+    {
+        return GraderQueueProcessor.estimatedJobWait(queuePosition);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Handle a direct action request.  The user's login session will be
      * passed in as well.
      *

@@ -175,7 +175,8 @@ public class LISResultId
                 try
                 {
                     byte[] bytes =
-                        Charset.forName("UTF-16").encode(msg).array();
+                        Charset.forName("UTF-8").encode(msg).array();
+                        // Charset.forName("UTF-16").encode(msg).array();
                     InputStream is = new ByteArrayInputStream(bytes);
 
                     OAuthConsumer consumer = new OAuthConsumer(null,

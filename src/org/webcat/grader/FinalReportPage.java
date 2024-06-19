@@ -157,6 +157,7 @@ public class FinalReportPage
             else
             {
                 result = null;
+                ensureJobDataIsInitialized();
                 reportArray = new NSMutableArray<ResultFile>();
             }
 
@@ -614,8 +615,11 @@ public class FinalReportPage
                         EnqueuedJob.regrading.isFalse()),
                 EnqueuedJob.submitTime.ascs());
             jobData.queueSize = jobData.jobs.count();
-            if (oldQueuePos < 0
-                || oldQueuePos >= jobData.queueSize)
+            if (oldQueuePos < 0)
+            {
+                oldQueuePos = 0;
+            }
+            if (oldQueuePos >= jobData.queueSize)
             {
                 oldQueuePos = jobData.queueSize - 1;
             }
@@ -629,16 +633,16 @@ public class FinalReportPage
                     break;
                 }
             }
-            oldQueuePos = jobData.queuePosition;
             if (jobData.queuePosition == jobData.queueSize)
             {
-                log.error("cannot find job in queue for:"
-                           + submission);
+                // log.error("cannot find job in queue for:" + submission);
+                jobData.queuePosition = 0;
             }
+            oldQueuePos = jobData.queuePosition;
             Grader grader = Grader.getInstance();
             jobData.mostRecentWait = grader.mostRecentJobWait();
             jobData.estimatedWait =
-                grader.estimatedJobTime() * (jobData.queuePosition + 1);
+                grader.estimatedJobWait(jobData.queuePosition + 1);
         }
     }
 

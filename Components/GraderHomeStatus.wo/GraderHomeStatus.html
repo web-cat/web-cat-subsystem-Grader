@@ -10,7 +10,7 @@ The following submissions are currently queued for processing:
     <span class="caution">Suspended</span></wo:else></wo:if><wo:else>
   <wo:if condition="$job.discarded"><span class="error">Cancelled</span></wo:if><wo:else>
     Queued</wo:else></wo:else></td>
-<td><wo:if condition="$job.submission.assignmentOffering.assignment.url"><webobject name="JobAssignmentName"/></wo:if><wo:else><wo:str value="~job.submission.assignmentOffering.titleString(coreSelections.semester)"/></wo:else> try #<webobject name="SubmitNumber"/></td>
+<td><wo:if condition="$job.submission.assignmentOffering.assignment.url"><webobject name="JobAssignmentName"/></wo:if><wo:else><wo:str value="~job.submission.assignmentOffering.titleString"/></wo:else> try #<webobject name="SubmitNumber"/></td>
 <td><webobject name="JobSubmissionTime"/></td></wo>
 </wo:loop></tbody></table>
 <p>(<b>Suspended</b> submissions must
