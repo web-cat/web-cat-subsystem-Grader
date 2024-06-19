@@ -1,5 +1,9 @@
 #This file is automatically rewritten by ANT, so all formatting will be trashed.
+<<<<<<< HEAD
 #Tue, 18 Jun 2024 20:06:42 -0400
+=======
+#Tue, 23 Apr 2024 11:30:00 -0400
+>>>>>>> 35137a2fbaddbd96c229620ca38772c710d82124
 #Tue Feb 09 21:48:28 GMT-05:00 2021
 Grader.version.revision=1
 Grader.license.url=http\://www.gnu.org/licenses/agpl.html
@@ -11,7 +15,11 @@ grader.mailResultNotificationAfterMinutes=15
 Grader.copyright=(c) 2006-2018 Virginia Tech Department of Computer Science
 grader.timeout.max=600
 Grader.provider=Virginia Tech Computer Science
+<<<<<<< HEAD
 Grader.version.date=20240618
+=======
+Grader.version.date=20240423
+>>>>>>> 35137a2fbaddbd96c229620ca38772c710d82124
 Grader.depends=env, pluginProperties
 subsystem.Grader=org.webcat.grader.Grader
 grader.timeout.default=60
