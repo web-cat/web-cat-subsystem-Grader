@@ -612,7 +612,8 @@ public class FinalReportPage
                 localContext(),
                 EnqueuedJob.discarded.isFalse().and(
                     EnqueuedJob.paused.isFalse()).and(
-                        EnqueuedJob.regrading.isFalse()),
+                        EnqueuedJob.priority.isNot((int)
+                            EnqueuedJob.PRIORITY_REGRADING)),
                 EnqueuedJob.submitTime.ascs());
             jobData.queueSize = jobData.jobs.count();
             if (oldQueuePos < 0)

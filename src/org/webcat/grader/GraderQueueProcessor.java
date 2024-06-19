@@ -70,7 +70,7 @@ import er.extensions.eof.ERXEOGlobalIDUtilities;
  */
 public class GraderQueueProcessor
     extends ECAction
-    implements Comparable<GraderQueueProcessor>
+    implements Comparable<GraderQueueProcessor>, HRRNJob
 {
     //~ Constructors ..........................................................
 
@@ -81,21 +81,49 @@ public class GraderQueueProcessor
      * @param queue the queue to operate on
      */
     private GraderQueueProcessor(
-        EOGlobalID jobId, long queueTime, boolean isRegrading)
+        EOGlobalID jobId,
+        byte priority,
+        long queueTime,
+        long estimatedExecTime
+        )
     {
         super(ecFactory._newEditingContext(), true);
         this.jobId = jobId;
+        this.priority = priority;
         this.queueTime = queueTime;
-        this.isRegrading = isRegrading;
+        this.estimatedExecTime = estimatedExecTime;
     }
 
 
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+    public byte priority()
+    {
+        return priority;
+    }
+
+
+    // ----------------------------------------------------------
+    public double responseRatio(long time)
+    {
+        long wait_time = time - queueTime;
+        return (wait_time + estimatedExecTime) / (double)estimatedExecTime;
+    }
+
+
+    // ----------------------------------------------------------
     public int compareTo(GraderQueueProcessor other)
     {
-        if (this.isRegrading == other.isRegrading)
+        if (this.priority < other.priority)
+        {
+            return -1;
+        }
+        else if (other.priority < this.priority)
+        {
+            return 1;
+        }
+        else
         {
             long diff = this.queueTime - other.queueTime;
             if (diff < 0)
@@ -110,14 +138,6 @@ public class GraderQueueProcessor
             {
                 return 1;
             }
-        }
-        else if (this.isRegrading)
-        {
-            return 1;
-        }
-        else
-        {
-            return -1;
         }
     }
 
@@ -1936,8 +1956,10 @@ public class GraderQueueProcessor
         }
         pool.execute(new GraderQueueProcessor(
             job.permanentGlobalID(false),
+            job.priority(),
             job.queueTime().getTime(),
-            job.regrading()));
+            0L // job.estimatedExecTime()
+            ));
     }
 
 
@@ -2157,7 +2179,7 @@ public class GraderQueueProcessor
         return new ThreadPoolExecutor(
             nThreads, nThreads,
             0L, TimeUnit.MILLISECONDS,
-            new PriorityBlockingQueue<Runnable>(),
+            new HRRNQueue<Runnable>(),
             new ThreadFactory() {
                 // ----------------------------------------------------------
                 public Thread newThread(Runnable r)
@@ -2197,8 +2219,9 @@ public class GraderQueueProcessor
     private boolean faultOccurredInStep;
     private boolean timeoutOccurredInStep;
     private EOGlobalID jobId;
+    private byte priority;
     private long queueTime;
-    private boolean isRegrading;
+    private long estimatedExecTime;
 
     static Logger log = Logger.getLogger(GraderQueueProcessor.class);
     static Logger jobLog = Logger.getLogger(

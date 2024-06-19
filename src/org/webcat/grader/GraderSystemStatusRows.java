@@ -140,7 +140,7 @@ public class GraderSystemStatusRows
             queuedJobs = (jobs == null)
                 ? 0
                 : ERXArrayUtilities.filteredArrayWithQualifierEvaluation(jobs,
-                    EnqueuedJob.regrading.isFalse()).count();
+                    EnqueuedJob.priority.isNot((int)EnqueuedJob.PRIORITY_REGRADING)).count();
             regradingJobs = (jobs == null) ? 0 : (jobs.count() - queuedJobs);
         }
         return queuedJobs;

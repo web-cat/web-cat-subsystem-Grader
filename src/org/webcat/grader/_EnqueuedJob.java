@@ -66,14 +66,12 @@ public abstract class _EnqueuedJob
      * inserted
      * @param discardedValue
      * @param pausedValue
-     * @param regradingValue
      * @return The newly created object
      */
     public static EnqueuedJob create(
         EOEditingContext editingContext,
         boolean discardedValue,
-        boolean pausedValue,
-        boolean regradingValue
+        boolean pausedValue
         )
     {
         EnqueuedJob eoObject = (EnqueuedJob)
@@ -82,7 +80,6 @@ public abstract class _EnqueuedJob
                 _EnqueuedJob.ENTITY_NAME);
         eoObject.setDiscarded(discardedValue);
         eoObject.setPaused(pausedValue);
-        eoObject.setRegrading(regradingValue);
         return eoObject;
     }
 
@@ -168,15 +165,15 @@ public abstract class _EnqueuedJob
     public static final String PAUSED_KEY = "paused";
     public static final ERXKey<Integer> paused =
         new ERXKey<Integer>(PAUSED_KEY);
+    public static final String PRIORITY_KEY = "priority";
+    public static final ERXKey<Integer> priority =
+        new ERXKey<Integer>(PRIORITY_KEY);
     public static final String PROCESSOR_KEY = "processor";
     public static final ERXKey<Integer> processor =
         new ERXKey<Integer>(PROCESSOR_KEY);
     public static final String QUEUE_TIME_KEY = "queueTime";
     public static final ERXKey<NSTimestamp> queueTime =
         new ERXKey<NSTimestamp>(QUEUE_TIME_KEY);
-    public static final String REGRADING_KEY = "regrading";
-    public static final ERXKey<Integer> regrading =
-        new ERXKey<Integer>(REGRADING_KEY);
     // To-one relationships ---
     public static final String SUBMISSION_KEY = "submission";
     public static final ERXKey<org.webcat.grader.Submission> submission =
@@ -380,6 +377,70 @@ public abstract class _EnqueuedJob
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>priority</code> value.
+     * @return the value of the attribute
+     */
+    public byte priority()
+    {
+        Integer returnValue =
+            (Integer)storedValueForKey( "priority" );
+        return ( returnValue == null )
+            ? 0
+            : returnValue.byteValue();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>priority</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setPriority( byte value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPriority("
+                + value + "): was " + priority() );
+        }
+        Integer actual =
+            er.extensions.eof.ERXConstant.integerForInt( value );
+            setPriorityRaw( actual );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>priority</code> value.
+     * @return the value of the attribute
+     */
+    public Integer priorityRaw()
+    {
+        return (Integer)storedValueForKey( "priority" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>priority</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setPriorityRaw( Integer value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setPriorityRaw("
+                + value + "): was " + priorityRaw() );
+        }
+        takeStoredValueForKey( value, "priority" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>processor</code> value.
      * @return the value of the attribute
      */
@@ -468,70 +529,6 @@ public abstract class _EnqueuedJob
                 + value + "): was " + queueTime() );
         }
         takeStoredValueForKey( value, "queueTime" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>regrading</code> value.
-     * @return the value of the attribute
-     */
-    public boolean regrading()
-    {
-        Integer returnValue =
-            (Integer)storedValueForKey( "regrading" );
-        return ( returnValue == null )
-            ? false
-            : ( returnValue.intValue() > 0 );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>regrading</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setRegrading( boolean value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setRegrading("
-                + value + "): was " + regrading() );
-        }
-        Integer actual =
-            er.extensions.eof.ERXConstant.integerForInt( value ? 1 : 0 );
-            setRegradingRaw( actual );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Retrieve this object's <code>regrading</code> value.
-     * @return the value of the attribute
-     */
-    public Integer regradingRaw()
-    {
-        return (Integer)storedValueForKey( "regrading" );
-    }
-
-
-    // ----------------------------------------------------------
-    /**
-     * Change the value of this object's <code>regrading</code>
-     * property.
-     *
-     * @param value The new value for this property
-     */
-    public void setRegradingRaw( Integer value )
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug( "setRegradingRaw("
-                + value + "): was " + regradingRaw() );
-        }
-        takeStoredValueForKey( value, "regrading" );
     }
 
 
