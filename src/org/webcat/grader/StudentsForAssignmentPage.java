@@ -33,6 +33,7 @@ import org.webcat.ui.WCTable;
 import org.webcat.ui.generators.JavascriptFunction;
 import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
+import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -104,6 +105,21 @@ public class StudentsForAssignmentPage
 
     //~ Methods ...............................................................
 
+    private long start_time;
+    private void log_time(String msg)
+    {
+        if (user().id().intValue() == 1)
+        {
+            long elapsed = System.currentTimeMillis() - start_time;
+            msg = StudentsForAssignmentPage.class.getSimpleName()
+                + " "
+                + msg
+                + ": elapsed " + elapsed + "ms";
+            log.info(msg);
+        }
+    }
+
+
     // ----------------------------------------------------------
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
@@ -122,12 +138,28 @@ public class StudentsForAssignmentPage
             }
         }
 
+        start_time = System.currentTimeMillis();
+        log_time("beforeAppendToResponse() query start");
         NSMutableArray<Submission> staffSubs =
             new NSMutableArray<Submission>();
         NSArray<User> admins = User.administrators(localContext());
+        
+        // Prefetch everything to see if there is a speedup
+        WCFetchSpecification<Submission> allSubmissionsFS =
+            new WCFetchSpecification<Submission>(
+                Submission.ENTITY_NAME,
+                Submission.assignmentOffering.in(offerings.displayedObjects()),
+                null);
+        allSubmissionsFS.setPrefetchingRelationshipKeyPaths(
+            new NSArray<String>(new String[]{"user", "result"}));
+        allSubmissionsFS.setIsDeep(true);
+        NSArray<Submission> allSubmissions = Submission
+            .objectsWithFetchSpecification(localContext(), allSubmissionsFS);
+        log_time("beforeAppendToResponse() after prefetch");
 
         for (AssignmentOffering ao : offerings.displayedObjects())
         {
+            log_time("beforeAppendToResponse() ao = " + ao.titleString());
             // Stuff the index variable into the public key so the group/stats
             // methods will work for us
             assignmentOffering = ao;
@@ -139,6 +171,7 @@ public class StudentsForAssignmentPage
                         omitStaff,
                         studentStats());
             userGroup().setObjectArray(subs);
+            log_time("beforeAppendToResponse() all subs, ao = " + ao.titleString());
 
             @SuppressWarnings("unchecked")
             NSArray<User> staff = ERXArrayUtilities
@@ -152,10 +185,12 @@ public class StudentsForAssignmentPage
                             true,  // omitPartners
                             staff,
                             null)));
+            log_time("beforeAppendToResponse() staff, ao = " + ao.titleString());
         }
 
         staffSubmissionGroup.setObjectArray(staffSubs);
 
+        log_time("beforeAppendToResponse() query finish");
         selectedUserSubmissionForPickerDialog = null;
         allUserSubmissionsForNavigationForPickerDialog = null;
 
