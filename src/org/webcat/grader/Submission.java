@@ -2496,7 +2496,7 @@ public class Submission
             }
         }
 
-        state.lastFetchTimestamp = new NSTimestamp();
+        state.lastFetchTimestamp = queryStart;
         return state;
     }
 
