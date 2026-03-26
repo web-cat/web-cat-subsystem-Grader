@@ -23,8 +23,6 @@ import com.webobjects.eoaccess.*;
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
 import er.extensions.eof.ERXConstant;
-import er.extensions.eof.ERXEOAccessUtilities;
-import er.extensions.eof.ERXEOGlobalIDUtilities;
 import er.extensions.eof.ERXQ;
 import er.extensions.foundation.ERXFileUtilities;
 import java.io.BufferedOutputStream;
@@ -33,6 +31,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webcat.core.*;
 import org.webcat.core.messaging.UnexpectedExceptionMessage;
@@ -2362,6 +2362,147 @@ public class Submission
 
     // ----------------------------------------------------------
     /**
+     * Retrieve current submissions for grading across multiple offerings.
+     *
+     * @param offerings The offerings to search for.
+     * @param users     An optional mapping of offerings to the specific users
+     *                  whose submissions should be retrieved.
+     * @return a new SubmissionGradingState containing the results.
+     */
+    public static SubmissionGradingState submissionsForGrading(
+        NSArray<AssignmentOffering> offerings,
+        NSDictionary<AssignmentOffering, NSArray<User>> users)
+    {
+        SubmissionGradingState state = new SubmissionGradingState(offerings, users);
+        return submissionsForGrading(state);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve current submissions for grading across multiple offerings
+     * and update the provided state.
+     *
+     * @param state The state to update.
+     * @return the updated state.
+     */
+    public static SubmissionGradingState submissionsForGrading(
+        SubmissionGradingState state)
+    {
+        NSTimestamp queryStart = new NSTimestamp();
+        NSArray<AssignmentOffering> offerings = state.offerings();
+        if (offerings == null || offerings.count() == 0)
+        {
+            return state;
+        }
+
+        EOEditingContext ec = offerings.objectAtIndex(0).editingContext();
+        if (ec == null)
+        {
+            return state;
+        }
+
+        // Build qualifier
+        NSDictionary<AssignmentOffering, NSArray<User>> users = state.users();
+
+        EOQualifier qual = assignmentOffering.in(offerings);
+        if (state.lastFetchTimestamp() != null)
+        {
+            qual = ERXQ.and(qual, submitTime.greaterThan(state.lastFetchTimestamp()));
+        }
+
+        WCFetchSpecification<Submission> fetchSpec =
+            new WCFetchSpecification<Submission>(
+                ENTITY_NAME, qual, null);
+        fetchSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
+            new String[] { RESULT_KEY }));
+        fetchSpec.setIsDeep(true);
+
+        NSArray<Submission> fetchedSubmissions =
+            objectsWithFetchSpecification(ec, fetchSpec);
+
+        // Merging Loop
+        for (Submission sub : fetchedSubmissions)
+        {
+            AssignmentOffering ao = sub.assignmentOffering();
+            User u = sub.user();
+            NSArray<User> aoUsers = users.get(ao);
+            
+            if (aoUsers != null && !aoUsers.contains(u))
+            {
+                continue;
+            }
+
+            Map<User, StudentSubmissionInfo> userMap =
+                state.resultsForOffering(ao);
+            if (userMap == null)
+            {
+                userMap = new HashMap<User, StudentSubmissionInfo>();
+                state.setObjectForKey(userMap, ao);
+            }
+
+            StudentSubmissionInfo info = userMap.get(u);
+            if (info == null)
+            {
+                info = new StudentSubmissionInfo(
+                    u, ao, null, new NSMutableArray<Submission>(), true);
+                userMap.put(u, info);
+            }
+
+            NSMutableArray<Submission> allSubs = info.allSubmissions;
+            if (!allSubs.containsObject(sub))
+            {
+                allSubs.addObject(sub);
+                info.isDirty = true;
+            }
+        }
+
+        // Re-evaluation Loop
+        for (AssignmentOffering ao : offerings)
+        {
+            Map<User, StudentSubmissionInfo> userMap =
+                state.resultsForOffering(ao);
+            if (userMap != null)
+            {
+                for (StudentSubmissionInfo info : userMap.values())
+                {
+                    if (info.isDirty)
+                    {
+                        NSMutableArray<Submission> allSubs =
+                            info.allSubmissions;
+                        if (allSubs.count() > 0)
+                        {
+                            // Sort by submitTime
+                            EOSortOrdering.sortArrayUsingKeyOrderArray(allSubs,
+                                submitTime.ascs());
+
+                            Submission best = null;
+                            for (Submission sub : allSubs)
+                            {
+                                if (sub.isBetterGradingChoiceThan(best))
+                                {
+                                    best = sub;
+                                }
+                            }
+                            info.gradedSubmission = best;
+                        }
+                        else
+                        {
+                            info.gradedSubmission = null;
+                        }
+                        info.isDirty = false;
+                    }
+                }
+            }
+        }
+
+        state.lastFetchTimestamp = new NSTimestamp();
+        return state;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Find all submissions that are used for scoring for a given
      * assignment.
      *
@@ -2636,6 +2777,101 @@ public class Submission
                 + ", avg = "
                 + mean();
         }
+    }
+
+
+    // -------------------------------------------------------------------------
+    /**
+     * A class used to track a student's submission status for a specific
+     * assignment offering.
+     */
+    public static class StudentSubmissionInfo
+    {
+        public User user;
+        public AssignmentOffering offering;
+        public Submission gradedSubmission;
+        public NSMutableArray<Submission> allSubmissions;
+        public boolean isDirty;
+
+        // ----------------------------------------------------------
+        public StudentSubmissionInfo(
+            User user,
+            AssignmentOffering offering,
+            Submission gradedSubmission,
+            NSMutableArray<Submission> allSubmissions,
+            boolean isDirty)
+        {
+            this.user = user;
+            this.offering = offering;
+            this.gradedSubmission = gradedSubmission;
+            this.allSubmissions = allSubmissions;
+            this.isDirty = isDirty;
+        }
+
+        // ----------------------------------------------------------
+        public User user() { return user; }
+        public AssignmentOffering offering() { return offering; }
+        public Submission gradedSubmission() { return gradedSubmission; }
+        public NSArray<Submission> allSubmissions() { return allSubmissions; }
+        public boolean isDirty() { return isDirty; }
+    }
+
+
+    // -------------------------------------------------------------------------
+    /**
+     * A dictionary that maps assignment offerings to a map of users and
+     * their submission information.
+     */
+    public static class SubmissionGradingState
+        extends NSMutableDictionary<AssignmentOffering,
+            Map<User, StudentSubmissionInfo>>
+    {
+        public NSTimestamp lastFetchTimestamp;
+        public NSArray<AssignmentOffering> offerings;
+        public NSDictionary<AssignmentOffering, NSArray<User>> users;
+
+        // ----------------------------------------------------------
+        public SubmissionGradingState(
+            NSArray<AssignmentOffering> offerings,
+            NSDictionary<AssignmentOffering, NSArray<User>> users)
+        {
+            super();
+            this.offerings = offerings;
+            this.users = users;
+            this.lastFetchTimestamp = null;
+        }
+
+
+        // ----------------------------------------------------------
+        public SubmissionGradingState(SubmissionGradingState existingState)
+        {
+            super(existingState);
+            this.offerings = existingState.offerings;
+            this.users = existingState.users;
+            this.lastFetchTimestamp = existingState.lastFetchTimestamp;
+        }
+
+
+        // ----------------------------------------------------------
+        public Map<User, StudentSubmissionInfo> resultsForOffering(
+            AssignmentOffering offering)
+        {
+            return objectForKey(offering);
+        }
+
+
+        // ----------------------------------------------------------
+        public StudentSubmissionInfo infoForUser(AssignmentOffering ao,
+            User student)
+        {
+            Map<User, StudentSubmissionInfo> results = resultsForOffering(ao);
+            return (results != null) ? results.get(student) : null;
+        }
+
+        // ----------------------------------------------------------
+        public NSTimestamp lastFetchTimestamp() { return lastFetchTimestamp; }
+        public NSArray<AssignmentOffering> offerings() { return offerings; }
+        public NSDictionary<AssignmentOffering, NSArray<User>> users() { return users; }
     }
 
 
