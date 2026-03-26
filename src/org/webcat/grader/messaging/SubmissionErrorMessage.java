@@ -59,7 +59,7 @@ public abstract class SubmissionErrorMessage
         List<File> attachments)
     {
 //        this.submission = submission.localInstance(editingContext());
-        attachments = attachments;
+        this.attachments = attachments;
         submitNumber = submission.submitNumber();
         userName = submission.user().userName();
         assignmentName =
