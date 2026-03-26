@@ -263,6 +263,9 @@ public class DownloadScoresDialog extends WCComponent
             out.print("Student Test %");
             out.print("Student Coverage %");
             out.print("Ref Test %");
+            out.print("Validation Tests Executed");
+            out.print("Validation Tests Passed");
+            out.print("Validation Test %");
         }
         out.print("Correctness/Testing Score");
         out.print("Correctness/Testing %");
@@ -272,7 +275,8 @@ public class DownloadScoresDialog extends WCComponent
         out.print("Design %");
         out.print("Penalty/Bonus");
         out.print("Total Score");
-        out.println("Total %");
+        out.print("Total %");
+        out.println("Comments");
 
         for (UserSubmissionPair pair : submissionsToExport)
         {
@@ -344,6 +348,7 @@ public class DownloadScoresDialog extends WCComponent
                     print(out, "");
                     print(out, "");
                     print(out, "");
+                    print(out, "");
                     out.println();
                 }
                 else
@@ -368,6 +373,12 @@ public class DownloadScoresDialog extends WCComponent
                         }
                         print(out, result.properties()
                             .getProperty("instructor.test.passRate"));
+                        print(out, result.properties()
+                            .getProperty("validate.test.executed"));
+                        print(out, result.properties()
+                            .getProperty("validate.test.passed"));
+                        print(out, result.properties()
+                            .getProperty("validate.test.passRate"));
                     }
                     print(out, result.correctnessScoreRaw());
                     print(out, result.correctnessScore()
@@ -388,6 +399,7 @@ public class DownloadScoresDialog extends WCComponent
                     }
                     print(out, result.finalScore());
                     print(out, result.finalScore() / sp.availablePoints());
+                    print(out, result.comments());
                     out.println();
                 }
             }
