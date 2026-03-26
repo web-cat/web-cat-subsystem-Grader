@@ -36,6 +36,7 @@ import org.webcat.grader.Submission;
 import org.webcat.woextensions.ECAction;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSTimestampFormatter;
 
 // -------------------------------------------------------------------------
 /**
@@ -157,9 +158,23 @@ public class LISResultId
             if (id != null && url != null && !url.isEmpty())
             {
                 LMSInstance lms = id.lmsInstance();
-                double score = submission.result().finalScore() /
+                double points = submission.result().finalScore();
+                double score = points /
                     submission.assignmentOffering().assignment()
                     .submissionProfile().availablePoints();
+                // Cap LTI score at 1.0, as required by LTI spec
+                if (score > 1.0)
+                {
+                    score = 1.0;
+                }
+                else if (score < 0.0)
+                {
+                    score = 0.0;
+                }
+                // An ISO8601-formatted timestamp, like this:
+                // 2017-04-16T18:54:36.736+00:00
+                String timestamp = formatter.format(submission.submitTime());
+
 //                log.debug("final score = " + submission.result().finalScore()
 //                    + ", available = "
 //                    + submission.assignmentOffering().assignment()
@@ -170,7 +185,20 @@ public class LISResultId
                     Long.toString(System.currentTimeMillis()))
                     .replaceAll("%ID%", id.lisResultSourcedId())
                     .replaceAll("%SCORE%",
-                    Double.toString(score));
+                    Double.toString(score))
+                    // Should really make this section of the message
+                    // conditional on whether the LTI launch included param:
+                    // ext_outcome_result_total_score_accepted=true
+                    .replaceAll("%POINTS%",
+                    Double.toString(points))
+                    // Should really make this section of the message
+                    // conditional on whether the LTI launch included param:
+                    // ext_outcome_submission_submitted_at_accepted=true
+                    .replaceAll("%TIMESTAMP%", timestamp)
+                    // Should really make this section of the message
+                    // conditional on whether the LTI launch included param:
+                    // ext_outcome_data_values_accepted=...url...
+                    .replaceAll("%URL%", submission.permalink());
 //                log.debug("outgoing message = " + msg);
                 try
                 {
@@ -228,6 +256,11 @@ public class LISResultId
 
     //~ Instance/static variables .............................................
 
+    // Produces an ISO8601-formatted timestamp, like this:
+    // 2017-04-16T18:54:36.736Z
+    private static NSTimestampFormatter formatter =
+        new NSTimestampFormatter("%Y-%m-%dT%H:%M:%S.%F3%Z");
+
     private static final String REPLACE_RESULT_TEMPLATE =
         "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n"
         + "<imsx_POXEnvelopeRequest xmlns=\"http://www.imsglobal.org/"
@@ -240,6 +273,13 @@ public class LISResultId
         + "  </imsx_POXHeader>\n"
         + "  <imsx_POXBody>\n"
         + "    <replaceResultRequest>\n"
+        // The following section should only be included if the LTI launch
+        // request included: ext_outcome_submission_submitted_at_accepted=true
+        + "      <submissionDetails>\n"
+        + "        <submittedAt>\n"
+        + "          %TIMESTAMP%\n"
+        + "        </submittedAt>\n"
+        + "      </submissionDetails>\n"
         + "      <resultRecord>\n"
         + "        <sourcedGUID>\n"
         + "          <sourcedId>%ID%</sourcedId>\n"
@@ -249,6 +289,17 @@ public class LISResultId
         + "            <language>en</language>\n"
         + "            <textString>%SCORE%</textString>\n"
         + "          </resultScore>\n"
+        // The following section should only be included if the LTI launch
+        // request included: ext_outcome_result_total_score_accepted=true
+        + "          <resultTotalScore>\n"
+        + "            <language>en</language>\n"
+        + "            <textString>%POINTS%</textString>\n"
+        + "          </resultTotalScore>\n"
+        // The following section should only be included if the LTI launch
+        // request included: ext_outcome_data_values_accepted=...url...
+        + "          <resultData>\n"
+        + "            <url>%URL%</url>\n"
+        + "          </resultData>\n"
         + "        </result>\n"
         + "      </resultRecord>\n"
         + "    </replaceResultRequest>\n"
