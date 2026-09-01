@@ -21,6 +21,7 @@ package org.webcat.grader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
@@ -36,7 +37,7 @@ import com.webobjects.appserver.WOResponse;
 import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSData;
 import com.webobjects.foundation.NSMutableArray;
-import com.webobjects.foundation.NSTimestamp;
+import com.webobjects.foundation.NSMutableDictionary;
 
 //-------------------------------------------------------------------------
 /**
@@ -160,31 +161,47 @@ public class DownloadScoresDialog extends WCComponent
         NSMutableArray<UserSubmissionPair> submissions =
             new NSMutableArray<UserSubmissionPair>();
 
+        NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
+            new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
+
         for (AssignmentOffering ao : assignmentOfferings)
         {
+            NSArray<User> allForAO = includeStaff
+                ? ao.courseOffering().studentsAndStaff()
+                : ao.courseOffering().studentsWithoutStaff();
+            usersByAO.setObjectForKey(allForAO, ao);
+        }
+
+        Submission.SubmissionGradingState state =
+            Submission.submissionsForGrading(assignmentOfferings, usersByAO);
+
+        for (AssignmentOffering ao : assignmentOfferings)
+        {
+            Map<User, Submission.StudentSubmissionInfo> infoMap =
+                state.resultsForOffering(ao);
+            NSArray<User> users = usersByAO.objectForKey(ao);
+
             if (useFullAllFormat || useFullAllDetailedFormat)
             {
-                NSArray<Submission> subs = Submission.objectsMatchingQualifier(
-                    localContext(),
-                    Submission.assignmentOffering.is(ao),
-                    Submission.user.dot(User.userName).asc().then(
-                        Submission.submitNumber.asc()));
-                for (Submission s : subs)
+                // We need ALL submissions for each user, sorted by user name
+                // then submit number.
+                for (User u : users)
                 {
-                    if (includeStaff || !ao.courseOffering().isStaff(s.user()))
+                    Submission.StudentSubmissionInfo info =
+                        (infoMap != null) ? infoMap.get(u) : null;
+                    if (info != null && info.allSubmissions() != null)
                     {
-                        submissions.add(new UserSubmissionPair(s.user(), s));
+                        for (Submission s : info.allSubmissions())
+                        {
+                            submissions.add(new UserSubmissionPair(u, s));
+                        }
                     }
                 }
             }
             else
             {
-                NSArray<User> students = includeStaff
-                    ? ao.courseOffering().studentsAndStaff()
-                    : ao.courseOffering().studentsWithoutStaff();
                 submissions.addObjectsFromArray(
-                    Submission.submissionsForGrading(
-                    localContext(), ao, false, students, null));
+                    UserSubmissionPair.fromInfoMap(infoMap, users, false, null));
             }
         }
 
@@ -266,6 +283,9 @@ public class DownloadScoresDialog extends WCComponent
             out.print("Validation Tests Executed");
             out.print("Validation Tests Passed");
             out.print("Validation Test %");
+            out.print("milestonePassed.1");
+            out.print("milestonePassed.2");
+            out.print("milestonePassed.3");
         }
         out.print("Correctness/Testing Score");
         out.print("Correctness/Testing %");
@@ -338,6 +358,12 @@ public class DownloadScoresDialog extends WCComponent
                        print(out, "");
                        print(out, "");
                        print(out, "");
+                       print(out, "");
+                       print(out, "");
+                       print(out, "");
+                       print(out, "");
+                       print(out, "");
+                       print(out, "");
                     }
                     print(out, "");
                     print(out, "");
@@ -379,6 +405,12 @@ public class DownloadScoresDialog extends WCComponent
                             .getProperty("validate.test.passed"));
                         print(out, result.properties()
                             .getProperty("validate.test.passRate"));
+                        print(out, result.properties()
+                            .getProperty("milestonePassed.1"));
+                        print(out, result.properties()
+                            .getProperty("milestonePassed.2"));
+                        print(out, result.properties()
+                            .getProperty("milestonePassed.3"));
                     }
                     print(out, result.correctnessScoreRaw());
                     print(out, result.correctnessScore()

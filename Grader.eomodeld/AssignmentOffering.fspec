@@ -1,14 +1,31 @@
 {
-    allOfferingsOrderedByDueDate = {
+   allOfferingsOrderedByDueDate = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
-        sortOrderings = ({class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; });
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
+        );
     };
+
     offeringsForCourseOffering = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
         qualifier = {
             class = EOKeyValueQualifier;
             key = courseOffering;
@@ -19,10 +36,18 @@
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
     };
+
     offeringsForCourse = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
         qualifier = {
             class = EOKeyValueQualifier;
             key = "courseOffering.course";
@@ -33,24 +58,183 @@
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
     };
-    offeringsWithUserAsStaff = {
+
+    openOfferingsForCourseOffering = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
         qualifier = {
-            class = EOOrQualifier;
+            class = EOAndQualifier;
             qualifiers = (
                 {
                     class = EOKeyValueQualifier;
-                    key = "courseOffering.instructors";
+                    key = courseOffering;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = courseOffering; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = publish;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = publish; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOOrQualifier;
+                    qualifiers = (
+                        {
+                            class = EOKeyValueQualifier;
+                            key = minOpensOn;
+                            selectorName = "isEqualTo:";
+                            value = {class = EONull; };
+                        },
+                        {
+                            class = EOKeyValueQualifier;
+                            key = minOpensOn;
+                            selectorName = "isLessThanOrEqualTo:";
+                            value = {"_key" = currentTime; class = EOQualifierVariable; };
+                        }
+                    );
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isGreaterThan:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
+                }
+            );
+        };
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
+        );
+    };
+
+    allOpenOfferingsForCourseOffering = {
+        class = WCFetchSpecification;
+        entityName = AssignmentOffering;
+        fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = courseOffering;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = courseOffering; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isGreaterThan:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
+                }
+            );
+        };
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
+        );
+    };
+
+    openOfferingsForStudent = {
+        class = WCFetchSpecification;
+        entityName = AssignmentOffering;
+        fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = "courseOffering.students";
                     selectorName = "doesContain:";
                     value = {"_key" = user; class = EOQualifierVariable; };
                 },
                 {
                     class = EOKeyValueQualifier;
-                    key = "courseOffering.graders";
+                    key = publish;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = publish; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOOrQualifier;
+                    qualifiers = (
+                        {
+                            class = EOKeyValueQualifier;
+                            key = minOpensOn;
+                            selectorName = "isEqualTo:";
+                            value = {class = EONull; };
+                        },
+                        {
+                            class = EOKeyValueQualifier;
+                            key = minOpensOn;
+                            selectorName = "isLessThanOrEqualTo:";
+                            value = {"_key" = currentTime; class = EOQualifierVariable; };
+                        }
+                    );
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isGreaterThan:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
+                }
+            );
+        };
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
+        );
+    };
+
+    closedOfferingsForStudent = {
+        class = WCFetchSpecification;
+        entityName = AssignmentOffering;
+        fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOKeyValueQualifier;
+                    key = "courseOffering.students";
                     selectorName = "doesContain:";
                     value = {"_key" = user; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = publish;
+                    selectorName = "isEqualTo:";
+                    value = {"_key" = publish; class = EOQualifierVariable; };
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isLessThanOrEqualTo:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
                 }
             );
         };
@@ -58,15 +242,89 @@
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
     };
-    offeringsWithUserAsStudent = {
+
+    openOfferingsForStaff = {
         class = WCFetchSpecification;
         entityName = AssignmentOffering;
         fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
         qualifier = {
-            class = EOKeyValueQualifier;
-            key = "courseOffering.students";
-            selectorName = "doesContain:";
-            value = {"_key" = user; class = EOQualifierVariable; };
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOOrQualifier;
+                    qualifiers = (
+                        {
+                            class = EOKeyValueQualifier;
+                            key = "courseOffering.instructors";
+                            selectorName = "doesContain:";
+                            value = {"_key" = user; class = EOQualifierVariable; };
+                        },
+                        {
+                            class = EOKeyValueQualifier;
+                            key = "courseOffering.graders";
+                            selectorName = "doesContain:";
+                            value = {"_key" = user; class = EOQualifierVariable; };
+                        }
+                    );
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isGreaterThan:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
+                }
+            );
+        };
+        sortOrderings = (
+            {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
+        );
+    };
+
+    closedOfferingsForStaff = {
+        class = WCFetchSpecification;
+        entityName = AssignmentOffering;
+        fetchLimit = 0;
+        prefetchingRelationshipKeyPaths = (
+            assignment,
+            "assignment.submissionProfile",
+            courseOffering,
+            "courseOffering.course",
+            "courseOffering.semester"
+        );
+        qualifier = {
+            class = EOAndQualifier;
+            qualifiers = (
+                {
+                    class = EOOrQualifier;
+                    qualifiers = (
+                        {
+                            class = EOKeyValueQualifier;
+                            key = "courseOffering.instructors";
+                            selectorName = "doesContain:";
+                            value = {"_key" = user; class = EOQualifierVariable; };
+                        },
+                        {
+                            class = EOKeyValueQualifier;
+                            key = "courseOffering.graders";
+                            selectorName = "doesContain:";
+                            value = {"_key" = user; class = EOQualifierVariable; };
+                        }
+                    );
+                },
+                {
+                    class = EOKeyValueQualifier;
+                    key = maxClosesOn;
+                    selectorName = "isLessThanOrEqualTo:";
+                    value = {"_key" = currentTime; class = EOQualifierVariable; };
+                }
+            );
         };
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }

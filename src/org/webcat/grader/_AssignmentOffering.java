@@ -163,9 +163,9 @@ public abstract class _AssignmentOffering
     //~ Constants (for key names) .............................................
 
     // Attributes ---
-    public static final String CLOSED_ON_DATE_KEY = "closedOnDate";
-    public static final ERXKey<NSTimestamp> closedOnDate =
-        new ERXKey<NSTimestamp>(CLOSED_ON_DATE_KEY);
+    public static final String CLOSES_ON_KEY = "closesOn";
+    public static final ERXKey<NSTimestamp> closesOn =
+        new ERXKey<NSTimestamp>(CLOSES_ON_KEY);
     public static final String DUE_DATE_KEY = "dueDate";
     public static final ERXKey<NSTimestamp> dueDate =
         new ERXKey<NSTimestamp>(DUE_DATE_KEY);
@@ -187,9 +187,18 @@ public abstract class _AssignmentOffering
     public static final String LMS_ASSIGNMENT_URL_KEY = "lmsAssignmentUrl";
     public static final ERXKey<String> lmsAssignmentUrl =
         new ERXKey<String>(LMS_ASSIGNMENT_URL_KEY);
+    public static final String MAX_CLOSES_ON_KEY = "maxClosesOn";
+    public static final ERXKey<NSTimestamp> maxClosesOn =
+        new ERXKey<NSTimestamp>(MAX_CLOSES_ON_KEY);
+    public static final String MIN_OPENS_ON_KEY = "minOpensOn";
+    public static final ERXKey<NSTimestamp> minOpensOn =
+        new ERXKey<NSTimestamp>(MIN_OPENS_ON_KEY);
     public static final String MOODLE_ID_KEY = "moodleId";
     public static final ERXKey<Long> moodleId =
         new ERXKey<Long>(MOODLE_ID_KEY);
+    public static final String OPENS_ON_KEY = "opensOn";
+    public static final ERXKey<NSTimestamp> opensOn =
+        new ERXKey<NSTimestamp>(OPENS_ON_KEY);
     public static final String PUBLISH_KEY = "publish";
     public static final ERXKey<Integer> publish =
         new ERXKey<Integer>(PUBLISH_KEY);
@@ -213,15 +222,22 @@ public abstract class _AssignmentOffering
     public static final String LIS_RESULT_IDS_KEY = "lisResultIds";
     public static final ERXKey<org.webcat.grader.lti.LISResultId> lisResultIds =
         new ERXKey<org.webcat.grader.lti.LISResultId>(LIS_RESULT_IDS_KEY);
+    public static final String STUDENT_EXTENSIONS_KEY = "studentExtensions";
+    public static final ERXKey<org.webcat.grader.StudentExtension> studentExtensions =
+        new ERXKey<org.webcat.grader.StudentExtension>(STUDENT_EXTENSIONS_KEY);
     public static final String SUBMISSIONS_KEY = "submissions";
     public static final ERXKey<org.webcat.grader.Submission> submissions =
         new ERXKey<org.webcat.grader.Submission>(SUBMISSIONS_KEY);
     // Fetch specifications ---
     public static final String ALL_OFFERINGS_ORDERED_BY_DUE_DATE_FSPEC = "allOfferingsOrderedByDueDate";
+    public static final String ALL_OPEN_OFFERINGS_FOR_COURSE_OFFERING_FSPEC = "allOpenOfferingsForCourseOffering";
+    public static final String CLOSED_OFFERINGS_FOR_STAFF_FSPEC = "closedOfferingsForStaff";
+    public static final String CLOSED_OFFERINGS_FOR_STUDENT_FSPEC = "closedOfferingsForStudent";
     public static final String OFFERINGS_FOR_COURSE_FSPEC = "offeringsForCourse";
     public static final String OFFERINGS_FOR_COURSE_OFFERING_FSPEC = "offeringsForCourseOffering";
-    public static final String OFFERINGS_WITH_USER_AS_STAFF_FSPEC = "offeringsWithUserAsStaff";
-    public static final String OFFERINGS_WITH_USER_AS_STUDENT_FSPEC = "offeringsWithUserAsStudent";
+    public static final String OPEN_OFFERINGS_FOR_COURSE_OFFERING_FSPEC = "openOfferingsForCourseOffering";
+    public static final String OPEN_OFFERINGS_FOR_STAFF_FSPEC = "openOfferingsForStaff";
+    public static final String OPEN_OFFERINGS_FOR_STUDENT_FSPEC = "openOfferingsForStudent";
     public static final String ENTITY_NAME = "AssignmentOffering";
 
     public transient final EOBasedKeyGenerator generateKey =
@@ -291,30 +307,30 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Retrieve this object's <code>closedOnDate</code> value.
+     * Retrieve this object's <code>closesOn</code> value.
      * @return the value of the attribute
      */
-    public NSTimestamp closedOnDate()
+    public NSTimestamp closesOn()
     {
-        return (NSTimestamp)storedValueForKey( "closedOnDate" );
+        return (NSTimestamp)storedValueForKey( "closesOn" );
     }
 
 
     // ----------------------------------------------------------
     /**
-     * Change the value of this object's <code>closedOnDate</code>
+     * Change the value of this object's <code>closesOn</code>
      * property.
      *
      * @param value The new value for this property
      */
-    public void setClosedOnDate( NSTimestamp value )
+    public void setClosesOn( NSTimestamp value )
     {
         if (log.isDebugEnabled())
         {
-            log.debug( "setClosedOnDate("
-                + value + "): was " + closedOnDate() );
+            log.debug( "setClosesOn("
+                + value + "): was " + closesOn() );
         }
-        takeStoredValueForKey( value, "closedOnDate" );
+        takeStoredValueForKey( value, "closesOn" );
     }
 
 
@@ -632,6 +648,64 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Retrieve this object's <code>maxClosesOn</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp maxClosesOn()
+    {
+        return (NSTimestamp)storedValueForKey( "maxClosesOn" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>maxClosesOn</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setMaxClosesOn( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMaxClosesOn("
+                + value + "): was " + maxClosesOn() );
+        }
+        takeStoredValueForKey( value, "maxClosesOn" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>minOpensOn</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp minOpensOn()
+    {
+        return (NSTimestamp)storedValueForKey( "minOpensOn" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>minOpensOn</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setMinOpensOn( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setMinOpensOn("
+                + value + "): was " + minOpensOn() );
+        }
+        takeStoredValueForKey( value, "minOpensOn" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve this object's <code>moodleId</code> value.
      * @return the value of the attribute
      */
@@ -656,6 +730,35 @@ public abstract class _AssignmentOffering
                 + value + "): was " + moodleId() );
         }
         takeStoredValueForKey( value, "moodleId" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve this object's <code>opensOn</code> value.
+     * @return the value of the attribute
+     */
+    public NSTimestamp opensOn()
+    {
+        return (NSTimestamp)storedValueForKey( "opensOn" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Change the value of this object's <code>opensOn</code>
+     * property.
+     *
+     * @param value The new value for this property
+     */
+    public void setOpensOn( NSTimestamp value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "setOpensOn("
+                + value + "): was " + opensOn() );
+        }
+        takeStoredValueForKey( value, "opensOn" );
     }
 
 
@@ -1517,6 +1620,186 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Retrieve the entities pointed to by the <code>studentExtensions</code>
+     * relationship.
+     * @return an NSArray of the entities in the relationship
+     */
+    @SuppressWarnings("unchecked")
+    public NSArray<org.webcat.grader.StudentExtension> studentExtensions()
+    {
+        return (NSArray<org.webcat.grader.StudentExtension>)
+            storedValueForKey("studentExtensions");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Replace the list of entities pointed to by the
+     * <code>studentExtensions</code> relationship.
+     *
+     * @param value The new set of entities to relate to
+     */
+    public void setStudentExtensions(
+        NSMutableArray<org.webcat.grader.StudentExtension>  value)
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug("setStudentExtensions("
+                + value + "): was " + studentExtensions());
+        }
+        takeStoredValueForKey(value, "studentExtensions");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>studentExtensions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>addToStudentExtensionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToStudentExtensions( org.webcat.grader.StudentExtension value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToStudentExtensions("
+                + value + "): was " + studentExtensions() );
+        }
+        NSMutableArray<org.webcat.grader.StudentExtension> array =
+            (NSMutableArray<org.webcat.grader.StudentExtension>)studentExtensions();
+        willChange();
+        array.addObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>studentExtensions</code>
+     * relationship (DO NOT USE--instead, use
+     * <code>removeFromStudentExtensionsRelationship()</code>.
+     * This method is provided for WebObjects use.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromStudentExtensions( org.webcat.grader.StudentExtension value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "RemoveFromStudentExtensions("
+                + value + "): was " + studentExtensions() );
+        }
+        NSMutableArray<org.webcat.grader.StudentExtension> array =
+            (NSMutableArray<org.webcat.grader.StudentExtension>)studentExtensions();
+        willChange();
+        array.removeObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Add a new entity to the <code>studentExtensions</code>
+     * relationship.
+     *
+     * @param value The new entity to relate to
+     */
+    public void addToStudentExtensionsRelationship( org.webcat.grader.StudentExtension value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "addToStudentExtensionsRelationship("
+                + value + "): was " + studentExtensions() );
+        }
+        addObjectToBothSidesOfRelationshipWithKey(
+            value, "studentExtensions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove a specific entity from the <code>studentExtensions</code>
+     * relationship.
+     *
+     * @param value The entity to remove from the relationship
+     */
+    public void removeFromStudentExtensionsRelationship( org.webcat.grader.StudentExtension value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "removeFromStudentExtensionsRelationship("
+                + value + "): was " + studentExtensions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "studentExtensions" );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create a brand new object that is a member of the
+     * <code>studentExtensions</code> relationship.
+     *
+     * @return The new entity
+     */
+    public org.webcat.grader.StudentExtension createStudentExtensionsRelationship()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "createStudentExtensionsRelationship()" );
+        }
+        EOClassDescription eoClassDesc = EOClassDescription
+            .classDescriptionForEntityName( "StudentExtension" );
+        EOEnterpriseObject eoObject = eoClassDesc
+            .createInstanceWithEditingContext( editingContext(), null );
+        editingContext().insertObject( eoObject );
+        addObjectToBothSidesOfRelationshipWithKey(
+            eoObject, "studentExtensions" );
+        return (org.webcat.grader.StudentExtension)eoObject;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove and then delete a specific entity that is a member of the
+     * <code>studentExtensions</code> relationship.
+     *
+     * @param value The entity to remove from the relationship and then delete
+     */
+    public void deleteStudentExtensionsRelationship( org.webcat.grader.StudentExtension value )
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteStudentExtensionsRelationship("
+                + value + "): was " + studentExtensions() );
+        }
+        removeObjectFromBothSidesOfRelationshipWithKey(
+            value, "studentExtensions" );
+        editingContext().deleteObject( value );
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove (and then delete, if owned) all entities that are members of the
+     * <code>studentExtensions</code> relationship.
+     */
+    public void deleteAllStudentExtensionsRelationships()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug( "deleteAllStudentExtensionsRelationships(): was "
+                + studentExtensions() );
+        }
+        for (org.webcat.grader.StudentExtension object : studentExtensions())
+        {
+            deleteStudentExtensionsRelationship(object);
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve the entities pointed to by the <code>submissions</code>
      * relationship.
      * @return an NSArray of the entities in the relationship
@@ -2209,6 +2492,152 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
+     * Retrieve objects according to the <code>allOpenOfferingsForCourseOffering</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param courseOfferingBinding fetch spec parameter
+     * @param currentTimeBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<AssignmentOffering> allOpenOfferingsForCourseOffering(
+            EOEditingContext context,
+            org.webcat.core.CourseOffering courseOfferingBinding,
+            NSTimestamp currentTimeBinding)
+    {
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("allOpenOfferingsForCourseOffering", "AssignmentOffering");
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if (courseOfferingBinding != null)
+        {
+            bindings.setObjectForKey(courseOfferingBinding,
+                                     "courseOffering");
+        }
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
+
+        NSArray<AssignmentOffering> objects =
+            objectsWithFetchSpecification(context, spec);
+        if (log.isDebugEnabled())
+        {
+            log.debug("allOpenOfferingsForCourseOffering(ec"
+                + ", " + courseOfferingBinding
+                + ", " + currentTimeBinding
+                + "): " + objects);
+        }
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>closedOfferingsForStaff</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param currentTimeBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<AssignmentOffering> closedOfferingsForStaff(
+            EOEditingContext context,
+            NSTimestamp currentTimeBinding,
+            org.webcat.core.User userBinding)
+    {
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("closedOfferingsForStaff", "AssignmentOffering");
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
+        if (userBinding != null)
+        {
+            bindings.setObjectForKey(userBinding,
+                                     "user");
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
+
+        NSArray<AssignmentOffering> objects =
+            objectsWithFetchSpecification(context, spec);
+        if (log.isDebugEnabled())
+        {
+            log.debug("closedOfferingsForStaff(ec"
+                + ", " + currentTimeBinding
+                + ", " + userBinding
+                + "): " + objects);
+        }
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>closedOfferingsForStudent</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param currentTimeBinding fetch spec parameter
+     * @param publishBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<AssignmentOffering> closedOfferingsForStudent(
+            EOEditingContext context,
+            NSTimestamp currentTimeBinding,
+            Integer publishBinding,
+            org.webcat.core.User userBinding)
+    {
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("closedOfferingsForStudent", "AssignmentOffering");
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
+        if (publishBinding != null)
+        {
+            bindings.setObjectForKey(publishBinding,
+                                     "publish");
+        }
+        if (userBinding != null)
+        {
+            bindings.setObjectForKey(userBinding,
+                                     "user");
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
+
+        NSArray<AssignmentOffering> objects =
+            objectsWithFetchSpecification(context, spec);
+        if (log.isDebugEnabled())
+        {
+            log.debug("closedOfferingsForStudent(ec"
+                + ", " + currentTimeBinding
+                + ", " + publishBinding
+                + ", " + userBinding
+                + "): " + objects);
+        }
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
      * Retrieve objects according to the <code>offeringsForCourse</code>
      * fetch specification.
      *
@@ -2285,23 +2714,84 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Retrieve objects according to the <code>offeringsWithUserAsStaff</code>
+     * Retrieve objects according to the <code>openOfferingsForCourseOffering</code>
      * fetch specification.
      *
      * @param context The editing context to use
-     * @param userBinding fetch spec parameter
+     * @param courseOfferingBinding fetch spec parameter
+     * @param currentTimeBinding fetch spec parameter
+     * @param publishBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray<AssignmentOffering> offeringsWithUserAsStaff(
+    public static NSArray<AssignmentOffering> openOfferingsForCourseOffering(
             EOEditingContext context,
-            org.webcat.core.User userBinding)
+            org.webcat.core.CourseOffering courseOfferingBinding,
+            NSTimestamp currentTimeBinding,
+            Integer publishBinding)
     {
         EOFetchSpecification spec = WCFetchSpecification
-            .fetchSpecificationNamed("offeringsWithUserAsStaff", "AssignmentOffering");
+            .fetchSpecificationNamed("openOfferingsForCourseOffering", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
+        if (courseOfferingBinding != null)
+        {
+            bindings.setObjectForKey(courseOfferingBinding,
+                                     "courseOffering");
+        }
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
+        if (publishBinding != null)
+        {
+            bindings.setObjectForKey(publishBinding,
+                                     "publish");
+        }
+        spec = spec.fetchSpecificationWithQualifierBindings(bindings);
+
+        NSArray<AssignmentOffering> objects =
+            objectsWithFetchSpecification(context, spec);
+        if (log.isDebugEnabled())
+        {
+            log.debug("openOfferingsForCourseOffering(ec"
+                + ", " + courseOfferingBinding
+                + ", " + currentTimeBinding
+                + ", " + publishBinding
+                + "): " + objects);
+        }
+        return objects;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve objects according to the <code>openOfferingsForStaff</code>
+     * fetch specification.
+     *
+     * @param context The editing context to use
+     * @param currentTimeBinding fetch spec parameter
+     * @param userBinding fetch spec parameter
+     * @return an NSArray of the entities retrieved
+     */
+    public static NSArray<AssignmentOffering> openOfferingsForStaff(
+            EOEditingContext context,
+            NSTimestamp currentTimeBinding,
+            org.webcat.core.User userBinding)
+    {
+        EOFetchSpecification spec = WCFetchSpecification
+            .fetchSpecificationNamed("openOfferingsForStaff", "AssignmentOffering");
+
+        NSMutableDictionary<String, Object> bindings =
+            new NSMutableDictionary<String, Object>();
+
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
         if (userBinding != null)
         {
             bindings.setObjectForKey(userBinding,
@@ -2313,7 +2803,8 @@ public abstract class _AssignmentOffering
             objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug("offeringsWithUserAsStaff(ec"
+            log.debug("openOfferingsForStaff(ec"
+                + ", " + currentTimeBinding
                 + ", " + userBinding
                 + "): " + objects);
         }
@@ -2323,23 +2814,37 @@ public abstract class _AssignmentOffering
 
     // ----------------------------------------------------------
     /**
-     * Retrieve objects according to the <code>offeringsWithUserAsStudent</code>
+     * Retrieve objects according to the <code>openOfferingsForStudent</code>
      * fetch specification.
      *
      * @param context The editing context to use
+     * @param currentTimeBinding fetch spec parameter
+     * @param publishBinding fetch spec parameter
      * @param userBinding fetch spec parameter
      * @return an NSArray of the entities retrieved
      */
-    public static NSArray<AssignmentOffering> offeringsWithUserAsStudent(
+    public static NSArray<AssignmentOffering> openOfferingsForStudent(
             EOEditingContext context,
+            NSTimestamp currentTimeBinding,
+            Integer publishBinding,
             org.webcat.core.User userBinding)
     {
         EOFetchSpecification spec = WCFetchSpecification
-            .fetchSpecificationNamed("offeringsWithUserAsStudent", "AssignmentOffering");
+            .fetchSpecificationNamed("openOfferingsForStudent", "AssignmentOffering");
 
         NSMutableDictionary<String, Object> bindings =
             new NSMutableDictionary<String, Object>();
 
+        if (currentTimeBinding != null)
+        {
+            bindings.setObjectForKey(currentTimeBinding,
+                                     "currentTime");
+        }
+        if (publishBinding != null)
+        {
+            bindings.setObjectForKey(publishBinding,
+                                     "publish");
+        }
         if (userBinding != null)
         {
             bindings.setObjectForKey(userBinding,
@@ -2351,7 +2856,9 @@ public abstract class _AssignmentOffering
             objectsWithFetchSpecification(context, spec);
         if (log.isDebugEnabled())
         {
-            log.debug("offeringsWithUserAsStudent(ec"
+            log.debug("openOfferingsForStudent(ec"
+                + ", " + currentTimeBinding
+                + ", " + publishBinding
                 + ", " + userBinding
                 + "): " + objects);
         }

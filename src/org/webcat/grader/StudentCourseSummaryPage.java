@@ -21,6 +21,7 @@
 
 package org.webcat.grader;
 
+import java.util.Map;
 import org.apache.log4j.Logger;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
@@ -138,9 +139,26 @@ public class StudentCourseSummaryPage
         NSArray<Assignment> assignments = Assignment.objectsMatchingQualifier(
                 localContext(), Assignment.courses.is(courseToFetch));
 
-        NSMutableArray<AssignmentOffering> assignmentOfferings =
+        NSMutableArray<AssignmentOffering> allAOs =
             new NSMutableArray<AssignmentOffering>();
+        NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
+            new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
+        NSArray<User> selectedStudentArray = new NSArray<User>(selectedStudent);
 
+        for (Assignment assignment : assignments)
+        {
+            for (AssignmentOffering ao : assignment.offerings())
+            {
+                allAOs.addObject(ao);
+                usersByAO.setObjectForKey(selectedStudentArray, ao);
+            }
+        }
+
+        Submission.SubmissionGradingState state =
+            Submission.submissionsForGrading(allAOs, usersByAO);
+
+        NSMutableArray<AssignmentOffering> displayOfferings =
+            new NSMutableArray<AssignmentOffering>();
         NSMutableDictionary<AssignmentOffering, Submission> submissions =
             new NSMutableDictionary<AssignmentOffering, Submission>();
 
@@ -169,14 +187,15 @@ public class StudentCourseSummaryPage
                     }
                 }
 
-                NSArray<Submission> subs =
-                    Submission.submissionsForGrading(
-                        localContext(), ao, selectedStudent);
+                Map<User, Submission.StudentSubmissionInfo> infoMap =
+                    state.resultsForOffering(ao);
+                NSArray<UserSubmissionPair> pairs =
+                    UserSubmissionPair.fromInfoMap(infoMap, false, null);
 
-                if (subs.size() > 0)
+                if (pairs.size() > 0 && pairs.objectAtIndex(0).userHasSubmission())
                 {
                     foundSubmission = true;
-                    assignmentOfferings.addObject(ao);
+                    displayOfferings.addObject(ao);
                     if (ao.assignment().usesTestingScore())
                     {
                         anyAssignmentUsesTestingScore = true;
@@ -193,13 +212,14 @@ public class StudentCourseSummaryPage
                     {
                         anyAssignmentUsesBonusesOrPenalties = true;
                     }
-                    submissions.setObjectForKey(subs.objectAtIndex(0), ao);
+                    submissions.setObjectForKey(
+                        pairs.objectAtIndex(0).submission(), ao);
                 }
             }
 
             if (!foundSubmission && homeAssignmentOffering != null)
             {
-                assignmentOfferings.addObject(homeAssignmentOffering);
+                displayOfferings.addObject(homeAssignmentOffering);
             }
         }
         int extraColCount = 0;
@@ -221,18 +241,31 @@ public class StudentCourseSummaryPage
         }
         anyAssignmentUsesExtraColumns = (extraColCount > 1);
 
-        assignmentOfferingsDisplayGroup.setObjectArray(assignmentOfferings);
+        assignmentOfferingsDisplayGroup.setObjectArray(displayOfferings);
         //assignmentOfferingsDisplayGroup.fetch();
 
         submissionsByAssignmentOffering = submissions;
 
         if (selectedAssignmentOffering != null)
         {
-            submissionDisplayGroup.setObjectArray(
-                Submission.submissionsForAssignmentOfferingAndUser(
-                    localContext(),
-                    selectedAssignmentOffering,
-                    selectedStudent));
+            // We can also use the state here to avoid another fetch for
+            // submissionDisplayGroup if we want, but that fetch is for
+            // ALL submissions of a single student for ONE offering.
+            // For now, let's keep the single offering fetch as is, or
+            // pull it from the StudentSubmissionInfo.allSubmissions.
+            Map<User, Submission.StudentSubmissionInfo> infoMap =
+                state.resultsForOffering(selectedAssignmentOffering);
+            Submission.StudentSubmissionInfo info = (infoMap != null)
+                ? infoMap.get(selectedStudent) : null;
+            
+            if (info != null && info.allSubmissions() != null)
+            {
+                submissionDisplayGroup.setObjectArray(info.allSubmissions());
+            }
+            else
+            {
+                submissionDisplayGroup.setObjectArray(NSArray.EmptyArray);
+            }
         }
         else
         {

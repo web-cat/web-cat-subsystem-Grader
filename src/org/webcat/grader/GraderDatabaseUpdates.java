@@ -715,6 +715,26 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Add student extension table and extra data fields to assignment
+     * offering.
+     * @throws SQLException on error
+     */
+    public void updateIncrement39() throws SQLException
+    {
+        database().executeSQL(
+            "alter table TASSIGNMENTOFFERING add "
+            + "(opensOn DATETIME, "
+            + "closesOn DATETIME, "
+            + "minOpensOn DATETIME, "
+            + "maxClosesOn DATETIME)");
+        createIndexFor("TASSIGNMENTOFFERING", "minOpensOn");
+        createIndexFor("TASSIGNMENTOFFERING", "maxClosesOn");
+        createStudentExtensionTable();
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
@@ -1188,7 +1208,7 @@ public class GraderDatabaseUpdates
         {
             log.info("creating table TimeBank");
             database().executeSQL(
-                "CREATE TABLE PageViewLog "
+                "CREATE TABLE TimeBank "
                 + "(OID INTEGER NOT NULL, "
                 + "available INTEGER NOT NULL, "
                 + "courseOfferingId INTEGER NOT NULL, "
@@ -1201,6 +1221,33 @@ public class GraderDatabaseUpdates
             createIndexFor("TimeBank", "courseOfferingId");
             createIndexFor("TimeBank", "submissionProfileId");
             createIndexFor("TimeBank", "name");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the TimeBank table, if needed.
+     * @throws SQLException on error
+     */
+    private void createStudentExtensionTable()
+        throws SQLException
+    {
+        if (!database().hasTable("StudentExtension"))
+        {
+            log.info("creating table StudentExtension");
+            database().executeSQL(
+                "CREATE TABLE StudentExtension "
+                + "(OID INTEGER NOT NULL, "
+                + "assignmentOfferingId INTEGER NOT NULL, "
+                + "userId INTEGER NOT NULL, "
+                + "opensOn DATETIME, "
+                + "dueDate DATETIME, "
+                + "closesOn DATETIME )");
+            database().executeSQL(
+                "ALTER TABLE StudentExtension ADD PRIMARY KEY (OID)");
+            createIndexFor("StudentExtension", "userId");
+            createIndexFor("TimeBank", "assignmentOfferingId");
         }
     }
 }

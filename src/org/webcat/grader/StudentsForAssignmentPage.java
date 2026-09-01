@@ -143,49 +143,60 @@ public class StudentsForAssignmentPage
         NSMutableArray<Submission> staffSubs =
             new NSMutableArray<Submission>();
         NSArray<User> admins = User.administrators(localContext());
-        
-        // Prefetch everything to see if there is a speedup
-        WCFetchSpecification<Submission> allSubmissionsFS =
-            new WCFetchSpecification<Submission>(
-                Submission.ENTITY_NAME,
-                Submission.assignmentOffering.in(offerings.displayedObjects()),
-                null);
-        allSubmissionsFS.setPrefetchingRelationshipKeyPaths(
-            new NSArray<String>(new String[]{"user", "result"}));
-        allSubmissionsFS.setIsDeep(true);
-        NSArray<Submission> allSubmissions = Submission
-            .objectsWithFetchSpecification(localContext(), allSubmissionsFS);
-        log_time("beforeAppendToResponse() after prefetch");
 
-        for (AssignmentOffering ao : offerings.displayedObjects())
+        NSArray<AssignmentOffering> aos = offerings.displayedObjects();
+        NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
+            new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
+
+        for (AssignmentOffering ao : aos)
         {
-            log_time("beforeAppendToResponse() ao = " + ao.titleString());
-            // Stuff the index variable into the public key so the group/stats
-            // methods will work for us
-            assignmentOffering = ao;
-            NSArray<UserSubmissionPair> subs =
-                Submission.submissionsForGrading(
-                        localContext(),
-                        ao,
-                        true,  // omitPartners
-                        omitStaff,
-                        studentStats());
-            userGroup().setObjectArray(subs);
-            log_time("beforeAppendToResponse() all subs, ao = " + ao.titleString());
+            NSArray<User> students = omitStaff
+                ? ao.courseOffering().studentsWithoutStaff()
+                : ao.courseOffering().studentsAndStaff();
 
+            NSArray<User> staff = ERXArrayUtilities
+                .arrayByAddingObjectsFromArrayWithoutDuplicates(
+                    ao.courseOffering().staff(),
+                    admins);
+
+            NSArray<User> allForAO = ERXArrayUtilities
+                .arrayByAddingObjectsFromArrayWithoutDuplicates(students, staff);
+
+            usersByAO.setObjectForKey(allForAO, ao);
+        }
+
+        Submission.SubmissionGradingState state =
+            Submission.submissionsForGrading(aos, usersByAO);
+        log_time("beforeAppendToResponse() after batch fetch");
+
+        for (AssignmentOffering ao : aos)
+        {
+            assignmentOffering = ao;
+            Map<User, Submission.StudentSubmissionInfo> infoMap =
+                state.resultsForOffering(ao);
+            if (infoMap == null || infoMap.isEmpty()) { continue; }
+
+            // Student group
+            NSArray<User> students = omitStaff
+                ? ao.courseOffering().studentsWithoutStaff()
+                : ao.courseOffering().studentsAndStaff();
+
+            NSArray<UserSubmissionPair> studentPairs =
+                UserSubmissionPair.fromInfoMap(
+                    infoMap, students, true, studentStats());
+            userGroup().setObjectArray(studentPairs);
+
+            // Staff group
             @SuppressWarnings("unchecked")
             NSArray<User> staff = ERXArrayUtilities
                 .arrayByAddingObjectsFromArrayWithoutDuplicates(
                     ao.courseOffering().staff(),
                     admins);
-            staffSubs.addAll(extractSubmissions(
-                    Submission.submissionsForGrading(
-                            localContext(),
-                            ao,
-                            true,  // omitPartners
-                            staff,
-                            null)));
-            log_time("beforeAppendToResponse() staff, ao = " + ao.titleString());
+
+            NSArray<UserSubmissionPair> staffPairs =
+                UserSubmissionPair.fromInfoMap(
+                    infoMap, staff, true, null);
+            staffSubs.addAll(extractSubmissions(staffPairs));
         }
 
         staffSubmissionGroup.setObjectArray(staffSubs);

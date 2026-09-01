@@ -27,6 +27,10 @@
         {className = "org.webcat.grader.ResultOutcome"; name = ResultOutcome; }, 
         {className = "org.webcat.grader.Step"; name = Step; }, 
         {className = "org.webcat.grader.StepConfig"; name = StepConfig; }, 
+        {
+            className = "org.webcat.grader.StudentExtension"; 
+            name = StudentExtension; 
+        }, 
         {className = "org.webcat.grader.Submission"; name = Submission; }, 
         {
             className = "org.webcat.grader.SubmissionFileComment"; 

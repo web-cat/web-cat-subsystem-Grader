@@ -1,0 +1,63 @@
+{
+    attributes = (
+        {
+            allowsNull = N;
+            columnName = assignmentOfferingId;
+            name = assignmentOfferingId;
+            prototypeName = foreignId;
+        },
+        {
+            columnName = closesOn;
+            name = closesOn;
+            prototypeName = dateTime;
+        },
+        {
+            columnName = dueDate;
+            name = dueDate;
+            prototypeName = dateTime;
+        },
+        {allowsNull = N; name = id; prototypeName = id; },
+        {
+            columnName = opensOn;
+            name = opensOn;
+            prototypeName = dateTime;
+        },
+        {
+            allowsNull = N;
+            columnName = userId;
+            name = userId;
+            prototypeName = foreignId;
+        }
+    );
+    attributesUsedForLocking = (assignmentOfferingId, userId);
+    className = "org.webcat.grader.StudentExtension";
+    classProperties = (
+        assignmentOffering,
+        closesOn,
+        dueDate,
+        opensOn,
+        user
+    );
+    externalName = StudentExtension;
+    fetchSpecificationDictionary = {};
+    name = StudentExtension;
+    primaryKeyAttributes = (id);
+    relationships = (
+        {
+            destination = AssignmentOffering;
+            isMandatory = Y;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = assignmentOfferingId; });
+            name = assignmentOffering;
+        },
+        {
+            destination = User;
+            isMandatory = Y;
+            isToMany = N;
+            joinSemantic = EOInnerJoin;
+            joins = ({destinationAttribute = id; sourceAttribute = userId; });
+            name = user;
+        }
+    );
+}

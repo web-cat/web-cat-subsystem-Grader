@@ -2415,7 +2415,14 @@ public class Submission
             new WCFetchSpecification<Submission>(
                 ENTITY_NAME, qual, null);
         fetchSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
-            new String[] { RESULT_KEY }));
+            new String[] {
+                RESULT_KEY,
+                USER_KEY,
+                ASSIGNMENT_OFFERING_KEY,
+                ASSIGNMENT_OFFERING_KEY + "." + AssignmentOffering.COURSE_OFFERING_KEY,
+                RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY,
+                RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY + "." + USER_KEY
+            }));
         fetchSpec.setIsDeep(true);
 
         NSArray<Submission> fetchedSubmissions =

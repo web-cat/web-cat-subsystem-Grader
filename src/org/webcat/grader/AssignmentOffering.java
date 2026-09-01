@@ -21,11 +21,14 @@ package org.webcat.grader;
 
 import com.webobjects.eocontrol.*;
 import com.webobjects.foundation.*;
+import er.extensions.eof.ERXFetchSpecification;
 import er.extensions.eof.ERXKey;
 import er.extensions.eof.ERXQ;
 import er.extensions.eof.qualifiers.ERXInQualifier;
 import er.extensions.foundation.ERXArrayUtilities;
 import er.extensions.foundation.ERXValueUtilities;
+import er.extensions.qualifiers.ERXAndQualifier;
+import er.extensions.qualifiers.ERXOrQualifier;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
@@ -83,6 +86,232 @@ public class AssignmentOffering
         result.setAssignmentRelationship(forAssignment);
         result.setCourseOfferingRelationship(forCourseOffering);
         return result;
+    }
+
+
+    // ========================================================================
+    // Static Query & Retrieval Methods in AssignmentOffering.java
+    // ========================================================================
+
+    /**
+     * Standard relationship keypaths to prefetch on all AssignmentOffering
+     * queries to eliminate N+1 lazy faulting during page rendering and
+     * deadline calculation.
+     */
+    public static final NSArray<String> DEFAULT_PREFETCH_KEYPATHS =
+        new NSArray<String>(new String[] {
+            ASSIGNMENT_KEY,
+            ASSIGNMENT_KEY + "." + Assignment.SUBMISSION_PROFILE_KEY,
+            COURSE_OFFERING_KEY,
+            COURSE_OFFERING_KEY + "." + CourseOffering.COURSE_KEY,
+            COURSE_OFFERING_KEY + "." + CourseOffering.SEMESTER_KEY
+        });
+
+
+    // ----------------------------------------------------------
+    /**
+     * Execute a fetch specification with relationship prefetching.
+     */
+    public static NSArray<AssignmentOffering> fetchWithPrefetch(
+        EOEditingContext ec,
+        EOQualifier qualifier,
+        NSArray<EOSortOrdering> sortOrderings)
+    {
+        ERXFetchSpecification<AssignmentOffering> fspec =
+            new ERXFetchSpecification<AssignmentOffering>(
+                ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setPrefetchingRelationshipKeyPaths(DEFAULT_PREFETCH_KEYPATHS);
+        return ec.objectsWithFetchSpecification(fspec);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Canonical qualifier matching assignment offerings that are currently
+     * open (minOpensOn is null OR minOpensOn <= currentTime) AND
+     * maxClosesOn > currentTime.
+     */
+    public static EOQualifier openQualifier(NSTimestamp currentTime)
+    {
+        return minOpensOn.isNull()
+            .or(minOpensOn.lessThanOrEqualTo(currentTime))
+            .and(maxClosesOn.greaterThan(currentTime));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Canonical qualifier matching assignment offerings that are closed
+     * (maxClosesOn <= currentTime).
+     */
+    public static EOQualifier closedQualifier(NSTimestamp currentTime)
+    {
+        return maxClosesOn.lessThanOrEqualTo(currentTime);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve all active, open assignment offerings for a user (combines
+     * student offerings that are published and open, plus course staff
+     * offerings) with prefetching for assignment, profile, course, and
+     * semester.
+     *
+     * @param ec the editing context
+     * @param user the user (student or instructor/grader)
+     * @param currentTime the reference timestamp
+     * @return array of open AssignmentOfferings
+     */
+    public static NSArray<AssignmentOffering> openOfferingsForUser(
+        EOEditingContext ec, User user, NSTimestamp currentTime)
+    {
+        if (ec == null || user == null)
+        {
+            return NSArray.emptyArray();
+        }
+
+        // 1. Fetch published offerings open for student (with prefetching)
+        EOQualifier studentQual = publish.isTrue()
+            .and(courseOffering.dot(CourseOffering.students).is(user))
+            .and(openQualifier(currentTime));
+
+        NSMutableArray<AssignmentOffering> results =
+            new NSMutableArray<AssignmentOffering>(
+                fetchWithPrefetch(ec, studentQual,
+                    new NSArray<EOSortOrdering>(dueDate.asc())));
+
+        // 2. Add offerings where user has staff privileges and offering is
+        // still active
+        EOQualifier staffQual = courseOffering.dot(CourseOffering.instructors)
+            .is(user)
+            .or(courseOffering.dot(CourseOffering.graders).is(user))
+            .and(maxClosesOn.greaterThan(currentTime));
+
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, fetchWithPrefetch(ec, staffQual,
+                new NSArray<EOSortOrdering>(dueDate.asc())));
+
+        return results;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve closed/past assignment offerings for a user, optionally
+     * restricted to a specific semester (with prefetching).
+     *
+     * @param ec the editing context
+     * @param user the user
+     * @param semester optional semester filter (may be null)
+     * @param currentTime the reference timestamp
+     * @return array of closed AssignmentOfferings
+     */
+    public static NSArray<AssignmentOffering> closedOfferingsForUser(
+        EOEditingContext ec,
+        User user,
+        Semester semester,
+        NSTimestamp currentTime)
+    {
+        if (ec == null || user == null)
+        {
+            return NSArray.emptyArray();
+        }
+
+        ERXOrQualifier baseUserQual =
+            courseOffering.dot(CourseOffering.students)
+            .is(user)
+            .or(courseOffering.dot(CourseOffering.instructors).is(user))
+            .or(courseOffering.dot(CourseOffering.graders).is(user));
+
+        ERXAndQualifier closedQual =
+            baseUserQual.and(closedQualifier(currentTime));
+        if (semester != null)
+        {
+            closedQual = closedQual.and(
+                courseOffering.dot(CourseOffering.semester).is(semester));
+        }
+
+        return fetchWithPrefetch(ec, closedQual,
+            new NSArray<EOSortOrdering>(dueDate.desc()));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve assignment offerings for a specific course offering,
+     * automatically applying student vs. staff visibility and open status
+     * filters (with prefetching).
+     *
+     * @param ec the editing context
+     * @param aCourseOffering the course offering
+     * @param user the current user
+     * @param onlyOpen whether to restrict to currently open assignments
+     * @param currentTime the reference timestamp
+     * @return array of AssignmentOfferings
+     */
+    public static NSArray<AssignmentOffering> offeringsForCourseOffering(
+        EOEditingContext ec,
+        CourseOffering aCourseOffering,
+        User user,
+        boolean onlyOpen,
+        NSTimestamp currentTime)
+    {
+        if (ec == null || courseOffering == null)
+        {
+            return NSArray.emptyArray();
+        }
+
+        boolean isStaff = (user != null)
+            && (aCourseOffering.isInstructor(user)
+                || aCourseOffering.isGrader(user));
+
+        NSMutableArray<EOQualifier> quals = new NSMutableArray<EOQualifier>();
+        quals.addObject(courseOffering.is(aCourseOffering));
+
+        if (!isStaff)
+        {
+            quals.addObject(publish.isTrue());
+        }
+
+        if (onlyOpen)
+        {
+            if (!isStaff)
+            {
+                quals.addObject(openQualifier(currentTime));
+            }
+            else
+            {
+                quals.addObject(maxClosesOn.greaterThan(currentTime));
+            }
+        }
+
+        return fetchWithPrefetch(ec, new ERXAndQualifier(quals),
+            new NSArray<EOSortOrdering>(dueDate.asc()));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Submitter engine object retrieval (direct API / IDE plugin).
+     */
+    // FIXME: needs to be put into the other static method with this
+    // name, which uses the old style filtering
+    public static NSArray<AssignmentOffering> objectsForSubmitterEngine(
+        EOEditingContext context, boolean showAll, NSTimestamp currentTime)
+    {
+        EOQualifier qualifier;
+        if (showAll)
+        {
+            qualifier = maxClosesOn.greaterThan(
+                Semester.forDate(context, currentTime).semesterStartDate());
+        }
+        else
+        {
+            qualifier = openQualifier(currentTime);
+        }
+
+        return fetchWithPrefetch(context, qualifier,
+            new NSArray<EOSortOrdering>(dueDate.asc()));
     }
 
 
@@ -189,21 +418,37 @@ public class AssignmentOffering
      * @param user The user to check for
      * @return The final deadline as a timestamp
      */
-    public boolean userCanSubmit( User user )
+    public boolean userCanSubmit(User user)
     {
-        boolean result = false;
-        if ( courseOffering().instructors().containsObject( user )
-             || courseOffering().graders().containsObject( user ) )
+        return userCanSubmit(user, new NSTimestamp());
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean userCanSubmit(User user, NSTimestamp currentTime)
+    {
+        if (user == null || courseOffering() == null)
         {
-            result = true;
+            return false;
         }
-        else if ( publish() )
+
+        // Course staff (instructors, graders) and admins can always submit
+        if (user.hasAdminPrivileges()
+            || courseOffering().isInstructor(user)
+            || courseOffering().isGrader(user))
         {
-            NSTimestamp now = new NSTimestamp();
-            result = availableFrom().before( now )
-                && lateDeadline().after( now );
+            return true;
         }
-        return result;
+
+        // Students must be enrolled, assignment must be published,
+        // and currentTime must be
+        // within [openingDateFor(user), lateDeadlineFor(user)]
+        if (publish() && courseOffering().students().contains(user))
+        {
+            return isOpenFor(user, currentTime);
+        }
+
+        return false;
     }
 
 
@@ -722,6 +967,145 @@ public class AssignmentOffering
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Retrieve the student extension for the given user on this offering, if
+     * one exists. Evaluates over the in-memory studentExtensions relationship
+     * to prevent N+1 queries.
+     */
+    public StudentExtension extensionForUser(User user)
+    {
+        if (user == null)
+        {
+            return null;
+        }
+
+        NSArray<StudentExtension> exts = studentExtensions();
+        if (exts != null && exts.count() > 0)
+        {
+            EOQualifier hasUser = StudentExtension.user.is(user);
+            for (StudentExtension ext : exts)
+            {
+                if (hasUser.evaluateWithObject(ext))
+                {
+                    return ext;
+                }
+            }
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Effective opening date for a specific student.
+     */
+    public NSTimestamp openingDateFor(User user)
+    {
+        StudentExtension ext = extensionForUser(user);
+        if (ext != null && ext.opensOn() != null)
+        {
+            return ext.opensOn();
+        }
+        return opensOn();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Effective due date (soft deadline) for a specific student.
+     */
+    public NSTimestamp dueDateFor(User user)
+    {
+        StudentExtension ext = extensionForUser(user);
+        if (ext != null && ext.dueDate() != null)
+        {
+            return ext.dueDate();
+        }
+        return dueDate();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Effective hard deadline (cutoff) for a specific student.
+     * 3-Tier Resolution:
+     *   Tier 1: Explicit student extension hard deadline (ext.closesOn)
+     *   Tier 2: Max of base offering closing deadline OR (student soft deadline + deadTimeDelta)
+     *   Tier 3: Base offering closing deadline (closesOn)
+     */
+    public NSTimestamp lateDeadlineFor(User user)
+    {
+        StudentExtension ext = extensionForUser(user);
+        NSTimestamp baseLate = (closesOn() != null) ? closesOn() : lateDeadline();
+
+        if (ext != null)
+        {
+            // Tier 1: Explicit extension hard deadline override
+            if (ext.closesOn() != null)
+            {
+                return ext.closesOn();
+            }
+
+            // Tier 2: Extended soft deadline + dead window
+            if (ext.dueDate() != null)
+            {
+                SubmissionProfile profile = (assignment() != null)
+                    ? assignment().submissionProfile() : null;
+                long deadDelta = (profile != null) ? profile.deadTimeDelta() : 0L;
+                NSTimestamp extLate = (deadDelta > 0)
+                    ? new NSTimestamp(deadDelta, ext.dueDate()) : ext.dueDate();
+
+                if (baseLate == null || extLate.after(baseLate))
+                {
+                    return extLate;
+                }
+            }
+        }
+
+        // Tier 3: Base offering closing deadline
+        return baseLate;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Predicate checking if this offering is open for a specific user at currentTime.
+     */
+    public boolean isOpenFor(User user, NSTimestamp currentTime)
+    {
+        NSTimestamp open = openingDateFor(user);
+        NSTimestamp close = lateDeadlineFor(user);
+
+        boolean afterOpen = (open == null) || !currentTime.before(open);
+        boolean beforeClose = (close == null) || currentTime.before(close);
+
+        return afterOpen && beforeClose;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Predicate checking if this offering has closed for a specific user.
+     */
+    public boolean isClosedFor(User user, NSTimestamp currentTime)
+    {
+        NSTimestamp close = lateDeadlineFor(user);
+        return close != null && !currentTime.before(close);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Predicate checking if this offering is not yet available to a specific user.
+     */
+    public boolean isUnavailableFor(User user, NSTimestamp currentTime)
+    {
+        NSTimestamp open = openingDateFor(user);
+        return open != null && open.after(currentTime);
+    }
+
+
     //~ Public Static Methods .................................................
 
     // ----------------------------------------------------------
@@ -1157,6 +1541,7 @@ public class AssignmentOffering
     public void willInsert()
     {
         setLastModified(new NSTimestamp());
+        updateTimes();
         org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         super.willInsert();
     }
@@ -1176,12 +1561,19 @@ public class AssignmentOffering
     public void willUpdate()
     {
         setLastModified(new NSTimestamp());
-//        NSDictionary<String, Object> changes = changedProperties();
 
         // Flush assignment definitions, if needed
-//        if (changes.containsKey(DUE_DATE_KEY)
-//            || changes.containsKey(CLOSED_ON_DATE_KEY)
-//            || changes.containsKey(PUBLISH_KEY))
+        NSDictionary<String, Object> changes = changedProperties();
+        if (changes.containsKey(DUE_DATE_KEY)
+            || changes.containsKey(ASSIGNMENT_KEY))
+        {
+            updateTimes();
+        }
+        changes = changedProperties();
+        if (changes.containsKey(DUE_DATE_KEY)
+            || changes.containsKey(CLOSES_ON_KEY)
+            || changes.containsKey(OPENS_ON_KEY)
+            || changes.containsKey(PUBLISH_KEY))
         {
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         }
@@ -1207,6 +1599,276 @@ public class AssignmentOffering
         }
 
         super.willUpdate();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Update the baseline defaults (opensOn, closesOn) and the aggregate
+     * bounds (minOpensOn, maxClosesOn) given a SubmissionProfile.
+     *
+     * Employs an intelligent fast-path:
+     *   - If baseOpen is null (no availableTimeDelta): opensOn and minOpensOn
+     *     are set to null (always open).
+     *   - If no extensions exist: minOpensOn = baseOpen,
+     *     maxClosesOn = baseClose (O(1)).
+     *   - If baseOpen expands earlier than currentMinOpensOn:
+     *     minOpensOn = baseOpen (O(1)).
+     *   - If baseOpen contracts/moves later: scans non-deleted extensions
+     *     for true minimum.
+     *   - maxClosesOn is updated across extensions as deadTimeDelta shifts
+     *     soft extension cutoffs.
+     *
+     * @param profile the submission profile containing availability and
+     *        dead deltas
+     */
+    public void updateTimes(SubmissionProfile profile)
+    {
+        NSTimestamp myDueDate = dueDate();
+        if (myDueDate == null || profile == null)
+        {
+            setOpensOn(null);
+            setClosesOn(null);
+            setMinOpensOn(null);
+            setMaxClosesOn(null);
+            return;
+        }
+
+        long availDelta = profile.availableTimeDelta();
+        long deadDelta = profile.deadTimeDelta();
+
+        // 1. Calculate global baseline default open and close dates
+        // Null baseOpen indicates no opening constraint (always open)
+        NSTimestamp baseOpen = (availDelta > 0)
+            ? new NSTimestamp(-availDelta, myDueDate)
+                : null;
+        NSTimestamp baseClose = (deadDelta > 0)
+            ? new NSTimestamp(deadDelta, myDueDate)
+                : myDueDate;
+
+        setOpensOn(baseOpen);
+        setClosesOn(baseClose);
+
+        NSArray<StudentExtension> exts = studentExtensions();
+
+        // 2. Calculate minOpensOn
+        if (baseOpen == null)
+        {
+            // When baseline is always open, the aggregate envelope is also
+            // always open
+            setMinOpensOn(null);
+        }
+        else if (exts == null || exts.count() == 0)
+        {
+            setMinOpensOn(baseOpen);
+        }
+        else
+        {
+            NSTimestamp currentMinOpen = minOpensOn();
+            if (currentMinOpen != null && baseOpen.before(currentMinOpen))
+            {
+                // Window expanded earlier than any existing extension or
+                // previous baseline
+                setMinOpensOn(baseOpen);
+            }
+            else
+            {
+                // Window contracted or moved later: scan extensions for the
+                // true minimum
+                NSTimestamp earliestOpen = baseOpen;
+                for (StudentExtension ext : exts)
+                {
+                    if (!ext.isDeletedEO() && ext.opensOn() != null)
+                    {
+                        if (earliestOpen == null
+                            || ext.opensOn().before(earliestOpen))
+                        {
+                            earliestOpen = ext.opensOn();
+                        }
+                    }
+                }
+                setMinOpensOn(earliestOpen);
+            }
+        }
+
+        // 3. Calculate maxClosesOn (deadDelta changes shift soft extension
+        // deadlines)
+        if (exts == null || exts.count() == 0)
+        {
+            setMaxClosesOn(baseClose);
+            return;
+        }
+
+        NSTimestamp latestClose = baseClose;
+        for (StudentExtension ext : exts)
+        {
+            if (ext.isDeletedEO())
+            {
+                continue;
+            }
+
+            if (ext.closesOn() != null)
+            {
+                if (latestClose == null || ext.closesOn().after(latestClose))
+                {
+                    latestClose = ext.closesOn();
+                }
+            }
+            else if (ext.dueDate() != null)
+            {
+                NSTimestamp extLate = (deadDelta > 0)
+                    ? new NSTimestamp(deadDelta, ext.dueDate())
+                        : ext.dueDate();
+                if (latestClose == null || extLate.after(latestClose))
+                {
+                    latestClose = extLate;
+                }
+            }
+        }
+        setMaxClosesOn(latestClose);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Update the aggregate availability bounds (minOpensOn, maxClosesOn)
+     * given a specific StudentExtension that was created, modified, or
+     * marked for deletion.
+     *
+     * @param ext the student extension triggering the update
+     */
+    public void updateTimes(StudentExtension ext)
+    {
+        if (ext == null) { return; }
+        NSTimestamp myDueDate = dueDate();
+        if (myDueDate == null)
+        {
+            setMinOpensOn(null);
+            setMaxClosesOn(null);
+            return;
+        }
+
+        // Ensure baseline closesOn exists; if not, do full profile update
+        if (closesOn() == null)
+        {
+            updateTimes(assignment().submissionProfile());
+            return;
+        }
+
+        SubmissionProfile profile = assignment().submissionProfile();
+        long deadDelta = (profile != null) ? profile.deadTimeDelta() : 0L;
+
+        // 1. Update minOpensOn
+        if (opensOn() == null)
+        {
+            // Baseline is always open
+            setMinOpensOn(null);
+        }
+        else
+        {
+            NSTimestamp currentMinOpen = minOpensOn();
+            // Fast-path: Check if the extension expands the opening window
+            if (ext.editingContext() != null && !ext.isDeletedEO()
+                && ext.opensOn() != null)
+            {
+                if (currentMinOpen == null
+                    || ext.opensOn().before(currentMinOpen))
+                {
+                    setMinOpensOn(ext.opensOn());
+                }
+            }
+            else
+            {
+                // Contraction / deletion / null check: scan all non-deleted
+                // extensions
+                NSTimestamp earliestOpen = opensOn();
+                NSArray<StudentExtension> exts = studentExtensions();
+                if (exts != null && exts.count() > 0)
+                {
+                    for (StudentExtension studentExt : exts)
+                    {
+                        if (!studentExt.isDeletedEO()
+                            && studentExt.opensOn() != null)
+                        {
+                            if (earliestOpen == null
+                                || studentExt.opensOn().before(earliestOpen))
+                            {
+                                earliestOpen = studentExt.opensOn();
+                            }
+                        }
+                    }
+                }
+                setMinOpensOn(earliestOpen);
+            }
+        }
+
+        // 2. Update maxClosesOn
+        // Fast-path evaluation: Check if the extension expands maxClosesOn
+        if (ext.editingContext() != null && !ext.isDeletedEO())
+        {
+            NSTimestamp extClose = ext.closesOn();
+            if (extClose == null && ext.dueDate() != null)
+            {
+                extClose = (deadDelta > 0)
+                    ? new NSTimestamp(deadDelta, ext.dueDate())
+                        : ext.dueDate();
+            }
+
+            NSTimestamp currentMaxClose = maxClosesOn();
+            if (extClose != null
+                && (currentMaxClose == null
+                || extClose.after(currentMaxClose)))
+            {
+                setMaxClosesOn(extClose);
+                return;
+            }
+        }
+
+        // Fallback/Contraction/Deletion: Full scan across all non-deleted
+        // extensions
+        NSTimestamp latestClose = closesOn();
+        NSArray<StudentExtension> exts = studentExtensions();
+        if (exts != null && exts.count() > 0)
+        {
+            for (StudentExtension studentExt : exts)
+            {
+                if (studentExt.isDeletedEO())
+                {
+                    continue;
+                }
+
+                if (studentExt.closesOn() != null)
+                {
+                    if (latestClose == null
+                        || studentExt.closesOn().after(latestClose))
+                    {
+                        latestClose = studentExt.closesOn();
+                    }
+                }
+                else if (studentExt.dueDate() != null)
+                {
+                    NSTimestamp extLate = (deadDelta > 0)
+                        ? new NSTimestamp(deadDelta, studentExt.dueDate())
+                            : studentExt.dueDate();
+                    if (latestClose == null || extLate.after(latestClose))
+                    {
+                        latestClose = extLate;
+                    }
+                }
+            }
+        }
+        setMaxClosesOn(latestClose);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Convenience method to recalculate all 4 availability timestamps using
+     * this offering's assignment's SubmissionProfile.
+     */
+    public void updateTimes()
+    {
+        updateTimes(assignment().submissionProfile());
     }
 
 

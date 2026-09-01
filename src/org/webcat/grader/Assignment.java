@@ -199,12 +199,21 @@ public class Assignment
     @Override
     public void willUpdate()
     {
-//        NSDictionary<String, Object> changes = changedProperties();
+        NSDictionary<String, Object> changes = changedProperties();
 
         // Flush assignment definitions, if needed
-//        if (changes.containsKey(NAME_KEY)
-//            || changes.containsKey(SHORT_DESCRIPTION_KEY))
+        if (changes.containsKey(NAME_KEY)
+            || changes.containsKey(SHORT_DESCRIPTION_KEY)
+            || changes.containsKey(SUBMISSION_PROFILE_KEY))
         {
+            if (changes.containsKey(SUBMISSION_PROFILE_KEY))
+            {
+                SubmissionProfile profile = submissionProfile();
+                for (AssignmentOffering offering : offerings())
+                {
+                    offering.updateTimes(profile);
+                }
+            }
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         }
         super.willUpdate();

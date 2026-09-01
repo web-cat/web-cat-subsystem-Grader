@@ -94,9 +94,24 @@ public class SubmissionProfile
     {
         NSDictionary<String, Object> changes = changedProperties();
         // Flush assignment definitions, if needed
-//        if (changes.containsKey(AVAILABLE_TIME_DELTA_KEY)
-//            || changes.containsKey(DEAD_TIME_DELTA_KEY))
+        if (changes.containsKey(AVAILABLE_TIME_DELTA_KEY)
+            || changes.containsKey(DEAD_TIME_DELTA_KEY))
         {
+            EOEditingContext ec = editingContext();
+            if (ec != null)
+            {
+                NSArray<Assignment> assignments = assignment();
+                if (assignments != null && assignments.count() > 0)
+                {
+                    for (Assignment a : assignments)
+                    {
+                        for (AssignmentOffering offering : a.offerings())
+                        {
+                            offering.updateTimes(this);
+                        }
+                    }
+                }
+            }
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();
         }
         super.willUpdate();
