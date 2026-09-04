@@ -2417,11 +2417,7 @@ public class Submission
         fetchSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
             new String[] {
                 RESULT_KEY,
-                USER_KEY,
-                ASSIGNMENT_OFFERING_KEY,
-                ASSIGNMENT_OFFERING_KEY + "." + AssignmentOffering.COURSE_OFFERING_KEY,
-                RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY,
-                RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY + "." + USER_KEY
+                RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY
             }));
         fetchSpec.setIsDeep(true);
 
@@ -2486,6 +2482,10 @@ public class Submission
                             Submission best = null;
                             for (Submission sub : allSubs)
                             {
+                                if (!sub.resultIsReady())
+                                {
+                                    continue;
+                                }
                                 if (sub.isBetterGradingChoiceThan(best))
                                 {
                                     best = sub;
@@ -2505,6 +2505,80 @@ public class Submission
 
         state.lastFetchTimestamp = queryStart;
         return state;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve submissions for a single student across multiple assignment
+     * offerings in a course.
+     *
+     * @param ec        The editing context to use, or null to infer from offerings/student
+     * @param offerings The assignment offerings to search for
+     * @param student   The student whose submissions should be retrieved
+     * @return a Map from AssignmentOffering to StudentSubmissionInfo
+     */
+    public static Map<AssignmentOffering, StudentSubmissionInfo> submissionsForStudentInCourse(
+        EOEditingContext ec,
+        NSArray<AssignmentOffering> offerings,
+        User student)
+    {
+        Map<AssignmentOffering, StudentSubmissionInfo> result =
+            new HashMap<AssignmentOffering, StudentSubmissionInfo>();
+
+        if (offerings == null || offerings.count() == 0 || student == null)
+        {
+            return result;
+        }
+
+        if (ec == null)
+        {
+            ec = offerings.objectAtIndex(0).editingContext();
+            if (ec == null)
+            {
+                ec = student.editingContext();
+            }
+        }
+        if (ec == null)
+        {
+            return result;
+        }
+
+        EOQualifier qual = ERXQ.and(
+            user.is(student),
+            assignmentOffering.in(offerings));
+
+        WCFetchSpecification<Submission> fetchSpec =
+            new WCFetchSpecification<Submission>(
+                ENTITY_NAME, qual, submitTime.ascs());
+        fetchSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
+            new String[] {
+                RESULT_KEY
+            }));
+        fetchSpec.setIsDeep(true);
+
+        NSArray<Submission> fetchedSubmissions =
+            objectsWithFetchSpecification(ec, fetchSpec);
+
+        for (Submission sub : fetchedSubmissions)
+        {
+            AssignmentOffering ao = sub.assignmentOffering();
+            StudentSubmissionInfo info = result.get(ao);
+            if (info == null)
+            {
+                info = new StudentSubmissionInfo(
+                    student, ao, null, new NSMutableArray<Submission>(), false);
+                result.put(ao, info);
+            }
+            info.allSubmissions.addObject(sub);
+            if (sub.resultIsReady()
+                && sub.isBetterGradingChoiceThan(info.gradedSubmission))
+            {
+                info.gradedSubmission = sub;
+            }
+        }
+
+        return result;
     }
 
 

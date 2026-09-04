@@ -141,21 +141,18 @@ public class StudentCourseSummaryPage
 
         NSMutableArray<AssignmentOffering> allAOs =
             new NSMutableArray<AssignmentOffering>();
-        NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
-            new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
-        NSArray<User> selectedStudentArray = new NSArray<User>(selectedStudent);
 
         for (Assignment assignment : assignments)
         {
             for (AssignmentOffering ao : assignment.offerings())
             {
                 allAOs.addObject(ao);
-                usersByAO.setObjectForKey(selectedStudentArray, ao);
             }
         }
 
-        Submission.SubmissionGradingState state =
-            Submission.submissionsForGrading(allAOs, usersByAO);
+        Map<AssignmentOffering, Submission.StudentSubmissionInfo> studentSubmissions =
+            Submission.submissionsForStudentInCourse(
+                localContext(), allAOs, selectedStudent);
 
         NSMutableArray<AssignmentOffering> displayOfferings =
             new NSMutableArray<AssignmentOffering>();
@@ -187,12 +184,10 @@ public class StudentCourseSummaryPage
                     }
                 }
 
-                Map<User, Submission.StudentSubmissionInfo> infoMap =
-                    state.resultsForOffering(ao);
-                NSArray<UserSubmissionPair> pairs =
-                    UserSubmissionPair.fromInfoMap(infoMap, false, null);
+                Submission.StudentSubmissionInfo info =
+                    studentSubmissions.get(ao);
 
-                if (pairs.size() > 0 && pairs.objectAtIndex(0).userHasSubmission())
+                if (info != null && info.gradedSubmission() != null)
                 {
                     foundSubmission = true;
                     displayOfferings.addObject(ao);
@@ -213,7 +208,7 @@ public class StudentCourseSummaryPage
                         anyAssignmentUsesBonusesOrPenalties = true;
                     }
                     submissions.setObjectForKey(
-                        pairs.objectAtIndex(0).submission(), ao);
+                        info.gradedSubmission(), ao);
                 }
             }
 
@@ -248,16 +243,9 @@ public class StudentCourseSummaryPage
 
         if (selectedAssignmentOffering != null)
         {
-            // We can also use the state here to avoid another fetch for
-            // submissionDisplayGroup if we want, but that fetch is for
-            // ALL submissions of a single student for ONE offering.
-            // For now, let's keep the single offering fetch as is, or
-            // pull it from the StudentSubmissionInfo.allSubmissions.
-            Map<User, Submission.StudentSubmissionInfo> infoMap =
-                state.resultsForOffering(selectedAssignmentOffering);
-            Submission.StudentSubmissionInfo info = (infoMap != null)
-                ? infoMap.get(selectedStudent) : null;
-            
+            Submission.StudentSubmissionInfo info =
+                studentSubmissions.get(selectedAssignmentOffering);
+
             if (info != null && info.allSubmissions() != null)
             {
                 submissionDisplayGroup.setObjectArray(info.allSubmissions());

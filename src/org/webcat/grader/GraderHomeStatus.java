@@ -119,66 +119,26 @@ public class GraderHomeStatus
             }
 
             currentTime = new NSTimestamp();
-            // First, grab all this student can see
-            @SuppressWarnings("unchecked")
-            NSMutableArray<AssignmentOffering> interesting =
-                new NSMutableArray<AssignmentOffering>(
-                    ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                        AssignmentOffering.objectsMatchingQualifier(
-                            localContext(),
-                            AssignmentOffering.publish.isTrue().and(
-                                AssignmentOffering.courseOffering
-                                .dot(CourseOffering.students).is(user()))),
-                                AssignmentOffering.availableFrom.lessThan(
-                                    currentTime)));
 
-            // Now, add any user has instructor access to:
-            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
-                AssignmentOffering.objectsMatchingQualifier(localContext(),
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.instructors).is(user())));
-
-            // Now, add any user has grader access to:
-            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(interesting,
-                AssignmentOffering.objectsMatchingQualifier(localContext(),
-                    AssignmentOffering.courseOffering
-                    .dot(CourseOffering.graders).is(user())));
-
-            @SuppressWarnings("unchecked")
-            NSArray<AssignmentOffering> open = ERXArrayUtilities
-                .filteredArrayWithQualifierEvaluation(interesting,
-                    AssignmentOffering.lateDeadline.greaterThan(currentTime));
-
+            // Centralized fetch of all open offerings for this user:
+            NSArray<AssignmentOffering> open = AssignmentOffering
+                .openOfferingsForUser(localContext(), user(), currentTime);
+            openOfferings = open;
             currentAssignments = organizeAssignments(open);
             courses.setObjectArray(
                 new NSArray<Course>(currentAssignments.keySet()));
-            if (log.isDebugEnabled())
-            {
-                log.debug("organized = " + currentAssignments);
-            }
 
-            Semester currentSemester = null;
+            // Centralized fetch of closed offerings:
             NSArray<Semester> semesters =
                 Semester.allObjectsOrderedByStartDate(localContext());
-            if (semesters.count() > 0)
-            {
-                currentSemester = semesters.get(0);
-            }
-            @SuppressWarnings("unchecked")
-            NSArray<AssignmentOffering> old = ERXArrayUtilities
-                .filteredArrayWithQualifierEvaluation(interesting,
-                    currentSemester == null
-                    ? ERXQ.not(AssignmentOffering.lateDeadline
-                        .greaterThan(currentTime))
-                    : ERXQ.and(
-                        ERXQ.not(AssignmentOffering.lateDeadline
-                            .greaterThan(currentTime)),
-                            AssignmentOffering.courseOffering.dot(
-                                CourseOffering.semester).is(currentSemester)));
+            Semester currentSemester =
+                (semesters.count() > 0) ? semesters.get(0) : null;
+            NSArray<AssignmentOffering> old = AssignmentOffering
+                .closedOfferingsForUser(
+                    localContext(), user(), currentSemester, currentTime);
             oldAssignments = organizeAssignments(old);
             coursesForOld.setObjectArray(
                 new NSArray<Course>(oldAssignments.keySet()));
-            // FIXME: remove
             oldAssignmentGroup.setObjectArray(old);
         }
 
@@ -429,7 +389,7 @@ public class GraderHomeStatus
         {
             prefs().setShowUnpublishedAssignments(true);
         }
-        if (offering.lateDeadline().before(new NSTimestamp()))
+        if (offering.isClosedFor(user(), new NSTimestamp()))
         {
             prefs().setShowClosedAssignments(true);
         }
@@ -481,7 +441,7 @@ public class GraderHomeStatus
     public boolean assignmentOfferingIsUnavailable()
     {
         return assignmentOffering.availableFrom() != null
-            && assignmentOffering.availableFrom().after(currentTime);
+            && assignmentOffering.isUnavailableFor(user(), currentTime);
     }
 
 
@@ -489,39 +449,44 @@ public class GraderHomeStatus
     public boolean hasUpcomingAssignments()
     {
         // set up the upcoming assignments list
-        if (upcomingAssignmentsGroup.displayedObjects() == null
-            || upcomingAssignmentsGroup.displayedObjects().count() == 0)
+        if (upcomingAssignmentsGroup.allObjects() == null
+            || upcomingAssignmentsGroup.allObjects().count() == 0)
         {
-            EOQualifier baseQualifier =
-                AssignmentOffering.availableFrom.lessThan(currentTime).and(
-                AssignmentOffering.publish.isTrue()).and(
-                new EOKeyValueQualifier(
-                    AssignmentOffering.COURSE_OFFERING_STUDENTS_KEY,
-                    EOQualifier.QualifierOperatorContains,
-                    user()));
-            baseQualifier = ERXQ.or(baseQualifier,
-                new EOKeyValueQualifier(
-                    AssignmentOffering.COURSE_OFFERING_INSTRUCTORS_KEY,
-                    EOQualifier.QualifierOperatorContains,
-                    user()),
-                new EOKeyValueQualifier(
-                    AssignmentOffering.COURSE_OFFERING_GRADERS_KEY,
-                    EOQualifier.QualifierOperatorContains,
-                    user()));
-            upcomingAssignmentsGroup.setQualifier(ERXQ.and(
-                // Not in either of the upper lists
-                ERXQ.not(baseQualifier),
-                // Also, more recent than two weeks ago
-                AssignmentOffering.dueDate.greaterThan(
-                    currentTime.timestampByAddingGregorianUnits(
-                        0, 0, -14, 0, 0, 0)
-                    ),
-                // Also, some time within the next 4 weeks
-                AssignmentOffering.dueDate.lessThan(
-                    currentTime.timestampByAddingGregorianUnits(
-                        0, 0, 28, 0, 0, 0))
-                ));
-            upcomingAssignmentsGroup.fetch();
+            NSTimestamp windowStart = currentTime.timestampByAddingGregorianUnits(
+                0, 0, -14, 0, 0, 0);
+            NSTimestamp windowEnd = currentTime.timestampByAddingGregorianUnits(
+                0, 0, 28, 0, 0, 0);
+
+            EOQualifier dateQual = AssignmentOffering.dueDate.greaterThan(windowStart)
+                .and(AssignmentOffering.dueDate.lessThan(windowEnd));
+
+            EOQualifier instructorQual =
+                AssignmentOffering.courseOffering.dot(CourseOffering.instructors).is(user())
+                .and(dateQual);
+            NSMutableArray<AssignmentOffering> upcoming =
+                new NSMutableArray<AssignmentOffering>(
+                    AssignmentOffering.fetchWithPrefetch(localContext(), instructorQual, null));
+
+            EOQualifier graderQual =
+                AssignmentOffering.courseOffering.dot(CourseOffering.graders).is(user())
+                .and(dateQual);
+            ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+                upcoming,
+                AssignmentOffering.fetchWithPrefetch(localContext(), graderQual, null));
+
+            if (openOfferings != null)
+            {
+                upcoming.removeObjectsInArray(openOfferings);
+            }
+            if (oldAssignmentGroup.allObjects() != null)
+            {
+                upcoming.removeObjectsInArray(oldAssignmentGroup.allObjects());
+            }
+
+            EOSortOrdering.sortArrayUsingKeyOrderArray(
+                upcoming, new NSArray<EOSortOrdering>(AssignmentOffering.dueDate.asc()));
+
+            upcomingAssignmentsGroup.setObjectArray(upcoming);
         }
         return upcomingAssignmentsGroup.displayedObjects().count() > 0;
     }
@@ -696,6 +661,7 @@ public class GraderHomeStatus
     //~ Instance/static variables .............................................
 
     private NSTimestamp currentTime;
+    private NSArray<AssignmentOffering> openOfferings;
     private NSMutableDictionary<Course,
         NSMutableDictionary<Assignment, NSMutableArray<AssignmentOffering>>>
         currentAssignments;

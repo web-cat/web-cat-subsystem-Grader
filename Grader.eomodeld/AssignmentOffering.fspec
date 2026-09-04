@@ -202,6 +202,7 @@
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
         );
+        usesDistinct = YES;
     };
 
     closedOfferingsForStudent = {
@@ -241,6 +242,7 @@
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
+        usesDistinct = YES;
     };
 
     openOfferingsForStaff = {
@@ -285,6 +287,7 @@
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareAscending:"; }
         );
+        usesDistinct = YES;
     };
 
     closedOfferingsForStaff = {
@@ -329,5 +332,6 @@
         sortOrderings = (
             {class = EOSortOrdering; key = dueDate; selectorName = "compareDescending:"; }
         );
+        usesDistinct = YES;
     };
 }

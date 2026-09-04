@@ -334,7 +334,7 @@ public class UploadSubmissionPage
             CourseOffering course = offering.courseOffering();
             User primeUser =
                 wcSession().primeUser().localInstance(localContext());
-            if (deadline.before(now)
+            if (!offering.userCanSubmit(user(), now)
                  && !course.isInstructor(primeUser)
                  && !course.isGrader(primeUser))
             {

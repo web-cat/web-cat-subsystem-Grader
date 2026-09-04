@@ -91,57 +91,16 @@ public class PickAssignmentToSubmitPage
 
         NSDictionary<String, Object> config =
             wcSession().tabs.selectedDescendant().config();
-        if ( config == null ||
-             !ERXValueUtilities.booleanValueWithDefault(
-                             config.objectForKey( "all" ), false ) )
-        {
-            //
-            // assigments which are still open
-            //
-            if ( !(  selectedCourse.isInstructor( user() )
-                            || selectedCourse.isGrader( user() ) ) )
-            {
-                qualifiers.addObject( new EOKeyValueQualifier(
-                                  AssignmentOffering.AVAILABLE_FROM_KEY,
-                                  EOQualifier.QualifierOperatorLessThan,
-                                  currentTime
-                                ) );
-            }
-            qualifiers.addObject( new EOKeyValueQualifier(
-                                  AssignmentOffering.LATE_DEADLINE_KEY,
-                                  EOQualifier.QualifierOperatorGreaterThan,
-                                  currentTime
-                                ) );
-        }
-//        assignmentDisplayGroup.setQualifier(
-//            new EOAndQualifier( qualifiers ) );
-//        log.debug( "qualifier = " + assignmentDisplayGroup.qualifier() );
-//        assignmentDisplayGroup.fetch();
-//        log.debug( "results = " + assignmentDisplayGroup.displayedObjects() );
+        boolean onlyOpen = (config == null
+            || !ERXValueUtilities.booleanValueWithDefault(
+                config.objectForKey("all"), false));
 
-        //
-        // assignments which are published
-        //
-        if ( !(  selectedCourse.isInstructor( user() )
-              || selectedCourse.isGrader( user() ) ) )
-        {
-            log.debug( "hiding unpublished assignments" );
-            qualifiers.addObject( new EOKeyValueQualifier(
-                                      AssignmentOffering.PUBLISH_KEY,
-                                      EOQualifier.QualifierOperatorEqual,
-                                      ERXConstant.integerForInt( 1 )
-                                    ) );
-        }
-        assignmentDisplayGroup.setQualifier(
-                new EOAndQualifier( qualifiers ) );
-//        log.debug( "qualifier = " + assignmentDisplayGroup.qualifier() );
-        assignmentDisplayGroup.fetch();
-//        log.debug( "results = " + assignmentDisplayGroup.displayedObjects() );
-        if ( assignmentDisplayGroup.displayedObjects().count() == 0 )
-        {
-            log.debug( "attempting second group fetch" );
-            assignmentDisplayGroup.fetch();
-        }
+        NSArray<AssignmentOffering> offerings =
+            AssignmentOffering.offeringsForCourseOffering(
+                localContext(), selectedCourse, user(), onlyOpen, currentTime);
+
+        assignmentDisplayGroup.setObjectArray(offerings);
+
         AssignmentOffering selectedAssignment = prefs().assignmentOffering();
         if ( selectedAssignment != null )
         {

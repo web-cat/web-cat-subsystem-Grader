@@ -101,10 +101,7 @@ public class AssignmentOffering
     public static final NSArray<String> DEFAULT_PREFETCH_KEYPATHS =
         new NSArray<String>(new String[] {
             ASSIGNMENT_KEY,
-            ASSIGNMENT_KEY + "." + Assignment.SUBMISSION_PROFILE_KEY,
-            COURSE_OFFERING_KEY,
-            COURSE_OFFERING_KEY + "." + CourseOffering.COURSE_KEY,
-            COURSE_OFFERING_KEY + "." + CourseOffering.SEMESTER_KEY
+            COURSE_OFFERING_KEY
         });
 
 
@@ -120,6 +117,7 @@ public class AssignmentOffering
         ERXFetchSpecification<AssignmentOffering> fspec =
             new ERXFetchSpecification<AssignmentOffering>(
                 ENTITY_NAME, qualifier, sortOrderings);
+        fspec.setUsesDistinct(true);
         fspec.setPrefetchingRelationshipKeyPaths(DEFAULT_PREFETCH_KEYPATHS);
         return ec.objectsWithFetchSpecification(fspec);
     }
@@ -182,14 +180,22 @@ public class AssignmentOffering
 
         // 2. Add offerings where user has staff privileges and offering is
         // still active
-        EOQualifier staffQual = courseOffering.dot(CourseOffering.instructors)
+        EOQualifier instructorQual = courseOffering.dot(CourseOffering.instructors)
             .is(user)
-            .or(courseOffering.dot(CourseOffering.graders).is(user))
             .and(maxClosesOn.greaterThan(currentTime));
 
         ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
-            results, fetchWithPrefetch(ec, staffQual,
-                new NSArray<EOSortOrdering>(dueDate.asc())));
+            results, fetchWithPrefetch(ec, instructorQual, null));
+
+        EOQualifier graderQual = courseOffering.dot(CourseOffering.graders)
+            .is(user)
+            .and(maxClosesOn.greaterThan(currentTime));
+
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, fetchWithPrefetch(ec, graderQual, null));
+
+        EOSortOrdering.sortArrayUsingKeyOrderArray(
+            results, new NSArray<EOSortOrdering>(dueDate.asc()));
 
         return results;
     }
@@ -217,22 +223,53 @@ public class AssignmentOffering
             return NSArray.emptyArray();
         }
 
-        ERXOrQualifier baseUserQual =
-            courseOffering.dot(CourseOffering.students)
-            .is(user)
-            .or(courseOffering.dot(CourseOffering.instructors).is(user))
-            .or(courseOffering.dot(CourseOffering.graders).is(user));
+        EOQualifier closed = closedQualifier(currentTime);
+        EOQualifier semQual = (semester != null)
+            ? courseOffering.dot(CourseOffering.semester).is(semester)
+            : null;
 
-        ERXAndQualifier closedQual =
-            baseUserQual.and(closedQualifier(currentTime));
-        if (semester != null)
+        // 1. Closed offerings for student (only published)
+        ERXAndQualifier studentQual = publish.isTrue()
+            .and(courseOffering.dot(CourseOffering.students).is(user))
+            .and(closed);
+        if (semQual != null)
         {
-            closedQual = closedQual.and(
-                courseOffering.dot(CourseOffering.semester).is(semester));
+            studentQual = studentQual.and(semQual);
         }
 
-        return fetchWithPrefetch(ec, closedQual,
-            new NSArray<EOSortOrdering>(dueDate.desc()));
+        NSMutableArray<AssignmentOffering> results =
+            new NSMutableArray<AssignmentOffering>(
+                fetchWithPrefetch(ec, studentQual, null));
+
+        // 2. Closed offerings for instructor (includes unpublished)
+        ERXAndQualifier instructorQual =
+            courseOffering.dot(CourseOffering.instructors).is(user)
+            .and(closed);
+        if (semQual != null)
+        {
+            instructorQual = instructorQual.and(semQual);
+        }
+
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, fetchWithPrefetch(ec, instructorQual, null));
+
+        // 3. Closed offerings for grader (includes unpublished)
+        ERXAndQualifier graderQual =
+            courseOffering.dot(CourseOffering.graders).is(user)
+            .and(closed);
+        if (semQual != null)
+        {
+            graderQual = graderQual.and(semQual);
+        }
+
+        ERXArrayUtilities.addObjectsFromArrayWithoutDuplicates(
+            results, fetchWithPrefetch(ec, graderQual, null));
+
+        // 4. Sort merged results in memory
+        EOSortOrdering.sortArrayUsingKeyOrderArray(
+            results, new NSArray<EOSortOrdering>(dueDate.desc()));
+
+        return results;
     }
 
 
@@ -294,24 +331,16 @@ public class AssignmentOffering
     /**
      * Submitter engine object retrieval (direct API / IDE plugin).
      */
-    // FIXME: needs to be put into the other static method with this
-    // name, which uses the old style filtering
     public static NSArray<AssignmentOffering> objectsForSubmitterEngine(
         EOEditingContext context, boolean showAll, NSTimestamp currentTime)
     {
-        EOQualifier qualifier;
-        if (showAll)
-        {
-            qualifier = maxClosesOn.greaterThan(
-                Semester.forDate(context, currentTime).semesterStartDate());
-        }
-        else
-        {
-            qualifier = openQualifier(currentTime);
-        }
-
-        return fetchWithPrefetch(context, qualifier,
-            new NSArray<EOSortOrdering>(dueDate.asc()));
+        return objectsForSubmitterEngine(
+            context,
+            NSDictionary.<String, Object>emptyDictionary(),
+            currentTime,
+            false,
+            showAll,
+            false).offerings;
     }
 
 
@@ -1282,10 +1311,32 @@ public class AssignmentOffering
         boolean                 preserveDateDifferences
         )
     {
+        boolean forStaff = ERXValueUtilities.booleanValue(
+            formValueForKey(formValues, "staff"));
+        showAll = ERXValueUtilities.booleanValueWithDefault(
+            formValueForKey(formValues, "showAll"), showAll || forStaff);
+
         // Set up the qualifier
-        NSTimestamp oneYearAgo = new NSTimestamp()
-            .timestampByAddingGregorianUnits(-1, 0, 0, 0, 0, 0);
-        EOQualifier qualifier = dueDate.after(oneYearAgo);
+        EOQualifier dateQualifier;
+        if (showAll)
+        {
+            Semester sem = Semester.forDate(context, currentTime);
+            NSTimestamp cutoff = (sem != null)
+                ? sem.semesterStartDate()
+                : new NSTimestamp().timestampByAddingGregorianUnits(-1, 0, 0, 0, 0, 0);
+            dateQualifier = maxClosesOn.greaterThan(cutoff);
+        }
+        else
+        {
+            dateQualifier = openQualifier(currentTime);
+        }
+
+        EOQualifier qualifier = dateQualifier;
+        if (!forStaff)
+        {
+            qualifier = and(qualifier, publish.isTrue());
+        }
+
         Object valueObj = formValueForKey( formValues, "institution" );
         if ( valueObj != null )
         {
@@ -1308,14 +1359,6 @@ public class AssignmentOffering
                 courseOffering.dot(CourseOffering.course).dot(Course.number)
                 .is(ERXValueUtilities.intValue(valueObj)));
         }
-        boolean forStaff = ERXValueUtilities.booleanValue(
-            formValueForKey(formValues, "staff"));
-        showAll = ERXValueUtilities.booleanValueWithDefault(
-            formValueForKey(formValues, "showAll"), showAll || forStaff);
-//        if (!forStaff)
-//        {
-//            qualifier = and(qualifier, publish.isTrue());
-//        }
 
         if (qualifier == null)
         {
@@ -1369,38 +1412,27 @@ public class AssignmentOffering
         NSTimestamp expires = null;
         for (AssignmentOffering offering : results)
         {
-            NSTimestamp deadline = offering.lateDeadline();
+            NSTimestamp deadline = offering.maxClosesOn();
             if (deadline != null
                 && deadline.after(currentTime)
                 && (expires == null || expires.after(deadline)))
             {
                 expires = deadline;
             }
-            deadline = offering.availableFrom();
+            deadline = offering.minOpensOn();
             if (deadline != null
                 && deadline.after(currentTime)
                 && (expires == null || expires.after(deadline)))
             {
                 expires = deadline;
             }
-            offering.lateDeadline();
         }
         if (expires == null)
         {
             expires = currentTime;
         }
 
-        qualifier = null;
-        if (showAll)
-        {
-            qualifier = lateDeadline.greaterThan(Semester
-                .forDate(context, currentTime).semesterStartDate());
-        }
-        else
-        {
-            qualifier = availableFrom.lessThan(currentTime).and(
-                lateDeadline.greaterThan(currentTime));
-        }
+        qualifier = dateQualifier;
         if (!forStaff)
         {
             qualifier = and(qualifier, publish.isTrue());
@@ -1573,6 +1605,8 @@ public class AssignmentOffering
         if (changes.containsKey(DUE_DATE_KEY)
             || changes.containsKey(CLOSES_ON_KEY)
             || changes.containsKey(OPENS_ON_KEY)
+            || changes.containsKey(MIN_OPENS_ON_KEY)
+            || changes.containsKey(MAX_CLOSES_ON_KEY)
             || changes.containsKey(PUBLISH_KEY))
         {
             org.webcat.grader.actions.BlueJSubmitterDefinitions.flushCache();

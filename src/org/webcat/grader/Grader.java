@@ -170,6 +170,40 @@ public class Grader
                 log.error("Unable to purge old job processor settings due "
                     + "to exception", e);
             }
+            
+            // Migrate assignment offering open/close dates
+            try
+            {
+                NSTimestamp oneYearAgo = new NSTimestamp()
+                    .timestampByAddingGregorianUnits(-1, 0, 0, 0, 0, 0);
+
+                EOQualifier migrationQual = AssignmentOffering
+                    .dueDate.greaterThanOrEqualTo(oneYearAgo)
+                    .and(AssignmentOffering.closesOn.isNull());
+
+                // use fetchWithPrefetch to avoid N+1 query faults on
+                // assignment and submission profile
+                NSArray<AssignmentOffering> unmigrated = AssignmentOffering
+                    .fetchWithPrefetch(ec, migrationQual, null);
+
+                if (unmigrated.count() > 0)
+                {
+                    log.info("Migrating opensOn/closesOn for "
+                        + unmigrated.count()
+                        + " recent assignment offerings...");
+                    for (AssignmentOffering ao : unmigrated)
+                    {
+                        ao.updateTimes();
+                    }
+                    log.info("Assignment offering open/close date migration "
+                        + "completed.");
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("Unable to migrate assignment offering times "
+                    + "during startup", e);
+            }
             ec.saveChanges();
 
             // Resume any enqueued jobs (if grader is coming back up
@@ -497,12 +531,7 @@ public class Grader
             {
                 log.debug("assignment = " + thisAssignment.assignment().name());
                 CourseOffering co = thisAssignment.courseOffering();
-                if (co.isInstructor(localizedUser)
-                    || co.isGrader(localizedUser)
-                    || (co.students().contains(localizedUser)
-                        && thisAssignment.publish()
-                        && currentTime.after(thisAssignment.availableFrom())
-                        && currentTime.before(thisAssignment.lateDeadline())))
+                if (thisAssignment.userCanSubmit(localizedUser, currentTime))
                 {
                     log.debug("found matching assignment that is open.");
                     if (assignment == null)

@@ -527,7 +527,9 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public boolean hasTAScore()
     {
-        return aSubmission.result().taScoreRaw() != null;
+        return aSubmission != null
+            && aSubmission.result() != null
+            && aSubmission.result().taScoreRaw() != null;
     }
 
 

@@ -259,7 +259,8 @@ public class GraderNavigator
         if (hideClosed)
         {
             assnOffs = ERXQ.filtered(assnOffs,
-                    ERXQ.greaterThan("lateDeadline", now));
+                AssignmentOffering.maxClosesOn.greaterThan(now)
+                .or(AssignmentOffering.maxClosesOn.isNull()));
         }
         Map<Assignment, Assignment> closedAssigns =
             new HashMap<Assignment, Assignment>();
