@@ -52,6 +52,9 @@ import com.webobjects.foundation.NSDictionary;
 import com.webobjects.foundation.NSMutableArray;
 import com.webobjects.foundation.NSNumberFormatter;
 import com.webobjects.foundation.NSTimestamp;
+import java.security.MessageDigest;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import er.extensions.qualifiers.ERXKeyValueQualifier;
 
 //-------------------------------------------------------------------------
@@ -530,7 +533,6 @@ public class Grader
             for (AssignmentOffering thisAssignment : assignments)
             {
                 log.debug("assignment = " + thisAssignment.assignment().name());
-                CourseOffering co = thisAssignment.courseOffering();
                 if (thisAssignment.userCanSubmit(localizedUser, currentTime))
                 {
                     log.debug("found matching assignment that is open.");
@@ -585,134 +587,175 @@ public class Grader
         result.coreSelections().setCourseOfferingRelationship(
             assignment.courseOffering());
         result.prefs().setAssignmentOfferingRelationship(assignment);
-        NSArray<Submission> submissions =
-            Submission.submissionsForAssignmentOfferingAndUser(
-                ec, assignment, result.user());
-        int currentSubNo = submissions.count() + 1;
-        for (int i = 0; i < submissions.count(); i++)
+
+        String lockKey = localizedUser.id() + ":" + assignment.id();
+        ReentrantLock lock = getSubmissionLock(lockKey);
+
+        lock.lock();
+        try
         {
-            int sno = submissions.objectAtIndex(i).submitNumber();
-            if (sno >= currentSubNo)
+            // Compute SHA-256 payload hash and check for duplicate submission
+            String payloadHash = computeSHA256(file);
+            long now = System.currentTimeMillis();
+
+            // Self-clean entries older than 60 seconds
+            recentSubmissions.entrySet().removeIf(
+                entry -> (now - entry.getValue().timestamp) > 60_000L);
+
+            RecentSubmission recent = recentSubmissions.get(lockKey);
+            if (recent != null
+                && (now - recent.timestamp) < 30_000L
+                && recent.hash != null
+                && recent.hash.equals(payloadHash))
             {
-                currentSubNo = sno + 1;
+                log.info("Discarding duplicate submission from "
+                    + localizedUser.userName() + " for "
+                    + assignment.assignment().name()
+                    + "; identical payload to submission #" + recent.submitNumber);
+
+                result.clearSubmission();
+                result.submissionInProcess().clearUpload();
+                return result.generateResponse();
             }
-        }
 
-        // TODO: This max submission check doesn't take partners into account
-        Number maxSubmissions = assignment.assignment().submissionProfile()
-            .maxSubmissionsRaw();
-        if (maxSubmissions != null
-            && currentSubNo > maxSubmissions.intValue()
-            && !assignment.courseOffering().isStaff(session.user()))
-        {
-            String msg = "You have exceeded the allowable number "
-                + "of submissions for this assignment.";
-            result.errorMessages.add(msg);
-            log.warn(msg + "  User = " + session.user()
-                + "\n\t" + assignment);
-            return result.generateResponse();
-        }
-
-        // Parse the partner list and get the User objects.
-
-        NSMutableArray<User> partners = new NSMutableArray<User>();
-        NSMutableArray<String> partnersNotFound = new NSMutableArray<String>();
-
-        if (partnerList != null)
-        {
-            String[] usernames = partnerList.split("[,\\s]+");
-
-            for (String username : usernames)
+            NSArray<Submission> submissions =
+                Submission.submissionsForAssignmentOfferingAndUser(
+                    ec, assignment, result.user());
+            int currentSubNo = submissions.count() + 1;
+            for (int i = 0; i < submissions.count(); i++)
             {
-                username = username.trim();
-
-                if (username.length() > 0)
+                int sno = submissions.objectAtIndex(i).submitNumber();
+                if (sno >= currentSubNo)
                 {
-                    User partner = User.userWithDomainAndName(
-                        ec, session.user().authenticationDomain(), username);
+                    currentSubNo = sno + 1;
+                }
+            }
 
-                    if (partner != null)
+            // TODO: This max submission check doesn't take partners into account
+            Number maxSubmissions = assignment.assignment().submissionProfile()
+                .maxSubmissionsRaw();
+            if (maxSubmissions != null
+                && currentSubNo > maxSubmissions.intValue()
+                && !assignment.courseOffering().isStaff(session.user()))
+            {
+                String msg = "You have exceeded the allowable number "
+                    + "of submissions for this assignment.";
+                result.errorMessages.add(msg);
+                log.warn(msg + "  User = " + session.user()
+                    + "\n\t" + assignment);
+                return result.generateResponse();
+            }
+
+            // Parse the partner list and get the User objects.
+
+            NSMutableArray<User> partners = new NSMutableArray<User>();
+            NSMutableArray<String> partnersNotFound = new NSMutableArray<String>();
+
+            if (partnerList != null)
+            {
+                String[] usernames = partnerList.split("[,\\s]+");
+
+                for (String username : usernames)
+                {
+                    username = username.trim();
+
+                    if (username.length() > 0)
                     {
-                        partners.addObject(partner);
-                    }
-                    else
-                    {
-                        partnersNotFound.addObject(username);
+                        User partner = User.userWithDomainAndName(
+                            ec, session.user().authenticationDomain(), username);
+
+                        if (partner != null)
+                        {
+                            partners.addObject(partner);
+                        }
+                        else
+                        {
+                            partnersNotFound.addObject(username);
+                        }
                     }
                 }
             }
-        }
 
-        result.partnersNotFound = partnersNotFound;
-        result.startSubmission(currentSubNo, result.user(), assignment);
-        result.submissionInProcess().setPartners(partners);
-        result.submissionInProcess().setUploadedFile(file);
-        result.submissionInProcess().setUploadedFileName(fileName);
+            result.partnersNotFound = partnersNotFound;
+            result.startSubmission(currentSubNo, result.user(), assignment);
+            result.submissionInProcess().setPartners(partners);
+            result.submissionInProcess().setUploadedFile(file);
+            result.submissionInProcess().setUploadedFileName(fileName);
 
-        int len = 0;
-        try
-        {
-            len = file.length();
-        }
-        catch (Exception e)
-        {
-            // Ignore it: length() could produce an NPE on a bad POST request
-        }
-        if (len == 0)
-        {
-            result.clearSubmission();
-            result.submissionInProcess().clearUpload();
-            String msg = "Your file submission is empty.  "
-                + "Please choose an appropriate file.";
-            result.errorMessages.add(msg);
-            log.warn(msg + "  User = " + session.user()
-                + "\n\t" + assignment);
-            return result.generateResponse();
-        }
-        else if (len > assignment.assignment().submissionProfile()
-                        .effectiveMaxFileUploadSize())
-        {
-            result.clearSubmission();
-            result.submissionInProcess().clearUpload();
-            String msg = "Your file exceeds the file size limit for "
-                + "this assignment ("
-                + assignment.assignment().submissionProfile()
-                      .effectiveMaxFileUploadSize()
-                + ").  Please choose a smaller file.";
-            result.errorMessages.add(msg);
-            log.warn(msg + "  User = " + session.user()
-                + "\n\t" + assignment);
-            return result.generateResponse();
-        }
-        try
-        {
-            String msg = result.commitSubmission(context, currentTime);
-            if (msg != null)
+            int len = 0;
+            try
             {
+                len = file.length();
+            }
+            catch (Exception e)
+            {
+                // Ignore it: length() could produce an NPE on a bad POST request
+            }
+            if (len == 0)
+            {
+                result.clearSubmission();
+                result.submissionInProcess().clearUpload();
+                String msg = "Your file submission is empty.  "
+                    + "Please choose an appropriate file.";
+                result.errorMessages.add(msg);
                 log.warn(msg + "  User = " + session.user()
                     + "\n\t" + assignment);
-                result.errorMessages.add(msg);
+                return result.generateResponse();
             }
-        }
-        catch (Exception e)
-        {
-            new UnexpectedExceptionMessage(e, context, null, null)
-                .send();
-            result.clearSubmission();
-            result.submissionInProcess().clearUpload();
-            result.cancelLocalChanges();
-            String msg =
-                "An unexpected exception occurred while trying to commit "
-                + "your submission.  The error has been reported to the "
-                + "Web-CAT administrator.  Please try your submission again.";
-            result.errorMessages.add(msg);
-            log.error(msg + "  User = " + session.user()
-                + "\n\t" + assignment, e);
-            result.criticalError = true;
-        }
+            else if (len > assignment.assignment().submissionProfile()
+                            .effectiveMaxFileUploadSize())
+            {
+                result.clearSubmission();
+                result.submissionInProcess().clearUpload();
+                String msg = "Your file exceeds the file size limit for "
+                    + "this assignment ("
+                    + assignment.assignment().submissionProfile()
+                          .effectiveMaxFileUploadSize()
+                    + ").  Please choose a smaller file.";
+                result.errorMessages.add(msg);
+                log.warn(msg + "  User = " + session.user()
+                    + "\n\t" + assignment);
+                return result.generateResponse();
+            }
+            try
+            {
+                String msg = result.commitSubmission(context, currentTime);
+                if (msg != null)
+                {
+                    log.warn(msg + "  User = " + session.user()
+                        + "\n\t" + assignment);
+                    result.errorMessages.add(msg);
+                }
+                else if (payloadHash != null)
+                {
+                    recentSubmissions.put(lockKey,
+                        new RecentSubmission(payloadHash, currentSubNo, now));
+                }
+            }
+            catch (Exception e)
+            {
+                new UnexpectedExceptionMessage(e, context, null, null)
+                    .send();
+                result.clearSubmission();
+                result.submissionInProcess().clearUpload();
+                result.cancelLocalChanges();
+                String msg =
+                    "An unexpected exception occurred while trying to commit "
+                    + "your submission.  The error has been reported to the "
+                    + "Web-CAT administrator.  Please try your submission again.";
+                result.errorMessages.add(msg);
+                log.error(msg + "  User = " + session.user()
+                    + "\n\t" + assignment, e);
+                result.criticalError = true;
+            }
 
-        log.debug("handleSubmission() returning");
-        return result.generateResponse();
+            log.debug("handleSubmission() returning");
+            return result.generateResponse();
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
 
@@ -1006,38 +1049,71 @@ public class Grader
 
 
     // ----------------------------------------------------------
-    private static class FiveMinuteMaintenance
-        implements Runnable
+    private static class RecentSubmission
     {
-        // ----------------------------------------------------------
-        public void run()
+        final String hash;
+        final int submitNumber;
+        final long timestamp;
+
+        RecentSubmission(String hash, int submitNumber, long timestamp)
         {
-            while (true)
-            {
-                try
-                {
-                    Thread.sleep(5 * 60 * 1000);
-                }
-                catch (InterruptedException e)
-                {
-                    // ignore
-                }
-                ECAction.run(new ECAction() {
-                    @Override
-                    public void action()
-                    {
-                        GraderQueueProcessor.processJobs(
-                            EnqueuedJob.objectsMatchingQualifier(ec,
-                                EnqueuedJob.paused.isFalse().and(
-                                    EnqueuedJob.processor.isNull())));
-                    }
-                });
-            }
+            this.hash = hash;
+            this.submitNumber = submitNumber;
+            this.timestamp = timestamp;
         }
     }
 
 
+    // ----------------------------------------------------------
+    private static String computeSHA256(NSData data)
+    {
+        if (data == null || data.length() == 0)
+        {
+            return null;
+        }
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(data.bytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash)
+            {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        }
+        catch (Exception e)
+        {
+            log.error("Failed to compute SHA-256 for submission payload", e);
+            return null;
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private static ReentrantLock getSubmissionLock(String key)
+    {
+        int h = (key == null) ? 0 : key.hashCode();
+        h = h ^ (h >>> 16);
+        return SUBMISSION_LOCKS[h & (SUBMISSION_STRIPE_COUNT - 1)];
+    }
+
+
     //~ Instance/static variables .............................................
+
+    private static final int SUBMISSION_STRIPE_COUNT = 128;
+    private static final ReentrantLock[] SUBMISSION_LOCKS =
+        new ReentrantLock[SUBMISSION_STRIPE_COUNT];
+    static
+    {
+        for (int i = 0; i < SUBMISSION_STRIPE_COUNT; i++)
+        {
+            SUBMISSION_LOCKS[i] = new ReentrantLock();
+        }
+    }
+
+    private static final ConcurrentHashMap<String, RecentSubmission>
+        recentSubmissions = new ConcurrentHashMap<>();
 
     /**
      * This is a reference to the single instance of this class, representing
