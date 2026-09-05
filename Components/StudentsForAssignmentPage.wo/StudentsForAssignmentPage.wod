@@ -18,6 +18,7 @@ DownloadScores: WOGenericContainer {
 DownloadScoresDialog: DownloadScoresDialog {
     courseOfferings = courseOfferings;
     assignmentOfferings = offerings.displayedObjects;
+    gradingState = gradingStateForDownload;
 }
 
 DownloadScoresIcon: WCImageButton {

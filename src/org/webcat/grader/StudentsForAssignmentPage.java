@@ -834,5 +834,19 @@ public class StudentsForAssignmentPage
     public Submission.SubmissionGradingState gradingState;
     private NSArray<AssignmentOffering> lastOfferings;
 
+
+    // ----------------------------------------------------------
+    /**
+     * Getter for DownloadScoresDialog binding. Having only a getter without
+     * a corresponding setter defeats KVC value passback, making the binding
+     * strictly one-way.
+     *
+     * @return the current grading state
+     */
+    public Submission.SubmissionGradingState gradingStateForDownload()
+    {
+        return gradingState;
+    }
+
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }
