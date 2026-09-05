@@ -1,0 +1,78 @@
+{
+    attributes = (
+        {
+            allowsNull = Y; 
+            columnName = brokerBaseUrl; 
+            name = brokerBaseUrl; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            allowsNull = N; 
+            columnName = clientId; 
+            name = clientId; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            allowsNull = N; 
+            columnName = clientSecret; 
+            name = clientSecret; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = created; 
+            name = created; 
+            prototypeName = dateTime; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = domainPattern; 
+            name = domainPattern; 
+            prototypeName = tinyText; 
+        }, 
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {
+            allowsNull = Y; 
+            columnName = lastModified; 
+            name = lastModified; 
+            prototypeName = dateTime; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = name; 
+            name = name; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = requestedProperties; 
+            name = requestedProperties; 
+            prototypeName = tinyText; 
+        }
+    ); 
+    attributesUsedForLocking = (
+        brokerBaseUrl, 
+        clientId, 
+        clientSecret, 
+        domainPattern, 
+        id, 
+        name, 
+        requestedProperties
+    ); 
+    className = "org.webcat.grader.PassportClient"; 
+    classProperties = (
+        brokerBaseUrl, 
+        clientId, 
+        clientSecret, 
+        created, 
+        domainPattern, 
+        lastModified, 
+        name, 
+        requestedProperties
+    ); 
+    externalName = PassportClient; 
+    fetchSpecificationDictionary = {}; 
+    name = PassportClient; 
+    primaryKeyAttributes = (id); 
+    relationships = (); 
+}

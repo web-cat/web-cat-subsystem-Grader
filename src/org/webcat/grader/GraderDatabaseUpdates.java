@@ -747,6 +747,17 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Create PassportClient table for PassPort Protocol REST API clients.
+     * @throws SQLException on error
+     */
+    public void updateIncrement41() throws SQLException
+    {
+        createPassportClientTable();
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------
@@ -1260,6 +1271,35 @@ public class GraderDatabaseUpdates
                 "ALTER TABLE StudentExtension ADD PRIMARY KEY (OID)");
             createIndexFor("StudentExtension", "userId");
             createIndexFor("TimeBank", "assignmentOfferingId");
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Create the PassportClient table, if needed.
+     * @throws SQLException on error
+     */
+    private void createPassportClientTable()
+        throws SQLException
+    {
+        if (!database().hasTable("PassportClient"))
+        {
+            log.info("creating table PassportClient");
+            database().executeSQL(
+                "CREATE TABLE PassportClient "
+                + "(OID INTEGER NOT NULL, "
+                + "clientId TINYTEXT NOT NULL, "
+                + "clientSecret TINYTEXT NOT NULL, "
+                + "name TINYTEXT, "
+                + "brokerBaseUrl TINYTEXT, "
+                + "domainPattern TINYTEXT, "
+                + "requestedProperties TINYTEXT, "
+                + "created DATETIME, "
+                + "lastModified DATETIME )");
+            database().executeSQL(
+                "ALTER TABLE PassportClient ADD PRIMARY KEY (OID)");
+            createIndexFor("PassportClient", "clientId");
         }
     }
 }
