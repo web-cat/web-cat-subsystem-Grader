@@ -220,7 +220,7 @@ TR2: org.webcat.core.TableRow {
 UserSubmissionsTable: WCTable {
     id = tableId;
     displayGroup = userGroup;
-    searchOnKeyPaths = "user.lastName,user.firstName,submission.partneredSubmissions.user.lastName,submission.partneredSubmissions.user.firstName";
+    searchOnKeyPaths = "lastName,firstName,userName";
 }
 
 UsesBonusesOrPenalties: WOConditional {

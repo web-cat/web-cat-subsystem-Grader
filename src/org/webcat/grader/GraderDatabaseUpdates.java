@@ -735,6 +735,18 @@ public class GraderDatabaseUpdates
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Add index on TSUBMISSION for CISSUBMISSIONFORGRADING to accelerate
+     * submissionsForGrading fast-path lookups.
+     * @throws SQLException on error
+     */
+    public void updateIncrement40() throws SQLException
+    {
+        createIndexFor("TSUBMISSION", "CISSUBMISSIONFORGRADING");
+    }
+
+
     //~ Private Methods .......................................................
 
     // ----------------------------------------------------------

@@ -63,8 +63,8 @@ public class GradeStudentSubmissionPage
     public SubmissionFileStats stats;
     public int                 index;
 
-    public UserSubmissionPair  selectedUserSubmissionForPickerDialog;
-    public NSArray<UserSubmissionPair> allUserSubmissionsForNavigationForPickerDialog;
+    public Submission.StudentSubmissionInfo selectedUserSubmissionForPickerDialog;
+    public NSArray<Submission.StudentSubmissionInfo> allUserSubmissionsForNavigationForPickerDialog;
 
     /** true if submission file stats are recorded for this submission */
     public boolean hasFileStats = false;
@@ -80,7 +80,7 @@ public class GradeStudentSubmissionPage
     public NSArray<Byte> formats = SubmissionResult.formats;
     public byte aFormat;
 
-    public NSArray<UserSubmissionPair> availableSubmissions;
+    public NSArray<Submission.StudentSubmissionInfo> availableSubmissions;
     public int                         thisSubmissionIndex;
 
     // Hidden form fields for Maria support
@@ -315,7 +315,9 @@ public class GradeStudentSubmissionPage
         saveGrading();
 
         selectedUserSubmissionForPickerDialog =
-            new UserSubmissionPair(submission.user(), submission);
+            new Submission.StudentSubmissionInfo(submission.user(),
+                submission.assignmentOffering(), submission,
+                new NSMutableArray<Submission>(new Submission[] { submission }), false);
         allUserSubmissionsForNavigationForPickerDialog = availableSubmissions;
 
         JavascriptGenerator js = new JavascriptGenerator();

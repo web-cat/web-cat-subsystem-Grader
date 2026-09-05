@@ -69,20 +69,18 @@ public class StudentsForAssignmentPage
         offerings.setSortOrderings(
             AssignmentOffering.titleString.ascInsensitives());
 
-        studentNewerSubmissions = new ERXDisplayGroup<Submission>();
-        studentNewerSubmissions.setDetailKey("allSubmissions");
     }
 
 
     //~ KVC Attributes (must be public) .......................................
 
-    /** Submission in the worepetition */
-    public UserSubmissionPair aUserSubmission;
+    /** Student in the worepetition */
+    public User        aStudent;
     public Submission  aSubmission;
     public Submission  partnerSubmission;
 
-    public UserSubmissionPair  selectedUserSubmissionForPickerDialog;
-    public NSArray<UserSubmissionPair> allUserSubmissionsForNavigationForPickerDialog;
+    public Submission.StudentSubmissionInfo selectedUserSubmissionForPickerDialog;
+    public NSArray<Submission.StudentSubmissionInfo> allUserSubmissionsForNavigationForPickerDialog;
 
     /** index in the student worepetition */
     public int         index;
@@ -145,46 +143,64 @@ public class StudentsForAssignmentPage
         NSArray<User> admins = User.administrators(localContext());
 
         NSArray<AssignmentOffering> aos = offerings.displayedObjects();
-        NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
-            new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
 
-        for (AssignmentOffering ao : aos)
+        boolean offeringsChanged = (lastOfferings == null || !lastOfferings.equals(aos));
+        if (gradingState == null || offeringsChanged)
         {
-            NSArray<User> students = omitStaff
-                ? ao.courseOffering().studentsWithoutStaff()
-                : ao.courseOffering().studentsAndStaff();
+            lastOfferings = aos.immutableClone();
 
-            NSArray<User> staff = ERXArrayUtilities
-                .arrayByAddingObjectsFromArrayWithoutDuplicates(
-                    ao.courseOffering().staff(),
-                    admins);
+            NSMutableDictionary<AssignmentOffering, NSArray<User>> usersByAO =
+                new NSMutableDictionary<AssignmentOffering, NSArray<User>>();
 
-            NSArray<User> allForAO = ERXArrayUtilities
-                .arrayByAddingObjectsFromArrayWithoutDuplicates(students, staff);
+            for (AssignmentOffering ao : aos)
+            {
+                NSArray<User> students = ao.courseOffering().studentsWithoutStaff();
 
-            usersByAO.setObjectForKey(allForAO, ao);
+                NSArray<User> staff = ERXArrayUtilities
+                    .arrayByAddingObjectsFromArrayWithoutDuplicates(
+                        ao.courseOffering().staff(),
+                        admins);
+
+                NSArray<User> allForAO = ERXArrayUtilities
+                    .arrayByAddingObjectsFromArrayWithoutDuplicates(students, staff);
+
+                usersByAO.setObjectForKey(allForAO, ao);
+            }
+
+            gradingState = Submission.submissionsForGrading(aos, usersByAO);
         }
-
-        Submission.SubmissionGradingState state =
-            Submission.submissionsForGrading(aos, usersByAO);
+        else
+        {
+            Submission.submissionsForGrading(gradingState);
+        }
         log_time("beforeAppendToResponse() after batch fetch");
 
         for (AssignmentOffering ao : aos)
         {
             assignmentOffering = ao;
             Map<User, Submission.StudentSubmissionInfo> infoMap =
-                state.resultsForOffering(ao);
-            if (infoMap == null || infoMap.isEmpty()) { continue; }
+                gradingState.resultsForOffering(ao);
 
-            // Student group
-            NSArray<User> students = omitStaff
-                ? ao.courseOffering().studentsWithoutStaff()
-                : ao.courseOffering().studentsAndStaff();
+            Submission.CumulativeStats stats = studentStats();
 
-            NSArray<UserSubmissionPair> studentPairs =
-                UserSubmissionPair.fromInfoMap(
-                    infoMap, students, true, studentStats());
-            userGroup().setObjectArray(studentPairs);
+            // Student group: populate directly from offering's students
+            NSMutableArray<User> students = new NSMutableArray<User>();
+            for (User student : ao.courseOffering().studentsWithoutStaff())
+            {
+                Submission.StudentSubmissionInfo info =
+                    (infoMap != null) ? infoMap.get(student) : null;
+                Submission sub = (info != null) ? info.gradedSubmission : null;
+                if (sub != null && sub.partnerLink())
+                {
+                    continue;
+                }
+                students.addObject(student);
+                if (sub != null && sub.result() != null)
+                {
+                    stats.accumulate(sub.result());
+                }
+            }
+            userGroup(ao).setObjectArray(students);
 
             // Staff group
             @SuppressWarnings("unchecked")
@@ -193,13 +209,20 @@ public class StudentsForAssignmentPage
                     ao.courseOffering().staff(),
                     admins);
 
-            NSArray<UserSubmissionPair> staffPairs =
-                UserSubmissionPair.fromInfoMap(
-                    infoMap, staff, true, null);
-            staffSubs.addAll(extractSubmissions(staffPairs));
+            for (User u : staff)
+            {
+                Submission.StudentSubmissionInfo info =
+                    (infoMap != null) ? infoMap.get(u) : null;
+                Submission sub = (info != null) ? info.gradedSubmission : null;
+                if (sub != null && !sub.partnerLink())
+                {
+                    staffSubs.addObject(sub);
+                }
+            }
         }
 
-        staffSubmissionGroup.setObjectArray(staffSubs);
+        staffSubmissionGroup.setObjectArray(
+            ERXArrayUtilities.arrayWithoutDuplicates(staffSubs));
 
         log_time("beforeAppendToResponse() query finish");
         selectedUserSubmissionForPickerDialog = null;
@@ -210,38 +233,71 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    private NSArray<Submission> extractSubmissions(
-            NSArray<UserSubmissionPair> userSubs)
+    public void setAStudent(User student)
     {
-        NSMutableArray<Submission> submissions =
-            new NSMutableArray<Submission>();
-
-        for (UserSubmissionPair pair : userSubs)
-        {
-            if (pair.userHasSubmission())
-            {
-                submissions.addObject(pair.submission());
-            }
-        }
-
-        return submissions;
+        aStudent = student;
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        aSubmission = (info != null ? info.submission() : null);
     }
 
 
     // ----------------------------------------------------------
-    public void setAUserSubmission(UserSubmissionPair pair)
+    public Submission.StudentSubmissionInfo aStudentInfo()
     {
-        aUserSubmission = pair;
-        aSubmission = (pair != null ? pair.submission() : null);
+        if (gradingState != null && assignmentOffering != null && aStudent != null)
+        {
+            return gradingState.infoForUser(assignmentOffering, aStudent);
+        }
+        return null;
+    }
+
+
+    // ----------------------------------------------------------
+    public Submission aSubmission()
+    {
+        if (aSubmission != null)
+        {
+            return aSubmission;
+        }
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        return (info != null) ? info.submission() : null;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean userHasSubmission()
+    {
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        return info != null && info.userHasSubmission();
+    }
+
+
+    // ----------------------------------------------------------
+    public NSArray<Submission.StudentSubmissionInfo> availableSubmissionsForGrading()
+    {
+        NSMutableArray<Submission.StudentSubmissionInfo> list =
+            new NSMutableArray<Submission.StudentSubmissionInfo>();
+        for (User student : userGroup().displayedObjects())
+        {
+            Submission.StudentSubmissionInfo info =
+                (gradingState != null && assignmentOffering != null)
+                ? gradingState.infoForUser(assignmentOffering, student)
+                : null;
+            if (info != null && info.userHasSubmission())
+            {
+                list.addObject(info);
+            }
+        }
+        return list.immutableClone();
     }
 
 
     // ----------------------------------------------------------
     public WOActionResults pickOtherSubmission()
     {
-        selectedUserSubmissionForPickerDialog = aUserSubmission;
+        selectedUserSubmissionForPickerDialog = aStudentInfo();
         allUserSubmissionsForNavigationForPickerDialog =
-            userGroup().displayedObjects();
+            availableSubmissionsForGrading();
 
         JavascriptGenerator js = new JavascriptGenerator();
         js.dijit("pickSubmissionDialog").call("show");
@@ -312,16 +368,17 @@ public class StudentsForAssignmentPage
         WCComponent destination = null;
         if (!hasMessages())
         {
-            if (aSubmission == null)
+            Submission sub = aSubmission();
+            if (sub == null)
             {
                 log.error("editSubmissionScore(): null submission!");
             }
-            else if (!aSubmission.resultIsReady())
+            else if (!sub.resultIsReady())
             {
                 log.error("editSubmissionScore(): null submission result!");
-                log.error("student = " + aSubmission.user().userName());
+                log.error("student = " + sub.user().userName());
             }
-            prefs().setSubmissionRelationship(aSubmission);
+            prefs().setSubmissionRelationship(sub);
 
             destination = (WCComponent) super.next();
             if (destination instanceof GradeStudentSubmissionPage)
@@ -329,13 +386,12 @@ public class StudentsForAssignmentPage
                 GradeStudentSubmissionPage page =
                     (GradeStudentSubmissionPage) destination;
 
-                if (aUserSubmission != null)
-                {
-                    page.availableSubmissions =
-                        userGroup().displayedObjects().immutableClone();
-                    page.thisSubmissionIndex =
-                        page.availableSubmissions.indexOf(aUserSubmission);
-                }
+                page.availableSubmissions =
+                    availableSubmissionsForGrading();
+                Submission.StudentSubmissionInfo thisInfo = aStudentInfo();
+                page.thisSubmissionIndex = (thisInfo != null)
+                    ? page.availableSubmissions.indexOf(thisInfo)
+                    : -1;
             }
 
             destination.nextPage = this;
@@ -362,20 +418,18 @@ public class StudentsForAssignmentPage
             }
             prefs().setSubmissionRelationship(aNewerSubmission);
 
-//            destination = pageWithName(GradeStudentSubmissionPage.class);
             destination = (WCComponent) super.next();
             if (destination instanceof GradeStudentSubmissionPage)
             {
                 GradeStudentSubmissionPage page =
-                    (GradeStudentSubmissionPage)destination;
+                    (GradeStudentSubmissionPage) destination;
 
-                if (aUserSubmission != null)
-                {
-                    page.availableSubmissions =
-                        userGroup().displayedObjects().immutableClone();
-                    page.thisSubmissionIndex =
-                        page.availableSubmissions.indexOf(aUserSubmission);
-                }
+                page.availableSubmissions =
+                    availableSubmissionsForGrading();
+                Submission.StudentSubmissionInfo thisInfo = aStudentInfo();
+                page.thisSubmissionIndex = (thisInfo != null)
+                    ? page.availableSubmissions.indexOf(thisInfo)
+                    : -1;
             }
 
             destination.nextPage = this;
@@ -403,11 +457,15 @@ public class StudentsForAssignmentPage
         int numberNotified = 0;
 
         assignmentOffering = offeringForAction;
-        for (UserSubmissionPair pair : userGroup().allObjects())
+        for (User student : userGroup().allObjects())
         {
-            if (pair.userHasSubmission())
+            Submission.StudentSubmissionInfo info =
+                (gradingState != null && assignmentOffering != null)
+                ? gradingState.infoForUser(assignmentOffering, student)
+                : null;
+            if (info != null && info.userHasSubmission())
             {
-                Submission sub = pair.submission();
+                Submission sub = info.submission();
 
                 if (sub.result().status() == Status.UNFINISHED
                     || (sub.result().status() != Status.CHECK
@@ -508,49 +566,72 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    public ERXDisplayGroup<Submission> studentNewerSubmissions()
+    public NSArray<Submission> studentNewerSubmissions()
     {
-        if (studentNewerSubmissions.masterObject() != aSubmission)
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        if (info != null)
         {
-            studentNewerSubmissions.setMasterObject(aSubmission);
-            studentNewerSubmissions.setObjectArray(
-                aSubmission.allSubmissions());
-            studentNewerSubmissions.queryMin().takeValueForKey(
-                aSubmission.submitNumber() + 1, Submission.SUBMIT_NUMBER_KEY);
-            studentNewerSubmissions.setQualifier(
-                studentNewerSubmissions.qualifierFromQueryValues());
+            return info.newerSubmissions();
         }
-        return studentNewerSubmissions;
+        Submission sub = aSubmission();
+        if (sub != null)
+        {
+            NSMutableArray<Submission> newer = new NSMutableArray<Submission>();
+            for (Submission s : sub.allSubmissions())
+            {
+                if (s.submitNumber() > sub.submitNumber())
+                {
+                    newer.addObject(s);
+                }
+            }
+            return newer;
+        }
+        return NSArray.emptyArray();
     }
 
 
     // ----------------------------------------------------------
     public boolean hasTAScore()
     {
-        return aSubmission != null
-            && aSubmission.result() != null
-            && aSubmission.result().taScoreRaw() != null;
+        Submission sub = aSubmission();
+        return sub != null
+            && sub.result() != null
+            && sub.result().taScoreRaw() != null;
     }
 
 
     // ----------------------------------------------------------
     public boolean isMostRecentSubmission()
     {
-        return aSubmission == aSubmission.latestSubmission();
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        if (info != null)
+        {
+            return info.isMostRecentSubmission();
+        }
+        Submission sub = aSubmission();
+        return sub == null || sub == sub.latestSubmission();
     }
 
 
     // ----------------------------------------------------------
     public int mostRecentSubmissionNo()
     {
-        return aSubmission.latestSubmission().submitNumber();
+        Submission.StudentSubmissionInfo info = aStudentInfo();
+        if (info != null)
+        {
+            return info.mostRecentSubmissionNo();
+        }
+        Submission sub = aSubmission();
+        return (sub != null && sub.latestSubmission() != null)
+            ? sub.latestSubmission().submitNumber() : 0;
     }
 
 
     // ----------------------------------------------------------
     public String submitTimeSpanClass()
     {
-        if (aSubmission.isLate())
+        Submission sub = aSubmission();
+        if (sub != null && sub.isLate())
         {
             return "warn";
         }
@@ -586,9 +667,13 @@ public class StudentsForAssignmentPage
     // ----------------------------------------------------------
     public WOComponent repartner()
     {
-        for (UserSubmissionPair pair : userGroup().allObjects())
+        for (User student : userGroup().allObjects())
         {
-            Submission sub = pair.submission();
+            Submission.StudentSubmissionInfo info =
+                (gradingState != null && assignmentOffering != null)
+                ? gradingState.infoForUser(assignmentOffering, student)
+                : null;
+            Submission sub = (info != null) ? info.submission() : null;
 
             if (sub != null && sub.resultIsReady())
             {
@@ -664,19 +749,25 @@ public class StudentsForAssignmentPage
 
 
     // ----------------------------------------------------------
-    public ERXDisplayGroup<UserSubmissionPair> userGroup()
+    public ERXDisplayGroup<User> userGroup()
     {
-        ERXDisplayGroup<UserSubmissionPair> group =
-            userGroups.get(assignmentOffering);
+        return userGroup(assignmentOffering);
+    }
+
+
+    // ----------------------------------------------------------
+    public ERXDisplayGroup<User> userGroup(AssignmentOffering ao)
+    {
+        ERXDisplayGroup<User> group = userGroups.get(ao);
         if (group == null)
         {
-            group = new ERXDisplayGroup<UserSubmissionPair>();
+            group = new ERXDisplayGroup<User>();
             group.setNumberOfObjectsPerBatch(100);
             group.setSortOrderings(
-                UserSubmissionPair.user.dot(User.name_LF).ascInsensitives().then(
-                    UserSubmissionPair.user.dot(User.userName).ascInsensitive())
+                User.name_LF.ascInsensitives().then(
+                    User.userName.ascInsensitive())
                 );
-            userGroups.put(assignmentOffering, group);
+            userGroups.put(ao, group);
         }
         return group;
     }
@@ -700,23 +791,30 @@ public class StudentsForAssignmentPage
             }
         }
         // check date of submission against date of feedback
-        else if (aSubmission.resultIsReady()
-                && aSubmission.result().lastUpdated() != null
-                && aNewerSubmission.submitTime().after(
-                    aSubmission.result().lastUpdated()))
+        else
         {
-            result = "newer than feedback";
+            Submission sub = aSubmission();
+            if (sub != null
+                && sub.resultIsReady()
+                && sub.result().lastUpdated() != null
+                && aNewerSubmission.submitTime().after(
+                    sub.result().lastUpdated()))
+            {
+                result = "newer than feedback";
+            }
         }
 
         if (log.isDebugEnabled())
         {
             log.debug("newerSubmissionStatus() for " + aNewerSubmission
                 + " = " + result);
-            if (aSubmission.resultIsReady()
-                && aSubmission.result().lastUpdated() != null)
+            Submission sub = aSubmission();
+            if (sub != null
+                && sub.resultIsReady()
+                && sub.result().lastUpdated() != null)
             {
                 log.debug("    selected submission last updated: "
-                    + aSubmission.result().lastUpdated());
+                    + sub.result().lastUpdated());
             }
             log.debug("    newer submission on: "
                 + aNewerSubmission.submitTime());
@@ -727,13 +825,14 @@ public class StudentsForAssignmentPage
 
     //~ Instance/static variables .............................................
 
-    private Map<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>> userGroups =
-        new HashMap<AssignmentOffering, ERXDisplayGroup<UserSubmissionPair>>();
+    private Map<AssignmentOffering, ERXDisplayGroup<User>> userGroups =
+        new HashMap<AssignmentOffering, ERXDisplayGroup<User>>();
     private Map<AssignmentOffering, Submission.CumulativeStats> subStats;
 
     private AssignmentOffering offeringForAction;
 
-    private ERXDisplayGroup<Submission> studentNewerSubmissions;
+    public Submission.SubmissionGradingState gradingState;
+    private NSArray<AssignmentOffering> lastOfferings;
 
     static Logger log = Logger.getLogger(StudentsForAssignmentPage.class);
 }

@@ -1083,13 +1083,6 @@ public class Submission
      */
     public NSArray<Submission> allSubmissions()
     {
-        int newAOSubCount = assignmentOffering().submissions().count();
-        if (newAOSubCount != aoSubmissionsCountCache)
-        {
-            allSubmissionsCache = null;
-            aoSubmissionsCountCache = newAOSubCount;
-        }
-
         if (allSubmissionsCache == null)
         {
             if (user() != null && assignmentOffering() != null)
@@ -1113,8 +1106,6 @@ public class Submission
     {
         // Clear the in-memory cache of the all-submissions chain so that it
         // will be fetched again.
-
-        aoSubmissionsCountCache = 0;
         allSubmissionsCache = null;
     }
 
@@ -2373,7 +2364,27 @@ public class Submission
         NSArray<AssignmentOffering> offerings,
         NSDictionary<AssignmentOffering, NSArray<User>> users)
     {
-        SubmissionGradingState state = new SubmissionGradingState(offerings, users);
+        return submissionsForGrading(offerings, users, false);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Retrieve current submissions for grading across multiple offerings
+     * and update the provided state.
+     *
+     * @param offerings The assignment offerings to search for.
+     * @param users The users to search for within each offering.
+     * @param includeAllSubmitters Whether to include submissions from all submitters.
+     * @return a new SubmissionGradingState containing the results.
+     */
+    public static SubmissionGradingState submissionsForGrading(
+        NSArray<AssignmentOffering> offerings,
+        NSDictionary<AssignmentOffering, NSArray<User>> users,
+        boolean includeAllSubmitters)
+    {
+        SubmissionGradingState state = new SubmissionGradingState(
+            offerings, users, includeAllSubmitters);
         return submissionsForGrading(state);
     }
 
@@ -2402,13 +2413,59 @@ public class Submission
             return state;
         }
 
-        // Build qualifier
         NSDictionary<AssignmentOffering, NSArray<User>> users = state.users();
+        boolean includeAll = state.includeAllSubmitters();
+        boolean fetchAll = state.fetchAllSubmissions();
+
+        // Check if all offerings have a specified non-null user list
+        boolean allOfferingsHaveUserList = true;
+        NSMutableArray<User> allTargetUsers = new NSMutableArray<User>();
+        if (!includeAll && users != null)
+        {
+            for (AssignmentOffering ao : offerings)
+            {
+                NSArray<User> aoUsers = users.get(ao);
+                if (aoUsers == null)
+                {
+                    allOfferingsHaveUserList = false;
+                    break;
+                }
+                for (User u : aoUsers)
+                {
+                    if (!allTargetUsers.containsObject(u))
+                    {
+                        allTargetUsers.addObject(u);
+                    }
+                }
+            }
+        }
+        else
+        {
+            allOfferingsHaveUserList = false;
+        }
+
+        // If target users were provided for all offerings but the combined set is empty, nothing to fetch.
+        if (allOfferingsHaveUserList && allTargetUsers.count() == 0)
+        {
+            state.lastFetchTimestamp = queryStart;
+            return state;
+        }
+
+        boolean isInitialFetch = (state.lastFetchTimestamp() == null);
 
         EOQualifier qual = assignmentOffering.in(offerings);
-        if (state.lastFetchTimestamp() != null)
+        if (!isInitialFetch)
         {
             qual = ERXQ.and(qual, submitTime.greaterThan(state.lastFetchTimestamp()));
+        }
+        else if (!fetchAll)
+        {
+            qual = ERXQ.and(qual, isSubmissionForGrading.isTrue());
+        }
+
+        if (allOfferingsHaveUserList)
+        {
+            qual = ERXQ.and(qual, user.in(allTargetUsers));
         }
 
         WCFetchSpecification<Submission> fetchSpec =
@@ -2424,14 +2481,153 @@ public class Submission
         NSArray<Submission> fetchedSubmissions =
             objectsWithFetchSpecification(ec, fetchSpec);
 
-        // Merging Loop
-        for (Submission sub : fetchedSubmissions)
+        mergeSubmissionsIntoState(state, fetchedSubmissions, offerings, users, includeAll);
+        reevaluateDirtyInfos(state, offerings);
+
+        // Tier 2: Defensive fallback audit on initial fetch
+        if (isInitialFetch && !fetchAll && users != null)
+        {
+            NSMutableArray<User> unresolvedUsers = new NSMutableArray<User>();
+            for (AssignmentOffering ao : offerings)
+            {
+                NSArray<User> aoUsers = users.get(ao);
+                if (aoUsers != null)
+                {
+                    Map<User, StudentSubmissionInfo> userMap =
+                        state.resultsForOffering(ao);
+                    for (User u : aoUsers)
+                    {
+                        StudentSubmissionInfo info =
+                            (userMap != null) ? userMap.get(u) : null;
+                        if ((info == null || info.gradedSubmission == null)
+                            && !unresolvedUsers.containsObject(u))
+                        {
+                            unresolvedUsers.addObject(u);
+                        }
+                    }
+                }
+            }
+
+            if (unresolvedUsers.count() > 0)
+            {
+                EOQualifier fallbackQual = ERXQ.and(
+                    assignmentOffering.in(offerings),
+                    user.in(unresolvedUsers));
+
+                WCFetchSpecification<Submission> fallbackSpec =
+                    new WCFetchSpecification<Submission>(
+                        ENTITY_NAME, fallbackQual, null);
+                fallbackSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
+                    new String[] {
+                        RESULT_KEY,
+                        RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY
+                    }));
+                fallbackSpec.setIsDeep(true);
+
+                NSArray<Submission> fallbackSubs =
+                    objectsWithFetchSpecification(ec, fallbackSpec);
+
+                if (fallbackSubs.count() > 0)
+                {
+                    mergeSubmissionsIntoState(state, fallbackSubs, offerings, users, includeAll);
+                    reevaluateDirtyInfos(state, offerings);
+                }
+            }
+        }
+
+        // Approach A: Batch-fetch any submissions newer than the graded submission
+        if (isInitialFetch && !fetchAll)
+        {
+            NSMutableArray<EOQualifier> orQuals = new NSMutableArray<EOQualifier>();
+            for (AssignmentOffering ao : offerings)
+            {
+                Map<User, StudentSubmissionInfo> userMap =
+                    state.resultsForOffering(ao);
+                if (userMap != null)
+                {
+                    for (StudentSubmissionInfo info : userMap.values())
+                    {
+                        if (info.gradedSubmission != null)
+                        {
+                            orQuals.addObject(ERXQ.and(
+                                assignmentOffering.is(ao),
+                                user.is(info.user),
+                                submitNumber.greaterThan(info.gradedSubmission.submitNumber())
+                            ));
+                        }
+                    }
+                }
+            }
+
+            if (orQuals.count() > 0)
+            {
+                int batchSize = 100;
+                for (int i = 0; i < orQuals.count(); i += batchSize)
+                {
+                    int end = Math.min(i + batchSize, orQuals.count());
+                    NSArray<EOQualifier> subList = orQuals.subarrayWithRange(
+                        new NSRange(i, end - i));
+                    EOQualifier batchQual = new EOOrQualifier(subList);
+
+                    WCFetchSpecification<Submission> newerSpec =
+                        new WCFetchSpecification<Submission>(
+                            ENTITY_NAME, batchQual, null);
+                    newerSpec.setPrefetchingRelationshipKeyPaths(new NSArray<String>(
+                        new String[] {
+                            RESULT_KEY,
+                            RESULT_KEY + "." + SubmissionResult.SUBMISSIONS_KEY
+                        }));
+                    newerSpec.setIsDeep(true);
+
+                    NSArray<Submission> newerSubs =
+                        objectsWithFetchSpecification(ec, newerSpec);
+
+                    if (newerSubs.count() > 0)
+                    {
+                        mergeSubmissionsIntoState(state, newerSubs, offerings, users, includeAll);
+                    }
+                }
+
+                // Sort allSubmissions in each updated info by submitTime
+                for (AssignmentOffering ao : offerings)
+                {
+                    Map<User, StudentSubmissionInfo> userMap =
+                        state.resultsForOffering(ao);
+                    if (userMap != null)
+                    {
+                        for (StudentSubmissionInfo info : userMap.values())
+                        {
+                            if (info.allSubmissions != null && info.allSubmissions.count() > 1)
+                            {
+                                EOSortOrdering.sortArrayUsingKeyOrderArray(
+                                    info.allSubmissions, submitTime.ascs());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        state.lastFetchTimestamp = queryStart;
+        return state;
+    }
+
+
+    // ----------------------------------------------------------
+    private static void mergeSubmissionsIntoState(
+        SubmissionGradingState state,
+        NSArray<Submission> submissions,
+        NSArray<AssignmentOffering> offerings,
+        NSDictionary<AssignmentOffering, NSArray<User>> users,
+        boolean includeAll)
+    {
+        for (Submission sub : submissions)
         {
             AssignmentOffering ao = sub.assignmentOffering();
             User u = sub.user();
-            NSArray<User> aoUsers = users.get(ao);
-            
-            if (aoUsers != null && !aoUsers.contains(u))
+            NSArray<User> aoUsers = (users != null) ? users.get(ao) : null;
+
+            if (!includeAll && aoUsers != null && !aoUsers.contains(u))
             {
                 continue;
             }
@@ -2459,8 +2655,14 @@ public class Submission
                 info.isDirty = true;
             }
         }
+    }
 
-        // Re-evaluation Loop
+
+    // ----------------------------------------------------------
+    private static void reevaluateDirtyInfos(
+        SubmissionGradingState state,
+        NSArray<AssignmentOffering> offerings)
+    {
         for (AssignmentOffering ao : offerings)
         {
             Map<User, StudentSubmissionInfo> userMap =
@@ -2502,9 +2704,6 @@ public class Submission
                 }
             }
         }
-
-        state.lastFetchTimestamp = queryStart;
-        return state;
     }
 
 
@@ -2523,12 +2722,12 @@ public class Submission
         NSArray<AssignmentOffering> offerings,
         User student)
     {
-        Map<AssignmentOffering, StudentSubmissionInfo> result =
+        Map<AssignmentOffering, StudentSubmissionInfo> map =
             new HashMap<AssignmentOffering, StudentSubmissionInfo>();
 
         if (offerings == null || offerings.count() == 0 || student == null)
         {
-            return result;
+            return map;
         }
 
         if (ec == null)
@@ -2541,7 +2740,7 @@ public class Submission
         }
         if (ec == null)
         {
-            return result;
+            return map;
         }
 
         EOQualifier qual = ERXQ.and(
@@ -2563,12 +2762,12 @@ public class Submission
         for (Submission sub : fetchedSubmissions)
         {
             AssignmentOffering ao = sub.assignmentOffering();
-            StudentSubmissionInfo info = result.get(ao);
+            StudentSubmissionInfo info = map.get(ao);
             if (info == null)
             {
                 info = new StudentSubmissionInfo(
                     student, ao, null, new NSMutableArray<Submission>(), false);
-                result.put(ao, info);
+                map.put(ao, info);
             }
             info.allSubmissions.addObject(sub);
             if (sub.resultIsReady()
@@ -2578,7 +2777,7 @@ public class Submission
             }
         }
 
-        return result;
+        return map;
     }
 
 
@@ -2895,6 +3094,57 @@ public class Submission
         public Submission gradedSubmission() { return gradedSubmission; }
         public NSArray<Submission> allSubmissions() { return allSubmissions; }
         public boolean isDirty() { return isDirty; }
+
+        // ----------------------------------------------------------
+        public Submission submission() { return gradedSubmission; }
+        public boolean userHasSubmission() { return gradedSubmission != null; }
+
+        // ----------------------------------------------------------
+        public Submission latestSubmission()
+        {
+            if (allSubmissions != null && allSubmissions.count() > 0)
+            {
+                return allSubmissions.lastObject();
+            }
+            return gradedSubmission;
+        }
+
+        // ----------------------------------------------------------
+        public boolean isMostRecentSubmission()
+        {
+            Submission latest = latestSubmission();
+            return latest == null || latest == gradedSubmission;
+        }
+
+        // ----------------------------------------------------------
+        public int mostRecentSubmissionNo()
+        {
+            Submission latest = latestSubmission();
+            if (latest != null)
+            {
+                return latest.submitNumber();
+            }
+            return (gradedSubmission != null) ? gradedSubmission.submitNumber() : 0;
+        }
+
+        // ----------------------------------------------------------
+        public NSArray<Submission> newerSubmissions()
+        {
+            if (isMostRecentSubmission() || allSubmissions == null || gradedSubmission == null)
+            {
+                return NSArray.emptyArray();
+            }
+            int gradedNum = gradedSubmission.submitNumber();
+            NSMutableArray<Submission> newer = new NSMutableArray<Submission>();
+            for (Submission s : allSubmissions)
+            {
+                if (s.submitNumber() > gradedNum)
+                {
+                    newer.addObject(s);
+                }
+            }
+            return newer;
+        }
     }
 
 
@@ -2910,15 +3160,40 @@ public class Submission
         public NSTimestamp lastFetchTimestamp;
         public NSArray<AssignmentOffering> offerings;
         public NSDictionary<AssignmentOffering, NSArray<User>> users;
+        public boolean includeAllSubmitters;
+        public boolean fetchAllSubmissions;
 
         // ----------------------------------------------------------
         public SubmissionGradingState(
             NSArray<AssignmentOffering> offerings,
             NSDictionary<AssignmentOffering, NSArray<User>> users)
         {
+            this(offerings, users, false, false);
+        }
+
+
+        // ----------------------------------------------------------
+        public SubmissionGradingState(
+            NSArray<AssignmentOffering> offerings,
+            NSDictionary<AssignmentOffering, NSArray<User>> users,
+            boolean includeAllSubmitters)
+        {
+            this(offerings, users, includeAllSubmitters, false);
+        }
+
+
+        // ----------------------------------------------------------
+        public SubmissionGradingState(
+            NSArray<AssignmentOffering> offerings,
+            NSDictionary<AssignmentOffering, NSArray<User>> users,
+            boolean includeAllSubmitters,
+            boolean fetchAllSubmissions)
+        {
             super();
             this.offerings = offerings;
             this.users = users;
+            this.includeAllSubmitters = includeAllSubmitters;
+            this.fetchAllSubmissions = fetchAllSubmissions;
             this.lastFetchTimestamp = null;
         }
 
@@ -2929,6 +3204,8 @@ public class Submission
             super(existingState);
             this.offerings = existingState.offerings;
             this.users = existingState.users;
+            this.includeAllSubmitters = existingState.includeAllSubmitters;
+            this.fetchAllSubmissions = existingState.fetchAllSubmissions;
             this.lastFetchTimestamp = existingState.lastFetchTimestamp;
         }
 
@@ -2953,12 +3230,15 @@ public class Submission
         public NSTimestamp lastFetchTimestamp() { return lastFetchTimestamp; }
         public NSArray<AssignmentOffering> offerings() { return offerings; }
         public NSDictionary<AssignmentOffering, NSArray<User>> users() { return users; }
+        public boolean includeAllSubmitters() { return includeAllSubmitters; }
+        public void setIncludeAllSubmitters(boolean value) { this.includeAllSubmitters = value; }
+        public boolean fetchAllSubmissions() { return fetchAllSubmissions; }
+        public void setFetchAllSubmissions(boolean value) { this.fetchAllSubmissions = value; }
     }
 
 
     //~ Instance/static variables .............................................
 
-    private int aoSubmissionsCountCache;
     private NSArray<Submission> allSubmissionsCache;
 
     private String cachedPermalink;

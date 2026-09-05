@@ -67,7 +67,7 @@ public class StudentCourseSummaryPage
     public User                                aStudent;
     public User                                selectedStudent;
 
-    public UserSubmissionPair selectedUserSubmissionForPickerDialog;
+    public Submission.StudentSubmissionInfo selectedUserSubmissionForPickerDialog;
 
     public boolean anyAssignmentUsesTestingScore;
     public boolean anyAssignmentUsesToolCheckScore;
@@ -150,7 +150,7 @@ public class StudentCourseSummaryPage
             }
         }
 
-        Map<AssignmentOffering, Submission.StudentSubmissionInfo> studentSubmissions =
+        studentSubmissions =
             Submission.submissionsForStudentInCourse(
                 localContext(), allAOs, selectedStudent);
 
@@ -442,8 +442,17 @@ public class StudentCourseSummaryPage
     // ----------------------------------------------------------
     public WOActionResults pickOtherSubmission()
     {
-        selectedUserSubmissionForPickerDialog = new UserSubmissionPair(
-                selectedStudent, submissionForAssignmentOffering());
+        Submission sub = submissionForAssignmentOffering();
+        selectedUserSubmissionForPickerDialog = (studentSubmissions != null)
+            ? studentSubmissions.get(selectedAssignmentOffering)
+            : null;
+        if (selectedUserSubmissionForPickerDialog == null)
+        {
+            selectedUserSubmissionForPickerDialog = new Submission.StudentSubmissionInfo(
+                selectedStudent, selectedAssignmentOffering, sub,
+                new NSMutableArray<Submission>(sub != null ? new Submission[] { sub } : new Submission[0]),
+                false);
+        }
 
         JavascriptGenerator js = new JavascriptGenerator();
         js.dijit("pickSubmissionDialog").call("show");
@@ -459,6 +468,9 @@ public class StudentCourseSummaryPage
 
 
     //~ Static/instance variables .............................................
+
+    private Map<AssignmentOffering, Submission.StudentSubmissionInfo>
+        studentSubmissions;
 
     private NSDictionary<AssignmentOffering, Submission>
         submissionsByAssignmentOffering;

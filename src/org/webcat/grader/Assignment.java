@@ -347,31 +347,33 @@ public class Assignment
     // ----------------------------------------------------------
     public AssignmentOffering offeringForUser( User user )
     {
-        AssignmentOffering offering = null;
-        NSDictionary<String, Object> userBinding =
-            new NSDictionary<String, Object>( user, "user" );
+        if ( user == null )
+        {
+            return null;
+        }
 
         // First, check to see if the user is a student in any of the
         // course offerings associated with the available assignment offerings
-        NSArray<?> results = ERXArrayUtilities
-            .filteredArrayWithEntityFetchSpecification( offerings(),
-                AssignmentOffering.ENTITY_NAME,
-                AssignmentOffering.OFFERINGS_WITH_USER_AS_STUDENT_FSPEC,
-                userBinding );
-        if ( results == null || results.count() == 0 )
+        for ( AssignmentOffering offering : offerings() )
         {
-            // if the user is not found as a student, check for staff instead
-            results = ERXArrayUtilities
-                .filteredArrayWithEntityFetchSpecification( offerings(),
-                    AssignmentOffering.ENTITY_NAME,
-                    AssignmentOffering.OFFERINGS_WITH_USER_AS_STAFF_FSPEC,
-                    userBinding );
+            CourseOffering co = offering.courseOffering();
+            if ( co != null && co.students().containsObject( user ) )
+            {
+                return offering;
+            }
         }
-        if ( results != null && results.count() > 0 )
+
+        // If the user is not found as a student, check for staff instead
+        for ( AssignmentOffering offering : offerings() )
         {
-            offering = (AssignmentOffering)results.objectAtIndex( 0 );
+            CourseOffering co = offering.courseOffering();
+            if ( co != null && co.staff().containsObject( user ) )
+            {
+                return offering;
+            }
         }
-        return offering;
+
+        return null;
     }
 
 

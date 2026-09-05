@@ -53,8 +53,8 @@ public class PickSubmissionDialog
     //~ KVC attributes (must be public) .......................................
 
     public WCComponent                 nextPageForResultsPage;
-    public UserSubmissionPair          rootUserSubmission;
-    public NSArray<UserSubmissionPair> allUserSubmissionsForNavigation;
+    public Submission.StudentSubmissionInfo rootUserSubmission;
+    public NSArray<Submission.StudentSubmissionInfo> allUserSubmissionsForNavigation;
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
     public Submission                  aSubmission;
     public boolean                     sendsToGradingPage;
@@ -69,16 +69,16 @@ public class PickSubmissionDialog
      * is the submission that will be used to access all of the other
      * submissions made on this assignment by the user.
      *
-     * @param pair the UserSubmissionPair for which the dialog is being invoked
+     * @param info the UserSubmissionPair for which the dialog is being invoked
      */
-    public void setRootUserSubmission(UserSubmissionPair pair)
+    public void setRootUserSubmission(Submission.StudentSubmissionInfo info)
     {
-        rootUserSubmission = pair;
+        rootUserSubmission = info;
         collectSubmissions();
         extraColumnCount = 0;
-        if (pair != null && pair.submission() != null)
+        if (info != null && info.submission() != null)
         {
-            Assignment a = pair.submission().assignmentOffering().assignment();
+            Assignment a = info.submission().assignmentOffering().assignment();
             if (a.usesTAScore())
             {
                 extraColumnCount++;
@@ -108,10 +108,14 @@ public class PickSubmissionDialog
             lastRootUserSubmission = rootUserSubmission;
 
             NSArray<Submission> submissions =
-                rootUserSubmission.submission().allSubmissions();
+                (rootUserSubmission.submission() != null)
+                ? rootUserSubmission.submission().allSubmissions()
+                : NSArray.<Submission>emptyArray();
             // Migrate graded submission, if needed
             Submission graded =
-                rootUserSubmission.submission().gradedSubmission();
+                (rootUserSubmission.submission() != null)
+                ? rootUserSubmission.submission().gradedSubmission()
+                : null;
             if (log.isDebugEnabled())
             {
                 log.debug("graded submission = " + graded + " = "
@@ -233,7 +237,7 @@ public class PickSubmissionDialog
 
     //~ Static/instance variables .............................................
 
-    private UserSubmissionPair lastRootUserSubmission;
+    private Submission.StudentSubmissionInfo lastRootUserSubmission;
 
     static final Logger log = Logger.getLogger(PickSubmissionDialog.class);
 }

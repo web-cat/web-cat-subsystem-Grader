@@ -82,7 +82,8 @@ public class UserSubmissionPair implements NSKeyValueCodingAdditions
 
         for (User u : users)
         {
-            Submission.StudentSubmissionInfo info = infoMap.get(u);
+            Submission.StudentSubmissionInfo info =
+                (infoMap != null) ? infoMap.get(u) : null;
             Submission sub = (info != null) ? info.gradedSubmission : null;
 
             if (omitPartners && sub != null && sub.partnerLink())
