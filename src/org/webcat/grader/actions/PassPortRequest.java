@@ -635,7 +635,20 @@ public class PassPortRequest
             }
         }
 
-        // 2. Try email
+        // 2. Try canvas_user_id in LMSIdentity
+        String canvasUserId = uJson.optString("canvas_user_id", null);
+        if (canvasUserId != null && !canvasUserId.isEmpty())
+        {
+            LMSIdentity identity = LMSIdentity.firstObjectMatchingQualifier(
+                ec, LMSIdentity.lmsUserId.is(canvasUserId), null);
+            if (identity != null && identity.user() != null)
+            {
+                user = identity.user();
+                return user;
+            }
+        }
+
+        // 3. Try email
         String email = uJson.optString("email", null);
         if (email != null && !email.isEmpty())
         {
@@ -648,8 +661,12 @@ public class PassPortRequest
             }
         }
 
-        // 3. Try userName from email prefix or canvas_user_id
+        // 4. Try userName from canvas_user_id, email prefix, or userName property
         String userName = uJson.optString("userName", null);
+        if (userName == null && canvasUserId != null && !canvasUserId.isEmpty())
+        {
+            userName = canvasUserId;
+        }
         if (userName == null && email != null)
         {
             int at = email.indexOf('@');
@@ -674,7 +691,7 @@ public class PassPortRequest
 
 
     // ----------------------------------------------------------
-    // Dates & Extension Fields
+    // Dates & Extension Fields (PassPort v1.1)
     // ----------------------------------------------------------
 
     public String passType()
@@ -683,28 +700,84 @@ public class PassPortRequest
         return (ext != null) ? ext.optString("pass_type", null) : null;
     }
 
+    public NSTimestamp originalAvailableFrom()
+    {
+        return dateForKey("original_available_from");
+    }
+
+    public NSTimestamp newAvailableFrom()
+    {
+        NSTimestamp ts = dateForKey("new_available_from");
+        if (ts == null)
+        {
+            ts = dateForKey("available_from");
+        }
+        return ts;
+    }
+
     public NSTimestamp originalDueDate()
     {
-        JSONObject ext = extensionJson();
-        return (ext != null)
-            ? parseIsoDateTime(ext.optString("original_due_date", null))
-            : null;
+        return dateForKey("original_due_date");
     }
 
     public NSTimestamp newDueDate()
     {
-        JSONObject ext = extensionJson();
-        return (ext != null)
-            ? parseIsoDateTime(ext.optString("new_due_date", null))
-            : null;
+        NSTimestamp ts = dateForKey("new_due_date");
+        if (ts == null)
+        {
+            ts = dateForKey("due_date");
+        }
+        return ts;
+    }
+
+    public NSTimestamp originalAcceptUntil()
+    {
+        return dateForKey("original_accept_until");
+    }
+
+    public NSTimestamp newAcceptUntil()
+    {
+        NSTimestamp ts = dateForKey("new_accept_until");
+        if (ts == null)
+        {
+            ts = dateForKey("accept_until");
+        }
+        return ts;
     }
 
     public NSTimestamp appliedAt()
     {
+        return dateForKey("applied_at");
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Extracts and parses an ISO-8601 date from the extension JSON payload.
+     * Follows PassPort v1.1 nullability semantics: explicit JSON null, omitted/missing
+     * keys, or the literal string "null" are treated identically to null.
+     *
+     * @param key the extension date property key
+     * @return parsed NSTimestamp, or null if missing, null, or empty
+     */
+    public NSTimestamp dateForKey(String key)
+    {
         JSONObject ext = extensionJson();
-        return (ext != null)
-            ? parseIsoDateTime(ext.optString("applied_at", null))
-            : null;
+        if (ext == null || ext.isNull(key))
+        {
+            return null;
+        }
+        Object val = ext.opt(key);
+        if (val == null || val == JSONObject.NULL)
+        {
+            return null;
+        }
+        String str = val.toString();
+        if ("null".equalsIgnoreCase(str) || str.trim().isEmpty())
+        {
+            return null;
+        }
+        return parseIsoDateTime(str);
     }
 
 
@@ -714,7 +787,8 @@ public class PassPortRequest
      */
     public static NSTimestamp parseIsoDateTime(String isoString)
     {
-        if (isoString == null || isoString.trim().isEmpty())
+        if (isoString == null || isoString.trim().isEmpty()
+            || "null".equalsIgnoreCase(isoString.trim()))
         {
             return null;
         }
@@ -730,15 +804,53 @@ public class PassPortRequest
             {
                 TemporalAccessor ta =
                     DateTimeFormatter.ISO_DATE_TIME.parse(isoString.trim());
-                Instant instant = Instant.from(ta);
-                return new NSTimestamp(instant.toEpochMilli());
+                if (ta.isSupported(java.time.temporal.ChronoField.INSTANT_SECONDS))
+                {
+                    Instant instant = Instant.from(ta);
+                    return new NSTimestamp(instant.toEpochMilli());
+                }
+                else
+                {
+                    java.time.LocalDateTime ldt = java.time.LocalDateTime.parse(
+                        isoString.trim(), DateTimeFormatter.ISO_DATE_TIME);
+                    Instant instant = ldt.atZone(java.time.ZoneId.systemDefault()).toInstant();
+                    return new NSTimestamp(instant.toEpochMilli());
+                }
             }
             catch (Exception ex)
             {
-                log.warn("Unable to parse date string: '" + isoString + "': " + ex.getMessage());
-                return null;
+                try
+                {
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
+                        "yyyy-MM-dd'T'HH:mm:ss");
+                    sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                    java.util.Date d = sdf.parse(isoString.trim());
+                    return new NSTimestamp(d.getTime());
+                }
+                catch (Exception ex2)
+                {
+                    log.warn("Unable to parse date string: '" + isoString + "': " + ex.getMessage());
+                    return null;
+                }
             }
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Formats an NSTimestamp as an ISO-8601 UTC date string (e.g. 2023-10-02T23:59:59Z).
+     *
+     * @param ts the timestamp to format
+     * @return ISO-8601 formatted string, or null if ts is null
+     */
+    public static String formatIsoDateTime(NSTimestamp ts)
+    {
+        if (ts == null)
+        {
+            return null;
+        }
+        return Instant.ofEpochMilli(ts.getTime()).toString();
     }
 
 

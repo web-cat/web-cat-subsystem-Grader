@@ -1,8 +1,20 @@
-# PassPort Protocol v1
+# PassPort Protocol v1.1
 
 ## Cross-Platform Extension Management Documentation
 
-This document outlines the improved API design for a late pass management system (the "Broker") to communicate student deadline extensions to external Learning Tools (LTs).
+This document outlines the API design for a late pass management system (the "Broker") to communicate student deadline extensions to external Learning Tools (LTs).
+
+### Summary of Additions in v1.1 (Over v1.0)
+
+| Feature | PassPort v1.0 | PassPort v1.1 |
+| :--- | :--- | :--- |
+| **Lifecycle Dates** | Only `original_due_date` and `new_due_date` | Full assignment lifecycle dates: **Available From**, **Due Date**, and **Accept Until** (`available_from`, `due_date`, `accept_until`) |
+| **Nullable Dates** | Dates were required non-null strings | Any of the three date fields can be explicitly `null` |
+| **Missing Value Handling** | Strict schema validation | Missing or omitted date keys are treated identically to `null` |
+| **Extension-Only Passes** | Unsupported (forced artificial due date shifts) | Native support for extending late submission cutoffs (`new_accept_until`) while leaving `new_due_date` as `null` / unchanged |
+| **Compatibility & Endpoints** | `1.0` (`/passport/v1/`) | Backward-compatible `1.1` retaining `/passport/v1/` routes |
+
+---
 
 ### 1. Protocol Architecture
 
@@ -68,30 +80,66 @@ Every request from the Broker to the Tool must include an `X-PassPort-Signature`
   },
   "extension": {
     "pass_type": "24_HOUR_FREE_PASS",
+    "original_available_from": "2023-09-25T00:00:00Z",
+    "new_available_from": "2023-09-25T00:00:00Z",
     "original_due_date": "2023-10-01T23:59:59Z",
     "new_due_date": "2023-10-02T23:59:59Z",
+    "original_accept_until": "2023-10-03T23:59:59Z",
+    "new_accept_until": "2023-10-04T23:59:59Z",
     "applied_at": "2023-10-01T10:00:00Z"
   }
 }
 ```
 
-#### B.1. Property Sets
+#### B.1. Extension Dates & Nullability Semantics
+
+PassPort v1.1 supports all three lifecycle dates from the learning platform:
+
+1. **Available From (`original_available_from`, `new_available_from`):** The date/time when the assignment opens or becomes accessible to the student.
+2. **Due Date (`original_due_date`, `new_due_date`):** The deadline for on-time submission.
+3. **Accept Until (`original_accept_until`, `new_accept_until`):** The hard cutoff date/time after which no further submissions are accepted (the late submission cutoff).
+
+**Null and Missing Value Rules:**
+- **Explicit `null`:** Any of the three dates may be `null` for either `original_*` or `new_*` values.
+- **Missing treated as `null`:** If a date field is missing or omitted from the JSON payload, it must be interpreted identically to `null`.
+- **Extension-Only Passes:** When a pass extends only the late cutoff period without moving the due date, `new_accept_until` will contain the new cutoff timestamp, while `new_due_date` is `null` (or omitted).
+
+Example extension-only payload:
+
+```json
+{
+  "extension": {
+    "pass_type": "EXTENSION_ONLY_PASS",
+    "original_available_from": null,
+    "new_available_from": null,
+    "original_due_date": "2023-10-01T23:59:59Z",
+    "new_due_date": null,
+    "original_accept_until": "2023-10-03T23:59:59Z",
+    "new_accept_until": "2023-10-05T23:59:59Z",
+    "applied_at": "2023-10-02T10:00:00Z"
+  }
+}
+```
+
+#### B.2. Property Sets
 
 To respect data privacy, the Broker only sends optional properties if the Tool explicitly requests them during registration.
 
-| Category      | **Baseline (Always Sent)**                      | **Optional (Requested)**                                                                              |
-| :------------ | :---------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| **Context**   | `lms_instance_guid`, `issuer`, `lti_context_id` | `lms_instance`, `lti_deployment_id`, `canvas_course_id`                                               |
-| **User**      | `lti_user_id`                                   | `broker_user_id`, `canvas_user_id`, `first_name`, `last_name`, `email`, `display_name`, `course_role` |
-| **Resource**  | `lti_resource_link_id`                          | `broker_assignment_id`, `canvas_assignment_id`, `title`, `external_url`                               |
-| **Extension** | _All fields are mandatory_                      | N/A                                                                                                   |
+| Category      | **Baseline (Always Sent)**                                                                                                                                                                                                 | **Optional (Requested)**                                                                              |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+| **Context**   | `lms_instance_guid`, `issuer`, `lti_context_id`                                                                                                                                                                            | `lms_instance`, `lti_deployment_id`, `canvas_course_id`                                               |
+| **User**      | `lti_user_id`                                                                                                                                                                                                              | `broker_user_id`, `canvas_user_id`, `first_name`, `last_name`, `email`, `display_name`, `course_role` |
+| **Resource**  | `lti_resource_link_id`                                                                                                                                                                                                     | `broker_assignment_id`, `canvas_assignment_id`, `title`, `external_url`                               |
+| **Extension** | `pass_type`, `applied_at`, `original_available_from`*, `new_available_from`*, `original_due_date`*, `new_due_date`*, `original_accept_until`*, `new_accept_until`* | N/A                                                                                                   |
+
+*\*All date fields are nullable. Missing fields are treated identically to `null`.*
 
 #### C. Response Codes
 
 - **200 OK:** Extension successfully recorded.
 - **401 Unauthorized:** Signature mismatch or timestamp expired.
 - **404 Not Found:** User or Resource not recognized.
-- **409 Conflict:** A later due date is already active for this student.
+- **409 Conflict:** A later due date or accept until cutoff is already active for this student.
 
 ### 3. Dynamic Registration (Asynchronous Handshake)
 
@@ -110,7 +158,7 @@ The Broker initiates registration by sending a POST request to the tool's Regist
   "broker_base_url": "https://egp-broker.university.edu",
   "callback_url": "https://egp-broker.university.edu/api/passport/v1/credentials",
   "name": "VT Extension Manager",
-  "passport_version": "1.0"
+  "passport_version": "1.1"
 }
 ```
 
@@ -131,7 +179,7 @@ After validating the request, the Tool generates credentials and "pushes" them t
 ```json
 {
   "tool_name": "CodeWorkout",
-  "passport_version": "1.0",
+  "passport_version": "1.1",
   "endpoints": {
     "extension_handler": "https://codeworkout.org/api/passport/v1/extension"
   },

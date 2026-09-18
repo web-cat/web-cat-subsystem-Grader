@@ -145,8 +145,19 @@ public class PassPortSecurity
         }
         catch (NumberFormatException e)
         {
-            log.warn("Invalid X-PassPort-Timestamp header: " + timestampHeader);
-            return false;
+            try
+            {
+                java.time.Instant inst = java.time.Instant.parse(timestampHeader.trim());
+                long ts = inst.getEpochSecond();
+                long nowSeconds = System.currentTimeMillis() / 1000L;
+                long delta = Math.abs(nowSeconds - ts);
+                return delta <= maxDriftSeconds;
+            }
+            catch (Exception ex)
+            {
+                log.warn("Invalid X-PassPort-Timestamp header: " + timestampHeader);
+                return false;
+            }
         }
     }
 

@@ -78,7 +78,7 @@ public class passport
     public static final int HTTP_STATUS_INTERNAL_ERROR     = WOResponse.HTTP_STATUS_INTERNAL_ERROR;
 
     public static final String DEFAULT_DOMAIN_WHITELIST =
-        "*.vt.edu,*.edu,localhost,127.0.0.1";
+        "*.cs.vt.edu,localhost,127.0.0.1";
     public static final String PROPERTY_DOMAIN_WHITELIST =
         "org.webcat.grader.passport.domainWhitelist";
     public static final long REGISTRY_TTL_MS = 172800000L; // 48 hours
@@ -238,11 +238,28 @@ public class passport
 
 
     // ----------------------------------------------------------
+    public WOActionResults v1Action()
+    {
+        forgetSession();
+        String path = request().requestHandlerPath();
+        String uri = request().uri();
+        if ((path != null && path.contains("register"))
+            || (uri != null && uri.contains("register")))
+        {
+            return registerAction();
+        }
+        return extensionAction();
+    }
+
+
+    // ----------------------------------------------------------
     public WOActionResults defaultAction()
     {
         forgetSession();
         String path = request().requestHandlerPath();
-        if (path != null && path.contains("register"))
+        String uri = request().uri();
+        if ((path != null && path.contains("register"))
+            || (uri != null && uri.contains("register")))
         {
             return registerAction();
         }
@@ -256,13 +273,18 @@ public class passport
     {
         if (actionName != null)
         {
-            if (actionName.endsWith("extension") || actionName.equals("v1/extension"))
+            String lower = actionName.toLowerCase();
+            if (lower.contains("extension") || lower.endsWith("extension"))
             {
                 return extensionAction();
             }
-            if (actionName.endsWith("register") || actionName.equals("v1/register"))
+            if (lower.contains("register") || lower.endsWith("register"))
             {
                 return registerAction();
+            }
+            if ("v1".equals(lower))
+            {
+                return v1Action();
             }
         }
         return super.performActionNamed(actionName);
@@ -308,6 +330,18 @@ public class passport
                         resp.put("status", "ok");
                         resp.put("request_id", reqId);
                         resp.put("message", "Extension already recorded (idempotent response)");
+                        if (cached.appliedDueDate != null)
+                        {
+                            resp.put("new_due_date", PassPortRequest.formatIsoDateTime(cached.appliedDueDate));
+                        }
+                        if (cached.appliedClosesOn != null)
+                        {
+                            resp.put("new_accept_until", PassPortRequest.formatIsoDateTime(cached.appliedClosesOn));
+                        }
+                        if (cached.appliedOpensOn != null)
+                        {
+                            resp.put("new_available_from", PassPortRequest.formatIsoDateTime(cached.appliedOpensOn));
+                        }
                     }
                     catch (JSONException e) {}
                     return jsonResponse(HTTP_STATUS_OK, resp);
@@ -324,26 +358,47 @@ public class passport
                 }
 
                 NSTimestamp newDue = pReq.newDueDate();
-                if (newDue == null)
+                NSTimestamp newAcceptUntil = pReq.newAcceptUntil();
+                NSTimestamp newAvailableFrom = pReq.newAvailableFrom();
+
+                if (newDue == null && newAcceptUntil == null && newAvailableFrom == null)
                 {
                     return jsonError(HTTP_STATUS_BAD_REQUEST,
-                        "Missing or invalid extension.new_due_date");
+                        "No extension dates provided (at least one of new_due_date, new_accept_until, or new_available_from must be specified)");
                 }
 
                 // 3. Conflict Check (409 Conflict):
-                // If a later due date is already active for this student, reject
+                // If a later due date or accept until cutoff is already active for this student, reject
                 NSTimestamp currentActiveDue = ao.dueDateFor(student);
-                if (currentActiveDue != null && currentActiveDue.after(newDue))
+                NSTimestamp currentActiveAcceptUntil = ao.lateDeadlineFor(student);
+
+                boolean dueConflict = (newDue != null
+                    && currentActiveDue != null
+                    && currentActiveDue.after(newDue));
+                boolean acceptUntilConflict = (newAcceptUntil != null
+                    && currentActiveAcceptUntil != null
+                    && currentActiveAcceptUntil.after(newAcceptUntil));
+
+                if (dueConflict || acceptUntilConflict)
                 {
-                    log.info("PassPort extension conflict: active=" + currentActiveDue
-                        + " > new=" + newDue);
+                    log.info("PassPort extension conflict for student " + student.userName()
+                        + ": dueConflict=" + dueConflict + " (active=" + currentActiveDue + ", req=" + newDue + ")"
+                        + ", acceptUntilConflict=" + acceptUntilConflict + " (active=" + currentActiveAcceptUntil + ", req=" + newAcceptUntil + ")");
                     JSONObject conflict = new JSONObject();
                     try
                     {
                         conflict.put("status", "conflict");
-                        conflict.put("error", "A later due date is already active for this student.");
-                        conflict.put("active_due_date", currentActiveDue.toString());
-                        conflict.put("requested_due_date", newDue.toString());
+                        conflict.put("error", "A later due date or accept until cutoff is already active for this student.");
+                        if (dueConflict)
+                        {
+                            conflict.put("active_due_date", PassPortRequest.formatIsoDateTime(currentActiveDue));
+                            conflict.put("requested_due_date", PassPortRequest.formatIsoDateTime(newDue));
+                        }
+                        if (acceptUntilConflict)
+                        {
+                            conflict.put("active_accept_until", PassPortRequest.formatIsoDateTime(currentActiveAcceptUntil));
+                            conflict.put("requested_accept_until", PassPortRequest.formatIsoDateTime(newAcceptUntil));
+                        }
                     }
                     catch (JSONException e) {}
                     return jsonResponse(HTTP_STATUS_CONFLICT, conflict);
@@ -352,6 +407,7 @@ public class passport
                 // 4. Create or Update StudentExtension
                 StudentExtension ext = ao.extensionForUser(student);
                 boolean wasNewlyCreated = false;
+                NSTimestamp prevOpens = null;
                 NSTimestamp prevDue = null;
                 NSTimestamp prevClose = null;
 
@@ -362,11 +418,23 @@ public class passport
                 }
                 else
                 {
+                    prevOpens = ext.opensOn();
                     prevDue = ext.dueDate();
                     prevClose = ext.closesOn();
                 }
 
-                ext.setDueDate(newDue);
+                if (newDue != null)
+                {
+                    ext.setDueDate(newDue);
+                }
+                if (newAcceptUntil != null)
+                {
+                    ext.setClosesOn(newAcceptUntil);
+                }
+                if (newAvailableFrom != null)
+                {
+                    ext.setOpensOn(newAvailableFrom);
+                }
                 ec.saveChanges();
 
                 // 5. Store record in rollback/idempotency registry
@@ -376,15 +444,19 @@ public class passport
                 rec.assignmentOfferingId = (ao.id() != null) ? ao.id().intValue() : 0;
                 rec.userId = (student.id() != null) ? student.id().intValue() : 0;
                 rec.wasNewlyCreated = wasNewlyCreated;
+                rec.previousOpensOn = prevOpens;
                 rec.previousDueDate = prevDue;
                 rec.previousClosesOn = prevClose;
+                rec.appliedOpensOn = newAvailableFrom;
                 rec.appliedDueDate = newDue;
+                rec.appliedClosesOn = newAcceptUntil;
                 rec.recordedTime = System.currentTimeMillis();
                 EXTENSION_REGISTRY.put(reqId, rec);
 
                 log.info("PassPort extension applied: reqId=" + reqId
                     + ", student=" + student.userName() + ", ao=" + ao.id()
-                    + ", newDue=" + newDue);
+                    + ", newDue=" + newDue + ", newAcceptUntil=" + newAcceptUntil
+                    + ", newAvailableFrom=" + newAvailableFrom);
 
                 JSONObject success = new JSONObject();
                 try
@@ -392,7 +464,18 @@ public class passport
                     success.put("status", "ok");
                     success.put("request_id", reqId);
                     success.put("message", "Extension successfully recorded");
-                    success.put("new_due_date", newDue.toString());
+                    if (newDue != null)
+                    {
+                        success.put("new_due_date", PassPortRequest.formatIsoDateTime(newDue));
+                    }
+                    if (newAcceptUntil != null)
+                    {
+                        success.put("new_accept_until", PassPortRequest.formatIsoDateTime(newAcceptUntil));
+                    }
+                    if (newAvailableFrom != null)
+                    {
+                        success.put("new_available_from", PassPortRequest.formatIsoDateTime(newAvailableFrom));
+                    }
                 }
                 catch (JSONException e) {}
                 return jsonResponse(HTTP_STATUS_OK, success);
@@ -428,6 +511,14 @@ public class passport
                 }
                 if (reqId == null || reqId.trim().isEmpty())
                 {
+                    reqId = request().headerForKey("X-PassPort-Request-ID");
+                }
+                if (reqId == null || reqId.trim().isEmpty())
+                {
+                    reqId = request().headerForKey("x-passport-request-id");
+                }
+                if (reqId == null || reqId.trim().isEmpty())
+                {
                     return jsonError(HTTP_STATUS_BAD_REQUEST,
                         "Missing required field: request_id");
                 }
@@ -445,10 +536,21 @@ public class passport
                         }
                         else
                         {
+                            ext.setOpensOn(rec.previousOpensOn);
                             ext.setDueDate(rec.previousDueDate);
                             ext.setClosesOn(rec.previousClosesOn);
+                            if (ext.opensOn() == null && ext.dueDate() == null && ext.closesOn() == null)
+                            {
+                                ec.deleteObject(ext);
+                            }
                         }
                         ec.saveChanges();
+                        AssignmentOffering offering = AssignmentOffering.forId(ec, rec.assignmentOfferingId);
+                        if (offering != null)
+                        {
+                            offering.updateTimes();
+                            ec.saveChanges();
+                        }
                         log.info("PassPort extension rollback completed from registry for reqId: " + reqId);
 
                         JSONObject resp = new JSONObject();
@@ -472,14 +574,25 @@ public class passport
                     if (ext != null)
                     {
                         NSTimestamp origDue = pReq.originalDueDate();
-                        if (origDue != null)
-                        {
-                            ext.setDueDate(origDue);
-                        }
-                        else
+                        NSTimestamp origAcceptUntil = pReq.originalAcceptUntil();
+                        NSTimestamp origAvailableFrom = pReq.originalAvailableFrom();
+
+                        if (origDue == null && origAcceptUntil == null && origAvailableFrom == null)
                         {
                             ec.deleteObject(ext);
                         }
+                        else
+                        {
+                            ext.setDueDate(origDue);
+                            ext.setClosesOn(origAcceptUntil);
+                            ext.setOpensOn(origAvailableFrom);
+                            if (ext.opensOn() == null && ext.dueDate() == null && ext.closesOn() == null)
+                            {
+                                ec.deleteObject(ext);
+                            }
+                        }
+                        ec.saveChanges();
+                        ao.updateTimes();
                         ec.saveChanges();
                         log.info("PassPort extension rollback completed via payload match for reqId: " + reqId);
 
@@ -540,7 +653,7 @@ public class passport
                                 }
                                 catch (Exception e) {}
                                 client.setRequestedProperties(
-                                    "canvas_course_id,lti_user_id,email,canvas_assignment_id");
+                                    "canvas_course_id,canvas_assignment_id,title,lti_user_id,canvas_user_id,email");
                                 ec.saveChanges();
                             }
                             creds[0] = client.clientId();
@@ -551,7 +664,7 @@ public class passport
                     // Construct Phase 2 payload
                     JSONObject payload = new JSONObject();
                     payload.put("tool_name", "Web-CAT");
-                    payload.put("passport_version", "1.0");
+                    payload.put("passport_version", "1.1");
 
                     JSONObject endpoints = new JSONObject();
                     endpoints.put("extension_handler", extensionHandlerUrl);
@@ -559,9 +672,11 @@ public class passport
 
                     JSONArray requestedProps = new JSONArray();
                     requestedProps.put("canvas_course_id");
-                    requestedProps.put("lti_user_id");
-                    requestedProps.put("email");
                     requestedProps.put("canvas_assignment_id");
+                    requestedProps.put("title");
+                    requestedProps.put("lti_user_id");
+                    requestedProps.put("canvas_user_id");
+                    requestedProps.put("email");
                     payload.put("requested_properties", requestedProps);
 
                     JSONObject credentials = new JSONObject();
@@ -623,7 +738,7 @@ public class passport
         try
         {
             String url = Application.completeURLWithRequestHandlerKey(
-                context(), "wa", "passport/extension", null, true, 0);
+                context(), "wa", "passport/v1/extension", null, true, 0);
             if (url != null && !url.isEmpty())
             {
                 return url;
@@ -642,7 +757,7 @@ public class passport
         {
             host = "localhost";
         }
-        return scheme + "://" + host + "/WebObjects/Web-CAT.woa/wa/passport/extension";
+        return scheme + "://" + host + "/WebObjects/Web-CAT.woa/wa/passport/v1/extension";
     }
 
 
@@ -698,9 +813,12 @@ public class passport
         int assignmentOfferingId;
         int userId;
         boolean wasNewlyCreated;
+        NSTimestamp previousOpensOn;
         NSTimestamp previousDueDate;
         NSTimestamp previousClosesOn;
+        NSTimestamp appliedOpensOn;
         NSTimestamp appliedDueDate;
+        NSTimestamp appliedClosesOn;
         long recordedTime;
     }
 
