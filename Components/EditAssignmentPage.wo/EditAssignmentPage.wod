@@ -315,3 +315,10 @@ URLInfo: org.webcat.core.PopUpInfo {
     title   = "URL";
     message = "Place a URL to use for the assignment writeup.  If this optional value is set, the assignment name will be shown to students as an active hyperlink that targets this URL.";
 }
+
+RecalculateOfferingTimes: WCButton {
+    action = recalculateOfferingTimes;
+    remote = true;
+    label  = "Recalculate minOpen/maxClose Dates";
+}
+

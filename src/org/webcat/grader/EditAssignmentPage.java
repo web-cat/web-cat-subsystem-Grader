@@ -20,6 +20,7 @@
 package org.webcat.grader;
 
 import com.webobjects.appserver.*;
+import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
 import java.net.URL;
@@ -73,6 +74,11 @@ public class EditAssignmentPage
     public NSArray<GradingPlugin> gradingPluginsToAdd;
     public GradingPlugin gradingPluginToAdd;
 
+    public StudentExtension                    thisExtension;
+    public int                                 thisExtensionIndex;
+    public StudentExtension                    extensionForAction;
+    public ERXDisplayGroup<StudentExtension>   studentExtensionGroup;
+
 
     //~ Methods ...............................................................
 
@@ -122,6 +128,37 @@ public class EditAssignmentPage
                     assignment.submissionProfile() )
                  );
         }
+
+        if (studentExtensionGroup == null)
+        {
+            studentExtensionGroup = new ERXDisplayGroup<StudentExtension>();
+            studentExtensionGroup.setSortOrderings(
+                StudentExtension.user.dot(User.lastName).ascInsensitives().then(
+                    StudentExtension.user.dot(User.firstName).ascInsensitive())
+            );
+        }
+        NSMutableArray<StudentExtension> exts =
+            new NSMutableArray<StudentExtension>();
+        if (offeringGroup != null && offeringGroup.displayedObjects() != null)
+        {
+            for (AssignmentOffering offering : offeringGroup.displayedObjects())
+            {
+                NSArray<StudentExtension> offExts = offering.studentExtensions();
+                if (offExts != null && offExts.count() > 0)
+                {
+                    for (StudentExtension ext : offExts)
+                    {
+                        if (!ext.isDeletedEO())
+                        {
+                            exts.addObject(ext);
+                        }
+                    }
+                }
+            }
+        }
+        EOSortOrdering.sortArrayUsingKeyOrderArray(
+            exts, studentExtensionGroup.sortOrderings());
+        studentExtensionGroup.setObjectArray(exts);
 
         areDueDatesLocked = areDueDatesSame();
         areLmsIdsLocked = areLmsIdsSame();
@@ -577,6 +614,37 @@ public class EditAssignmentPage
         {
             thisOffering.setDueDate(value);
         }
+    }
+
+
+
+
+
+    // ----------------------------------------------------------
+    /**
+     * Recalculates the minOpen and maxClose dates for all assignment offerings
+     * managed on this page.
+     *
+     * @return javascript to refresh the offerings pane
+     */
+    public WOActionResults recalculateOfferingTimes()
+    {
+        if (saveAndCanProceed())
+        {
+            if (offeringGroup != null && offeringGroup.displayedObjects() != null)
+            {
+                for (AssignmentOffering offering : offeringGroup.displayedObjects())
+                {
+                    offering.updateTimes();
+                }
+            }
+            applyLocalChanges();
+            log.info("Recalculated minOpen/maxClose dates for all offerings of "
+                + (assignment != null ? assignment.name() : "assignment"));
+        }
+
+        return new JavascriptGenerator()
+            .refresh("allOfferings", "error-panel");
     }
 
 
@@ -1106,6 +1174,63 @@ public class EditAssignmentPage
             protected WOActionResults actionWasConfirmed()
             {
                 return deleteOfferingActionOk();
+            }
+        };
+    }
+
+
+    // ----------------------------------------------------------
+    private WOComponent deleteExtensionActionOk()
+    {
+        if (extensionForAction != null)
+        {
+            AssignmentOffering ao = extensionForAction.assignmentOffering();
+            if (!applyLocalChanges()) return flush(null);
+            localContext().deleteObject(extensionForAction);
+            if (!applyLocalChanges()) return flush(null);
+            if (ao != null)
+            {
+                ao.updateTimes();
+                applyLocalChanges();
+            }
+            extensionForAction = null;
+        }
+        return flush(null);
+    }
+
+
+    // ----------------------------------------------------------
+    public WOActionResults deleteExtension()
+    {
+        if (!applyLocalChanges())
+        {
+            return displayMessages();
+        }
+
+        extensionForAction = thisExtension;
+        final String studentName = (extensionForAction != null
+            && extensionForAction.user() != null)
+            ? extensionForAction.user().nameAndUid()
+            : "this student";
+
+        return new ConfirmingAction(this, false) {
+            @Override
+            protected String confirmationTitle()
+            {
+                return "Delete This Student Extension?";
+            }
+
+            @Override
+            protected String confirmationMessage()
+            {
+                return "<p>Are you sure you want to delete the deadline extension for <b>"
+                    + studentName + "</b>?</p>";
+            }
+
+            @Override
+            protected WOActionResults actionWasConfirmed()
+            {
+                return deleteExtensionActionOk();
             }
         };
     }

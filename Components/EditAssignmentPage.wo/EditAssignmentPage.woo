@@ -36,5 +36,11 @@
 	            }
 	        ); 
 	    }; 
+        studentExtensionGroup = {
+            class = ERXDisplayGroup; 
+            formatForLikeQualifier = "%@*"; 
+            localKeys = (); 
+            numberOfObjectsPerBatch = 0; 
+        }; 
     };
 }

@@ -85,6 +85,35 @@
         </wo:loop>
     </tbody>
 </table>
+
+<h3>Student Extensions</h3>
+<wo:if condition="$studentExtensionGroup.displayedObjects.count">
+<table>
+    <thead><tr>
+        <th>Student</th>
+        <th class="sm">Course Offering</th>
+        <th>Opens On</th>
+        <th>Due Date</th>
+        <th>Closes On</th>
+        <th class="sm">Delete?</th>
+    </tr></thead>
+    <tbody>
+        <wo:loop list="$studentExtensionGroup.displayedObjects" item="$thisExtension" index="$thisExtensionIndex">
+        <wo:tr index="$thisExtensionIndex">
+            <td><strong><wo:str value="$thisExtension.user.nameAndUid"/></strong></td>
+            <td><wo:str value="$thisExtension.assignmentOffering.courseOffering.compactName"/></td>
+            <td><wo:str value="$thisExtension.opensOn" formatter="$session.timeFormatter"/></td>
+            <td><wo:str value="$thisExtension.dueDate" formatter="$session.timeFormatter"/></td>
+            <td><wo:str value="$thisExtension.closesOn" formatter="$session.timeFormatter"/></td>
+            <td><wo:WCImageButton filename="icons/delete.png" framework="Core" remote="true" action="$deleteExtension" alt="Delete this extension" title="Delete this extension" class="icon"/></td>
+        </wo:tr>
+        </wo:loop>
+    </tbody>
+</table>
+</wo:if><wo:else>
+<p>&lt;none&gt;</p>
+</wo:else>
+<p><wo:WCButton action="$recalculateOfferingTimes" remote="true" label="Recalculate minOpen/maxClose Dates"/></p>
 </wo:WCContentPane>
 
 <h3>Actions for All Offerings</h3>
