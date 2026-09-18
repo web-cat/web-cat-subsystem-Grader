@@ -1316,7 +1316,57 @@ public class AssignmentOffering
         showAll = ERXValueUtilities.booleanValueWithDefault(
             formValueForKey(formValues, "showAll"), showAll || forStaff);
 
-        // Set up the qualifier
+        EOQualifier scopeQualifier = null;
+        if (!forStaff)
+        {
+            scopeQualifier = publish.isTrue();
+        }
+
+        Object valueObj = formValueForKey(formValues, "institution");
+        if (valueObj != null)
+        {
+            scopeQualifier = and(scopeQualifier,
+                courseOffering.dot(CourseOffering.course)
+                .dot(Course.department).dot(Department.institution)
+                .dot(AuthenticationDomain.propertyName).is(
+                    "authenticator." + valueObj));
+        }
+        valueObj = formValueForKey(formValues, "crn");
+        if (valueObj != null)
+        {
+            scopeQualifier = and(scopeQualifier,
+                courseOffering.dot(CourseOffering.crn).is(valueObj.toString()));
+        }
+        valueObj = formValueForKey(formValues, "course");
+        if (valueObj != null)
+        {
+            scopeQualifier = and(scopeQualifier,
+                courseOffering.dot(CourseOffering.course).dot(Course.number)
+                .is(ERXValueUtilities.intValue(valueObj)));
+        }
+
+        // Determine starting expiration time from next assignment to open
+        NSTimestamp expires = null;
+        EOQualifier nextOpenQual = and(scopeQualifier,
+            minOpensOn.greaterThan(currentTime));
+        if (nextOpenQual == null)
+        {
+            nextOpenQual = assignment.isNotNull();
+        }
+        WCFetchSpecification<AssignmentOffering> nextOpenSpec =
+            new WCFetchSpecification<AssignmentOffering>(
+                AssignmentOffering.ENTITY_NAME,
+                nextOpenQual,
+                new NSArray<EOSortOrdering>(minOpensOn.asc()));
+        nextOpenSpec.setFetchLimit(1);
+        NSArray<AssignmentOffering> nextOpenings =
+            objectsWithFetchSpecification(context, nextOpenSpec);
+        if (nextOpenings != null && nextOpenings.count() > 0)
+        {
+            expires = nextOpenings.objectAtIndex(0).minOpensOn();
+        }
+
+        // Set up the qualifier for open offerings
         EOQualifier dateQualifier;
         if (showAll)
         {
@@ -1331,35 +1381,7 @@ public class AssignmentOffering
             dateQualifier = openQualifier(currentTime);
         }
 
-        EOQualifier qualifier = dateQualifier;
-        if (!forStaff)
-        {
-            qualifier = and(qualifier, publish.isTrue());
-        }
-
-        Object valueObj = formValueForKey( formValues, "institution" );
-        if ( valueObj != null )
-        {
-            qualifier = and(qualifier,
-                courseOffering.dot(CourseOffering.course)
-                .dot(Course.department).dot(Department.institution)
-                .dot(AuthenticationDomain.propertyName).is(
-                    "authenticator." + valueObj));
-        }
-        valueObj = formValueForKey( formValues, "crn" );
-        if ( valueObj != null )
-        {
-            qualifier = and(qualifier,
-                courseOffering.dot(CourseOffering.crn).is(valueObj.toString()));
-        }
-        valueObj = formValueForKey( formValues, "course" );
-        if ( valueObj != null )
-        {
-            qualifier = and(qualifier,
-                courseOffering.dot(CourseOffering.course).dot(Course.number)
-                .is(ERXValueUtilities.intValue(valueObj)));
-        }
-
+        EOQualifier qualifier = and(scopeQualifier, dateQualifier);
         if (qualifier == null)
         {
             qualifier = assignment.isNotNull();
@@ -1408,8 +1430,7 @@ public class AssignmentOffering
             log.debug("after crns filter: " + results);
         }
 
-        // Find query expiration time
-        NSTimestamp expires = null;
+        // Adjust query expiration time based on active offerings
         for (AssignmentOffering offering : results)
         {
             NSTimestamp deadline = offering.maxClosesOn();
@@ -1419,30 +1440,16 @@ public class AssignmentOffering
             {
                 expires = deadline;
             }
-            deadline = offering.minOpensOn();
-            if (deadline != null
-                && deadline.after(currentTime)
-                && (expires == null || expires.after(deadline)))
+            if (showAll)
             {
-                expires = deadline;
+                deadline = offering.minOpensOn();
+                if (deadline != null
+                    && deadline.after(currentTime)
+                    && (expires == null || expires.after(deadline)))
+                {
+                    expires = deadline;
+                }
             }
-        }
-        if (expires == null)
-        {
-            expires = currentTime;
-        }
-
-        qualifier = dateQualifier;
-        if (!forStaff)
-        {
-            qualifier = and(qualifier, publish.isTrue());
-        }
-        {
-            @SuppressWarnings("unchecked")
-            NSArray<AssignmentOffering> newResults =
-                ERXArrayUtilities.filteredArrayWithQualifierEvaluation(
-                    results, qualifier);
-            results = newResults;
         }
         if (!groupByCRN)
         {
