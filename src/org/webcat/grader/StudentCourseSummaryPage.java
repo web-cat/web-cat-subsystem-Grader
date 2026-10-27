@@ -419,6 +419,12 @@ public class StudentCourseSummaryPage
                 GradeStudentSubmissionPage page =
                     pageWithName(GradeStudentSubmissionPage.class);
 
+                Submission sub = aSubmission;
+                if (sub == null && assignmentOffering != null)
+                {
+                    sub = submissionForAssignmentOffering();
+                }
+                page.submission = sub;
                 page.availableSubmissions = null;
                 page.thisSubmissionIndex = 0;
                 page.nextPage = this;

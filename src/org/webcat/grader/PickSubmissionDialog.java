@@ -201,6 +201,7 @@ public class PickSubmissionDialog
             {
                 GradeStudentSubmissionPage page =
                     pageWithName(GradeStudentSubmissionPage.class);
+                page.submission = selectedSub;
 
                 if (allUserSubmissionsForNavigation == null)
                 {

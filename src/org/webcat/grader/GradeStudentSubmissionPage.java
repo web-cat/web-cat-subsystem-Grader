@@ -221,8 +221,6 @@ public class GradeStudentSubmissionPage
             thisSubmissionIndex = nextSub;
             submission = availableSubmissions
                 .objectAtIndex(nextSub).submission();
-            prefs().setSubmissionRelationship(submission);
-            prefs().setSubmissionFileStatsRelationship(null);
             result = submission.result();
         }
 
@@ -291,8 +289,9 @@ public class GradeStudentSubmissionPage
         }
 
         log.debug( "fileStatsDetails()" );
-        prefs().setSubmissionFileStatsRelationship( stats );
-        WCComponent statsPage = pageWithName(EditFileCommentsPage.class);
+        EditFileCommentsPage statsPage =
+            pageWithName(EditFileCommentsPage.class);
+        statsPage.fileStats = stats;
         statsPage.nextPage = this;
         return statsPage;
     }
@@ -360,9 +359,8 @@ public class GradeStudentSubmissionPage
         {
             return null;
         }
-        Submission sub = prefs().submission();
+        Submission sub = submission;
         sub.requeueForGrading(localContext());
-        prefs().setSubmissionRelationship(null);
         applyLocalChanges();
         GraderQueueProcessor.processSubmission(sub);
         return back();

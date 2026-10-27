@@ -155,8 +155,9 @@ public class EditFileCommentsPage
         }
         else
         {
-            prefs().setSubmissionFileStatsRelationship(selectedFile);
-            WCComponent statsPage = pageWithName(EditFileCommentsPage.class);
+            EditFileCommentsPage statsPage =
+                pageWithName(EditFileCommentsPage.class);
+            statsPage.fileStats = selectedFile;
             statsPage.nextPage = this.nextPage;
             return statsPage;
         }

@@ -33,7 +33,6 @@ import org.webcat.ui.WCTable;
 import org.webcat.ui.generators.JavascriptFunction;
 import org.webcat.ui.generators.JavascriptGenerator;
 import org.webcat.ui.util.ComponentIDGenerator;
-import org.webcat.woextensions.WCFetchSpecification;
 
 // -------------------------------------------------------------------------
 /**
@@ -156,11 +155,13 @@ public class StudentsForAssignmentPage
             {
                 NSArray<User> students = ao.courseOffering().studentsWithoutStaff();
 
+                @SuppressWarnings("unchecked")
                 NSArray<User> staff = ERXArrayUtilities
                     .arrayByAddingObjectsFromArrayWithoutDuplicates(
                         ao.courseOffering().staff(),
                         admins);
 
+                @SuppressWarnings("unchecked")
                 NSArray<User> allForAO = ERXArrayUtilities
                     .arrayByAddingObjectsFromArrayWithoutDuplicates(students, staff);
 
@@ -386,6 +387,7 @@ public class StudentsForAssignmentPage
                 GradeStudentSubmissionPage page =
                     (GradeStudentSubmissionPage) destination;
 
+                page.submission = sub;
                 page.availableSubmissions =
                     availableSubmissionsForGrading();
                 Submission.StudentSubmissionInfo thisInfo = aStudentInfo();
@@ -424,6 +426,7 @@ public class StudentsForAssignmentPage
                 GradeStudentSubmissionPage page =
                     (GradeStudentSubmissionPage) destination;
 
+                page.submission = aNewerSubmission;
                 page.availableSubmissions =
                     availableSubmissionsForGrading();
                 Submission.StudentSubmissionInfo thisInfo = aStudentInfo();
