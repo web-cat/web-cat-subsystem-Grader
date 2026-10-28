@@ -778,19 +778,22 @@ public class GraderQueueProcessor
                 job.submission().assignmentOffering().assignment()
                 .name() );
 
-            properties.setProperty("dueDateTimestamp", Long.toString(
-                job.submission().assignmentOffering().dueDate().getTime()));
+            NSTimestamp t = job.submission().assignmentOffering().dueDate();
+            properties.setProperty("dueDateTimestamp",
+                (t == null) ? "" :Long.toString(t.getTime()));
+            NSTimestamp ld =
+                job.submission().assignmentOffering().lateDeadline();
             properties.setProperty("lateDeadlineTimestamp",
-                Long.toString(job.submission().assignmentOffering()
-                    .lateDeadline().getTime()));
+                (t == null) ? "" :Long.toString(t.getTime()));
+            t = job.submission().submitTime();
             properties.setProperty("submissionTimestamp",
-                Long.toString(job.submission().submitTime().getTime()));
+                (t == null) ? "" :Long.toString(t.getTime()));
             properties.setProperty("jobQueueTimestamp",
                 Long.toString(job.queueTime().getTime()));
 
             properties.setProperty("jobQueuedAfterLateDeadline",
-                Boolean.toString(job.queueTime().after(
-                    job.submission().assignmentOffering().lateDeadline())));
+                (ld == null) ? "" :
+                Boolean.toString(job.queueTime().after(ld)));
             properties.setProperty("jobIsRegrading",
                 Boolean.toString(job.regrading()));
 

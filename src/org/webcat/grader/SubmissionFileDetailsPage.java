@@ -130,9 +130,6 @@ public class SubmissionFileDetailsPage
         }
         else
         {
-            prefs().setSubmissionFileStatsRelationship( selectedFile );
-            prefs().setSubmissionRelationship(
-                thisFile.submissionResult().submissionFor(user()));
             SubmissionFileDetailsPage statsPage = (SubmissionFileDetailsPage)
                 pageWithName(
                     SubmissionFileDetailsPage.class.getName() );

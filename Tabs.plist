@@ -50,11 +50,6 @@
               };
             };
           };
-          "Regrade Everyone" = {
-            accessLevel = 50;
-            priority = 5;
-            pageName = org.webcat.grader.MassRegraderPage;
-          };
         };
       };
       Assignments = {

@@ -253,7 +253,7 @@ public class BlueJSubmitterDefinitions
         {
             name += " (not published)";
         }
-        if ( currentTime.after(anAssignmentOffering.lateDeadline()))
+        if ( currentTime.after(anAssignmentOffering.maxClosesOn()))
         {
             name += " (closed)"; // " (by permission only)";
         }
@@ -324,6 +324,10 @@ public class BlueJSubmitterDefinitions
     // ----------------------------------------------------------
     public String escapeBareName(String name)
     {
+        if (name != null)
+        {
+            name = name.replaceAll("&", "and");
+        }
         return name;
     }
 

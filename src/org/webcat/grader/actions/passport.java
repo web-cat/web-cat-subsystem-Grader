@@ -24,6 +24,7 @@ package org.webcat.grader.actions;
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WORequest;
 import com.webobjects.appserver.WOResponse;
+import com.webobjects.foundation.NSArray;
 import com.webobjects.foundation.NSTimestamp;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -44,6 +45,8 @@ import org.webcat.core.actions.WCDirectAction;
 import org.webcat.grader.AssignmentOffering;
 import org.webcat.grader.PassportClient;
 import org.webcat.grader.StudentExtension;
+import org.webcat.grader.Submission;
+import org.webcat.grader.SubmissionResult;
 import org.webcat.woextensions.ECAction;
 import org.webcat.woextensions.ECActionWithResult;
 
@@ -56,6 +59,7 @@ import org.webcat.woextensions.ECActionWithResult;
  * 2. DELETE /passport/v1/extension - Revert/rollback extension using request_id (200 OK / 401 / 404)
  * 3. POST /passport/v1/register - Phase 1 Dynamic Registration handshake (202 Accepted)
  *    and triggers asynchronous Phase 2 credential delivery to callback_url.
+ * 4. POST|GET /passport/v1/status or /submissionStatus - Query student submission status (200 OK / 401 / 404)
  *
  * @author PassPort API Generator
  */
@@ -118,6 +122,28 @@ public class passport
             return jsonError(HTTP_STATUS_METHOD_NOT_ALLOWED,
                 "Method " + method + " not allowed on /extension");
         }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Submission status query endpoint:
+     * - POST / GET: Returns student's submission status for grading and most recent.
+     */
+    public WOActionResults submissionStatusAction()
+    {
+        forgetSession();
+        return handleSubmissionStatus();
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Alias for submissionStatusAction.
+     */
+    public WOActionResults statusAction()
+    {
+        return submissionStatusAction();
     }
 
 
@@ -248,6 +274,11 @@ public class passport
         {
             return registerAction();
         }
+        if ((path != null && (path.contains("status") || path.contains("submission")))
+            || (uri != null && (uri.contains("status") || uri.contains("submission"))))
+        {
+            return submissionStatusAction();
+        }
         return extensionAction();
     }
 
@@ -263,6 +294,11 @@ public class passport
         {
             return registerAction();
         }
+        if ((path != null && (path.contains("status") || path.contains("submission")))
+            || (uri != null && (uri.contains("status") || uri.contains("submission"))))
+        {
+            return submissionStatusAction();
+        }
         return extensionAction();
     }
 
@@ -274,6 +310,10 @@ public class passport
         if (actionName != null)
         {
             String lower = actionName.toLowerCase();
+            if (lower.contains("status") || lower.contains("submission"))
+            {
+                return submissionStatusAction();
+            }
             if (lower.contains("extension") || lower.endsWith("extension"))
             {
                 return extensionAction();
@@ -615,6 +655,111 @@ public class passport
     }
 
 
+    // ----------------------------------------------------------
+    private WOActionResults handleSubmissionStatus()
+    {
+        return new ECActionWithResult<WOActionResults>() {
+            @Override
+            public WOActionResults action()
+            {
+                PassPortRequest pReq = new PassPortRequest(request(), ec);
+
+                // 1. Authenticate & Verify
+                if (!pReq.isValid())
+                {
+                    log.warn("PassPort submission status query unauthorized: " + pReq.validationError());
+                    return jsonError(HTTP_STATUS_UNAUTHORIZED,
+                        pReq.validationError());
+                }
+
+                // 2. Resolve entities
+                AssignmentOffering ao = pReq.assignmentOffering();
+                User student = pReq.user();
+                if (ao == null || student == null)
+                {
+                    log.warn("PassPort submission status 404: ao=" + ao + ", student=" + student);
+                    return jsonError(HTTP_STATUS_NOT_FOUND,
+                        "User or Resource not recognized");
+                }
+
+                // 3. Query student's submissions for this assignment offering
+                NSArray<Submission> allSubs =
+                    Submission.submissionsForAssignmentOfferingAndUserDescending(
+                        ec, ao, student);
+
+                // Determine submission for grading:
+                NSArray<Submission> gradingCandidates =
+                    Submission.submissionsForGrading(ec, ao, student);
+                Submission subForGrading = (gradingCandidates != null && gradingCandidates.count() > 0)
+                    ? gradingCandidates.objectAtIndex(0)
+                    : null;
+
+                if (subForGrading == null && allSubs != null && allSubs.count() > 0)
+                {
+                    for (Submission s : allSubs)
+                    {
+                        if (s.isSubmissionForGrading())
+                        {
+                            subForGrading = s;
+                            break;
+                        }
+                    }
+                    if (subForGrading == null)
+                    {
+                        for (Submission s : allSubs)
+                        {
+                            if (s.resultIsReady() && s.isBetterGradingChoiceThan(subForGrading))
+                            {
+                                subForGrading = s;
+                            }
+                        }
+                    }
+                    if (subForGrading == null)
+                    {
+                        subForGrading = allSubs.objectAtIndex(0);
+                    }
+                }
+
+                // Determine most recent submission:
+                Submission mostRecentSub = (allSubs != null && allSubs.count() > 0)
+                    ? allSubs.objectAtIndex(0)
+                    : null;
+
+                JSONObject response = new JSONObject();
+                try
+                {
+                    response.put("status", "ok");
+
+                    if (subForGrading != null)
+                    {
+                        JSONObject gradingJson = formatSubmissionJson(subForGrading);
+                        response.put("submission_for_grading", gradingJson);
+                    }
+                    else
+                    {
+                        response.put("submission_for_grading", JSONObject.NULL);
+                    }
+
+                    // for the most recent submission, if different from the submission for grading:
+                    if (mostRecentSub != null && (subForGrading == null || !mostRecentSub.equals(subForGrading)))
+                    {
+                        JSONObject recentJson = formatSubmissionJson(mostRecentSub);
+                        response.put("most_recent_submission", recentJson);
+                    }
+                }
+                catch (JSONException e)
+                {
+                    log.error("Error creating submission status JSON response", e);
+                    return jsonError(HTTP_STATUS_INTERNAL_ERROR,
+                        "Internal error formatting JSON response");
+                }
+
+                return jsonResponse(HTTP_STATUS_OK, response);
+            }
+        }.call();
+    }
+
+
     //~ Private Helper Methods ................................................
 
     // ----------------------------------------------------------
@@ -758,6 +903,107 @@ public class passport
             host = "localhost";
         }
         return scheme + "://" + host + "/WebObjects/Web-CAT.woa/wa/passport/v1/extension";
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Formats submission data into a JSON object including timestamp,
+     * submission number, total score, TA score, and direct URLs for
+     * student view and grader view.
+     */
+    private JSONObject formatSubmissionJson(Submission sub)
+        throws JSONException
+    {
+        JSONObject json = new JSONObject();
+
+        // 1. timestamp
+        if (sub.submitTime() != null)
+        {
+            json.put("timestamp", PassPortRequest.formatIsoDateTime(sub.submitTime()));
+        }
+        else
+        {
+            json.put("timestamp", JSONObject.NULL);
+        }
+
+        // 2. submission number
+        json.put("submission_number", sub.submitNumber());
+        json.put("submit_number", sub.submitNumber());
+
+        // 3. total score
+        SubmissionResult res = sub.result();
+        if (res != null)
+        {
+            json.put("total_score", res.finalScore());
+        }
+        else
+        {
+            json.put("total_score", JSONObject.NULL);
+        }
+
+        // 4. ta score (null if none entered)
+        if (res != null && res.taScoreRaw() != null)
+        {
+            json.put("ta_score", res.taScoreRaw());
+        }
+        else
+        {
+            json.put("ta_score", JSONObject.NULL);
+        }
+
+        // 5. direct url for the student view of feedback for the submission
+        // 6. direct url to view the grading page for the submission
+        Number idVal = sub.id();
+        String viewUrl = buildSubmissionUrl("view", idVal);
+        String editUrl = buildSubmissionUrl("edit", idVal);
+
+        json.put("direct_url_feedback", viewUrl);
+        json.put("feedback_url", viewUrl);
+        json.put("view_url", viewUrl);
+        json.put("student_view_url", viewUrl);
+
+        json.put("direct_url_grading", editUrl);
+        json.put("grading_url", editUrl);
+        json.put("edit_url", editUrl);
+        json.put("grader_view_url", editUrl);
+
+        return json;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Construct a direct URL for the submission direct action handler.
+     */
+    private String buildSubmissionUrl(String action, Number id)
+    {
+        String actionPath = "submission/" + action;
+        String queryString = (id != null) ? ("id=" + id) : null;
+        try
+        {
+            String url = Application.completeURLWithRequestHandlerKey(
+                context(), "wa", actionPath, queryString, true, 0);
+            if (url != null && !url.isEmpty())
+            {
+                return url;
+            }
+        }
+        catch (Exception e) {}
+
+        String scheme = request().isSecure() ? "https" : "http";
+        String forwardedProto = request().headerForKey("x-forwarded-proto");
+        if (forwardedProto != null && !forwardedProto.isEmpty())
+        {
+            scheme = forwardedProto;
+        }
+        String host = request().headerForKey("host");
+        if (host == null || host.isEmpty())
+        {
+            host = "localhost";
+        }
+        String qs = (queryString != null) ? ("?" + queryString) : "";
+        return scheme + "://" + host + "/WebObjects/Web-CAT.woa/wa/" + actionPath + qs;
     }
 
 

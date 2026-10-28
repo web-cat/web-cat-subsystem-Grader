@@ -344,16 +344,21 @@ public class StudentCourseSummaryPage
 
     // ----------------------------------------------------------
     /**
-     * Checks for errors, then records the currently selected item.
+     * Checks for errors, records the selected assignment offering in preferences,
+     * and returns the selected submission.
      *
-     * @return true if no errors are present
+     * @return the valid Submission, or null if no valid submission could be resolved
      */
-    protected boolean saveSelectionCanContinue()
+    protected Submission saveSelectionCanContinue()
     {
         Submission submission = aSubmission;
         if (submission == null && assignmentOffering != null)
         {
             submission = submissionForAssignmentOffering();
+        }
+        if (submission == null && submissionDisplayGroup != null)
+        {
+            submission = submissionDisplayGroup.selectedObject();
         }
 
         if (submission == null)
@@ -370,13 +375,13 @@ public class StudentCourseSummaryPage
         {
             prefs().setAssignmentOfferingRelationship(
                 submission.assignmentOffering());
-            prefs().setSubmissionRelationship(submission);
 
             log.debug("Changing selection, sub #"
-                + prefs().submission().submitNumber());
+                + submission.submitNumber());
+            return submission;
         }
 
-        return !hasMessages();
+        return null;
     }
 
 
@@ -412,21 +417,14 @@ public class StudentCourseSummaryPage
     // ----------------------------------------------------------
     public WOActionResults viewSubmission()
     {
-        if (saveSelectionCanContinue())
+        Submission sub = saveSelectionCanContinue();
+        if (sub != null)
         {
             if (isUserStaff())
             {
                 GradeStudentSubmissionPage page =
                     pageWithName(GradeStudentSubmissionPage.class);
-
-                Submission sub = aSubmission;
-                if (sub == null && assignmentOffering != null)
-                {
-                    sub = submissionForAssignmentOffering();
-                }
                 page.submission = sub;
-                page.availableSubmissions = null;
-                page.thisSubmissionIndex = 0;
                 page.nextPage = this;
 
                 page.reloadGraderPrefs();
@@ -434,8 +432,12 @@ public class StudentCourseSummaryPage
             }
             else
             {
-                reloadGraderPrefs();
-                return pageWithName(FinalReportPage.class);
+                FinalReportPage page =
+                    pageWithName(FinalReportPage.class);
+                page.submission = sub;
+                page.nextPage = this;
+                page.reloadGraderPrefs();
+                return page;
             }
         }
         else

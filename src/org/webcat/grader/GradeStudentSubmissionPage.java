@@ -160,6 +160,51 @@ public class GradeStudentSubmissionPage
             submissionNumber = Integer.toString(submission.submitNumber());
         }
 
+        if (availableSubmissions == null)
+        {
+            if (submission != null)
+            {
+                availableSubmissions =
+                    new NSArray<Submission.StudentSubmissionInfo>(
+                        new Submission.StudentSubmissionInfo(
+                            submission.user(),
+                            submission.assignmentOffering(),
+                            submission,
+                            new NSMutableArray<Submission>(
+                                new Submission[] { submission }),
+                            false));
+            }
+            else
+            {
+                availableSubmissions = NSArray.emptyArray();
+            }
+        }
+
+        if (thisSubmissionIndex < 0
+            || thisSubmissionIndex >= availableSubmissions.count())
+        {
+            thisSubmissionIndex = -1;
+            if (availableSubmissions != null && submission != null)
+            {
+                for (int i = 0; i < availableSubmissions.count(); i++)
+                {
+                    Submission.StudentSubmissionInfo info =
+                        availableSubmissions.objectAtIndex(i);
+                    if (submission.equals(info.submission())
+                        || (info.user() != null
+                            && info.user().equals(submission.user())))
+                    {
+                        thisSubmissionIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (thisSubmissionIndex < 0)
+            {
+                thisSubmissionIndex = 0;
+            }
+        }
+
         super.beforeAppendToResponse( response, context );
     }
 
@@ -172,11 +217,18 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
+    @Override
     public WOComponent next()
     {
-        return applyLocalChanges()
-            ? super.next()
-            : null;
+        if (applyLocalChanges())
+        {
+            if (nextPage != null)
+            {
+                return super.next();
+            }
+            return pageWithName(wcSession().tabs.selectDefault().pageName());
+        }
+        return null;
     }
 
 
@@ -190,6 +242,11 @@ public class GradeStudentSubmissionPage
     // ----------------------------------------------------------
     public int indexOfNextSubmission()
     {
+        if (availableSubmissions == null || availableSubmissions.count() == 0)
+        {
+            return 0;
+        }
+
         int nextIndex = thisSubmissionIndex;
 
         do
@@ -202,6 +259,14 @@ public class GradeStudentSubmissionPage
                         nextIndex).submission().resultIsReady()));
 
         return nextIndex;
+    }
+
+
+    // ----------------------------------------------------------
+    public boolean hasNextStudent()
+    {
+        return availableSubmissions != null
+            && availableSubmissions.count() > indexOfNextSubmission();
     }
 
 
@@ -229,10 +294,16 @@ public class GradeStudentSubmissionPage
 
 
     // ----------------------------------------------------------
+    @Override
     public WOComponent cancel()
     {
+        if (nextPage == null)
+        {
+            clearMessages();
+            cancelLocalChanges();
+            return pageWithName(wcSession().tabs.selectDefault().pageName());
+        }
         return super.cancel();
-//        return super.next();
     }
 
 

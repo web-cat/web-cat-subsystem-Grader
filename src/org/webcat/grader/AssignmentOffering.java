@@ -419,25 +419,26 @@ public class AssignmentOffering
      */
     public NSTimestamp lateDeadline()
     {
-        NSTimestamp myDueDate = dueDate();
-        if ( myDueDate != null )
-        {
-            Assignment myAssignment = assignment();
-            if ( myAssignment != null )
-            {
-                SubmissionProfile submissionProfile =
-                    myAssignment.submissionProfile();
-                if ( submissionProfile != null )
-                {
-                    myDueDate = new NSTimestamp(
-                        submissionProfile.deadTimeDelta(),
-                        myDueDate
-                    );
-                }
-            }
-        }
-        log.debug( "lateDeadline() = " + myDueDate );
-        return myDueDate;
+        return closesOn();
+//        NSTimestamp myDueDate = dueDate();
+//        if ( myDueDate != null )
+//        {
+//            Assignment myAssignment = assignment();
+//            if ( myAssignment != null )
+//            {
+//                SubmissionProfile submissionProfile =
+//                    myAssignment.submissionProfile();
+//                if ( submissionProfile != null )
+//                {
+//                    myDueDate = new NSTimestamp(
+//                        submissionProfile.deadTimeDelta(),
+//                        myDueDate
+//                    );
+//                }
+//            }
+//        }
+//        log.debug( "lateDeadline() = " + myDueDate );
+//        return myDueDate;
     }
 
 
@@ -2039,7 +2040,7 @@ public class AssignmentOffering
     .then(
         courseOffering.dot(CourseOffering.course).dot(Course.number)
         .asc())
-    .then(dueDate.asc())
+    .then(maxClosesOn.desc())
     .then(assignment.dot(Assignment.name).ascInsensitive());
 
     private static final NSArray<EOSortOrdering> SUBMISSION_CRN_ORDERINGS =

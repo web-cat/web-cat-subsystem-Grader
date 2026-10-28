@@ -111,10 +111,6 @@ public class FinalReportPage
                     localContext(),
                     prefs().assignment(),
                     user());
-                if (submission != null)
-                {
-                    prefs().setSubmissionRelationship(submission);
-                }
             }
         }
         if (submission != null)
@@ -136,10 +132,6 @@ public class FinalReportPage
         }
         if (submission != null)
         {
-            if (submission != prefs().submission())
-            {
-                prefs().setSubmissionRelationship(submission);
-            }
             reportIsReady = submission.resultIsReady();
             if (reportIsReady)
             {
@@ -254,8 +246,9 @@ public class FinalReportPage
         }
 
         log.debug("fileStatsDetails()");
-        prefs().setSubmissionFileStatsRelationship(stats);
-        WCComponent statsPage = pageWithName(SubmissionFileDetailsPage.class);
+        SubmissionFileDetailsPage statsPage = (SubmissionFileDetailsPage)
+            pageWithName(SubmissionFileDetailsPage.class.getName());
+        statsPage.thisFile = stats;
         statsPage.nextPage = this;
         return statsPage;
     }

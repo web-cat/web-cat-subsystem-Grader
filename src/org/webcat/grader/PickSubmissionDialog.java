@@ -222,7 +222,10 @@ public class PickSubmissionDialog
             }
             else
             {
-                pageToReturn = pageWithName(FinalReportPage.class);
+                FinalReportPage page =
+                    pageWithName(FinalReportPage.class);
+                page.submission = selectedSub;
+                pageToReturn = page;
             }
             pageToReturn.reloadGraderPrefs();
             if (nextPageForResultsPage != null)
