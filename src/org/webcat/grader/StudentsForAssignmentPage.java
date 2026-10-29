@@ -24,6 +24,7 @@ package org.webcat.grader;
 import java.util.HashMap;
 import java.util.Map;
 import com.webobjects.appserver.*;
+import com.webobjects.eocontrol.EOSortOrdering;
 import com.webobjects.foundation.*;
 import er.extensions.appserver.ERXDisplayGroup;
 import er.extensions.foundation.ERXArrayUtilities;
@@ -438,6 +439,174 @@ public class StudentsForAssignmentPage
             destination.nextPage = this;
         }
         return destination;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Updates in-memory submission grading state and refreshes Enterprise
+     * Objects when a submission has been edited or regraded in
+     * GradeStudentSubmissionPage.
+     *
+     * @param updatedSub The submission that was edited or regraded
+     * @param wasRegraded True if the submission was regraded via background queue
+     */
+    public void updateSubmissionState(Submission updatedSub, boolean wasRegraded)
+    {
+        if (updatedSub == null)
+        {
+            return;
+        }
+
+        if (wasRegraded && gradingState != null)
+        {
+            User u = updatedSub.user();
+            refreshUserInGradingState(u);
+            for (Submission partnerSub : updatedSub.partneredSubmissions())
+            {
+                if (partnerSub.user() != null)
+                {
+                    refreshUserInGradingState(partnerSub.user());
+                }
+            }
+            return;
+        }
+
+        Submission localSub = updatedSub.localInstance(localContext());
+        if (localSub == null)
+        {
+            localSub = updatedSub;
+        }
+
+        if (gradingState != null)
+        {
+            updateStudentInfoForSubmission(localSub);
+            for (Submission partnerSub : localSub.partneredSubmissions())
+            {
+                updateStudentInfoForSubmission(partnerSub);
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private void refreshUserInGradingState(User u)
+    {
+        if (u == null || gradingState == null)
+        {
+            return;
+        }
+
+        Map<AssignmentOffering, Submission.StudentSubmissionInfo> freshMap =
+            Submission.submissionsForStudentInCourse(
+                localContext(), gradingState.offerings(), u);
+
+        for (AssignmentOffering ao : gradingState.offerings())
+        {
+            Map<User, Submission.StudentSubmissionInfo> userMap =
+                gradingState.resultsForOffering(ao);
+            if (userMap != null)
+            {
+                Submission.StudentSubmissionInfo freshInfo = freshMap.get(ao);
+                if (freshInfo != null)
+                {
+                    User targetUser = u;
+                    for (User key : userMap.keySet())
+                    {
+                        if (key.equals(u) || key.primaryKey().equals(u.primaryKey()))
+                        {
+                            targetUser = key;
+                            break;
+                        }
+                    }
+                    userMap.put(targetUser, freshInfo);
+                }
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    private void updateStudentInfoForSubmission(Submission s)
+    {
+        AssignmentOffering ao = s.assignmentOffering();
+        User u = s.user();
+        if (ao == null || u == null || gradingState == null)
+        {
+            return;
+        }
+
+        AssignmentOffering targetAO = ao;
+        if (gradingState.resultsForOffering(targetAO) == null)
+        {
+            for (AssignmentOffering off : gradingState.offerings())
+            {
+                if (off.equals(ao) || off.primaryKey().equals(ao.primaryKey()))
+                {
+                    targetAO = off;
+                    break;
+                }
+            }
+        }
+
+        Map<User, Submission.StudentSubmissionInfo> userMap =
+            gradingState.resultsForOffering(targetAO);
+        if (userMap == null)
+        {
+            return;
+        }
+
+        Submission.StudentSubmissionInfo info = userMap.get(u);
+        if (info == null)
+        {
+            for (Map.Entry<User, Submission.StudentSubmissionInfo> entry : userMap.entrySet())
+            {
+                if (entry.getKey().equals(u) || entry.getKey().primaryKey().equals(u.primaryKey()))
+                {
+                    info = entry.getValue();
+                    break;
+                }
+            }
+        }
+        if (info == null)
+        {
+            info = new Submission.StudentSubmissionInfo(
+                u, targetAO, s, new NSMutableArray<Submission>(s), false);
+            userMap.put(u, info);
+            return;
+        }
+
+        if (s.isSubmissionForGrading() && s.resultIsReady())
+        {
+            info.gradedSubmission = s;
+            if (info.allSubmissions != null && !info.allSubmissions.containsObject(s))
+            {
+                info.allSubmissions.addObject(s);
+                EOSortOrdering.sortArrayUsingKeyOrderArray(
+                    info.allSubmissions, Submission.submitTime.ascs());
+            }
+        }
+        else if (info.gradedSubmission == s || !s.resultIsReady())
+        {
+            Submission best = null;
+            if (info.allSubmissions != null)
+            {
+                for (Submission candidate : info.allSubmissions)
+                {
+                    if (candidate.isSubmissionForGrading())
+                    {
+                        best = candidate;
+                        break;
+                    }
+                    if (candidate.resultIsReady()
+                        && candidate.isBetterGradingChoiceThan(best))
+                    {
+                        best = candidate;
+                    }
+                }
+            }
+            info.gradedSubmission = best;
+        }
     }
 
 

@@ -224,6 +224,7 @@ public class GradeStudentSubmissionPage
         {
             if (nextPage != null)
             {
+                notifyParentPageOfChanges(submission, false);
                 return super.next();
             }
             return pageWithName(wcSession().tabs.selectDefault().pageName());
@@ -303,6 +304,7 @@ public class GradeStudentSubmissionPage
             cancelLocalChanges();
             return pageWithName(wcSession().tabs.selectDefault().pageName());
         }
+        notifyParentPageOfChanges(null, false);
         return super.cancel();
     }
 
@@ -347,7 +349,12 @@ public class GradeStudentSubmissionPage
             result.setLastUpdated(now);
         }
         log.debug("Before commiting, result = " + result.snapshot());
-        return super.applyLocalChanges();
+        boolean success = super.applyLocalChanges();
+        if (success && submission != null)
+        {
+            savedSubmissions.addObject(submission);
+        }
+        return success;
     }
 
 
@@ -434,7 +441,33 @@ public class GradeStudentSubmissionPage
         sub.requeueForGrading(localContext());
         applyLocalChanges();
         GraderQueueProcessor.processSubmission(sub);
+        notifyParentPageOfChanges(sub, true);
         return back();
+    }
+
+
+    // ----------------------------------------------------------
+    private void notifyParentPageOfChanges(
+        Submission specificSub, boolean wasRegraded)
+    {
+        if (nextPage instanceof StudentsForAssignmentPage)
+        {
+            StudentsForAssignmentPage parent =
+                (StudentsForAssignmentPage) nextPage;
+            if (specificSub != null)
+            {
+                savedSubmissions.addObject(specificSub);
+                if (wasRegraded)
+                {
+                    regradedSubmissions.addObject(specificSub);
+                }
+            }
+            for (Submission s : savedSubmissions)
+            {
+                boolean regraded = regradedSubmissions.containsObject(s);
+                parent.updateSubmissionState(s, regraded);
+            }
+        }
     }
 
 
@@ -576,6 +609,10 @@ public class GradeStudentSubmissionPage
 
     //~ Instance/static variables .............................................
 
+    private NSMutableSet<Submission> regradedSubmissions =
+        new NSMutableSet<Submission>();
+    private NSMutableSet<Submission> savedSubmissions =
+        new NSMutableSet<Submission>();
     private Boolean showCoverageData;
     private String priorComments;
     private Boolean showAutoGradedComments;
