@@ -7,12 +7,12 @@
 <wo:if condition="$needsLTIClickthrough">
 <wo:org.webcat.core.WCPageModule title="Visit your LMS Before Viewing Feedback">
 <p>Before you view your feedback, please
-<wo:if condition="$prefs.assignmentOffering.lmsAssignmentUrl">
-<wo:link href="$prefs.assignmentOffering.lmsAssignmentUrl">visit this
+<wo:if condition="$submission.assignmentOffering.lmsAssignmentUrl">
+<wo:link href="$submission.assignmentOffering.lmsAssignmentUrl">visit this
 assignment's page</wo:link></wo:if><wo:else>visit this assignment's
 page</wo:else>
 on your
-<wo:str value="$prefs.assignmentOffering.courseOffering.lmsName"/>
+<wo:str value="$submission.assignmentOffering.courseOffering.lmsName"/>
 site, and enter Web-CAT from that page. Thank you.
 </p>
 </wo:org.webcat.core.WCPageModule>

@@ -100,7 +100,7 @@ public class UploadSubmissionPage
         }
         if (offering == null)
         {
-            offering = prefs().assignmentOffering();
+            offering = selectedAssignmentOffering();
         }
         if (showStudentSelector)
         {

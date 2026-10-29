@@ -152,7 +152,9 @@ public class GraderPrefsManager
      * Retrieve the entity pointed to by the <code>step</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public Step step()
     {
         return (Step)handleQueryWithUnboundKey(GraderPrefs.STEP_KEY);
@@ -165,7 +167,9 @@ public class GraderPrefsManager
      * relationship.
      *
      * @param value The new entity to relate to
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public void setStepRelationship(Step value)
     {
         addObjectToBothSidesOfRelationshipWithKey(value, GraderPrefs.STEP_KEY);
@@ -177,7 +181,9 @@ public class GraderPrefsManager
      * Retrieve the entity pointed to by the <code>submission</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public Submission submission()
     {
         return (Submission)handleQueryWithUnboundKey(
@@ -191,7 +197,9 @@ public class GraderPrefsManager
      * relationship.
      *
      * @param value The new entity to relate to
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public void setSubmissionRelationship(Submission value)
     {
         addObjectToBothSidesOfRelationshipWithKey(
@@ -208,7 +216,9 @@ public class GraderPrefsManager
      * Retrieve the entity pointed to by the <code>submissionFileStats</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public SubmissionFileStats submissionFileStats()
     {
         return (SubmissionFileStats)handleQueryWithUnboundKey(
@@ -222,7 +232,9 @@ public class GraderPrefsManager
      * relationship.
      *
      * @param value The new entity to relate to
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public void setSubmissionFileStatsRelationship(SubmissionFileStats value)
     {
         addObjectToBothSidesOfRelationshipWithKey(

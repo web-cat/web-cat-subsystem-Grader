@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.webcat.core.Course;
 import org.webcat.core.CourseOffering;
 import org.webcat.core.Semester;
+import org.webcat.grader.graphs.AssignmentGraphPage;
 
 // -------------------------------------------------------------------------
 /**
@@ -245,9 +246,19 @@ public class GraderHomeStatus
      */
     public WOComponent viewResults()
     {
-        selectSubmission(assignmentOffering);
-        return pageWithName(
+        Submission sub = selectSubmission(assignmentOffering);
+        WOComponent nextPage = pageWithName(
             wcSession().tabs.selectById("MostRecent").pageName());
+        if (nextPage instanceof FinalReportPage)
+        {
+            FinalReportPage reportPage = (FinalReportPage) nextPage;
+            reportPage.submission = sub;
+            if (assignmentOffering != null)
+            {
+                reportPage.setSelectedAssignmentOffering(assignmentOffering);
+            }
+        }
+        return nextPage;
     }
 
 
@@ -259,9 +270,15 @@ public class GraderHomeStatus
      */
     public WOComponent graphResults()
     {
-        selectSubmission(assignmentOffering);
-        return pageWithName(
+        selectAssignment(assignmentOffering);
+        WOComponent nextPage = pageWithName(
             wcSession().tabs.selectById("GraphResults").pageName());
+        if (nextPage instanceof AssignmentGraphPage)
+        {
+            AssignmentGraphPage graphPage = (AssignmentGraphPage) nextPage;
+            graphPage.setSelectedAssignmentOffering(assignmentOffering);
+        }
+        return nextPage;
     }
 
 
@@ -400,7 +417,7 @@ public class GraderHomeStatus
 
 
     // ----------------------------------------------------------
-    private void selectSubmission(AssignmentOffering offering)
+    private Submission selectSubmission(AssignmentOffering offering)
     {
         selectAssignment(offering);
         SubmissionResult subResult =
@@ -411,6 +428,7 @@ public class GraderHomeStatus
             sub = subResult.submissionFor(user());
         }
         prefs().setSubmissionRelationship(sub);
+        return sub;
     }
 
 

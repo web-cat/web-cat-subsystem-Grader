@@ -89,23 +89,25 @@ public class PickSubmissionPage
 //            user = prefs().submission().user();
 //        }
         previousSubmissions = false;
-        if (prefs().assignmentOffering() != null)
+        AssignmentOffering ao = selectedAssignmentOffering();
+        if (ao != null)
         {
             submissions =
                 Submission.submissionsForAssignmentOfferingAndUserDescending(
-                    localContext(), prefs().assignmentOffering(), user);
+                    localContext(), ao, user);
             submissionDisplayGroup.setObjectArray(submissions);
             previousSubmissions = (submissions.count() > 0);
         }
-        if (prefs().assignment() != null
+        Assignment a = selectedAssignment();
+        if (a != null
             && !previousSubmissions
-            && coreSelections().semester() != null)
+            && selectedSemester() != null)
         {
             submissions =
                 Submission.submissionsForAssignmentAndUserDescending(
                     localContext(),
-                    prefs().assignment(),
-                    coreSelections().semester(),
+                    a,
+                    selectedSemester(),
                     user);
             submissionDisplayGroup.setObjectArray(submissions);
             previousSubmissions = (submissions.count() > 0);
@@ -115,13 +117,20 @@ public class PickSubmissionPage
             error(
                 "You have not completed any submissions for this assignment.");
         }
-        if (prefs().submission() != null)
+        if (selectedSubmission == null)
+        {
+            selectedSubmission = prefs().submission();
+        }
+        if (selectedSubmission != null)
         {
             log.debug( "Currently has a submission chosen" );
-            int idx = submissions.indexOfIdenticalObject(prefs().submission());
+            int idx = submissions != null
+                ? submissions.indexOfIdenticalObject(selectedSubmission)
+                : NSArray.NotFound;
             if (idx == NSArray.NotFound)
             {
                 log.debug("Invalid submission being cleared");
+                selectedSubmission = null;
                 prefs().setSubmissionRelationship(null);
             }
             else
@@ -131,18 +140,18 @@ public class PickSubmissionPage
                            + selectedIndex);
             }
         }
-        if (prefs().submission() == null &&
+        if (selectedSubmission == null &&
             submissionDisplayGroup.displayedObjects().count() > 0)
         {
             selectedIndex = 0;
-            prefs().setSubmissionRelationship(
-                    (Submission)submissionDisplayGroup.displayedObjects().
-                        objectAtIndex(selectedIndex));
+            selectedSubmission = (Submission)submissionDisplayGroup.displayedObjects().
+                objectAtIndex(selectedIndex);
+            prefs().setSubmissionRelationship(selectedSubmission);
             log.debug(
                 "No selection; selecting index "
                 + selectedIndex
                 + ", sub #"
-                + prefs().submission().submitNumber());
+                + selectedSubmission.submitNumber());
         }
         log.debug("calling super.appendToResponse()");
         super.beforeAppendToResponse(response, context);
@@ -174,21 +183,21 @@ public class PickSubmissionPage
         }
         else if (selectedIndex >= 0)
         {
-            prefs().setSubmissionRelationship(
-                    (Submission)submissionDisplayGroup.displayedObjects().
-                        objectAtIndex(selectedIndex));
+            selectedSubmission = (Submission)submissionDisplayGroup.displayedObjects().
+                objectAtIndex(selectedIndex);
+            prefs().setSubmissionRelationship(selectedSubmission);
             log.debug(
                 "Changing selection; selecting index "
                 + selectedIndex
                 + ", sub #"
-                + prefs().submission().submitNumber());
+                + selectedSubmission.submitNumber());
         }
-        if (prefs().submission() == null)
+        if (selectedSubmission == null)
         {
             log.warn("saveSelectionCanContinue(): null submission!");
             error("Please choose a submission.");
         }
-        else if (!prefs().submission().resultIsReady())
+        else if (!selectedSubmission.resultIsReady())
         {
             error("The Grader has not yet completed processing "
                 + "on that submission.");
@@ -228,9 +237,10 @@ public class PickSubmissionPage
     public boolean selectingForDifferentUser()
     {
         boolean result = false;
-        if (prefs().submission() != null)
+        Submission sub = (selectedSubmission != null) ? selectedSubmission : prefs().submission();
+        if (sub != null)
         {
-            result = user() != prefs().submission().user();
+            result = user() != sub.user();
         }
         return result;
     }
@@ -258,7 +268,13 @@ public class PickSubmissionPage
         if (saveSelectionCanContinue())
         {
             result = super.next();
-            if (result instanceof GraderComponent)
+            if (result instanceof FinalReportPage && selectedSubmission != null)
+            {
+                FinalReportPage reportPage = (FinalReportPage) result;
+                reportPage.submission = selectedSubmission;
+                reportPage.setSelectedAssignmentOffering(selectedSubmission.assignmentOffering());
+            }
+            else if (result instanceof GraderComponent)
             {
                 ((GraderComponent)result).reloadGraderPrefs();
             }
@@ -285,6 +301,7 @@ public class PickSubmissionPage
 
     //~ Instance/static variables .............................................
 
+    private Submission            selectedSubmission;
     protected NSArray<Submission> submissions;
     protected int                 oldBatchSize;
     protected int                 oldBatchIndex;

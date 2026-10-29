@@ -1,9 +1,9 @@
 AssignmentName: WOString {
-    value = prefs.assignmentOffering.titleString;
+    value = selectedAssignmentOffering.titleString;
 }
 
 Chart1: org.webcat.grader.graphs.HistogramChart {
-    dataset    = prefs.assignmentOffering.graphSummary.frequencyDataset;
+    dataset    = selectedAssignmentOffering.graphSummary.frequencyDataset;
     title      = "Score Distribution for the Class";
     xAxisLabel = "Score";
     yAxisLabel = "Students";

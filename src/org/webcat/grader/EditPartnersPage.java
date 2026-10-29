@@ -54,6 +54,7 @@ public class EditPartnersPage
     //~ KVC Attributes (must be public) .......................................
 
     public SubmissionResult    result;
+    public Submission          submission;
 
     public WODisplayGroup      partnerDisplayGroup;
     public Submission          partnerSubmission;
@@ -70,20 +71,25 @@ public class EditPartnersPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        log.debug( "selected submission = "
-                   + prefs().submission().submitNumber()
-                   + " for " + prefs().submission().user().userName() );
-        if (result == null)
+        Submission sub = (submission != null) ? submission : prefs().submission();
+        if (sub != null && log.isDebugEnabled())
         {
-            result = prefs().submission().result();
+            log.debug( "selected submission = "
+                       + sub.submitNumber()
+                       + " for " + sub.user().userName() );
+        }
+        if (result == null && sub != null)
+        {
+            result = sub.result();
         }
         if ( result == null )
         {
             log.error( "appendToResponse(): null submission result" );
         }
         partnerDisplayGroup.setMasterObject( result );
+        CourseOffering co = selectedCourseOffering();
         studentDisplayGroup.setMasterObject(
-            coreSelections().courseOffering() );
+            co != null ? co : coreSelections().courseOffering() );
         super.beforeAppendToResponse( response, context );
     }
 

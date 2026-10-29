@@ -64,15 +64,19 @@ public class AssignmentGraphPage
     protected void beforeAppendToResponse(
         WOResponse response, WOContext context)
     {
-        SubmissionResult subResult = prefs().assignmentOffering()
-            .mostRecentSubmissionResultFor( user() );
+        AssignmentOffering ao = selectedAssignmentOffering();
+        SubmissionResult subResult = (ao != null)
+            ? ao.mostRecentSubmissionResultFor(user())
+            : null;
         mostRecentScore = ( subResult == null )
             ? null
             : new Double( subResult.automatedScore() );
-        pastSubResults = SubmissionResult.resultsForAssignmentAndUser(
-            localContext(),
-            prefs().assignmentOffering(),
-            user() );
+        pastSubResults = (ao != null)
+            ? SubmissionResult.resultsForAssignmentAndUser(
+                localContext(),
+                ao,
+                user() )
+            : null;
         hasSubmissions = pastSubResults != null
             && pastSubResults.count() > 0;
         correctnessToolsDataset = new SubmissionResultDataset(
@@ -88,7 +92,12 @@ public class AssignmentGraphPage
     // ----------------------------------------------------------
     public boolean isStaff()
     {
-        CourseOffering course = prefs().assignmentOffering().courseOffering();
+        AssignmentOffering ao = selectedAssignmentOffering();
+        if (ao == null || ao.courseOffering() == null)
+        {
+            return false;
+        }
+        CourseOffering course = ao.courseOffering();
         boolean result = course.isInstructor( user() )
             || course.isGrader( user() );
         return result;
@@ -100,9 +109,11 @@ public class AssignmentGraphPage
     {
         if ( subResultsByNumber == null )
         {
-            subResultsByNumber =
-                SubmissionResult.mostRecentResultsForAssignmentOrderedByNumber(
-                    localContext(), prefs().assignmentOffering() );
+            AssignmentOffering ao = selectedAssignmentOffering();
+            subResultsByNumber = (ao != null)
+                ? SubmissionResult.mostRecentResultsForAssignmentOrderedByNumber(
+                    localContext(), ao )
+                : NSArray.EmptyArray;
         }
         return subResultsByNumber;
     }

@@ -94,27 +94,40 @@ public class FinalReportPage
     {
         log.debug("beginning appendToResponse()");
         jobData = null;
-        if (submission == null && prefs() != null)
+        if (submission == null)
         {
-            submission = prefs().submission();
-            if (submission != null
-                && (submission.user() != user()
-                    || submission.assignmentOffering().assignment()
-                        != prefs().assignment()))
+            Assignment targetAssignment = selectedAssignment();
+            if (targetAssignment == null && selectedAssignmentOffering() != null)
             {
-                submission = null;
+                targetAssignment = selectedAssignmentOffering().assignment();
+            }
+            if (targetAssignment == null && prefs() != null)
+            {
+                targetAssignment = prefs().assignment();
             }
 
-            if (submission == null && prefs().assignment() != null)
+            if (prefs() != null)
+            {
+                submission = prefs().submission();
+                if (submission != null
+                    && (submission.user() != user()
+                        || (targetAssignment != null && submission.assignmentOffering().assignment() != targetAssignment)))
+                {
+                    submission = null;
+                }
+            }
+
+            if (submission == null && targetAssignment != null)
             {
                 submission = Submission.latestSubmissionForAssignmentAndUser(
                     localContext(),
-                    prefs().assignment(),
+                    targetAssignment,
                     user());
             }
         }
         if (submission != null)
         {
+            setSelectedAssignmentOffering(submission.assignmentOffering());
 //            submission = submission.refetch(localContext());
 //            if (submission.result() != null)
 //            {

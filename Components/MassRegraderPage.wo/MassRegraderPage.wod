@@ -6,7 +6,7 @@ Navigator: org.webcat.grader.GraderNavigator {
 }
 
 AssignmentName: WOString {
-    value = prefs.assignmentOffering.titleString;
+    value = selectedAssignmentOffering.titleString;
 }
 
 SubmissionQualifier : WCSimpleTextArea {

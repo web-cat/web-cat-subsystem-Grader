@@ -86,6 +86,8 @@ public class GraderCourseComponent
                   || offering.isGrader( user ) ) )
         {
             result = true;
+            setSelectedCourse( offering.course() );
+            setSelectedCourseOffering( offering );
             coreSelections().setCourseRelationship( offering.course() );
             coreSelections().setCourseOfferingRelationship( offering );
         }

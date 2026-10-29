@@ -133,7 +133,7 @@ public class GraderAssignmentsComponent
     {
         NSMutableArray<AssignmentOffering> assignmentOfferings =
             new NSMutableArray<AssignmentOffering>(courseOfferings.size());
-        Assignment assignment = prefs().assignment();
+        Assignment assignment = selectedAssignment();
         if (assignment != null)
         {
             for (CourseOffering co : courseOfferings)
@@ -158,11 +158,11 @@ public class GraderAssignmentsComponent
     {
         NSMutableArray<CourseOffering> courseOfferings =
             new NSMutableArray<CourseOffering>(10);
-        Course course = coreSelections().course();
+        Course course = selectedCourse();
         if (course == null)
         {
             // Just one offering selected
-            CourseOffering co = coreSelections().courseOffering();
+            CourseOffering co = selectedCourseOffering();
             if (co != null &&
                     (co.isStaff(user()) || user().hasAdminPrivileges()))
             {
@@ -171,7 +171,7 @@ public class GraderAssignmentsComponent
         }
         else
         {
-            Semester semester = coreSelections().semester();
+            Semester semester = selectedSemester();
             // Find all offerings that this user can see
             NSArray<CourseOffering> candidates = (semester == null)
                 ? course.offerings()

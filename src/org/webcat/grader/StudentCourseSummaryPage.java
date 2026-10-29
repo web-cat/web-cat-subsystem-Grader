@@ -75,7 +75,6 @@ public class StudentCourseSummaryPage
     public boolean anyAssignmentUsesBonusesOrPenalties;
     public boolean anyAssignmentUsesExtraColumns;
 
-    public AssignmentOffering          selectedAssignmentOffering;
     public ERXDisplayGroup<Submission> submissionDisplayGroup;
     public Submission                  aSubmission;
 
@@ -163,7 +162,7 @@ public class StudentCourseSummaryPage
         anyAssignmentUsesToolCheckScore = false;
         anyAssignmentUsesTAScore = false;
         anyAssignmentUsesBonusesOrPenalties = false;
-        selectedAssignmentOffering = prefs().assignmentOffering();
+        AssignmentOffering currentSelectedAO = selectedAssignmentOffering();
 
         for (Assignment assignment : assignments)
         {
@@ -177,10 +176,11 @@ public class StudentCourseSummaryPage
                 if (co.equals(homeOffering))
                 {
                     homeAssignmentOffering = ao;
-                    if (selectedAssignmentOffering == null
-                        && assignment == prefs().assignment())
+                    if (currentSelectedAO == null
+                        && assignment == selectedAssignment())
                     {
-                        selectedAssignmentOffering = ao;
+                        currentSelectedAO = ao;
+                        setSelectedAssignmentOffering(ao);
                     }
                 }
 
@@ -241,10 +241,10 @@ public class StudentCourseSummaryPage
 
         submissionsByAssignmentOffering = submissions;
 
-        if (selectedAssignmentOffering != null)
+        if (currentSelectedAO != null)
         {
             Submission.StudentSubmissionInfo info =
-                studentSubmissions.get(selectedAssignmentOffering);
+                studentSubmissions.get(currentSelectedAO);
 
             if (info != null && info.allSubmissions() != null)
             {
@@ -451,13 +451,14 @@ public class StudentCourseSummaryPage
     public WOActionResults pickOtherSubmission()
     {
         Submission sub = submissionForAssignmentOffering();
-        selectedUserSubmissionForPickerDialog = (studentSubmissions != null)
-            ? studentSubmissions.get(selectedAssignmentOffering)
+        AssignmentOffering currentAO = selectedAssignmentOffering();
+        selectedUserSubmissionForPickerDialog = (studentSubmissions != null && currentAO != null)
+            ? studentSubmissions.get(currentAO)
             : null;
         if (selectedUserSubmissionForPickerDialog == null)
         {
             selectedUserSubmissionForPickerDialog = new Submission.StudentSubmissionInfo(
-                selectedStudent, selectedAssignmentOffering, sub,
+                selectedStudent, currentAO, sub,
                 new NSMutableArray<Submission>(sub != null ? new Submission[] { sub } : new Submission[0]),
                 false);
         }

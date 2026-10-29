@@ -163,7 +163,9 @@ public class GraderPrefs
      * Retrieve the entity pointed to by the <code>step</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public Step step()
     {
         try
@@ -211,7 +213,9 @@ public class GraderPrefs
      * Retrieve the entity pointed to by the <code>submission</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public Submission submission()
     {
         try
@@ -259,7 +263,9 @@ public class GraderPrefs
      * Retrieve the entity pointed to by the <code>submissionFileStats</code>
      * relationship.
      * @return the entity in the relationship
+     * @deprecated Page-level state should be used instead of GraderPrefs transient relationships.
      */
+    @Deprecated
     public SubmissionFileStats submissionFileStats()
     {
         try

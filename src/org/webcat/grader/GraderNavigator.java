@@ -288,10 +288,10 @@ public class GraderNavigator
         assigns = EOSortOrdering.sortedArrayUsingKeyOrderArray(assigns,
             EntityUtils.sortOrderingsForEntityNamed(Assignment.ENTITY_NAME));
 
-        Assignment targetAssignment = graderParent.prefs().assignment();
+        Assignment targetAssignment = graderParent.selectedAssignment();
         if (targetAssignment == null)
         {
-            AssignmentOffering ao = graderParent.prefs().assignmentOffering();
+            AssignmentOffering ao = graderParent.selectedAssignmentOffering();
             if (ao != null)
             {
                 targetAssignment = ao.assignment();
@@ -424,12 +424,14 @@ public class GraderNavigator
                     log.debug("saving assignment selection = "
                         + targetAssignment);
                 }
+                graderParent.setSelectedAssignment(targetAssignment);
+                graderParent.setSelectedAssignmentOffering(null);
                 graderParent.prefs().setAssignmentRelationship(
                     targetAssignment);
                 graderParent.prefs().setAssignmentOfferingRelationship(null);
                 CourseOffering co =
-                    selectionsParent.coreSelections().courseOffering();
-                Course course = selectionsParent.coreSelections().course();
+                    selectionsParent.selectedCourseOffering();
+                Course course = selectionsParent.selectedCourse();
                 for (AssignmentOffering ao : targetAssignment.offerings())
                 {
                     if ((co != null && co == ao.courseOffering())
@@ -441,6 +443,7 @@ public class GraderNavigator
                             log.debug("saving assignment offering selection = "
                                 + ao);
                         }
+                        graderParent.setSelectedAssignmentOffering(ao);
                         graderParent.prefs().setAssignmentOfferingRelationship(
                             ao);
                         break;
@@ -450,13 +453,19 @@ public class GraderNavigator
             else
             {
                 log.debug("saving assignment selection = null");
+                graderParent.setSelectedAssignment(null);
+                graderParent.setSelectedAssignmentOffering(null);
                 graderParent.prefs().setAssignmentRelationship(null);
+                graderParent.prefs().setAssignmentOfferingRelationship(null);
             }
         }
         else
         {
             log.debug("saving assignment selection = null");
+            graderParent.setSelectedAssignment(null);
+            graderParent.setSelectedAssignmentOffering(null);
             graderParent.prefs().setAssignmentRelationship(null);
+            graderParent.prefs().setAssignmentOfferingRelationship(null);
         }
     }
 

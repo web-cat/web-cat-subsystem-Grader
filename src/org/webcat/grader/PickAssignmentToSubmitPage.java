@@ -148,10 +148,15 @@ public class PickAssignmentToSubmitPage
             log.debug( "existing assignment selected ("
                        + selectedIndex
                        + ")" );
-            prefs().setAssignmentOfferingRelationship(
-                (AssignmentOffering)assignmentDisplayGroup
-                    .displayedObjects().objectAtIndex( selectedIndex ) );
-            return super.next();
+            AssignmentOffering ao = (AssignmentOffering)assignmentDisplayGroup
+                .displayedObjects().objectAtIndex( selectedIndex );
+            prefs().setAssignmentOfferingRelationship( ao );
+            WOComponent nextPage = super.next();
+            if (nextPage instanceof GraderAssignmentComponent)
+            {
+                ((GraderAssignmentComponent)nextPage).setSelectedAssignmentOffering(ao);
+            }
+            return nextPage;
         }
     }
 

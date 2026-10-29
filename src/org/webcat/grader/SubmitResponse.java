@@ -57,6 +57,7 @@ public class SubmitResponse
 
     //~ KVC attributes (must be public) .......................................
 
+    public Submission submission;
     public String aPartnerNotFound;
     public String  sessionID;
     public boolean criticalError = false;
@@ -91,9 +92,10 @@ public class SubmitResponse
      */
     public boolean gradingPaused()
     {
-        if (prefs() == null || prefs().submission() == null)
+        Submission sub = (submission != null) ? submission : (prefs() != null ? prefs().submission() : null);
+        if (sub == null)
             return false;
-        EnqueuedJob job = prefs().submission().enqueuedJob();
+        EnqueuedJob job = sub.enqueuedJob();
         return job != null  &&  job.paused();
     }
 

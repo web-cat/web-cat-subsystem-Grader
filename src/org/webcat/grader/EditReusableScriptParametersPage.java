@@ -66,7 +66,10 @@ public class EditReusableScriptParametersPage
         WOResponse response, WOContext context)
     {
         log.debug("appendToResponse()");
-        step = prefs().step();
+        if (step == null)
+        {
+            step = prefs().step();
+        }
         if (baseDir == null)
         {
             baseDir = new java.io.File (GradingPlugin.userScriptDirName(

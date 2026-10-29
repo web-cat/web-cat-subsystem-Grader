@@ -67,7 +67,10 @@ public class EditStepPage
         WOResponse response, WOContext context)
     {
         log.debug( "appendToResponse()" );
-        step = prefs().step();
+        if (step == null)
+        {
+            step = prefs().step();
+        }
         stepConfigList = StepConfig.configsForUserAndCourseScriptIncludingMine(
             localContext(),
             user(),
@@ -137,6 +140,7 @@ public class EditStepPage
         EditReusableScriptParametersPage newPage =
             (EditReusableScriptParametersPage)
             pageWithName( EditReusableScriptParametersPage.class.getName() );
+        newPage.step = step;
         newPage.nextPage = this;
         return newPage;
     }

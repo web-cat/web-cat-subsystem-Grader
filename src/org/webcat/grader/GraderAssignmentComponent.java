@@ -50,6 +50,110 @@ public class GraderAssignmentComponent
     //~ Methods ...............................................................
 
     // ----------------------------------------------------------
+    @Override
+    public void lateAwake()
+    {
+        super.lateAwake();
+        if (!assignmentSelectionsSeeded)
+        {
+            seedAssignmentSelections();
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Access the currently selected assignment for this page.
+     * @return the selected assignment
+     */
+    public Assignment selectedAssignment()
+    {
+        if (selectedAssignment == null && selectedAssignmentOffering == null && !assignmentSelectionsSeeded)
+        {
+            seedAssignmentSelections();
+        }
+        return selectedAssignment;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Sets the selected assignment for this page.
+     * @param value the assignment
+     */
+    public void setSelectedAssignment(Assignment value)
+    {
+        this.selectedAssignment = value;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Access the currently selected assignment offering for this page.
+     * @return the selected assignment offering
+     */
+    public AssignmentOffering selectedAssignmentOffering()
+    {
+        if (selectedAssignmentOffering == null && selectedAssignment == null && !assignmentSelectionsSeeded)
+        {
+            seedAssignmentSelections();
+        }
+        return selectedAssignmentOffering;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Sets the selected assignment offering for this page.
+     * @param value the assignment offering
+     */
+    public void setSelectedAssignmentOffering(AssignmentOffering value)
+    {
+        this.selectedAssignmentOffering = value;
+        if (value != null)
+        {
+            if (this.selectedAssignment == null)
+            {
+                this.selectedAssignment = value.assignment();
+            }
+            if (value.courseOffering() != null)
+            {
+                setSelectedCourseOffering(value.courseOffering());
+                setSelectedCourse(value.courseOffering().course());
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Seeds the page-level assignment selections from persistent preferences
+     * if the page does not already have an active selection.
+     */
+    protected void seedAssignmentSelections()
+    {
+        assignmentSelectionsSeeded = true;
+        if (selectedAssignmentOffering == null && selectedAssignment == null)
+        {
+            AssignmentOffering ao = prefs().assignmentOffering();
+            Assignment a = prefs().assignment();
+            if (ao != null)
+            {
+                this.selectedAssignmentOffering = ao;
+                if (this.selectedAssignment == null)
+                {
+                    this.selectedAssignment = ao.assignment();
+                }
+            }
+            else if (a != null)
+            {
+                this.selectedAssignment = a;
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------
     /**
      * This method determines whether any embedded navigator will
      * automatically pop up to force a selection and page reload.
@@ -58,14 +162,14 @@ public class GraderAssignmentComponent
     public boolean forceNavigatorSelection()
     {
         boolean result = super.forceNavigatorSelection();
-        if (prefs().assignment() == null)
+        if (selectedAssignment() == null)
         {
             result = true;
         }
         else if (!result && requiresAssignmentOffering())
         {
-            AssignmentOffering ao = prefs().assignmentOffering();
-            Assignment assignment = prefs().assignment();
+            AssignmentOffering ao = selectedAssignmentOffering();
+            Assignment assignment = selectedAssignment();
             if (ao == null && assignment != null)
             {
                 CourseOffering co = bestMatchingCourseOffering();
@@ -73,12 +177,15 @@ public class GraderAssignmentComponent
                 {
                     if (offering.courseOffering() == co)
                     {
+                        setSelectedAssignmentOffering(offering);
                         prefs().setAssignmentOfferingRelationship(offering);
-                        if (coreSelections().courseOffering() != co)
+                        if (selectedCourseOffering() != co)
                         {
+                            setSelectedCourseOffering(co);
                             coreSelections().setCourseOfferingRelationship(co);
-                            if (coreSelections().course() != co.course())
+                            if (selectedCourse() != co.course())
                             {
+                                setSelectedCourse(null);
                                 coreSelections().setCourseRelationship(null);
                             }
                         }
@@ -86,7 +193,7 @@ public class GraderAssignmentComponent
                     }
                 }
             }
-            result = (prefs().assignmentOffering() == null);
+            result = (selectedAssignmentOffering() == null);
         }
         return result;
     }
@@ -160,6 +267,8 @@ public class GraderAssignmentComponent
         boolean result = false;
         if (offering != null && startWith(offering.courseOffering()))
         {
+            setSelectedAssignmentOffering(offering);
+            setSelectedAssignment(offering.assignment());
             prefs().setAssignmentOfferingRelationship(offering);
             result = true;
         }
@@ -170,10 +279,11 @@ public class GraderAssignmentComponent
     // ----------------------------------------------------------
     public boolean needsLTIClickthrough()
     {
-        return prefs().assignmentOffering() != null
-            && prefs().assignmentOffering().courseOffering() != null
-            && prefs().assignmentOffering().courseOffering().isStudent(user())
-            && prefs().assignmentOffering().needsLTIClickthrough(user());
+        AssignmentOffering ao = selectedAssignmentOffering();
+        return ao != null
+            && ao.courseOffering() != null
+            && ao.courseOffering().isStudent(user())
+            && ao.needsLTIClickthrough(user());
     }
 
 
@@ -209,6 +319,10 @@ public class GraderAssignmentComponent
 
 
     //~ Instance/static variables .............................................
+
+    private Assignment selectedAssignment;
+    private AssignmentOffering selectedAssignmentOffering;
+    private boolean assignmentSelectionsSeeded = false;
 
     private boolean isInIFrame = false;
 }

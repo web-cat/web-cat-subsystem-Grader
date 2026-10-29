@@ -86,7 +86,9 @@ public class GraderComponent
     /**
      * Determine whether "Finish" can be pressed for this task.
      * @return true if a submission is stored
+     * @deprecated Page-level state should be used instead of prefs().submission()
      */
+    @Deprecated
     public boolean canFinish()
     {
         return prefs().submission() != null;

@@ -260,6 +260,7 @@ public class GraderSubmissionUploadComponent
             }
         }
         applyLocalChanges();
+        committedSubmission = submission;
         prefs().setSubmissionRelationship(submission);
         {
             try
@@ -311,6 +312,7 @@ public class GraderSubmissionUploadComponent
 
     //~ Instance/static variables .............................................
 
+    public Submission committedSubmission;
     private SubmissionInProcess sip;
     private static final String KEY = SubmissionInProcess.class.getName();
 

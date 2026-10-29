@@ -261,7 +261,12 @@ public class ConfirmSubmissionPage
         else
         {
             resetPrimeUser();
-            return super.next();
+            WOComponent nextPage = super.next();
+            if (nextPage instanceof SubmitResponse && committedSubmission != null)
+            {
+                ((SubmitResponse)nextPage).submission = committedSubmission;
+            }
+            return nextPage;
         }
     }
 

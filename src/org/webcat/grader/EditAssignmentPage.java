@@ -973,13 +973,14 @@ public class EditAssignmentPage
     // ----------------------------------------------------------
     public WOComponent editStep()
     {
-        WCComponent result = null;
+        EditStepPage result = null;
         if (saveAndCanProceed())
         {
             log.debug("step = " + thisStep);
             prefs().setAssignmentOfferingRelationship(selectedOffering);
             prefs().setStepRelationship(thisStep);
-            result = pageWithName(EditStepPage.class);
+            result = (EditStepPage)pageWithName(EditStepPage.class);
+            result.step = thisStep;
             result.nextPage = this;
         }
         return result;
